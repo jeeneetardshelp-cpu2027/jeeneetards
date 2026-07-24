@@ -1,0 +1,26 @@
+production_migration.sql — expected SHA-256
+===========================================
+
+f158df644e7be45d924ff17d0ebb13435cef5e1ee67bc8fda3bddca7a9fdbbe6  production_migration.sql
+
+Size:  63,959 bytes
+Lines: 1,171
+
+Verify on Windows (PowerShell):
+
+    Get-FileHash -Algorithm SHA256 "production\production_migration.sql"
+
+The Hash column must equal the value above, case-insensitively. If it does not
+match, DO NOT run the file.
+
+Bundled, in order:
+  1. src/migrations/v6_prod_legacy_cleanup.sql
+  2. src/migrations/import_playlist_v4.sql
+  3. src/migrations/import_playlist_v6.sql
+  4. src/migrations/v6_2_grant_tightening.sql
+  5. src/migrations/v6_class_levels_migration.sql
+
+Verified ABSENT by the builder: staging test helpers, drift fixtures,
+app_environment seed row, blocking-drift functions, fixture helpers.
+
+Contains no credentials.

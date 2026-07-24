@@ -1,0 +1,66 @@
+{
+  "deployment_date": "2026-07-22",
+  "project": "youtube",
+  "branch": "main",
+  "environment": "production",
+  "authorization": "APPLY V9 TO PRODUCTION",
+  "migration": {
+    "file": "production_delta.sql",
+    "sha256": "4fbdda12e12ba8d62f842e1d7703dbd8471da9b0a8d55ea0c5f9f97384a3c79a",
+    "result": "Success. No rows returned"
+  },
+  "database_evidence": {
+    "functions": {
+      "rows": 2,
+      "stable": true,
+      "security_invoker": true,
+      "empty_search_path": true
+    },
+    "execute_grants": {
+      "rows": 8,
+      "anon": true,
+      "authenticated": true,
+      "service_role": true,
+      "owner_postgres": true,
+      "public_absent": true
+    },
+    "indexes": {
+      "rows": 2,
+      "idx_plg_goal_playlist": true,
+      "idx_pcl_class_playlist": true
+    },
+    "anonymous_execution": {
+      "permission_error": false,
+      "facet_rows_observed": 12,
+      "transaction_rolled_back": true
+    },
+    "content_counts_after": {
+      "playlists": 7,
+      "videos": 40,
+      "playlist_video_links": 50,
+      "playlist_goal_links": 7,
+      "playlist_class_links": 7,
+      "matches_baseline": true
+    }
+  },
+  "frontend_smoke_test": {
+    "target": "local final frontend using production Supabase data",
+    "guided_journey": "JEE -> Class 11 -> Physics -> Kinematics",
+    "courses_observed": 5,
+    "contextual_filter": {
+      "selected": "Revision",
+      "url_updated": true,
+      "chips_updated": true,
+      "facet_counts_updated": true,
+      "results_observed": 1
+    },
+    "mobile_360x800_overflow_px": 0,
+    "dark_mode": true,
+    "filter_dialog_focus_on_open": "Close filters",
+    "console_errors_or_warnings": 0,
+    "accessibility_follow_up": "Filter group selected count now has an explicit separated accessible label.",
+    "final_tests": "455 passed, 0 failed",
+    "production_build": "passed"
+  },
+  "source": "Production SQL results supplied by the project owner and reviewed in Codex."
+}

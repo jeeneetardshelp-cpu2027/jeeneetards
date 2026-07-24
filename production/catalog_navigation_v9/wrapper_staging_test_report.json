@@ -1,0 +1,16 @@
+{
+  "verified_on": "2026-07-22",
+  "target_kind": "disposable-staging",
+  "artifact": "catalog_navigation_v9_production_wrapper_staging_dry_run_v3.sql",
+  "artifact_sha256": "0e639d0a102b25477d0c6f292b07ecdf14ab1a1fb470e3c65bf809013ce8c8bc",
+  "transaction_ended_with": "rollback",
+  "final_result": {
+    "environment_after": "staging",
+    "curriculum_function_restored": true,
+    "facet_function_restored": true,
+    "goal_index_restored": true,
+    "class_index_restored": true
+  },
+  "evidence_source": "User-provided Supabase SQL Editor result screenshot",
+  "production_touched": false
+}

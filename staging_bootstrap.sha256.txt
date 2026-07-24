@@ -1,0 +1,35 @@
+staging_bootstrap.sql — expected SHA-256  (v6.2)
+========================================
+
+8bbc24c5c3388a32c315434fd76305f574b34260b69b214199f857345cc72502  staging_bootstrap.sql
+
+Size:  134,503 bytes
+Lines: 2,751
+Files bundled: 18 (see ORDER in src/scripts/buildStagingBootstrap.js)
+
+Verify on Windows (PowerShell):
+
+    Get-FileHash -Algorithm SHA256 "staging_bootstrap.sql"
+
+The Hash column must equal the value above, case-insensitively. If it does not
+match, DO NOT run the file — regenerate it with `npm run build:bootstrap` and
+compare again, or ask for a fresh package.
+
+This file is generated, not hand-written. `npm run build:bootstrap` concatenates
+the 18 source SQL files in dependency order, so the same sources always produce
+the same bytes and therefore the same hash.
+
+What it contains, in order:
+   1-11  base schema + earlier migrations (through import_playlist_v2.sql)
+  12     import_playlist_v4.sql          functions/reference data, no trigger
+  13     import_playlist_v6.sql          v6 delta
+  14     staging_test_helpers.sql        STAGING ONLY — never apply to production
+  15     staging_drift_fixtures.sql      STAGING ONLY — manufactures drift
+  16     v6_class_levels_migration.sql   select migrate_class_levels(true)
+  17     seed: one test chapter
+  18     seed: app_environment = 'staging'
+
+Items 14, 15 and 18 are the reason this file must only ever be run against a
+disposable staging project. The production path is items 12, 13 and 16 only.
+
+Contains no credentials of any kind.

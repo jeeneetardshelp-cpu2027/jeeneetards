@@ -1,0 +1,95 @@
+{
+  "run": "a008ac",
+  "target": "https://essmxonestbrgmgrtywn.supabase.co",
+  "when": "2026-07-22T19:53:05.198Z",
+  "fixture": {
+    "playlists": 1000,
+    "videos": 10000,
+    "channels": 20,
+    "chapters": 50,
+    "teacher_labels": 200
+  },
+  "budgets_ms": {
+    "curriculum_p95": 1200,
+    "facets_p95": 1800,
+    "page_p95": 1200
+  },
+  "passed": 8,
+  "failed": 0,
+  "fatal": null,
+  "guard_failed": false,
+  "cleanup_ran": true,
+  "results": [
+    {
+      "name": "JEE Class 11 chapter navigation p95 stays within 1200 ms",
+      "passed": true,
+      "detail": "{\"samples\":7,\"min_ms\":980,\"median_ms\":990,\"p95_ms\":1011,\"max_ms\":1011}"
+    },
+    {
+      "name": "curriculum remains bounded and target count is distinct",
+      "passed": true,
+      "detail": "rows=25 target=20 expected=20"
+    },
+    {
+      "name": "contextual facet aggregation p95 stays within 1800 ms",
+      "passed": true,
+      "detail": "{\"samples\":7,\"min_ms\":89,\"median_ms\":91,\"p95_ms\":96,\"max_ms\":96}"
+    },
+    {
+      "name": "facet response is bounded and non-vacuous",
+      "passed": true,
+      "detail": "rows=41"
+    },
+    {
+      "name": "filtered 12-course page with exact count p95 stays within 1200 ms",
+      "passed": true,
+      "detail": "{\"samples\":7,\"min_ms\":111,\"median_ms\":119,\"p95_ms\":125,\"max_ms\":125}"
+    },
+    {
+      "name": "page is server-bounded, unique, and reports the full matching count",
+      "passed": true,
+      "detail": "rows=12 unique=12 count=20 expected=20"
+    },
+    {
+      "name": "stable ordering prevents duplicates across adjacent pages",
+      "passed": true,
+      "detail": "page0=12 page1=8"
+    },
+    {
+      "name": "leading-wildcard catalogue search p95 stays within 1200 ms",
+      "passed": true,
+      "detail": "{\"samples\":7,\"min_ms\":68,\"median_ms\":83,\"p95_ms\":109,\"max_ms\":109}"
+    },
+    {
+      "metric": "timings",
+      "curriculum": {
+        "samples": 7,
+        "min_ms": 980,
+        "median_ms": 990,
+        "p95_ms": 1011,
+        "max_ms": 1011
+      },
+      "facets": {
+        "samples": 7,
+        "min_ms": 89,
+        "median_ms": 91,
+        "p95_ms": 96,
+        "max_ms": 96
+      },
+      "filtered_page": {
+        "samples": 7,
+        "min_ms": 111,
+        "median_ms": 119,
+        "p95_ms": 125,
+        "max_ms": 125
+      },
+      "wildcard_search": {
+        "samples": 7,
+        "min_ms": 68,
+        "median_ms": 83,
+        "p95_ms": 109,
+        "max_ms": 109
+      }
+    }
+  ]
+}

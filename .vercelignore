@@ -1,0 +1,15 @@
+.env
+.env.*
+!.env.example
+node_modules
+dist
+.git
+archive
+*.rar
+*.zip
+*-test-report.json
+.report-browser-fixture.json
+faculty-test-report.json
+comparison-test-report.json
+catalog-navigation-test-report.json
+production/

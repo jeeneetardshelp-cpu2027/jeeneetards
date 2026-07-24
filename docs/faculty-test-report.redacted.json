@@ -1,0 +1,31 @@
+{
+  "run": "e7c325",
+  "target": "REDACTED_DISPOSABLE_STAGING",
+  "passed": 19,
+  "failed": 0,
+  "fatal": null,
+  "guard_failed": false,
+  "cleanup_ran": true,
+  "result_count": 19,
+  "checks": [
+    "Devanagari survives faculty normalization",
+    "matching names require explicit duplicate acknowledgement",
+    "two real people may share one display name",
+    "a shared verified alias returns both people",
+    "public results mark the exact alias as ambiguous",
+    "exact resolution refuses to pick an ambiguous identity",
+    "universal student search preserves both ambiguous faculty candidates",
+    "a proposed alias is invisible to students",
+    "the admin review search can see the proposed alias",
+    "direct REST exposes only verified aliases",
+    "scanning legacy text creates proposals but no identities or links",
+    "an unknown faculty id is rejected before any playlist write",
+    "non-empty teacher_ids replaces with an explicit teaching order",
+    "an omitted teacher_ids key preserves existing links",
+    "an explicit empty teacher_ids array clears links",
+    "anonymous faculty import is rejected by authorization",
+    "anonymous admin candidate search is rejected",
+    "anonymous proposal review is rejected",
+    "signed-in non-admin is rejected by all faculty admin entry points"
+  ]
+}

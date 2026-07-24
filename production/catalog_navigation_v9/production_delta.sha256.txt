@@ -1,0 +1,11 @@
+Catalogue navigation v9 production package — SHA-256
+
+4fbdda12e12ba8d62f842e1d7703dbd8471da9b0a8d55ea0c5f9f97384a3c79a  production_delta.sql
+6059b0f6795f1ac710c80678cf8f25bcaf74128d8ee5910b29323f443e921a73  rollback.sql
+6013bc6c370ed87fc72209b3f642eb7e3f05035a1bb39d9604228fc3eee6cb82  evidence.sql
+576dadcf2009a45b333635badcd8b9f0de671063da6733d562e69091b78f748d  wrapper_staging_test_report.json
+0c8bca590ad6cd65f7b006be316c2fc36d509be037fa0b0d2ace2acddf354795  README.md
+
+Core source: 1609de029bc1d94e07ec021fff6499f3203e669bbca0887d1013453ff7425140
+Verified staging delta: 3e2ca97d6a4b701e5e95afea5c64325a05beb9025423eb8304b56196dc97db98
+Verified run: 50bee2 (10/10)

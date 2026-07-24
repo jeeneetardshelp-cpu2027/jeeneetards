@@ -1,0 +1,44 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+dist-ssr/
+
+# Generated (regenerate with: node src/scripts/buildStagingBootstrap.js)
+staging_bootstrap.sql
+
+# Secrets — real keys live here, never commit this file
+.env*
+!.env.example
+!.env.staging.example
+
+# Generated verification and browser-audit output
+*-test-report.json
+test-report.json
+drift-report*.json
+ui-audit/
+coverage/
+playwright-report/
+test-results/
+.report-browser-fixture.json
+
+# Review archives must be produced outside the repository with pack:review
+archive/
+*.zip
+*.rar
+
+# Local assistant/tool state
+.claude/
+.codex/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Editor / OS
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db

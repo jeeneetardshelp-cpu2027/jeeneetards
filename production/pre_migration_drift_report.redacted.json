@@ -1,0 +1,86 @@
+{
+  "note": "PRE-MIGRATION drift report. REDACTED: project ref and course titles removed; ids, label sets and verdicts verbatim. Produced by src/scripts/driftReport.js (read-only, SELECT only).",
+  "target": "https://<production-ref>.supabase.co",
+  "when": "2026-07-21T10:36:41.184Z",
+  "dry_run": true,
+  "wrote_nothing": true,
+  "total_playlists": 7,
+  "counts": {
+    "agree": 7
+  },
+  "would_backfill": 0,
+  "would_abort": false,
+  "blocking_rows": [],
+  "rows": [
+    {
+      "id": 1,
+      "array": [
+        "11th"
+      ],
+      "junction": [
+        "11th"
+      ],
+      "verdict": "agree"
+    },
+    {
+      "id": 4,
+      "array": [
+        "11th"
+      ],
+      "junction": [
+        "11th"
+      ],
+      "verdict": "agree"
+    },
+    {
+      "id": 5,
+      "array": [
+        "11th"
+      ],
+      "junction": [
+        "11th"
+      ],
+      "verdict": "agree"
+    },
+    {
+      "id": 6,
+      "array": [
+        "11th"
+      ],
+      "junction": [
+        "11th"
+      ],
+      "verdict": "agree"
+    },
+    {
+      "id": 7,
+      "array": [
+        "11th"
+      ],
+      "junction": [
+        "11th"
+      ],
+      "verdict": "agree"
+    },
+    {
+      "id": 8,
+      "array": [
+        "11th"
+      ],
+      "junction": [
+        "11th"
+      ],
+      "verdict": "agree"
+    },
+    {
+      "id": 9,
+      "array": [
+        "11th"
+      ],
+      "junction": [
+        "11th"
+      ],
+      "verdict": "agree"
+    }
+  ]
+}

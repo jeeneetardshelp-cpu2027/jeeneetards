@@ -1,0 +1,306 @@
+-- =====================================================================
+-- catalog_navigation_v9.sql
+-- Bounded curriculum navigation + contextual catalogue facet counts.
+--
+-- The browser must never download every playlist/video merely to build a
+-- menu or count filter options. Both functions below aggregate in Postgres
+-- and return only the small result needed to draw the current navigation.
+-- =====================================================================
+
+create index if not exists idx_plg_goal_playlist
+  on public.playlist_learning_goals (learning_goal_id, playlist_id);
+create index if not exists idx_pcl_class_playlist
+  on public.playlist_class_levels (class_level_id, playlist_id);
+
+-- ---------------------------------------------------------------------
+-- One current curriculum level per call:
+--   null goal                         -> learning goals
+--   goal, null subject                -> subjects with matching courses
+--   goal + subject                    -> chapters with matching courses
+-- Class is applied to subjects/chapters so a selected stage cannot lead to
+-- a branch that is populated only for another stage.
+-- ---------------------------------------------------------------------
+drop function if exists public.get_browse_curriculum(text, text, text);
+create function public.get_browse_curriculum(
+    p_goal text default null,
+    p_class text default null,
+    p_subject text default null)
+returns table (
+    level text,
+    entity_id bigint,
+    slug text,
+    name text,
+    display_order integer,
+    course_count bigint)
+language sql
+stable
+security invoker
+set search_path = ''
+as $$
+  with rows as (
+    -- Landing level. Keep zero-count reference rows so a deliberately
+    -- unavailable goal can be labelled "Coming soon" rather than vanishing.
+    select
+      'goal'::text as level,
+      lg.id as entity_id,
+      lg.slug,
+      lg.name,
+      lg.display_order,
+      count(distinct plg.playlist_id)::bigint as course_count
+    from public.learning_goals lg
+    left join public.playlist_learning_goals plg
+      on plg.learning_goal_id = lg.id
+    where p_goal is null and p_subject is null
+    group by lg.id, lg.slug, lg.name, lg.display_order
+
+    union all
+
+    select
+      'subject'::text,
+      s.id,
+      s.slug,
+      s.name,
+      s.display_order,
+      count(distinct pl.id)::bigint
+    from public.subjects s
+    join public.playlists pl on pl.subject_id = s.id
+    join public.playlist_learning_goals plg on plg.playlist_id = pl.id
+    join public.learning_goals lg on lg.id = plg.learning_goal_id
+    where p_goal is not null
+      and p_subject is null
+      and lg.slug = p_goal
+      and (
+        p_class is null or exists (
+          select 1
+          from public.playlist_class_levels pcl
+          join public.class_levels cl on cl.id = pcl.class_level_id
+          where pcl.playlist_id = pl.id
+            and cl.slug = any(
+              case
+                when p_class = 'dropper' then array['dropper','class-11','class-12']::text[]
+                else array[p_class]::text[]
+              end
+            )
+        )
+      )
+    group by s.id, s.slug, s.name, s.display_order
+
+    union all
+
+    select
+      'chapter'::text,
+      ch.id,
+      ch.slug,
+      ch.name,
+      ch.display_order,
+      count(distinct pl.id)::bigint
+    from public.chapters ch
+    join public.subjects s on s.id = ch.subject_id
+    join public.videos v on v.chapter_id = ch.id
+    join public.playlist_videos pv on pv.video_id = v.id
+    join public.playlists pl on pl.id = pv.playlist_id
+    join public.playlist_learning_goals plg on plg.playlist_id = pl.id
+    join public.learning_goals lg on lg.id = plg.learning_goal_id
+    where p_goal is not null
+      and p_subject is not null
+      and lg.slug = p_goal
+      and s.slug = p_subject
+      and (
+        p_class is null or exists (
+          select 1
+          from public.playlist_class_levels pcl
+          join public.class_levels cl on cl.id = pcl.class_level_id
+          where pcl.playlist_id = pl.id
+            and cl.slug = any(
+              case
+                when p_class = 'dropper' then array['dropper','class-11','class-12']::text[]
+                else array[p_class]::text[]
+              end
+            )
+        )
+      )
+    group by ch.id, ch.slug, ch.name, ch.display_order
+  )
+  select r.level, r.entity_id, r.slug, r.name, r.display_order, r.course_count
+  from rows r
+  order by r.display_order, r.name, r.entity_id;
+$$;
+
+comment on function public.get_browse_curriculum(text, text, text) is
+  'Bounded goal/subject/chapter navigation with distinct course counts and strict class semantics.';
+
+revoke all on function public.get_browse_curriculum(text, text, text)
+  from public, anon, authenticated, service_role;
+grant execute on function public.get_browse_curriculum(text, text, text)
+  to anon, authenticated, service_role;
+
+-- ---------------------------------------------------------------------
+-- Contextual facet counts in one round trip.
+--
+-- Each facet applies every OTHER active filter and excludes its own. A
+-- playlist is always counted DISTINCTLY. The synthetic Dropper option uses
+-- the same superset semantics as the result query: explicit Dropper + 11 + 12.
+-- ---------------------------------------------------------------------
+drop function if exists public.browse_facet_counts(
+  text, text, text, text, bigint, text[], text[], text[], text);
+create function public.browse_facet_counts(
+    p_goal text default null,
+    p_class text default null,
+    p_subject text default null,
+    p_chapter text default null,
+    p_channel bigint default null,
+    p_language text[] default null,
+    p_type text[] default null,
+    p_difficulty text[] default null,
+    p_search text default null)
+returns table (facet text, value text, n bigint)
+language sql
+stable
+security invoker
+set search_path = ''
+as $$
+  with class_options(value, slugs) as (
+    values
+      ('class-10'::text, array['class-10']::text[]),
+      ('class-11'::text, array['class-11']::text[]),
+      ('class-12'::text, array['class-12']::text[]),
+      ('dropper'::text, array['dropper','class-11','class-12']::text[])
+  ), base as (
+    select
+      pl.id,
+      pl.language,
+      pl.content_type,
+      pl.difficulty,
+      pl.channel_id,
+      (p_goal is null or exists (
+        select 1
+        from public.playlist_learning_goals g
+        join public.learning_goals lg on lg.id = g.learning_goal_id
+        where g.playlist_id = pl.id and lg.slug = p_goal
+      )) as ok_goal,
+      (p_class is null or exists (
+        select 1
+        from public.playlist_class_levels j
+        join public.class_levels cl on cl.id = j.class_level_id
+        where j.playlist_id = pl.id
+          and cl.slug = any(
+            case
+              when p_class = 'dropper' then array['dropper','class-11','class-12']::text[]
+              else array[p_class]::text[]
+            end
+          )
+      )) as ok_class,
+      (p_subject is null or exists (
+        select 1 from public.subjects s
+        where s.id = pl.subject_id and s.slug = p_subject
+      )) as ok_subject,
+      (p_chapter is null or exists (
+        select 1
+        from public.playlist_videos pv
+        join public.videos v on v.id = pv.video_id
+        join public.chapters c on c.id = v.chapter_id
+        where pv.playlist_id = pl.id and c.slug = p_chapter
+      )) as ok_chapter,
+      (p_channel is null or pl.channel_id = p_channel) as ok_channel,
+      (p_language is null or pl.language = any(p_language)) as ok_language,
+      (p_type is null or pl.content_type = any(p_type)) as ok_type,
+      (p_difficulty is null or pl.difficulty = any(p_difficulty)) as ok_difficulty,
+      (p_search is null or btrim(p_search) = '' or pl.title ilike '%' || btrim(p_search) || '%') as ok_search
+    from public.playlists pl
+  ), facets as (
+    select 'goal'::text as facet, lg.slug as value, count(distinct b.id)::bigint as n
+    from base b
+    join public.playlist_learning_goals g on g.playlist_id = b.id
+    join public.learning_goals lg on lg.id = g.learning_goal_id
+    where b.ok_class and b.ok_subject and b.ok_chapter and b.ok_channel
+      and b.ok_language and b.ok_type and b.ok_difficulty and b.ok_search
+    group by lg.slug
+
+    union all
+
+    select 'class', co.value, count(distinct b.id)::bigint
+    from base b
+    cross join class_options co
+    where b.ok_goal and b.ok_subject and b.ok_chapter and b.ok_channel
+      and b.ok_language and b.ok_type and b.ok_difficulty and b.ok_search
+      and exists (
+        select 1
+        from public.playlist_class_levels j
+        join public.class_levels cl on cl.id = j.class_level_id
+        where j.playlist_id = b.id and cl.slug = any(co.slugs)
+      )
+    group by co.value
+
+    union all
+
+    select 'subject', s.slug, count(distinct b.id)::bigint
+    from base b
+    join public.playlists pl on pl.id = b.id
+    join public.subjects s on s.id = pl.subject_id
+    where b.ok_goal and b.ok_class and b.ok_chapter and b.ok_channel
+      and b.ok_language and b.ok_type and b.ok_difficulty and b.ok_search
+    group by s.slug
+
+    union all
+
+    select 'chapter', c.slug, count(distinct b.id)::bigint
+    from base b
+    join public.playlist_videos pv on pv.playlist_id = b.id
+    join public.videos v on v.id = pv.video_id
+    join public.chapters c on c.id = v.chapter_id
+    where b.ok_goal and b.ok_class and b.ok_subject and b.ok_channel
+      and b.ok_language and b.ok_type and b.ok_difficulty and b.ok_search
+    group by c.slug
+
+    union all
+
+    select 'language', b.language, count(distinct b.id)::bigint
+    from base b
+    where b.language is not null
+      and b.ok_goal and b.ok_class and b.ok_subject and b.ok_chapter
+      and b.ok_channel and b.ok_type and b.ok_difficulty and b.ok_search
+    group by b.language
+
+    union all
+
+    select 'type', b.content_type, count(distinct b.id)::bigint
+    from base b
+    where b.content_type is not null
+      and b.ok_goal and b.ok_class and b.ok_subject and b.ok_chapter
+      and b.ok_channel and b.ok_language and b.ok_difficulty and b.ok_search
+    group by b.content_type
+
+    union all
+
+    select 'difficulty', b.difficulty, count(distinct b.id)::bigint
+    from base b
+    where b.difficulty is not null
+      and b.ok_goal and b.ok_class and b.ok_subject and b.ok_chapter
+      and b.ok_channel and b.ok_language and b.ok_type and b.ok_search
+    group by b.difficulty
+
+    union all
+
+    select 'channel', b.channel_id::text, count(distinct b.id)::bigint
+    from base b
+    where b.channel_id is not null
+      and b.ok_goal and b.ok_class and b.ok_subject and b.ok_chapter
+      and b.ok_language and b.ok_type and b.ok_difficulty and b.ok_search
+    group by b.channel_id
+  )
+  select f.facet, f.value, f.n
+  from facets f
+  where f.n > 0
+  order by f.facet, f.value;
+$$;
+
+comment on function public.browse_facet_counts(
+  text, text, text, text, bigint, text[], text[], text[], text) is
+  'Contextual distinct course counts. Each facet excludes itself; Dropper includes class 11 and 12.';
+
+revoke all on function public.browse_facet_counts(
+  text, text, text, text, bigint, text[], text[], text[], text)
+  from public, anon, authenticated, service_role;
+grant execute on function public.browse_facet_counts(
+  text, text, text, text, bigint, text[], text[], text[], text)
+  to anon, authenticated, service_role;

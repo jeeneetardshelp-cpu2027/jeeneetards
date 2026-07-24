@@ -1,0 +1,448 @@
+{
+  "run": "628271",
+  "target": "https://<staging-ref>.supabase.co",
+  "when": "2026-07-21T10:27:10.824Z",
+  "passed": 87,
+  "failed": 0,
+  "fatal": null,
+  "guard_failed": false,
+  "cleanup_ran": true,
+  "results": [
+    {
+      "name": "V1 empty video array",
+      "passed": true,
+      "detail": "videos must be a non-empty array"
+    },
+    {
+      "name": "V2 missing title",
+      "passed": true,
+      "detail": "title is required"
+    },
+    {
+      "name": "V3 unknown class label",
+      "passed": true,
+      "detail": "unknown class label in {99th}"
+    },
+    {
+      "name": "V4 invalid category",
+      "passed": true,
+      "detail": "invalid category_id 999999"
+    },
+    {
+      "name": "V5 subject↔chapter mismatch",
+      "passed": true,
+      "detail": "chapter 1 does not belong to subject 3"
+    },
+    {
+      "name": "V6 invalid audience_focus",
+      "passed": true,
+      "detail": "audience_focus 12th is not among applicable classes {11th}"
+    },
+    {
+      "name": "V7 duplicate video id",
+      "passed": true,
+      "detail": "duplicate youtube_video_id in payload"
+    },
+    {
+      "name": "V8 malformed video id",
+      "passed": true,
+      "detail": "a video has a missing/invalid youtube_video_id"
+    },
+    {
+      "name": "V9 goal↔class incompatible (JEE + Class 10)",
+      "passed": true,
+      "detail": "class {10th} not valid for this learning goal"
+    },
+    {
+      "name": "V10 blank video title",
+      "passed": true,
+      "detail": "a video has a blank title"
+    },
+    {
+      "name": "V11 out-of-range duration",
+      "passed": true,
+      "detail": "a video has an out-of-range duration (1..86400 seconds)"
+    },
+    {
+      "name": "V12 invalid content_type enum",
+      "passed": true,
+      "detail": "invalid content_type nonsense"
+    },
+    {
+      "name": "V13 invalid language enum",
+      "passed": true,
+      "detail": "invalid language klingon"
+    },
+    {
+      "name": "V14 malformed youtube_playlist_id",
+      "passed": true,
+      "detail": "invalid youtube_playlist_id format"
+    },
+    {
+      "name": "V15 learning_goal_id required",
+      "passed": true,
+      "detail": "learning_goal_id is required (it is no longer derived from the category)"
+    },
+    {
+      "name": "V16 invalid learning_goal_id",
+      "passed": true,
+      "detail": "invalid learning_goal_id 999999"
+    },
+    {
+      "name": "V17 boards rejected for non-school goal",
+      "passed": true,
+      "detail": "board_ids apply only to the School Boards learning goal"
+    },
+    {
+      "name": "V18 school goal requires a board",
+      "passed": true,
+      "detail": "school-board content requires at least one board_id"
+    },
+    {
+      "name": "V19 school-board (CBSE Class 10) content imports and is board-tagged",
+      "passed": true,
+      "detail": "boards=1"
+    },
+    {
+      "name": "R1 rejected payload wrote nothing (no playlist, no video)",
+      "passed": true,
+      "detail": "a video has a blank title"
+    },
+    {
+      "name": "C1 simultaneous duplicate imports deterministic (5/5 rounds, 2/2 required)",
+      "passed": true,
+      "detail": "[{\"round\":0,\"succeeded\":2,\"playlists\":1,\"links\":1},{\"round\":1,\"succeeded\":2,\"playlists\":1,\"links\":1},{\"round\":2,\"succeeded\":2,\"playlists\":1,\"links\":1},{\"round\":3,\"succeeded\":2,\"playlists\":1,\"links\":1},{\"round\":4,\"succeeded\":2,\"playlists\":1,\"links\":1}]"
+    },
+    {
+      "name": "M1 merge keeps curated title/teacher, no dup links",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "N1 first import counts the video as ADDED",
+      "passed": true,
+      "detail": "added=2 reused=0"
+    },
+    {
+      "name": "N2 an existing video counts as REUSED, not added",
+      "passed": true,
+      "detail": "added=0 reused=1"
+    },
+    {
+      "name": "S1 shared video keeps JEE+NEET goals",
+      "passed": true,
+      "detail": "JEE,NEET"
+    },
+    {
+      "name": "T1 empty taxonomy must use the named clear operation",
+      "passed": true,
+      "detail": "at least one learning goal and one class level are required; use clear_video_taxonomy() to remove all taxonomy"
+    },
+    {
+      "name": "T2 incompatible goal/class rejected (JEE + Class 10)",
+      "passed": true,
+      "detail": "class_level 1 is not valid for learning_goal 1"
+    },
+    {
+      "name": "R2 mid-transaction failure rolled back the DELETE (tags intact)",
+      "passed": true,
+      "detail": "invalid class_level_id in {999999} | after: JEE,NEET"
+    },
+    {
+      "name": "T3 set_video_taxonomy removes the erroneous NEET tag",
+      "passed": true,
+      "detail": "JEE"
+    },
+    {
+      "name": "T4 clear_video_taxonomy empties it deliberately",
+      "passed": true,
+      "detail": "0 left"
+    },
+    {
+      "name": "P1 replace overwrites title",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "P2 replace drops stale link, keeps video row",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "P3 replace re-homes channel_id",
+      "passed": true,
+      "detail": "1 vs 1"
+    },
+    {
+      "name": "CC1 video_ids required",
+      "passed": true,
+      "detail": "video_ids must be a non-empty array"
+    },
+    {
+      "name": "CC2 video_ids empty rejected",
+      "passed": true,
+      "detail": "video_ids must be a non-empty array"
+    },
+    {
+      "name": "CC3 duplicate video_id rejected",
+      "passed": true,
+      "detail": "duplicate video_id in payload"
+    },
+    {
+      "name": "CC4 non-numeric video_id rejected",
+      "passed": true,
+      "detail": "video_ids must all be positive whole numbers within range"
+    },
+    {
+      "name": "CC5 non-existent video_id rejected",
+      "passed": true,
+      "detail": "video_ids contains an id that does not exist"
+    },
+    {
+      "name": "CC6 create_course reports a lesson count equal to real links",
+      "passed": true,
+      "detail": "lessons=1 links=1"
+    },
+    {
+      "name": "DA1 direct UPDATE of the array is neutralised",
+      "passed": true,
+      "detail": "[\"11th\"]"
+    },
+    {
+      "name": "DA2 direct INSERT carrying an array is neutralised",
+      "passed": true,
+      "detail": "[]"
+    },
+    {
+      "name": "DA3 junction INSERT fills the array, multi-class, in display order",
+      "passed": true,
+      "detail": "[\"11th\",\"Dropper\"]"
+    },
+    {
+      "name": "DA4 junction DELETE shrinks the array",
+      "passed": true,
+      "detail": "[\"11th\"]"
+    },
+    {
+      "name": "MG1 array-only single-class PRESERVED (array kept AND junction backfilled)",
+      "passed": true,
+      "detail": "array=[\"12th\"] junction=[\"class-12\"]"
+    },
+    {
+      "name": "MG2 array-only multi-class PRESERVED",
+      "passed": true,
+      "detail": "array=[\"11th\",\"12th\",\"Dropper\"]"
+    },
+    {
+      "name": "MG3 junction-only playlist had its array filled",
+      "passed": true,
+      "detail": "[\"11th\",\"12th\"]"
+    },
+    {
+      "name": "MG4 unclassified playlist left untouched",
+      "passed": true,
+      "detail": "[]"
+    },
+    {
+      "name": "MG5 migration recorded an audit verdict for every playlist",
+      "passed": true,
+      "detail": "{\"array-only\":2,\"junction-only\":1,\"agree\":37,\"both-empty\":3}"
+    },
+    {
+      "name": "D1 zero array/junction drift across all playlists",
+      "passed": true,
+      "detail": "drifted: 0/15"
+    },
+    {
+      "name": "X1 contradictory category/goal pair rejected (NEET category + JEE goal)",
+      "passed": true,
+      "detail": "category 2 is not valid for learning goal 1 (Browse and Explore would disagree)"
+    },
+    {
+      "name": "X3 Browse and Explore return the SAME videos for every category/goal pair",
+      "passed": true,
+      "detail": "[]"
+    },
+    {
+      "name": "X4 a shared lecture is reachable from BOTH goals despite one category_id",
+      "passed": true,
+      "detail": "category_id=1 viaJEE=true viaNEET=true"
+    },
+    {
+      "name": "X5 shared lecture builds subject+chapter branches under BOTH goals in the Browse tree",
+      "passed": true,
+      "detail": "jee=1 neet=1"
+    },
+    {
+      "name": "X6 every learning goal has a declared category mapping",
+      "passed": true,
+      "detail": "unmapped goals: none"
+    },
+    {
+      "name": "X7 every category has a declared learning-goal mapping",
+      "passed": true,
+      "detail": "unmapped categories: none"
+    },
+    {
+      "name": "B1 CBSE scope contains the CBSE course and NOT the ICSE course",
+      "passed": true,
+      "detail": "cbse=[38,50]"
+    },
+    {
+      "name": "B2 ICSE scope contains the ICSE course and NOT the CBSE course",
+      "passed": true,
+      "detail": "icse=[51]"
+    },
+    {
+      "name": "B3 a board-scoped course carries exactly one board tag",
+      "passed": true,
+      "detail": "[{\"board_id\":1}]"
+    },
+    {
+      "name": "MB1 blocking drift makes the migration ABORT",
+      "passed": true,
+      "detail": "ABORT: unknown class label(s): playlist 53: {11th,bogus}"
+    },
+    {
+      "name": "MB2 aborted migration persisted ZERO audit rows (vs post-fixture baseline)",
+      "passed": true,
+      "detail": "43 -> 43"
+    },
+    {
+      "name": "MB3 aborted migration added and removed ZERO junction rows (vs post-fixture baseline)",
+      "passed": true,
+      "detail": "22 -> 22"
+    },
+    {
+      "name": "MB4 aborted migration left triggers unchanged",
+      "passed": true,
+      "detail": "true -> true"
+    },
+    {
+      "name": "MB5 migration succeeds again once the blocking rows are removed",
+      "passed": true,
+      "detail": "{\"agree\":18,\"both-empty\":1}"
+    },
+    {
+      "name": "MB6 each run keeps its own audit evidence (run_id)",
+      "passed": true,
+      "detail": "89a90dbf-d3b9-4d15-a2ad-e4790d4c271a"
+    },
+    {
+      "name": "E1 video_ids zero rejected",
+      "passed": true,
+      "detail": "video_ids must all be positive whole numbers within range"
+    },
+    {
+      "name": "E2 video_ids negative rejected",
+      "passed": true,
+      "detail": "video_ids must all be positive whole numbers within range"
+    },
+    {
+      "name": "E3 video_ids decimal rejected",
+      "passed": true,
+      "detail": "video_ids must all be positive whole numbers within range"
+    },
+    {
+      "name": "E4 video_ids overflow rejected",
+      "passed": true,
+      "detail": "video_ids must all be positive whole numbers within range"
+    },
+    {
+      "name": "E5 video_ids numeric string rejected",
+      "passed": true,
+      "detail": "video_ids must all be positive whole numbers within range"
+    },
+    {
+      "name": "E6 video_ids null element rejected",
+      "passed": true,
+      "detail": "video_ids must all be positive whole numbers within range"
+    },
+    {
+      "name": "E7 video_ids object element rejected",
+      "passed": true,
+      "detail": "video_ids must all be positive whole numbers within range"
+    },
+    {
+      "name": "E8 video_ids nested array rejected",
+      "passed": true,
+      "detail": "video_ids must all be positive whole numbers within range"
+    },
+    {
+      "name": "E9 video_ids boolean rejected",
+      "passed": true,
+      "detail": "video_ids must all be positive whole numbers within range"
+    },
+    {
+      "name": "G1 duplicate learning_goal_id rejected",
+      "passed": true,
+      "detail": "duplicate learning_goal_id in {1,1}"
+    },
+    {
+      "name": "G2 duplicate class_level_id rejected",
+      "passed": true,
+      "detail": "duplicate class_level_id in {2,2}"
+    },
+    {
+      "name": "G3 duplicate rejection deleted nothing",
+      "passed": true,
+      "detail": "1 -> 1"
+    },
+    {
+      "name": "A1 anonymous import rejected by AUTHORIZATION (42501)",
+      "passed": true,
+      "detail": "permission denied for function import_playlist"
+    },
+    {
+      "name": "A2 anonymous create_course rejected",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "A3 anonymous clear_video_taxonomy rejected",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "A4 anonymous migrate_class_levels rejected",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "A5 anonymous cannot read the migration audit trail",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "AU0 test user exists and is NOT an admin",
+      "passed": true,
+      "detail": "{\"is_admin\":false}"
+    },
+    {
+      "name": "AU1 logged-in non-admin cannot import (42501)",
+      "passed": true,
+      "detail": "not authorized to import"
+    },
+    {
+      "name": "AU2 logged-in non-admin cannot create_course (42501)",
+      "passed": true,
+      "detail": "not authorized"
+    },
+    {
+      "name": "AU3 logged-in non-admin cannot run the migration (42501)",
+      "passed": true,
+      "detail": "permission denied for function migrate_class_levels"
+    },
+    {
+      "name": "AU4 logged-in non-admin cannot rewrite taxonomy (42501)",
+      "passed": true,
+      "detail": "not authorized"
+    },
+    {
+      "name": "AU5 logged-in non-admin cannot read the migration audit trail",
+      "passed": true,
+      "detail": "\"0 rows\""
+    }
+  ],
+  "note": "Staging integration run. Target redacted; results verbatim."
+}

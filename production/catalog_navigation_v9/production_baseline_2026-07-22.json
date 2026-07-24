@@ -1,0 +1,22 @@
+{
+  "captured_at_local_date": "2026-07-22",
+  "project": "youtube",
+  "branch": "main",
+  "environment": "production",
+  "backup_verified": {
+    "type": "physical",
+    "timestamp_utc": "2026-07-21T18:35:46Z"
+  },
+  "pre_deployment": {
+    "curriculum_function_absent": true,
+    "facet_function_absent": true,
+    "goal_index_already_exists": false,
+    "class_index_already_exists": false,
+    "playlists": 7,
+    "videos": 40,
+    "playlist_video_links": 50,
+    "playlist_goal_links": 7,
+    "playlist_class_links": 7
+  },
+  "source": "Read-only production SQL result supplied by the project owner."
+}

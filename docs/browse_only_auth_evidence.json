@@ -1,0 +1,11 @@
+{
+  "date": "2026-07-23",
+  "environment": "production",
+  "project_name": "youtube",
+  "project_ref": "kezelafqhgqrprpadmlf",
+  "verification_method": "read-only Supabase dashboard inspection",
+  "allow_new_users_to_sign_up": false,
+  "allow_anonymous_sign_ins": false,
+  "email_provider_enabled": true,
+  "production_writes_during_verification": 0
+}
