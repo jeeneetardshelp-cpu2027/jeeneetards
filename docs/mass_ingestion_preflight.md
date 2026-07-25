@@ -5,8 +5,8 @@ import; it does not authorize one.
 
 ## Baseline recorded on 25 July 2026
 
-- 28 courses and 270 playlist memberships.
-- Coverage: JEE Physics; 13 Class 11 courses, 15 Class 12 courses, and 23
+- 30 courses and 295 playlist memberships.
+- Coverage: JEE Physics; 15 Class 11 courses, 15 Class 12 courses, and 25
   Dropper-compatible courses.
 - Core metadata missing from 0 courses.
 - Fully contained duplicate candidates: 0.
@@ -20,6 +20,9 @@ import; it does not authorize one.
   because their source lesson ordering is inconsistent.
 - Fluid Mechanics is deferred because its source lesson ordering is also
   inconsistent.
+- Viscosity is deferred because its first two source lessons are reversed.
+  Sound Waves is deferred because its source sequence is inconsistent and it
+  includes an existing Wave Optics video.
 
 Regenerate the read-only baseline immediately before every batch:
 

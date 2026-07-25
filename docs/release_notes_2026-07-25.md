@@ -134,6 +134,24 @@ verified with a corrected audit before the remaining three imports continued.
 No production data needed correction. No migrations, schema changes, or
 application-code changes were made.
 
+### Fluids and rotational-motion batch
+
+The next staging-first batch added:
+
+- Surface Tension: 5 new lessons under Mechanical Properties of Fluids.
+- Rotational Dynamics: 20 new lessons under Rotational Motion.
+
+Production now contains 30 courses and 295 ordered playlist memberships.
+Anonymous checks confirmed exact course counts, contiguous positions, complete
+metadata, correct Class 11/Dropper attribution, zero blocked embeds, zero new
+overlap pairs, and zero fully contained duplicate-course candidates. The
+production capability contract passed.
+
+Viscosity was deferred because its first two source lessons are reversed.
+Sound Waves was deferred because its lesson sequence is inconsistent and it
+contains a video already used by Wave Optics. No migrations, schema changes,
+or application-code changes were made.
+
 ## Operational boundary
 
 Future catalogue batches still require the ingestion preflight, a recent
