@@ -1,7 +1,6 @@
-// useExplore.js — data for the guided Explore cascade, from the structured
-// learning_goals / class_levels tables + the goal↔video junction.
+// useExplore.js — bounded data for the guided Explore cascade.
 //
-//   useLearningGoals() — goals that actually have content (+ counts)
+//   useLearningGoals() — goals with distinct course counts
 //   useClassLevels()   — the four stages (reference data)
 //   useGoalCatalog(id) — the subjects and chapters that have content for one
 //                        goal, so we never offer an empty branch (this is what
@@ -49,36 +48,13 @@ export function useLearningGoals() {
         setLoading(false);
         return;
       }
-      if (!isMissingCatalogRpc(rpc.error)) {
-        console.error("browse curriculum goals:", rpc.error);
-        setGoals([]);
-        setError("We couldn't load the course guide.");
-        setLoading(false);
-        return;
-      }
-
-      // Compatibility only: production can keep browsing while v9 is rolled
-      // out deliberately. This old path counts lectures, so it labels them as
-      // lectures and never pretends they are distinct course counts.
-      const [goalRows, links] = await Promise.all([
-        supabase.from("learning_goals").select("id, name, slug").order("display_order"),
-        supabase.from("video_learning_goals").select("learning_goal_id"),
-      ]);
-      if (!active) return;
-      if (goalRows.error || links.error) {
-        console.error("legacy browse curriculum goals:", goalRows.error ?? links.error);
-        setGoals([]);
-        setError("We couldn't load the course guide.");
-      } else {
-        const counts = new Map();
-        for (const row of links.data ?? [])
-          counts.set(row.learning_goal_id, (counts.get(row.learning_goal_id) ?? 0) + 1);
-        setGoals((goalRows.data ?? []).map((row) => ({
-          ...row,
-          count: counts.get(row.id) ?? 0,
-          countUnit: "lecture",
-        })));
-      }
+      // Catalogue navigation is a verified production capability. Falling
+      // back to video_learning_goals would download a junction that grows with
+      // the entire catalogue and silently turn a server-bounded route into an
+      // unbounded browser query. Fail honestly and let the student retry.
+      console.error("browse curriculum goals:", rpc.error);
+      setGoals([]);
+      setError("We couldn't load the course guide.");
       setLoading(false);
     };
 
@@ -210,7 +186,7 @@ export function useClassLevels() {
 // The bounded subject/chapter tree for one goal and class. v9 returns DISTINCT
 // course counts in one or two small RPC calls; it never downloads the growing
 // video junction into the browser.
-export function useGoalCatalog({ goal, goalId, stage, subject } = {}) {
+export function useGoalCatalog({ goal, stage, subject } = {}) {
   const [subjects, setSubjects] = useState([]);
   const [chaptersBySubject, setChaptersBySubject] = useState({});
   const [loading, setLoading] = useState(false);
@@ -229,63 +205,11 @@ export function useGoalCatalog({ goal, goalId, stage, subject } = {}) {
     setLoading(true);
     setError(null);
 
-    const loadLegacy = async () => {
-      if (!goalId) throw new Error("Legacy course guide needs a goal id.");
-      const legacy = await supabase
-        .from("videos")
-        .select(
-          "id, subject_id, subjects(name, slug), chapter_id, chapters(name, slug)," +
-            " video_learning_goals!inner(learning_goal_id)"
-        )
-        .eq("video_learning_goals.learning_goal_id", goalId);
-      if (legacy.error) throw legacy.error;
-      const subs = new Map();
-      const chaps = {};
-      for (const video of legacy.data ?? []) {
-        if (!video.subject_id) continue;
-        if (!subs.has(video.subject_id)) subs.set(video.subject_id, {
-          id: video.subject_id,
-          name: video.subjects?.name ?? "Unknown subject",
-          slug: video.subjects?.slug ?? String(video.subject_id),
-          count: 0,
-          countUnit: "lecture",
-        });
-        subs.get(video.subject_id).count += 1;
-        if (video.chapter_id) {
-          chaps[video.subject_id] ??= new Map();
-          const byId = chaps[video.subject_id];
-          if (!byId.has(video.chapter_id)) byId.set(video.chapter_id, {
-            id: video.chapter_id,
-            name: video.chapters?.name ?? "Unknown chapter",
-            slug: video.chapters?.slug ?? String(video.chapter_id),
-            count: 0,
-            countUnit: "lecture",
-          });
-          byId.get(video.chapter_id).count += 1;
-        }
-      }
-      const byName = (a, b) => a.name.localeCompare(b.name);
-      return {
-        subjects: [...subs.values()].sort(byName),
-        chapters: Object.fromEntries(
-          Object.entries(chaps).map(([id, rows]) => [id, [...rows.values()].sort(byName)])
-        ),
-      };
-    };
-
     const load = async () => {
       const args = { p_goal: goal, p_class: stage ?? null, p_subject: null };
       const subjectResult = await supabase.rpc("get_browse_curriculum", args);
       if (!active) return;
-      if (subjectResult.error) {
-        if (!isMissingCatalogRpc(subjectResult.error)) throw subjectResult.error;
-        const fallback = await loadLegacy();
-        if (!active) return;
-        setSubjects(fallback.subjects);
-        setChaptersBySubject(fallback.chapters);
-        setLoading(false);
-        return;
-      }
+      if (subjectResult.error) throw subjectResult.error;
 
       const nextSubjects = (subjectResult.data ?? []).map(curriculumRow);
       let nextChapters = {};
@@ -314,7 +238,7 @@ export function useGoalCatalog({ goal, goalId, stage, subject } = {}) {
     });
 
     return () => { active = false; };
-  }, [goal, goalId, stage, subject, nonce]);
+  }, [goal, stage, subject, nonce]);
 
   return {
     subjects, chaptersBySubject, loading, error,

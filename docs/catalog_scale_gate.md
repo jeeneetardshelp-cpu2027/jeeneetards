@@ -20,6 +20,11 @@ with the other queries. Treat it as the first performance watch item before
 raising the catalogue beyond this fixture size; passing is not evidence of
 unbounded scale.
 
+The frontend treats `get_browse_curriculum` as a required, verified production
+capability. If it is unavailable, guided navigation shows a retryable error; it
+does not fall back to downloading `video_learning_goals` or the full video
+catalogue into the browser.
+
 The default fixture represents the near-term catalogue rather than today's
 seven production courses:
 

@@ -85,7 +85,6 @@ export default function Explore() {
     // Subjects are not needed until a real class has been selected. Waiting
     // also prevents a broad unclassified request during the class step.
     goal: classNode ? goalNode?.slug : null,
-    goalId: goalNode?.id,
     stage: classNode?.slug,
     subject,
   });
@@ -206,6 +205,11 @@ export default function Explore() {
             loading={catLoading}
             error={catalogError}
             onRetry={retryCatalog}
+            emptyMessage={`No ${classNode.name} courses are available yet.`}
+            emptyAction={{
+              label: "Choose another stage",
+              onClick: () => navigate(p()),
+            }}
             options={subjects.map((s) => ({
               key: s.id,
               label: s.name,
@@ -356,7 +360,15 @@ function ResultRow({ title, subtitle, onClick }) {
 const countHint = ({ count, countUnit = "course" }) =>
   `${count} ${countUnit}${count === 1 ? "" : "s"}`;
 
-function Step({ title, options, loading, error, onRetry }) {
+function Step({
+  title,
+  options,
+  loading,
+  error,
+  onRetry,
+  emptyMessage = "Nothing here yet.",
+  emptyAction,
+}) {
   const { t } = useTheme();
   return (
     <section>
@@ -380,7 +392,17 @@ function Step({ title, options, loading, error, onRetry }) {
           )}
         </div>
       ) : options.length === 0 ? (
-        <p className={`mt-6 text-sm ${t.muted}`}>Nothing here yet.</p>
+        <div className={`mt-6 rounded-xl border border-dashed ${t.border} ${t.card} p-6`}>
+          <p className={`text-sm font-medium ${t.text}`}>{emptyMessage}</p>
+          {emptyAction && (
+            <button
+              onClick={emptyAction.onClick}
+              className={`mt-3 min-h-11 rounded-xl border ${t.border} px-4 text-sm font-medium ${t.hover}`}
+            >
+              {emptyAction.label}
+            </button>
+          )}
+        </div>
       ) : (
         <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3">
           {options.map((o) => (

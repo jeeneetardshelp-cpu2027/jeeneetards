@@ -70,21 +70,29 @@ describe("verified curriculum RPC in the guided journey", () => {
     });
   });
 
-  it("uses the old lecture-labelled path only when the RPC capability is absent", async () => {
+  it("fails closed without downloading the video junction when the RPC is absent", async () => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
     rpcImpl = () => ({ data: null, error: { code: "PGRST202", message: "not in schema cache" } });
-    tableRows = {
-      learning_goals: { data: [{ id: 1, slug: "jee", name: "JEE" }], error: null },
-      video_learning_goals: {
-        data: [{ learning_goal_id: 1 }, { learning_goal_id: 1 }], error: null,
-      },
-    };
     render(<GoalProbe />);
     await waitFor(() => expect(hookState.loading).toBe(false));
 
-    expect(fromCalls.map((call) => call.table)).toEqual([
-      "learning_goals", "video_learning_goals",
-    ]);
-    expect(hookState.goals[0]).toMatchObject({ count: 2, countUnit: "lecture" });
+    expect(fromCalls).toEqual([]);
+    expect(hookState.goals).toEqual([]);
+    expect(hookState.error).toMatch(/couldn't load/i);
+    console.error.mockRestore();
+  });
+
+  it("keeps subject and chapter navigation bounded when the RPC is absent", async () => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    rpcImpl = () => ({ data: null, error: { code: "PGRST202", message: "not in schema cache" } });
+    render(<CatalogProbe goal="jee" goalId={1} stage="class-11" subject="physics" />);
+    await waitFor(() => expect(hookState.loading).toBe(false));
+
+    expect(fromCalls).toEqual([]);
+    expect(hookState.subjects).toEqual([]);
+    expect(hookState.chaptersBySubject).toEqual({});
+    expect(hookState.error).toMatch(/couldn't load/i);
+    console.error.mockRestore();
   });
 
   it("forwards goal, class and subject and maps chapter course counts", async () => {
