@@ -12,6 +12,7 @@ Applying v9 cannot accidentally deploy those unrelated changes.
 | `production_delta.sql` | Preflight + exact staging-verified core + postflight | `4fbdda12e12ba8d62f842e1d7703dbd8471da9b0a8d55ea0c5f9f97384a3c79a` |
 | `rollback.sql` | Removes only the two v9 functions | `6059b0f6795f1ac710c80678cf8f25bcaf74128d8ee5910b29323f443e921a73` |
 | `evidence.sql` | Read-only post-deployment checks | `6013bc6c370ed87fc72209b3f642eb7e3f05035a1bb39d9604228fc3eee6cb82` |
+| `staging_verification_summary.json` | Sanitized staging verification result | `08dddcf8a7f612c2061fecef19f8f4636c17fd50a6a92e3a953b974868737b5c` |
 | `wrapper_staging_test_report.json` | Production-wrapper rollback rehearsal evidence | `576dadcf2009a45b333635badcd8b9f0de671063da6733d562e69091b78f748d` |
 
 Core source hash: `1609de029bc1d94e07ec021fff6499f3203e669bbca0887d1013453ff7425140`  

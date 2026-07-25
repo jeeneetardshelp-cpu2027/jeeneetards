@@ -13,8 +13,12 @@ const delta = read("production/catalog_navigation_v9/production_delta.sql");
 const rollback = read("production/catalog_navigation_v9/rollback.sql");
 const evidence = read("production/catalog_navigation_v9/evidence.sql");
 const manifest = read("production/catalog_navigation_v9/production_delta.sha256.txt");
-const report = JSON.parse(read("catalog-navigation-test-report.json"));
-const wrapperReport = JSON.parse(read("catalog-navigation-v9-wrapper-test-report.json"));
+const report = JSON.parse(
+  read("production/catalog_navigation_v9/staging_verification_summary.json"),
+);
+const wrapperReport = JSON.parse(
+  read("production/catalog_navigation_v9/wrapper_staging_test_report.json"),
+);
 const dryRun = read("catalog_navigation_v9_production_wrapper_staging_dry_run_v3.sql");
 const dryRunHash = read("catalog_navigation_v9_production_wrapper_staging_dry_run_v3.sha256.txt");
 
@@ -90,7 +94,8 @@ describe("catalog navigation v9 production package", () => {
   it("the manifest hashes every delivered artifact and outputs contain no credential shapes", () => {
     for (const name of [
       "production_delta.sql", "rollback.sql", "evidence.sql",
-      "wrapper_staging_test_report.json", "README.md",
+      "staging_verification_summary.json", "wrapper_staging_test_report.json",
+      "README.md",
     ]) {
       const value = read(`production/catalog_navigation_v9/${name}`);
       expect(manifest).toContain(`${hash(value)}  ${name}`);

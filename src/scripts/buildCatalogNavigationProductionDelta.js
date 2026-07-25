@@ -41,6 +41,15 @@ const core = read(paths.core);
 const stagingDelta = readFileSync(resolve(root, paths.stagingDelta));
 const report = JSON.parse(read(paths.report));
 const wrapperReport = JSON.parse(read(paths.wrapperReport));
+const stagingVerificationSummary = {
+  run: report.run,
+  verified_at: report.when,
+  passed: report.passed,
+  failed: report.failed,
+  fatal: report.fatal,
+  guard_failed: report.guard_failed,
+  cleanup_ran: report.cleanup_ran,
+};
 
 if (sha(core) !== VERIFIED_CORE_SHA) {
   console.error("REFUSING: catalog_navigation_v9.sql changed after its staging verification.");
@@ -114,6 +123,7 @@ const files = {
   "production_delta.sql": productionSql,
   "rollback.sql": read(paths.rollback),
   "evidence.sql": read(paths.evidence),
+  "staging_verification_summary.json": `${JSON.stringify(stagingVerificationSummary, null, 2)}\n`,
   "wrapper_staging_test_report.json": `${JSON.stringify(wrapperReport, null, 2)}\n`,
 };
 for (const [name, value] of Object.entries(files))
@@ -134,6 +144,7 @@ Applying v9 cannot accidentally deploy those unrelated changes.
 | \`production_delta.sql\` | Preflight + exact staging-verified core + postflight | \`${hashes["production_delta.sql"]}\` |
 | \`rollback.sql\` | Removes only the two v9 functions | \`${hashes["rollback.sql"]}\` |
 | \`evidence.sql\` | Read-only post-deployment checks | \`${hashes["evidence.sql"]}\` |
+| \`staging_verification_summary.json\` | Sanitized staging verification result | \`${hashes["staging_verification_summary.json"]}\` |
 | \`wrapper_staging_test_report.json\` | Production-wrapper rollback rehearsal evidence | \`${hashes["wrapper_staging_test_report.json"]}\` |
 
 Core source hash: \`${VERIFIED_CORE_SHA}\`  
