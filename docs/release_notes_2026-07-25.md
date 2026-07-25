@@ -112,6 +112,28 @@ one existing-video overlap, and Circular Motion and KTG had inconsistent
 source lesson ordering. No migrations, schema changes, or application-code
 changes were made for this batch.
 
+### Properties of matter and thermal batch
+
+The next staging-first batch added:
+
+- Elasticity: 4 new lessons under Mechanical Properties of Solids.
+- Thermal Expansion: 4 new lessons under Thermal Properties of Matter.
+- Calorimetry: 4 new lessons under Thermal Properties of Matter.
+- Heat Transfer: 7 new lessons under Thermal Properties of Matter.
+
+Production now contains 28 courses and 270 ordered playlist memberships.
+Anonymous checks confirmed exact course counts, contiguous lesson positions,
+complete metadata, correct Class 11/Dropper attribution, zero blocked embeds,
+zero new overlap pairs, and zero fully contained duplicate-course candidates.
+The production capability contract passed.
+
+Fluid Mechanics was deferred because its source playlist order is inconsistent.
+After the Elasticity import, a syntax error in a local read-only audit wrapper
+stopped the batch before another import started. The exact 25/255 state was
+verified with a corrected audit before the remaining three imports continued.
+No production data needed correction. No migrations, schema changes, or
+application-code changes were made.
+
 ## Operational boundary
 
 Future catalogue batches still require the ingestion preflight, a recent
