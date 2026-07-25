@@ -1,5 +1,10 @@
 import fs from "node:fs";
 import path from "node:path";
+import {
+  PUBLIC_BROWSER_ENV,
+  PRIVATE_SERVER_ENV,
+  resolveReleaseEnvironment,
+} from "./releaseEnv.js";
 
 const root = process.cwd();
 const failures = [];
@@ -44,28 +49,18 @@ function verifyHeaderSet(label, headers) {
     pass(`${label} security headers are complete`);
 }
 
-function parseEnv(source) {
-  const values = {};
-  for (const raw of source.split(/\r?\n/)) {
-    const line = raw.trim();
-    if (!line || line.startsWith("#") || !line.includes("=")) continue;
-    const split = line.indexOf("=");
-    values[line.slice(0, split).trim()] = line.slice(split + 1).trim();
-  }
-  return values;
-}
-
-if (!exists(".env")) fail(".env is missing");
+const hasEnvFile = exists(".env");
+if (!hasEnvFile && process.env.CI !== "true") fail(".env is missing");
+else if (!hasEnvFile) pass("CI uses explicit non-secret browser placeholders");
 if (!exists("dist/index.html")) fail("dist/index.html is missing; run npm run build first");
 if (!exists("vercel.json")) fail("vercel.json is missing");
 if (!exists("netlify.toml")) fail("netlify.toml is missing");
 
-const env = exists(".env") ? parseEnv(read(".env")) : {};
-for (const name of [
-  "VITE_SUPABASE_URL",
-  "VITE_SUPABASE_ANON_KEY",
-  "VITE_YOUTUBE_API_KEY",
-]) {
+const env = resolveReleaseEnvironment(
+  hasEnvFile ? read(".env") : "",
+  process.env,
+);
+for (const name of PUBLIC_BROWSER_ENV) {
   const value = env[name];
   if (!value || value.startsWith("your-")) fail(`${name} is not configured`);
   else pass(`${name} is configured as an intentionally public browser value`);
@@ -78,7 +73,7 @@ const textFiles = exists("dist")
       .join("\n")
   : "";
 
-for (const name of ["YOUTUBE_API_KEY", "SUPABASE_SERVICE_ROLE_KEY"]) {
+for (const name of PRIVATE_SERVER_ENV) {
   const value = env[name];
   if (value && textFiles.includes(value)) fail(`${name} leaked into dist`);
   else pass(`${name} is absent from dist`);

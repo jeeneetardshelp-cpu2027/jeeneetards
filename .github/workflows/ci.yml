@@ -18,6 +18,13 @@ jobs:
     name: Test and build
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    # These values are deliberately fake and public. They let Vite and the
+    # release gate exercise browser configuration without copying the ignored
+    # local .env file or any privileged credential into GitHub.
+    env:
+      VITE_SUPABASE_URL: https://ci-placeholder.supabase.co
+      VITE_SUPABASE_ANON_KEY: ci-public-anon-key
+      VITE_YOUTUBE_API_KEY: ci-public-youtube-key
 
     steps:
       - name: Check out repository
