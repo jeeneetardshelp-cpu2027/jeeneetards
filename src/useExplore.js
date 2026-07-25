@@ -78,19 +78,29 @@ export function useLearningGoals() {
 // A failed query is NOT an empty board list. If either request errors we
 // report the error, because "every board says Coming soon" and "the database
 // is unreachable" look identical to a student otherwise.
-export function useBoards() {
+export function useBoards(enabled = true) {
   const [boards, setBoards] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(enabled);
   const [error, setError] = useState(null);
   const [unavailable, setUnavailable] = useState(false);
 
   useEffect(() => {
     let active = true;
+    if (!enabled) {
+      setBoards([]);
+      setLoading(false);
+      setError(null);
+      setUnavailable(false);
+      return;
+    }
     if (!isSupabaseConfigured) {
       setError("Supabase isn't configured.");
       setLoading(false);
       return;
     }
+    setLoading(true);
+    setError(null);
+    setUnavailable(false);
 
     Promise.all([
       supabase.from("boards").select("id, name, slug").order("display_order"),
@@ -124,7 +134,7 @@ export function useBoards() {
       });
 
     return () => { active = false; };
-  }, []);
+  }, [enabled]);
 
   return { boards, loading, error, unavailable };
 }

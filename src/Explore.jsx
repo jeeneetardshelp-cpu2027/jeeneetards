@@ -72,7 +72,7 @@ export default function Explore() {
   } = useLearningGoals();
   const { classLevels } = useClassLevels();
   const { boards, loading: boardsLoading, error: boardsError,
-          unavailable: boardsUnavailable } = useBoards();
+          unavailable: boardsUnavailable } = useBoards(isSchool);
   const boardNode = boards.find((x) => x.slug === board);
   // Path builder that knows about the extra stage.
   const p = (...rest) => path(goal, ...(isSchool ? [board, ...rest] : rest));
