@@ -111,7 +111,7 @@ the local `.env` file or any privileged credential.
 | `npm run verify:frontend-release` | Check secrets, metadata, headers, SPA routing and legal placeholders |
 | `npm run verify:production-capabilities` | Read-only check that production API capabilities match the frontend flags |
 | `npm run audit:production-catalog` | Read-only anonymous inventory of live catalogue metadata and coverage |
-| `npm run ui:audit` | Run the configured responsive browser audit |
+| `npm run ui:audit` | Run the responsive browser audit and fail on objective layout/accessibility regressions |
 | `npm run pack:review` | Build a review archive outside the repository |
 
 For a normal frontend change, run:

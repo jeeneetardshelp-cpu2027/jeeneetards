@@ -11,6 +11,7 @@ import { chromium } from "playwright";
 import { existsSync, mkdirSync, writeFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { collectUiAuditFailures } from "./uiAuditPolicy.js";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const OUT = resolve(root, "ui-audit");
@@ -300,3 +301,12 @@ console.log(`200% reflow emulation: ${JSON.stringify(reflow200)}`);
 console.log(`focus ring present on first 8 tabs: ${focus.filter((f) => f.ring).length}/8`);
 console.log(`restoration (real SPA back): url=${report.restoration.filtersRestored} scroll=${report.restoration.scrollRestored} (${beforeNav.y} → ${afterBack.y}, scrollable=${beforeNav.scrollable}, clicked="${clicked}" → ${afterClick.url})`);
 console.log(`screenshots + report -> ui-audit/`);
+
+const failures = collectUiAuditFailures(report);
+if (failures.length > 0) {
+  console.error(`\nUI audit failed with ${failures.length} objective regression(s):`);
+  for (const failure of failures) console.error(`  - ${failure}`);
+  process.exitCode = 1;
+} else {
+  console.log("UI audit objective gates passed");
+}
