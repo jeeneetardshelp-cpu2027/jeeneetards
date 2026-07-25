@@ -14,7 +14,7 @@ descriptive info. All videos stay on YouTube.
 - Users are high-school students. Keep everything simple and obvious.
 - Minimal and distraction-free: clean typography, generous whitespace,
   hairline borders (not heavy shadows), and BOTH light and dark mode.
-- Brand accent: Competishun navy `#142A4F`, teal `#13919B`. Use accents sparingly.
+- Brand accent: Competishun navy `#142A4F`, accessible teal `#0F6F78`. Use accents sparingly.
 
 ## Tech stack
 - React + Vite (JavaScript, not TypeScript).

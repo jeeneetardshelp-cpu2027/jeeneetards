@@ -25,8 +25,9 @@ import { EXAMS } from "./filterModel.js";
 import { useTheme } from "./theme.jsx";
 import { useLearningGoals } from "./useExplore.js";
 import { RELEASE_CAPABILITIES } from "./releaseCapabilities.js";
+import { BRAND_NAVY, BRAND_TEAL } from "./brandColors.js";
 
-const BRAND = { navy: "#142A4F", teal: "#13919B" };
+const BRAND = { navy: BRAND_NAVY, teal: BRAND_TEAL };
 
 export function homeTagline(capabilities = RELEASE_CAPABILITIES) {
   return capabilities.comparison

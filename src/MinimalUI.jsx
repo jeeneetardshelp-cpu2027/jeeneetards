@@ -18,10 +18,11 @@ import { useEffect, useMemo, useState } from "react";
 import YouTubePlayer from "./YouTubePlayer.jsx";
 import { useTheme } from "./theme.jsx";
 import { formatDuration } from "./metadata.js";
+import { BRAND_TEAL } from "./brandColors.js";
 export { ThemeProvider, ThemeContext, useTheme } from "./theme.jsx";
 
 // Accent colours stay the same in both themes (used via inline style).
-const ACCENT = { teal: "#13919B" };
+const ACCENT = { teal: BRAND_TEAL };
 
 // =====================================================================
 //  3a.  PLAYER AREA

@@ -5,8 +5,9 @@
 import { useState } from "react";
 import { useTheme } from "./theme.jsx";
 import { CONTENT_TYPES, LANGUAGES, DIFFICULTIES } from "./metadata.js";
+import { BRAND_NAVY, BRAND_TEAL } from "./brandColors.js";
 
-export const ACCENT = { teal: "#13919B", navy: "#142A4F", red: "#dc2626" };
+export const ACCENT = { teal: BRAND_TEAL, navy: BRAND_NAVY, red: "#dc2626" };
 
 export function Labeled({ label, hint, children }) {
   const { t } = useTheme();

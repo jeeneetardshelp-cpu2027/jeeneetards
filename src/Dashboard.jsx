@@ -29,9 +29,10 @@ import PlaylistBrowse from "./PlaylistBrowse.jsx";
 import { FacultyFilter } from "./FacultyFilter.jsx";
 import { useTheme } from "./theme.jsx";
 import { RELEASE_CAPABILITIES } from "./releaseCapabilities.js";
+import { BRAND_NAVY, BRAND_TEAL } from "./brandColors.js";
 
 // Your Competishun brand colours. Change these two lines to re-theme.
-const BRAND = { navy: "#142A4F", teal: "#13919B" };
+const BRAND = { navy: BRAND_NAVY, teal: BRAND_TEAL };
 
 
 // ---------------------------------------------------------------------
@@ -528,16 +529,18 @@ export default function Dashboard() {
             </div>
           )}
 
-          <FacultyFilter
-            params={params}
-            setParams={setParams}
-            scope={{
-              goalId: canonical.goalId,
-              subjectId: canonical.subjectId,
-              chapterId: canonical.chapterId,
-            }}
-            onAvailabilityChange={setFacultyCapability}
-          />
+          {RELEASE_CAPABILITIES.facultyRegistry && (
+            <FacultyFilter
+              params={params}
+              setParams={setParams}
+              scope={{
+                goalId: canonical.goalId,
+                subjectId: canonical.subjectId,
+                chapterId: canonical.chapterId,
+              }}
+              onAvailabilityChange={setFacultyCapability}
+            />
+          )}
 
           {teacherRequested && facultyCapability !== "available" && facultyCapability !== "loading" && (
             <div className={`mt-3 rounded-xl border p-4 text-sm ${dark ? "border-amber-900 bg-amber-950/40 text-amber-100" : "border-amber-200 bg-amber-50 text-amber-900"}`}>

@@ -22,8 +22,9 @@ import { RATING_DIFFICULTY, RATING_BEST_FOR } from "./metadata.js";
 import { ratingDisplay } from "./ratingConfidence.js";
 import StudentAuth from "./StudentAuth.jsx";
 import { RELEASE_FEATURES } from "./releaseCapabilities.js";
+import { BRAND_TEAL } from "./brandColors.js";
 
-const ACCENT = { teal: "#13919B", star: "#f59e0b", red: "#dc2626" };
+const ACCENT = { teal: BRAND_TEAL, star: "#f59e0b", red: "#dc2626" };
 
 // A 1–5 star input.
 function StarInput({ value, onChange, label }) {

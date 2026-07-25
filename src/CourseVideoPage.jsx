@@ -11,8 +11,9 @@ import CourseRating from "./CourseRating.jsx";
 import VideoReport from "./VideoReport.jsx";
 import CourseOverview from "./CourseOverview.jsx";
 import { useCourseMetadata } from "./PageMetadata.jsx";
+import { BRAND_TEAL } from "./brandColors.js";
 
-const TEAL = "#13919B";
+const TEAL = BRAND_TEAL;
 
 function CenteredNotice({ title, detail, onBack, onRetry }) {
   const { t } = useTheme();

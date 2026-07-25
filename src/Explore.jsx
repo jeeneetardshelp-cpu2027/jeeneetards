@@ -37,8 +37,9 @@ import { useScopedSearch } from "./useScopedSearch.js";
 import { canonicalBrowseUrl } from "./canonicalUrl.js";
 import { GlobalHeader, HeaderSearch, Container } from "./AppShell.jsx";
 import { useTheme } from "./theme.jsx";
+import { BRAND_NAVY, BRAND_TEAL } from "./brandColors.js";
 
-const BRAND = { navy: "#142A4F", teal: "#13919B" };
+const BRAND = { navy: BRAND_NAVY, teal: BRAND_TEAL };
 
 const path = (...parts) => "/explore/" + parts.filter(Boolean).join("/");
 

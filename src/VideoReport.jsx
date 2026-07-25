@@ -8,8 +8,9 @@ import { useSession } from "./useSession.js";
 import { useTheme } from "./theme.jsx";
 import { RELEASE_FEATURES } from "./releaseCapabilities.js";
 import StudentAuth from "./StudentAuth.jsx";
+import { BRAND_TEAL } from "./brandColors.js";
 
-const ACCENT = { teal: "#13919B", red: "#dc2626" };
+const ACCENT = { teal: BRAND_TEAL, red: "#dc2626" };
 const MAX_NOTE = 1000;
 
 const REASONS = [

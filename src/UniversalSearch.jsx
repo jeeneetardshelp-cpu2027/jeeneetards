@@ -21,8 +21,9 @@ import { Search, X, Loader2, AlertTriangle, Users } from "lucide-react";
 import { useUniversalSearch, GROUPS, MIN_QUERY } from "./useUniversalSearch.js";
 import { normalizeForHighlight } from "./searchHighlight.js";
 import { useTheme } from "./theme.jsx";
+import { BRAND_NAVY, BRAND_TEAL } from "./brandColors.js";
 
-const BRAND = { navy: "#142A4F", teal: "#13919B" };
+const BRAND = { navy: BRAND_NAVY, teal: BRAND_TEAL };
 
 // ---------------------------------------------------------------- highlight
 /**

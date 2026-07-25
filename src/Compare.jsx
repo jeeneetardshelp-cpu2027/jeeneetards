@@ -319,7 +319,7 @@ function ComparisonTable({ rows }) {
   // Highlight rows where the courses actually DIFFER. No winner is declared —
   // "shorter" is better for one student and worse for another.
   const differing = new Set(
-    attrs.filter((a) => new Set(rows.map((c) => a.get(c) ?? " ")).size > 1).map((a) => a.key)
+    attrs.filter((a) => new Set(rows.map((c) => a.get(c) ?? "\u0000")).size > 1).map((a) => a.key)
   );
 
   const anyBestFor = rows.some((c) => bestFor(c) != null);

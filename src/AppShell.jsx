@@ -24,8 +24,9 @@ import {
   ChevronRight, Search, GraduationCap, Moon, Sun, X,
 } from "lucide-react";
 import { useTheme } from "./theme.jsx";
+import { BRAND_NAVY, BRAND_TEAL } from "./brandColors.js";
 
-const BRAND = { navy: "#142A4F", teal: "#13919B" };
+const BRAND = { navy: BRAND_NAVY, teal: BRAND_TEAL };
 
 // `width` picks the cap. "reading" stays narrow on purpose (guided steps, legal
 // text); "catalogue" is for grids that genuinely benefit from more columns.

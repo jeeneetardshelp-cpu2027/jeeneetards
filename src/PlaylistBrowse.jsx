@@ -23,13 +23,14 @@ import { FILTER_PARAMS } from "./filterSchema.js";
 import { makeReturnState } from "./returnTo.js";
 import { ratingDisplay, RATING_CONFIDENCE_MIN } from "./ratingConfidence.js";
 import { useTheme } from "./theme.jsx";
+import { BRAND_NAVY, BRAND_TEAL } from "./brandColors.js";
 
 // Labels come from the canonical filter vocabulary — a second copy here would
 // drift, and the card would say "Advanced" while the filter said something else.
 const COURSE_TYPE_LABEL = Object.fromEntries(COURSE_TYPES.map((c) => [c.id, c.label]));
 const DIFFICULTY_LABEL = Object.fromEntries(DIFFICULTIES.map((d) => [d.id, d.label]));
 
-const BRAND = { navy: "#142A4F", teal: "#13919B" };
+const BRAND = { navy: BRAND_NAVY, teal: BRAND_TEAL };
 // Two is the minimum that is a comparison at all; beyond four the columns stop
 // being readable on a phone, which is where the comparison matters most.
 // (MIN_COMPARE / MAX_COMPARE now come from filterModel.js — see the import

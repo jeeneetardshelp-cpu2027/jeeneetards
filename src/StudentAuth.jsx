@@ -2,8 +2,9 @@ import { useState } from "react";
 import { supabase } from "./supabaseClient";
 import { useTheme } from "./theme.jsx";
 import { RELEASE_FEATURES } from "./releaseCapabilities.js";
+import { BRAND_TEAL } from "./brandColors.js";
 
-const ACCENT = { teal: "#13919B", red: "#dc2626" };
+const ACCENT = { teal: BRAND_TEAL, red: "#dc2626" };
 
 // Shared by student-owned actions such as ratings and reports. A successful
 // auth change is observed by useSession in the parent, which replaces this

@@ -6,8 +6,9 @@ import {
   CONTENT_TYPE_LABELS, DIFFICULTY_LABELS, LANGUAGE_LABELS, formatDuration,
 } from "./metadata.js";
 import { ratingDisplay } from "./ratingConfidence.js";
+import { BRAND_TEAL } from "./brandColors.js";
 
-const TEAL = "#13919B";
+const TEAL = BRAND_TEAL;
 
 const formatCheckedDate = (value) => {
   if (!value) return null;

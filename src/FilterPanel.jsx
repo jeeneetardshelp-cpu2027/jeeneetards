@@ -16,8 +16,9 @@ import { applyFilterChange } from "./filterChips.js";
 import { STAGES_BY_EXAM, SUBJECT_SLUGS_BY_GOAL } from "./filterModel.js";
 import { classSlugToStage } from "./canonicalUrl.js";
 import { useTheme } from "./theme.jsx";
+import { BRAND_TEAL } from "./brandColors.js";
 
-const BRAND = { teal: "#13919B" };
+const BRAND = { teal: BRAND_TEAL };
 
 // Long lists get a search box; short ones would just gain clutter.
 const SEARCH_THRESHOLD = 8;

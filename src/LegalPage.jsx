@@ -1,7 +1,8 @@
 import { GlobalHeader, Container } from "./AppShell.jsx";
 import { useTheme } from "./theme.jsx";
+import { BRAND_TEAL } from "./brandColors.js";
 
-const BRAND = { teal: "#13919B" };
+const BRAND = { teal: BRAND_TEAL };
 const CONTACT = "rajesh@gmail.com";
 
 function Section({ title, children }) {

@@ -15,6 +15,7 @@ import { MemoryRouter, Routes, Route } from "react-router";
 
 // Record every query the page issues.
 const calls = [];
+const rpcCalls = [];
 function builder(table) {
   const rec = { table, cols: null, eq: {}, range: null };
   calls.push(rec);
@@ -32,7 +33,13 @@ function builder(table) {
 }
 vi.mock("./supabaseClient", () => ({
   isSupabaseConfigured: true,
-  supabase: { from: (t) => builder(t), rpc: () => Promise.resolve({ data: [], error: null }) },
+  supabase: {
+    from: (t) => builder(t),
+    rpc: (name) => {
+      rpcCalls.push(name);
+      return Promise.resolve({ data: [], error: null });
+    },
+  },
 }));
 
 import Dashboard from "./Dashboard.jsx";
@@ -47,7 +54,10 @@ const renderAt = (url) =>
 const playlistQuery = () =>
   calls.filter((c) => c.table === "playlists" && c.range != null).at(-1);
 
-beforeEach(() => { calls.length = 0; });
+beforeEach(() => {
+  calls.length = 0;
+  rpcCalls.length = 0;
+});
 
 describe("Dashboard route → playlist query", () => {
   it("carries ?goal=1 from the URL into the playlist query", async () => {
@@ -72,6 +82,12 @@ describe("Dashboard route → playlist query", () => {
     const q = playlistQuery();
     expect(q.eq["playlist_learning_goals.learning_goal_id"]).toBeUndefined();
     expect(q.cols).not.toContain("playlist_learning_goals");
+  });
+
+  it("does not call the unavailable faculty registry from the public browse page", async () => {
+    renderAt("/browse");
+    await screen.findByText("Playlists");
+    expect(rpcCalls).not.toContain("get_faculty_facets");
   });
 
   it("carries subject and chapter from the URL too", async () => {
