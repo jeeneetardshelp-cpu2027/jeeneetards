@@ -35,6 +35,14 @@ export function validateCourseMetadata(metadata) {
   return metadata;
 }
 
+export function validateCourseAttribution({ teacher, audienceFocus, classLabels }) {
+  if (!teacher?.trim()) throw new Error("teacher is required.");
+  if (!classLabels.includes(audienceFocus)) {
+    throw new Error("audienceFocus must be one of the applicable classes.");
+  }
+  return { teacher: teacher.trim(), audienceFocus };
+}
+
 export function buildImportPayload({
   plan,
   channel,
@@ -52,10 +60,11 @@ export function buildImportPayload({
     class_labels: plan.classLabels,
     youtube_playlist_id: plan.playlist.id,
     title: plan.playlist.title,
-    teacher: null,
+    teacher: plan.teacher,
     content_type: plan.contentType,
     language: plan.language,
     difficulty: plan.difficulty,
+    audience_focus: plan.audienceFocus,
     videos: videos.map((video) => ({
       youtube_video_id: video.videoId,
       title: video.title,
@@ -156,18 +165,26 @@ export function parseImporterArgs(argv) {
     contentType: value("content-type"),
     language: value("language"),
     difficulty: value("difficulty"),
+    teacher: value("teacher"),
+    audienceFocus: value("audience-focus"),
   };
   const nonInteractive = Object.values(mapping).some(Boolean);
   if (nonInteractive) {
     const required = [
       "playlistId", "category", "goal", "subject", "chapter", "classes",
       "contentType", "language", "difficulty",
+      "teacher", "audienceFocus",
     ];
     const missing = required.filter((key) => !mapping[key]);
     if (missing.length) {
       throw new Error(`Non-interactive import is missing: ${missing.join(", ")}.`);
     }
     validateCourseMetadata(mapping);
+    validateCourseAttribution({
+      teacher: mapping.teacher,
+      audienceFocus: mapping.audienceFocus,
+      classLabels: mapping.classes.split(",").map((value) => value.trim()),
+    });
   }
   return {
     environment,

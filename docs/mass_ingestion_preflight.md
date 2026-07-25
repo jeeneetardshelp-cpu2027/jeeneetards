@@ -69,7 +69,9 @@ npm run import -- <CHANNEL_ID> `
   --classes=<CLASSES> `
   --content-type=<TYPE> `
   --language=<LANGUAGE> `
-  --difficulty=<DIFFICULTY>
+  --difficulty=<DIFFICULTY> `
+  --teacher=<TEACHER> `
+  --audience-focus=<ONE_APPLICABLE_CLASS>
 ```
 
 Review `../outputs/ingestion-dry-run.json`. Stop if the playlist already
@@ -144,4 +146,3 @@ Stop the batch without starting another when any of these occurs:
 
 Do not repair a failed batch with blanket metadata scripts. Diagnose the exact
 rows and use guarded management operations.
-

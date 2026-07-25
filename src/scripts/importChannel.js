@@ -32,6 +32,7 @@ import {
   parseImporterArgs,
   playlistFromOwner,
   promptCourseMetadata,
+  validateCourseAttribution,
 } from "./ingestionSafety.js";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
@@ -218,9 +219,16 @@ async function main() {
       : await promptCourseMetadata(ask, (_label, options) => {
         say(`  ${C.yellow}Type one of: ${options.join(", ")}${C.reset}`);
       });
+    const attribution = args.nonInteractive
+      ? validateCourseAttribution({
+        teacher: args.teacher,
+        audienceFocus: args.audienceFocus,
+        classLabels,
+      })
+      : await promptAttribution(ask, classLabels);
     plans.push({
       playlist: p, categoryId, learningGoalId, boardIds, subjectId,
-      chapterName, classLabels, ...metadata,
+      chapterName, classLabels, ...metadata, ...attribution,
     });
   }
   rl.close();
@@ -267,6 +275,8 @@ async function main() {
         content_type: plan.contentType,
         language: plan.language,
         difficulty: plan.difficulty,
+        teacher: plan.teacher,
+        audience_focus: plan.audienceFocus,
       });
     }
     const outputDirectory = resolve(root, "../outputs");
@@ -382,6 +392,18 @@ function parseClasses(input) {
     .split(",")
     .map((s) => valid[s.trim().toLowerCase()])
     .filter(Boolean);
+}
+
+async function promptAttribution(ask, classLabels) {
+  let teacher = "";
+  while (!teacher) teacher = (await ask("  Teacher: ")).trim();
+  let audienceFocus = "";
+  while (!classLabels.includes(audienceFocus)) {
+    audienceFocus = (await ask(
+      `  Primary audience (${classLabels.join(" / ")}): `,
+    )).trim();
+  }
+  return validateCourseAttribution({ teacher, audienceFocus, classLabels });
 }
 
 async function ensureChapter(db, name, subjectId, summary) {

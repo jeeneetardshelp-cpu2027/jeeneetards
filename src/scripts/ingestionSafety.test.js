@@ -10,6 +10,7 @@ import {
   parseImporterArgs,
   playlistFromOwner,
   promptCourseMetadata,
+  validateCourseAttribution,
   validateCourseMetadata,
 } from "./ingestionSafety.js";
 
@@ -58,6 +59,8 @@ describe("channel ingestion metadata", () => {
         contentType: "full-course",
         language: "hinglish",
         difficulty: "advanced",
+        teacher: "ABJ Sir",
+        audienceFocus: "11th",
         playlist: { id: "PL_real", title: "Real course" },
       },
       channel: { title: "Real channel" },
@@ -76,6 +79,8 @@ describe("channel ingestion metadata", () => {
       content_type: "full-course",
       language: "hinglish",
       difficulty: "advanced",
+      teacher: "ABJ Sir",
+      audience_focus: "11th",
     });
   });
 
@@ -134,13 +139,30 @@ describe("channel ingestion metadata", () => {
       "--content-type=full-course",
       "--language=hinglish",
       "--difficulty=advanced",
+      "--teacher=ABJ Sir",
+      "--audience-focus=11th",
     ])).toMatchObject({
       nonInteractive: true,
       playlistId: "PL_real",
       contentType: "full-course",
       language: "hinglish",
       difficulty: "advanced",
+      teacher: "ABJ Sir",
+      audienceFocus: "11th",
     });
+  });
+
+  it("requires teacher attribution and a valid primary audience", () => {
+    expect(() => validateCourseAttribution({
+      teacher: "",
+      audienceFocus: "11th",
+      classLabels: ["11th"],
+    })).toThrow(/teacher/);
+    expect(() => validateCourseAttribution({
+      teacher: "ABJ Sir",
+      audienceFocus: "12th",
+      classLabels: ["11th"],
+    })).toThrow(/applicable classes/);
   });
 
   it("requires an exact bounded playlist count", () => {
