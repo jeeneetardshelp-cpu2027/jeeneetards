@@ -106,7 +106,7 @@ export function usePlaylistBrowse({
     // unconditional would silently drop playlists that have no goal tag or no
     // videos from the unfiltered view.
     const cols =
-      "id, title, teacher, average_rating, ratings_count, language, content_type," +
+      "id, title, display_order, teacher, average_rating, ratings_count, language, content_type," +
       " difficulty, class_levels, institutes_channels(name), subjects(name)," +
       " playlist_videos(count)" +
       (goalId ? ", playlist_learning_goals!inner(learning_goal_id)" : "") +
@@ -131,11 +131,11 @@ export function usePlaylistBrowse({
     let q = supabase
       .from("playlists")
       .select(cols, { count: "exact" })
-      // STABLE ORDER. Without a unique final key, rows that tie on
-      // ratings_count AND title can come back in a different order per
-      // request, so the same playlist can appear on page 1 and page 2 while
-      // another never appears at all. id is unique, so it makes the total
-      // order deterministic.
+      // CURRICULUM ORDER first. New courses default to 1,000,000, so they stay
+      // after deliberately curated rows until an editor places them. Ratings
+      // rank alternative courses at the same curriculum position. The unique
+      // final id makes paging deterministic even when every earlier key ties.
+      .order("display_order")
       .order("ratings_count", { ascending: false })
       .order("title")
       .order("id")

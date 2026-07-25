@@ -38,7 +38,7 @@ const ok = (n, c, d) => { console.log(`${c ? "\x1b[32m✓" : "\x1b[31m✗"} ${n}
 
 // Exactly the column list usePlaylistBrowse builds.
 const cols = (goalId, chapterId) =>
-  "id, title, teacher, average_rating, ratings_count, language, content_type," +
+  "id, title, display_order, teacher, average_rating, ratings_count, language, content_type," +
   " difficulty, class_levels, institutes_channels(name), subjects(name)," +
   " playlist_videos(count)" +
   (goalId ? ", playlist_learning_goals!inner(learning_goal_id)" : "") +
@@ -46,7 +46,8 @@ const cols = (goalId, chapterId) =>
 
 const build = ({ goalId, subjectId, chapterId, search, page = 0 }) => {
   let q = db.from("playlists").select(cols(goalId, chapterId), { count: "exact" })
-    .order("ratings_count", { ascending: false }).order("title")
+    .order("display_order").order("ratings_count", { ascending: false })
+    .order("title").order("id")
     .range(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE - 1);
   if (goalId) q = q.eq("playlist_learning_goals.learning_goal_id", goalId);
   if (subjectId) q = q.eq("subject_id", subjectId);

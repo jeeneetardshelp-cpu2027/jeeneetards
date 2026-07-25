@@ -168,13 +168,14 @@ async function measure(label, run, budget) {
 
 function browsePage({ goalId, classSlug, subjectId, chapterId, search, page = 0 }) {
   const cols =
-    "id,title,teacher,average_rating,ratings_count,language,content_type,difficulty," +
+    "id,title,display_order,teacher,average_rating,ratings_count,language,content_type,difficulty," +
     "class_levels,institutes_channels(name),subjects(name),playlist_videos(count)" +
     (goalId ? ",playlist_learning_goals!inner(learning_goal_id)" : "") +
     (classSlug ? ",pcl:playlist_class_levels!inner(class_levels!inner(slug))" : "") +
     (chapterId ? ",pv:playlist_videos!inner(videos!inner(chapter_id))" : "");
   let query = anon.from("playlists").select(cols, { count: "exact" })
-    .order("ratings_count", { ascending: false }).order("title").order("id")
+    .order("display_order").order("ratings_count", { ascending: false })
+    .order("title").order("id")
     .range(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE - 1);
   if (goalId) query = query.eq("playlist_learning_goals.learning_goal_id", goalId);
   if (classSlug) query = query.eq("pcl.class_levels.slug", classSlug);

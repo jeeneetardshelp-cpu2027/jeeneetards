@@ -55,7 +55,9 @@ create table public.playlists (
     category_id    bigint references public.categories(id) on delete set null,
     subject_id     bigint references public.subjects(id)   on delete set null,
     thumbnail_url  text,
-    display_order  int  not null default 0,
+    -- Curated courses use small ascending values. New, uncurated courses stay
+    -- at the end until an editor deliberately places them.
+    display_order  int  not null default 1000000,
     average_rating numeric(3,2) not null default 0,   -- maintained by trigger
     ratings_count  int          not null default 0,   -- maintained by trigger
     created_at     timestamptz  not null default now()

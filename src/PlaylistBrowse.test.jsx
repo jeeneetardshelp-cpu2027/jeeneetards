@@ -13,10 +13,13 @@ import { MemoryRouter, Routes, Route, useLocation } from "react-router";
 // ---- a fake PostgREST builder that records what was asked for ----
 const calls = [];
 function makeBuilder(rows, count) {
-  const rec = { table: null, cols: null, eq: {}, range: null, ilike: null };
+  const rec = { table: null, cols: null, eq: {}, range: null, ilike: null, orders: [] };
   const b = {
     select(cols, opts) { rec.cols = cols; rec.opts = opts; return b; },
-    order() { return b; },
+    order(column, options) {
+      rec.orders.push(options?.ascending === false ? `${column} desc` : column);
+      return b;
+    },
     range(a, z) { rec.range = [a, z]; return b; },
     eq(k, v) { rec.eq[k] = v; return b; },
     ilike(k, v) { rec.ilike = [k, v]; return b; },
@@ -96,6 +99,17 @@ describe("chapter filtering happens in the database", () => {
 });
 
 describe("pagination", () => {
+  it("uses curated curriculum order before ratings and stable tie-breakers", async () => {
+    const q = await run({});
+    expect(q.cols).toContain("display_order");
+    expect(q.orders).toEqual([
+      "display_order",
+      "ratings_count desc",
+      "title",
+      "id",
+    ]);
+  });
+
   it("requests only one page, not the whole catalogue", async () => {
     const q = await run({});
     expect(q.range).toEqual([0, PAGE_SIZE - 1]);

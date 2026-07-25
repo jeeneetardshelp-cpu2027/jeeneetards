@@ -238,7 +238,12 @@ describe("filters run before range and count", () => {
 
   it("ordering has a unique tie-breaker so paging cannot shuffle", async () => {
     const { q } = await run({});
-    expect(q.order[q.order.length - 1]).toBe("id");
+    expect(q.order).toEqual([
+      "display_order",
+      "ratings_count desc",
+      "title",
+      "id",
+    ]);
   });
 });
 
