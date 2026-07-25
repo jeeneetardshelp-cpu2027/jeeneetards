@@ -34,6 +34,22 @@ export async function getChannel(key, channelId) {
   };
 }
 
+export async function getPlaylistOwner(key, playlistId) {
+  const json = await call(key, "playlists", {
+    part: "snippet,contentDetails",
+    id: playlistId,
+  });
+  const item = json.items?.[0];
+  if (!item) throw new Error(`No playlist found for id ${playlistId}.`);
+  return {
+    channelId: item.snippet.channelId,
+    channelTitle: item.snippet.channelTitle,
+    playlistId: item.id,
+    playlistTitle: item.snippet.title,
+    videoCount: item.contentDetails?.itemCount ?? 0,
+  };
+}
+
 // Every playlist owned by the channel (walks all pages).
 export async function getAllPlaylists(key, channelId) {
   const playlists = [];

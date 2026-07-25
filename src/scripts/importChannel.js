@@ -24,11 +24,16 @@ import { dirname, resolve } from "node:path";
 import {
   getChannel, getAllPlaylists, getPlaylistVideos,
 } from "./youtubeNode.js";
+import {
+  buildImportPayload,
+  parseImporterArgs,
+  promptCourseMetadata,
+} from "./ingestionSafety.js";
 
 // --- tiny .env reader (no dependency; Vite isn't running here) --------
-function loadEnv() {
+function loadEnv(environment) {
   const here = dirname(fileURLToPath(import.meta.url));
-  const envPath = resolve(here, "../../.env");
+  const envPath = resolve(here, environment === "staging" ? "../../.env.staging" : "../../.env");
   const env = {};
   try {
     for (const line of readFileSync(envPath, "utf8").split("\n")) {
@@ -53,13 +58,18 @@ const fail = (msg) => {
 
 // ---------------------------------------------------------------------
 async function main() {
-  const env = loadEnv();
-  const url = env.VITE_SUPABASE_URL;
-  const serviceKey = env.SUPABASE_SERVICE_ROLE_KEY;
+  const args = parseImporterArgs(process.argv.slice(2));
+  if (args.environment === "production" && !args.confirmProduction) {
+    fail("Production import requires --confirm-production. Use --env=staging for staging.");
+  }
+  const env = loadEnv(args.environment);
+  const productionEnv = args.environment === "staging" ? loadEnv("production") : env;
+  const url = env.TEST_SUPABASE_URL ?? env.VITE_SUPABASE_URL;
+  const serviceKey = env.TEST_SERVICE_KEY ?? env.SUPABASE_SERVICE_ROLE_KEY;
   // Node-side key, NOT the VITE_ one. Anything prefixed VITE_ is inlined into
   // the public browser bundle, so it must be referrer-restricted and is not the
   // right credential for a server-side script that can burn quota in bulk.
-  const ytKey = env.YOUTUBE_API_KEY;
+  const ytKey = env.YOUTUBE_API_KEY ?? productionEnv.YOUTUBE_API_KEY;
 
   if (!url) fail("VITE_SUPABASE_URL missing from .env");
   if (!ytKey)
@@ -74,12 +84,21 @@ async function main() {
   const db = createClient(url, serviceKey, {
     auth: { persistSession: false, autoRefreshToken: false },
   });
+  if (args.environment === "staging") {
+    const { data: marker, error: markerError } = await db
+      .from("app_environment")
+      .select("name")
+      .maybeSingle();
+    if (markerError || !["staging", "test"].includes(marker?.name)) {
+      fail("The selected database does not carry a staging/test environment marker.");
+    }
+  }
 
   const rl = readline.createInterface({ input: stdin, output: stdout });
   const ask = (q) => rl.question(q);
 
   // --- channel id: from argv, or ask --------------------------------
-  let channelId = process.argv[2];
+  let channelId = args.channelId;
   if (!channelId) {
     channelId = (await ask("YouTube channel ID (UC...): ")).trim();
   }
@@ -119,28 +138,37 @@ async function main() {
   say(`${C.dim}Goals:      ${goals.map((g) => g.name).join(", ")}${C.reset}`);
   say(`${C.dim}Subjects:   ${subjects.map((s) => s.name).join(", ")}${C.reset}`);
 
-  const which = (
-    await ask(
-      `\nImport which playlists? ${C.dim}(all / 1,3,5 / 1-4)${C.reset} `
-    )
-  ).trim();
-  const chosen = pickPlaylists(playlists, which);
+  const chosen = args.nonInteractive
+    ? playlists.filter((playlist) => playlist.id === args.playlistId)
+    : pickPlaylists(playlists, (
+      await ask(
+        `\nImport which playlists? ${C.dim}(all / 1,3,5 / 1-4)${C.reset} `
+      )
+    ).trim());
   if (chosen.length === 0) fail("Nothing selected.");
 
   // --- 3. map each chosen playlist ----------------------------------
   const plans = [];
   for (const p of chosen) {
     say(`\n${C.bold}${p.title}${C.reset} ${C.dim}(${p.videoCount} videos)${C.reset}`);
-    const skip = (await ask(`  Skip this one? (y/N) `)).trim().toLowerCase();
+    const skip = args.nonInteractive
+      ? "n"
+      : (await ask(`  Skip this one? (y/N) `)).trim().toLowerCase();
     if (skip === "y") continue;
 
-    const categoryId = await pickOne(ask, "  Category", catByName);
+    const categoryId = args.nonInteractive
+      ? namedId(catByName, "category", args.category)
+      : await pickOne(ask, "  Category", catByName);
     // Asked for explicitly: the goal is no longer inferred from the category.
-    const learningGoalId = await pickOne(ask, "  Learning goal", goalByName);
+    const learningGoalId = args.nonInteractive
+      ? namedId(goalByName, "learning goal", args.goal)
+      : await pickOne(ask, "  Learning goal", goalByName);
     const goalSlug = goals.find((g) => g.id === learningGoalId)?.slug;
     let boardIds = [];
     if (goalSlug === "school") {
-      const answer = (await ask(`  Board(s) ${C.dim}(e.g. CBSE)${C.reset}: `)).trim();
+      const answer = args.nonInteractive
+        ? (args.board ?? "")
+        : (await ask(`  Board(s) ${C.dim}(e.g. CBSE)${C.reset}: `)).trim();
       boardIds = answer
         .split(",")
         .map((s) => boardByName.get(s.trim().toLowerCase())?.id)
@@ -150,17 +178,35 @@ async function main() {
         continue;
       }
     }
-    const subjectId = await pickOne(ask, "  Subject", subjByName);
-    const chapterName = (await ask(`  Chapter name: `)).trim();
+    const subjectId = args.nonInteractive
+      ? namedId(subjByName, "subject", args.subject)
+      : await pickOne(ask, "  Subject", subjByName);
+    const chapterName = args.nonInteractive
+      ? args.chapter
+      : (await ask(`  Chapter name: `)).trim();
     const classLabels = parseClasses(
-      await ask(`  Applicable classes ${C.dim}(e.g. 11th, Dropper)${C.reset}: `)
+      args.nonInteractive
+        ? args.classes
+        : await ask(`  Applicable classes ${C.dim}(e.g. 11th, Dropper)${C.reset}: `)
     );
     if (classLabels.length === 0) {
       say(`  ${C.yellow}skipped — no classes given${C.reset}`);
       continue;
     }
 
-    plans.push({ playlist: p, categoryId, learningGoalId, boardIds, subjectId, chapterName, classLabels });
+    const metadata = args.nonInteractive
+      ? {
+        contentType: args.contentType,
+        language: args.language,
+        difficulty: args.difficulty,
+      }
+      : await promptCourseMetadata(ask, (_label, options) => {
+        say(`  ${C.yellow}Type one of: ${options.join(", ")}${C.reset}`);
+      });
+    plans.push({
+      playlist: p, categoryId, learningGoalId, boardIds, subjectId,
+      chapterName, classLabels, ...metadata,
+    });
   }
   rl.close();
 
@@ -183,26 +229,9 @@ async function main() {
 
     // The whole playlist import is ONE transaction inside Postgres.
     const { data, error } = await db.rpc("import_playlist", {
-      payload: {
-        channel: { name: channel.title, youtube_channel_id: channelId },
-        category_id: plan.categoryId,
-        // Explicit — the RPC no longer derives the goal from the category name.
-        learning_goal_id: plan.learningGoalId,
-        board_ids: plan.boardIds ?? [],
-        subject_id: plan.subjectId,
-        chapter_id: chapterId,
-        class_labels: plan.classLabels,
-        youtube_playlist_id: plan.playlist.id,
-        title: plan.playlist.title,
-        teacher: null,
-        videos: ytVideos.map((v) => ({
-          youtube_video_id: v.videoId,
-          title: v.title,
-          duration_seconds: v.durationSeconds ?? null,
-          caption_status: v.captionStatus ?? null,
-          embedding_status: v.embeddingStatus ?? null,
-        })),
-      },
+      payload: buildImportPayload({
+        plan, channel, channelId, chapterId, videos: ytVideos,
+      }),
     });
     if (error) fail(`import "${plan.playlist.title}": ${error.message}`);
 
@@ -216,7 +245,7 @@ async function main() {
   }
 
   // --- done ---------------------------------------------------------
-  say(`\n${C.green}${C.bold}✓ Import complete${C.reset}`);
+  say(`\n${C.green}${C.bold}✓ Import finished${C.reset}`);
   say(`  ${summary.added} videos added, ${summary.reused} reused`);
   say(`  ${summary.chapters} chapters created`);
   say(
@@ -260,6 +289,12 @@ async function pickOne(ask, label, byName) {
       `    ${C.yellow}Type one of: ${[...byName.values()].map((v) => v.name).join(", ")}${C.reset}`
     );
   }
+}
+
+function namedId(byName, label, value) {
+  const hit = byName.get(value.trim().toLowerCase());
+  if (!hit) fail(`Unknown ${label} "${value}".`);
+  return hit.id;
 }
 
 // "11th, Dropper" -> ["11th","Dropper"]; validates against known labels.

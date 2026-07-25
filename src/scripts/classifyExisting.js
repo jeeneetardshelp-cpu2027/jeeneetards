@@ -6,15 +6,27 @@
 //  and writes the matching playlist_class_levels junction row. Correct
 //  classification, not invented data; adjust per-course later in admin.
 //
-//  Run locally: node src/scripts/classifyExisting.js
+//  Run only after reviewing the selected row count:
+//  node src/scripts/classifyExisting.js --confirm --expected-count=<reviewed-count>
 // =====================================================================
 
 import { createClient } from "@supabase/supabase-js";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
+import {
+  assertExpectedRowCount,
+  parseBulkConfirmation,
+} from "./ingestionSafety.js";
 
 const here = dirname(fileURLToPath(import.meta.url));
+let expectedCount;
+try {
+  expectedCount = parseBulkConfirmation(process.argv.slice(2));
+} catch (error) {
+  console.error("Bulk classification stopped: " + error.message);
+  process.exit(1);
+}
 const env = {};
 for (const line of readFileSync(resolve(here, "../../.env"), "utf8").split("\n")) {
   const m = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*)\s*$/i);
@@ -35,6 +47,11 @@ const class11 = cl.id;
 
 const { data: pls, error: plErr } = await db.from("playlists").select("id, class_levels");
 if (plErr) fail("playlists: " + plErr.message);
+try {
+  assertExpectedRowCount(expectedCount, pls.length);
+} catch (error) {
+  fail(error.message);
+}
 
 let updated = 0;
 for (const p of pls) {
