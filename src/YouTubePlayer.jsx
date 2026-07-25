@@ -125,13 +125,13 @@ export default function YouTubePlayer({ videoId = "", title = "", onPlay = null 
       if (playerRef.current && playerRef.current.destroy) {
         try {
           playerRef.current.destroy();
-        } catch (_) {
-          /* ignore */
+        } catch {
+          // The player may already have been removed by the iframe API.
         }
         playerRef.current = null;
       }
     };
-  }, [videoId]);
+  }, [videoId, title]);
 
   return (
     <div className="relative aspect-video w-full overflow-hidden bg-black">

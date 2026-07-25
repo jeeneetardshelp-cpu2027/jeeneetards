@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
-import { MemoryRouter, Route, Routes, useLocation } from "react-router-dom";
+import { MemoryRouter, Route, Routes, useLocation } from "react-router";
 import { ThemeProvider } from "./theme.jsx";
 import FeatureUnavailable from "./FeatureUnavailable.jsx";
 import VideoReport from "./VideoReport.jsx";

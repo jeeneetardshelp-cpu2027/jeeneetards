@@ -26,7 +26,7 @@ import {
 } from "./youtube.js";
 
 export default function ImportPlaylistForm({
-  channels, categories, subjects, chapters, classLevelRows,
+  channels, categories, subjects, chapters,
   learningGoals = [], boards = [], reload,
 }) {
   const { t } = useTheme();

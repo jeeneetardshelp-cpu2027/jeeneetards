@@ -26,7 +26,7 @@
 // =====================================================================
 
 import { useState } from "react";
-import { useNavigate, useParams, Navigate } from "react-router-dom";
+import { useNavigate, useParams, Navigate } from "react-router";
 import { BookOpen, PlayCircle } from "lucide-react";
 import {
   useLearningGoals, useClassLevels, useGoalCatalog, useBoards,

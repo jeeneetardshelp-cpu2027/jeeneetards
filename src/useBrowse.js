@@ -36,10 +36,16 @@ export function useVideos({
     videos: [], total: null, loading: true, error: null, hasMore: false,
   });
   const generation = useRef(0);
+  const languageKey = JSON.stringify(language ?? []);
+  const contentTypeKey = JSON.stringify(contentType ?? []);
+  const difficultyKey = JSON.stringify(difficulty ?? []);
 
   const load = useCallback(async () => {
     const gen = ++generation.current;
     const current = () => gen === generation.current;
+    const languageValues = JSON.parse(languageKey);
+    const contentTypeValues = JSON.parse(contentTypeKey);
+    const difficultyValues = JSON.parse(difficultyKey);
     if (!enabled) {
       setState({ videos: [], total: null, loading: true, error: null, hasMore: false });
       return;
@@ -57,7 +63,7 @@ export function useVideos({
     // are classified. Filtering the direct video junction made Playlists show
     // 5 valid courses while Lectures incorrectly showed zero.
     const needsPlaylistContext = Boolean(
-      classSlugs || language?.length || contentType?.length || difficulty?.length || teacherId,
+      classSlugs || languageValues.length || contentTypeValues.length || difficultyValues.length || teacherId,
     );
     const cols =
       "id, youtube_video_id, title, institutes_channels(name), subjects(name), chapters(name)" +
@@ -80,9 +86,9 @@ export function useVideos({
     if (chapterId) q = q.eq("chapter_id", chapterId);
     if (channelId) q = q.eq("channel_id", channelId);
     if (teacherId) q = q.eq("membership.playlists.pt.teacher_id", teacherId);
-    if (language?.length) q = q.in("membership.playlists.language", language);
-    if (contentType?.length) q = q.in("membership.playlists.content_type", contentType);
-    if (difficulty?.length) q = q.in("membership.playlists.difficulty", difficulty);
+    if (languageValues.length) q = q.in("membership.playlists.language", languageValues);
+    if (contentTypeValues.length) q = q.in("membership.playlists.content_type", contentTypeValues);
+    if (difficultyValues.length) q = q.in("membership.playlists.difficulty", difficultyValues);
     const term = (search ?? "").trim();
     if (term) q = q.ilike("title", `%${term}%`);
 
@@ -120,7 +126,7 @@ export function useVideos({
       setState({ videos: [], total: null, loading: false, error: "Couldn't reach the database.", hasMore: false });
     }
   }, [enabled, goalId, subjectId, chapterId, stage, channelId, teacherId,
-      language?.join(","), contentType?.join(","), difficulty?.join(","), search, page]);
+      languageKey, contentTypeKey, difficultyKey, search, page]);
 
   useEffect(() => { load(); }, [load]);
   return { ...state, reload: load };

@@ -104,6 +104,7 @@ the local `.env` file or any privileged credential.
 | Command | Purpose |
 | --- | --- |
 | `npm run dev` | Start the local development server |
+| `npm run lint` | Check JavaScript, React hooks and accessibility rules |
 | `npm test` | Run the complete automated test suite once |
 | `npm run build` | Create the production bundle in `dist/` |
 | `npm run preview` | Preview the built bundle locally |
@@ -115,13 +116,14 @@ the local `.env` file or any privileged credential.
 For a normal frontend change, run:
 
 ```powershell
+npm run lint
 npm test
 npm run build
 npm run verify:frontend-release
 ```
 
-GitHub Actions repeats `npm ci`, tests, build and the frontend release verifier
-for every push to `main` and every pull request.
+GitHub Actions repeats `npm ci`, static checks, tests, build and the frontend
+release verifier for every push to `main` and every pull request.
 
 ## Project map
 

@@ -13,7 +13,7 @@
 // =====================================================================
 
 import { useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router";
 import {
   Search, GraduationCap, BookOpen, PlayCircle, Users, ArrowRight, X, History,
 } from "lucide-react";

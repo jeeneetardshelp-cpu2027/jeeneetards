@@ -19,7 +19,7 @@
 //   npm run verify:classsync
 //   npm run verify:classsync -- --selftest   (proves the harness fails loudly)
 
-import { client, must, rows, count, all, ProbeError } from "./dbProbe.js";
+import { client, rows, count, all, ProbeError } from "./dbProbe.js";
 
 const LABEL_TO_SLUG = {
   "10th": "class-10", "11th": "class-11", "12th": "class-12", Dropper: "dropper",

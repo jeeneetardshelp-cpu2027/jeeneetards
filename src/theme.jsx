@@ -42,7 +42,9 @@ export function ThemeProvider({ children }) {
 
   useLayoutEffect(() => {
     const mode = dark ? "dark" : "light";
-    try { window.localStorage.setItem(THEME_STORAGE_KEY, mode); } catch {}
+    try { window.localStorage.setItem(THEME_STORAGE_KEY, mode); } catch {
+      // The active theme still applies when persistence is blocked.
+    }
     document.documentElement.dataset.theme = mode;
     document.documentElement.style.colorScheme = mode;
   }, [dark]);

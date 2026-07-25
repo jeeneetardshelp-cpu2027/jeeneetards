@@ -10,7 +10,7 @@
 // absent, not disabled — see filterSchema.js for why.
 
 import { useState, useMemo } from "react";
-import { ChevronDown, Search, X } from "lucide-react";
+import { ChevronDown, Search } from "lucide-react";
 import { AVAILABLE } from "./filterSchema.js";
 import { applyFilterChange } from "./filterChips.js";
 import { STAGES_BY_EXAM, SUBJECT_SLUGS_BY_GOAL } from "./filterModel.js";

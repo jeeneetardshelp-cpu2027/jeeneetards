@@ -13,7 +13,7 @@
 // =====================================================================
 
 import { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router";
 import { useCanonicalFilters } from "./useCanonicalFilters.js";
 import { buildChips, removeChip, clearAllChips } from "./filterChips.js";
 import FilterPanel from "./FilterPanel.jsx";
@@ -127,18 +127,25 @@ function VideoModal({ video, onClose }) {
     // Dark backdrop — clicking it closes the modal.
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      style={{ backgroundColor: "rgba(15,23,42,0.75)" }}
-      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="video-modal-title"
     >
-      {/* stopPropagation = clicking INSIDE the box does NOT close it */}
+      <button
+        type="button"
+        aria-label="Dismiss video dialog"
+        tabIndex={-1}
+        className="absolute inset-0 cursor-default"
+        style={{ backgroundColor: "rgba(15,23,42,0.75)" }}
+        onClick={onClose}
+      />
       <div
-        className={`w-full max-w-3xl overflow-hidden rounded-2xl ${t.card} ${t.text} shadow-2xl`}
-        onClick={(e) => e.stopPropagation()}
+        className={`relative w-full max-w-3xl overflow-hidden rounded-2xl ${t.card} ${t.text} shadow-2xl`}
       >
         {/* Header */}
         <div className={`flex items-start justify-between gap-4 border-b ${t.border} p-4`}>
           <div>
-            <h2 className={`font-semibold leading-snug ${t.text}`}>{video.title}</h2>
+            <h2 id="video-modal-title" className={`font-semibold leading-snug ${t.text}`}>{video.title}</h2>
             <p className={`mt-0.5 text-xs ${t.muted}`}>
               {video.institute} · {video.subject} · {video.chapter}
             </p>

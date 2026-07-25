@@ -7,8 +7,8 @@
 // just on what happens to be painted.
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
+import { render, waitFor } from "@testing-library/react";
+import { MemoryRouter } from "react-router";
 
 // ---- a builder that records the query AND applies the class predicate to a
 // fixture, so "different classes -> different non-empty results" is real.

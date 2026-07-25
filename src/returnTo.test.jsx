@@ -5,9 +5,9 @@
 // student reading another site who opens a shared course link has
 // history.length > 1, so our own Back button navigated them off the app.
 
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { MemoryRouter, Routes, Route, useLocation, useNavigate } from "react-router-dom";
+import { MemoryRouter, Routes, Route, useLocation, useNavigate } from "react-router";
 import {
   makeReturnState, isTrustedReturnUrl, readReturnUrl, resolveBack,
   rememberReturn, recallReturn, RETURN_MARKER,

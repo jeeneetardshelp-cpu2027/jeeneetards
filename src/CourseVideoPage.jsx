@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import {
   useLocation, useNavigate, useParams, useSearchParams,
-} from "react-router-dom";
+} from "react-router";
 import { VideoView } from "./MinimalUI.jsx";
 import { useTheme } from "./theme.jsx";
 import { usePlaylistVideos } from "./usePlaylistVideos.js";

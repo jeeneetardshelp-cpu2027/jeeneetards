@@ -1,6 +1,6 @@
 import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter } from "react-router";
 import LegalPage from "./LegalPage.jsx";
 import PrivacyPolicy from "./PrivacyPolicy.jsx";
 import { ThemeProvider } from "./theme.jsx";

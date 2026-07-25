@@ -6,7 +6,7 @@
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { MemoryRouter, Routes, Route, useLocation } from "react-router-dom";
+import { MemoryRouter, Routes, Route, useLocation } from "react-router";
 
 let EXISTING = [];             // rows in `playlists`
 let CHAPTER_OF = {};           // playlist id -> [chapter ids it teaches]

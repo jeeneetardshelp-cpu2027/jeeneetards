@@ -13,7 +13,7 @@
 //  a student can't stack multiple ratings on one course.
 // =====================================================================
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Star } from "lucide-react";
 import { supabase } from "./supabaseClient";
 import { useSession } from "./useSession.js";
@@ -101,23 +101,23 @@ function CourseRatingInteractive({ playlistId, initialAverage = 0, initialCount 
   const publicRating = ratingDisplay(avg.average, avg.count);
 
   // Refresh the course average (kept fresh by the DB trigger).
-  const refreshAverage = async () => {
+  const refreshAverage = useCallback(async () => {
     const { data } = await supabase
       .from("playlists")
       .select("average_rating, ratings_count")
       .eq("id", playlistId)
       .maybeSingle();
     if (data) setAvg({ average: Number(data.average_rating), count: data.ratings_count });
-  };
+  }, [playlistId]);
 
   useEffect(() => {
     refreshAverage();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [playlistId]);
+  }, [refreshAverage]);
 
   // Load this student's existing rating so they can edit it.
+  const userId = user?.id;
   useEffect(() => {
-    if (!user) {
+    if (!userId) {
       setExisting(null);
       return;
     }
@@ -126,7 +126,7 @@ function CourseRatingInteractive({ playlistId, initialAverage = 0, initialCount 
       .from("playlist_ratings")
       .select("*")
       .eq("playlist_id", playlistId)
-      .eq("user_id", user.id)
+      .eq("user_id", userId)
       .maybeSingle()
       .then(({ data }) => {
         if (!active || !data) return;
@@ -141,7 +141,7 @@ function CourseRatingInteractive({ playlistId, initialAverage = 0, initialCount 
     return () => {
       active = false;
     };
-  }, [user?.id, playlistId]);
+  }, [userId, playlistId]);
 
   const submit = async (e) => {
     e.preventDefault();

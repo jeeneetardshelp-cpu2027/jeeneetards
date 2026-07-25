@@ -19,7 +19,7 @@
 //   wide       up to 1760px
 // so a 2560px monitor shows a usable page instead of a strip.
 
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router";
 import {
   ChevronRight, Search, GraduationCap, Moon, Sun, X,
 } from "lucide-react";

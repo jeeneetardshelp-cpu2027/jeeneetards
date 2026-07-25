@@ -20,7 +20,7 @@ descriptive info. All videos stay on YouTube.
 - React + Vite (JavaScript, not TypeScript).
 - Tailwind CSS v4 — via the `@tailwindcss/vite` plugin + `@import "tailwindcss";`
   in the CSS. Do NOT use the old `npx tailwindcss init` / PostCSS flow.
-- Routing: react-router-dom.
+- Routing: React Router 8 via `react-router` (the `react-router-dom` compatibility package was removed in v8).
 - Icons: lucide-react.
 - Backend: Supabase (Postgres + Auth + Row Level Security) via @supabase/supabase-js.
 - Deploy target (later): Vercel or Netlify.

@@ -6,8 +6,8 @@
 // says "Kinematics" while the list shows the whole library.
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, fireEvent, waitFor, act } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
+import { render, waitFor, act } from "@testing-library/react";
+import { MemoryRouter } from "react-router";
 import {
   parseEnumParam, parseChannelParam, parsePositiveIdParam,
   parseFilterParams, normalizeFilterParams,

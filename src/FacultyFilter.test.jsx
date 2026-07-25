@@ -9,7 +9,7 @@
 // Run: npm test
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
-import { MemoryRouter, Routes, Route, useSearchParams } from "react-router-dom";
+import { MemoryRouter, Routes, Route, useSearchParams } from "react-router";
 
 vi.mock("./useFaculty.js", () => ({
   useFacultyFacets: vi.fn(),

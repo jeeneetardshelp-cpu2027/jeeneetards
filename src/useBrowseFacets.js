@@ -39,9 +39,15 @@ export function useBrowseFacets({
 } = {}) {
   const [state, setState] = useState({ ...EMPTY, loading: enabled });
   const [nonce, setNonce] = useState(0);
+  const languageKey = JSON.stringify(language ?? []);
+  const contentTypeKey = JSON.stringify(contentType ?? []);
+  const difficultyKey = JSON.stringify(difficulty ?? []);
 
   useEffect(() => {
     let active = true;
+    const languageValues = JSON.parse(languageKey);
+    const contentTypeValues = JSON.parse(contentTypeKey);
+    const difficultyValues = JSON.parse(difficultyKey);
     if (!enabled) {
       setState(EMPTY);
       return;
@@ -64,9 +70,9 @@ export function useBrowseFacets({
       p_subject: subject || null,
       p_chapter: chapter || null,
       p_channel: channelId ? Number(channelId) : null,
-      p_language: language?.length ? language : null,
-      p_type: contentType?.length ? contentType : null,
-      p_difficulty: difficulty?.length ? difficulty : null,
+      p_language: languageValues.length ? languageValues : null,
+      p_type: contentTypeValues.length ? contentTypeValues : null,
+      p_difficulty: difficultyValues.length ? difficultyValues : null,
       p_search: search.trim() || null,
     }).then(({ data, error }) => {
       if (!active) return;
@@ -96,7 +102,7 @@ export function useBrowseFacets({
     return () => { active = false; };
   }, [
     goal, stage, subject, chapter, channelId,
-    JSON.stringify(language), JSON.stringify(contentType), JSON.stringify(difficulty),
+    languageKey, contentTypeKey, difficultyKey,
     search, enabled, nonce,
   ]);
 

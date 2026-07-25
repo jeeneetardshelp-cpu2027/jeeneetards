@@ -12,7 +12,7 @@
 //      NOT presented as a resolved faculty identity.
 
 import { useEffect, useRef, useState } from "react";
-import { useSearchParams, useNavigate, useLocation } from "react-router-dom";
+import { useSearchParams, useNavigate, useLocation } from "react-router";
 import {
   Star, Clock, Layers, Building2, SlidersHorizontal, X, AlertTriangle,
 } from "lucide-react";
@@ -180,6 +180,7 @@ export default function PlaylistBrowse({
   useEffect(() => {
     if (!sheetOpen) return;
     const bodyOverflow = document.body.style.overflow;
+    const returnFocusTarget = filterButtonRef.current;
     document.body.style.overflow = "hidden";
     closeButtonRef.current?.focus();
 
@@ -208,7 +209,7 @@ export default function PlaylistBrowse({
     return () => {
       document.removeEventListener("keydown", onKeyDown);
       document.body.style.overflow = bodyOverflow;
-      filterButtonRef.current?.focus();
+      returnFocusTarget?.focus();
     };
   }, [sheetOpen]);
 
@@ -462,7 +463,13 @@ export default function PlaylistBrowse({
       {/* ---- mobile filter bottom sheet ---- */}
       {sheetOpen && (
         <div className="fixed inset-0 z-50 lg:hidden" role="dialog" aria-modal="true" aria-labelledby="mobile-filter-title">
-          <div className="absolute inset-0 bg-slate-900/60" onClick={() => setSheetOpen(false)} />
+          <button
+            type="button"
+            aria-label="Dismiss filter dialog"
+            tabIndex={-1}
+            className="absolute inset-0 bg-slate-900/60"
+            onClick={() => setSheetOpen(false)}
+          />
           <div ref={sheetRef} className={`absolute inset-x-0 bottom-0 max-h-[80vh] overflow-y-auto rounded-t-2xl ${t.card} ${t.text} p-4`}>
             <div className="mb-3 flex items-center justify-between">
               <h2 id="mobile-filter-title" className={`text-sm font-semibold ${t.text}`}>Filters</h2>

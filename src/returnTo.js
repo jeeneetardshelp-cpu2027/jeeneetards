@@ -71,12 +71,16 @@ const storageKey = (coursePath) => `returnTo:${coursePath}`;
 
 export function rememberReturn(coursePath, url) {
   if (!isTrustedReturnUrl(url)) return;
-  try { sessionStorage.setItem(storageKey(coursePath), url); } catch {}
+  try { sessionStorage.setItem(storageKey(coursePath), url); } catch {
+    // Return navigation still works through router state when storage is unavailable.
+  }
 }
 
 export function recallReturn(coursePath) {
   let url = null;
-  try { url = sessionStorage.getItem(storageKey(coursePath)); } catch {}
+  try { url = sessionStorage.getItem(storageKey(coursePath)); } catch {
+    // Treat unavailable storage as if no return URL had been remembered.
+  }
   return isTrustedReturnUrl(url) ? url : null;
 }
 

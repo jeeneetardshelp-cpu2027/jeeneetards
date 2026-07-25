@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { Page } from "./AppShell.jsx";
 import { useTheme } from "./theme.jsx";
 
@@ -22,4 +22,3 @@ export default function FeatureUnavailable({ title, detail }) {
     </Page>
   );
 }
-

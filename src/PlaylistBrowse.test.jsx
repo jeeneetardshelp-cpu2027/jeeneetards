@@ -8,7 +8,7 @@
 // Run: npm test
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { MemoryRouter, Routes, Route, useLocation } from "react-router-dom";
+import { MemoryRouter, Routes, Route, useLocation } from "react-router";
 
 // ---- a fake PostgREST builder that records what was asked for ----
 const calls = [];

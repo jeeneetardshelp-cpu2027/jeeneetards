@@ -17,7 +17,7 @@ import { lazy, Suspense, useEffect } from "react";
 import {
   Routes, Route, Outlet, Navigate,
   useNavigate, useParams, useLocation, useNavigationType,
-} from "react-router-dom";
+} from "react-router";
 
 import { ThemeProvider, useTheme } from "./theme.jsx";
 import Home from "./Home.jsx";
@@ -88,7 +88,9 @@ function ScrollToTop() {
   // Remember where this entry was when we leave it.
   useEffect(() => {
     const save = () => {
-      try { sessionStorage.setItem('scroll:' + key, String(window.scrollY)); } catch {}
+      try { sessionStorage.setItem('scroll:' + key, String(window.scrollY)); } catch {
+        // Storage can be disabled by browser privacy settings.
+      }
     };
     // pagehide covers a real unload (link to another document, reload, tab
     // close). The cleanup below covers SPA route changes. Without the former,
@@ -99,7 +101,9 @@ function ScrollToTop() {
 
   useEffect(() => {
     let saved = NaN;
-    try { saved = Number(sessionStorage.getItem('scroll:' + key)); } catch {}
+    try { saved = Number(sessionStorage.getItem('scroll:' + key)); } catch {
+      // Treat unavailable storage as if no position had been saved.
+    }
 
     // A saved position is restored on POP (Back/Forward). After a full document
     // reload the FIRST navigation is not reported as POP, so gating on navType

@@ -16,7 +16,7 @@
 //     client-side re-ranking (requirement 4/5).
 
 import { useState, useRef, useEffect, useMemo, useCallback } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router";
 import { Search, X, Loader2, AlertTriangle, Users } from "lucide-react";
 import { useUniversalSearch, GROUPS, MIN_QUERY } from "./useUniversalSearch.js";
 import { normalizeForHighlight } from "./searchHighlight.js";

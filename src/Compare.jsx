@@ -20,7 +20,7 @@
 //   * differences are highlighted; no winner is declared
 
 import { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router";
 import { ArrowLeft, AlertTriangle } from "lucide-react";
 import { supabase, isSupabaseConfigured } from "./supabaseClient";
 import { Page } from "./AppShell.jsx";
@@ -68,10 +68,12 @@ export function useComparison(ids, chapterId, learningGoalId = null) {
     rows: [], notFound: [], wrongChapter: [], loading: true, error: null,
   });
   const [nonce, setNonce] = useState(0);
+  const idsKey = ids.join(",");
 
   useEffect(() => {
     let active = true;
-    if (!ids.length || !chapterId) {
+    const requestIds = idsKey ? idsKey.split(",").map(Number) : [];
+    if (!requestIds.length || !chapterId) {
       setState({ rows: [], notFound: [], wrongChapter: [], loading: false, error: null });
       return;
     }
@@ -83,7 +85,7 @@ export function useComparison(ids, chapterId, learningGoalId = null) {
     setState((s) => ({ ...s, loading: true, error: null }));
 
     supabase.rpc("get_playlist_comparison", {
-      p_playlist_ids: ids,
+      p_playlist_ids: requestIds,
       p_chapter_id: chapterId,
       p_learning_goal_id: learningGoalId,
     }).then(({ data, error }) => {
@@ -106,7 +108,7 @@ export function useComparison(ids, chapterId, learningGoalId = null) {
       setState({ rows, notFound, wrongChapter, loading: false, error: null });
     });
     return () => { active = false; };
-  }, [ids.join(","), chapterId, learningGoalId, nonce]);
+  }, [idsKey, chapterId, learningGoalId, nonce]);
 
   return { ...state, reload: () => setNonce((n) => n + 1) };
 }

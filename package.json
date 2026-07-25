@@ -8,6 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest run",
+    "lint": "eslint . --max-warnings=0",
     "build:bootstrap": "node src/scripts/buildStagingBootstrap.js",
     "build:faculty-staging": "node src/scripts/buildFacultyStagingDelta.js",
     "build:faculty-repair": "node src/scripts/buildFacultyStagingRepair.js",
@@ -47,12 +48,18 @@
     "lucide-react": "^1.25.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
-    "react-router-dom": "^7.18.1"
+    "react-router": "8.3.0"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.5",
     "@tailwindcss/vite": "^4.3.3",
     "@testing-library/react": "^16.3.2",
     "@vitejs/plugin-react": "^6.0.3",
+    "eslint": "^9.39.5",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.7.0",
     "jsdom": "^29.1.1",
     "playwright": "^1.61.1",
     "tailwindcss": "^4.3.3",

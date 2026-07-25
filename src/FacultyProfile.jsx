@@ -5,7 +5,7 @@
 // faculty — seeing "also known as ABJ Sir" is what confirms you found the right
 // person.
 
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router";
 import { BadgeCheck, Star } from "lucide-react";
 import { useFacultyProfile } from "./useFaculty.js";
 import { GlobalHeader, Container } from "./AppShell.jsx";

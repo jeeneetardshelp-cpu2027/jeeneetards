@@ -26,17 +26,18 @@ import { parseCanonical } from "./canonicalUrl.js";
 const EMPTY = { goalId: null, subjectId: null, chapterId: null, boardId: null, names: {} };
 
 export function useCanonicalFilters(params) {
-  const c = parseCanonical(params);
-  const key = [c.goal.raw, c.subject.raw, c.chapter.raw, c.board].join("|");
+  const parsed = parseCanonical(params);
+  const canonicalKey = JSON.stringify(parsed);
 
   const [state, setState] = useState({
-    ...EMPTY, stage: c.stage, board: c.board,
+    ...EMPTY, stage: parsed.stage, board: parsed.board,
     loading: false, error: null, ready: false, unresolved: [],
   });
   const [nonce, setNonce] = useState(0);
 
   useEffect(() => {
     let active = true;
+    const c = JSON.parse(canonicalKey);
     const need = [
       c.goal.slug    && { table: "learning_goals", slug: c.goal.slug,    as: "goalId",    key: "goal" },
       c.subject.slug && { table: "subjects",       slug: c.subject.slug, as: "subjectId", key: "subject" },
@@ -105,7 +106,7 @@ export function useCanonicalFilters(params) {
     });
 
     return () => { active = false; };
-  }, [key, nonce]);
+  }, [canonicalKey, nonce]);
 
   return { ...state, retry: () => setNonce((n) => n + 1) };
 }

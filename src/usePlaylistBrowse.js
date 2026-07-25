@@ -64,10 +64,12 @@ export function usePlaylistBrowse({
   // Not querying at all is the only correct behaviour.
   enabled = true,
 }) {
-  const classSlugs = classSlugsForStage(stage);
   const [state, setState] = useState({
     items: [], total: null, loading: true, error: null, hasMore: false,
   });
+  const languageKey = JSON.stringify(language ?? []);
+  const contentTypeKey = JSON.stringify(contentType ?? []);
+  const difficultyKey = JSON.stringify(difficulty ?? []);
 
   // Discards obsolete responses. Filters resolve asynchronously (a slug has to
   // become an id), so this hook runs once with no chapter and again with one.
@@ -80,6 +82,10 @@ export function usePlaylistBrowse({
   const load = useCallback(async () => {
     const gen = ++generation.current;
     const current = () => gen === generation.current;
+    const classSlugs = classSlugsForStage(stage);
+    const languageValues = JSON.parse(languageKey);
+    const contentTypeValues = JSON.parse(contentTypeKey);
+    const difficultyValues = JSON.parse(difficultyKey);
     if (!enabled) {
       // Hold the skeleton rather than showing a stale or unfiltered list.
       setState({ items: [], total: null, loading: true, error: null, hasMore: false });
@@ -146,9 +152,9 @@ export function usePlaylistBrowse({
     // AND-of-ORs shape is identical whether one or three values are chosen.
     if (channelId) q = q.eq("channel_id", channelId);
     if (teacherId) q = q.eq("pt.teacher_id", teacherId);
-    if (language?.length) q = q.in("language", language);
-    if (contentType?.length) q = q.in("content_type", contentType);
-    if (difficulty?.length) q = q.in("difficulty", difficulty);
+    if (languageValues.length) q = q.in("language", languageValues);
+    if (contentTypeValues.length) q = q.in("content_type", contentTypeValues);
+    if (difficultyValues.length) q = q.in("difficulty", difficultyValues);
     if (chapterId) q = q.eq("pv.videos.chapter_id", chapterId);
     const term = (search ?? "").trim();
     if (term) q = q.ilike("title", `%${term}%`);
@@ -176,7 +182,7 @@ export function usePlaylistBrowse({
       hasMore: count != null ? (page + 1) * PAGE_SIZE < count : items.length === PAGE_SIZE,
     });
   }, [enabled, goalId, boardId, subjectId, chapterId, stage, channelId, teacherId,
-      language?.join(","), contentType?.join(","), difficulty?.join(","),
+      languageKey, contentTypeKey, difficultyKey,
       search, page]);
 
   useEffect(() => { load(); }, [load]);
