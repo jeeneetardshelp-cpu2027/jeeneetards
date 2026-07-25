@@ -1,9 +1,10 @@
 // =====================================================================
 //  importChannel.js  —  LOCAL bulk importer.  Run with:
-//      node src/scripts/importChannel.js  [channelId]
+//      npm run import -- [channelId] --env=staging --dry-run
+//        --expected-playlists=1 --max-playlists=5
 //
-//  This script uses the SERVICE ROLE key, which bypasses row-level
-//  security entirely. That is why it must ONLY ever run locally:
+//  Write mode uses the SERVICE ROLE key, which bypasses row-level security.
+//  Dry runs use the browser-safe anonymous key. Run both modes only locally:
 //    • the key lives in .env under SUPABASE_SERVICE_ROLE_KEY (no VITE_)
 //    • Vite never bundles it, so it can't reach the browser
 //    • never commit it, never deploy it, never paste it anywhere
@@ -18,22 +19,26 @@
 import { createClient } from "@supabase/supabase-js";
 import readline from "node:readline/promises";
 import { stdin, stdout } from "node:process";
-import { readFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
 import {
-  getChannel, getAllPlaylists, getPlaylistVideos,
+  getChannel, getAllPlaylists, getPlaylistOwner, getPlaylistVideos,
 } from "./youtubeNode.js";
 import {
+  assertImportSelection,
+  assertProductionWriteAllowed,
   buildImportPayload,
   parseImporterArgs,
+  playlistFromOwner,
   promptCourseMetadata,
 } from "./ingestionSafety.js";
 
+const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
+
 // --- tiny .env reader (no dependency; Vite isn't running here) --------
 function loadEnv(environment) {
-  const here = dirname(fileURLToPath(import.meta.url));
-  const envPath = resolve(here, environment === "staging" ? "../../.env.staging" : "../../.env");
+  const envPath = resolve(root, environment === "staging" ? ".env.staging" : ".env");
   const env = {};
   try {
     for (const line of readFileSync(envPath, "utf8").split("\n")) {
@@ -59,13 +64,16 @@ const fail = (msg) => {
 // ---------------------------------------------------------------------
 async function main() {
   const args = parseImporterArgs(process.argv.slice(2));
-  if (args.environment === "production" && !args.confirmProduction) {
-    fail("Production import requires --confirm-production. Use --env=staging for staging.");
+  try {
+    assertProductionWriteAllowed(args);
+  } catch (error) {
+    fail(error.message);
   }
   const env = loadEnv(args.environment);
   const productionEnv = args.environment === "staging" ? loadEnv("production") : env;
   const url = env.TEST_SUPABASE_URL ?? env.VITE_SUPABASE_URL;
   const serviceKey = env.TEST_SERVICE_KEY ?? env.SUPABASE_SERVICE_ROLE_KEY;
+  const publicKey = env.TEST_ANON_KEY ?? env.VITE_SUPABASE_ANON_KEY;
   // Node-side key, NOT the VITE_ one. Anything prefixed VITE_ is inlined into
   // the public browser bundle, so it must be referrer-restricted and is not the
   // right credential for a server-side script that can burn quota in bulk.
@@ -74,14 +82,16 @@ async function main() {
   if (!url) fail("VITE_SUPABASE_URL missing from .env");
   if (!ytKey)
     fail("YOUTUBE_API_KEY missing from .env (server-side key — do NOT use VITE_YOUTUBE_API_KEY, that one is public).");
-  if (!serviceKey || serviceKey.includes("paste-your"))
+  if (!args.dryRun && (!serviceKey || serviceKey.includes("paste-your")))
     fail(
       "SUPABASE_SERVICE_ROLE_KEY not set in .env.\n" +
         "  Get it from Supabase -> Project Settings -> API -> service_role."
     );
+  if (args.dryRun && !publicKey)
+    fail("A browser-safe anonymous key is required for --dry-run.");
 
-  // The service role client. auth persistence off — this is a one-shot tool.
-  const db = createClient(url, serviceKey, {
+  // Auth persistence is disabled because each run is a one-shot local process.
+  const db = createClient(url, args.dryRun ? publicKey : serviceKey, {
     auth: { persistSession: false, autoRefreshToken: false },
   });
   if (args.environment === "staging") {
@@ -107,8 +117,10 @@ async function main() {
   // --- 1. fetch from YouTube ----------------------------------------
   say(`\n${C.dim}Fetching channel…${C.reset}`);
   const channel = await getChannel(ytKey, channelId);
-  say(`${C.dim}Fetching playlists…${C.reset}`);
-  const playlists = await getAllPlaylists(ytKey, channelId);
+  say(`${C.dim}Fetching playlist${args.nonInteractive ? "" : "s"}…${C.reset}`);
+  const playlists = args.nonInteractive
+    ? [playlistFromOwner(await getPlaylistOwner(ytKey, args.playlistId), channelId)]
+    : await getAllPlaylists(ytKey, channelId);
 
   if (playlists.length === 0) fail("This channel has no public playlists.");
 
@@ -146,6 +158,9 @@ async function main() {
       )
     ).trim());
   if (chosen.length === 0) fail("Nothing selected.");
+  if (chosen.length > args.maxPlaylists) {
+    fail(`Selected ${chosen.length} playlists; batch cap is ${args.maxPlaylists}.`);
+  }
 
   // --- 3. map each chosen playlist ----------------------------------
   const plans = [];
@@ -211,21 +226,84 @@ async function main() {
   rl.close();
 
   if (plans.length === 0) fail("No playlists to import after mapping.");
+  try {
+    assertImportSelection({
+      selected: plans.length,
+      expected: args.expectedPlaylists,
+      max: args.maxPlaylists,
+    });
+  } catch (error) {
+    fail(error.message);
+  }
 
   // --- 4. import — ONE transactional RPC call per playlist ----------
+  if (args.dryRun) {
+    const entries = [];
+    for (const plan of plans) {
+      const [{ data: existingPlaylist, error: playlistError }, chapter, ytVideos] =
+        await Promise.all([
+          db.from("playlists")
+            .select("id,title")
+            .eq("youtube_playlist_id", plan.playlist.id)
+            .maybeSingle(),
+          findChapter(db, plan.chapterName, plan.subjectId),
+          getPlaylistVideos(ytKey, plan.playlist.id),
+        ]);
+      if (playlistError) throw playlistError;
+      entries.push({
+        youtube_playlist_id: plan.playlist.id,
+        title: plan.playlist.title,
+        published_video_count: Number(plan.playlist.videoCount),
+        usable_video_count: ytVideos.length,
+        existing_playlist: existingPlaylist
+          ? { id: existingPlaylist.id, title: existingPlaylist.title }
+          : null,
+        chapter: {
+          name: plan.chapterName,
+          action: chapter ? "reuse" : "create",
+          production_blocker: args.environment === "production" && !chapter,
+        },
+        class_labels: plan.classLabels,
+        content_type: plan.contentType,
+        language: plan.language,
+        difficulty: plan.difficulty,
+      });
+    }
+    const outputDirectory = resolve(root, "../outputs");
+    const outputPath = resolve(outputDirectory, "ingestion-dry-run.json");
+    mkdirSync(outputDirectory, { recursive: true });
+    writeFileSync(outputPath, `${JSON.stringify({
+      environment: args.environment,
+      channel: { id: channelId, title: channel.title },
+      expected_playlists: args.expectedPlaylists,
+      batch_cap: args.maxPlaylists,
+      entries,
+    }, null, 2)}\n`, "utf8");
+    say(`\n${C.green}${C.bold}Dry run complete — no Supabase writes${C.reset}`);
+    say(`  ${entries.length} playlist plan(s) saved to ${outputPath}\n`);
+    return;
+  }
+
   const summary = { added: 0, reused: 0, courses: 0, coursesReused: 0, chapters: 0 };
 
   for (const plan of plans) {
     say(`\n${C.teal}▶ ${plan.playlist.title}${C.reset}`);
-
-    // chapter is reference data (find-or-create) — outside the atomic import.
-    const chapterId = await ensureChapter(db, plan.chapterName, plan.subjectId, summary);
 
     const ytVideos = await getPlaylistVideos(ytKey, plan.playlist.id);
     if (ytVideos.length === 0) {
       say(`  ${C.yellow}no usable videos, skipping${C.reset}`);
       continue;
     }
+
+    const existingChapter = await findChapter(db, plan.chapterName, plan.subjectId);
+    if (args.environment === "production" && !existingChapter) {
+      fail(
+        `Chapter "${plan.chapterName}" does not exist in production. ` +
+        "Create and review reference data separately before importing.",
+      );
+    }
+    const chapterId = existingChapter?.id
+      ?? await ensureChapter(db, plan.chapterName, plan.subjectId, summary);
 
     // The whole playlist import is ONE transaction inside Postgres.
     const { data, error } = await db.rpc("import_playlist", {
@@ -308,12 +386,7 @@ function parseClasses(input) {
 
 async function ensureChapter(db, name, subjectId, summary) {
   const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
-  const { data: existing } = await db
-    .from("chapters")
-    .select("id")
-    .eq("subject_id", subjectId)
-    .eq("name", name)
-    .maybeSingle();
+  const existing = await findChapter(db, name, subjectId);
   if (existing) return existing.id;
 
   const { data, error } = await db
@@ -324,6 +397,17 @@ async function ensureChapter(db, name, subjectId, summary) {
   if (error) fail(`inserting chapter "${name}": ${error.message}`);
   summary.chapters += 1;
   return data.id;
+}
+
+async function findChapter(db, name, subjectId) {
+  const { data, error } = await db
+    .from("chapters")
+    .select("id")
+    .eq("subject_id", subjectId)
+    .eq("name", name)
+    .maybeSingle();
+  if (error) throw error;
+  return data;
 }
 
 main().catch((err) => fail(err.message ?? String(err)));

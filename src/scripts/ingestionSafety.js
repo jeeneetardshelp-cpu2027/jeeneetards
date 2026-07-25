@@ -87,11 +87,61 @@ export function assertExpectedRowCount(expected, actual) {
   }
 }
 
+function positiveIntegerArg(argv, name, { max = Number.MAX_SAFE_INTEGER } = {}) {
+  const raw = argv.find((arg) => arg.startsWith(`--${name}=`))
+    ?.slice(name.length + 3);
+  if (!raw) throw new Error(`--${name}=<positive integer> is required.`);
+  const value = Number(raw);
+  if (!Number.isSafeInteger(value) || value <= 0 || value > max) {
+    throw new Error(`--${name} must be a positive integer no greater than ${max}.`);
+  }
+  return value;
+}
+
+export function assertImportSelection({ selected, expected, max }) {
+  if (selected > max) {
+    throw new Error(`Import stopped: selected ${selected} playlists; batch cap is ${max}.`);
+  }
+  if (selected !== expected) {
+    throw new Error(`Import stopped: expected ${expected} playlists but mapped ${selected}.`);
+  }
+}
+
+export function playlistFromOwner(owner, expectedChannelId) {
+  if (owner.channelId !== expectedChannelId) {
+    throw new Error(
+      `Playlist ${owner.playlistId} does not belong to channel ${expectedChannelId}.`,
+    );
+  }
+  return {
+    id: owner.playlistId,
+    title: owner.playlistTitle,
+    videoCount: owner.videoCount,
+  };
+}
+
+export function assertProductionWriteAllowed({
+  environment,
+  dryRun,
+  confirmProduction,
+}) {
+  if (environment === "production" && !dryRun && !confirmProduction) {
+    throw new Error(
+      "Production import requires --confirm-production. Use --env=staging for staging.",
+    );
+  }
+}
+
 export function parseImporterArgs(argv) {
   const environmentArg = argv.find((arg) => arg.startsWith("--env="));
-  const environment = environmentArg?.slice("--env=".length) || "production";
+  const environment = environmentArg?.slice("--env=".length) || "staging";
   if (!["production", "staging"].includes(environment)) {
     throw new Error("--env must be production or staging.");
+  }
+  const expectedPlaylists = positiveIntegerArg(argv, "expected-playlists");
+  const maxPlaylists = positiveIntegerArg(argv, "max-playlists", { max: 25 });
+  if (expectedPlaylists > maxPlaylists) {
+    throw new Error("--expected-playlists cannot exceed --max-playlists.");
   }
   const value = (name) => argv.find((arg) => arg.startsWith(`--${name}=`))
     ?.slice(name.length + 3) ?? null;
@@ -121,7 +171,10 @@ export function parseImporterArgs(argv) {
   }
   return {
     environment,
+    dryRun: argv.includes("--dry-run"),
     confirmProduction: argv.includes("--confirm-production"),
+    expectedPlaylists,
+    maxPlaylists,
     channelId: argv.find((arg) => !arg.startsWith("--")) ?? null,
     nonInteractive,
     ...mapping,

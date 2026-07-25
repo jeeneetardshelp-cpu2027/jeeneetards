@@ -1,0 +1,147 @@
+# Mass-ingestion preflight
+
+Use this gate before adding catalogue content in batches. It prepares an
+import; it does not authorize one.
+
+## Baseline recorded on 25 July 2026
+
+- 5 courses and 43 playlist memberships.
+- Coverage: JEE, Class 11, Physics.
+- Core metadata missing from 0 courses.
+- Fully contained duplicate candidates: 0.
+- Registered source channel: Mohit Tyagi.
+
+Regenerate the read-only baseline immediately before every batch:
+
+```powershell
+npm run audit:production-catalog
+npm run audit:ingestion -- --env=production
+```
+
+## Importer controls
+
+The channel importer:
+
+- targets staging when `--env` is omitted;
+- requires exact `--expected-playlists` and explicit `--max-playlists`;
+- refuses a batch cap above 25;
+- supports `--dry-run` with the anonymous Supabase key;
+- checks that a named playlist belongs to the named channel;
+- requires `--confirm-production` for production writes;
+- refuses production imports whose chapter reference does not already exist;
+- sends one transactional playlist RPC after YouTube metadata is collected.
+
+These controls limit the size of a mistake. They do not decide whether
+taxonomy or course selection is academically correct.
+
+## Owner inputs
+
+Before a sample import, supply:
+
+1. YouTube channel ID.
+2. Exact playlist ID.
+3. Category and learning goal.
+4. Subject and existing chapter name.
+5. Applicable class levels.
+6. Content type, language, and difficulty.
+7. Teacher attribution review.
+8. Reason the playlist belongs in the directory.
+
+Do not infer missing academic metadata from a title alone.
+
+## Required sequence
+
+### 1. Write-free production plan
+
+Run one playlist at a time:
+
+```powershell
+npm run import -- <CHANNEL_ID> `
+  --env=production `
+  --dry-run `
+  --expected-playlists=1 `
+  --max-playlists=5 `
+  --playlist-id=<PLAYLIST_ID> `
+  --category=<CATEGORY> `
+  --goal=<GOAL> `
+  --subject=<SUBJECT> `
+  --chapter=<EXISTING_CHAPTER> `
+  --classes=<CLASSES> `
+  --content-type=<TYPE> `
+  --language=<LANGUAGE> `
+  --difficulty=<DIFFICULTY>
+```
+
+Review `../outputs/ingestion-dry-run.json`. Stop if the playlist already
+exists, the channel differs, usable video count is unexpected, metadata is
+uncertain, or `production_blocker` is true.
+
+### 2. Disposable-staging sample
+
+Run the same single playlist with `--env=staging` and without `--dry-run`.
+Record created and reused counts. Inspect the course through Browse, open the
+first and last lessons, check embedded playback, and review taxonomy in the
+Manage tab.
+
+Delete or retain the sample according to the staging fixture plan. Never use a
+production identifier as an assumed cleanup selector.
+
+### 3. Production readiness
+
+Before a production write:
+
+- complete [backup and restore readiness](backup_restore_readiness.md);
+- obtain owner approval for the exact playlist and mapping;
+- confirm the dry-run report matches the reviewed mapping;
+- confirm the chapter reference already exists;
+- record expected course, video, and membership changes;
+- choose rollback and stop thresholds.
+
+The first production batch is one playlist. Increase later batches only after
+the previous batch passes post-import checks. Keep `--max-playlists=5` during
+the initial rollout even though the importer’s absolute cap is 25.
+
+### 4. Production command
+
+Only after the preceding gates:
+
+```powershell
+npm run import -- <CHANNEL_ID> `
+  --env=production `
+  --confirm-production `
+  --expected-playlists=1 `
+  --max-playlists=5 `
+  <THE SAME REVIEWED MAPPING ARGUMENTS>
+```
+
+### 5. Post-import checks
+
+Immediately rerun the two read-only audits and compare them with the baseline.
+Then check:
+
+- course and lecture count deltas;
+- missing metadata;
+- duplicate and overlap candidates;
+- class, goal, subject, and chapter placement;
+- first and last lesson playback;
+- anonymous Browse and search;
+- Manage tab lookup;
+- frontend error responses.
+
+## Stop criteria
+
+Stop the batch without starting another when any of these occurs:
+
+- actual selected playlist count differs from the approved count;
+- source ownership differs;
+- a production chapter would need creation;
+- usable video count differs materially from the reviewed plan;
+- any RPC, authorization, or YouTube quota error occurs;
+- missing required metadata appears;
+- unexpected duplicate containment appears;
+- Browse, search, course pages, or playback regress;
+- the backup or rollback record is incomplete.
+
+Do not repair a failed batch with blanket metadata scripts. Diagnose the exact
+rows and use guarded management operations.
+
