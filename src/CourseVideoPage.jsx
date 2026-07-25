@@ -10,6 +10,7 @@ import { readReturnUrl, rememberReturn, resolveBack } from "./returnTo.js";
 import CourseRating from "./CourseRating.jsx";
 import VideoReport from "./VideoReport.jsx";
 import CourseOverview from "./CourseOverview.jsx";
+import { useCourseMetadata } from "./PageMetadata.jsx";
 
 const TEAL = "#13919B";
 
@@ -41,6 +42,7 @@ export default function CourseVideoPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const { course, lessons, loading, error, reload } = usePlaylistVideos(playlistId);
+  useCourseMetadata(course);
 
   const [savedProgress, setSavedProgress] = useState(null);
   useEffect(() => {

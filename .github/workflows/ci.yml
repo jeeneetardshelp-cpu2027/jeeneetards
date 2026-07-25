@@ -37,3 +37,6 @@ jobs:
 
       - name: Build production site
         run: npm run build
+
+      - name: Verify frontend release safeguards
+        run: npm run verify:frontend-release

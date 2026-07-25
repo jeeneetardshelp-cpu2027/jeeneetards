@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title description">
+  <title id="title">JEENEETARD - Free course finder</title>
+  <desc id="description">Browse free educational YouTube courses by exam, class, subject and chapter.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#142A4F"/>
+      <stop offset="1" stop-color="#0B1C39"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#37C0C8" stop-opacity=".32"/>
+      <stop offset="1" stop-color="#37C0C8" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#background)"/>
+  <circle cx="1040" cy="80" r="380" fill="url(#glow)"/>
+  <circle cx="1130" cy="560" r="260" fill="none" stroke="#37C0C8" stroke-opacity=".13" stroke-width="2"/>
+  <circle cx="1130" cy="560" r="190" fill="none" stroke="#37C0C8" stroke-opacity=".11" stroke-width="2"/>
+  <path d="M760 0h440v630H940c-92-108-148-238-168-378C758 156 754 72 760 0Z" fill="#FFFFFF" fill-opacity=".025"/>
+
+  <g transform="translate(92 82)">
+    <rect width="88" height="88" rx="22" fill="#37C0C8"/>
+    <path d="M16 39 44 25l28 14-28 14-28-14Z" fill="#142A4F"/>
+    <path d="M27 47v13c8 7 26 7 34 0V47l-17 8.5L27 47Z" fill="#FFFFFF"/>
+    <path d="M71 42v17" stroke="#142A4F" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="71" cy="63" r="3" fill="#142A4F"/>
+  </g>
+
+  <g font-family="Arial, Helvetica, sans-serif">
+    <text x="204" y="135" fill="#FFFFFF" font-size="35" font-weight="700" letter-spacing="2">JEENEETARD</text>
+    <text x="204" y="168" fill="#A9BDC8" font-size="18" font-weight="600" letter-spacing="3">FREE EDUCATIONAL DIRECTORY</text>
+
+    <text x="92" y="304" fill="#FFFFFF" font-size="68" font-weight="750">Find the right course,</text>
+    <text x="92" y="384" fill="#37C0C8" font-size="68" font-weight="750">without the clutter.</text>
+
+    <text x="96" y="454" fill="#D8E2EA" font-size="27">Browse free educational YouTube courses by</text>
+    <text x="96" y="493" fill="#D8E2EA" font-size="27">exam, class, subject and chapter.</text>
+
+    <g transform="translate(92 548)">
+      <rect width="164" height="45" rx="22.5" fill="#FFFFFF" fill-opacity=".1" stroke="#FFFFFF" stroke-opacity=".16"/>
+      <text x="82" y="30" text-anchor="middle" fill="#FFFFFF" font-size="18" font-weight="700">EXAM</text>
+      <rect x="178" width="164" height="45" rx="22.5" fill="#FFFFFF" fill-opacity=".1" stroke="#FFFFFF" stroke-opacity=".16"/>
+      <text x="260" y="30" text-anchor="middle" fill="#FFFFFF" font-size="18" font-weight="700">CLASS</text>
+      <rect x="356" width="164" height="45" rx="22.5" fill="#FFFFFF" fill-opacity=".1" stroke="#FFFFFF" stroke-opacity=".16"/>
+      <text x="438" y="30" text-anchor="middle" fill="#FFFFFF" font-size="18" font-weight="700">SUBJECT</text>
+      <rect x="534" width="164" height="45" rx="22.5" fill="#FFFFFF" fill-opacity=".1" stroke="#FFFFFF" stroke-opacity=".16"/>
+      <text x="616" y="30" text-anchor="middle" fill="#FFFFFF" font-size="18" font-weight="700">CHAPTER</text>
+    </g>
+  </g>
+</svg>

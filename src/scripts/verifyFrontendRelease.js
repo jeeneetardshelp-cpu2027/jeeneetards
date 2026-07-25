@@ -113,11 +113,33 @@ if (exists("index.html")) {
   if (/<script(?![^>]*\bsrc=)[^>]*>[\s\S]*?<\/script>/i.test(source))
     fail("index.html contains inline JavaScript, which weakens script-src");
   else pass("index.html contains no inline JavaScript");
+
+  if (/find and compare/i.test(source))
+    fail("index.html promises comparison even though the release disables it");
+  else pass("index.html describes the browse-only release truthfully");
+
+  for (const required of [
+    'rel="icon"',
+    'rel="canonical"',
+    'property="og:image"',
+    'name="twitter:card"',
+  ]) {
+    if (!source.includes(required)) fail(`index.html is missing ${required}`);
+  }
 }
 
 if (exists("dist/index.html") && !read("dist/index.html").includes('name="description"'))
   fail("production HTML has no description metadata");
 else if (exists("dist/index.html")) pass("production HTML includes release metadata");
+
+for (const asset of [
+  "dist/favicon.svg",
+  "dist/social-preview.png",
+  "dist/robots.txt",
+]) {
+  if (!exists(asset)) fail(`production build is missing ${asset}`);
+  else pass(`production build includes ${asset}`);
+}
 
 for (const file of ["src/YouTubePlayer.jsx", "src/Dashboard.jsx"]) {
   const source = exists(file) ? read(file) : "";

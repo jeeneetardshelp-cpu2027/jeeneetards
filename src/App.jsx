@@ -26,6 +26,7 @@ import LegalPage from "./LegalPage.jsx";
 import PrivacyPolicy from "./PrivacyPolicy.jsx";
 import FeatureUnavailable from "./FeatureUnavailable.jsx";
 import AppErrorBoundary from "./AppErrorBoundary.jsx";
+import RouteMetadata from "./PageMetadata.jsx";
 import { RELEASE_CAPABILITIES } from "./releaseCapabilities.js";
 
 const Explore = lazy(() => import("./Explore.jsx"));
@@ -251,6 +252,7 @@ export default function App() {
   return (
     <ThemeProvider>
       <AppErrorBoundary>
+      <RouteMetadata />
       <ScrollToTop />
       <Routes>
         {/* Admin sits OUTSIDE the student layout — no site footer. */}

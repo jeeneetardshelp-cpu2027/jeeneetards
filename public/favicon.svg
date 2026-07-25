@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="JEENEETARD">
+  <rect width="64" height="64" rx="14" fill="#142A4F"/>
+  <path d="M10 25 32 14l22 11-22 11L10 25Z" fill="#37C0C8"/>
+  <path d="M19 31v11c6 6 20 6 26 0V31l-13 6.5L19 31Z" fill="#F8FAFC"/>
+  <path d="M53 27v14" stroke="#37C0C8" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="53" cy="45" r="3" fill="#37C0C8"/>
+</svg>
