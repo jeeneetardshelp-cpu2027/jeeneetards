@@ -127,8 +127,9 @@ GitHub Actions repeats `npm ci`, static checks, tests, build and the frontend
 release verifier for every push to `main` and every pull request.
 
 The production catalogue audit uses only the browser-safe anonymous key and
-performs one `SELECT`; it has no write path and never imports the service-role
-key. Its sanitized JSON report is written outside the repository at
+performs `SELECT` queries only; it has no write path and never imports the
+service-role key. It also reports exact video overlap between playlists so a
+duplicate course can be reviewed before removal. Its sanitized JSON report is written outside the repository at
 `../outputs/catalog-production-inventory.json`.
 
 ## Project map

@@ -98,3 +98,46 @@ export function buildCatalogInventory(rows, generatedAt = new Date().toISOString
     courses,
   };
 }
+
+export function findPlaylistOverlaps(memberships, courses = []) {
+  const byPlaylist = new Map();
+  const courseNames = new Map(courses.map((course) => [Number(course.id), course.title]));
+
+  for (const row of memberships ?? []) {
+    const playlistId = Number(row.playlist_id);
+    const videoId = Number(row.video_id);
+    if (!Number.isFinite(playlistId) || !Number.isFinite(videoId)) continue;
+    if (!byPlaylist.has(playlistId)) byPlaylist.set(playlistId, new Map());
+    byPlaylist.get(playlistId).set(videoId, {
+      id: videoId,
+      youtubeVideoId: text(row.videos?.youtube_video_id) || null,
+      title: text(row.videos?.title) || null,
+    });
+  }
+
+  const overlaps = [];
+  const playlistIds = [...byPlaylist.keys()].sort((a, b) => a - b);
+  for (let leftIndex = 0; leftIndex < playlistIds.length; leftIndex++) {
+    for (let rightIndex = leftIndex + 1; rightIndex < playlistIds.length; rightIndex++) {
+      const leftId = playlistIds[leftIndex];
+      const rightId = playlistIds[rightIndex];
+      const left = byPlaylist.get(leftId);
+      const right = byPlaylist.get(rightId);
+      const shared = [...left.keys()].filter((videoId) => right.has(videoId));
+      if (!shared.length) continue;
+      overlaps.push({
+        leftId,
+        leftTitle: courseNames.get(leftId) ?? null,
+        rightId,
+        rightTitle: courseNames.get(rightId) ?? null,
+        sharedCount: shared.length,
+        leftCount: left.size,
+        rightCount: right.size,
+        leftFullyContained: shared.length === left.size,
+        rightFullyContained: shared.length === right.size,
+        sharedVideos: shared.map((videoId) => left.get(videoId)),
+      });
+    }
+  }
+  return overlaps;
+}

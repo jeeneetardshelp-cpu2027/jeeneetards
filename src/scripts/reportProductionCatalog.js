@@ -6,7 +6,10 @@ import { createClient } from "@supabase/supabase-js";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { buildCatalogInventory } from "./catalogInventory.js";
+import {
+  buildCatalogInventory,
+  findPlaylistOverlaps,
+} from "./catalogInventory.js";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const outputDirectory = resolve(root, "../outputs");
@@ -51,6 +54,19 @@ if (error) {
 }
 
 const report = buildCatalogInventory(data);
+const { data: memberships, error: membershipError } = await db
+  .from("playlist_videos")
+  .select("playlist_id,video_id,position,videos(youtube_video_id,title)")
+  .order("playlist_id")
+  .order("position");
+if (membershipError) {
+  console.error(`Playlist-overlap inventory failed: ${membershipError.message}`);
+  process.exit(1);
+}
+report.overlaps = findPlaylistOverlaps(memberships, report.courses);
+report.summary.duplicateCandidates = report.overlaps.filter(
+  (overlap) => overlap.leftFullyContained || overlap.rightFullyContained,
+).length;
 mkdirSync(outputDirectory, { recursive: true });
 writeFileSync(outputPath, `${JSON.stringify(report, null, 2)}\n`, "utf8");
 
@@ -66,6 +82,17 @@ console.table(report.courses.map((course) => ({
   missing: course.missing.join(", "),
   issues: course.issues.join(", "),
 })));
+if (report.overlaps.length) {
+  console.log("Playlist video overlap:");
+  console.table(report.overlaps.map((overlap) => ({
+    left: `${overlap.leftId}: ${overlap.leftTitle}`,
+    right: `${overlap.rightId}: ${overlap.rightTitle}`,
+    shared: overlap.sharedCount,
+    leftLectures: overlap.leftCount,
+    rightLectures: overlap.rightCount,
+    leftFullyContained: overlap.leftFullyContained,
+    rightFullyContained: overlap.rightFullyContained,
+  })));
+}
 console.log(JSON.stringify(report.summary, null, 2));
 console.log(`Read-only report saved to ${outputPath}`);
-

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   buildCatalogInventory,
+  findPlaylistOverlaps,
   normalizeCatalogCourse,
 } from "./scripts/catalogInventory.js";
 
@@ -88,5 +89,40 @@ describe("read-only catalogue inventory", () => {
     });
 
     expect(course.missing).toContain("source-playlist-id");
+  });
+
+  it("proves when one playlist is fully contained inside another", () => {
+    const overlaps = findPlaylistOverlaps([
+      { playlist_id: 1, video_id: 10, videos: { youtube_video_id: "a", title: "One" } },
+      { playlist_id: 1, video_id: 11, videos: { youtube_video_id: "b", title: "Two" } },
+      { playlist_id: 4, video_id: 10, videos: { youtube_video_id: "a", title: "One" } },
+      { playlist_id: 4, video_id: 11, videos: { youtube_video_id: "b", title: "Two" } },
+      { playlist_id: 4, video_id: 12, videos: { youtube_video_id: "c", title: "Three" } },
+      { playlist_id: 5, video_id: 20, videos: { youtube_video_id: "d", title: "Other" } },
+    ], [
+      { id: 1, title: "Complete Kinematics" },
+      { id: 4, title: "Rectilinear Motion" },
+      { id: 5, title: "Rectilinear Motion (Kinematics)" },
+    ]);
+
+    expect(overlaps).toEqual([expect.objectContaining({
+      leftId: 1,
+      leftTitle: "Complete Kinematics",
+      rightId: 4,
+      rightTitle: "Rectilinear Motion",
+      sharedCount: 2,
+      leftCount: 2,
+      rightCount: 3,
+      leftFullyContained: true,
+      rightFullyContained: false,
+    })]);
+    expect(overlaps[0].sharedVideos).toHaveLength(2);
+  });
+
+  it("does not report playlists that share no videos", () => {
+    expect(findPlaylistOverlaps([
+      { playlist_id: 1, video_id: 10 },
+      { playlist_id: 2, video_id: 20 },
+    ])).toEqual([]);
   });
 });
