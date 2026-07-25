@@ -24,7 +24,11 @@ const serviceKey = mode === "staging"
   : env.SUPABASE_SERVICE_ROLE_KEY;
 
 if (!baseUrl || !serviceKey) {
-  throw new Error("VITE_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are required");
+  throw new Error(
+    mode === "staging"
+      ? "TEST_SUPABASE_URL and TEST_SERVICE_KEY are required"
+      : "VITE_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are required",
+  );
 }
 
 const supabase = createClient(baseUrl, serviceKey, {
@@ -96,8 +100,13 @@ const tables = [
   "playlists",
   "videos",
   "playlist_videos",
+  "playlist_ratings",
   "playlist_learning_goals",
   "playlist_class_levels",
+  "video_learning_goals",
+  "video_class_levels",
+  "institutes_channels",
+  "categories",
   "chapters",
   "subjects",
   "learning_goals",
