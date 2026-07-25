@@ -1,6 +1,8 @@
 # Frontend deployment runbook
 
-Status: prepared locally; no hosting account or public site has been created.
+Status: source, host configuration and release gates are prepared. Hosting is
+external state; confirm the current preview and production deployment in the
+selected provider before following the promotion steps below.
 
 ## Build contract
 
@@ -29,9 +31,10 @@ users to sign up** and **Allow anonymous sign-ins**. Existing admin users can
 still sign in; do not delete them. Supabase documents that disabling new
 sign-ups preserves sign-in for existing users.
 
-Verified on 23 July 2026: both signup controls were off and the Email provider
-remained enabled. Evidence is stored in `docs/browse_only_auth_evidence.json`.
-Re-check it immediately before the first public deployment.
+The last captured settings evidence is stored in
+`docs/browse_only_auth_evidence.json`. Treat that file as historical evidence,
+not as a live settings check. Re-check both controls immediately before a public
+deployment.
 
 Then confirm all three values remain `false` in `src/releaseCapabilities.js`:
 
@@ -82,9 +85,10 @@ credentials before release.
 7. Keep the preview deployment until these checks pass; promote only after the
    evidence is saved.
 
-## Repository note
+## Repository workflow
 
-This project copy is not currently a Git repository. A direct CLI/manual
-deployment is possible, but automatic preview and production deployments need
-Git initialization plus a private remote. Do not initialize or publish a
-repository until its full tracked-file and secret scope has been reviewed.
+This project is versioned in Git and tracks the GitHub `main` branch. The
+checked-in GitHub Actions workflow runs the release gates for pushes and pull
+requests. Before connecting or changing a hosting provider, review the tracked
+file and secret scope, then configure only the browser-safe environment
+variables listed above.

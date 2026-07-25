@@ -151,7 +151,7 @@ duplicate course can be reviewed before removal. Its sanitized JSON report is wr
 
 Theme colours come from `ThemeContext`/`useTheme`; components do not use
 Tailwind's `dark:` variant. Brand accents are navy `#142A4F` and teal
-`#13919B`.
+`#0F6F78`.
 
 ## Database and production safety
 

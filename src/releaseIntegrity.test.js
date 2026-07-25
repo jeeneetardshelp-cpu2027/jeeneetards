@@ -53,4 +53,23 @@ describe("frontend release-file integrity", () => {
         .not.toContain("#13919B");
     }
   });
+
+  it("keeps release documentation aligned with durable repository facts", () => {
+    const repositoryRoot = resolve(sourceRoot, "..");
+    const readme = readFileSync(resolve(repositoryRoot, "README.md"), "utf8");
+    const deploymentGuide = readFileSync(
+      resolve(repositoryRoot, "docs", "frontend_deployment.md"),
+      "utf8",
+    );
+
+    expect(readme).toContain("#0F6F78");
+    expect(readme).not.toContain("#13919B");
+    expect(deploymentGuide).not.toContain(
+      "no hosting account or public site has been created",
+    );
+    expect(deploymentGuide).not.toContain(
+      "This project copy is not currently a Git repository",
+    );
+    expect(deploymentGuide).not.toContain("Verified on 23 July 2026");
+  });
 });
