@@ -152,6 +152,31 @@ Sound Waves was deferred because its lesson sequence is inconsistent and it
 contains a video already used by Wave Optics. No migrations, schema changes,
 or application-code changes were made.
 
+### Units and Measurements checkpoint
+
+Error and Measurement added 5 new Class 11/Dropper lessons under Units and
+Measurements. Production now contains 31 courses and exactly 300 ordered
+playlist memberships.
+
+The catalog and anonymous capability checks passed with zero missing metadata,
+zero title-review flags, zero missing teacher attributions, zero blocked embeds
+in the new course, zero new overlap pairs, and zero fully contained duplicate
+course candidates.
+
+Five read-only production timing samples recorded:
+
+- curriculum navigation: 215 ms average, 222 ms maximum;
+- first catalog page: 193 ms average, 202 ms maximum.
+
+The 70-entry Ray Optics source was blocked before staging because it repeats
+one YouTube video, duplicates lesson 36, and includes a Unit and Dimension
+lesson. Wave on String was deferred because lessons 6, 7, and 8 are out of
+source order. The remaining explicitly Physics-labelled chapter sources now
+require source correction, taxonomy review, or overlap approval before another
+batch. Expanding to Chemistry or Mathematics also requires a separate,
+verified teacher-attribution pass. No migrations, schema changes, or
+application-code changes were made.
+
 ## Operational boundary
 
 Future catalogue batches still require the ingestion preflight, a recent
