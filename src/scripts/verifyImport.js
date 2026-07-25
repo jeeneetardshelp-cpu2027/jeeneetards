@@ -669,6 +669,26 @@ async function main() {
         const audit = await userClient.from("class_levels_migration_audit").select("id");
         ok("AU5 logged-in non-admin cannot read the migration audit trail",
            (audit.data ?? []).length === 0, JSON.stringify(audit.error?.message ?? `${(audit.data ?? []).length} rows`));
+
+        // The response alone is not proof: RLS may return success with zero
+        // affected rows. Attempt the escalation, then inspect the stored value
+        // with the service client.
+        const escalation = await userClient
+          .from("profiles")
+          .update({ is_admin: true })
+          .eq("id", testUserId);
+        const storedProfile = must(
+          await db.from("profiles").select("is_admin").eq("id", testUserId).single(),
+          "AU6 stored profile",
+        );
+        ok(
+          "AU6 logged-in non-admin cannot set profiles.is_admin",
+          storedProfile.is_admin === false,
+          JSON.stringify({
+            response_error: escalation.error?.message ?? null,
+            stored_is_admin: storedProfile.is_admin,
+          }),
+        );
       }
     }
   } else {
