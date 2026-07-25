@@ -40,10 +40,39 @@ commit `b5d0c6f63bc533bde8b5748a21d42ba4b7a8a2a9`.
   - Supabase client: 52.89 KB gzip;
   - CSS: 8.12 KB gzip.
 
+## Catalogue rollout update
+
+- Production now contains 18 courses and 197 ordered playlist memberships,
+  all under JEE Physics.
+- The reviewed Class 12 additions include Magnetism, Electromagnetic
+  Induction, Alternating Current, Electromagnetic Waves, Wave Optics, and
+  Semiconductor Electronics.
+- Wave Optics added 11 lessons (10 new videos and one reviewed reuse from
+  Electromagnetic Waves). Semiconductor Electronics added 10 new lessons.
+- The catalogue audit reports zero missing core metadata, zero title-review
+  flags, zero missing teacher attributions, and zero fully contained duplicate
+  course candidates.
+- Nuclear Physics was not promoted. Its YouTube playlist repeats video ID
+  `sk0AndvKmfE`, so it remains a dry-run blocker.
+- The importer now detects repeated playlist video IDs before chapter lookup,
+  chapter creation, or the import RPC. This closes the staging issue where a
+  rejected playlist could leave an empty chapter row.
+- The empty staging-only Nuclear Physics chapter created by the earlier failed
+  attempt was identity-checked, confirmed to have zero video references, and
+  removed. Production was never affected by that failure.
+- No database migrations or schema changes were run for this rollout.
+
+Validation after the update:
+
+- 619 frontend and script tests passed across 66 files.
+- ESLint passed with zero warnings.
+- The production Vite build passed.
+- Frontend release and anonymous production capability gates passed.
+- The production dependency audit found zero vulnerabilities.
+
 ## Operational boundary
 
-This checkpoint does not authorize a bulk catalogue import. Before mass
-ingestion, complete the ingestion preflight, confirm a recent restorable
-production backup, sample one channel, inspect the resulting taxonomy and
-duplicates, and define stop/rollback thresholds.
-
+Future catalogue batches still require the ingestion preflight, a recent
+restorable production backup, a staging sample, reviewed taxonomy and overlap
+results, and numerical stop/rollback thresholds. A previously completed batch
+does not authorize the next one.

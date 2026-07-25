@@ -5,11 +5,14 @@ import; it does not authorize one.
 
 ## Baseline recorded on 25 July 2026
 
-- 5 courses and 43 playlist memberships.
-- Coverage: JEE, Class 11, Physics.
+- 18 courses and 197 playlist memberships.
+- Coverage: JEE Physics; 6 Class 11 courses, 12 Class 12 courses, and 13
+  Dropper-compatible courses.
 - Core metadata missing from 0 courses.
 - Fully contained duplicate candidates: 0.
 - Registered source channel: Mohit Tyagi.
+- Nuclear Physics is intentionally excluded: its source playlist repeats a
+  YouTube video ID and is blocked before any database write.
 
 Regenerate the read-only baseline immediately before every batch:
 
@@ -29,6 +32,9 @@ The channel importer:
 - checks that a named playlist belongs to the named channel;
 - requires `--confirm-production` for production writes;
 - refuses production imports whose chapter reference does not already exist;
+- reports repeated YouTube video IDs as a dry-run blocker;
+- refuses a playlist with repeated YouTube video IDs before chapter lookup,
+  chapter creation, or the import RPC;
 - sends one transactional playlist RPC after YouTube metadata is collected.
 
 These controls limit the size of a mistake. They do not decide whether
@@ -76,7 +82,8 @@ npm run import -- <CHANNEL_ID> `
 
 Review `../outputs/ingestion-dry-run.json`. Stop if the playlist already
 exists, the channel differs, usable video count is unexpected, metadata is
-uncertain, or `production_blocker` is true.
+uncertain, `chapter.production_blocker` is true, or
+`video_validation.production_blocker` is true.
 
 ### 2. Disposable-staging sample
 
@@ -138,6 +145,7 @@ Stop the batch without starting another when any of these occurs:
 - source ownership differs;
 - a production chapter would need creation;
 - usable video count differs materially from the reviewed plan;
+- `video_validation.duplicate_youtube_video_ids` is non-empty;
 - any RPC, authorization, or YouTube quota error occurs;
 - missing required metadata appears;
 - unexpected duplicate containment appears;

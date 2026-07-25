@@ -6,6 +6,7 @@ import {
   assertProductionWriteAllowed,
   assertExpectedRowCount,
   buildImportPayload,
+  findDuplicateVideoIds,
   parseBulkConfirmation,
   parseImporterArgs,
   playlistFromOwner,
@@ -33,6 +34,20 @@ describe("channel ingestion metadata", () => {
     expect(source).toMatch(
       /args\.environment === "production" && !existingChapter/,
     );
+  });
+
+  it("rejects duplicate YouTube video IDs before any chapter write", () => {
+    expect(findDuplicateVideoIds([
+      { videoId: "video-1" },
+      { videoId: "video-2" },
+      { videoId: "video-1" },
+      { videoId: "video-1" },
+    ])).toEqual(["video-1"]);
+
+    const source = readFileSync(resolve("src/scripts/importChannel.js"), "utf8");
+    const writeBranch = source.slice(source.indexOf("for (const plan of plans) {", source.indexOf("const summary =")));
+    expect(writeBranch.indexOf("findDuplicateVideoIds(ytVideos)"))
+      .toBeLessThan(writeBranch.indexOf("ensureChapter("));
   });
 
   it("requires an explicit content type, language and difficulty", async () => {

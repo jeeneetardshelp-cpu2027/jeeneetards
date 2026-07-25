@@ -43,6 +43,18 @@ export function validateCourseAttribution({ teacher, audienceFocus, classLabels 
   return { teacher: teacher.trim(), audienceFocus };
 }
 
+export function findDuplicateVideoIds(videos = []) {
+  const seen = new Set();
+  const duplicates = new Set();
+  for (const video of videos) {
+    const videoId = String(video?.videoId ?? "").trim();
+    if (!videoId) continue;
+    if (seen.has(videoId)) duplicates.add(videoId);
+    else seen.add(videoId);
+  }
+  return [...duplicates];
+}
+
 export function buildImportPayload({
   plan,
   channel,

@@ -29,6 +29,7 @@ import {
   assertImportSelection,
   assertProductionWriteAllowed,
   buildImportPayload,
+  findDuplicateVideoIds,
   parseImporterArgs,
   playlistFromOwner,
   promptCourseMetadata,
@@ -258,11 +259,16 @@ async function main() {
           getPlaylistVideos(ytKey, plan.playlist.id),
         ]);
       if (playlistError) throw playlistError;
+      const duplicateVideoIds = findDuplicateVideoIds(ytVideos);
       entries.push({
         youtube_playlist_id: plan.playlist.id,
         title: plan.playlist.title,
         published_video_count: Number(plan.playlist.videoCount),
         usable_video_count: ytVideos.length,
+        video_validation: {
+          duplicate_youtube_video_ids: duplicateVideoIds,
+          production_blocker: duplicateVideoIds.length > 0,
+        },
         existing_playlist: existingPlaylist
           ? { id: existingPlaylist.id, title: existingPlaylist.title }
           : null,
@@ -300,6 +306,13 @@ async function main() {
     say(`\n${C.teal}▶ ${plan.playlist.title}${C.reset}`);
 
     const ytVideos = await getPlaylistVideos(ytKey, plan.playlist.id);
+    const duplicateVideoIds = findDuplicateVideoIds(ytVideos);
+    if (duplicateVideoIds.length > 0) {
+      fail(
+        `Playlist "${plan.playlist.title}" repeats YouTube video ID(s): ` +
+        `${duplicateVideoIds.join(", ")}. No database writes were attempted.`,
+      );
+    }
     if (ytVideos.length === 0) {
       say(`  ${C.yellow}no usable videos, skipping${C.reset}`);
       continue;
