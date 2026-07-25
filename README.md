@@ -197,6 +197,9 @@ read-only production capability check against the intended production project.
 
 ## Further operational documentation
 
+- [Release checkpoint — 25 July 2026](docs/release_notes_2026-07-25.md)
+- [Backup and restore readiness](docs/backup_restore_readiness.md)
+- [Checklist for future Codex tasks](docs/codex_task_safety_checklist.md)
 - [Frontend deployment gate](docs/frontend_deployment.md)
 - [Catalogue scale gate](docs/catalog_scale_gate.md)
 - [Import and migration hardening](docs/import_hardening.md)
