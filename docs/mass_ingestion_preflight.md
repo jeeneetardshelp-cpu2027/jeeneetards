@@ -5,8 +5,8 @@ import; it does not authorize one.
 
 ## Baseline recorded on 25 July 2026
 
-- 21 courses and 220 playlist memberships.
-- Coverage: JEE Physics; 6 Class 11 courses, 15 Class 12 courses, and 16
+- 24 courses and 251 playlist memberships.
+- Coverage: JEE Physics; 9 Class 11 courses, 15 Class 12 courses, and 19
   Dropper-compatible courses.
 - Core metadata missing from 0 courses.
 - Fully contained duplicate candidates: 0.
@@ -15,6 +15,9 @@ import; it does not authorize one.
   YouTube video ID and is blocked before any database write.
 - X-rays is intentionally deferred because its playlist spans multiple
   curriculum concepts and needs an explicit chapter-placement decision.
+- Gravitation and SHM are deferred because their usable video counts are lower
+  than their published playlist counts. Circular Motion and KTG are deferred
+  because their source lesson ordering is inconsistent.
 
 Regenerate the read-only baseline immediately before every batch:
 

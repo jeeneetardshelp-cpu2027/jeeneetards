@@ -92,6 +92,26 @@ experiments, Bragg diffraction, and electron diffraction; assigning all four
 to one chapter needs a separate taxonomy decision. No migrations, schema
 changes, or application-code changes were made for this batch.
 
+### Class 11 mechanics and thermal batch
+
+A further staging-first batch added:
+
+- Work, Power and Energy: 11 new lessons.
+- Centre of Mass: 12 new lessons.
+- Thermodynamics: 8 new lessons.
+
+Production now contains 24 courses and 251 ordered playlist memberships.
+Anonymous post-import checks confirmed exact course counts, contiguous lesson
+positions, complete video metadata, correct Class 11/Dropper attribution, zero
+blocked embeds, zero new overlap pairs, and zero fully contained duplicate
+course candidates. The anonymous production capability contract passed.
+
+Four other Class 11 candidates were rejected rather than normalized silently:
+Gravitation exposed only 6 of 9 published entries, SHM exposed 12 of 13 plus
+one existing-video overlap, and Circular Motion and KTG had inconsistent
+source lesson ordering. No migrations, schema changes, or application-code
+changes were made for this batch.
+
 ## Operational boundary
 
 Future catalogue batches still require the ingestion preflight, a recent
