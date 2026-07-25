@@ -164,7 +164,7 @@ function SkeletonCard() {
 // ---------------------------------------------------------------- page
 export default function PlaylistBrowse({
   tab, onTabChange, filters, lectureView, lectureTotal = null, lectureLoading = false,
-  comparisonEnabled = true,
+  comparisonEnabled = true, mobileSearch = null, onResetFilters = null,
 }) {
   const navigate = useNavigate();
   const [params, setParams] = useSearchParams();
@@ -470,13 +470,24 @@ export default function PlaylistBrowse({
                 <X className={`h-5 w-5 ${t.muted}`} />
               </button>
             </div>
+            {mobileSearch && (
+              <div className="mb-4">
+                <p className={`mb-2 text-xs font-semibold uppercase tracking-wide ${t.muted}`}>
+                  Search
+                </p>
+                {mobileSearch}
+              </div>
+            )}
             {filters.sheetContent}
             {/* Reset and Show sit together: the sheet stays open while the
                 student adjusts filters (selections are URL-backed, so the
                 results behind update live), and Show is the deliberate exit. */}
             <div className="mt-4 flex items-center gap-2">
               <button
-                onClick={() => setParams(clearAllChips(params))}
+                onClick={() => {
+                  if (onResetFilters) onResetFilters();
+                  else setParams(clearAllChips(params));
+                }}
                 disabled={activeFilterCount === 0}
                 className={`min-h-11 shrink-0 rounded-xl border ${t.border} px-4 text-sm font-medium ${t.text} ${t.hover} disabled:opacity-40`}
               >

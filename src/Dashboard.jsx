@@ -180,7 +180,7 @@ function VideoModal({ video, onClose }) {
 // ---------------------------------------------------------------------
 // 6. SEARCH BAR
 // ---------------------------------------------------------------------
-function SearchBar({ value, onChange }) {
+function SearchBar({ value, onChange, ariaLabel = "Search courses and lessons" }) {
   const { t } = useTheme();
   return (
     <div className="relative w-full">
@@ -189,6 +189,7 @@ function SearchBar({ value, onChange }) {
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
+        aria-label={ariaLabel}
         placeholder="Search courses and lessons…"
         className={`w-full min-h-11 min-w-0 rounded-lg border ${t.border} ${t.input} ${t.text} py-2 pl-9 pr-11 text-sm outline-none transition focus:ring-2 focus:ring-teal-500`}
       />
@@ -283,8 +284,19 @@ export default function Dashboard() {
   // database query (and the shareable link) only update once typing settles.
   const [searchInput, setSearchInput] = useState(urlQuery);
   const debouncedSearch = useDebouncedValue(searchInput, 300);
+  // Back/Forward and URL-backed Reset can change `q` without typing in the
+  // input. Keep the controlled field aligned so a stale debounced value cannot
+  // silently put a cleared search back into the URL.
+  useEffect(() => {
+    setSearchInput(urlQuery);
+  }, [urlQuery]);
   useEffect(() => {
     const wanted = debouncedSearch.trim();
+    // Reset, Clear, and browser navigation can change the field before the
+    // previous debounced value expires. Never write that obsolete value back
+    // into the URL.
+    if (searchInput.trim() !== wanted) return;
+
     const current = params.get("q") ?? "";
     // DO NOTHING when the URL already says this. On mount both are "", and
     // writing anyway pushed a snapshot of the params taken BEFORE the
@@ -303,7 +315,7 @@ export default function Dashboard() {
       { replace: true }
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedSearch, params]);
+  }, [debouncedSearch, searchInput, params]);
 
   // The inactive tab sends no catalogue request. At library scale a student
   // viewing courses must not also download lectures in the background.
@@ -364,9 +376,11 @@ export default function Dashboard() {
     enabled: canonical.ready && !filterOptions.loading && !filterOptions.error
       && !teacherRequested && !canonical.board,
   });
-  const heading =
-    chapterName ?? subjectName ?? goalName ??
-    (tab === "playlists" ? "All courses" : "All lessons");
+  const searchTerm = urlQuery.trim();
+  const scopeHeading = chapterName ?? subjectName ?? goalName ?? null;
+  const heading = searchTerm
+    ? `Search results for “${searchTerm}”${scopeHeading ? ` in ${scopeHeading}` : ""}`
+    : scopeHeading ?? (tab === "playlists" ? "All courses" : "All lessons");
 
   // Chip labels come from the tree we already resolved, keyed by whatever the
   // URL actually holds (slug OR legacy id) so both forms render a real name.
@@ -541,6 +555,14 @@ export default function Dashboard() {
             tab={tab}
             onTabChange={setTab}
             comparisonEnabled={RELEASE_CAPABILITIES.comparison}
+            mobileSearch={
+              <SearchBar
+                value={searchInput}
+                onChange={setSearchInput}
+                ariaLabel="Search catalogue"
+              />
+            }
+            onResetFilters={clearAll}
             filters={{ goal: category, board: canonical.boardId, stage: canonical.stage,
                        subject, chapter, search: urlQuery, sheetContent: filterPanel("sheet"),
                        // Validated, de-duplicated, bounded. Never the raw URL.

@@ -119,7 +119,8 @@ export const isAvailable = (key) => AVAILABLE.some((f) => f.key === key);
 export const filterByKey = (key) => AVAILABLE.find((f) => f.key === key) ?? null;
 
 /** Every canonical URL parameter this phase owns. Used by Clear All. */
-// `teacher` is capability-gated by teachers_v7 rather than listed in AVAILABLE
-// (which is always rendered). It still counts as an active URL filter whenever
-// that capability exists.
-export const FILTER_PARAMS = [...AVAILABLE.map((f) => f.param), "teacher"];
+// Search is rendered outside FilterPanel, and `teacher` is capability-gated by
+// teachers_v7 rather than listed in AVAILABLE (which is always rendered).
+// Both still narrow the result set, so both must count in the mobile filter
+// badge and enable Reset.
+export const FILTER_PARAMS = ["q", ...AVAILABLE.map((f) => f.param), "teacher"];

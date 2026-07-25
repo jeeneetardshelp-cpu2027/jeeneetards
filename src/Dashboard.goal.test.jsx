@@ -10,7 +10,7 @@
 //
 // Run: npm test
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter, Routes, Route } from "react-router-dom";
 
 // Record every query the page issues.
@@ -98,6 +98,32 @@ describe("Dashboard route → playlist query", () => {
     expect(screen.getByText("Individual lectures").getAttribute("aria-current")).toBeNull();
     expect(screen.getByPlaceholderText("Search courses and lessons…")).toBeTruthy();
     expect(calls.filter((c) => c.table === "videos" && c.range != null)).toHaveLength(0);
+  });
+
+  it("keeps a URL search visible, counted, and resettable on mobile", async () => {
+    renderAt("/browse?q=kinematics");
+
+    expect(await screen.findByRole("heading", {
+      name: "Search results for “kinematics”",
+    })).toBeTruthy();
+
+    fireEvent.click(screen.getByRole("button", { name: "Filters (1)" }));
+    const mobileSearch = screen.getByRole("textbox", { name: "Search catalogue" });
+    expect(mobileSearch.value).toBe("kinematics");
+
+    const reset = screen.getByRole("button", { name: "Reset" });
+    expect(reset.disabled).toBe(false);
+    fireEvent.click(reset);
+
+    await waitFor(() => {
+      expect(screen.getByRole("heading", { name: "All courses" })).toBeTruthy();
+      expect(screen.getByRole("button", { name: "Filters" })).toBeTruthy();
+      expect(screen.getByRole("textbox", { name: "Search catalogue" }).value).toBe("");
+    });
+
+    // The old bug re-added q when the stale debounced field fired.
+    await new Promise((resolve) => setTimeout(resolve, 400));
+    expect(screen.getByRole("heading", { name: "All courses" })).toBeTruthy();
   });
 
   it("queries only a lecture page when the lectures tab is active", async () => {
