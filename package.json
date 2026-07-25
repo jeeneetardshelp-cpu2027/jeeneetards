@@ -11,6 +11,7 @@
     "lint": "eslint . --max-warnings=0",
     "audit:production-catalog": "node src/scripts/reportProductionCatalog.js",
     "audit:manage-capabilities": "node src/scripts/inspectManageCapabilities.js",
+    "verify:manage-ui-staging": "node src/scripts/verifyManageUiStaging.js",
     "build:bootstrap": "node src/scripts/buildStagingBootstrap.js",
     "build:faculty-staging": "node src/scripts/buildFacultyStagingDelta.js",
     "build:faculty-repair": "node src/scripts/buildFacultyStagingRepair.js",

@@ -27,6 +27,7 @@ import { courseImportRpc, withFacultySelection } from "./facultyImport.js";
 import FacultyReviewPanel from "./FacultyReviewPanel.jsx";
 import ContentQualityPanel from "./ContentQualityPanel.jsx";
 import { hasAdminAccess } from "./adminAccess.js";
+import ManageCatalogPanel from "./ManageCatalogPanel.jsx";
 
 // ---------------------------------------------------------------------
 //  Small helpers
@@ -860,6 +861,7 @@ export default function AdminPanel() {
   const TABS = [
     { id: "import", label: "Import Playlist" },
     { id: "manual", label: "Add Manually" },
+    { id: "manage", label: "Manage" },
     { id: "quality", label: "Content Quality" },
     { id: "faculty", label: "Faculty Review" },
     { id: "reports", label: "Reports" },
@@ -887,7 +889,9 @@ export default function AdminPanel() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-3xl px-6 py-8">
+      <main className={`mx-auto px-6 py-8 ${
+        tab === "manage" ? "max-w-6xl" : "max-w-3xl"
+      }`}>
         {/* Tabs */}
         <div className={`scrollbar-none mb-6 flex gap-5 overflow-x-auto border-b ${t.divider}`}>
           {TABS.map((tb) => {
@@ -919,6 +923,13 @@ export default function AdminPanel() {
           <ContentQualityPanel />
         ) : tab === "faculty" ? (
           <FacultyReviewPanel />
+        ) : tab === "manage" ? (
+          <ManageCatalogPanel
+            channels={admin.channels}
+            learningGoals={admin.learningGoals}
+            classLevelRows={admin.classLevelRows}
+            chapters={admin.chapters}
+          />
         ) : tab === "import" ? (
           <ImportPlaylistForm
             channels={admin.channels}
