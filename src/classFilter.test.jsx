@@ -50,6 +50,7 @@ vi.mock("./supabaseClient", () => ({
 
 import { usePlaylistBrowse, classSlugsForStage, PAGE_SIZE } from "./usePlaylistBrowse.js";
 import { playlistMatchesClass } from "./classLevels.js";
+import { useCanonicalFilters } from "./useCanonicalFilters.js";
 
 // Non-vacuous fixtures: every class has content, so an empty result is a
 // failure rather than the natural state of the data.
@@ -70,6 +71,16 @@ const CATALOGUE = [
 
 let result;
 function Probe(props) { result = usePlaylistBrowse(props); return null; }
+function UrlDrivenProbe({ params }) {
+  const canonical = useCanonicalFilters(params);
+  result = usePlaylistBrowse({
+    goalId: canonical.goalId,
+    subjectId: canonical.subjectId,
+    stage: canonical.stage,
+    enabled: canonical.ready,
+  });
+  return null;
+}
 const run = async (props) => {
   render(<MemoryRouter><Probe {...props} /></MemoryRouter>);
   await waitFor(() => expect(result.loading).toBe(false));
@@ -110,6 +121,28 @@ describe("the slug set each stage filters on", () => {
 
 // ---------------------------------------------------------------- the query
 describe("class filtering happens in the database", () => {
+  it("changes the database predicate when only the URL class changes", async () => {
+    const class11 = new URLSearchParams("goal=1&subject=1&class=11");
+    const class12 = new URLSearchParams("goal=1&subject=1&class=12");
+    const view = (params) => (
+      <MemoryRouter>
+        <UrlDrivenProbe params={params} />
+      </MemoryRouter>
+    );
+
+    const { rerender } = render(view(class11));
+    await waitFor(() => {
+      const query = calls.filter((call) => call.table === "playlists").at(-1);
+      expect(query?.in).toEqual(["pcl.class_levels.slug", ["class-11"]]);
+    });
+
+    rerender(view(class12));
+    await waitFor(() => {
+      const query = calls.filter((call) => call.table === "playlists").at(-1);
+      expect(query?.in).toEqual(["pcl.class_levels.slug", ["class-12"]]);
+    });
+  });
+
   it("joins the junction and filters on it", async () => {
     const { query } = await run({ stage: "class-11" });
     expect(query.cols).toContain("playlist_class_levels!inner");
