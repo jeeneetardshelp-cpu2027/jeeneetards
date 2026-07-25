@@ -5,14 +5,16 @@ import; it does not authorize one.
 
 ## Baseline recorded on 25 July 2026
 
-- 18 courses and 197 playlist memberships.
-- Coverage: JEE Physics; 6 Class 11 courses, 12 Class 12 courses, and 13
+- 21 courses and 220 playlist memberships.
+- Coverage: JEE Physics; 6 Class 11 courses, 15 Class 12 courses, and 16
   Dropper-compatible courses.
 - Core metadata missing from 0 courses.
 - Fully contained duplicate candidates: 0.
 - Registered source channel: Mohit Tyagi.
 - Nuclear Physics is intentionally excluded: its source playlist repeats a
   YouTube video ID and is blocked before any database write.
+- X-rays is intentionally deferred because its playlist spans multiple
+  curriculum concepts and needs an explicit chapter-placement decision.
 
 Regenerate the read-only baseline immediately before every batch:
 

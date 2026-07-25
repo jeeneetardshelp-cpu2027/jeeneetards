@@ -70,6 +70,28 @@ Validation after the update:
 - Frontend release and anonymous production capability gates passed.
 - The production dependency audit found zero vulnerabilities.
 
+### Subsequent reviewed content batch
+
+The next staging-first batch added three Class 12/Dropper courses:
+
+- Photoelectric Effect: 7 new lessons under Dual Nature of Radiation and
+  Matter.
+- Bohr's Model: 9 new lessons under Atoms.
+- Optical Instruments: 7 new lessons under Ray Optics and Optical
+  Instruments.
+
+Production now contains 21 courses and 220 ordered playlist memberships.
+Anonymous post-import checks confirmed contiguous lesson positions, complete
+video metadata, zero blocked embeds, zero new overlaps, and zero fully
+contained duplicate-course candidates. The production capability contract also
+passed.
+
+Nuclear Physics remains blocked by its repeated source video ID. The X-rays
+playlist was deferred because its lessons span X-ray production, atomic
+experiments, Bragg diffraction, and electron diffraction; assigning all four
+to one chapter needs a separate taxonomy decision. No migrations, schema
+changes, or application-code changes were made for this batch.
+
 ## Operational boundary
 
 Future catalogue batches still require the ingestion preflight, a recent
