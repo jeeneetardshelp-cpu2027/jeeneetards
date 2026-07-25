@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "test": "vitest run",
     "lint": "eslint . --max-warnings=0",
+    "audit:production-catalog": "node src/scripts/reportProductionCatalog.js",
     "build:bootstrap": "node src/scripts/buildStagingBootstrap.js",
     "build:faculty-staging": "node src/scripts/buildFacultyStagingDelta.js",
     "build:faculty-repair": "node src/scripts/buildFacultyStagingRepair.js",

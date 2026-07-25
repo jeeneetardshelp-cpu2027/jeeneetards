@@ -110,6 +110,7 @@ the local `.env` file or any privileged credential.
 | `npm run preview` | Preview the built bundle locally |
 | `npm run verify:frontend-release` | Check secrets, metadata, headers, SPA routing and legal placeholders |
 | `npm run verify:production-capabilities` | Read-only check that production API capabilities match the frontend flags |
+| `npm run audit:production-catalog` | Read-only anonymous inventory of live catalogue metadata and coverage |
 | `npm run ui:audit` | Run the configured responsive browser audit |
 | `npm run pack:review` | Build a review archive outside the repository |
 
@@ -124,6 +125,11 @@ npm run verify:frontend-release
 
 GitHub Actions repeats `npm ci`, static checks, tests, build and the frontend
 release verifier for every push to `main` and every pull request.
+
+The production catalogue audit uses only the browser-safe anonymous key and
+performs one `SELECT`; it has no write path and never imports the service-role
+key. Its sanitized JSON report is written outside the repository at
+`../outputs/catalog-production-inventory.json`.
 
 ## Project map
 
