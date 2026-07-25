@@ -24,6 +24,7 @@ import Home from "./Home.jsx";
 import Footer from "./Footer.jsx";
 import LegalPage from "./LegalPage.jsx";
 import PrivacyPolicy from "./PrivacyPolicy.jsx";
+import PasswordReset from "./PasswordReset.jsx";
 import FeatureUnavailable from "./FeatureUnavailable.jsx";
 import AppErrorBoundary from "./AppErrorBoundary.jsx";
 import RouteMetadata from "./PageMetadata.jsx";
@@ -222,7 +223,7 @@ function ComparisonRoute() {
   return (
     <FeatureUnavailable
       title="Course comparison is coming soon"
-      detail="The comparison database is still being verified. Course selection is hidden until every comparison value can be shown accurately."
+      detail="The comparison database is still under review. Course selection is hidden until every comparison value can be shown accurately."
     />
   );
 }
@@ -292,6 +293,7 @@ export default function App() {
           />
           <Route path="/terms" element={<TermsPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
+          <Route path="/reset" element={<PasswordReset />} />
           {/* anything else -> home */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>

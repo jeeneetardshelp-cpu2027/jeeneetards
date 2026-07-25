@@ -157,6 +157,31 @@ for (const file of ["src/LegalPage.jsx", "src/PrivacyPolicy.jsx"]) {
   else pass(`${file} contains no known legal placeholders`);
 }
 
+const legalInputsFile = "docs/legal_release_inputs.md";
+if (!exists(legalInputsFile)) {
+  fail(`${legalInputsFile} is missing`);
+} else {
+  const source = read(legalInputsFile);
+  const ownerFacts = [
+    "Legal entity or individual operator name",
+    "Contact email",
+    "Postal address and jurisdiction",
+    "Hosting provider",
+    "Effective date",
+  ];
+  const missingFacts = ownerFacts.filter((fact) => !source.includes(fact));
+  if (missingFacts.length) {
+    fail(`${legalInputsFile} omits owner inputs: ${missingFacts.join(", ")}`);
+  } else if (!ownerFacts.every((fact) => {
+    const line = source.split(/\r?\n/).find((candidate) => candidate.includes(fact)) ?? "";
+    return /Awaiting owner input/i.test(line);
+  })) {
+    fail(`${legalInputsFile} must clearly mark every owner-only fact as awaiting input`);
+  } else {
+    pass("owner-supplied legal facts are explicitly listed as outstanding");
+  }
+}
+
 if (failures.length) {
   for (const message of failures) console.error(`✗ ${message}`);
   console.error(`\n${failures.length} frontend release gate${failures.length === 1 ? "" : "s"} failed`);

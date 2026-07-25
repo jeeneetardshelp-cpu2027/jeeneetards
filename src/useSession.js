@@ -10,7 +10,11 @@ export function useSession() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!isSupabaseConfigured) {
+    if (
+      !isSupabaseConfigured ||
+      !supabase?.auth?.getSession ||
+      !supabase?.auth?.onAuthStateChange
+    ) {
       setLoading(false);
       return;
     }

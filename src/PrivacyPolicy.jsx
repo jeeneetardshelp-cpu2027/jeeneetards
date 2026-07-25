@@ -3,7 +3,6 @@ import { useTheme } from "./theme.jsx";
 import { BRAND_TEAL } from "./brandColors.js";
 
 const BRAND = { teal: BRAND_TEAL };
-const CONTACT = "rajesh@gmail.com";
 
 function Section({ title, children }) {
   const { t } = useTheme();
@@ -39,154 +38,139 @@ export default function PrivacyPolicy() {
       <main className="py-10">
         <Container width="reading">
           <h1 className={`text-2xl font-bold ${t.text}`}>Privacy Policy</h1>
-          <p className={`mt-1 text-xs ${t.muted}`}>Effective: 23 July 2026</p>
+          <p className={`mt-1 text-xs ${t.muted}`}>
+            Effective date: awaiting owner approval
+          </p>
 
-          <Section title="1. Scope and operator">
+          <Section title="1. Scope and operator details">
             <p>
-              This policy explains how JEENEETARD, based in Jaipur, Rajasthan,
-              India, handles information in its current browse-only educational
-              directory. It applies to the public website and not to the
-              independent services operated by YouTube, Google, Supabase, or
-              Vercel.
+              This policy describes the information paths implemented by
+              JEENEETARD. The operator&apos;s legal name, public contact details,
+              postal address, jurisdiction, and final effective date must be
+              supplied and approved by the owner before launch.
             </p>
           </Section>
 
-          <Section title="2. Browse-only release">
+          <Section title="2. Browsing and account information">
             <p>
-              You can browse courses and lessons without creating an account.
-              Public student account creation, ratings, reviews, and report
-              submissions are disabled in this release. JEENEETARD does not ask
-              public visitors for a name, age, school, phone number, or email
-              address to use the directory.
+              Courses and lessons can be browsed without an account. The code
+              also supports student accounts through Supabase Auth. When that
+              capability is enabled, authentication can handle an email address and Supabase user identifier,
+              session and recovery tokens, and
+              security events needed to create, access, recover, and protect an
+              account.
+            </p>
+            <p>
+              Public account, rating, review, and report controls are currently
+              hidden behind release controls. Records created during authorised
+              administration, testing, or an earlier enabled period may still
+              exist until they are removed under the approved retention policy.
             </p>
           </Section>
 
-          <Section title="3. Information handled when you use the site">
+          <Section title="3. Ratings, reviews, and content reports">
             <p>
-              <strong>Technical requests:</strong> Vercel hosts the website and
-              Supabase provides database and API services. Those providers may
-              receive standard request information such as IP address, browser
-              type, timestamps, requested pages, and security diagnostics when
-              they deliver or protect the service.
+              The implemented course-rating path can store a student account
+              identifier; overall, clarity, and question ratings; difficulty
+              and suitability selections; and an optional free-text review.
             </p>
             <p>
-              <strong>Messages you choose to send:</strong> if you email us, we
-              receive your email address, message, and any information you
-              include. Please do not send unnecessary personal information.
-            </p>
-            <p>
-              JEENEETARD currently uses no first-party advertising system and
-              no third-party audience analytics service. We do not sell or rent
-              personal information.
+              The implemented reporting path can store a report reason, optional free-text note, and reporter account identifier. Free
+              text may contain personal information if a person chooses to
+              include it, so users should submit only what is necessary.
             </p>
           </Section>
 
-          <Section title="4. Information stored only in your browser">
+          <Section title="4. Information stored in your browser">
             <p>
-              The site uses local browser storage to remember your light or
-              dark theme and your on-device watch progress, including recently
-              watched courses and lesson identifiers. Session storage may keep
-              your return URL and scroll position during navigation. This
-              information remains in your browser and is not uploaded to a
-              JEENEETARD account. You can remove it by clearing this site's
-              browser data.
+              Local storage key <code>lecture-library-theme</code> remembers
+              the light or dark theme. Local storage key{" "}
+              <code>ll_progress_v1</code> can remember course and lesson
+              identifiers, titles, watched items, and update times on the
+              device.
+            </p>
+            <p>
+              Session storage entries beginning with <code>returnTo:</code> can
+              remember the filtered course page to return to. Entries beginning
+              with <code>scroll:</code> can remember a page&apos;s scroll
+              position. This browser data is not attached to a Supabase account
+              by the current frontend and can be removed by clearing site data.
             </p>
           </Section>
 
-          <Section title="5. YouTube and Google">
+          <Section title="5. Providers, video playback, and logs">
             <p>
-              Videos use YouTube's privacy-enhanced embed domain. Loading or
-              using the player, thumbnails, or a direct YouTube link can still
-              send technical and interaction information to YouTube or Google.
-              Their processing is governed by the{" "}
+              Vercel and Supabase deliver the site, database, API, and
+              authentication services. They may process standard request and security logs,
+              such as IP address, browser information,
+              timestamps, requested resources, authentication events, and
+              diagnostics, under their own terms and settings.
+            </p>
+            <p>
+              Videos use YouTube&apos;s privacy-enhanced embed domain. Loading a
+              player, thumbnail, or direct link can still send technical and
+              interaction information to YouTube or Google. Their processing is
+              described in the{" "}
               <ExternalLink href="https://policies.google.com/privacy">
                 Google Privacy Policy
               </ExternalLink>{" "}
-              and the{" "}
+              and{" "}
               <ExternalLink href="https://www.youtube.com/t/terms">
                 YouTube Terms of Service
               </ExternalLink>
-              . Privacy-enhanced mode limits personalisation associated with an
-              embedded view, but it does not make YouTube part of JEENEETARD or
-              place YouTube's processing under our control.
+              .
             </p>
           </Section>
 
-          <Section title="6. Why information is used">
+          <Section title="6. Purposes and sharing">
             <p>
-              The limited information described above is used to deliver and
-              secure the directory, diagnose failures, remember preferences on
-              your device, respond to messages, handle rights-holder requests,
-              and comply with legal obligations. We do not use it to make
-              automated decisions about students or to target advertising.
+              Information is used to deliver and secure the service, maintain
+              sessions, recover accounts, remember on-device preferences and
+              progress, receive ratings or reports when enabled, diagnose
+              failures, respond to requests, and meet legal obligations.
+            </p>
+            <p>
+              Information may be shared with the providers above when necessary
+              to operate their services, when a user directs the sharing, or
+              when law requires it. The current frontend contains no
+              first-party advertising system or third-party audience analytics
+              integration and does not implement the sale of personal
+              information.
             </p>
           </Section>
 
-          <Section title="7. Children and students under 18">
+          <Section title="7. Retention and deletion">
             <p>
-              JEENEETARD serves exam-preparation and school students, including
-              users who may be under 18. For that reason, the public release is
-              browse-only and does not offer student accounts or contribution
-              forms. Users under 18 should use the service with a parent or
-              guardian's involvement.
-            </p>
-            <p>
-              We do not intentionally request personal information from a child
-              through the website. If a child sends personal information to the
-              contact address, a parent or guardian may ask us to delete it.
+              Browser data remains until the user or browser removes it.
+              Provider logs and database records remain according to provider
+              settings and the operator&apos;s approved retention policy. Exact
+              retention periods and the public request process are owner inputs
+              that must be published before launch; the code does not establish
+              those legal periods.
             </p>
           </Section>
 
-          <Section title="8. Sharing, transfers, and retention">
+          <Section title="8. Students under 18">
             <p>
-              Information is shared only as needed with service providers such
-              as Vercel and Supabase, with YouTube or Google when their content
-              is loaded or used, when you direct us to share it, or when law
-              requires it. These providers may process information outside your
-              state or country under their own terms and safeguards.
-            </p>
-            <p>
-              Browser-stored preferences and progress remain until you clear
-              them or the browser removes them. Hosting and security logs are
-              retained according to operational need and provider settings.
-              Emails are retained only as long as reasonably needed to answer,
-              document, or resolve the request, subject to legal obligations.
+              The catalogue is likely to be used by students under 18. A parent
+              or guardian should be involved when an under-18 student creates an
+              account, follows an external link, or submits information. The
+              owner must approve the applicable age, consent, and deletion
+              process before enabling public account or contribution controls.
             </p>
           </Section>
 
-          <Section title="9. Your choices and requests">
+          <Section title="9. Choices, security, and contact">
             <p>
-              You may block or clear browser storage, decline to load a video,
-              or open YouTube under your own browser settings. For information
-              that you sent directly by email, you may request access,
-              correction, deletion, or withdrawal of consent where applicable.
-              We may need enough information to verify and process a request.
+              Users can clear local or session storage, avoid loading a video,
+              sign out of an enabled account, and use the password-reset flow.
+              No internet service can promise absolute security.
             </p>
-          </Section>
-
-          <Section title="10. Security and policy changes">
             <p>
-              We use reasonable technical and organisational safeguards, but no
-              internet service can promise absolute security. This policy will
-              be updated before enabling accounts, student submissions,
-              analytics, advertising, or another materially different data use.
-              The effective date will be revised when material changes are
-              published.
-            </p>
-          </Section>
-
-          <Section title="11. Contact">
-            <p>
-              For privacy questions, requests, or concerns, contact JEENEETARD
-              at{" "}
-              <a
-                href={`mailto:${CONTACT}`}
-                className="font-medium underline"
-                style={{ color: BRAND.teal }}
-              >
-                {CONTACT}
-              </a>
-              . The responsible contact is based in Jaipur, Rajasthan, India.
+              The public email, postal contact, and procedure for access,
+              correction, deletion, withdrawal, privacy, and rights-holder
+              requests are awaiting owner approval and must be published before
+              launch.
             </p>
           </Section>
         </Container>

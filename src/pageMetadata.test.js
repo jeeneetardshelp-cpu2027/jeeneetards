@@ -36,13 +36,14 @@ describe("public page metadata", () => {
   it("keeps restricted and unavailable routes out of the index", () => {
     expect(metadataForLocation("/admin").robots).toBe("noindex, nofollow");
     expect(metadataForLocation("/admin/").robots).toBe("noindex, nofollow");
+    expect(metadataForLocation("/reset").robots).toBe("noindex, nofollow");
     expect(metadataForLocation("/compare").robots).toBe("noindex, follow");
     expect(metadataForLocation("/faculty/example").robots).toBe(
       "noindex, follow",
     );
   });
 
-  it("uses verified course data when a course finishes loading", () => {
+  it("uses loaded course data when a course finishes loading", () => {
     const page = metadataForCourse({
       title: "Rectilinear Motion (Kinematics)",
       subject: "Physics",

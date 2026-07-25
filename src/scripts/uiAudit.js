@@ -8,7 +8,7 @@
 //
 // Output: ui-audit/*.png  +  ui-audit/report.json
 import { chromium } from "playwright";
-import { mkdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, writeFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -31,6 +31,7 @@ const JOURNEY = [
   ['subject', '/explore/jee/class-11/physics'],
   ['results', '/explore/jee/class-11/physics/kinematics'],
   ['browse', '/browse'],
+  ['reset', '/reset'],
   ['chapterhub', '/chapter/1'],
   ['player', null],
 ];
@@ -42,7 +43,19 @@ const LONG_EN = "#7 Examples on motion under gravity with graph | Rectilinear mo
 const LONG_HI = "गतिकी — सरल रेखीय गति के उदाहरण एवं गुरुत्व के अंतर्गत गति का सम्पूर्ण अध्याय पुनरावृत्ति कक्षा ११ भौतिक विज्ञान";
 
 const results = [];
-const browser = await chromium.launch();
+const browserCandidates = [
+  process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE,
+  process.platform === "win32"
+    ? "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
+    : null,
+  process.platform === "win32"
+    ? "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe"
+    : null,
+].filter(Boolean);
+const systemBrowser = browserCandidates.find((candidate) => existsSync(candidate));
+const browser = await chromium.launch(
+  systemBrowser ? { executablePath: systemBrowser } : {},
+);
 
 // Never audit a guessed database id. Discover a real course through the same
 // catalogue control a student uses, then reuse that route at every viewport.
@@ -155,7 +168,7 @@ for (const { w: width, h: height } of VIEWPORTS) {
     const m = await probe(page);
     results.push({ width, height, step: name, path, ...m });
     // full-page shot only for the two most informative steps, to keep it quick
-    if (["results","browse","home","chapterhub","player"].includes(name)) {
+    if (["results","browse","reset","home","chapterhub","player"].includes(name)) {
       await page.screenshot({ path: resolve(OUT, `${width}-${name}.png`), fullPage: false });
     }
   }

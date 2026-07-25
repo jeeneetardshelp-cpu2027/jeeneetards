@@ -75,6 +75,14 @@ function StudentAuthForm() {
         >
           {mode === "signup" ? "Have an account? Sign in" : "New here? Create an account"}
         </button>
+        {mode === "signin" && (
+          <a
+            href="/reset"
+            className={`inline-flex min-h-11 items-center rounded-lg px-1 text-xs ${t.muted} hover:underline focus:outline-none focus:ring-2 focus:ring-teal-500`}
+          >
+            Forgot password?
+          </a>
+        )}
       </div>
       {message && (
         <p

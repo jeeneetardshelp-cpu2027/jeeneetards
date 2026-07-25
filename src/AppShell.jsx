@@ -19,12 +19,15 @@
 //   wide       up to 1760px
 // so a 2560px monitor shows a usable page instead of a strip.
 
+import { useState } from "react";
 import { useNavigate, useLocation } from "react-router";
 import {
-  ChevronRight, Search, GraduationCap, Moon, Sun, X,
+  ChevronRight, Search, GraduationCap, LogOut, Moon, Sun, X,
 } from "lucide-react";
 import { useTheme } from "./theme.jsx";
 import { BRAND_NAVY, BRAND_TEAL } from "./brandColors.js";
+import { useSession } from "./useSession.js";
+import { supabase } from "./supabaseClient.js";
 
 const BRAND = { navy: BRAND_NAVY, teal: BRAND_TEAL };
 
@@ -48,11 +51,21 @@ export function GlobalHeader({ crumbs = [], search = null, leading = null, width
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { dark, t, toggle } = useTheme();
+  const { session } = useSession();
+  const [signingOut, setSigningOut] = useState(false);
+  const [signOutError, setSignOutError] = useState("");
   const nav = [
     { label: "Home", to: "/" },
     { label: "Find a course", to: "/explore" },
     { label: "Browse courses", to: "/browse" },
   ];
+  const signOut = async () => {
+    setSigningOut(true);
+    setSignOutError("");
+    const { error } = await supabase.auth.signOut();
+    setSigningOut(false);
+    if (error) setSignOutError("Could not sign out. Please try again.");
+  };
 
   return (
     <header className={`sticky top-0 z-30 border-b ${t.border} ${dark ? "bg-neutral-950/95" : "bg-white/95"} backdrop-blur`}>
@@ -95,6 +108,18 @@ export function GlobalHeader({ crumbs = [], search = null, leading = null, width
               offers it in the page body (Explore's context search, the
               catalogue's Filters sheet), so nothing becomes unreachable. */}
           <div className="ml-auto hidden min-w-0 flex-1 sm:block sm:max-w-sm">{search}</div>
+          {session?.user && (
+            <button
+              type="button"
+              onClick={signOut}
+              disabled={signingOut}
+              aria-label="Sign out"
+              className={`flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-xl px-2 text-sm ${t.muted} ${t.hover} disabled:opacity-50`}
+            >
+              <LogOut className="h-4 w-4" aria-hidden="true" />
+              <span className="hidden lg:inline">{signingOut ? "Signing out…" : "Sign out"}</span>
+            </button>
+          )}
           <button
             type="button"
             onClick={toggle}
@@ -105,6 +130,11 @@ export function GlobalHeader({ crumbs = [], search = null, leading = null, width
             {dark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
           </button>
         </div>
+        {signOutError && (
+          <p role="alert" className="pb-2 text-right text-xs text-rose-600">
+            {signOutError}
+          </p>
+        )}
 
         <nav aria-label="Primary navigation" className={`grid grid-cols-3 border-t ${t.border} sm:hidden`}>
           {nav.map((n) => {

@@ -14,26 +14,27 @@ const show = (page) => render(
 afterEach(cleanup);
 
 describe("browse-only legal disclosures", () => {
-  it("publishes product-specific terms with real contact and jurisdiction", () => {
+  it("publishes product-specific terms without inventing owner-only facts", () => {
     show(<LegalPage />);
     expect(screen.getByRole("heading", { name: "Terms of Service & Disclaimer" })).toBeTruthy();
-    expect(screen.getByText("Effective: 23 July 2026")).toBeTruthy();
-    expect(screen.getAllByRole("link", { name: "rajesh@gmail.com" })).toHaveLength(2);
-    expect(document.body.textContent).toMatch(/governed by the laws of India/i);
-    expect(document.body.textContent).toMatch(/current public release is browse-only/i);
+    expect(screen.getByText(/effective date: awaiting owner approval/i)).toBeTruthy();
+    expect(document.body.textContent).toMatch(/browsing does not require an account/i);
+    expect(document.body.textContent).toMatch(/legal name.*awaiting owner approval/i);
+    expect(document.body.textContent).not.toMatch(/rajesh@gmail\.com/i);
+    expect(document.body.textContent).not.toMatch(/courts in jaipur/i);
   });
 
-  it("accurately discloses providers, local storage, YouTube, and under-18 use", () => {
+  it("accurately discloses accounts, submissions, storage, providers, and under-18 use", () => {
     show(<PrivacyPolicy />);
     const text = document.body.textContent;
-    expect(screen.getByText("Effective: 23 July 2026")).toBeTruthy();
-    expect(text).toMatch(/Vercel hosts the website/i);
-    expect(text).toMatch(/Supabase provides database and API services/i);
-    expect(text).toMatch(/local browser storage/i);
+    expect(screen.getByText(/effective date: awaiting owner approval/i)).toBeTruthy();
+    expect(text).toMatch(/Supabase Auth/i);
+    expect(text).toMatch(/overall, clarity, and question ratings/i);
+    expect(text).toMatch(/ll_progress_v1/i);
+    expect(text).toMatch(/Vercel and Supabase deliver the site/i);
     expect(text).toMatch(/privacy-enhanced embed domain/i);
-    expect(text).toMatch(/users who may be under 18/i);
-    expect(text).toMatch(/does not offer student accounts or contribution forms/i);
-    expect(screen.getByRole("link", { name: "rajesh@gmail.com" }).getAttribute("href"))
-      .toBe("mailto:rajesh@gmail.com");
+    expect(text).toMatch(/students under 18/i);
+    expect(text).toMatch(/public email.*awaiting owner approval/i);
+    expect(text).not.toMatch(/rajesh@gmail\.com/i);
   });
 });

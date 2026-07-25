@@ -115,6 +115,15 @@ export function metadataForLocation(pathname = "/", search = "") {
     };
   }
 
+  if (path === "/reset") {
+    return {
+      ...base,
+      title: `Password reset | ${SITE_NAME}`,
+      description: "Request a password-reset link or choose a new account password.",
+      robots: "noindex, nofollow",
+    };
+  }
+
   if (path === "/admin") {
     return {
       ...base,
@@ -133,7 +142,7 @@ export function metadataForLocation(pathname = "/", search = "") {
       ...base,
       title: `Feature coming soon | ${SITE_NAME}`,
       description:
-        "This catalogue feature is still being verified and is not available in the current release.",
+        "This catalogue feature is still under review and is not available in the current release.",
       robots: "noindex, follow",
     };
   }
