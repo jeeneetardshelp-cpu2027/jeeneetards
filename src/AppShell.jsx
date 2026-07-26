@@ -22,7 +22,7 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router";
 import {
-  ChevronRight, Search, GraduationCap, LogOut, Moon, Sun, X,
+  ChevronRight, Search, LogOut, Moon, Sun, X,
 } from "lucide-react";
 import { useTheme } from "./theme.jsx";
 import { BRAND_NAVY, BRAND_TEAL } from "./brandColors.js";
@@ -30,6 +30,9 @@ import { useSession } from "./useSession.js";
 import { supabase } from "./supabaseClient.js";
 
 const BRAND = { navy: BRAND_NAVY, teal: BRAND_TEAL };
+// Editorial serif for the wordmark — matches Home.jsx. System faces only.
+const SERIF =
+  '"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,"Times New Roman",serif';
 
 // `width` picks the cap. "reading" stays narrow on purpose (guided steps, legal
 // text); "catalogue" is for grids that genuinely benefit from more columns.
@@ -75,11 +78,24 @@ export function GlobalHeader({ crumbs = [], search = null, leading = null, width
           <button
             onClick={() => navigate("/")}
             aria-label="JEENEETARD home"
-            className="flex min-h-11 min-w-11 shrink-0 items-center justify-center gap-2 px-1 font-semibold tracking-tight"
-            style={{ color: dark ? "#F5F5F5" : BRAND.navy }}
+            className="flex min-h-11 shrink-0 items-center gap-2.5 px-1"
           >
-            <GraduationCap className="h-5 w-5" style={{ color: BRAND.teal }} />
-            <span className="hidden sm:inline">JEENEETARD</span>
+            <span
+              aria-hidden="true"
+              className="grid h-8 w-8 shrink-0 place-items-center rounded-lg text-white shadow-sm"
+              style={{
+                background: `linear-gradient(150deg, ${BRAND.teal}, #0A5560)`,
+                fontFamily: SERIF, fontWeight: 700, fontSize: "1.05rem", lineHeight: 1,
+              }}
+            >
+              J
+            </span>
+            <span
+              className="hidden text-[1.15rem] font-semibold tracking-tight sm:inline"
+              style={{ fontFamily: SERIF, color: dark ? "#F5F5F5" : BRAND.navy }}
+            >
+              JEENEETARD
+            </span>
           </button>
 
           <nav aria-label="Primary navigation" className="ml-2 hidden items-center gap-1 sm:flex">

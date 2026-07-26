@@ -5,21 +5,20 @@
 //  playlist comparison) in two or three taps:
 //    • a prominent search box with grouped live results
 //    • Browse by exam
-//    • a small, real featured-courses row (honest data, never faked)
+//    • why the directory is different
 //
-//  Sections that need engagement data we don't have yet (Continue Watching is
-//  device-local; Popular is not built) are omitted or use only real fields.
+//  Sections that need engagement data we don't have yet (Popular, Recently
+//  viewed) are intentionally omitted rather than faked. Featured courses will
+//  return once the shared PlaylistBrowse card is reusable (one card, no drift).
 // =====================================================================
 
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 import {
   Search, GraduationCap, BookOpen, PlayCircle, Users, ArrowRight, X, History,
-  ShieldCheck, ListFilter, Sparkles, Activity, Compass, Layers,
+  ShieldCheck, ListFilter, Sparkles, Activity, Compass,
 } from "lucide-react";
 import { useDebouncedValue } from "./useBrowse.js";
-import { usePlaylistBrowse } from "./usePlaylistBrowse.js";
-import { ratingDisplay } from "./ratingConfidence.js";
 import { GlobalHeader, Container } from "./AppShell.jsx";
 import { useSearch } from "./useSearch.js";
 import { getContinueWatching } from "./progress.js";
@@ -37,15 +36,6 @@ const BRAND = { navy: BRAND_NAVY, teal: BRAND_TEAL };
 const SERIF =
   '"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,"Times New Roman",serif';
 
-// A restrained subject palette for card spines / kickers. Falls back to the
-// brand accent for anything unmapped.
-const SUBJECT_COLORS = {
-  physics: "#3B6FE0", chemistry: "#CF8526", mathematics: "#7A5AF0",
-  maths: "#7A5AF0", biology: "#D85B84", botany: "#2E9E6B", zoology: "#2E9E6B",
-};
-const subjectColor = (name) => SUBJECT_COLORS[String(name || "").toLowerCase()] ?? BRAND.teal;
-const goldFor = (dark) => (dark ? "#D6A94C" : "#B4842C");
-
 // Per-exam identity for the "Browse by exam" cards.
 const EXAM_META = {
   jee: { icon: GraduationCap, tint: "#0F6F78" },
@@ -53,15 +43,6 @@ const EXAM_META = {
   school: { icon: BookOpen, tint: "#3B6FE0" },
   olympiad: { icon: Compass, tint: "#7A5AF0" },
 };
-
-function StarIcon({ size = 14, color }) {
-  return (
-    <svg viewBox="0 0 24 24" width={size} height={size} aria-hidden="true"
-      style={{ fill: color, stroke: "none", flex: "none" }}>
-      <path d="M12 2l3 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.9 21l1.2-6.8-5-4.9 6.9-1z" />
-    </svg>
-  );
-}
 
 export function homeTagline(capabilities = RELEASE_CAPABILITIES) {
   return capabilities.comparison
@@ -186,7 +167,6 @@ function Landing({ navigate }) {
   const [continueWatching] = useState(() => getContinueWatching(3));
   const { t } = useTheme();
   const { goals, loading: goalsLoading, error: goalsError } = useLearningGoals();
-  const jee = (goals ?? []).find((g) => g.slug === "jee");
 
   return (
     <div className="space-y-14">
@@ -280,11 +260,6 @@ function Landing({ navigate }) {
         </div>
       </section>
 
-      {/* ---- Featured courses (real data via the browse hook) ---- */}
-      {jee?.id && (
-        <FeaturedCourses goalId={jee.id} navigate={navigate} />
-      )}
-
       {/* ---- Browse the library CTA ---- */}
       <Section title="Browse the library" eyebrow="The full catalogue">
         <button
@@ -308,97 +283,6 @@ function Landing({ navigate }) {
     </div>
   );
 }
-
-// ---------------------------------------------------------------------
-//  Featured courses — reuses the hardened browse hook; shows only real
-//  fields, hides itself on empty/error (never fakes a "popular" list).
-// ---------------------------------------------------------------------
-function FeaturedCourses({ goalId, navigate }) {
-  const { t } = useTheme();
-  const { items, loading, error } = usePlaylistBrowse({ goalId, page: 0, enabled: !!goalId });
-  const courses = (items ?? []).slice(0, 3);
-
-  if (error) return null;
-
-  return (
-    <Section title="Courses to start with" eyebrow="From the catalogue"
-      action={{ label: "Browse all", onClick: () => navigate("/browse") }}>
-      {loading ? (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-          {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className={`h-44 animate-pulse rounded-2xl ${t.input}`} />
-          ))}
-        </div>
-      ) : courses.length === 0 ? null : (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-          {courses.map((c) => (
-            <CourseCard key={c.id} course={c} onOpen={() => navigate(`/course/${c.id}`)} />
-          ))}
-        </div>
-      )}
-    </Section>
-  );
-}
-
-function CourseCard({ course, onOpen }) {
-  const { t, dark } = useTheme();
-  const color = subjectColor(course.subject);
-  const rating = ratingDisplay(course.rating, course.ratingCount);
-  const initials = (course.teacher || "")
-    .split(/\s+/).map((w) => w[0]).filter(Boolean).slice(0, 2).join("").toUpperCase();
-
-  const facts = [
-    course.lectures != null && `${course.lectures} lesson${course.lectures === 1 ? "" : "s"}`,
-    course.contentType && cap(course.contentType.replace(/-/g, " ")),
-    course.language && cap(course.language),
-  ].filter(Boolean);
-
-  return (
-    <button onClick={onOpen}
-      className={`group flex flex-col overflow-hidden rounded-2xl border ${t.border} ${t.card} text-left shadow-sm transition hover:-translate-y-1 hover:shadow-lg`}>
-      <span className="h-1 w-full" style={{ background: color }} />
-      <span className="flex flex-1 flex-col p-5">
-        <span className="text-[0.68rem] font-semibold uppercase tracking-[0.08em]" style={{ color }}>
-          {[course.subject, course.classLevels?.[0]].filter(Boolean).join(" · ") || "Course"}
-        </span>
-        <span className="mt-2 text-lg font-semibold leading-snug" style={{ fontFamily: SERIF }}>
-          {course.title}
-        </span>
-        {facts.length > 0 && (
-          <span className={`mt-3 flex flex-wrap gap-x-3 gap-y-1 text-xs ${t.faint}`}>
-            {facts.map((f, i) => (
-              <span key={i} className="inline-flex items-center gap-1">
-                {i === 0 && <Layers className="h-3.5 w-3.5" />}{f}
-              </span>
-            ))}
-          </span>
-        )}
-        <span className={`mt-4 flex items-center justify-between border-t ${t.divider} pt-3`}>
-          <span className="flex min-w-0 items-center gap-2">
-            {course.teacher ? (
-              <>
-                <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full text-[0.68rem] font-bold text-white"
-                  style={{ background: color }}>{initials || "?"}</span>
-                <span className={`truncate text-xs font-semibold ${t.text}`}>{course.teacher}</span>
-              </>
-            ) : (
-              <span className={`text-xs ${t.muted}`}>Teacher on course page</span>
-            )}
-          </span>
-          {rating?.kind === "scored" ? (
-            <span className="inline-flex shrink-0 items-center gap-1 text-xs font-semibold" style={{ fontVariantNumeric: "tabular-nums" }}>
-              <StarIcon color={goldFor(dark)} />{rating.score.toFixed(1)}
-            </span>
-          ) : (
-            <span className={`shrink-0 text-[0.68rem] ${t.muted}`}>Not yet rated</span>
-          )}
-        </span>
-      </span>
-    </button>
-  );
-}
-
-function cap(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
 
 // ---------------------------------------------------------------------
 //  Grouped search results
