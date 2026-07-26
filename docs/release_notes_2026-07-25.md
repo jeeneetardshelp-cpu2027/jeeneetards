@@ -405,3 +405,34 @@ Validation after the update:
 
 No migrations, schema changes, or application-code changes were made for the
 Thermodynamics import.
+
+### Atomic Structure checkpoint
+
+Atomic Structure was promoted after the staging-first gate:
+
+- Atomic Structure: 34 new Class 11/Dropper lessons from source playlist
+  `PL_A4M5IAkMafCoVdcacbzrXlRy76fOTwJ`, source title
+  `CHEMISTRY-ATOMIC STRUCTURE`, under production chapter `37`.
+- Production course: `47`, title `CHEMISTRY-ATOMIC STRUCTURE`, teacher
+  `ALK Sir`.
+
+The playlist passed source-order, duplicate-video, zero-overlap,
+teacher-attribution, staging import, production dry-run, and production import
+gates. Production now contains 40 courses and exactly 463 ordered playlist
+memberships. Anonymous checks confirmed the course appears through
+`get_chapter_courses(37)`, all 34 lessons are embeddable with duration
+metadata, duplicate-course candidates remain 0, and the production capability
+contract passed. A local route smoke check for `/course/47/chapter/37` returned
+HTTP 200.
+
+Validation after the update:
+
+- 665 Vitest tests passed across 68 files in the current local workspace.
+- ESLint passed with zero warnings.
+- The production Vite build passed.
+- `npm audit --audit-level=high` still reports the same 7 high-severity
+  dev-only ESLint/minimatch/brace-expansion findings; dependency mutation
+  remains deferred because the proposed fix is forced/breaking.
+
+No migrations, schema changes, or application-code changes were made for the
+Atomic Structure import.
