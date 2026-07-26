@@ -230,6 +230,28 @@ import; it does not authorize one.
   [official JEE Main 2026 syllabus](https://cdnbbsr.s3waas.gov.in/s3f8e59f4b2fe7c5705bf878bbd494ccdf/uploads/2025/10/202510311323551056.pdf).
   Production remains blocked by the missing chapter reference and, more
   importantly, the incomplete backup/restore gate.
+- Indefinite Integration, source playlist
+  `PL_A4M5IAkMacK7OyqPwHe0rvG4KqxFIum`, is staging-qualified but not
+  production-approved. Staging course/chapter `1245` / `153` contains 87 new
+  Class 12/Dropper lessons by `Mohit Tyagi` with 0 reuse. The source has 87
+  published, usable, unique, public, embeddable, duration-complete videos
+  totaling 51,760 seconds. All 87 descriptions and 86 of 87 titles directly
+  identify Mohit Tyagi; lesson 42 is attributed in its description, and no
+  alternate teacher appears. Source positions and leading title numbers are
+  exactly `1` through `87`, so no membership repair was needed.
+
+  The first dry run incorrectly reported duplicate lesson number `2` because
+  the parser ignored plain-space leading numbers and read internal `(Part 2)`
+  labels in lessons 5, 8, and 40. The parser now treats a plain-space leading
+  number as authoritative over an internal `(Part N)` label, regression tests
+  cover this exact pattern, and a post-fix production dry run reports quality
+  `ok` with 0 findings. The new canonical
+  chapter matches the indefinite-integration scope in the
+  [official JEE Main 2026 syllabus](https://cdnbbsr.s3waas.gov.in/s3f8e59f4b2fe7c5705bf878bbd494ccdf/uploads/2025/10/202510311323551056.pdf)
+  and
+  [official JEE Advanced 2026 syllabus](https://jeeadv.ac.in/documents/jee-advanced-2026-syllabus.pdf).
+  Production still reports `chapter.production_blocker: true` and remains
+  blocked by the backup/restore gate.
 - Differentiability remains deferred even though its 45 lessons are ordered
   and overlap-free: lesson 16 has no direct teacher evidence, leaving the
   source at 44/45 attributed descriptions on a multi-faculty channel.
@@ -268,9 +290,12 @@ import; it does not authorize one.
   Carbonyl Compounds, and Reduction/Oxidation/Hydrolysis remain deferred
   because teacher evidence is incomplete and/or appended PYQ videos make the
   source scope ambiguous.
-- ORM-2 is blocked because its source repeats a YouTube video ID. GOC-1,
-  ORM-1, and Stereoisomerism remain deferred because their source lesson order
-  is not curriculum-contiguous.
+- ORM-2 is blocked because its source repeats a YouTube video ID. GOC-1 is
+  deferred because its final two unnumbered appendages lack direct teacher
+  evidence. ORM-1 is deferred because it crosses multiple canonical units and
+  ends with an unnumbered mixed-channel supplement. Stereoisomerism is deferred
+  because lesson 40 is mistitled `4O`, the source order needs extensive repair,
+  and the final unnumbered PYQ lacks direct teacher evidence.
 - Matrices is deferred because its otherwise-contiguous `#1` through `#11`
   source ends with an unnumbered Cayley-Hamilton lesson credited to Rajat Jain
   Sir. Importing it as one Mohit Tyagi course would lose the mixed-teacher

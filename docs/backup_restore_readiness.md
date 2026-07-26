@@ -13,9 +13,10 @@ backup exists or that a restore exercise has passed.
   destination, or isolated restore-rehearsal result is recorded.
 - Therefore production migrations, content imports, chapter creation, and
   corrective data writes are blocked. Staging validation may continue.
-- The next staged candidate is General Organic Chemistry: Part 2, staging
-  course/chapter `1244` / `152`; it must not be promoted merely because its
-  content checks pass.
+- Staging-only checkpoints now exist for General Organic Chemistry: Part 2
+  (course/chapter `1244` / `152`) and Indefinite Integration (`1245` / `153`).
+  Neither is production-approved, and neither may be promoted merely because
+  its content and staging checks passed.
 
 Recheck the dashboard and replace this section with completed evidence before
 the next production write. Do not infer backup coverage from earlier green CI,

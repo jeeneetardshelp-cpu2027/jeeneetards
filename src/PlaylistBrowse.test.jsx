@@ -12,6 +12,7 @@ import { MemoryRouter, Routes, Route, useLocation } from "react-router";
 
 // ---- a fake PostgREST builder that records what was asked for ----
 const calls = [];
+let NEXT_RESULTS = [];
 function makeBuilder(rows, count) {
   const rec = { table: null, cols: null, eq: {}, range: null, ilike: null, orders: [] };
   const b = {
@@ -24,7 +25,12 @@ function makeBuilder(rows, count) {
     eq(k, v) { rec.eq[k] = v; return b; },
     ilike(k, v) { rec.ilike = [k, v]; return b; },
     in(k, v) { rec.in = [k, v]; return b; },
-    then(resolve) { return Promise.resolve({ data: rows, error: null, count }).then(resolve); },
+    then(resolve) {
+      const result = NEXT_RESULTS.length
+        ? NEXT_RESULTS.shift()
+        : { data: rows, error: null, count };
+      return Promise.resolve(result).then(resolve);
+    },
   };
   calls.push(rec);
   return b;
@@ -36,7 +42,9 @@ vi.mock("./supabaseClient", () => ({
   supabase: { from: (t) => { const b = makeBuilder(ROWS, COUNT); calls[calls.length - 1].table = t; return b; } },
 }));
 
-import { usePlaylistBrowse, PAGE_SIZE, formatDuration } from "./usePlaylistBrowse.js";
+import {
+  usePlaylistBrowse, PAGE_SIZE, formatDuration, isMissingBrowseStatsColumn,
+} from "./usePlaylistBrowse.js";
 import PlaylistBrowse from "./PlaylistBrowse.jsx";
 
 // Drives the hook and reports nothing — we assert on the recorded query.
@@ -56,7 +64,7 @@ const row = (id, title, over = {}) => ({
   institutes_channels: null, subjects: null, playlist_videos: [{ count: 3 }], ...over,
 });
 
-beforeEach(() => { calls.length = 0; ROWS = []; COUNT = 0; });
+beforeEach(() => { calls.length = 0; NEXT_RESULTS = []; ROWS = []; COUNT = 0; });
 
 describe("goal isolation", () => {
   it("filters by learning goal in the DATABASE when a goal is selected", async () => {
@@ -135,6 +143,87 @@ describe("pagination", () => {
     expect(q.range).toEqual([7 * PAGE_SIZE, 8 * PAGE_SIZE - 1]);
     // a 500-row catalogue must never be fetched whole
     expect(q.range[1] - q.range[0] + 1).toBe(PAGE_SIZE);
+  });
+
+  it("retries without optional popularity columns when an older schema lacks them", async () => {
+    ROWS = [row(11, "Indefinite Integration")];
+    COUNT = 1;
+    NEXT_RESULTS.push({
+      data: null,
+      count: null,
+      error: {
+        code: "42703",
+        message: "column playlists.view_count_total does not exist",
+      },
+    });
+
+    await run({});
+
+    expect(calls).toHaveLength(2);
+    expect(calls[0].cols).toContain("view_count_total");
+    expect(calls[0].orders).toEqual([
+      "display_order", "popularity_score desc", "title", "id",
+    ]);
+    expect(calls[1].cols).not.toContain("view_count_total");
+    expect(calls[1].cols).not.toContain("stats_fetched_at");
+    expect(calls[1].orders).toEqual(["display_order", "title", "id"]);
+  });
+
+  it("uses the same compatibility fallback when popularity ordering is absent", async () => {
+    NEXT_RESULTS.push({
+      data: null,
+      count: null,
+      error: {
+        code: "42703",
+        message: "column playlists.popularity_score does not exist",
+      },
+    });
+
+    await run({ sort: "popular" });
+
+    expect(calls).toHaveLength(2);
+    expect(calls[0].orders).toEqual(["popularity_score desc", "id"]);
+    expect(calls[1].orders).toEqual(["display_order", "title", "id"]);
+  });
+
+  it("does not retry unrelated missing-column errors", async () => {
+    const error = { code: "42703", message: "column playlists.teacher does not exist" };
+    NEXT_RESULTS.push({ data: null, count: null, error });
+    const log = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    await run({});
+
+    expect(calls).toHaveLength(1);
+    expect(log).toHaveBeenCalledWith("playlist browse:", error);
+    log.mockRestore();
+    expect(isMissingBrowseStatsColumn({
+      code: "PGRST204",
+      message: "Could not find the 'title' column of 'playlists' in the schema cache",
+    })).toBe(false);
+  });
+
+  it("does not launch a fallback for a stale request generation", async () => {
+    let resolveOld;
+    NEXT_RESULTS.push(new Promise((resolve) => { resolveOld = resolve; }));
+    const view = render(
+      <MemoryRouter><Probe search="old" /></MemoryRouter>,
+    );
+    await waitFor(() => expect(calls).toHaveLength(1));
+
+    view.rerender(<MemoryRouter><Probe search="new" /></MemoryRouter>);
+    await waitFor(() => expect(calls).toHaveLength(2));
+
+    resolveOld({
+      data: null,
+      count: null,
+      error: {
+        code: "42703",
+        message: "column playlists.view_count_total does not exist",
+      },
+    });
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    expect(calls).toHaveLength(2);
   });
 });
 

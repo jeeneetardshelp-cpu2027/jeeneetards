@@ -69,6 +69,22 @@ const ORDER_BY = {
   recent: (q) => q.order("created_at", { ascending: false }),
 };
 
+// Older/disposable environments can legitimately predate video_stats.sql.
+// Browsing should still work there: popularity is optional catalogue metadata,
+// not a reason to hide every course. Production keeps the one-request path
+// above; this ordering is used only when Postgres reports a missing rollup.
+const ORDER_WITHOUT_STATS = {
+  ...ORDER_BY,
+  recommended: (q) => q.order("display_order").order("title"),
+  popular: (q) => q.order("display_order").order("title"),
+  most_viewed: (q) => q.order("display_order").order("title"),
+};
+
+const OPTIONAL_STATS_COLUMN = /\b(view_count_total|popularity_score|stats_fetched_at)\b/i;
+export const isMissingBrowseStatsColumn = (error) =>
+  ["42703", "PGRST204"].includes(error?.code) &&
+  OPTIONAL_STATS_COLUMN.test(error?.message ?? "");
+
 export function usePlaylistBrowse({
   goalId, boardId, subjectId, chapterId, stage, channelId, teacherId,
   language, contentType, difficulty, search, sort, page = 0,
@@ -150,30 +166,43 @@ export function usePlaylistBrowse({
     // still leads with curated display_order (new courses default to 1,000,000,
     // so they stay after deliberately placed rows). Every chain ends with a
     // unique .order("id") so paging is deterministic even when earlier keys tie.
-    const applyOrder = ORDER_BY[sort] ?? ORDER_BY.recommended;
-    let q = applyOrder(supabase.from("playlists").select(cols, { count: "exact" }))
-      .order("id")
-      .range(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE - 1);
+    const buildQuery = (includeStats) => {
+      const selectedColumns = includeStats
+        ? cols
+        : cols.replace(" view_count_total, stats_fetched_at,", "");
+      const orderMap = includeStats ? ORDER_BY : ORDER_WITHOUT_STATS;
+      const applyOrder = orderMap[sort] ?? orderMap.recommended;
+      let q = applyOrder(supabase.from("playlists").select(selectedColumns, { count: "exact" }))
+        .order("id")
+        .range(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE - 1);
 
-    // Learning goal was accepted as a prop and never applied, so a JEE view
-    // also listed NEET courses. Goal isolation is the point of the journey.
-    if (goalId) q = q.eq("playlist_learning_goals.learning_goal_id", goalId);
-    if (boardId) q = q.eq("playlist_boards.board_id", boardId);
-    if (classSlugs) q = q.in("pcl.class_levels.slug", classSlugs);
-    if (subjectId) q = q.eq("subject_id", subjectId);
-    // Scalar columns on playlists — no join needed, so these cost nothing extra.
-    // Multi-select uses .in(); a single value still goes through .in() so the
-    // AND-of-ORs shape is identical whether one or three values are chosen.
-    if (channelId) q = q.eq("channel_id", channelId);
-    if (teacherId) q = q.eq("pt.teacher_id", teacherId);
-    if (languageValues.length) q = q.in("language", languageValues);
-    if (contentTypeValues.length) q = q.in("content_type", contentTypeValues);
-    if (difficultyValues.length) q = q.in("difficulty", difficultyValues);
-    if (chapterId) q = q.eq("pv.videos.chapter_id", chapterId);
-    const term = (search ?? "").trim();
-    if (term) q = q.ilike("title", `%${term}%`);
+      // Learning goal was accepted as a prop and never applied, so a JEE view
+      // also listed NEET courses. Goal isolation is the point of the journey.
+      if (goalId) q = q.eq("playlist_learning_goals.learning_goal_id", goalId);
+      if (boardId) q = q.eq("playlist_boards.board_id", boardId);
+      if (classSlugs) q = q.in("pcl.class_levels.slug", classSlugs);
+      if (subjectId) q = q.eq("subject_id", subjectId);
+      // Scalar columns on playlists — no join needed, so these cost nothing extra.
+      // Multi-select uses .in(); a single value still goes through .in() so the
+      // AND-of-ORs shape is identical whether one or three values are chosen.
+      if (channelId) q = q.eq("channel_id", channelId);
+      if (teacherId) q = q.eq("pt.teacher_id", teacherId);
+      if (languageValues.length) q = q.in("language", languageValues);
+      if (contentTypeValues.length) q = q.in("content_type", contentTypeValues);
+      if (difficultyValues.length) q = q.in("difficulty", difficultyValues);
+      if (chapterId) q = q.eq("pv.videos.chapter_id", chapterId);
+      const term = (search ?? "").trim();
+      if (term) q = q.ilike("title", `%${term}%`);
 
-    const { data, error, count } = await q;
+      return q;
+    };
+
+    let result = await buildQuery(true);
+    if (!current()) return;
+    if (isMissingBrowseStatsColumn(result.error)) {
+      result = await buildQuery(false);
+    }
+    const { data, error, count } = result;
     if (!current()) return;                    // a newer query has superseded this one
     if (error) {
       // PostgREST answers a range past the end of the result set with 416

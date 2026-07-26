@@ -20,10 +20,12 @@ import { findDuplicateVideoIds } from "../ingestionSafety.js";
 
 // Parse a lesson number out of a source title. Handles the conventions seen in
 // real catalogue sources: "…#7", "07.", "Lecture 7", "L-7", "Part 3".
+// A plain-space leading number is authoritative over an internal "(Part N)"
+// label, which describes a subseries rather than the playlist lesson number.
 export function lessonNumber(title = "") {
   const hash = title.match(/#\s*(\d{1,3})\b/);
   if (hash) return Number(hash[1]);
-  const lead = title.match(/^\s*(\d{1,3})\s*[.)\-|]/);
+  const lead = title.match(/^\s*(\d{1,3})(?=\s|[.)\-|])/);
   if (lead) return Number(lead[1]);
   const kw = title.match(/\b(?:lecture|lesson|part|ep|episode|l)\s*[-.:]?\s*(\d{1,3})\b/i);
   if (kw) return Number(kw[1]);

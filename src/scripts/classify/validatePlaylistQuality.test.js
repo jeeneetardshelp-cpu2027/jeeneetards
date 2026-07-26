@@ -21,6 +21,7 @@ describe("lessonNumber", () => {
   });
   it("parses leading numbers and 'Lecture N'", () => {
     expect(lessonNumber("07. Mole Concept")).toBe(7);
+    expect(lessonNumber("8 Example of evaluation of integral (Part 2)")).toBe(8);
     expect(lessonNumber("Lecture 12 | Kinematics")).toBe(12);
   });
   it("returns null when there is no number", () => {
@@ -34,6 +35,14 @@ describe("findDuplicateLessonNumbers (Codex blocked Ray Optics: 'duplicates less
   });
   it("clean sequence has none", () => {
     expect(findDuplicateLessonNumbers(pl(["#1 A", "#2 B", "#3 C"]).videos)).toEqual([]);
+  });
+  it("keeps plain-space leading numbers authoritative over internal part labels", () => {
+    const videos = pl([
+      "5 Integration of standard function (Part 2)",
+      "8 Example of evaluation of integral (Part 2)",
+      "40 Standard Algebraic Integral Formula Integration (Part 2)",
+    ]).videos;
+    expect(findDuplicateLessonNumbers(videos)).toEqual([]);
   });
 });
 

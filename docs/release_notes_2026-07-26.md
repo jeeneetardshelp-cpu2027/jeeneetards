@@ -1109,3 +1109,78 @@ Validation after the staging checkpoint:
 
 No production data, migrations, schema, or application code were changed, and
 no manual CI rerun was started.
+
+## Indefinite Integration staging checkpoint and discovery hardening
+
+Indefinite Integration cleared the content and staging gates:
+
+- Source playlist `PL_A4M5IAkMacK7OyqPwHe0rvG4KqxFIum`.
+- 87 new Class 12/Dropper staging lessons, teacher `Mohit Tyagi`, with 0 reused
+  videos.
+- Staging course/chapter: `1245` / `153`.
+- Production course/chapter: not created.
+
+The source has 87 published, usable, unique, public, processed, embeddable, and
+duration-complete videos totaling 51,760 seconds (14 hours, 22 minutes,
+40 seconds), with no production video overlap. All 87 descriptions and 86 of
+87 titles directly identify Mohit Tyagi; lesson 42 supplies the attribution in
+its description, and no alternate teacher appears.
+
+The leading title numbers and source positions are exactly `1` through `87`.
+The initial dry run nevertheless returned `blocked` with duplicate lesson
+number `2`: the parser ignored plain-space leading numbers and instead read
+internal `(Part 2)` labels in lessons 5, 8, and 40. The parser now treats a
+plain-space leading number as authoritative over an internal `(Part N)` label,
+and regression coverage preserves that rule. The post-fix write-free production
+dry run reports quality `ok`, 0 findings, 87 usable videos, no duplicate video
+IDs, and the expected missing-chapter production blocker. Staging retained
+exact source order, so no membership normalization write was needed.
+
+The lessons coherently cover basic antiderivatives, substitution, integration
+by parts, trigonometric and algebraic forms, partial fractions, and exact
+derivatives. This matches the indefinite-integral scope in the
+[official JEE Main 2026 syllabus](https://cdnbbsr.s3waas.gov.in/s3f8e59f4b2fe7c5705bf878bbd494ccdf/uploads/2025/10/202510311323551056.pdf)
+and
+[official JEE Advanced 2026 syllabus](https://jeeadv.ac.in/documents/jee-advanced-2026-syllabus.pdf).
+The canonical chapter is `Indefinite Integration`, not the existing
+`Definite Integration` or `Application of Integrals` chapters.
+
+Runtime QA uncovered one staging discovery defect: the disposable staging
+schema predates optional video-popularity rollup columns, so Browse requested
+`view_count_total` and failed before rendering courses. The browse hook now
+retries once without optional popularity fields only when Postgres explicitly
+reports one of those columns missing. Normal production success remains one
+request; unrelated schema errors do not retry, stale requests cannot launch a
+fallback, and fallback ordering remains deterministic.
+
+After the fix, staging Browse rendered its 86 fixture/content courses, search
+returned only Indefinite Integration, and opening the result loaded course
+`1245`. Direct course checks covered lessons 1, 8, 44, and 87, including the
+parser-edge `(Part 2)` lesson and the disabled final Next control. Each expected
+privacy-enhanced YouTube embed loaded, lesson search worked, and light/dark
+theme switching succeeded. Production Browse still rendered all 83 courses.
+
+Production was intentionally not changed and contains neither this course nor
+its canonical chapter. The signed-in Supabase Backups page reports that the
+`youtube` project is on Free Plan and that Free Plan does not include project
+backups. With no qualifying backup or isolated restore rehearsal recorded, the
+repository's backup gate continues to block every production write. Production
+remains at 83 courses and 1,307 memberships.
+
+Validation after the checkpoint:
+
+- Independent and local source-to-staging checks confirmed 87 contiguous
+  positions, 87 unique IDs, exact source IDs/titles/durations/embed status,
+  correct taxonomy and metadata, 51,760 seconds total, complete goal/class
+  links, and 0 reuse.
+- All 688 Vitest tests passed across 69 files.
+- ESLint passed with zero warnings.
+- The production Vite build completed with 1,945 modules transformed.
+- All 20 frontend release gates and all 5 production capability checks passed.
+- The production-only dependency audit found 0 vulnerabilities. The general
+  audit retains the known 7 high-severity dev-only
+  ESLint/minimatch/brace-expansion findings; the breaking forced fix remains
+  deferred.
+
+No production data, migration, or schema change was made, and no manual CI run
+was started.
