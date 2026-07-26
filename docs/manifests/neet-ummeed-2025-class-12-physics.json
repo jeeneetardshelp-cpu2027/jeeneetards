@@ -1,0 +1,67 @@
+{
+  "version": 1,
+  "request_id": "a3311b62-f25b-48f8-8493-b95d197f3e74",
+  "youtube_playlist_id": "PLJyab0VQDBGUTE58JH-Ee2nscTRF436VJ",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "xOOfiwVxDkk",
+      "chapter": "Electrostatics"
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "jiGfwRgv7-M",
+      "chapter": "Electrostatics"
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "7Mv-geL7UNU",
+      "chapter": "Current Electricity"
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "qVFhJZvXAg0",
+      "chapter": "Moving Charges and Magnetism"
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "LQt2zH9aUBA",
+      "chapter": "Magnetism and Matter"
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "Gnk0DDvyK14",
+      "chapter": "Electromagnetic Induction"
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "9Qf6j_ifaHc",
+      "chapter": "Alternating Current"
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "quqs2c-9LiE",
+      "chapter": "Electromagnetic Waves"
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "iua5Kxhfkyc",
+      "chapter": "Ray Optics and Optical Instruments"
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "R6E3Sh070nM",
+      "chapter": "Wave Optics"
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "HynWoYUWSsw",
+      "chapter": "Modern Physics"
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "sBDn-OkmikM",
+      "chapter": "Semiconductor Electronics"
+    }
+  ]
+}
