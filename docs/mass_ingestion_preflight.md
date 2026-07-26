@@ -5,9 +5,9 @@ import; it does not authorize one.
 
 ## Baseline recorded on 26 July 2026
 
-- 80 courses and 1,208 playlist memberships.
-- Coverage: 32 JEE Physics, 27 JEE Chemistry, and 21 JEE Mathematics courses;
-  41 Class 11 courses, 41 Class 12 courses, and 75 Dropper-compatible courses.
+- 81 courses and 1,300 playlist memberships.
+- Coverage: 32 JEE Physics, 27 JEE Chemistry, and 22 JEE Mathematics courses;
+  42 Class 11 courses, 41 Class 12 courses, and 76 Dropper-compatible courses.
 - Core metadata missing from 0 courses.
 - Fully contained duplicate candidates: 0.
 - Registered source channel: Mohit Tyagi.
@@ -192,6 +192,12 @@ import; it does not authorize one.
   88 descriptions, exact ordered `Part 1` through `Part 88` Class 11/Dropper
   lessons, and 0 video reuse. The source title `Progression and Series` was
   normalized to `Progressions and Series` through exact guards.
+- Binomial Theorem, source playlist
+  `PL_A4M5IAkMacSgRRlEkUB9v-gE1yxw_rG`, was added with direct
+  `#MohitTyagi` attribution in all 92 descriptions, exact ordered `Part 1`
+  through `Part 92` Class 11/Dropper lessons, and 0 video reuse. The source
+  title already exactly matched the canonical chapter and course title, so
+  no normalization update was needed.
 - Differentiability remains deferred even though its 45 lessons are ordered
   and overlap-free: lesson 16 has no direct teacher evidence, leaving the
   source at 44/45 attributed descriptions on a multi-faculty channel.

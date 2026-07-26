@@ -887,3 +887,61 @@ Validation after the batch:
 
 No migrations, schema changes, application-code changes, or manual CI reruns
 were made for this batch.
+
+## Binomial Theorem Mathematics checkpoint
+
+Binomial Theorem was promoted through the staging-first gate:
+
+- Source playlist `PL_A4M5IAkMacSgRRlEkUB9v-gE1yxw_rG`.
+- 92 new Class 11/Dropper lessons, teacher `Mohit Tyagi`, with 0 reused
+  videos.
+- Staging course/chapter: `1241` / `150`.
+- Production course/chapter: `88` / `78`.
+
+Independent source and taxonomy reviews found 92 unique, public, embeddable
+videos with complete durations, no production video overlap, and an exact
+parser-confirmed contiguous `Part 1` through `Part 92` sequence. All 92 live
+descriptions directly contain `#MohitTyagi`. The uninterrupted source runs for
+53,965 seconds (14 hours, 59 minutes, 25 seconds).
+
+Every lesson title remains Binomial Theorem, and the source description
+presents the playlist as complete JEE Main/Advanced topic coverage. Advanced
+coefficient identities remain coherent same-chapter enrichment; there is no
+appended PYQ course, supplement, teacher change, or scope break. Authoritative
+playlist positions and title parts agree exactly even though the historical
+upload dates are not monotonic.
+
+The canonical chapter and course title are both `Binomial Theorem`. The
+mapping is `11th,Dropper`, with audience focus `11th`, content type
+`full-course`, language `hinglish`, and difficulty `advanced`. The source
+title already exactly matched `Binomial Theorem`; an exact equality check
+passed, so no normalization update was needed. The importer emitted its known
+title-only teacher advisory because it does not fetch video descriptions.
+
+Production now contains 81 courses and exactly 1,300 ordered playlist
+memberships: 32 Physics, 27 Chemistry, and 22 Mathematics courses, with 42
+Class 11, 41 Class 12, and 76 Dropper-compatible courses. Core metadata,
+titles, and teacher attribution remain complete, and fully contained
+duplicate-course candidates remain 0. The anonymous production capability
+contract passed.
+
+Browser checks covered lessons 1, 46, and 92 in staging and production, plus
+the production Browse search result. The expected privacy-enhanced YouTube
+embeds, canonical title, ordered lesson positions, and search result rendered,
+and no console errors appeared.
+
+Validation after the batch:
+
+- Exact source-to-database validation confirmed 92 contiguous positions, 92
+  unique video IDs, matching titles and durations totaling 53,965 seconds,
+  correct taxonomy and metadata, and embeddable status for every lesson.
+- All 683 Vitest tests passed across 69 files.
+- ESLint passed with zero warnings.
+- The production Vite build and frontend release safeguards passed.
+- The production-only dependency audit found 0 vulnerabilities. The general
+  audit retains the known 7 high-severity dev-only
+  ESLint/minimatch/brace-expansion findings; the forced breaking fix remains
+  deferred.
+
+No migrations, schema changes, application-code changes, or manual CI reruns
+were made for this batch.
