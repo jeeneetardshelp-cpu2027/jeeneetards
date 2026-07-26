@@ -5,9 +5,9 @@ import; it does not authorize one.
 
 ## Baseline recorded on 25 July 2026
 
-- 46 courses and 554 playlist memberships.
-- Coverage: JEE Physics plus 15 JEE Chemistry courses; 23 Class 11 courses,
-  24 Class 12 courses, and 41 Dropper-compatible courses.
+- 49 courses and 578 playlist memberships.
+- Coverage: JEE Physics plus 18 JEE Chemistry courses; 25 Class 11 courses,
+  25 Class 12 courses, and 44 Dropper-compatible courses.
 - Core metadata missing from 0 courses.
 - Fully contained duplicate candidates: 0.
 - Registered source channel: Mohit Tyagi.
@@ -46,6 +46,16 @@ import; it does not authorize one.
   attribution, 2 ordered lessons, and 0 video reuse.
 - Gaseous State, source playlist `PL_A4M5IAkMaf71_7enQvAZ41ZdIKAFxf5`, was
   added with `ALK Sir` attribution, 27 ordered lessons, and 0 video reuse.
+- Hydrogen, source playlist `PL_A4M5IAkMafrSGEfB92LgHNHcJD02O29`, was added
+  with `ALK Sir` attribution, 4 ordered Class 11 lessons, and 0 video reuse.
+- The d and f Block Elements, source playlist
+  `PL_A4M5IAkMacxIWVbn6uUj1kTpdYo9nOa`, was added with `ALK Sir`
+  attribution, 12 ordered Class 12 lessons, and 0 video reuse.
+- The s-Block Elements, source playlist
+  `PL_A4M5IAkMadIk5zPjnR2XgZi2n_7_Qwo`, was added with `ALK Sir`
+  attribution, 8 ordered Class 11 lessons, and 0 video reuse. Its source title
+  `s BLOCK ELEMENTS` was normalized through an exact, guarded staging-first
+  metadata update after the catalog audit flagged it for title review.
 - Nuclear Physics is intentionally excluded: its source playlist repeats a
   YouTube video ID and is blocked before any database write.
 - X-rays is intentionally deferred because its playlist spans multiple

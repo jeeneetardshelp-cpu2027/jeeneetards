@@ -629,3 +629,53 @@ stopped before any database write.
 
 No migrations, schema changes, or application-code changes were made for the
 Gaseous State import.
+
+### Hydrogen and block-elements checkpoint
+
+Three inorganic Chemistry courses were promoted one at a time through the
+staging-first gate:
+
+- Hydrogen: 4 new Class 11/Dropper lessons from source playlist
+  `PL_A4M5IAkMafrSGEfB92LgHNHcJD02O29`, under production chapter `44`;
+  production course `54`, teacher `ALK Sir`.
+- The d and f Block Elements: 12 new Class 12/Dropper lessons from source
+  playlist `PL_A4M5IAkMacxIWVbn6uUj1kTpdYo9nOa`, under production chapter
+  `45`; production course `55`, teacher `ALK Sir`.
+- The s-Block Elements: 8 new Class 11/Dropper lessons from source playlist
+  `PL_A4M5IAkMadIk5zPjnR2XgZi2n_7_Qwo`, under production chapter `46`;
+  production course `56`, teacher `ALK Sir`.
+
+Each playlist matched its published and usable video counts, used contiguous
+source ordering, had no duplicate YouTube IDs, no blocked embeds, no existing
+catalog overlap, complete duration metadata, and teacher evidence on every
+video description. The local advisory quality gate reported teacher review
+because the current importer fetches titles but not video descriptions; the
+separate read-only source audit supplied the missing evidence before either
+production write.
+
+The source title `s BLOCK ELEMENTS` triggered one catalog title-review item.
+An exact guarded update was applied and browser-verified in staging first, then
+mirrored in production as `The s-Block Elements`. The final read-only catalog
+audit contains 0 title-review items.
+
+Production now contains 49 courses and exactly 578 ordered playlist
+memberships: 31 Physics and 18 Chemistry courses, with 25 Class 11, 25 Class
+12, and 44 Dropper-compatible courses. Core metadata remains complete and
+fully contained duplicate-course candidates remain 0. The anonymous
+production capability contract passed.
+
+Browser checks covered the first and last lessons in staging and production
+for all three courses. The expected `youtube-nocookie.com` embed IDs loaded,
+course titles and lesson counts were correct, and no console errors appeared.
+
+Validation after the batch:
+
+- 683 Vitest tests passed across 69 files in the current local workspace.
+- ESLint passed with zero warnings.
+- The production Vite build passed.
+- `npm audit --audit-level=high` still reports the same 7 high-severity
+  dev-only ESLint/minimatch/brace-expansion findings; dependency mutation
+  remains deferred because the proposed fix is forced/breaking.
+
+No migrations, schema changes, or application-code changes were made for this
+batch.
