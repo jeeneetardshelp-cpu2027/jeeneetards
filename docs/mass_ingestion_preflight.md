@@ -5,9 +5,9 @@ import; it does not authorize one.
 
 ## Baseline recorded on 26 July 2026
 
-- 69 courses and 777 playlist memberships.
-- Coverage: 32 JEE Physics, 27 JEE Chemistry, and 10 JEE Mathematics courses;
-  36 Class 11 courses, 35 Class 12 courses, and 64 Dropper-compatible courses.
+- 70 courses and 796 playlist memberships.
+- Coverage: 32 JEE Physics, 27 JEE Chemistry, and 11 JEE Mathematics courses;
+  37 Class 11 courses, 35 Class 12 courses, and 65 Dropper-compatible courses.
 - Core metadata missing from 0 courses.
 - Fully contained duplicate candidates: 0.
 - Registered source channel: Mohit Tyagi.
@@ -134,6 +134,11 @@ import; it does not authorize one.
   added with `#MohitTyagi` attribution in all 16 video descriptions, exact
   ordered lessons, and 0 video reuse. Its Class 11 foundations and Class 12
   Bayes/distribution material require Class 11, Class 12, and Dropper tags.
+- Permutations and Combinations, source playlist
+  `PL_A4M5IAkMae1vVGOC3Ptr4qXYZOqXvJa`, was added with `#MohitTyagi`
+  attribution in all 19 video descriptions, exact ordered Class 11 lessons,
+  and 0 video reuse. Isolated Class 12 promotional tags in two source titles
+  do not change the taught Class 11 curriculum scope.
 - Nuclear Physics is intentionally excluded: its source playlist repeats a
   YouTube video ID and is blocked before any database write.
 - X-rays is intentionally deferred because its playlist spans multiple

@@ -277,3 +277,53 @@ Validation after the batch:
 
 No migrations, schema changes, application-code changes, or manual CI reruns
 were made for this batch.
+
+## Permutations and Combinations Mathematics checkpoint
+
+Permutations and Combinations was promoted through the staging-first gate:
+
+- Source playlist `PL_A4M5IAkMae1vVGOC3Ptr4qXYZOqXvJa`.
+- 19 new Class 11/Dropper lessons, teacher `Mohit Tyagi`, with 0 reused
+  videos.
+- Staging course/chapter: `1230` / `139`.
+- Production course/chapter: `77` / `67`.
+
+Three independent read-only reviews found 19 unique, public, embeddable videos
+with complete durations, no production video overlap, exact source/title
+order from `#1` through `#19`, and no material outside the Permutations and
+Combinations chapter. All 19 live video descriptions contain
+`#Mathematics #MohitTyagi`, with no competing faculty attribution.
+
+The importer emitted its known title-only teacher advisory because it does not
+fetch video descriptions. The separate source audits supplied 19/19 direct
+hashtag evidence before either write. The canonical Class 11 mapping uses
+`11th,Dropper` with audience focus `11th`; isolated Class 12 promotional tags
+in two source titles do not represent Class 12 curriculum coverage.
+
+The source title was normalized from
+`Permutation And Combination - IIT-JEE maths video lecture` to
+`Permutations and Combinations` with exact playlist/title guards.
+
+Production now contains 70 courses and exactly 796 ordered playlist
+memberships: 32 Physics, 27 Chemistry, and 11 Mathematics courses, with 37
+Class 11, 35 Class 12, and 65 Dropper-compatible courses. Core metadata,
+titles, and teacher attribution remain complete, and fully contained
+duplicate-course candidates remain 0. The anonymous production capability
+contract passed.
+
+Browser checks covered lessons 1 and 19 in staging and production, plus the
+production Browse search result. The expected YouTube embeds and ordered
+lesson list rendered, and no console errors appeared.
+
+Validation after the batch:
+
+- All 683 Vitest tests passed across 69 files.
+- ESLint passed with zero warnings.
+- The production Vite build and frontend release safeguards passed.
+- The production-only dependency audit found 0 vulnerabilities. The general
+  audit retains the known 7 high-severity dev-only
+  ESLint/minimatch/brace-expansion findings; the forced breaking fix remains
+  deferred.
+
+No migrations, schema changes, application-code changes, or manual CI reruns
+were made for this batch.
