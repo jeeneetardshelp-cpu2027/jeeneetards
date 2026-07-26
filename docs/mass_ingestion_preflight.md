@@ -5,9 +5,9 @@ import; it does not authorize one.
 
 ## Baseline recorded on 25 July 2026
 
-- 56 courses and 636 playlist memberships.
-- Coverage: JEE Physics plus 25 JEE Chemistry courses; 27 Class 11 courses,
-  30 Class 12 courses, and 51 Dropper-compatible courses.
+- 57 courses and 648 playlist memberships.
+- Coverage: JEE Physics plus 26 JEE Chemistry courses; 28 Class 11 courses,
+  30 Class 12 courses, and 52 Dropper-compatible courses.
 - Core metadata missing from 0 courses.
 - Fully contained duplicate candidates: 0.
 - Registered source channel: Mohit Tyagi.
@@ -86,6 +86,12 @@ import; it does not authorize one.
   numbering provided an exact 1–11 sequence, so the source order
   `1–5, 8–11, 6–7` was normalized with guarded membership updates in staging
   first and then production.
+- Mole Concept, source playlist
+  `PL_A4M5IAkMaccW6F0AgKT-mmrlAQksYCu`, was added with `ALK Sir`
+  attribution, 12 Class 11 lessons, and 0 video reuse. The complete title
+  numbering provided an exact 1–12 sequence, so lesson 6 was moved from the
+  final source position into its guarded curriculum position in staging first
+  and then production.
 - Nuclear Physics is intentionally excluded: its source playlist repeats a
   YouTube video ID and is blocked before any database write.
 - X-rays is intentionally deferred because its playlist spans multiple
@@ -101,9 +107,9 @@ import; it does not authorize one.
 - Ray Optics is blocked because its source repeats one video, duplicates lesson
   number 36, and includes a Unit and Dimension lesson. Wave on String is
   deferred because lessons 6, 7, and 8 are out of source order.
-- Mole Concept and IUPAC are deferred because each source playlist exposes one
-  lesson out of sequence. Environmental Chemistry is deferred until the
-  remaining teacher-attribution gap is reviewed.
+- IUPAC is deferred because its source playlist exposes one lesson out of
+  sequence. Environmental Chemistry is deferred until the remaining
+  teacher-attribution gap is reviewed.
 - General Inorganic Chemistry is deferred because the quick video-metadata pass
   did not expose direct teacher-attribution evidence.
 - Redox Reaction and Equivalent Concept is deferred because production dry-run

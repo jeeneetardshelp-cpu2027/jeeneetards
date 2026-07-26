@@ -820,3 +820,42 @@ Validation after the batch:
 
 No migrations, schema changes, application-code changes, or manual CI reruns
 were made for this batch.
+
+### Mole Concept Chemistry checkpoint
+
+Mole Concept was promoted through the staging-first gate:
+
+- Source playlist `PL_A4M5IAkMaccW6F0AgKT-mmrlAQksYCu`.
+- 12 new Class 11/Dropper lessons, teacher `ALK Sir`, with 0 reused videos.
+- Staging course/chapter: `1217` / `126`.
+- Production course/chapter: `64` / `54`.
+
+The source contained 12 unique, public, embeddable videos with complete
+durations, direct `ALK Sir` attribution, no production video overlap, and an
+exact title-number set from 1 through 12. Lesson 6 appeared after lesson 12 in
+the YouTube source; guarded membership updates normalized the sequence to
+1–12 in staging first and then production. The long source title was also
+normalized to `Mole Concept` with exact playlist/title guards.
+
+Production now contains 57 courses and exactly 648 ordered playlist
+memberships: 31 Physics and 26 Chemistry courses, with 28 Class 11, 30 Class
+12, and 52 Dropper-compatible courses. Core metadata, titles, and teacher
+attribution remain complete, and fully contained duplicate-course candidates
+remain 0. The anonymous production capability contract passed.
+
+Browser checks covered lessons 1 and 12 in staging and production. The
+expected YouTube embeds loaded, the corrected 1–12 lesson list rendered, and
+no console errors appeared.
+
+Validation after the batch:
+
+- 683 Vitest tests passed across 69 files in the current local workspace.
+- ESLint passed with zero warnings.
+- The production Vite build passed.
+- The production-only dependency audit found 0 vulnerabilities. The general
+  audit retains the known 7 high-severity dev-only
+  ESLint/minimatch/brace-expansion findings; the forced breaking fix remains
+  deferred.
+
+No migrations, schema changes, application-code changes, or manual CI reruns
+were made for this batch.
