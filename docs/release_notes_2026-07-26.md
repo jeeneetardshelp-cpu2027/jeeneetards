@@ -226,3 +226,54 @@ Validation after the batch:
 
 No migrations, schema changes, application-code changes, or manual CI reruns
 were made for this batch.
+
+## Probability Mathematics checkpoint
+
+Probability was promoted through the staging-first gate:
+
+- Source playlist `PL_A4M5IAkMaf-WePkSulK_zt0yfQUrZgE`.
+- 16 new Class 11/Class 12/Dropper lessons, teacher `Mohit Tyagi`, with 0
+  reused videos.
+- Staging course/chapter: `1229` / `138`.
+- Production course/chapter: `76` / `66`.
+
+The source contained 16 unique, public, embeddable videos with complete
+durations, no production video overlap, exact source/title order from `#1`
+through `#16`, and no material outside Probability. Every live video
+description contains `#MohitTyagi`, and the automated importer quality gate
+reported `OK`.
+
+An independent taxonomy arbitration confirmed the three class tags. Lessons
+1 through 12 cover Class 11 foundations, while lessons 13 through 16 cover
+Class 12 total probability, Bayes' theorem, probability distributions, mean,
+and variance. In this catalog, class tags record curriculum coverage while
+`audience_focus` records the dominant audience, so the course uses
+`11th,12th,Dropper` with audience focus `12th`.
+
+The source title was normalized from
+`Probability -IIT JEE MAINS AND ADVANCED` to `Probability` with exact
+playlist/title guards.
+
+Production now contains 69 courses and exactly 777 ordered playlist
+memberships: 32 Physics, 27 Chemistry, and 10 Mathematics courses, with 36
+Class 11, 35 Class 12, and 64 Dropper-compatible courses. Core metadata,
+titles, and teacher attribution remain complete, and fully contained
+duplicate-course candidates remain 0. The anonymous production capability
+contract passed.
+
+Browser checks covered lessons 1 and 16 in staging and production, plus the
+production Browse search result. The expected YouTube embeds and ordered
+lesson list rendered, and no console errors appeared.
+
+Validation after the batch:
+
+- All 683 Vitest tests passed across 69 files.
+- ESLint passed with zero warnings.
+- The production Vite build and frontend release safeguards passed.
+- The production-only dependency audit found 0 vulnerabilities. The general
+  audit retains the known 7 high-severity dev-only
+  ESLint/minimatch/brace-expansion findings; the forced breaking fix remains
+  deferred.
+
+No migrations, schema changes, application-code changes, or manual CI reruns
+were made for this batch.
