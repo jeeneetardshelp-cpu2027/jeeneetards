@@ -5,9 +5,9 @@ import; it does not authorize one.
 
 ## Baseline recorded on 26 July 2026
 
-- 82 courses and 1,303 playlist memberships.
-- Coverage: 32 JEE Physics, 27 JEE Chemistry, and 23 JEE Mathematics courses;
-  43 Class 11 courses, 41 Class 12 courses, and 77 Dropper-compatible courses.
+- 83 courses and 1,307 playlist memberships.
+- Coverage: 33 JEE Physics, 27 JEE Chemistry, and 23 JEE Mathematics courses;
+  43 Class 11 courses, 42 Class 12 courses, and 78 Dropper-compatible courses.
 - Core metadata missing from 0 courses.
 - Fully contained duplicate candidates: 0.
 - Registered source channel: Mohit Tyagi.
@@ -205,6 +205,13 @@ import; it does not authorize one.
   sequence, and 0 video reuse. The source title was normalized through exact
   playlist, title, subject, and collision guards in staging first and then
   production.
+- Conductors, source playlist `PL_A4M5IAkMafRbbj8o0zvHGHrJV8FsxgZ`, was
+  added under Electrostatics with direct `ABJ Sir` attribution in all 4
+  descriptions, 4 Class 12/Dropper lessons, and 0 video reuse. Its visible
+  source order `2, 1, 3, 4` was normalized to the exact title-number order
+  `1, 2, 3, 4` with an atomic, guarded membership upsert in staging first and
+  then production. The source title was also normalized to `Conductors`
+  through exact guards.
 - Differentiability remains deferred even though its 45 lessons are ordered
   and overlap-free: lesson 16 has no direct teacher evidence, leaving the
   source at 44/45 attributed descriptions on a multi-faculty channel.
@@ -212,18 +219,16 @@ import; it does not authorize one.
   YouTube video ID and is blocked before any database write.
 - X-rays is intentionally deferred because its playlist spans multiple
   curriculum concepts and needs an explicit chapter-placement decision.
-- Conductors is deferred until a separately reviewed membership-normalization
-  plan is approved: all 4 videos are public, embeddable, uniquely attributed
-  to `ABJ Sir`, and overlap-free, but the source playlist's visible
-  lesson-number order is `2, 1, 3, 4`.
 - Gravitation and SHM are deferred because their usable video counts are lower
   than their published playlist counts. Circular Motion and KTG are deferred
   because their source lesson ordering is inconsistent.
 - Fluid Mechanics is deferred because its source lesson ordering is also
   inconsistent.
-- Viscosity is deferred because its first two source lessons are reversed.
-  Sound Waves is deferred because its source sequence is inconsistent and it
-  includes an existing Wave Optics video.
+- Viscosity is deferred because its first two source lessons are reversed and
+  its final unnumbered lesson lacks direct teacher evidence while mixing Fluid
+  Mechanics, KTG, and Thermodynamics. Sound Waves is deferred because its
+  source sequence is inconsistent and it includes an existing Wave Optics
+  video.
 - Ray Optics is blocked because its source repeats one video, duplicates lesson
   number 36, and includes a Unit and Dimension lesson. Wave on String is
   deferred because lessons 6, 7, and 8 are out of source order.

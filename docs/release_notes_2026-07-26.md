@@ -997,3 +997,57 @@ Validation after the batch:
 
 No migrations, schema changes, application-code changes, or manual CI reruns
 were made for this batch.
+
+## Conductors Physics checkpoint
+
+Conductors was promoted through the staging-first gate:
+
+- Source playlist `PL_A4M5IAkMafRbbj8o0zvHGHrJV8FsxgZ`.
+- 4 new Class 12/Dropper lessons, teacher `ABJ Sir`, with 0 reused videos.
+- Staging course/chapter: `1243` / `79`.
+- Production course/chapter: `90` / `8`.
+
+Independent source review found 4 unique, public, embeddable videos with
+complete durations, no production video overlap, and direct `ABJ Sir`
+attribution in every description. The source runs for 22,288 seconds
+(6 hours, 11 minutes, 28 seconds).
+
+The visible source order was `2, 1, 3, 4`. Exact video-ID, title, membership,
+position, taxonomy, and collision guards were checked before an atomic
+four-row membership upsert normalized the order to `1, 2, 3, 4` in staging
+first and then production. The source title was also normalized to the
+canonical `Conductors` title through exact guards.
+
+The mapping is JEE Physics, chapter `Electrostatics`, classes
+`12th,Dropper`, audience focus `12th`, content type `full-course`, language
+`hinglish`, and difficulty `advanced`.
+
+Production now contains 83 courses and exactly 1,307 ordered playlist
+memberships: 33 Physics, 27 Chemistry, and 23 Mathematics courses, with 43
+Class 11, 42 Class 12, and 78 Dropper-compatible courses. Core metadata,
+titles, and teacher attribution remain complete, and fully contained
+duplicate-course candidates remain 0. The anonymous production capability
+contract passed.
+
+Browser checks covered lessons 1, 3, and 4 in staging and production, plus the
+production global search result. Each lesson loaded its expected
+privacy-enhanced YouTube embed, the ordered lesson list and canonical title
+rendered, search opened production course `90`, and no console errors
+appeared.
+
+Validation after the checkpoint:
+
+- Exact source-to-database validation confirmed 4 contiguous positions, 4
+  unique video IDs, matching titles and durations totaling 22,288 seconds,
+  correct taxonomy and metadata, embeddable status for every lesson, and 0
+  external memberships.
+- All 683 Vitest tests passed across 69 files.
+- ESLint passed with zero warnings.
+- The production Vite build and frontend release safeguards passed.
+- The production-only dependency audit found 0 vulnerabilities. The general
+  audit retains the known 7 high-severity dev-only
+  ESLint/minimatch/brace-expansion findings; the forced breaking fix remains
+  deferred.
+
+No migrations, schema changes, application-code changes, or manual CI reruns
+were made for this checkpoint.
