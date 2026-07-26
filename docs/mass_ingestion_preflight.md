@@ -5,9 +5,9 @@ import; it does not authorize one.
 
 ## Baseline recorded on 26 July 2026
 
-- 72 courses and 841 playlist memberships.
-- Coverage: 32 JEE Physics, 27 JEE Chemistry, and 13 JEE Mathematics courses;
-  38 Class 11 courses, 36 Class 12 courses, and 67 Dropper-compatible courses.
+- 73 courses and 887 playlist memberships.
+- Coverage: 32 JEE Physics, 27 JEE Chemistry, and 14 JEE Mathematics courses;
+  38 Class 11 courses, 37 Class 12 courses, and 68 Dropper-compatible courses.
 - Core metadata missing from 0 courses.
 - Fully contained duplicate candidates: 0.
 - Registered source channel: Mohit Tyagi.
@@ -149,6 +149,10 @@ import; it does not authorize one.
   ordered Class 12 lessons, and 0 video reuse. Lessons 17 through 19 retain
   differentiation and integration of determinants as advanced same-chapter
   applications.
+- Continuity, source playlist `PL_A4M5IAkMads1bsxLYBoJOLA3bWsY7mK`, was
+  added with direct `Mohit Tyagi` attribution in all 46 video descriptions,
+  exact ordered Class 12 lessons, and 0 video reuse. The source remains
+  Continuity-only; separate Differentiability content is not mixed into it.
 - Nuclear Physics is intentionally excluded: its source playlist repeats a
   YouTube video ID and is blocked before any database write.
 - X-rays is intentionally deferred because its playlist spans multiple

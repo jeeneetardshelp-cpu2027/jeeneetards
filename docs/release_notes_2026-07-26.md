@@ -429,3 +429,56 @@ Validation after the batch:
 
 No migrations, schema changes, application-code changes, or manual CI reruns
 were made for this batch.
+
+## Continuity Mathematics checkpoint
+
+Continuity was promoted through the staging-first gate:
+
+- Source playlist `PL_A4M5IAkMads1bsxLYBoJOLA3bWsY7mK`.
+- 46 new Class 12/Dropper lessons, teacher `Mohit Tyagi`, with 0 reused
+  videos.
+- Staging course/chapter: `1233` / `142`.
+- Production course/chapter: `80` / `70`.
+
+Independent source and taxonomy reviews found 46 unique, public, embeddable
+videos with complete durations, no production video overlap, exact
+source/title order from `#1` through `#46`, and approximately 8 hours 10
+minutes of one uninterrupted teacher/source series. Every live video
+description directly attributes Mohit Tyagi, with no competing faculty
+evidence.
+
+Every lesson remains Continuity-specific: continuity at a point, algebra and
+checking, continuity theorems and the intermediate value theorem,
+discontinuity types, composite-function continuity, and determination of
+constants. The channel maintains separate Differentiability material, so the
+canonical standalone mapping is `Continuity`, `12th,Dropper`, with audience
+focus `12th`.
+
+The automated importer quality gate reported `OK`. The source title was
+normalized from `IIT JEE MATHEMATICS-CONTINUITY` to `Continuity` with exact
+playlist/title guards.
+
+Production now contains 73 courses and exactly 887 ordered playlist
+memberships: 32 Physics, 27 Chemistry, and 14 Mathematics courses, with 38
+Class 11, 37 Class 12, and 68 Dropper-compatible courses. Core metadata,
+titles, and teacher attribution remain complete, and fully contained
+duplicate-course candidates remain 0. The anonymous production capability
+contract passed.
+
+Browser checks covered lessons 1, 35, and 46 in staging and production, plus
+the production Browse search result. The interior check explicitly covered
+the discontinuity section. The expected YouTube embeds and ordered lesson
+list rendered, and no console errors appeared.
+
+Validation after the batch:
+
+- All 683 Vitest tests passed across 69 files.
+- ESLint passed with zero warnings.
+- The production Vite build and frontend release safeguards passed.
+- The production-only dependency audit found 0 vulnerabilities. The general
+  audit retains the known 7 high-severity dev-only
+  ESLint/minimatch/brace-expansion findings; the forced breaking fix remains
+  deferred.
+
+No migrations, schema changes, application-code changes, or manual CI reruns
+were made for this batch.
