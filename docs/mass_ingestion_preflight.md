@@ -5,9 +5,9 @@ import; it does not authorize one.
 
 ## Baseline recorded on 25 July 2026
 
-- 58 courses and 669 playlist memberships.
-- Coverage: JEE Physics plus 27 JEE Chemistry courses; 28 Class 11 courses,
-  31 Class 12 courses, and 53 Dropper-compatible courses.
+- 59 courses and 672 playlist memberships.
+- Coverage: 32 JEE Physics plus 27 JEE Chemistry courses; 28 Class 11
+  courses, 32 Class 12 courses, and 54 Dropper-compatible courses.
 - Core metadata missing from 0 courses.
 - Fully contained duplicate candidates: 0.
 - Registered source channel: Mohit Tyagi.
@@ -97,6 +97,9 @@ import; it does not authorize one.
   The complete title numbering provided an exact 1–21 sequence, so lesson 16
   was moved from the final source position into its guarded curriculum
   position in staging first and then production.
+- Communication Systems, source playlist
+  `PL_A4M5IAkMadLq0IUyZW8s44EHCj3xClG`, was added with `ABJ Sir`
+  attribution, 3 ordered Class 12 lessons, and 0 video reuse.
 - Nuclear Physics is intentionally excluded: its source playlist repeats a
   YouTube video ID and is blocked before any database write.
 - X-rays is intentionally deferred because its playlist spans multiple

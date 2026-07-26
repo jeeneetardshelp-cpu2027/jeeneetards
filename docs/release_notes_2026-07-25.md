@@ -903,3 +903,45 @@ Validation after the batch:
 
 No migrations, schema changes, application-code changes, or manual CI reruns
 were made for this batch.
+
+### Communication Systems Physics checkpoint
+
+Communication Systems was promoted through the staging-first gate:
+
+- Source playlist `PL_A4M5IAkMadLq0IUyZW8s44EHCj3xClG`.
+- 3 new Class 12/Dropper lessons, teacher `ABJ Sir`, with 0 reused videos.
+- Staging course/chapter: `1219` / `128`.
+- Production course/chapter: `66` / `56`.
+
+The source contained 3 unique, public, embeddable videos with complete
+durations, direct `ABJ Sir` evidence on every video, no production video
+overlap, and an exact source/title order from 1 through 3. The source title
+was normalized from `Communication system| Class 12 | Physics` to
+`Communication Systems` with exact playlist/title guards.
+
+The importer emitted its known title-only teacher advisory because it does not
+fetch video descriptions. The separate read-only source audit supplied 3/3
+teacher evidence before either write.
+
+Production now contains 59 courses and exactly 672 ordered playlist
+memberships: 32 Physics and 27 Chemistry courses, with 28 Class 11, 32 Class
+12, and 54 Dropper-compatible courses. Core metadata, titles, and teacher
+attribution remain complete, and fully contained duplicate-course candidates
+remain 0. The anonymous production capability contract passed.
+
+Browser checks covered lessons 1 and 3 in staging and production. The expected
+YouTube embeds and ordered lesson list rendered, and no console errors
+appeared.
+
+Validation after the batch:
+
+- 683 Vitest tests passed across 69 files in the current local workspace.
+- ESLint passed with zero warnings.
+- The production Vite build passed.
+- The production-only dependency audit found 0 vulnerabilities. The general
+  audit retains the known 7 high-severity dev-only
+  ESLint/minimatch/brace-expansion findings; the forced breaking fix remains
+  deferred.
+
+No migrations, schema changes, application-code changes, or manual CI reruns
+were made for this batch.
