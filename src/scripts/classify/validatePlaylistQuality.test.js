@@ -87,6 +87,7 @@ describe("hasTeacherEvidence (Codex accepts once '#alksir' appears, defers other
   });
   it("accepts an 'X Sir' mention", () => {
     expect(hasTeacherEvidence([{ title: "Kinetics by ALK Sir" }])).toBe(true);
+    expect(hasTeacherEvidence([{ title: "Biology with Yashika Ma'am" }])).toBe(true);
   });
   it("accepts official video-tag attribution", () => {
     expect(hasTeacherEvidence([{
@@ -100,9 +101,21 @@ describe("hasTeacherEvidence (Codex accepts once '#alksir' appears, defers other
   });
   it("matches a known-teacher full name even without a hashtag or 'Sir'", () => {
     expect(hasTeacherEvidence([{ title: "Kinematics Full Course" }], "", ["Mohit Tyagi"])).toBe(false);
+    expect(hasTeacherEvidence([{ title: "Lecture by Manish Raj" }], "", ["Manish Raj"])).toBe(true);
+    expect(hasTeacherEvidence([{ title: "Lecture by Manish Raj" }])).toBe(false);
     expect(hasTeacherEvidence([{ title: "Kinematics — Mohit Tyagi Classes" }], "", ["Mohit Tyagi"])).toBe(true);
+    expect(hasTeacherEvidence([{ title: "Kinematics | mohittyagi" }], "", ["Mohit Tyagi"])).toBe(true);
     // a partial first-token ("Alk") must NOT match "ALK Sir" — that would mis-attribute.
     expect(hasTeacherEvidence([{ title: "Periodic Table with Alk" }], "", ["ALK Sir"])).toBe(false);
+    expect(hasTeacherEvidence([{ title: "Random Walks Irregular Motion" }], "", ["ALK Sir"])).toBe(false);
+  });
+  it("rejects publisher marketing links as faculty evidence", () => {
+    const description = [
+      "Commerce Wallah by PW https://www.youtube.com/@CommerceWallah",
+      "CA Wallah by PW https://www.youtube.com/@CAWallahbyPW",
+      "JEE Challengers by PW https://www.youtube.com/@JEEChallengers",
+    ].join("\n");
+    expect(hasTeacherEvidence([{ title: "The Living World", description }])).toBe(false);
   });
   it("defers when no evidence at all", () => {
     expect(hasTeacherEvidence([{ title: "General Inorganic Chemistry" }])).toBe(false);

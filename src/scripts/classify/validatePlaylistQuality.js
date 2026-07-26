@@ -89,8 +89,9 @@ export function mappedImportBlockingFindings(findings = []) {
 
 // Is there ANY teacher-attribution evidence across the playlist? Codex accepts
 // a playlist once one video shows evidence (e.g. the "#alksir" hashtag), and
-// defers when none does. Checks hashtags, "X Sir/Ma'am", "by X", and any
-// known-teacher name/slug.
+// defers when none does. Checks hashtags, "X Sir/Ma'am", and any known-teacher
+// name/slug. A generic "by X" is deliberately insufficient because channel
+// marketing links such as "Commerce Wallah by PW" are not faculty credits.
 export function hasTeacherEvidence(videos = [], description = "", knownTeachers = []) {
   const haystack = [
     description,
@@ -103,13 +104,11 @@ export function hasTeacherEvidence(videos = [], description = "", knownTeachers 
     .join(" \n ");
   if (/#\w*(?:sir|maam|ma'am)\b/i.test(haystack)) return true;
   if (/\b[A-Z][A-Za-z.]+\s+(?:sir|ma'?am)\b/i.test(haystack)) return true;
-  if (/\bby\s+[A-Z][A-Za-z.]+/.test(haystack)) return true;
   for (const name of knownTeachers) {
-    const slug = String(name).toLowerCase().replace(/[^a-z0-9]/g, "");
-    if (!slug) continue;
-    const loose = String(name).toLowerCase().replace(/\s+/g, "\\s*");
-    if (new RegExp(loose, "i").test(haystack)) return true;
-    if (haystack.toLowerCase().replace(/[^a-z0-9]/g, "").includes(slug)) return true;
+    const tokens = String(name).toLowerCase().match(/[a-z0-9]+/g) ?? [];
+    if (tokens.length === 0) continue;
+    const flexibleName = tokens.join("[^a-z0-9]*");
+    if (new RegExp(`\\b${flexibleName}\\b`, "i").test(haystack)) return true;
   }
   return false;
 }
@@ -156,7 +155,7 @@ export function validatePlaylistQuality({
   // 5. Missing teacher evidence (review).
   if (videos.length && !hasTeacherEvidence(videos, playlist?.description ?? "", knownTeachers)) {
     add("no_teacher_evidence", "warn",
-      "No teacher-attribution evidence found (hashtag, \"X Sir\", \"by X\", or a known name).", null);
+      "No teacher-attribution evidence found (hashtag, \"X Sir/Ma'am\", or a known name).", null);
   }
 
   // 6. Fewer usable videos than the source advertises (review).
