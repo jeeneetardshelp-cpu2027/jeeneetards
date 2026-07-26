@@ -5,9 +5,9 @@ import; it does not authorize one.
 
 ## Baseline recorded on 26 July 2026
 
-- 76 courses and 987 playlist memberships.
-- Coverage: 32 JEE Physics, 27 JEE Chemistry, and 17 JEE Mathematics courses;
-  38 Class 11 courses, 40 Class 12 courses, and 71 Dropper-compatible courses.
+- 77 courses and 992 playlist memberships.
+- Coverage: 32 JEE Physics, 27 JEE Chemistry, and 18 JEE Mathematics courses;
+  39 Class 11 courses, 40 Class 12 courses, and 72 Dropper-compatible courses.
 - Core metadata missing from 0 courses.
 - Fully contained duplicate candidates: 0.
 - Registered source channel: Mohit Tyagi.
@@ -167,6 +167,11 @@ import; it does not authorize one.
   `#MohitTyagi` attribution in all 86 video descriptions, exact ordered
   Class 12 lessons, and 0 video reuse. The uninterrupted `Part 1` through
   `Part 86` source was preserved in one atomic course.
+- Logarithms, source playlist `PL_A4M5IAkMadF2rExT0C-TvtH2vn3dLGR`, was
+  added with direct `#MohitTyagi` attribution in all 5 video descriptions,
+  5 Class 11/Dropper lessons, and 0 video reuse. Manual review confirmed the
+  digit-plus-space source order `1` through `5`, which the automated
+  lesson-number parser cannot assess.
 - Differentiability remains deferred even though its 45 lessons are ordered
   and overlap-free: lesson 16 has no direct teacher evidence, leaving the
   source at 44/45 attributed descriptions on a multi-faculty channel.

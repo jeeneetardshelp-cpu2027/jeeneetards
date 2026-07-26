@@ -653,3 +653,59 @@ leaving 44 of 45 descriptions attributed on a multi-faculty channel.
 
 No migrations, schema changes, application-code changes, or manual CI reruns
 were made for this batch.
+
+## Logarithms Mathematics checkpoint
+
+Logarithms was promoted through the staging-first gate:
+
+- Source playlist `PL_A4M5IAkMadF2rExT0C-TvtH2vn3dLGR`.
+- 5 new Class 11/Dropper lessons, teacher `Mohit Tyagi`, with 0 reused videos.
+- Staging course/chapter: `1237` / `146`.
+- Production course/chapter: `84` / `74`.
+
+Independent source and taxonomy reviews found 5 unique, public, embeddable
+videos with complete durations, no production video overlap, and direct
+`#Mathematics #MohitTyagi` evidence in every live description. The 13,761
+seconds (3 hours, 49 minutes, 21 seconds) cover introduction and formulae,
+examples, logarithmic inequalities, characteristic and mantissa, and number
+of digits without appended PYQ material, a teacher change, or scope drift.
+
+The visible source title prefixes run from `1` through `5` in exact playlist
+order. Because each digit is followed by a space, the automated lesson-number
+parser cannot assess the sequence; independent and staging reviews verified
+all five positions manually before production. The mapping is the standalone
+canonical chapter `Logarithms`, `11th,Dropper`, with audience focus `11th`,
+content type `full-course`, language `hinglish`, and difficulty `advanced`.
+
+The importer emitted its known title-only teacher advisory because it does not
+fetch video descriptions. The source title `Logarithm` was normalized to
+`Logarithms` with exact playlist, title, subject, and collision guards in
+staging first and then production.
+
+Production now contains 77 courses and exactly 992 ordered playlist
+memberships: 32 Physics, 27 Chemistry, and 18 Mathematics courses, with 39
+Class 11, 40 Class 12, and 72 Dropper-compatible courses. Core metadata,
+titles, and teacher attribution remain complete, and fully contained
+duplicate-course candidates remain 0. The anonymous production capability
+contract passed.
+
+Browser checks covered lessons 1, 3, and 5 in staging and production, plus the
+production Browse search result. The expected privacy-enhanced YouTube embeds,
+canonical title, ordered lesson positions, and search result rendered, and no
+console errors appeared.
+
+Validation after the batch:
+
+- Exact database validation confirmed 5 contiguous positions, 5 unique video
+  IDs, complete durations totaling 13,761 seconds, correct taxonomy and
+  metadata, and embeddable status for every lesson.
+- All 683 Vitest tests passed across 69 files.
+- ESLint passed with zero warnings.
+- The production Vite build and frontend release safeguards passed.
+- The production-only dependency audit found 0 vulnerabilities. The general
+  audit retains the known 7 high-severity dev-only
+  ESLint/minimatch/brace-expansion findings; the forced breaking fix remains
+  deferred.
+
+No migrations, schema changes, application-code changes, or manual CI reruns
+were made for this batch.
