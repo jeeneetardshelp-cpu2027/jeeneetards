@@ -5,9 +5,9 @@ import; it does not authorize one.
 
 ## Baseline recorded on 26 July 2026
 
-- 64 courses and 700 playlist memberships.
-- Coverage: 32 JEE Physics, 27 JEE Chemistry, and 5 JEE Mathematics courses;
-  31 Class 11 courses, 34 Class 12 courses, and 59 Dropper-compatible courses.
+- 65 courses and 712 playlist memberships.
+- Coverage: 32 JEE Physics, 27 JEE Chemistry, and 6 JEE Mathematics courses;
+  32 Class 11 courses, 34 Class 12 courses, and 60 Dropper-compatible courses.
 - Core metadata missing from 0 courses.
 - Fully contained duplicate candidates: 0.
 - Registered source channel: Mohit Tyagi.
@@ -116,6 +116,11 @@ import; it does not authorize one.
 - Hyperbola, source playlist `PL_A4M5IAkMaeaLAU22ViTSvk3T7AWxnT_`, was
   added with direct `Mohit Tyagi` attribution on all 7 ordered Class 11
   lessons and 0 video reuse.
+- Statistics, source playlist `PL_A4M5IAkMadco0ISV4gL7BEkzs7ki6lm`, was
+  added with direct `Mohit Tyagi` attribution on all 12 Class 11 lessons and
+  0 video reuse. Core lessons `#1` through `#11` remain contiguous; the final
+  source position is an intentional same-teacher Statistics advanced
+  supplement.
 - Nuclear Physics is intentionally excluded: its source playlist repeats a
   YouTube video ID and is blocked before any database write.
 - X-rays is intentionally deferred because its playlist spans multiple
@@ -147,6 +152,10 @@ import; it does not authorize one.
 - ORM-2 is blocked because its source repeats a YouTube video ID. GOC-1,
   GOC-2, ORM-1, and Stereoisomerism remain deferred because their source
   lesson order is not curriculum-contiguous.
+- Matrices is deferred because its otherwise-contiguous `#1` through `#11`
+  source ends with an unnumbered Cayley-Hamilton lesson credited to Rajat Jain
+  Sir. Importing it as one Mohit Tyagi course would lose the mixed-teacher
+  attribution; no write was made.
 
 Regenerate the read-only baseline immediately before every batch:
 
