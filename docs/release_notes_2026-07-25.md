@@ -1031,3 +1031,46 @@ Validation after the batch:
 
 No migrations, schema changes, application-code changes, or manual CI reruns
 were made for this batch.
+
+### Trigonometric Equations Mathematics checkpoint
+
+Trigonometric Equations was promoted through the staging-first gate:
+
+- Source playlist `PL_A4M5IAkMafsM4VwfCbZ8Oa4i_96R09n`.
+- 3 new Class 11/Dropper lessons, teacher `Mohit Tyagi`, with 0 reused videos.
+- Staging course/chapter: `1222` / `131`.
+- Production course/chapter: `69` / `59`.
+
+The source contained 3 unique, public, embeddable videos with complete
+durations, direct `Mohit Tyagi` evidence on every video, no production video
+overlap, and exact source/title order from `#1` through `#3`. The source title
+was normalized from `Trigonometric Equation` to `Trigonometric Equations`
+with exact playlist/title guards.
+
+The importer emitted its known title-only teacher advisory because it does not
+fetch video descriptions. The separate read-only source audit supplied 3/3
+teacher evidence before either write.
+
+Production now contains 62 courses and exactly 686 ordered playlist
+memberships: 32 Physics, 27 Chemistry, and 3 Mathematics courses, with 29
+Class 11, 34 Class 12, and 57 Dropper-compatible courses. Core metadata,
+titles, and teacher attribution remain complete, and fully contained
+duplicate-course candidates remain 0. The anonymous production capability
+contract passed.
+
+Browser checks covered lessons 1 and 3 in staging and production. The expected
+YouTube embeds and ordered lesson list rendered, and no console errors
+appeared.
+
+Validation after the batch:
+
+- 683 Vitest tests passed across 69 files in the current local workspace.
+- ESLint passed with zero warnings.
+- The production Vite build passed.
+- The production-only dependency audit found 0 vulnerabilities. The general
+  audit retains the known 7 high-severity dev-only
+  ESLint/minimatch/brace-expansion findings; the forced breaking fix remains
+  deferred.
+
+No migrations, schema changes, application-code changes, or manual CI reruns
+were made for this batch.
