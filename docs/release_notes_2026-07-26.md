@@ -1215,7 +1215,42 @@ editorial taxonomy decision. The ordered position/video-ID snapshot SHA-256 is
 The quality gate also reports repeated lesson number `57` across positions
 57–61, and no waiver was added. No manifest is checked in.
 
-No v12 migration was applied, no staging or production data was changed, and
-no production package was regenerated. The SQL is covered by static source
-contracts but was not compiled or runtime-tested against Supabase. See
-`docs/per_video_chapter_ingestion.md` for the future deployment checklist.
+The disposable-staging prerequisite now also has a separate, explicitly
+confirmed verifier in source:
+
+- It requires both staging allow flags, an exact command-line confirmation,
+  every known production URL to differ from the test URL, and a live
+  `staging`/`test` database marker before any fixture write.
+- It requires the exact v12 and staging-helper capabilities, collision-checks
+  every run-owned catalogue/request identity, and verifies anonymous,
+  non-admin, and admin audit permissions against a known audit row.
+- It covers successful mapping, exact replay, changed-payload and create-only
+  rejection, structural versus nonstructural drift, stale replay, injected
+  transaction rollback, and parallel shared/conflicting video outcomes.
+- Timed requests are bounded. Cleanup revalidates the live marker, waits on
+  every request lock before its first delete, removes exact catalogue/auth
+  fixtures, deletes protected audit evidence last, and requires zero residue.
+- The helper SQL is apply-guarded for staging only, service-role-only, scoped
+  to one six-hex run, and refuses rollback while any `TESTV12` fixture remains.
+
+The verifier is deliberately absent from `test:all` and CI. Its refusal path
+was exercised locally without the v12-specific allow flag: it exited `2`,
+authorized no cleanup, attempted no mutation, and wrote only a redacted report
+outside the repository. The database-connected success path was **not run**,
+so this remains source/preflight evidence rather than a staging pass.
+
+Validation for this source checkpoint:
+
+- 749 Vitest tests passed across 72 files.
+- ESLint passed with zero warnings.
+- The production Vite build and all frontend release safeguards passed.
+- The anonymous production capability check passed read-only.
+- The production-only dependency audit found 0 vulnerabilities. The complete
+  audit retains the known 7 high-severity dev-only findings and 0 critical
+  findings.
+
+No v12 or helper SQL was executed, no migration was applied, no staging or
+production data was changed, no production package was regenerated, and no
+manual CI run was started. Production remains blocked by the missing
+backup/restore evidence. See `docs/per_video_chapter_ingestion.md` for the
+future disposable-staging sequence.

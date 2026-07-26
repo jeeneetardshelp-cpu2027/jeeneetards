@@ -21,6 +21,9 @@ Use this checklist at the start and end of every task in this repository.
 - Do not rerun completed staging or production migrations without a named
   reason and owner approval.
 - Do not manually dispatch CI when a push already triggers it.
+- Do not add a one-off staging verifier or migration to `test:all`, CI, or a
+  schedule, and do not rerun one automatically or manually without an explicit
+  approved target and reason.
 - Keep production checks read-only unless the owner authorizes an exact write.
 
 ## Database-changing work
@@ -28,9 +31,28 @@ Use this checklist at the start and end of every task in this repository.
 - Confirm the target URL differs from production when using disposable staging.
 - Require `TEST_ALLOW=1` and a live `app_environment` value of `staging` or
   `test`.
+- For the v12 disposable-staging verifier, additionally require
+  `V12_TEST_ALLOW=1` and the exact
+  `--confirm-disposable-v12-staging` command-line confirmation. Never infer
+  either from earlier approval.
+- Confirm the test service and anonymous keys belong to the test URL and are
+  not production credentials.
 - Use unique fixture identifiers.
+- Before the first write, check every planned fixture identifier and protected
+  audit request ID for collisions; abort rather than reuse or delete a match.
 - Define cleanup before creating fixtures.
 - Refuse cleanup when target identity or test results are uncertain.
+- Immediately before cleanup, re-read the live `app_environment` marker. If it
+  is unreadable or no longer `staging`/`test`, perform no deletes and preserve
+  the exact fixture ledger for recovery.
+- Before the first cleanup delete, synchronize on every run-owned request lock.
+  An HTTP timeout alone does not prove that its database transaction stopped;
+  if bounded quiescence fails, preserve all fixtures for recovery.
+- Clean only run-owned ordinary fixtures first, clean the protected import
+  audit last through its bounded staging-only helper, and require zero residue.
+- Roll back a task-specific staging helper only after protected-audit cleanup
+  and zero residue, and before rolling back any base staging helper it depends
+  on.
 - For production, complete
   [backup and restore readiness](backup_restore_readiness.md) first.
 - Record expected counts and stop criteria before mass operations.
@@ -57,4 +79,3 @@ Use this checklist at the start and end of every task in this repository.
   browser step.
 - Stop at the phase boundary instead of starting the next risky operation
   implicitly.
-

@@ -8,6 +8,12 @@ been imported. The SQL contract has static source tests and review evidence,
 but has not been compiled or exercised against a database; that belongs to the
 disposable-staging step below.
 
+The separate disposable-staging verifier and its staging-only helper/rollback
+SQL are also source-prepared, but **have not been run**. No v12 SQL was
+executed, no migration was applied, and no fixture, audit row, or catalogue
+data was changed while preparing them. Their presence in the repository is
+not runtime evidence.
+
 This workflow exists for a narrow case: one publisher-owned YouTube playlist
 contains lessons from more than one canonical chapter, but should remain one
 course with one source playlist identity. It does not split one source into
@@ -118,19 +124,50 @@ the rollback file as a substitute for a backup.
 Do not combine this with any completed migration or rerun an old production
 bundle.
 
-1. Run `per_video_chapter_import_v12_preflight.sql` read-only against a
-   disposable or approved staging database.
-2. Review every returned prerequisite. Stop on any false or missing value.
-3. Apply only `per_video_chapter_import_v12.sql` to staging.
-4. Run `per_video_chapter_import_v12_postflight.sql` read-only.
-5. Run the automated integration, frontend, release, capability, and security
-   checks.
-6. Run a mapped import dry-run and review its JSON evidence.
-7. Import exactly one staging checkpoint, then verify both chapter discovery
-   routes and representative first/middle/last lessons.
-8. Package a dedicated production delta only after staging evidence and the
-   backup/restore gate pass. Do not add v12 to or rerun the legacy cumulative
-   production migration.
+The exact future disposable-staging order is:
+
+1. Run `per_video_chapter_import_v12_preflight.sql` read-only against the
+   disposable staging database. Review every result and stop on any false,
+   missing, or non-staging value.
+2. Apply only `per_video_chapter_import_v12.sql` to that disposable staging
+   database. Do not rerun a cumulative or previously completed migration.
+3. Run `per_video_chapter_import_v12_postflight.sql` read-only and stop on any
+   capability, grant, RLS, or object mismatch.
+4. Confirm that the base staging-only
+   `src/migrations/staging_test_helpers.sql` has already been applied and that
+   its server-side environment guard is available.
+5. Apply only
+   `src/migrations/per_video_chapter_import_v12_staging_test_helpers.sql`.
+   This helper is staging/test-only and is not part of a production package.
+6. Confirm that `TEST_SUPABASE_URL` is distinct from the production URL, that
+   `TEST_SERVICE_KEY` and `TEST_ANON_KEY` belong only to the disposable target,
+   and that no production key is supplied. Set both `TEST_ALLOW=1` and
+   `V12_TEST_ALLOW=1`, then run exactly:
+
+   ```text
+   npm run verify:v12-import-staging -- --confirm-disposable-v12-staging
+   ```
+
+7. Review the redacted report written outside the repository under
+   `../outputs/v12-import/`. Require every assertion to pass,
+   `requests_quiesced` to be true, cleanup to complete, and every reported
+   residue count to be zero. A failed, missing, or unreviewed report is not
+   staging evidence.
+8. After zero residue is confirmed, optionally apply
+   `per_video_chapter_import_v12_staging_test_helpers_rollback.sql`. Roll back
+   this v12 helper before any rollback of the base `staging_test_helpers.sql`.
+9. Stop at this boundary. A mapped source dry-run, one real staging checkpoint,
+   browser verification, or production packaging is a separate reviewed task;
+   none follows automatically from the synthetic verifier.
+
+`verify:v12-import-staging` is deliberately excluded from `test:all` and CI.
+Do not schedule it, add it to a general test command, or run it automatically.
+It is an explicitly confirmed disposable-staging operation.
+
+Production remains blocked by `docs/backup_restore_readiness.md`. Even a future
+green disposable-staging report would not authorize production SQL or data
+writes. Do not add v12 to, or rerun, the legacy cumulative production
+migration.
 
 ## Functions source checkpoint
 

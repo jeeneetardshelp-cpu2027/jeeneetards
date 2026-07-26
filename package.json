@@ -32,6 +32,7 @@
     "build:production": "node src/scripts/buildProductionMigration.js",
     "drift:report": "node src/scripts/driftReport.js",
     "test:integration": "node src/scripts/verifyImport.js",
+    "verify:v12-import-staging": "node src/scripts/verifyPerVideoChapterImportStaging.js",
     "test:all": "vitest run && node src/scripts/verifyImport.js",
     "ui:audit": "node src/scripts/uiAudit.js",
     "verify:browse": "node src/scripts/verifyBrowseQueries.js",

@@ -307,6 +307,9 @@ import; it does not authorize one.
   mapping, apply v12, or rerun an older cumulative production migration as a
   substitute for that review. Functions is additionally blocked by the
   deterministic repeated-lesson-57 finding; there is no quality waiver.
+  The separate disposable-staging verifier/helper are source-prepared but
+  unrun, excluded from general tests/CI, and do not count as staging evidence.
+  Run them only through the explicit guarded sequence in that document.
 
 Regenerate the read-only baseline immediately before every batch:
 
