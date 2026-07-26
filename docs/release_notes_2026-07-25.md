@@ -183,3 +183,37 @@ Future catalogue batches still require the ingestion preflight, a recent
 restorable production backup, a staging sample, reviewed taxonomy and overlap
 results, and numerical stop/rollback thresholds. A previously completed batch
 does not authorize the next one.
+
+### First Chemistry checkpoint
+
+The first Chemistry course was promoted after a read-only discovery and
+teacher-attribution pass:
+
+- Thermochemistry: 8 new Class 11/Dropper lessons from Mohit Tyagi playlist
+  `PL_A4M5IAkMaeghI_80Pllo-oJ_CfWSy59`.
+- Teacher attribution: `ALK Sir`, supported by the source playlist metadata
+  and video metadata.
+- Production reference data: Chemistry chapter `Thermochemistry` was inserted
+  separately as chapter `29` after production confirmed Chemistry existed as
+  subject `2` and had 0 Chemistry chapters.
+- Production course: `39`, title `CHEMISTRY THERMOCHEMISTRY`, 8 ordered
+  lesson memberships, 0 reused videos.
+
+Production now contains 32 courses and exactly 308 ordered playlist
+memberships. Anonymous checks confirmed the new course appears through
+`get_chapter_courses(29)`, all 8 lessons map to Chemistry/Thermochemistry,
+metadata is complete, duplicate-course candidates remain 0, and the production
+capability contract passed.
+
+Validation after the update:
+
+- 619 Vitest tests passed across 66 files.
+- ESLint passed with zero warnings.
+- The production Vite build passed.
+- `npm audit --audit-level=high` still reports 7 high-severity findings in
+  the dev-only ESLint/minimatch/brace-expansion chain. `npm audit fix
+  --dry-run` produced no non-breaking fix, and `npm audit fix --force
+  --dry-run` proposed major/breaking ESLint changes plus peer conflicts, so no
+  dependency mutation was made in this content batch.
+
+No migrations, schema changes, or application-code changes were made.

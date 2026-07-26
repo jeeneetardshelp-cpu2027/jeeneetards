@@ -5,12 +5,15 @@ import; it does not authorize one.
 
 ## Baseline recorded on 25 July 2026
 
-- 31 courses and 300 playlist memberships.
-- Coverage: JEE Physics; 16 Class 11 courses, 15 Class 12 courses, and 26
-  Dropper-compatible courses.
+- 32 courses and 308 playlist memberships.
+- Coverage: JEE Physics plus the first JEE Chemistry course; 17 Class 11
+  courses, 15 Class 12 courses, and 27 Dropper-compatible courses.
 - Core metadata missing from 0 courses.
 - Fully contained duplicate candidates: 0.
 - Registered source channel: Mohit Tyagi.
+- Chemistry expansion started with Thermochemistry, playlist
+  `PL_A4M5IAkMaeghI_80Pllo-oJ_CfWSy59`, teacher attribution `ALK Sir`, 8
+  ordered lessons, and 0 video reuse.
 - Nuclear Physics is intentionally excluded: its source playlist repeats a
   YouTube video ID and is blocked before any database write.
 - X-rays is intentionally deferred because its playlist spans multiple
@@ -26,6 +29,9 @@ import; it does not authorize one.
 - Ray Optics is blocked because its source repeats one video, duplicates lesson
   number 36, and includes a Unit and Dimension lesson. Wave on String is
   deferred because lessons 6, 7, and 8 are out of source order.
+- Mole Concept and IUPAC are deferred because each source playlist exposes one
+  lesson out of sequence. Environmental Chemistry is deferred until the
+  remaining teacher-attribution gap is reviewed.
 
 Regenerate the read-only baseline immediately before every batch:
 
@@ -156,7 +162,8 @@ Stop the batch without starting another when any of these occurs:
 
 - actual selected playlist count differs from the approved count;
 - source ownership differs;
-- a production chapter would need creation;
+- a production chapter would need creation without a separately reviewed,
+  exact reference-data insert;
 - usable video count differs materially from the reviewed plan;
 - `video_validation.duplicate_youtube_video_ids` is non-empty;
 - any RPC, authorization, or YouTube quota error occurs;
