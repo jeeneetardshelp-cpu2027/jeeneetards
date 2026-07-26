@@ -135,3 +135,49 @@ Validation after the batch:
 
 No migrations, schema changes, application-code changes, or manual CI reruns
 were made for this batch.
+
+## Circles Mathematics checkpoint
+
+Circles was promoted through the staging-first gate:
+
+- Source playlist `PL_A4M5IAkMadiR6WFaUTQegpdKUJRD90D`.
+- 18 new Class 11/Dropper lessons, teacher `Mohit Tyagi`, with 0 reused videos.
+- Staging course/chapter: `1227` / `136`.
+- Production course/chapter: `74` / `64`.
+
+The source contained 18 unique, public, embeddable videos with complete
+durations, no production video overlap, exact source/title order from `#1`
+through `#18`, and no material outside the Circles chapter. Every live video
+description contains `#Mathematics #MohitTyagi`.
+
+The importer emitted its known title-only teacher advisory because it does not
+fetch video descriptions. The separate read-only source audit supplied 18/18
+direct hashtag evidence before either write. The source title was normalized
+from `CIRCLES - IIT JEE Mains and Advanced online lectures` to `Circles` with
+exact playlist/title guards.
+
+Production now contains 67 courses and exactly 741 ordered playlist
+memberships: 32 Physics, 27 Chemistry, and 8 Mathematics courses, with 34
+Class 11, 34 Class 12, and 62 Dropper-compatible courses. Core metadata,
+titles, and teacher attribution remain complete, and fully contained
+duplicate-course candidates remain 0. The anonymous production capability
+contract passed.
+
+Browser checks covered lessons 1 and 18 in staging and production, plus the
+production Browse search result. The expected YouTube embeds and ordered
+lesson list rendered, and no console errors appeared.
+
+Validation after the batch:
+
+- A focused rerun passed all 6 tests in `phase1Truth.test.jsx` after an initial
+  parallel-run loading timeout.
+- The clean serial suite passed all 683 Vitest tests across 69 files.
+- ESLint passed with zero warnings.
+- The production Vite build and frontend release safeguards passed.
+- The production-only dependency audit found 0 vulnerabilities. The general
+  audit retains the known 7 high-severity dev-only
+  ESLint/minimatch/brace-expansion findings; the forced breaking fix remains
+  deferred.
+
+No migrations, schema changes, application-code changes, or manual CI reruns
+were made for this batch.
