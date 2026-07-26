@@ -5,9 +5,9 @@ import; it does not authorize one.
 
 ## Baseline recorded on 26 July 2026
 
-- 78 courses and 1,054 playlist memberships.
-- Coverage: 32 JEE Physics, 27 JEE Chemistry, and 19 JEE Mathematics courses;
-  39 Class 11 courses, 41 Class 12 courses, and 73 Dropper-compatible courses.
+- 79 courses and 1,120 playlist memberships.
+- Coverage: 32 JEE Physics, 27 JEE Chemistry, and 20 JEE Mathematics courses;
+  40 Class 11 courses, 41 Class 12 courses, and 74 Dropper-compatible courses.
 - Core metadata missing from 0 courses.
 - Fully contained duplicate candidates: 0.
 - Registered source channel: Mohit Tyagi.
@@ -178,6 +178,14 @@ import; it does not authorize one.
   through `Part 62` Class 12/Dropper lessons, and 0 video reuse. Its source
   title was normalized through exact guards. This course is distinct from
   the deferred Differentiability source.
+- Quadratic Equations, source playlist
+  `PL_A4M5IAkMaf5Ga3nQJe-gg-0zXG77YRB`, was added with direct Mohit Tyagi
+  attribution in all 66 descriptions, 66 Class 11/Dropper lessons, and 0
+  video reuse. Manual review confirmed the digit-plus-space title order `1`
+  through `66`, which the automated lesson-number parser cannot assess.
+  Lessons 61 through 66 retain Theory of Equations as an intentional
+  same-chapter extension. The source title was normalized to the canonical
+  course title `Quadratic Equations and Expressions` through exact guards.
 - Differentiability remains deferred even though its 45 lessons are ordered
   and overlap-free: lesson 16 has no direct teacher evidence, leaving the
   source at 44/45 attributed descriptions on a multi-faculty channel.

@@ -766,3 +766,65 @@ Validation after the batch:
 
 No migrations, schema changes, application-code changes, or manual CI reruns
 were made for this batch.
+
+## Quadratic Equations Mathematics checkpoint
+
+Quadratic Equations and Expressions was promoted through the staging-first
+gate:
+
+- Source playlist `PL_A4M5IAkMaf5Ga3nQJe-gg-0zXG77YRB`.
+- 66 new Class 11/Dropper lessons, teacher `Mohit Tyagi`, with 0 reused
+  videos.
+- Staging course/chapter: `1239` / `148`.
+- Production course/chapter: `86` / `76`.
+
+Independent source and taxonomy reviews found 66 unique, public, embeddable
+videos with complete durations, no production video overlap, and direct Mohit
+Tyagi evidence in every live description. The uninterrupted source runs for
+43,913 seconds (12 hours, 11 minutes, 53 seconds).
+
+Source positions 0 through 65 exactly match visible leading title numbers `1`
+through `66`, without gaps, duplicates, or inversions. Because every number is
+followed by a space, the automated lesson-number parser cannot assess the
+sequence; independent and staging reviews verified all 66 positions manually.
+Lessons 61 through 66 are contiguous
+`Quadratic Equation | Theory of Equations` lessons by the same teacher, with
+no appended PYQ material or supplement, so they remain an intentional
+same-chapter extension.
+
+The canonical chapter is `Quadratic Equations`, while the precise course title
+is `Quadratic Equations and Expressions`. The mapping is `11th,Dropper`, with
+audience focus `11th`, content type `full-course`, language `hinglish`, and
+difficulty `advanced`. The source title
+`IIT-JEE-Mathematics-Quadratic Equation And Expressions` was normalized with
+exact playlist, title, subject, and collision guards in staging first and then
+production.
+
+Production now contains 79 courses and exactly 1,120 ordered playlist
+memberships: 32 Physics, 27 Chemistry, and 20 Mathematics courses, with 40
+Class 11, 41 Class 12, and 74 Dropper-compatible courses. Core metadata,
+titles, and teacher attribution remain complete, and fully contained
+duplicate-course candidates remain 0. The anonymous production capability
+contract passed.
+
+Browser checks covered lessons 1, 33, 61, and 66 in staging and production,
+plus the production Browse search result. Lesson 61 explicitly exercised the
+Theory of Equations transition. The expected privacy-enhanced YouTube embeds,
+canonical title, ordered lesson positions, and search result rendered, and no
+console errors appeared.
+
+Validation after the batch:
+
+- Exact source-to-database validation confirmed 66 contiguous positions, 66
+  unique video IDs, matching titles and durations totaling 43,913 seconds,
+  correct taxonomy and metadata, and embeddable status for every lesson.
+- All 683 Vitest tests passed across 69 files.
+- ESLint passed with zero warnings.
+- The production Vite build and frontend release safeguards passed.
+- The production-only dependency audit found 0 vulnerabilities. The general
+  audit retains the known 7 high-severity dev-only
+  ESLint/minimatch/brace-expansion findings; the forced breaking fix remains
+  deferred.
+
+No migrations, schema changes, application-code changes, or manual CI reruns
+were made for this batch.
