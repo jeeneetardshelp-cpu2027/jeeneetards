@@ -859,3 +859,47 @@ Validation after the batch:
 
 No migrations, schema changes, application-code changes, or manual CI reruns
 were made for this batch.
+
+### Metallurgy Chemistry checkpoint
+
+Metallurgy was promoted through the staging-first gate:
+
+- Source playlist `PL_A4M5IAkMafI3Li4aCyQSa-HX6WMUlak`.
+- 21 new Class 12/Dropper lessons, teacher `ALK Sir`, with 0 reused videos.
+- Staging course/chapter: `1218` / `127`.
+- Production course/chapter: `65` / `55`.
+
+The source contained 21 unique, public, embeddable videos with complete
+durations, direct `ALK Sir` evidence on every video, no production video
+overlap, and an exact title-number set from 1 through 21. Lesson 16 appeared
+after lesson 21 in the YouTube source; guarded membership updates normalized
+the sequence to 1–21 in staging first and then production. The source title
+was also normalized from `CHEMISTRY-METALLURGY` to `Metallurgy` with exact
+playlist/title guards.
+
+The importer emitted its known title-only teacher advisory because it does not
+fetch video descriptions. The separate read-only source audit supplied 21/21
+teacher evidence before either write.
+
+Production now contains 58 courses and exactly 669 ordered playlist
+memberships: 31 Physics and 27 Chemistry courses, with 28 Class 11, 31 Class
+12, and 53 Dropper-compatible courses. Core metadata, titles, and teacher
+attribution remain complete, and fully contained duplicate-course candidates
+remain 0. The anonymous production capability contract passed.
+
+Browser checks covered lessons 1 and 21 in staging and production. The
+expected YouTube embeds loaded, the corrected 1–21 lesson list rendered, and
+no console errors appeared.
+
+Validation after the batch:
+
+- 683 Vitest tests passed across 69 files in the current local workspace.
+- ESLint passed with zero warnings.
+- The production Vite build passed.
+- The production-only dependency audit found 0 vulnerabilities. The general
+  audit retains the known 7 high-severity dev-only
+  ESLint/minimatch/brace-expansion findings; the forced breaking fix remains
+  deferred.
+
+No migrations, schema changes, application-code changes, or manual CI reruns
+were made for this batch.
