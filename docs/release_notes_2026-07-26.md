@@ -709,3 +709,60 @@ Validation after the batch:
 
 No migrations, schema changes, application-code changes, or manual CI reruns
 were made for this batch.
+
+## Differentiation Mathematics checkpoint
+
+Differentiation was promoted through the staging-first gate:
+
+- Source playlist `PL_A4M5IAkMaeewzwCJPpL65y1HV0VAiC4`.
+- 62 new Class 12/Dropper lessons, teacher `Mohit Tyagi`, with 0 reused
+  videos.
+- Staging course/chapter: `1238` / `147`.
+- Production course/chapter: `85` / `75`.
+
+Independent source and taxonomy reviews found 62 unique, public, embeddable
+videos with complete durations, no production video overlap, and an exact
+contiguous `Part 1` through `Part 62` sequence. All 62 descriptions directly
+attribute Mohit Tyagi. The uninterrupted source runs for 35,753 seconds
+(9 hours, 55 minutes, 53 seconds). Parts 56 through 62 narrow to determination
+of function but remain explicitly numbered Differentiation lessons, so there
+is no appended PYQ material, teacher change, or scope drift.
+
+The standalone canonical chapter and course title are `Differentiation`,
+distinct from Continuity and the separately deferred Differentiability source.
+The mapping is `12th,Dropper`, with audience focus `12th`, content type
+`full-course`, language `hinglish`, and difficulty `advanced`.
+
+The importer emitted its known title-only teacher advisory because it does not
+fetch video descriptions. The source title
+`Differentiation-JEE Mains and JEE Advanced` was normalized to
+`Differentiation` with exact playlist, title, subject, and collision guards in
+staging first and then production.
+
+Production now contains 78 courses and exactly 1,054 ordered playlist
+memberships: 32 Physics, 27 Chemistry, and 19 Mathematics courses, with 39
+Class 11, 41 Class 12, and 73 Dropper-compatible courses. Core metadata,
+titles, and teacher attribution remain complete, and fully contained
+duplicate-course candidates remain 0. The anonymous production capability
+contract passed.
+
+Browser checks covered lessons 1, 32, and 62 in staging and production, plus
+the production Browse search result. The expected privacy-enhanced YouTube
+embeds, canonical title, ordered lesson positions, and search result rendered,
+and no console errors appeared.
+
+Validation after the batch:
+
+- Exact source-to-database validation confirmed 62 contiguous positions, 62
+  unique video IDs, matching titles and durations totaling 35,753 seconds,
+  correct taxonomy and metadata, and embeddable status for every lesson.
+- All 683 Vitest tests passed across 69 files.
+- ESLint passed with zero warnings.
+- The production Vite build and frontend release safeguards passed.
+- The production-only dependency audit found 0 vulnerabilities. The general
+  audit retains the known 7 high-severity dev-only
+  ESLint/minimatch/brace-expansion findings; the forced breaking fix remains
+  deferred.
+
+No migrations, schema changes, application-code changes, or manual CI reruns
+were made for this batch.
