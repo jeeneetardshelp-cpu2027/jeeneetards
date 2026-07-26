@@ -732,3 +732,51 @@ Validation after the batch:
 
 No migrations, schema changes, or application-code changes were made for this
 batch.
+
+### P-Block and cation-analysis Chemistry checkpoint
+
+Two more Chemistry courses were promoted one at a time through the
+staging-first gate:
+
+- P-Block Elements: Groups 13 and 14: 11 new Class 11/Dropper lessons from
+  source playlist `PL_A4M5IAkMad_XS2fNetEPTFguJBVrXwd`, under production
+  chapter `51`; production course `61`, teacher `ALK Sir`.
+- Qualitative Analysis: Cations: 8 new Class 12/Dropper lessons from source
+  playlist `PL_A4M5IAkMaf1tQ9MqxPgXstm1k0E934E`, under production chapter
+  `52`; production course `62`, teacher `ALK Sir`.
+
+The cation course was intentionally mapped separately from production course
+`49`: that existing course contains preliminary and anion tests, while the new
+source is cation-specific. Both playlists matched their published and usable
+counts, preserved contiguous source ordering, had no duplicate YouTube IDs,
+no blocked embeds, no existing catalog overlap, complete duration metadata,
+and teacher evidence on every video description.
+
+Both source titles were normalized through exact playlist/title guards in
+staging first and then production. One initial P-Block dry-run ended on a
+transient YouTube fetch failure; its stale output was discarded and no write
+was attempted. The isolated retry passed all gates before the staging and
+production writes.
+
+Production now contains 55 courses and exactly 625 ordered playlist
+memberships: 31 Physics and 24 Chemistry courses, with 26 Class 11, 30 Class
+12, and 50 Dropper-compatible courses. Core metadata remains complete,
+title-review items remain 0, and fully contained duplicate-course candidates
+remain 0. The anonymous production capability contract passed.
+
+Browser checks covered first and last lessons in staging and production for
+both courses. The expected YouTube embeds loaded, course titles and lesson
+counts were correct, and no console errors appeared.
+
+Validation after the batch:
+
+- 683 Vitest tests passed across 69 files in the current local workspace.
+- ESLint passed with zero warnings.
+- The production Vite build passed.
+- The production-only dependency audit found 0 vulnerabilities. The general
+  audit retains the known 7 high-severity dev-only
+  ESLint/minimatch/brace-expansion findings; the forced breaking fix remains
+  deferred.
+
+No migrations, schema changes, application-code changes, or manual CI reruns
+were made for this batch.

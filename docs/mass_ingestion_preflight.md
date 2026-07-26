@@ -5,9 +5,9 @@ import; it does not authorize one.
 
 ## Baseline recorded on 25 July 2026
 
-- 53 courses and 606 playlist memberships.
-- Coverage: JEE Physics plus 22 JEE Chemistry courses; 25 Class 11 courses,
-  29 Class 12 courses, and 48 Dropper-compatible courses.
+- 55 courses and 625 playlist memberships.
+- Coverage: JEE Physics plus 24 JEE Chemistry courses; 26 Class 11 courses,
+  30 Class 12 courses, and 50 Dropper-compatible courses.
 - Core metadata missing from 0 courses.
 - Fully contained duplicate candidates: 0.
 - Registered source channel: Mohit Tyagi.
@@ -67,9 +67,19 @@ import; it does not authorize one.
 - P-Block Elements: Groups 15 and 16, source playlist
   `PL_A4M5IAkMadgDwH13M1jouR_8PEo24QG`, was added with `ALK Sir`
   attribution, 13 ordered Class 12 lessons, and 0 video reuse.
-- Source-title capitalization for these four courses was normalized with exact
+- Source-title capitalization for those four courses was normalized with exact
   playlist/title guards in staging first and then production; the final catalog
   audit contains 0 title-review items.
+- P-Block Elements: Groups 13 and 14, source playlist
+  `PL_A4M5IAkMad_XS2fNetEPTFguJBVrXwd`, was added with `ALK Sir`
+  attribution, 11 ordered Class 11 lessons, and 0 video reuse.
+- Qualitative Analysis: Cations, source playlist
+  `PL_A4M5IAkMaf1tQ9MqxPgXstm1k0E934E`, was added separately from the
+  existing preliminary/anion-analysis course, with `ALK Sir` attribution, 8
+  ordered Class 12 lessons, and 0 video reuse.
+- Both new source titles were normalized through exact playlist/title guards
+  in staging first and then production; the final catalog audit contains 0
+  title-review items.
 - Nuclear Physics is intentionally excluded: its source playlist repeats a
   YouTube video ID and is blocked before any database write.
 - X-rays is intentionally deferred because its playlist spans multiple
@@ -93,6 +103,13 @@ import; it does not authorize one.
 - Redox Reaction and Equivalent Concept is deferred because production dry-run
   found 16 published videos but only 15 usable videos, so the batch stops before
   any database write.
+- Hydrocarbons, Aromatic Hydrocarbons, ORM-3, ORM-4, Polymers, Biomolecules,
+  Carbonyl Compounds, and Reduction/Oxidation/Hydrolysis remain deferred
+  because teacher evidence is incomplete and/or appended PYQ videos make the
+  source scope ambiguous.
+- ORM-2 is blocked because its source repeats a YouTube video ID. GOC-1,
+  GOC-2, ORM-1, Structural Isomerism, and Stereoisomerism remain deferred
+  because their source lesson order is not curriculum-contiguous.
 
 Regenerate the read-only baseline immediately before every batch:
 
