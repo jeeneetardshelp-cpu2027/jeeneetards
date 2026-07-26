@@ -5,9 +5,9 @@ import; it does not authorize one.
 
 ## Baseline recorded on 25 July 2026
 
-- 34 courses and 326 playlist memberships.
-- Coverage: JEE Physics plus three JEE Chemistry courses; 18 Class 11
-  courses, 16 Class 12 courses, and 29 Dropper-compatible courses.
+- 35 courses and 335 playlist memberships.
+- Coverage: JEE Physics plus four JEE Chemistry courses; 18 Class 11
+  courses, 17 Class 12 courses, and 30 Dropper-compatible courses.
 - Core metadata missing from 0 courses.
 - Fully contained duplicate candidates: 0.
 - Registered source channel: Mohit Tyagi.
@@ -18,6 +18,9 @@ import; it does not authorize one.
   `PL_A4M5IAkMaedwEboOyFHzyLrpVALNl_2`, and Nuclear Chemistry, playlist
   `PL_A4M5IAkMadFwfHLDsGFGynlaFhM7FJP`, both with `ALK Sir` attribution and
   0 video reuse.
+- Surface Chemistry, playlist `PL_A4M5IAkMacJHCXkUt-73k--709WPvVs`, was added
+  after all 9 videos showed `ALK Sir` evidence when the `#alksir` description
+  form was included; it also had 0 video reuse.
 - Nuclear Physics is intentionally excluded: its source playlist repeats a
   YouTube video ID and is blocked before any database write.
 - X-rays is intentionally deferred because its playlist spans multiple
@@ -37,8 +40,7 @@ import; it does not authorize one.
   lesson out of sequence. Environmental Chemistry is deferred until the
   remaining teacher-attribution gap is reviewed.
 - General Inorganic Chemistry is deferred because the quick video-metadata pass
-  did not expose direct teacher-attribution evidence. Surface Chemistry is
-  deferred until the one video without direct tag evidence is reviewed.
+  did not expose direct teacher-attribution evidence.
 
 Regenerate the read-only baseline immediately before every batch:
 

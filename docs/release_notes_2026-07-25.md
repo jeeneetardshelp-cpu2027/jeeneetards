@@ -251,5 +251,34 @@ Validation after the update:
 
 General Inorganic Chemistry was not imported because the quick video-metadata
 pass did not expose direct teacher-attribution evidence. Surface Chemistry was
-also deferred until the one video without direct tag evidence is reviewed. No
-migrations, schema changes, or application-code changes were made.
+deferred at this point pending review of the `#alksir` description evidence and
+was handled in the following checkpoint. No migrations, schema changes, or
+application-code changes were made.
+
+### Surface Chemistry checkpoint
+
+Surface Chemistry was promoted after the teacher-attribution review was
+completed with the `#alksir` description signal included:
+
+- Surface Chemistry: 9 new Class 12/Dropper lessons from playlist
+  `PL_A4M5IAkMacJHCXkUt-73k--709WPvVs`, under production chapter `32`.
+- Production course: `42`, title `SURFACE CHEMISTRY`, teacher `ALK Sir`.
+
+The playlist passed source-order, duplicate-video, zero-overlap, staging
+import, production dry-run, and production import gates. Production now
+contains 35 courses and exactly 335 ordered playlist memberships. Anonymous
+checks confirmed the course appears through its chapter course RPC, all 9
+lessons are embeddable with duration metadata, duplicate-course candidates
+remain 0, and the production capability contract passed.
+
+Validation after the update:
+
+- 664 Vitest tests passed across 68 files in the current local workspace.
+- ESLint passed with zero warnings.
+- The production Vite build passed.
+- `npm audit --audit-level=high` still reports the same 7 high-severity
+  dev-only ESLint/minimatch/brace-expansion findings.
+
+General Inorganic Chemistry remains deferred because the quick video-metadata
+pass did not expose direct teacher-attribution evidence. No migrations, schema
+changes, or application-code changes were made for the Surface Chemistry import.
