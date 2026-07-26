@@ -5,9 +5,9 @@ import; it does not authorize one.
 
 ## Baseline recorded on 25 July 2026
 
-- 55 courses and 625 playlist memberships.
-- Coverage: JEE Physics plus 24 JEE Chemistry courses; 26 Class 11 courses,
-  30 Class 12 courses, and 50 Dropper-compatible courses.
+- 56 courses and 636 playlist memberships.
+- Coverage: JEE Physics plus 25 JEE Chemistry courses; 27 Class 11 courses,
+  30 Class 12 courses, and 51 Dropper-compatible courses.
 - Core metadata missing from 0 courses.
 - Fully contained duplicate candidates: 0.
 - Registered source channel: Mohit Tyagi.
@@ -80,6 +80,12 @@ import; it does not authorize one.
 - Both new source titles were normalized through exact playlist/title guards
   in staging first and then production; the final catalog audit contains 0
   title-review items.
+- Structural Isomerism, source playlist
+  `PL_A4M5IAkMac-tIcsX-GmJB6Jfv5wjVTp`, was added with `NS Sir`
+  attribution, 11 Class 11 lessons, and 0 video reuse. The complete title
+  numbering provided an exact 1–11 sequence, so the source order
+  `1–5, 8–11, 6–7` was normalized with guarded membership updates in staging
+  first and then production.
 - Nuclear Physics is intentionally excluded: its source playlist repeats a
   YouTube video ID and is blocked before any database write.
 - X-rays is intentionally deferred because its playlist spans multiple
@@ -108,8 +114,8 @@ import; it does not authorize one.
   because teacher evidence is incomplete and/or appended PYQ videos make the
   source scope ambiguous.
 - ORM-2 is blocked because its source repeats a YouTube video ID. GOC-1,
-  GOC-2, ORM-1, Structural Isomerism, and Stereoisomerism remain deferred
-  because their source lesson order is not curriculum-contiguous.
+  GOC-2, ORM-1, and Stereoisomerism remain deferred because their source
+  lesson order is not curriculum-contiguous.
 
 Regenerate the read-only baseline immediately before every batch:
 

@@ -780,3 +780,43 @@ Validation after the batch:
 
 No migrations, schema changes, application-code changes, or manual CI reruns
 were made for this batch.
+
+### Structural Isomerism Chemistry checkpoint
+
+Structural Isomerism was promoted through the staging-first gate:
+
+- Source playlist `PL_A4M5IAkMac-tIcsX-GmJB6Jfv5wjVTp`.
+- 11 new Class 11/Dropper lessons, teacher `NS Sir`, with 0 reused videos.
+- Staging course/chapter: `1216` / `125`.
+- Production course/chapter: `63` / `53`.
+
+The source contained 11 unique, public, embeddable videos with complete
+durations, direct `NS Sir` or `Neeraj Saini` attribution, no production video
+overlap, and an exact title-number set from 1 through 11. Its YouTube order was
+`1–5, 8–11, 6–7`; guarded membership updates normalized that to 1–11 in
+staging first and then production. The course title was also normalized from
+`STRUCTURAL ISOMERISM` to `Structural Isomerism` with exact playlist/title
+guards.
+
+Production now contains 56 courses and exactly 636 ordered playlist
+memberships: 31 Physics and 25 Chemistry courses, with 27 Class 11, 30 Class
+12, and 51 Dropper-compatible courses. Core metadata, titles, and teacher
+attribution remain complete, and fully contained duplicate-course candidates
+remain 0. The anonymous production capability contract passed.
+
+Browser checks covered lessons 1 and 11 in staging and production. The
+expected YouTube embeds loaded, the corrected 1–11 lesson list rendered, and
+no console errors appeared.
+
+Validation after the batch:
+
+- 683 Vitest tests passed across 69 files in the current local workspace.
+- ESLint passed with zero warnings.
+- The production Vite build passed.
+- The production-only dependency audit found 0 vulnerabilities. The general
+  audit retains the known 7 high-severity dev-only
+  ESLint/minimatch/brace-expansion findings; the forced breaking fix remains
+  deferred.
+
+No migrations, schema changes, application-code changes, or manual CI reruns
+were made for this batch.
