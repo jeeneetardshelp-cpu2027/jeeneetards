@@ -945,3 +945,55 @@ Validation after the batch:
 
 No migrations, schema changes, application-code changes, or manual CI reruns
 were made for this batch.
+
+## Heights and Distances JEE Main 2019 PYQ checkpoint
+
+Heights and Distances was promoted through the staging-first gate as a small,
+strictly bounded PYQ course:
+
+- Source playlist `PL_A4M5IAkMaedGbnmLZVKTkd6RS0X3XZB`.
+- 3 new Class 11/Dropper lessons, teacher `Mohit Tyagi`, with 0 reused videos.
+- Staging course/chapter: `1242` / `151`.
+- Production course/chapter: `89` / `79`.
+
+Independent source review found 3 unique, public, embeddable videos with
+complete durations, no production video overlap, and an exact `#1` through
+`#3` playlist sequence. Every title directly identifies Mohit Tyagi. The
+source runs for 3,246 seconds (54 minutes, 6 seconds) and is explicitly a JEE
+Main 2019 Heights and Distances question set.
+
+The canonical chapter is `Trigonometry`, matching the current JEE Main
+Mathematics unit, while the precise course title is
+`Heights and Distances: JEE Main 2019 PYQs`. The mapping is
+`11th,Dropper`, with audience focus `11th`, content type `pyq`, language
+`hinglish`, and difficulty `advanced`. The source title was normalized with
+exact playlist, title, subject, and collision guards in staging first and then
+production.
+
+Production now contains 82 courses and exactly 1,303 ordered playlist
+memberships: 32 Physics, 27 Chemistry, and 23 Mathematics courses, with 43
+Class 11, 41 Class 12, and 77 Dropper-compatible courses. Core metadata,
+titles, and teacher attribution remain complete, and fully contained
+duplicate-course candidates remain 0. The anonymous production capability
+contract passed.
+
+Browser checks covered lessons 1, 2, and 3 in staging and production, plus the
+production global search result. The expected privacy-enhanced YouTube embeds,
+canonical title, ordered lesson positions, and search result rendered, and no
+console errors appeared.
+
+Validation after the batch:
+
+- Exact source-to-database validation confirmed 3 contiguous positions, 3
+  unique video IDs, matching titles and durations totaling 3,246 seconds,
+  correct taxonomy and metadata, and embeddable status for every lesson.
+- All 683 Vitest tests passed across 69 files.
+- ESLint passed with zero warnings.
+- The production Vite build and frontend release safeguards passed.
+- The production-only dependency audit found 0 vulnerabilities. The general
+  audit retains the known 7 high-severity dev-only
+  ESLint/minimatch/brace-expansion findings; the forced breaking fix remains
+  deferred.
+
+No migrations, schema changes, application-code changes, or manual CI reruns
+were made for this batch.

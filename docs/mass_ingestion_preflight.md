@@ -5,9 +5,9 @@ import; it does not authorize one.
 
 ## Baseline recorded on 26 July 2026
 
-- 81 courses and 1,300 playlist memberships.
-- Coverage: 32 JEE Physics, 27 JEE Chemistry, and 22 JEE Mathematics courses;
-  42 Class 11 courses, 41 Class 12 courses, and 76 Dropper-compatible courses.
+- 82 courses and 1,303 playlist memberships.
+- Coverage: 32 JEE Physics, 27 JEE Chemistry, and 23 JEE Mathematics courses;
+  43 Class 11 courses, 41 Class 12 courses, and 77 Dropper-compatible courses.
 - Core metadata missing from 0 courses.
 - Fully contained duplicate candidates: 0.
 - Registered source channel: Mohit Tyagi.
@@ -198,6 +198,13 @@ import; it does not authorize one.
   through `Part 92` Class 11/Dropper lessons, and 0 video reuse. The source
   title already exactly matched the canonical chapter and course title, so
   no normalization update was needed.
+- Heights and Distances: JEE Main 2019 PYQs, source playlist
+  `PL_A4M5IAkMaedGbnmLZVKTkd6RS0X3XZB`, was added as a `pyq` course under
+  the canonical Trigonometry chapter with direct `Mohit Tyagi` attribution
+  in all 3 titles, an exact ordered `#1` through `#3` Class 11/Dropper
+  sequence, and 0 video reuse. The source title was normalized through exact
+  playlist, title, subject, and collision guards in staging first and then
+  production.
 - Differentiability remains deferred even though its 45 lessons are ordered
   and overlap-free: lesson 16 has no direct teacher evidence, leaving the
   source at 44/45 attributed descriptions on a multi-faculty channel.
@@ -205,6 +212,10 @@ import; it does not authorize one.
   YouTube video ID and is blocked before any database write.
 - X-rays is intentionally deferred because its playlist spans multiple
   curriculum concepts and needs an explicit chapter-placement decision.
+- Conductors is deferred until a separately reviewed membership-normalization
+  plan is approved: all 4 videos are public, embeddable, uniquely attributed
+  to `ABJ Sir`, and overlap-free, but the source playlist's visible
+  lesson-number order is `2, 1, 3, 4`.
 - Gravitation and SHM are deferred because their usable video counts are lower
   than their published playlist counts. Circular Motion and KTG are deferred
   because their source lesson ordering is inconsistent.
@@ -220,6 +231,11 @@ import; it does not authorize one.
   usable videos, and direct teacher evidence is incomplete. Environmental
   Chemistry is deferred until the remaining teacher-attribution gap is
   reviewed.
+- Coordination Compounds is deferred despite its exact 32-lesson sequence:
+  lesson 31 has no direct `ALK Sir` evidence, leaving attribution at 31/32 on
+  the multi-faculty channel. Electrochemistry is deferred because its final
+  unnumbered lesson mixes Carbonyl and Electrochemistry questions and leaves
+  direct `ALK Sir` attribution at 30/31.
 - General Inorganic Chemistry is deferred because the quick video-metadata pass
   did not expose direct teacher-attribution evidence.
 - Redox Reaction and Equivalent Concept is deferred because production dry-run
