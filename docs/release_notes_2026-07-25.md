@@ -374,3 +374,34 @@ Validation after the update:
 
 No migrations, schema changes, or application-code changes were made for the
 Chemical Kinetics import.
+
+### Thermodynamics checkpoint
+
+Thermodynamics was promoted after the staging-first gate:
+
+- Thermodynamics: 28 new Class 11/Dropper lessons from source playlist
+  `PL_A4M5IAkMaeRvDnG59F_78rB1xnVGll9`, source title
+  `CHEMISTRY-THERMODYNAMICS`, under production chapter `36`.
+- Production course: `46`, title `CHEMISTRY-THERMODYNAMICS`, teacher
+  `ALK Sir`.
+
+The playlist passed source-order, duplicate-video, zero-overlap,
+teacher-attribution, staging import, production dry-run, and production import
+gates. Production now contains 39 courses and exactly 429 ordered playlist
+memberships. Anonymous checks confirmed the course appears through
+`get_chapter_courses(36)`, all 28 lessons are embeddable with duration
+metadata, duplicate-course candidates remain 0, and the production capability
+contract passed. A local route smoke check for `/course/46/chapter/36` returned
+HTTP 200.
+
+Validation after the update:
+
+- 665 Vitest tests passed across 68 files in the current local workspace.
+- ESLint passed with zero warnings.
+- The production Vite build passed.
+- `npm audit --audit-level=high` still reports the same 7 high-severity
+  dev-only ESLint/minimatch/brace-expansion findings; dependency mutation
+  remains deferred because the proposed fix is forced/breaking.
+
+No migrations, schema changes, or application-code changes were made for the
+Thermodynamics import.
