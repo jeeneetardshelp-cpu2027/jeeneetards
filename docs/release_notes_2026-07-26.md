@@ -1051,3 +1051,61 @@ Validation after the checkpoint:
 
 No migrations, schema changes, application-code changes, or manual CI reruns
 were made for this checkpoint.
+
+## General Organic Chemistry Part 2 staging checkpoint
+
+General Organic Chemistry: Part 2 cleared the content and staging gates:
+
+- Source playlist `PL_A4M5IAkMafc2p-SO0X7dPJGHp7kqO22`.
+- 22 new Class 11/Dropper staging lessons, teacher `NS Sir`, with 0 reused
+  videos.
+- Staging course/chapter: `1244` / `152`.
+- Production course/chapter: not created.
+
+The source has 22 published, usable, unique, public, processed, embeddable,
+and duration-complete videos. Every title directly identifies NS Sir, there is
+no competing teacher evidence, and the automated importer quality gate
+reported `ok` with 0 findings. The source runs for 40,501 seconds
+(11 hours, 15 minutes, 1 second) and has no production video overlap.
+
+The visible source order was `1–17, 19–22, 18`; every integer from 1 through
+22 appears exactly once in the titles. After exact playlist, video-ID, title,
+duration, chapter, membership-count, uniqueness, and current-position guards,
+one atomic five-membership upsert normalized the staging order to `1–22`.
+The source title was separately collision-guarded and normalized to
+`General Organic Chemistry: Part 2`.
+
+All lessons coherently cover reaction intermediates and rearrangements,
+acidity/basicity, acid-base reaction conditions, and tautomerism. The
+canonical staging chapter `Some Basic Principles of Organic Chemistry`
+matches Unit 14 of the
+[official JEE Main 2026 syllabus](https://cdnbbsr.s3waas.gov.in/s3f8e59f4b2fe7c5705bf878bbd494ccdf/uploads/2025/10/202510311323551056.pdf).
+
+Staging browser checks covered lessons 1, 18, and 22 plus global search. Each
+expected privacy-enhanced YouTube embed loaded, the repaired 17–18–19
+transition rendered in order, search opened course `1244`, and no console
+errors appeared. The anonymous `/admin` route correctly required an
+administrator sign-in.
+
+Production was intentionally not changed. Its dry run reported the missing
+canonical chapter as a production blocker. The signed-in Supabase Backups page
+also reported that the `youtube` project is on Free Plan and that Free Plan
+does not include project backups. With no qualifying backup or isolated
+restore rehearsal recorded, the repository's backup gate blocks all
+production writes. Production remains at 83 courses and 1,307 memberships.
+
+Validation after the staging checkpoint:
+
+- Independent and local source-to-staging checks confirmed 22 contiguous
+  positions, exact source IDs/titles/durations, correct taxonomy and metadata,
+  40,501 seconds total, complete video goal/class links, and 0 reuse.
+- All 683 Vitest tests passed across 69 files.
+- ESLint passed with zero warnings.
+- The production Vite build and frontend release safeguards passed.
+- The anonymous production capability contract passed.
+- The production-only dependency audit found 0 vulnerabilities. The general
+  audit retains the known 7 high-severity dev-only
+  ESLint/minimatch/brace-expansion findings.
+
+No production data, migrations, schema, or application code were changed, and
+no manual CI rerun was started.

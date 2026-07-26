@@ -11,6 +11,12 @@ import; it does not authorize one.
 - Core metadata missing from 0 courses.
 - Fully contained duplicate candidates: 0.
 - Registered source channel: Mohit Tyagi.
+- Production catalogue writes are paused. On 26 July 2026 the signed-in
+  Supabase Backups page identified the `youtube` production project as Free
+  Plan and explicitly reported that Free Plan does not include project
+  backups. No qualifying backup timestamp or isolated restore rehearsal is
+  recorded. Keep using staging until
+  [backup and restore readiness](backup_restore_readiness.md) is complete.
 - Chemistry expansion started with Thermochemistry, playlist
   `PL_A4M5IAkMaeghI_80Pllo-oJ_CfWSy59`, teacher attribution `ALK Sir`, 8
   ordered lessons, and 0 video reuse.
@@ -212,6 +218,18 @@ import; it does not authorize one.
   `1, 2, 3, 4` with an atomic, guarded membership upsert in staging first and
   then production. The source title was also normalized to `Conductors`
   through exact guards.
+- General Organic Chemistry: Part 2, source playlist
+  `PL_A4M5IAkMafc2p-SO0X7dPJGHp7kqO22`, is staging-qualified but not
+  production-approved. Staging course/chapter `1244` / `152` contains 22 new
+  Class 11/Dropper lessons by `NS Sir` with 0 reuse. All 22 titles directly
+  identify NS Sir; the source has 22 published, usable, unique, public,
+  embeddable, duration-complete videos and passed the automated quality gate
+  with 0 findings. Its source order `1–17, 19–22, 18` was normalized through
+  an exact guarded five-membership update to `1–22`. The canonical chapter
+  `Some Basic Principles of Organic Chemistry` follows Unit 14 of the
+  [official JEE Main 2026 syllabus](https://cdnbbsr.s3waas.gov.in/s3f8e59f4b2fe7c5705bf878bbd494ccdf/uploads/2025/10/202510311323551056.pdf).
+  Production remains blocked by the missing chapter reference and, more
+  importantly, the incomplete backup/restore gate.
 - Differentiability remains deferred even though its 45 lessons are ordered
   and overlap-free: lesson 16 has no direct teacher evidence, leaving the
   source at 44/45 attributed descriptions on a multi-faculty channel.
@@ -251,8 +269,8 @@ import; it does not authorize one.
   because teacher evidence is incomplete and/or appended PYQ videos make the
   source scope ambiguous.
 - ORM-2 is blocked because its source repeats a YouTube video ID. GOC-1,
-  GOC-2, ORM-1, and Stereoisomerism remain deferred because their source
-  lesson order is not curriculum-contiguous.
+  ORM-1, and Stereoisomerism remain deferred because their source lesson order
+  is not curriculum-contiguous.
 - Matrices is deferred because its otherwise-contiguous `#1` through `#11`
   source ends with an unnumbered Cayley-Hamilton lesson credited to Rajat Jain
   Sir. Importing it as one Mohit Tyagi course would lose the mixed-teacher

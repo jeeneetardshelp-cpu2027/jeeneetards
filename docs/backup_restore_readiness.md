@@ -3,6 +3,24 @@
 This is a release control for database-changing work. It does not attest that a
 backup exists or that a restore exercise has passed.
 
+## Current production status — 26 July 2026
+
+- Project name: `youtube`.
+- Project reference: `kezelafqhgqrprpadmlf`.
+- The signed-in Supabase `Database Backups` page reports that this is a Free
+  Plan project and that Free Plan does not include project backups.
+- No qualifying production backup timestamp, retention window, restore
+  destination, or isolated restore-rehearsal result is recorded.
+- Therefore production migrations, content imports, chapter creation, and
+  corrective data writes are blocked. Staging validation may continue.
+- The next staged candidate is General Organic Chemistry: Part 2, staging
+  course/chapter `1244` / `152`; it must not be promoted merely because its
+  content checks pass.
+
+Recheck the dashboard and replace this section with completed evidence before
+the next production write. Do not infer backup coverage from earlier green CI,
+successful migrations, or previous imports.
+
 ## Before a production write
 
 The owner must record:
@@ -64,4 +82,3 @@ Evidence location:
 
 Keep secrets out of the record. Store project keys only in the ignored
 environment files intended for them.
-
