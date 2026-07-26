@@ -5,9 +5,9 @@ import; it does not authorize one.
 
 ## Baseline recorded on 25 July 2026
 
-- 49 courses and 578 playlist memberships.
-- Coverage: JEE Physics plus 18 JEE Chemistry courses; 25 Class 11 courses,
-  25 Class 12 courses, and 44 Dropper-compatible courses.
+- 53 courses and 606 playlist memberships.
+- Coverage: JEE Physics plus 22 JEE Chemistry courses; 25 Class 11 courses,
+  29 Class 12 courses, and 48 Dropper-compatible courses.
 - Core metadata missing from 0 courses.
 - Fully contained duplicate candidates: 0.
 - Registered source channel: Mohit Tyagi.
@@ -56,6 +56,20 @@ import; it does not authorize one.
   attribution, 8 ordered Class 11 lessons, and 0 video reuse. Its source title
   `s BLOCK ELEMENTS` was normalized through an exact, guarded staging-first
   metadata update after the catalog audit flagged it for title review.
+- Carboxylic Acids and Derivatives, source playlist
+  `PL_A4M5IAkMafYSOfKgyE8Wl_uWzR2M_FU`, was added with `NS Sir`
+  attribution, 4 ordered Class 12 lessons, and 0 video reuse.
+- Amines, source playlist `PL_A4M5IAkMafkw_Mr6VzCzK2RQZindA3H`, was added
+  with `NS Sir` attribution, 5 ordered Class 12 lessons, and 0 video reuse.
+- P-Block Elements: Groups 17 and 18, source playlist
+  `PL_A4M5IAkMacBob5iqWgldry3gKHEUipf`, was added with `ALK Sir`
+  attribution, 6 ordered Class 12 lessons, and 0 video reuse.
+- P-Block Elements: Groups 15 and 16, source playlist
+  `PL_A4M5IAkMadgDwH13M1jouR_8PEo24QG`, was added with `ALK Sir`
+  attribution, 13 ordered Class 12 lessons, and 0 video reuse.
+- Source-title capitalization for these four courses was normalized with exact
+  playlist/title guards in staging first and then production; the final catalog
+  audit contains 0 title-review items.
 - Nuclear Physics is intentionally excluded: its source playlist repeats a
   YouTube video ID and is blocked before any database write.
 - X-rays is intentionally deferred because its playlist spans multiple

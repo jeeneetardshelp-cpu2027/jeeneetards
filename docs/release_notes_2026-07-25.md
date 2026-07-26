@@ -679,3 +679,56 @@ Validation after the batch:
 
 No migrations, schema changes, or application-code changes were made for this
 batch.
+
+### Organic and p-Block Chemistry checkpoint
+
+Four more Chemistry courses were promoted one at a time through the
+staging-first gate:
+
+- Carboxylic Acids and Derivatives: 4 new Class 12/Dropper lessons from source
+  playlist `PL_A4M5IAkMafYSOfKgyE8Wl_uWzR2M_FU`, under production chapter
+  `47`; production course `57`, teacher `NS Sir`.
+- Amines: 5 new Class 12/Dropper lessons from source playlist
+  `PL_A4M5IAkMafkw_Mr6VzCzK2RQZindA3H`, under production chapter `48`;
+  production course `58`, teacher `NS Sir`.
+- P-Block Elements: Groups 17 and 18: 6 new Class 12/Dropper lessons from
+  source playlist `PL_A4M5IAkMacBob5iqWgldry3gKHEUipf`, under production
+  chapter `49`; production course `59`, teacher `ALK Sir`.
+- P-Block Elements: Groups 15 and 16: 13 new Class 12/Dropper lessons from
+  source playlist `PL_A4M5IAkMadgDwH13M1jouR_8PEo24QG`, under production
+  chapter `50`; production course `60`, teacher `ALK Sir`.
+
+Each playlist matched its published and usable counts, preserved contiguous
+source ordering, had no duplicate YouTube IDs, no blocked embeds, no existing
+catalog overlap, complete duration metadata, and teacher evidence on every
+video description. The local title-only advisory was reviewed against that
+independent description evidence before each production write.
+
+Source titles were normalized to the scoped course names above through exact
+playlist/title guards in staging first and then production. The final
+capitalization-only corrections changed `p-Block` to `P-Block` after the
+catalog rule identified the two remaining title-review items. The final audit
+contains 0 title-review items.
+
+Production now contains 53 courses and exactly 606 ordered playlist
+memberships: 31 Physics and 22 Chemistry courses, with 25 Class 11, 29 Class
+12, and 48 Dropper-compatible courses. Core metadata remains complete and
+fully contained duplicate-course candidates remain 0. The anonymous
+production capability contract passed.
+
+Browser checks covered first and last lessons in staging and production for
+all four courses. The expected `youtube-nocookie.com` embed IDs loaded, course
+titles and lesson counts were correct, and no console errors appeared.
+
+Validation after the batch:
+
+- 683 Vitest tests passed across 69 files in the current local workspace.
+- ESLint passed with zero warnings.
+- The production Vite build passed.
+- `npm audit --audit-level=high` reports the unchanged 7 high-severity
+  dev-only ESLint/minimatch/brace-expansion findings and 0 production
+  dependency findings; dependency mutation remains deferred because the
+  proposed fix is forced/breaking.
+
+No migrations, schema changes, or application-code changes were made for this
+batch.
