@@ -5,9 +5,9 @@ import; it does not authorize one.
 
 ## Baseline recorded on 25 July 2026
 
-- 40 courses and 463 playlist memberships.
-- Coverage: JEE Physics plus nine JEE Chemistry courses; 20 Class 11
-  courses, 20 Class 12 courses, and 35 Dropper-compatible courses.
+- 41 courses and 492 playlist memberships.
+- Coverage: JEE Physics plus 10 JEE Chemistry courses; 21 Class 11 courses,
+  20 Class 12 courses, and 36 Dropper-compatible courses.
 - Core metadata missing from 0 courses.
 - Fully contained duplicate candidates: 0.
 - Registered source channel: Mohit Tyagi.
@@ -32,6 +32,8 @@ import; it does not authorize one.
   added with `ALK Sir` attribution, 28 ordered lessons, and 0 video reuse.
 - Atomic Structure, source playlist `PL_A4M5IAkMafCoVdcacbzrXlRy76fOTwJ`, was
   added with `ALK Sir` attribution, 34 ordered lessons, and 0 video reuse.
+- Ionic Equilibrium, source playlist `PL_A4M5IAkMadJjUIVhfb3yy8k2OgmmvYK`, was
+  added with `ALK Sir` attribution, 29 ordered lessons, and 0 video reuse.
 - Nuclear Physics is intentionally excluded: its source playlist repeats a
   YouTube video ID and is blocked before any database write.
 - X-rays is intentionally deferred because its playlist spans multiple

@@ -436,3 +436,34 @@ Validation after the update:
 
 No migrations, schema changes, or application-code changes were made for the
 Atomic Structure import.
+
+### Ionic Equilibrium checkpoint
+
+Ionic Equilibrium was promoted after the staging-first gate:
+
+- Ionic Equilibrium: 29 new Class 11/Dropper lessons from source playlist
+  `PL_A4M5IAkMadJjUIVhfb3yy8k2OgmmvYK`, source title
+  `CHEMISTRY-IONIC EQUILIBRIUM`, under production chapter `38`.
+- Production course: `48`, title `CHEMISTRY-IONIC EQUILIBRIUM`, teacher
+  `ALK Sir`.
+
+The playlist passed source-order, duplicate-video, zero-overlap,
+teacher-attribution, staging import, production dry-run, and production import
+gates. Production now contains 41 courses and exactly 492 ordered playlist
+memberships. Anonymous checks confirmed the course appears through
+`get_chapter_courses(38)`, all 29 lessons are embeddable with duration
+metadata, duplicate-course candidates remain 0, and the production capability
+contract passed. A local route smoke check for `/course/48/chapter/38` returned
+HTTP 200.
+
+Validation after the update:
+
+- 665 Vitest tests passed across 68 files in the current local workspace.
+- ESLint passed with zero warnings.
+- The production Vite build passed.
+- `npm audit --audit-level=high` still reports the same 7 high-severity
+  dev-only ESLint/minimatch/brace-expansion findings; dependency mutation
+  remains deferred because the proposed fix is forced/breaking.
+
+No migrations, schema changes, or application-code changes were made for the
+Ionic Equilibrium import.
