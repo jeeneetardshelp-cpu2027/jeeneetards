@@ -5,9 +5,9 @@ import; it does not authorize one.
 
 ## Baseline recorded on 26 July 2026
 
-- 73 courses and 887 playlist memberships.
-- Coverage: 32 JEE Physics, 27 JEE Chemistry, and 14 JEE Mathematics courses;
-  38 Class 11 courses, 37 Class 12 courses, and 68 Dropper-compatible courses.
+- 74 courses and 889 playlist memberships.
+- Coverage: 32 JEE Physics, 27 JEE Chemistry, and 15 JEE Mathematics courses;
+  38 Class 11 courses, 38 Class 12 courses, and 69 Dropper-compatible courses.
 - Core metadata missing from 0 courses.
 - Fully contained duplicate candidates: 0.
 - Registered source channel: Mohit Tyagi.
@@ -153,6 +153,11 @@ import; it does not authorize one.
   added with direct `Mohit Tyagi` attribution in all 46 video descriptions,
   exact ordered Class 12 lessons, and 0 video reuse. The source remains
   Continuity-only; separate Differentiability content is not mixed into it.
+- Area Under Curves, source playlist `PL_A4M5IAkMaf8TqINqRXRlWeuFgl6fBgf`,
+  was added under the canonical Application of Integrals chapter with direct
+  `#MohitTyagi` attribution in both video descriptions and 0 video reuse.
+  Manual review confirmed the unparseable digit-plus-space source order
+  `1` then `2`.
 - Nuclear Physics is intentionally excluded: its source playlist repeats a
   YouTube video ID and is blocked before any database write.
 - X-rays is intentionally deferred because its playlist spans multiple

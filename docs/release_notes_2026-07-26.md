@@ -482,3 +482,56 @@ Validation after the batch:
 
 No migrations, schema changes, application-code changes, or manual CI reruns
 were made for this batch.
+
+## Area Under Curves Mathematics checkpoint
+
+Area Under Curves was promoted through the staging-first gate:
+
+- Source playlist `PL_A4M5IAkMaf8TqINqRXRlWeuFgl6fBgf`.
+- 2 new Class 12/Dropper lessons, teacher `Mohit Tyagi`, with 0 reused videos.
+- Staging course/chapter: `1234` / `143`.
+- Production course/chapter: `81` / `71`.
+
+Independent source and taxonomy reviews found 2 unique, public, embeddable
+videos with complete durations, no production video overlap, and 94 minutes
+9 seconds of one bounded two-part series. Both live video descriptions contain
+`#Mathematics #MohitTyagi`, with no competing faculty evidence.
+
+The official Class 12 chapter name is `Application of Integrals`, while the
+source proves the narrower course scope `Area Under Curves`. The canonical
+chapter therefore supports strict curriculum filtering without overstating
+the course title. The mapping is `12th,Dropper` with audience focus `12th`.
+
+The source titles begin with a digit followed by a space, which the automated
+lesson-number parser does not recognize. Independent validation confirmed
+that playlist positions 1 and 2 match the visible title prefixes `1` and `2`;
+both orders were preserved. The importer emitted its known title-only teacher
+advisory because it does not fetch video descriptions.
+
+The source title was normalized from
+`Area Under The Curves - IIT JEE MAINS AND ADVANCED ONLINE FREE VIDEO LECTURES`
+to `Area Under Curves` with exact playlist/title guards.
+
+Production now contains 74 courses and exactly 889 ordered playlist
+memberships: 32 Physics, 27 Chemistry, and 15 Mathematics courses, with 38
+Class 11, 38 Class 12, and 69 Dropper-compatible courses. Core metadata,
+titles, and teacher attribution remain complete, and fully contained
+duplicate-course candidates remain 0. The anonymous production capability
+contract passed.
+
+Browser checks covered both lessons in staging and production, plus the
+production Browse search result. The expected YouTube embeds and canonical
+chapter scope rendered, and no console errors appeared.
+
+Validation after the batch:
+
+- All 683 Vitest tests passed across 69 files.
+- ESLint passed with zero warnings.
+- The production Vite build and frontend release safeguards passed.
+- The production-only dependency audit found 0 vulnerabilities. The general
+  audit retains the known 7 high-severity dev-only
+  ESLint/minimatch/brace-expansion findings; the forced breaking fix remains
+  deferred.
+
+No migrations, schema changes, application-code changes, or manual CI reruns
+were made for this batch.
