@@ -5,9 +5,9 @@ import; it does not authorize one.
 
 ## Baseline recorded on 25 July 2026
 
-- 62 courses and 686 playlist memberships.
-- Coverage: 32 JEE Physics, 27 JEE Chemistry, and 3 JEE Mathematics courses;
-  29 Class 11 courses, 34 Class 12 courses, and 57 Dropper-compatible courses.
+- 63 courses and 693 playlist memberships.
+- Coverage: 32 JEE Physics, 27 JEE Chemistry, and 4 JEE Mathematics courses;
+  30 Class 11 courses, 34 Class 12 courses, and 58 Dropper-compatible courses.
 - Core metadata missing from 0 courses.
 - Fully contained duplicate candidates: 0.
 - Registered source channel: Mohit Tyagi.
@@ -110,6 +110,9 @@ import; it does not authorize one.
 - Trigonometric Equations, source playlist
   `PL_A4M5IAkMafsM4VwfCbZ8Oa4i_96R09n`, was added with direct `Mohit Tyagi`
   attribution on all 3 ordered Class 11 lessons and 0 video reuse.
+- Ellipse, source playlist `PL_A4M5IAkMae6_gCoLFltXl3bmtZmOvjQ`, was
+  added with direct `Mohit Tyagi` attribution on all 7 ordered Class 11
+  lessons and 0 video reuse.
 - Nuclear Physics is intentionally excluded: its source playlist repeats a
   YouTube video ID and is blocked before any database write.
 - X-rays is intentionally deferred because its playlist spans multiple
