@@ -593,3 +593,63 @@ channel.
 
 No migrations, schema changes, application-code changes, or manual CI reruns
 were made for this batch.
+
+## Definite Integration Mathematics checkpoint
+
+Definite Integration was promoted through the staging-first gate:
+
+- Source playlist `PL_A4M5IAkMafGD8xJhm9IioyF_norREYN`.
+- 86 new Class 12/Dropper lessons, teacher `Mohit Tyagi`, with 0 reused
+  videos.
+- Staging course/chapter: `1236` / `145`.
+- Production course/chapter: `83` / `73`.
+
+Independent source and taxonomy reviews found 86 unique, public, embeddable
+videos with complete durations, no production video overlap, and an exact
+`Part 1` through `Part 86` sequence. The uninterrupted source runs for 52,474
+seconds (14 hours, 34 minutes, 34 seconds). Every live description contains
+direct `#Mathematics #MohitTyagi` evidence, with no appended PYQ or supplement,
+teacher change, or competing faculty evidence.
+
+The standalone canonical chapter and course title are `Definite Integration`;
+the related Area Under Curves course remains under Application of Integrals.
+The mapping is `12th,Dropper`, with audience focus `12th`, content type
+`full-course`, language `hinglish`, and difficulty `advanced`. The 86-video
+playlist was imported alone as one atomic transaction and remained well below
+the importer's 500-video hard cap.
+
+The importer emitted its known title-only teacher advisory because it does not
+fetch video descriptions. The source title was already exactly
+`Definite Integration`; an exact equality check passed, so no normalization
+update was needed.
+
+Production now contains 76 courses and exactly 987 ordered playlist
+memberships: 32 Physics, 27 Chemistry, and 17 Mathematics courses, with 38
+Class 11, 40 Class 12, and 71 Dropper-compatible courses. Core metadata,
+titles, and teacher attribution remain complete, and fully contained
+duplicate-course candidates remain 0. The anonymous production capability
+contract passed.
+
+Browser checks covered lessons 1, 43, and 86 in staging and production, plus
+the production Browse search result. The expected privacy-enhanced YouTube
+embeds, course title, ordered lesson positions, and search result rendered,
+and no console errors appeared.
+
+Validation after the batch:
+
+- Exact database validation confirmed 86 contiguous positions, 86 unique
+  video IDs, complete durations totaling 52,474 seconds, correct taxonomy and
+  metadata, and embeddable status for every lesson.
+- All 683 Vitest tests passed across 69 files.
+- ESLint passed with zero warnings.
+- The production Vite build and frontend release safeguards passed.
+- The production-only dependency audit found 0 vulnerabilities. The general
+  audit retains the known 7 high-severity dev-only
+  ESLint/minimatch/brace-expansion findings; the forced breaking fix remains
+  deferred.
+
+Differentiability remains deferred: lesson 16 lacks direct teacher evidence,
+leaving 44 of 45 descriptions attributed on a multi-faculty channel.
+
+No migrations, schema changes, application-code changes, or manual CI reruns
+were made for this batch.
