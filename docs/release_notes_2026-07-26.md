@@ -828,3 +828,62 @@ Validation after the batch:
 
 No migrations, schema changes, application-code changes, or manual CI reruns
 were made for this batch.
+
+## Sequences and Series Mathematics checkpoint
+
+Progressions and Series was promoted through the staging-first gate:
+
+- Source playlist `PL_A4M5IAkMaeu--QWWngkEI10RKOXf8TF`.
+- 88 new Class 11/Dropper lessons, teacher `Mohit Tyagi`, with 0 reused
+  videos.
+- Staging course/chapter: `1240` / `149`.
+- Production course/chapter: `87` / `77`.
+
+Independent source and taxonomy reviews found 88 unique, public, embeddable
+videos with complete durations, no production video overlap, and an exact
+parser-confirmed contiguous `Part 1` through `Part 88` sequence. All 88 live
+descriptions directly contain `#MohitTyagi`. The uninterrupted source runs for
+54,171 seconds (15 hours, 2 minutes, 51 seconds).
+
+Every title remains `Progression and Series Part N`. The source description
+defines one complete basic-to-advanced Sequences and Series course covering
+arithmetic, geometric, and harmonic progressions, sigma properties and
+applications, difference and `Vn` methods, and progression-derived
+inequalities. The advanced material remains a coherent same-chapter extension,
+with no appended PYQ course, supplement, or teacher change.
+
+The canonical chapter is `Sequences and Series`, while the precise course
+title is `Progressions and Series`. The mapping is `11th,Dropper`, with
+audience focus `11th`, content type `full-course`, language `hinglish`, and
+difficulty `advanced`. The source title `Progression and Series` was
+normalized with exact playlist, title, subject, and collision guards in
+staging first and then production. The importer emitted its known title-only
+teacher advisory because it does not fetch video descriptions.
+
+Production now contains 80 courses and exactly 1,208 ordered playlist
+memberships: 32 Physics, 27 Chemistry, and 21 Mathematics courses, with 41
+Class 11, 41 Class 12, and 75 Dropper-compatible courses. Core metadata,
+titles, and teacher attribution remain complete, and fully contained
+duplicate-course candidates remain 0. The anonymous production capability
+contract passed.
+
+Browser checks covered lessons 1, 44, and 88 in staging and production, plus
+the production Browse search result. The expected privacy-enhanced YouTube
+embeds, canonical title, ordered lesson positions, and search result rendered,
+and no console errors appeared.
+
+Validation after the batch:
+
+- Exact source-to-database validation confirmed 88 contiguous positions, 88
+  unique video IDs, matching titles and durations totaling 54,171 seconds,
+  correct taxonomy and metadata, and embeddable status for every lesson.
+- All 683 Vitest tests passed across 69 files.
+- ESLint passed with zero warnings.
+- The production Vite build and frontend release safeguards passed.
+- The production-only dependency audit found 0 vulnerabilities. The general
+  audit retains the known 7 high-severity dev-only
+  ESLint/minimatch/brace-expansion findings; the forced breaking fix remains
+  deferred.
+
+No migrations, schema changes, application-code changes, or manual CI reruns
+were made for this batch.

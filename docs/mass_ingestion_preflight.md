@@ -5,9 +5,9 @@ import; it does not authorize one.
 
 ## Baseline recorded on 26 July 2026
 
-- 79 courses and 1,120 playlist memberships.
-- Coverage: 32 JEE Physics, 27 JEE Chemistry, and 20 JEE Mathematics courses;
-  40 Class 11 courses, 41 Class 12 courses, and 74 Dropper-compatible courses.
+- 80 courses and 1,208 playlist memberships.
+- Coverage: 32 JEE Physics, 27 JEE Chemistry, and 21 JEE Mathematics courses;
+  41 Class 11 courses, 41 Class 12 courses, and 75 Dropper-compatible courses.
 - Core metadata missing from 0 courses.
 - Fully contained duplicate candidates: 0.
 - Registered source channel: Mohit Tyagi.
@@ -186,6 +186,12 @@ import; it does not authorize one.
   Lessons 61 through 66 retain Theory of Equations as an intentional
   same-chapter extension. The source title was normalized to the canonical
   course title `Quadratic Equations and Expressions` through exact guards.
+- Progressions and Series, source playlist
+  `PL_A4M5IAkMaeu--QWWngkEI10RKOXf8TF`, was added under the canonical
+  Sequences and Series chapter with direct `#MohitTyagi` attribution in all
+  88 descriptions, exact ordered `Part 1` through `Part 88` Class 11/Dropper
+  lessons, and 0 video reuse. The source title `Progression and Series` was
+  normalized to `Progressions and Series` through exact guards.
 - Differentiability remains deferred even though its 45 lessons are ordered
   and overlap-free: lesson 16 has no direct teacher evidence, leaving the
   source at 44/45 attributed descriptions on a multi-faculty channel.
