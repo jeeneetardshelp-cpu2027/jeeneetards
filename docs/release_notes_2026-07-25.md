@@ -313,3 +313,33 @@ Validation after the update:
 
 No migrations, schema changes, or application-code changes were made for the
 Solutions import.
+
+### Solid State checkpoint
+
+Solid State was promoted after the same staging-first gate:
+
+- Solid State: 23 new Class 12/Dropper lessons from source playlist
+  `PL_A4M5IAkMacfcfyAANNIQOuDqHUI5weL`, source title
+  `CHEMISTRY-SOLID STATE`, under production chapter `34`.
+- Production course: `44`, title `CHEMISTRY-SOLID STATE`, teacher `ALK Sir`.
+
+The playlist passed source-order, duplicate-video, zero-overlap,
+teacher-attribution, staging import, production dry-run, and production import
+gates. Production now contains 37 courses and exactly 375 ordered playlist
+memberships. Anonymous checks confirmed the course appears through
+`get_chapter_courses(34)`, all 23 lessons are embeddable with duration
+metadata, duplicate-course candidates remain 0, and the production capability
+contract passed. A local route smoke check for `/course/44/chapter/34` returned
+HTTP 200.
+
+Validation after the update:
+
+- 665 Vitest tests passed across 68 files in the current local workspace.
+- ESLint passed with zero warnings.
+- The production Vite build passed.
+- `npm audit --audit-level=high` still reports the same 7 high-severity
+  dev-only ESLint/minimatch/brace-expansion findings; dependency mutation
+  remains deferred because the proposed fix is forced/breaking.
+
+No migrations, schema changes, or application-code changes were made for the
+Solid State import.
