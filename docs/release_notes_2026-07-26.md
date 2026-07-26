@@ -378,3 +378,54 @@ Validation after the batch:
 
 No migrations, schema changes, application-code changes, or manual CI reruns
 were made for this batch.
+
+## Determinants Mathematics checkpoint
+
+Determinants was promoted through the staging-first gate:
+
+- Source playlist `PL_A4M5IAkMaex9aIhynPtk3ZO-xO_G2kJ`.
+- 25 new Class 12/Dropper lessons, teacher `Mohit Tyagi`, with 0 reused
+  videos.
+- Staging course/chapter: `1232` / `141`.
+- Production course/chapter: `79` / `69`.
+
+Independent source and taxonomy reviews found 25 unique, public, embeddable
+videos with complete durations, no production video overlap, exact
+source/title order from `#1` through `#25`, and one uninterrupted
+teacher/source series. Every live video description contains
+`#Mathematics #MohitTyagi`, with no competing faculty evidence.
+
+Lessons 17 through 19 apply differentiation and integration to determinant
+expressions; they are not standalone calculus lessons. They remain explicitly
+determinant-titled inside the same sequence and are retained as advanced
+same-chapter applications. The canonical mapping is therefore
+`12th,Dropper` with audience focus `12th`.
+
+The importer emitted its known title-only teacher advisory because it does not
+fetch video descriptions. The source title was normalized from
+`Determinants-IIT JEE mains and advanced maths videos` to `Determinants` with
+exact playlist/title guards.
+
+Production now contains 72 courses and exactly 841 ordered playlist
+memberships: 32 Physics, 27 Chemistry, and 13 Mathematics courses, with 38
+Class 11, 36 Class 12, and 67 Dropper-compatible courses. Core metadata,
+titles, and teacher attribution remain complete, and fully contained
+duplicate-course candidates remain 0. The anonymous production capability
+contract passed.
+
+Browser checks covered lessons 1 and 25 in staging and production, plus the
+production Browse search result. The expected YouTube embeds and ordered
+lesson list rendered, and no console errors appeared.
+
+Validation after the batch:
+
+- All 683 Vitest tests passed across 69 files.
+- ESLint passed with zero warnings.
+- The production Vite build and frontend release safeguards passed.
+- The production-only dependency audit found 0 vulnerabilities. The general
+  audit retains the known 7 high-severity dev-only
+  ESLint/minimatch/brace-expansion findings; the forced breaking fix remains
+  deferred.
+
+No migrations, schema changes, application-code changes, or manual CI reruns
+were made for this batch.
