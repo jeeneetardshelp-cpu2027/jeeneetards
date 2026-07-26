@@ -343,3 +343,34 @@ Validation after the update:
 
 No migrations, schema changes, or application-code changes were made for the
 Solid State import.
+
+### Chemical Kinetics checkpoint
+
+Chemical Kinetics was promoted after the staging-first gate:
+
+- Chemical Kinetics: 26 new Class 12/Dropper lessons from source playlist
+  `PL_A4M5IAkMadkjXXk9EiOUrn1lGbBico_`, source title
+  `CHEMISTRY-CHEMICAL KINETICS`, under production chapter `35`.
+- Production course: `45`, title `CHEMISTRY-CHEMICAL KINETICS`, teacher
+  `ALK Sir`.
+
+The playlist passed source-order, duplicate-video, zero-overlap,
+teacher-attribution, staging import, production dry-run, and production import
+gates. Production now contains 38 courses and exactly 401 ordered playlist
+memberships. Anonymous checks confirmed the course appears through
+`get_chapter_courses(35)`, all 26 lessons are embeddable with duration
+metadata, duplicate-course candidates remain 0, and the production capability
+contract passed. A local route smoke check for `/course/45/chapter/35` returned
+HTTP 200.
+
+Validation after the update:
+
+- 665 Vitest tests passed across 68 files in the current local workspace.
+- ESLint passed with zero warnings.
+- The production Vite build passed.
+- `npm audit --audit-level=high` still reports the same 7 high-severity
+  dev-only ESLint/minimatch/brace-expansion findings; dependency mutation
+  remains deferred because the proposed fix is forced/breaking.
+
+No migrations, schema changes, or application-code changes were made for the
+Chemical Kinetics import.
