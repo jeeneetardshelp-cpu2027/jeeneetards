@@ -5,9 +5,9 @@ import; it does not authorize one.
 
 ## Baseline recorded on 26 July 2026
 
-- 74 courses and 889 playlist memberships.
-- Coverage: 32 JEE Physics, 27 JEE Chemistry, and 15 JEE Mathematics courses;
-  38 Class 11 courses, 38 Class 12 courses, and 69 Dropper-compatible courses.
+- 75 courses and 901 playlist memberships.
+- Coverage: 32 JEE Physics, 27 JEE Chemistry, and 16 JEE Mathematics courses;
+  38 Class 11 courses, 39 Class 12 courses, and 70 Dropper-compatible courses.
 - Core metadata missing from 0 courses.
 - Fully contained duplicate candidates: 0.
 - Registered source channel: Mohit Tyagi.
@@ -158,6 +158,13 @@ import; it does not authorize one.
   `#MohitTyagi` attribution in both video descriptions and 0 video reuse.
   Manual review confirmed the unparseable digit-plus-space source order
   `1` then `2`.
+- Vector Algebra and Three-Dimensional Geometry, source playlist
+  `PL_A4M5IAkMafmea0RnicbuLD6Ly2EIr0X`, was added under the official combined
+  Vectors and Three-Dimensional Geometry unit with `#MohitTyagi` attribution
+  in all 12 video descriptions, exact ordered lessons, and 0 video reuse.
+- Differentiability remains deferred even though its 45 lessons are ordered
+  and overlap-free: lesson 16 has no direct teacher evidence, leaving the
+  source at 44/45 attributed descriptions on a multi-faculty channel.
 - Nuclear Physics is intentionally excluded: its source playlist repeats a
   YouTube video ID and is blocked before any database write.
 - X-rays is intentionally deferred because its playlist spans multiple

@@ -535,3 +535,61 @@ Validation after the batch:
 
 No migrations, schema changes, application-code changes, or manual CI reruns
 were made for this batch.
+
+## Vectors and Three-Dimensional Geometry Mathematics checkpoint
+
+Vector Algebra and Three-Dimensional Geometry was promoted through the
+staging-first gate:
+
+- Source playlist `PL_A4M5IAkMafmea0RnicbuLD6Ly2EIr0X`.
+- 12 new Class 12/Dropper lessons, teacher `Mohit Tyagi`, with 0 reused
+  videos.
+- Staging course/chapter: `1235` / `144`.
+- Production course/chapter: `82` / `72`.
+
+Independent source and taxonomy reviews found 12 unique, public, embeddable
+videos with complete durations, no production video overlap, exact
+source/title order from `#1` through `#12`, and direct
+`#Mathematics #MohitTyagi` evidence in every live description.
+
+Lessons 1 through 8 teach Vector Algebra and lessons 9 through 12 apply vectors
+to Three-Dimensional Geometry. The source is one uninterrupted sequence, and
+the official Class 12 curriculum groups them as the combined Vectors and
+Three-Dimensional Geometry unit. The mapping is therefore `12th,Dropper` with
+audience focus `12th`.
+
+The importer emitted its known title-only teacher advisory because it does not
+fetch video descriptions. The source title was normalized from
+`VECTOR AND THREE DIMENSIONAL GEOMETRY - IIT JEE FREE ONLINE VIDEO LECTURES`
+to `Vector Algebra and Three-Dimensional Geometry` with exact playlist/title
+guards.
+
+Production now contains 75 courses and exactly 901 ordered playlist
+memberships: 32 Physics, 27 Chemistry, and 16 Mathematics courses, with 38
+Class 11, 39 Class 12, and 70 Dropper-compatible courses. Core metadata,
+titles, and teacher attribution remain complete, and fully contained
+duplicate-course candidates remain 0. The anonymous production capability
+contract passed.
+
+Browser checks covered lessons 1, 9, and 12 in staging and production, plus
+the production Browse search result. Lesson 9 explicitly exercised the
+transition from Vector Algebra into Three-Dimensional Geometry. The expected
+YouTube embeds and ordered lesson list rendered, and no console errors
+appeared.
+
+Validation after the batch:
+
+- All 683 Vitest tests passed across 69 files.
+- ESLint passed with zero warnings.
+- The production Vite build and frontend release safeguards passed.
+- The production-only dependency audit found 0 vulnerabilities. The general
+  audit retains the known 7 high-severity dev-only
+  ESLint/minimatch/brace-expansion findings; the forced breaking fix remains
+  deferred.
+
+Differentiability was reviewed but not imported. Lesson 16 lacks direct
+teacher evidence, leaving 44 of 45 descriptions attributed on a multi-faculty
+channel.
+
+No migrations, schema changes, application-code changes, or manual CI reruns
+were made for this batch.
