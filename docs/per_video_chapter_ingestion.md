@@ -2,17 +2,19 @@
 
 ## Current status
 
-The v12 implementation is source-ready but **not deployed**. No v12 migration
-has been applied to staging or production, and no mixed-chapter playlist has
-been imported. The SQL contract has static source tests and review evidence,
-but has not been compiled or exercised against a database; that belongs to the
-disposable-staging step below.
+The v12 implementation is installed and rehearsal-passed on the disposable
+staging database. It is **not deployed to production**, and no real
+mixed-chapter playlist has been imported. The staging database advertises the
+complete version-12 capability contract. A separate anonymous, read-only
+production probe returned `PGRST202` for that capability.
 
-The separate disposable-staging verifier and its staging-only helper/rollback
-SQL are also source-prepared, but **have not been run**. No v12 SQL was
-executed, no migration was applied, and no fixture, audit row, or catalogue
-data was changed while preparing them. Their presence in the repository is
-not runtime evidence.
+The explicitly confirmed staging verifier passed on 26 July 2026. Its
+temporary staging-only helper and failure trigger were removed after cleanup;
+the base staging helpers remain installed. The redacted evidence is outside
+the repository at
+`../outputs/v12-import/v12-staging-ff29d6.json`.
+Its SHA-256 and the separately observed recovery/final-state checks are
+preserved in `docs/v12_staging_rehearsal_evidence.json`.
 
 This workflow exists for a narrow case: one publisher-owned YouTube playlist
 contains lessons from more than one canonical chapter, but should remain one
@@ -21,6 +23,34 @@ several courses.
 
 Production remains blocked by the backup/restore gate in
 `docs/backup_restore_readiness.md`.
+
+## Disposable-staging evidence
+
+- The read-only preflight passed every prerequisite encoded for v12 and
+  returned the exact environment marker `staging`.
+- The only schema migration applied was
+  `per_video_chapter_import_v12.sql`; the staging-only helper SQL was
+  temporarily installed and later rolled back. The read-only postflight
+  passed its capability, RLS, grant, and sequence checks with zero
+  pre-existing mapped-import audit rows.
+- The confirmed verifier passed 25 assertions with 0 failures. It exercised
+  permission boundaries, successful mapping, exact replay, conflicting
+  replay/create-only guards, structural drift, injected rollback, and both
+  shared and conflicting concurrency.
+- Cleanup acquired every run-owned request lock, removed ordinary fixtures
+  first, deleted the 4 expected protected audit rows last, and reported zero
+  playlists, videos, channels, chapters, audits, profiles, and auth users.
+- One earlier runner was interrupted by a local shell timeout after creating
+  two chapters, two channels, and one test account/profile. Its exact six-hex
+  ledger was recovered separately: all 9 request locks were acquired,
+  protected-audit cleanup ran last, and all residue counts were verified as
+  zero before the successful run began.
+- The v12 staging-test helper rollback passed. Final read-only checks showed
+  capability version 12, no staging-test capability, no failure trigger, zero
+  mapped-import audits, and zero `TESTV12` residue.
+- The verifier reported `production_touched=false` and
+  `migrations_applied_by_harness=false`. No production SQL or data write was
+  attempted.
 
 ## Student-facing contract
 
@@ -124,7 +154,9 @@ the rollback file as a substitute for a backup.
 Do not combine this with any completed migration or rerun an old production
 bundle.
 
-The exact future disposable-staging order is:
+The exact disposable-staging order is below. It was completed for the recorded
+checkpoint and must not be rerun without a new, explicitly approved
+disposable target and reason:
 
 1. Run `per_video_chapter_import_v12_preflight.sql` read-only against the
    disposable staging database. Review every result and stop on any false,
@@ -164,10 +196,9 @@ The exact future disposable-staging order is:
 Do not schedule it, add it to a general test command, or run it automatically.
 It is an explicitly confirmed disposable-staging operation.
 
-Production remains blocked by `docs/backup_restore_readiness.md`. Even a future
-green disposable-staging report would not authorize production SQL or data
-writes. Do not add v12 to, or rerun, the legacy cumulative production
-migration.
+Production remains blocked by `docs/backup_restore_readiness.md`. The green
+disposable-staging report does not authorize production SQL or data writes.
+Do not add v12 to, or rerun, the legacy cumulative production migration.
 
 ## Functions source checkpoint
 

@@ -1,0 +1,99 @@
+{
+  "version": 1,
+  "recorded_at": "2026-07-26T06:35:58.2051092Z",
+  "source_commit": "ba731b24e54ad28e86646d229b03ed6c04b12e55",
+  "target": "redacted-disposable-staging",
+  "target_differs_from_known_production": true,
+  "preflight": {
+    "passed": true,
+    "environment": "staging",
+    "encoded_prerequisites_passed": 9
+  },
+  "migration": {
+    "only_schema_migration_applied": "per_video_chapter_import_v12.sql",
+    "postflight_passed": true,
+    "initial_mapped_import_audit_rows": 0
+  },
+  "interrupted_run_recovery": {
+    "run_id": "1c6aaf",
+    "cause": "local shell timeout closed the verifier output pipe",
+    "initial_exact_residue": {
+      "playlists": 0,
+      "videos": 0,
+      "channels": 2,
+      "chapters": 2,
+      "audits": 0,
+      "profiles": 1,
+      "auth_users": 1
+    },
+    "requests_quiesced": true,
+    "request_locks_acquired": 9,
+    "audit_cleanup_last": true,
+    "deleted_audit_rows": 0,
+    "final_exact_residue": {
+      "playlists": 0,
+      "videos": 0,
+      "channels": 0,
+      "chapters": 0,
+      "audits": 0,
+      "profiles": 0,
+      "auth_users": 0
+    }
+  },
+  "successful_verifier": {
+    "run_id": "ff29d6",
+    "redacted_report": "../outputs/v12-import/v12-staging-ff29d6.json",
+    "redacted_report_sha256": "6e3c216461dce4df614410190aa465d2daeeae1f3e0e032cd53b4b82715b7655",
+    "passed": 25,
+    "failed": 0,
+    "all_guards_passed": true,
+    "expected_audit_rows": 4,
+    "requests_quiesced": true,
+    "cleanup_completed": true,
+    "audit_cleanup_last": true,
+    "deleted_audit_rows": 4,
+    "final_residue": {
+      "playlists": 0,
+      "videos": 0,
+      "channels": 0,
+      "chapters": 0,
+      "audits": 0,
+      "profiles": 0,
+      "auth_users": 0
+    },
+    "production_touched": false,
+    "migrations_applied_by_harness": false
+  },
+  "temporary_helper_rollback": {
+    "passed": true,
+    "staging_test_capability_absent_after_rollback": true,
+    "failure_trigger_present_after_rollback": false
+  },
+  "final_staging_probe": {
+    "environment": "staging",
+    "v12_capability": {
+      "version": 12,
+      "per_video_chapter_id": true,
+      "all_or_none_mapping": true,
+      "create_only": true,
+      "request_replay": true,
+      "audit_snapshot": true,
+      "rollback_rpc": false
+    },
+    "mapped_import_audit_rows": 0,
+    "testv12_residue": {
+      "playlists": 0,
+      "videos": 0,
+      "channels": 0,
+      "chapters": 0,
+      "auth_users": 0
+    }
+  },
+  "production_read_only_probe": {
+    "anonymous_v12_capability_absent": true,
+    "error_code": "PGRST202",
+    "production_write_attempted": false
+  },
+  "production_release_authorized": false,
+  "production_blocker": "No qualifying backup and isolated restore rehearsal is recorded."
+}

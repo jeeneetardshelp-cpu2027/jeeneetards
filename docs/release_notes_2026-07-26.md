@@ -1189,7 +1189,8 @@ was started.
 
 The approved whole-playlist backlog was exhausted without forcing incomplete
 sources, mixed faculty, or ambiguous chapter mappings. A guarded v12
-prerequisite is now implemented in source but intentionally not deployed:
+prerequisite is implemented in source and rehearsal-passed on disposable
+staging, but remains intentionally absent from production:
 
 - Exact checked-in manifests bind every source position and YouTube video ID to
   one canonical chapter, require real strictly increasing YouTube positions,
@@ -1215,8 +1216,8 @@ editorial taxonomy decision. The ordered position/video-ID snapshot SHA-256 is
 The quality gate also reports repeated lesson number `57` across positions
 57–61, and no waiver was added. No manifest is checked in.
 
-The disposable-staging prerequisite now also has a separate, explicitly
-confirmed verifier in source:
+The disposable-staging prerequisite has a separate, explicitly confirmed
+verifier:
 
 - It requires both staging allow flags, an exact command-line confirmation,
   every known production URL to differ from the test URL, and a live
@@ -1236,11 +1237,37 @@ confirmed verifier in source:
 The verifier is deliberately absent from `test:all` and CI. Its refusal path
 was exercised locally without the v12-specific allow flag: it exited `2`,
 authorized no cleanup, attempted no mutation, and wrote only a redacted report
-outside the repository. The database-connected success path was **not run**,
-so this remains source/preflight evidence rather than a staging pass.
+outside the repository.
 
-Validation for this source checkpoint:
+The database-connected disposable-staging path then completed:
 
+- Read-only preflight returned `staging` and passed every prerequisite encoded
+  for v12.
+- The only schema migration applied was the v12 additive delta; the
+  staging-only helper SQL was temporarily installed and later rolled back.
+  Postflight passed all capability, RLS, grant, and sequence checks with zero
+  initial audit rows.
+- Report `../outputs/v12-import/v12-staging-ff29d6.json` records 25 passing
+  assertions, 0 failures, request quiescence, complete cleanup, 4 protected
+  audit rows deleted last, and zero residue in every reported category.
+- An earlier local shell-timeout interruption left only two run-owned
+  chapters, two channels, and one non-admin test account/profile. Exact-ledger
+  recovery acquired all 9 request locks, ran protected-audit cleanup last,
+  and proved zero residue before the successful run.
+- The temporary v12 staging helper and failure trigger were removed. Final
+  read-only checks retained capability version 12, returned zero mapped-import
+  audits, and found no `TESTV12` catalogue or auth residue.
+- The report records `production_touched=false` and
+  `migrations_applied_by_harness=false`. A separate anonymous, read-only
+  production probe returned `PGRST202` for the v12 capability.
+- The successful report SHA-256 plus the separately observed interrupted-run
+  recovery, helper rollback, final staging probe, and production probe are
+  preserved in `docs/v12_staging_rehearsal_evidence.json`.
+
+Validation for this staging checkpoint:
+
+- The confirmed disposable-staging verifier passed all 25 assertions and its
+  exact cleanup checks.
 - 749 Vitest tests passed across 72 files.
 - ESLint passed with zero warnings.
 - The production Vite build and all frontend release safeguards passed.
@@ -1249,8 +1276,9 @@ Validation for this source checkpoint:
   audit retains the known 7 high-severity dev-only findings and 0 critical
   findings.
 
-No v12 or helper SQL was executed, no migration was applied, no staging or
-production data was changed, no production package was regenerated, and no
-manual CI run was started. Production remains blocked by the missing
-backup/restore evidence. See `docs/per_video_chapter_ingestion.md` for the
-future disposable-staging sequence.
+The v12 delta was applied only to disposable staging. The staging-only helper
+was applied for the verifier and then removed after zero residue was proven.
+No real mapped course was imported, no production SQL or data was changed, no
+production package was regenerated, and no manual CI run was started.
+Production remains blocked by the missing backup/restore evidence. See
+`docs/per_video_chapter_ingestion.md` for the guarded sequence and evidence.
