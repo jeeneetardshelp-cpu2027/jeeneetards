@@ -1,12 +1,12 @@
 import {
-  AlertTriangle, BookOpen, Building2, Clock, Layers, Play, Star, UserRound,
+  AlertTriangle, BookOpen, Building2, Clock, Layers, Play, Star,
 } from "lucide-react";
 import { useTheme } from "./theme.jsx";
 import {
   CONTENT_TYPE_LABELS, DIFFICULTY_LABELS, LANGUAGE_LABELS, formatDuration,
 } from "./metadata.js";
 import { ratingDisplay } from "./ratingConfidence.js";
-import { BRAND_TEAL } from "./brandColors.js";
+import { BRAND_TEAL, BRAND_SERIF, subjectColor } from "./brandColors.js";
 
 const TEAL = BRAND_TEAL;
 
@@ -23,6 +23,9 @@ export default function CourseOverview({
   course, lessons, watchedIds = [], continueLesson = null, onStart,
 }) {
   const { t } = useTheme();
+  const color = subjectColor(course.subject);
+  const initials = (course.teacher || "")
+    .split(/\s+/).map((w) => w[0]).filter(Boolean).slice(0, 2).join("").toUpperCase();
   const watchedCount = lessons.filter((lesson) => watchedIds.includes(lesson.videoId)).length;
   const lectureCount = Number.isFinite(course.lectures) ? course.lectures : lessons.length;
   const rating = ratingDisplay(course.averageRating, course.ratingsCount);
@@ -43,20 +46,35 @@ export default function CourseOverview({
       : "Start course";
 
   return (
-    <section className={`rounded-2xl border ${t.border} ${t.card} p-5 sm:p-7`} aria-labelledby="course-title">
+    <section className={`overflow-hidden rounded-2xl border ${t.border} ${t.card}`} aria-labelledby="course-title">
+      <span className="block h-1 w-full" style={{ background: color }} />
+      <div className="p-5 sm:p-7">
       <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
         <div className="min-w-0">
           <div className="flex flex-wrap gap-1.5">
+            {course.subject && (
+              <span className="rounded-full px-2.5 py-1 text-xs font-semibold"
+                style={{ color, background: `${color}17` }}>
+                {course.subject}
+              </span>
+            )}
             {[...(course.learningGoals ?? []), ...(course.classLevels ?? [])].map((label) => (
               <span key={label} className={`rounded-full px-2.5 py-1 text-xs ${t.chip}`}>{label}</span>
             ))}
           </div>
-          <h1 id="course-title" className={`mt-3 text-2xl font-bold tracking-tight sm:text-3xl ${t.text}`}>
+          <h1 id="course-title" className={`mt-3 text-2xl font-semibold tracking-tight sm:text-3xl ${t.text}`}
+            style={{ fontFamily: BRAND_SERIF }}>
             {course.title}
           </h1>
           {(course.teacher || course.institute) && (
             <div className={`mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm ${t.muted}`}>
-              {course.teacher && <span className="inline-flex items-center gap-1.5"><UserRound className="h-4 w-4" />{course.teacher}</span>}
+              {course.teacher && (
+                <span className="inline-flex items-center gap-2">
+                  <span className="grid h-6 w-6 place-items-center rounded-full text-[0.6rem] font-bold text-white"
+                    style={{ background: color }} aria-hidden="true">{initials || "?"}</span>
+                  {course.teacher}
+                </span>
+              )}
               {course.institute && <span className="inline-flex items-center gap-1.5"><Building2 className="h-4 w-4" />{course.institute}</span>}
             </div>
           )}
@@ -123,6 +141,7 @@ export default function CourseOverview({
           </div>
         </div>
       )}
+      </div>
     </section>
   );
 }

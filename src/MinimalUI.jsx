@@ -18,7 +18,7 @@ import { useEffect, useMemo, useState } from "react";
 import YouTubePlayer from "./YouTubePlayer.jsx";
 import { useTheme } from "./theme.jsx";
 import { formatDuration } from "./metadata.js";
-import { BRAND_TEAL } from "./brandColors.js";
+import { BRAND_TEAL, BRAND_SERIF } from "./brandColors.js";
 export { ThemeProvider, ThemeContext, useTheme } from "./theme.jsx";
 
 // Accent colours stay the same in both themes (used via inline style).
@@ -99,7 +99,7 @@ export function LessonList({ lessons, activeLessonId, onSelectLesson, watchedIds
     <section className="mt-8" aria-labelledby="course-lessons-heading">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h2 id="course-lessons-heading" className={`text-base font-semibold ${t.text}`}>
+          <h2 id="course-lessons-heading" className={`text-lg font-semibold ${t.text}`} style={{ fontFamily: BRAND_SERIF }}>
             Course lessons
           </h2>
           <p className={`mt-0.5 text-sm ${t.faint}`}>
@@ -200,6 +200,7 @@ export function LessonList({ lessons, activeLessonId, onSelectLesson, watchedIds
                 className={`flex min-h-11 w-full items-center gap-3 px-4 py-3 text-left text-sm transition ${t.hover}`}
                 style={{
                   borderLeft: `3px solid ${active ? ACCENT.teal : "transparent"}`,
+                  background: active ? `${ACCENT.teal}12` : undefined,
                 }}
               >
                 <span className="flex w-4 shrink-0 items-center justify-center">
@@ -311,7 +312,7 @@ export function VideoView({
        <Container width="reading">
         <div id="course-player" tabIndex={-1} className="scroll-mt-44 focus:outline-none sm:scroll-mt-28">
           <PlayerArea videoId={videoId} title={videoTitle} onPlay={onLessonPlay} />
-          <h2 className={`mt-5 text-xl font-semibold ${t.text}`}>{videoTitle}</h2>
+          <h2 className={`mt-5 text-2xl font-semibold leading-snug ${t.text}`} style={{ fontFamily: BRAND_SERIF }}>{videoTitle}</h2>
           <p className={`mt-1 text-sm ${t.muted}`}>
             {lessons.length > 0
               ? `Lesson ${
