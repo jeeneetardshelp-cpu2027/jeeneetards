@@ -71,7 +71,7 @@ export function buildChips(params, names = {}) {
     for (const value of values) {
       const label =
         key === "class"
-          ? (CLASS_LABEL[value] ?? `Class ${value}`)
+          ? (CLASS_LABEL[toClassSlug(value)] ?? `Class ${value}`)
           // Enum labels come from the canonical vocabulary, so a chip never
           // shows a raw slug ("full-course") where the panel says "Full course".
           : schema?.kind === "enum"
