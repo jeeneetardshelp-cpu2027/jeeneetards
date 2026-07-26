@@ -1184,3 +1184,38 @@ Validation after the checkpoint:
 
 No production data, migration, or schema change was made, and no manual CI run
 was started.
+
+## Mixed-chapter ingestion prerequisite
+
+The approved whole-playlist backlog was exhausted without forcing incomplete
+sources, mixed faculty, or ambiguous chapter mappings. A guarded v12
+prerequisite is now implemented in source but intentionally not deployed:
+
+- Exact checked-in manifests bind every source position and YouTube video ID to
+  one canonical chapter, require real strictly increasing YouTube positions,
+  and use a durable request UUID plus manifest/source SHA-256 evidence.
+- The additive mapped RPC keeps one source playlist as one course, validates
+  every chapter and reused video before writing, performs the import and
+  chapter assignments atomically, and records an RLS-protected audit snapshot.
+- Identical request retries are read-only replays; conflicting retries,
+  existing source courses, partial mappings, and cross-subject/chapter reuse
+  are rejected.
+- Replay checks import-owned structural state without being invalidated by
+  unrelated ratings, popularity, or verification refreshes. The public
+  capability endpoint exposes fixed read-only flags; audit state stays guarded.
+- Chapter-qualified course routes now constrain playback, navigation, counts,
+  duration, and resume selection to the requested chapter. The chapterless
+  route remains full-course mode.
+
+Functions playlist `PL_A4M5IAkMad5zB0Dh6gUw1eYK8dN7hP7` was not imported.
+Its 187-item source snapshot contains 141 clear Functions lessons, 7 clear
+Inverse Trigonometric Functions lessons, and 39 lessons requiring an explicit
+editorial taxonomy decision. The ordered position/video-ID snapshot SHA-256 is
+`214db3c5b0c42fadc9c88bc49e6958bf94ae2214f65ba3466c25f6b81afc540d`.
+The quality gate also reports repeated lesson number `57` across positions
+57–61, and no waiver was added. No manifest is checked in.
+
+No v12 migration was applied, no staging or production data was changed, and
+no production package was regenerated. The SQL is covered by static source
+contracts but was not compiled or runtime-tested against Supabase. See
+`docs/per_video_chapter_ingestion.md` for the future deployment checklist.

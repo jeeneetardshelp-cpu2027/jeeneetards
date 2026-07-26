@@ -79,6 +79,14 @@ export function findOverlap(videos = [], existingVideoIds = new Set()) {
     .filter((id) => id && existingVideoIds.has(id));
 }
 
+// The mapped RPC validates reused videos against their exact reviewed subject
+// and chapter inside the same transaction. That resolves only the generic
+// overlap warning; every other mechanical or review finding remains a write
+// blocker until the classifier/source evidence is corrected.
+export function mappedImportBlockingFindings(findings = []) {
+  return findings.filter((finding) => finding.code !== "cross_chapter_overlap");
+}
+
 // Is there ANY teacher-attribution evidence across the playlist? Codex accepts
 // a playlist once one video shows evidence (e.g. the "#alksir" hashtag), and
 // defers when none does. Checks hashtags, "X Sir/Ma'am", "by X", and any

@@ -55,6 +55,122 @@ export function findDuplicateVideoIds(videos = []) {
   return [...duplicates];
 }
 
+export function validateMappedVideoDetails(videos = []) {
+  const missingDurationVideoIds = [];
+  const nonEmbeddableVideoIds = [];
+  for (const video of videos) {
+    const duration = Number(video.durationSeconds);
+    if (!Number.isFinite(duration) || duration <= 0) {
+      missingDurationVideoIds.push(video.videoId);
+    }
+    if (!["allowed", "embeddable"].includes(video.embeddingStatus)) {
+      nonEmbeddableVideoIds.push(video.videoId);
+    }
+  }
+  return {
+    ok: missingDurationVideoIds.length === 0 && nonEmbeddableVideoIds.length === 0,
+    missingDurationVideoIds,
+    nonEmbeddableVideoIds,
+  };
+}
+
+export function validateMappedSourcePositions(videos = []) {
+  const positions = [];
+  const seen = new Set();
+  let previous = -1;
+  for (const video of videos) {
+    const position = video?.sourcePosition;
+    if (!Number.isSafeInteger(position) || position < 0) {
+      throw new Error(
+        `Mapped source video ${video?.videoId ?? "(unknown)"} has no valid YouTube position.`,
+      );
+    }
+    if (seen.has(position) || position <= previous) {
+      throw new Error(
+        "Mapped source positions must be unique and strictly increasing.",
+      );
+    }
+    seen.add(position);
+    previous = position;
+    positions.push(position + 1);
+  }
+  return positions;
+}
+
+export function mappedSourceSnapshotEvidence(videos = []) {
+  const positions = validateMappedSourcePositions(videos);
+  return `${videos
+    .map((video, index) => `${positions[index]}\t${video.videoId}`)
+    .join("\n")}\n`;
+}
+
+export function validateChapterManifest({ manifest, playlistId, videos }) {
+  if (!manifest || typeof manifest !== "object" || Array.isArray(manifest)) {
+    throw new Error("Chapter manifest must be a JSON object.");
+  }
+  if (manifest.version !== 1) {
+    throw new Error("Chapter manifest version must be 1.");
+  }
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+    .test(manifest.request_id ?? "")) {
+    throw new Error("Chapter manifest request_id must be a UUID.");
+  }
+  if (manifest.youtube_playlist_id !== playlistId) {
+    throw new Error("Chapter manifest playlist ID does not match the selected playlist.");
+  }
+  if (!Array.isArray(manifest.assignments)) {
+    throw new Error("Chapter manifest assignments must be an array.");
+  }
+  if (manifest.assignments.length !== videos.length) {
+    throw new Error(
+      `Chapter manifest must map all ${videos.length} source videos exactly once.`,
+    );
+  }
+
+  const seenIds = new Set();
+  const chapters = new Set();
+  const sourcePositions = validateMappedSourcePositions(videos);
+  const mapped = videos.map((video, index) => {
+    const assignment = manifest.assignments[index];
+    const expectedPosition = sourcePositions[index];
+    if (!assignment || assignment.position !== expectedPosition) {
+      throw new Error(
+        `Chapter manifest position ${expectedPosition} is missing or out of order.`,
+      );
+    }
+    if (assignment.youtube_video_id !== video.videoId) {
+      throw new Error(
+        `Chapter manifest video at position ${expectedPosition} does not match the source.`,
+      );
+    }
+    if (seenIds.has(assignment.youtube_video_id)) {
+      throw new Error(
+        `Chapter manifest repeats video ${assignment.youtube_video_id}.`,
+      );
+    }
+    const chapterName = String(assignment.chapter ?? "").trim();
+    if (!chapterName) {
+      throw new Error(
+        `Chapter manifest position ${expectedPosition} has no chapter.`,
+      );
+    }
+    seenIds.add(assignment.youtube_video_id);
+    chapters.add(chapterName);
+    return { ...video, chapterName };
+  });
+
+  if (chapters.size < 2) {
+    throw new Error(
+      "A chapter manifest must map the source to at least two chapters; use --chapter for a single chapter.",
+    );
+  }
+  return {
+    videos: mapped,
+    chapterNames: [...chapters],
+    requestId: manifest.request_id,
+  };
+}
+
 export function buildImportPayload({
   plan,
   channel,
@@ -62,7 +178,16 @@ export function buildImportPayload({
   chapterId,
   videos,
 }) {
-  return {
+  const mappedCount = videos.filter(
+    (video) => Number.isSafeInteger(video.chapterId) && video.chapterId > 0,
+  ).length;
+  if (mappedCount > 0 && mappedCount !== videos.length) {
+    throw new Error("Every video must have a chapterId when chapter mapping is used.");
+  }
+  if (mappedCount > 0 && chapterId != null) {
+    throw new Error("Use either a playlist chapterId or per-video chapterIds, not both.");
+  }
+  const payload = {
     channel: { name: channel.title, youtube_channel_id: channelId },
     category_id: plan.categoryId,
     learning_goal_id: plan.learningGoalId,
@@ -77,14 +202,32 @@ export function buildImportPayload({
     language: plan.language,
     difficulty: plan.difficulty,
     audience_focus: plan.audienceFocus,
-    videos: videos.map((video) => ({
-      youtube_video_id: video.videoId,
-      title: video.title,
-      duration_seconds: video.durationSeconds ?? null,
-      caption_status: video.captionStatus ?? null,
-      embedding_status: video.embeddingStatus ?? null,
-    })),
+    videos: videos.map((video) => {
+      const row = {
+        youtube_video_id: video.videoId,
+        title: video.title,
+        duration_seconds: video.durationSeconds ?? null,
+        caption_status: video.captionStatus ?? null,
+        embedding_status: video.embeddingStatus ?? null,
+      };
+      if (mappedCount > 0) row.chapter_id = video.chapterId;
+      return row;
+    }),
   };
+  if (mappedCount > 0) {
+    if (!plan.requestId) {
+      throw new Error("Mapped imports require a durable requestId.");
+    }
+    if (!/^[0-9a-f]{64}$/.test(plan.manifestSha256 ?? "") ||
+        !/^[0-9a-f]{64}$/.test(plan.sourceSnapshotSha256 ?? "")) {
+      throw new Error("Mapped imports require manifest and source SHA-256 evidence.");
+    }
+    payload.request_id = plan.requestId;
+    payload.manifest_sha256 = plan.manifestSha256;
+    payload.source_snapshot_sha256 = plan.sourceSnapshotSha256;
+    payload.manifest_assignment_count = videos.length;
+  }
+  return payload;
 }
 
 export function parseBulkConfirmation(argv) {
@@ -179,14 +322,21 @@ export function parseImporterArgs(argv) {
     difficulty: value("difficulty"),
     teacher: value("teacher"),
     audienceFocus: value("audience-focus"),
+    chapterManifest: value("chapter-manifest"),
   };
   const nonInteractive = Object.values(mapping).some(Boolean);
   if (nonInteractive) {
+    if (mapping.chapter && mapping.chapterManifest) {
+      throw new Error("Use either --chapter or --chapter-manifest, not both.");
+    }
     const required = [
-      "playlistId", "category", "goal", "subject", "chapter", "classes",
+      "playlistId", "category", "goal", "subject", "classes",
       "contentType", "language", "difficulty",
       "teacher", "audienceFocus",
     ];
+    if (!mapping.chapter && !mapping.chapterManifest) {
+      required.push("chapter or chapterManifest");
+    }
     const missing = required.filter((key) => !mapping[key]);
     if (missing.length) {
       throw new Error(`Non-interactive import is missing: ${missing.join(", ")}.`);

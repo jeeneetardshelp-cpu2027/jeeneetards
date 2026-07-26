@@ -76,7 +76,7 @@ export default function RouteMetadata() {
 }
 
 export function useCourseMetadata(course) {
-  const { pathname } = useLocation();
+  const { pathname, search } = useLocation();
 
   useEffect(() => {
     const metadata = metadataForCourse(course);
@@ -86,5 +86,5 @@ export function useCourseMetadata(course) {
       canonicalPath: pathname,
       robots: "index, follow",
     });
-  }, [course, pathname]);
+  }, [course, pathname, search]);
 }

@@ -5,6 +5,7 @@ import {
   findOverlap,
   hasTeacherEvidence,
   lessonNumber,
+  mappedImportBlockingFindings,
   validatePlaylistQuality,
 } from "./validatePlaylistQuality.js";
 
@@ -65,6 +66,18 @@ describe("findOverlap (Codex: 'includes an existing Wave Optics video')", () => 
   it("flags videos already in the catalogue", () => {
     const videos = [{ videoId: "a" }, { videoId: "sk0AndvKmfE" }, { videoId: "c" }];
     expect(findOverlap(videos, new Set(["sk0AndvKmfE"]))).toEqual(["sk0AndvKmfE"]);
+  });
+});
+
+describe("mappedImportBlockingFindings", () => {
+  it("resolves only overlap through the atomic chapter equality check", () => {
+    const findings = [
+      { code: "cross_chapter_overlap", severity: "warn" },
+      { code: "no_teacher_evidence", severity: "warn" },
+      { code: "duplicate_lesson_numbers", severity: "block" },
+    ];
+    expect(mappedImportBlockingFindings(findings).map(({ code }) => code))
+      .toEqual(["no_teacher_evidence", "duplicate_lesson_numbers"]);
   });
 });
 

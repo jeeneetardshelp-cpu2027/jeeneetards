@@ -7,25 +7,32 @@ import {
   assertExpectedRowCount,
   buildImportPayload,
   findDuplicateVideoIds,
+  mappedSourceSnapshotEvidence,
   parseBulkConfirmation,
   parseImporterArgs,
   playlistFromOwner,
   promptCourseMetadata,
+  validateChapterManifest,
   validateCourseAttribution,
   validateCourseMetadata,
+  validateMappedVideoDetails,
+  validateMappedSourcePositions,
 } from "./ingestionSafety.js";
 
 describe("channel ingestion metadata", () => {
   it("wires the metadata payload builder into the importer RPC call", () => {
     const source = readFileSync(resolve("src/scripts/importChannel.js"), "utf8");
-    expect(source).toMatch(/payload:\s*buildImportPayload\(\{/);
+    const payloadBuild = source.indexOf("importPayload = buildImportPayload({");
+    const rpcCall = source.indexOf("payload: importPayload");
+    expect(payloadBuild).toBeGreaterThan(-1);
+    expect(rpcCall).toBeGreaterThan(payloadBuild);
   });
 
   it("keeps dry-run on the anonymous client and before the import RPC", () => {
     const source = readFileSync(resolve("src/scripts/importChannel.js"), "utf8");
     expect(source).toMatch(/args\.dryRun \? publicKey : serviceKey/);
     expect(source.indexOf("if (args.dryRun)"))
-      .toBeLessThan(source.indexOf('db.rpc("import_playlist"'));
+      .toBeLessThan(source.indexOf("db.rpc(rpc"));
   });
 
   it("uses a focused ownership lookup and existing production chapters", () => {
@@ -99,6 +106,199 @@ describe("channel ingestion metadata", () => {
     });
   });
 
+  it("builds a complete per-video chapter payload without a conflicting default", () => {
+    const payload = buildImportPayload({
+      plan: {
+        categoryId: 1, learningGoalId: 2, boardIds: [], subjectId: 3,
+        classLabels: ["12th"], contentType: "full-course", language: "hinglish",
+        difficulty: "advanced", teacher: "Mohit Tyagi", audienceFocus: "12th",
+        playlist: { id: "PL_real", title: "Mapped course" },
+        requestId: "018f7e3b-39b0-7f3e-8ee4-7a8d4d5a6b7c",
+        manifestSha256: "a".repeat(64),
+        sourceSnapshotSha256: "b".repeat(64),
+      },
+      channel: { title: "Real channel" },
+      channelId: "UC_real",
+      chapterId: null,
+      videos: [
+        { videoId: "video-one01", title: "One", chapterId: 4 },
+        { videoId: "video-two02", title: "Two", chapterId: 5 },
+      ],
+    });
+
+    expect(payload.chapter_id).toBeNull();
+    expect(payload.request_id).toBe("018f7e3b-39b0-7f3e-8ee4-7a8d4d5a6b7c");
+    expect(payload.manifest_sha256).toBe("a".repeat(64));
+    expect(payload.source_snapshot_sha256).toBe("b".repeat(64));
+    expect(payload.manifest_assignment_count).toBe(2);
+    expect(payload.videos.map((video) => video.chapter_id)).toEqual([4, 5]);
+    expect(() => buildImportPayload({
+      plan: {
+        categoryId: 1, learningGoalId: 2, boardIds: [], subjectId: 3,
+        classLabels: ["12th"], contentType: "full-course", language: "hinglish",
+        difficulty: "advanced", teacher: "Mohit Tyagi", audienceFocus: "12th",
+        playlist: { id: "PL_real", title: "Mapped course" },
+        requestId: "018f7e3b-39b0-7f3e-8ee4-7a8d4d5a6b7c",
+      },
+      channel: { title: "Real channel" },
+      channelId: "UC_real",
+      chapterId: null,
+      videos: [{ videoId: "video-one01", title: "One", chapterId: 4 }],
+    })).toThrow(/manifest and source SHA-256 evidence/i);
+    expect(() => buildImportPayload({
+      plan: {
+        categoryId: 1, learningGoalId: 2, boardIds: [], subjectId: 3,
+        classLabels: ["12th"], contentType: "full-course", language: "hinglish",
+        difficulty: "advanced", teacher: "Mohit Tyagi", audienceFocus: "12th",
+        playlist: { id: "PL_real", title: "Mapped course" },
+        requestId: "018f7e3b-39b0-7f3e-8ee4-7a8d4d5a6b7c",
+        manifestSha256: "a".repeat(64),
+        sourceSnapshotSha256: "b".repeat(64),
+      },
+      channel: { title: "Real channel" },
+      channelId: "UC_real",
+      chapterId: 4,
+      videos: [{ videoId: "video-one01", title: "One", chapterId: 4 }],
+    })).toThrow(/either a playlist chapterId or per-video chapterIds/i);
+  });
+
+  it("requires an exact, ordered, exhaustive chapter manifest", () => {
+    const videos = [
+      {
+        videoId: "video-one01", title: "One", position: 0, sourcePosition: 0,
+      },
+      {
+        videoId: "video-two02", title: "Two", position: 1, sourcePosition: 1,
+      },
+    ];
+    const manifest = {
+      version: 1,
+      request_id: "018f7e3b-39b0-4f3e-8ee4-7a8d4d5a6b7c",
+      youtube_playlist_id: "PL_real",
+      assignments: [
+        { position: 1, youtube_video_id: "video-one01", chapter: "Functions" },
+        { position: 2, youtube_video_id: "video-two02", chapter: "Inverse Trigonometric Functions" },
+      ],
+    };
+    expect(validateChapterManifest({
+      manifest, playlistId: "PL_real", videos,
+    })).toEqual({
+      videos: [
+        { ...videos[0], chapterName: "Functions" },
+        { ...videos[1], chapterName: "Inverse Trigonometric Functions" },
+      ],
+      chapterNames: ["Functions", "Inverse Trigonometric Functions"],
+      requestId: "018f7e3b-39b0-4f3e-8ee4-7a8d4d5a6b7c",
+    });
+    expect(() => validateChapterManifest({
+      manifest: { ...manifest, request_id: "not-a-uuid" },
+      playlistId: "PL_real",
+      videos,
+    })).toThrow(/request_id.*UUID/i);
+    expect(() => validateChapterManifest({
+      manifest: { ...manifest, youtube_playlist_id: "PL_other" },
+      playlistId: "PL_real",
+      videos,
+    })).toThrow(/playlist ID/i);
+    expect(() => validateChapterManifest({
+      manifest: {
+        ...manifest,
+        assignments: [manifest.assignments[1], manifest.assignments[0]],
+      },
+      playlistId: "PL_real",
+      videos,
+    })).toThrow(/position 1/i);
+    expect(() => validateChapterManifest({
+      manifest: { ...manifest, assignments: manifest.assignments.slice(0, 1) },
+      playlistId: "PL_real",
+      videos,
+    })).toThrow(/map all 2 source videos/i);
+    expect(() => validateChapterManifest({
+      manifest: {
+        ...manifest,
+        assignments: manifest.assignments.map((row) => ({ ...row, chapter: "Functions" })),
+      },
+      playlistId: "PL_real",
+      videos,
+    })).toThrow(/at least two chapters/i);
+  });
+
+  it("uses YouTube source positions and requires complete embeddable details", () => {
+    const videos = [
+      {
+        videoId: "video-one01", title: "One", position: 0,
+        sourcePosition: 0,
+        durationSeconds: 600, embeddingStatus: "embeddable",
+      },
+      {
+        videoId: "video-two02", title: "Two", position: 2,
+        sourcePosition: 2,
+        durationSeconds: null, embeddingStatus: "blocked",
+      },
+    ];
+    const manifest = {
+      version: 1,
+      request_id: "018f7e3b-39b0-4f3e-8ee4-7a8d4d5a6b7c",
+      youtube_playlist_id: "PL_real",
+      assignments: [
+        { position: 1, youtube_video_id: "video-one01", chapter: "Functions" },
+        { position: 3, youtube_video_id: "video-two02", chapter: "ITF" },
+      ],
+    };
+    expect(validateChapterManifest({
+      manifest, playlistId: "PL_real", videos,
+    }).videos.map((video) => video.chapterName)).toEqual(["Functions", "ITF"]);
+    expect(validateMappedVideoDetails(videos)).toEqual({
+      ok: false,
+      missingDurationVideoIds: ["video-two02"],
+      nonEmbeddableVideoIds: ["video-two02"],
+    });
+    expect(() => validateChapterManifest({
+      manifest: {
+        ...manifest,
+        assignments: [
+          manifest.assignments[0],
+          { ...manifest.assignments[1], position: 2 },
+        ],
+      },
+      playlistId: "PL_real",
+      videos,
+    })).toThrow(/position 3/i);
+  });
+
+  it("fails closed when mapped source positions are missing or ambiguous", () => {
+    expect(() => validateMappedSourcePositions([
+      { videoId: "video-one01", position: 0 },
+    ])).toThrow(/no valid YouTube position/i);
+    expect(() => validateMappedSourcePositions([
+      { videoId: "video-one01", sourcePosition: 0 },
+      { videoId: "video-two02", sourcePosition: null },
+    ])).toThrow(/no valid YouTube position/i);
+    expect(() => validateMappedSourcePositions([
+      { videoId: "video-one01", sourcePosition: 0 },
+      { videoId: "video-two02", sourcePosition: 0 },
+    ])).toThrow(/unique and strictly increasing/i);
+    expect(() => validateMappedSourcePositions([
+      { videoId: "video-one01", sourcePosition: 2 },
+      { videoId: "video-two02", sourcePosition: 1 },
+    ])).toThrow(/unique and strictly increasing/i);
+    expect(mappedSourceSnapshotEvidence([
+      { videoId: "video-one01", sourcePosition: 0 },
+      { videoId: "video-two02", sourcePosition: 2 },
+    ])).toBe("1\tvideo-one01\n3\tvideo-two02\n");
+  });
+
+  it("keeps mapped empty-source handling fail-closed without changing legacy skip", () => {
+    const source = readFileSync(resolve("src/scripts/importChannel.js"), "utf8");
+    const emptyBranch = source.slice(
+      source.indexOf("if (ytVideos.length === 0)"),
+      source.indexOf("let chapterId", source.indexOf("if (ytVideos.length === 0)")),
+    );
+    expect(emptyBranch).toMatch(/if \(plan\.chapterManifest\)/);
+    expect(emptyBranch.indexOf("fail(")).toBeLessThan(emptyBranch.indexOf("continue;"));
+    expect(emptyBranch).toMatch(/no usable videos, skipping/);
+  });
+
   it("makes the database target explicit", () => {
     expect(parseImporterArgs([
       "--env=staging", "--expected-playlists=1", "--max-playlists=5", "UC_real",
@@ -165,6 +365,36 @@ describe("channel ingestion metadata", () => {
       teacher: "ABJ Sir",
       audienceFocus: "11th",
     });
+    expect(parseImporterArgs([
+      "UC_real",
+      "--env=staging",
+      "--expected-playlists=1",
+      "--max-playlists=5",
+      "--playlist-id=PL_real",
+      "--category=JEE",
+      "--goal=JEE",
+      "--subject=Mathematics",
+      "--chapter-manifest=docs/manifests/functions.json",
+      "--classes=12th",
+      "--content-type=full-course",
+      "--language=hinglish",
+      "--difficulty=advanced",
+      "--teacher=Mohit Tyagi",
+      "--audience-focus=12th",
+    ])).toMatchObject({
+      nonInteractive: true,
+      chapter: null,
+      chapterManifest: "docs/manifests/functions.json",
+    });
+    expect(() => parseImporterArgs([
+      "UC_real", "--expected-playlists=1", "--max-playlists=1",
+      "--playlist-id=PL_real", "--category=JEE", "--goal=JEE",
+      "--subject=Mathematics", "--chapter=Functions",
+      "--chapter-manifest=manifest.json", "--classes=12th",
+      "--content-type=full-course", "--language=hinglish",
+      "--difficulty=advanced", "--teacher=Mohit Tyagi",
+      "--audience-focus=12th",
+    ])).toThrow(/either --chapter or --chapter-manifest/i);
   });
 
   it("requires teacher attribution and a valid primary audience", () => {

@@ -300,6 +300,13 @@ import; it does not authorize one.
   source ends with an unnumbered Cayley-Hamilton lesson credited to Rajat Jain
   Sir. Importing it as one Mohit Tyagi course would lose the mixed-teacher
   attribution; no write was made.
+- Mixed-chapter ingestion has a guarded v12 source implementation but has not
+  been deployed or applied. Its exact manifest contract, staging-only
+  deployment sequence, and current Functions blocker are documented in
+  `docs/per_video_chapter_ingestion.md`. Do not split a source, invent a
+  mapping, apply v12, or rerun an older cumulative production migration as a
+  substitute for that review. Functions is additionally blocked by the
+  deterministic repeated-lesson-57 finding; there is no quality waiver.
 
 Regenerate the read-only baseline immediately before every batch:
 

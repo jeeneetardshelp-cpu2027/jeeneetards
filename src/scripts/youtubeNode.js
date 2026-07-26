@@ -92,7 +92,11 @@ export async function getPlaylistVideos(key, playlistId) {
       videos.push({
         videoId,
         title,
+        // Legacy imports preserve their historical usable-list fallback/order.
+        // Mapped imports validate sourcePosition and never use that fallback as
+        // review evidence.
         position: item.snippet?.position ?? videos.length,
+        sourcePosition: item.snippet?.position ?? null,
       });
     }
     pageToken = json.nextPageToken;

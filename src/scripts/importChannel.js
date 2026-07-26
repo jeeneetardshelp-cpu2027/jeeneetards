@@ -19,9 +19,12 @@
 import { createClient } from "@supabase/supabase-js";
 import readline from "node:readline/promises";
 import { stdin, stdout } from "node:process";
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import {
+  mkdirSync, readFileSync, realpathSync, writeFileSync,
+} from "node:fs";
+import { createHash } from "node:crypto";
 import { fileURLToPath } from "node:url";
-import { dirname, resolve } from "node:path";
+import { dirname, isAbsolute, relative, resolve } from "node:path";
 import {
   getChannel, getAllPlaylists, getPlaylistOwner, getPlaylistVideos,
 } from "./youtubeNode.js";
@@ -30,12 +33,18 @@ import {
   assertProductionWriteAllowed,
   buildImportPayload,
   findDuplicateVideoIds,
+  mappedSourceSnapshotEvidence,
   parseImporterArgs,
   playlistFromOwner,
   promptCourseMetadata,
+  validateChapterManifest,
   validateCourseAttribution,
+  validateMappedVideoDetails,
 } from "./ingestionSafety.js";
-import { validatePlaylistQuality } from "./classify/validatePlaylistQuality.js";
+import {
+  mappedImportBlockingFindings,
+  validatePlaylistQuality,
+} from "./classify/validatePlaylistQuality.js";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 
@@ -67,6 +76,9 @@ const fail = (msg) => {
 // ---------------------------------------------------------------------
 async function main() {
   const args = parseImporterArgs(process.argv.slice(2));
+  const chapterManifestFile = args.chapterManifest
+    ? loadChapterManifest(args.chapterManifest)
+    : null;
   try {
     assertProductionWriteAllowed(args);
   } catch (error) {
@@ -230,7 +242,13 @@ async function main() {
       : await promptAttribution(ask, classLabels);
     plans.push({
       playlist: p, categoryId, learningGoalId, boardIds, subjectId,
-      chapterName, classLabels, ...metadata, ...attribution,
+      chapterName,
+      chapterManifest: chapterManifestFile?.manifest ?? null,
+      chapterManifestPath: chapterManifestFile?.path ?? null,
+      chapterManifestSha256: chapterManifestFile?.sha256 ?? null,
+      classLabels,
+      ...metadata,
+      ...attribution,
     });
   }
   rl.close();
@@ -249,38 +267,119 @@ async function main() {
   // --- 4. import — ONE transactional RPC call per playlist ----------
   if (args.dryRun) {
     const entries = [];
+    const hasMappedPlan = plans.some((plan) => Boolean(plan.chapterManifest));
+    const mappedCapability = hasMappedPlan
+      ? await readMappedImportCapability(db)
+      : null;
     // The quality gate needs two catalogue-wide inputs, both public-read:
     // every existing video id (to detect cross-chapter reuse) and the known
     // teacher roster (to confirm attribution evidence).
-    const existingVideoIds = await fetchCatalogueVideoIds(db);
-    const { data: teacherRows } = await db.from("playlists").select("teacher");
+    const existingVideoIds = await fetchCatalogueVideoIds(db, {
+      strict: hasMappedPlan,
+    });
+    const { data: teacherRows, error: teacherError } =
+      await db.from("playlists").select("teacher");
+    if (hasMappedPlan && teacherError) throw teacherError;
     const knownTeachers = [...new Set((teacherRows ?? []).map((r) => r.teacher).filter(Boolean))];
     let blockedCount = 0;
     let reviewCount = 0;
     for (const plan of plans) {
-      const [{ data: existingPlaylist, error: playlistError }, chapter, ytVideos] =
+      const [{ data: existingPlaylist, error: playlistError }, ytVideos] =
         await Promise.all([
           db.from("playlists")
             .select("id,title")
             .eq("youtube_playlist_id", plan.playlist.id)
             .maybeSingle(),
-          findChapter(db, plan.chapterName, plan.subjectId),
           getPlaylistVideos(ytKey, plan.playlist.id),
         ]);
       if (playlistError) throw playlistError;
+      const mapped = plan.chapterManifest
+        ? validateChapterManifest({
+          manifest: plan.chapterManifest,
+          playlistId: plan.playlist.id,
+          videos: ytVideos,
+        })
+        : null;
+      const chapterNames = mapped?.chapterNames ?? [plan.chapterName];
+      const chapterRows = await Promise.all(
+        chapterNames.map(async (name) => ({
+          name,
+          chapter: await findChapter(db, name, plan.subjectId),
+        })),
+      );
       const duplicateVideoIds = findDuplicateVideoIds(ytVideos);
+      const detailValidation = mapped
+        ? validateMappedVideoDetails(ytVideos)
+        : null;
       // Automated quality gate — the mechanical checks a reviewer used to run by
       // hand (duplicate ids/lesson numbers, order, cross-chapter reuse, teacher
-      // evidence, usable-count shortfall). Advisory in the dry run: it informs
-      // the go/no-go decision, it does not itself write or block.
+      // evidence, usable-count shortfall). Legacy findings remain advisory;
+      // mapped mode applies the same blocking policy here and in write mode.
       const quality = validatePlaylistQuality({
         playlist: { title: plan.playlist.title, videos: ytVideos },
         existingVideoIds,
         expectedVideoCount: Number(plan.playlist.videoCount),
         knownTeachers: [plan.teacher, ...knownTeachers],
       });
-      if (quality.status === "blocked") blockedCount += 1;
-      else if (quality.status === "review") reviewCount += 1;
+      const missingChapters = chapterRows
+        .filter(({ chapter }) => !chapter)
+        .map(({ name }) => name);
+      const mappedQualityBlockers = mapped && !existingPlaylist
+        ? mappedImportBlockingFindings(quality.findings)
+        : [];
+      const mappedAtomicVerificationFindings = mapped && !existingPlaylist
+        ? quality.findings.filter(
+          (finding) => finding.code === "cross_chapter_overlap",
+        )
+        : [];
+      const readinessFindings = mapped
+        ? [
+          ...(!mappedCapability?.supported
+            ? [{
+              code: "mapped_capability_missing",
+              severity: "block",
+              message: "The selected database has no verified v12 mapped-import capability.",
+            }]
+            : []),
+          ...(existingPlaylist
+            ? [{
+              code: "source_playlist_replay_unverified",
+              severity: "review",
+              message:
+                "The source already exists. Anonymous dry-run cannot read the " +
+                "audit row; write mode will allow only an exact, drift-free replay.",
+            }]
+            : []),
+          ...(missingChapters.length
+            ? [{
+              code: "mapped_chapters_missing",
+              severity: "block",
+              message: `Reviewed chapters are missing: ${missingChapters.join(", ")}.`,
+            }]
+            : []),
+          ...(!detailValidation.ok
+            ? [{
+              code: "mapped_video_details_incomplete",
+              severity: "block",
+              message:
+                `${detailValidation.missingDurationVideoIds.length} duration and ` +
+                `${detailValidation.nonEmbeddableVideoIds.length} embedding check(s) failed.`,
+            }]
+            : []),
+        ]
+        : [];
+      let effectiveStatus = quality.status;
+      if (mapped) {
+        const hasBlocker =
+          readinessFindings.some(({ severity }) => severity === "block") ||
+          mappedQualityBlockers.length > 0;
+        const needsReview =
+          readinessFindings.some(({ severity }) => severity === "review") ||
+          mappedAtomicVerificationFindings.length > 0;
+        effectiveStatus = hasBlocker ? "blocked" : needsReview ? "review" : "ok";
+      }
+      if (effectiveStatus === "blocked") blockedCount += 1;
+      else if (effectiveStatus === "review") reviewCount += 1;
       entries.push({
         youtube_playlist_id: plan.playlist.id,
         title: plan.playlist.title,
@@ -288,17 +387,51 @@ async function main() {
         usable_video_count: ytVideos.length,
         video_validation: {
           duplicate_youtube_video_ids: duplicateVideoIds,
-          production_blocker: duplicateVideoIds.length > 0,
+          missing_duration_youtube_video_ids:
+            detailValidation?.missingDurationVideoIds ?? [],
+          non_embeddable_youtube_video_ids:
+            detailValidation?.nonEmbeddableVideoIds ?? [],
+          production_blocker:
+            duplicateVideoIds.length > 0 || detailValidation?.ok === false,
         },
-        quality: { status: quality.status, findings: quality.findings },
+        quality: {
+          status: quality.status,
+          effective_status: effectiveStatus,
+          findings: quality.findings,
+          mapped_write_blocking_findings: mappedQualityBlockers,
+          mapped_atomic_verification_findings: mappedAtomicVerificationFindings,
+          readiness_findings: readinessFindings,
+        },
         existing_playlist: existingPlaylist
           ? { id: existingPlaylist.id, title: existingPlaylist.title }
           : null,
-        chapter: {
-          name: plan.chapterName,
-          action: chapter ? "reuse" : "create",
-          production_blocker: args.environment === "production" && !chapter,
-        },
+        ...(mapped
+          ? {
+            chapter_manifest: {
+              version: plan.chapterManifest.version,
+              request_id: mapped.requestId,
+              exact_source_mapping: true,
+              path: plan.chapterManifestPath,
+              manifest_sha256: plan.chapterManifestSha256,
+              source_snapshot_sha256: sourceSnapshotSha256(ytVideos),
+              assignment_count: plan.chapterManifest.assignments.length,
+            },
+            capability: mappedCapability,
+            chapters: chapterRows.map(({ name, chapter }) => ({
+              name,
+              action: chapter ? "reuse" : "missing",
+              write_blocker: !chapter,
+              production_blocker: args.environment === "production" && !chapter,
+            })),
+          }
+          : {
+            chapter: {
+              name: plan.chapterName,
+              action: chapterRows[0].chapter ? "reuse" : "create",
+              production_blocker:
+                args.environment === "production" && !chapterRows[0].chapter,
+            },
+          }),
         class_labels: plan.classLabels,
         content_type: plan.contentType,
         language: plan.language,
@@ -307,13 +440,17 @@ async function main() {
         audience_focus: plan.audienceFocus,
       });
 
-      const badge = quality.status === "blocked" ? `${C.red}BLOCKED${C.reset}`
-        : quality.status === "review" ? `${C.yellow}REVIEW ${C.reset}`
+      const badge = effectiveStatus === "blocked" ? `${C.red}BLOCKED${C.reset}`
+        : effectiveStatus === "review" ? `${C.yellow}REVIEW ${C.reset}`
           : `${C.green}OK     ${C.reset}`;
       say(`  ${badge} ${plan.playlist.title} ${C.dim}(${ytVideos.length} usable)${C.reset}`);
       for (const f of quality.findings) {
         const mark = f.severity === "block" ? `${C.red}✗${C.reset}` : `${C.yellow}!${C.reset}`;
         say(`    ${mark} ${f.message}`);
+      }
+      for (const finding of readinessFindings) {
+        const color = finding.severity === "block" ? C.red : C.yellow;
+        say(`    ${color}!${C.reset} ${finding.message}`);
       }
     }
     const outputDirectory = resolve(root, "../outputs");
@@ -349,27 +486,139 @@ async function main() {
       );
     }
     if (ytVideos.length === 0) {
+      if (plan.chapterManifest) {
+        fail(
+          `Mapped import "${plan.playlist.title}" returned no usable source ` +
+          "videos; refusing to treat an empty response as a successful skip.",
+        );
+      }
       say(`  ${C.yellow}no usable videos, skipping${C.reset}`);
       continue;
     }
 
-    const existingChapter = await findChapter(db, plan.chapterName, plan.subjectId);
-    if (args.environment === "production" && !existingChapter) {
-      fail(
-        `Chapter "${plan.chapterName}" does not exist in production. ` +
-        "Create and review reference data separately before importing.",
+    let chapterId = null;
+    let importVideos = ytVideos;
+    let rpc = "import_playlist";
+    let importPlan = plan;
+    let importPayload = null;
+    if (plan.chapterManifest) {
+      const mapped = validateChapterManifest({
+        manifest: plan.chapterManifest,
+        playlistId: plan.playlist.id,
+        videos: ytVideos,
+      });
+      await assertMappedImportCapability(db);
+      const chapterRows = await Promise.all(
+        mapped.chapterNames.map(async (name) => ({
+          name,
+          chapter: await findChapter(db, name, plan.subjectId),
+        })),
       );
+      const missing = chapterRows.filter(({ chapter }) => !chapter).map(({ name }) => name);
+      if (missing.length > 0) {
+        fail(
+          `Mapped import requires every reviewed chapter to exist first. Missing: ` +
+          `${missing.join(", ")}.`,
+        );
+      }
+      const chapterByName = new Map(
+        chapterRows.map(({ name, chapter }) => [name, chapter.id]),
+      );
+      importVideos = mapped.videos.map((video) => ({
+        ...video,
+        chapterId: chapterByName.get(video.chapterName),
+      }));
+      importPlan = {
+        ...plan,
+        requestId: mapped.requestId,
+        manifestSha256: plan.chapterManifestSha256,
+        sourceSnapshotSha256: sourceSnapshotSha256(ytVideos),
+      };
+      rpc = "import_playlist_with_chapters";
+      importPayload = buildImportPayload({
+        plan: importPlan,
+        channel,
+        channelId,
+        chapterId,
+        videos: importVideos,
+      });
+
+      // A committed mapped import may be retried after a lost response. Check
+      // only for the durable request ID, then let the RPC compare the complete
+      // payload and live after-state. Skipping the new-import quality scan is
+      // what makes a truthful, write-free replay reachable.
+      const { data: priorAudit, error: auditError } = await db
+        .from("playlist_import_audit")
+        .select("request_id")
+        .eq("request_id", mapped.requestId)
+        .maybeSingle();
+      if (auditError) {
+        fail(`checking mapped import request: ${auditError.message}`);
+      }
+
+      if (!priorAudit) {
+        const detailValidation = validateMappedVideoDetails(ytVideos);
+        if (!detailValidation.ok) {
+          fail(
+            "Mapped import requires complete duration metadata and embeddable videos.",
+          );
+        }
+        const [existingVideoIds, teacherResult] = await Promise.all([
+          fetchCatalogueVideoIds(db, { strict: true }),
+          db.from("playlists").select("teacher"),
+        ]);
+        if (teacherResult.error) {
+          fail(`reading teacher evidence roster: ${teacherResult.error.message}`);
+        }
+        const knownTeachers = [
+          ...new Set(
+            (teacherResult.data ?? []).map((row) => row.teacher).filter(Boolean),
+          ),
+        ];
+        const quality = validatePlaylistQuality({
+          playlist: { title: plan.playlist.title, videos: ytVideos },
+          existingVideoIds,
+          expectedVideoCount: Number(plan.playlist.videoCount),
+          knownTeachers: [plan.teacher, ...knownTeachers],
+        });
+        // Exact subject/chapter equality for reused videos is enforced inside
+        // the atomic RPC. That resolves only the generic overlap warning; every
+        // other mechanical finding remains a write blocker.
+        const unresolvedFindings = mappedImportBlockingFindings(quality.findings);
+        if (unresolvedFindings.length > 0) {
+          fail(
+            `Mapped import has ${unresolvedFindings.length} unresolved quality ` +
+            "finding(s). Run the dry-run and resolve each one first.",
+          );
+        }
+      }
+    } else {
+      const existingChapter = await findChapter(db, plan.chapterName, plan.subjectId);
+      if (args.environment === "production" && !existingChapter) {
+        fail(
+          `Chapter "${plan.chapterName}" does not exist in production. ` +
+          "Create and review reference data separately before importing.",
+        );
+      }
+      chapterId = existingChapter?.id
+        ?? await ensureChapter(db, plan.chapterName, plan.subjectId, summary);
     }
-    const chapterId = existingChapter?.id
-      ?? await ensureChapter(db, plan.chapterName, plan.subjectId, summary);
 
     // The whole playlist import is ONE transaction inside Postgres.
-    const { data, error } = await db.rpc("import_playlist", {
-      payload: buildImportPayload({
-        plan, channel, channelId, chapterId, videos: ytVideos,
-      }),
+    importPayload ??= buildImportPayload({
+      plan: importPlan, channel, channelId, chapterId, videos: importVideos,
+    });
+    const { data, error } = await db.rpc(rpc, {
+      payload: importPayload,
     });
     if (error) fail(`import "${plan.playlist.title}": ${error.message}`);
+    if (data.idempotent_replay) {
+      say(
+        `  verified replay: request ${data.request_id} already matches live ` +
+        "catalogue state; no rows changed",
+      );
+      continue;
+    }
 
     summary.added += data.videos_added;
     summary.reused += data.videos_reused;
@@ -403,8 +652,9 @@ function nameMap(rows) {
 // Every YouTube video id already in the catalogue, for the cross-chapter reuse
 // check. Paged in 1000s so a large catalogue is not silently truncated at
 // PostgREST's default row cap. Read-only; failures degrade to an empty set
-// (the overlap check simply reports nothing) rather than aborting the dry run.
-async function fetchCatalogueVideoIds(db) {
+// (the overlap check simply reports nothing) rather than aborting a legacy dry
+// run. Guarded mapped runs pass strict:true and fail closed instead.
+async function fetchCatalogueVideoIds(db, { strict = false } = {}) {
   const ids = new Set();
   const step = 1000;
   for (let from = 0; ; from += step) {
@@ -412,7 +662,10 @@ async function fetchCatalogueVideoIds(db) {
       .from("videos")
       .select("youtube_video_id")
       .range(from, from + step - 1);
-    if (error) break;
+    if (error) {
+      if (strict) throw error;
+      break;
+    }
     for (const r of data ?? []) ids.add(r.youtube_video_id);
     if (!data || data.length < step) break;
   }
@@ -497,6 +750,61 @@ async function findChapter(db, name, subjectId) {
     .maybeSingle();
   if (error) throw error;
   return data;
+}
+
+function loadChapterManifest(inputPath) {
+  const manifestPath = resolve(root, inputPath);
+  if (!manifestPath.toLowerCase().endsWith(".json")) {
+    throw new Error("Chapter manifest must be a .json file.");
+  }
+  try {
+    const realRoot = realpathSync(root);
+    const realManifestPath = realpathSync(manifestPath);
+    const relativePath = relative(realRoot, realManifestPath);
+    if (relativePath.startsWith("..") || isAbsolute(relativePath)) {
+      throw new Error("Chapter manifests must be stored inside this repository.");
+    }
+    const raw = readFileSync(realManifestPath, "utf8");
+    return {
+      manifest: JSON.parse(raw),
+      path: relativePath.replaceAll("\\", "/"),
+      sha256: createHash("sha256").update(raw).digest("hex"),
+    };
+  } catch (error) {
+    throw new Error(`Couldn't read chapter manifest "${inputPath}": ${error.message}`);
+  }
+}
+
+function sourceSnapshotSha256(videos) {
+  return createHash("sha256")
+    .update(mappedSourceSnapshotEvidence(videos))
+    .digest("hex");
+}
+
+async function readMappedImportCapability(db) {
+  const { data, error } = await db.rpc("per_video_chapter_import_capability");
+  const supported = !error && data?.version === 12 &&
+    data?.per_video_chapter_id === true &&
+    data?.all_or_none_mapping === true &&
+    data?.create_only === true &&
+    data?.request_replay === true &&
+    data?.audit_snapshot === true;
+  return {
+    supported,
+    version: supported ? data.version : null,
+    error: supported ? null : (error?.message ?? "Capability contract mismatch."),
+  };
+}
+
+async function assertMappedImportCapability(db) {
+  const capability = await readMappedImportCapability(db);
+  if (!capability.supported) {
+    fail(
+      "The selected database does not support guarded per-video chapter imports. " +
+      "Apply and verify the v12 staging migration first.",
+    );
+  }
+  return capability;
 }
 
 main().catch((err) => fail(err.message ?? String(err)));

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   useLocation, useNavigate, useParams, useSearchParams,
 } from "react-router";
@@ -10,10 +10,51 @@ import { readReturnUrl, rememberReturn, resolveBack } from "./returnTo.js";
 import CourseRating from "./CourseRating.jsx";
 import VideoReport from "./VideoReport.jsx";
 import CourseOverview from "./CourseOverview.jsx";
-import { useCourseMetadata } from "./PageMetadata.jsx";
+import { applyPageMetadata, useCourseMetadata } from "./PageMetadata.jsx";
 import { BRAND_TEAL } from "./brandColors.js";
 
 const TEAL = BRAND_TEAL;
+
+export function scopeCourseLessons(lessons, chapterId) {
+  if (chapterId == null || chapterId === "") {
+    return { lessons, chapter: null, requested: false, valid: true };
+  }
+  const id = Number(chapterId);
+  if (!Number.isInteger(id) || id <= 0) {
+    return { lessons: [], chapter: null, requested: true, valid: false };
+  }
+  const scoped = lessons
+    .filter((lesson) => Number(lesson.chapter?.id) === id)
+    .map((lesson, index) => ({
+      ...lesson,
+      coursePosition: lesson.position,
+      position: index + 1,
+    }));
+  return {
+    lessons: scoped,
+    chapter: scoped[0]?.chapter ?? null,
+    requested: true,
+    valid: scoped.length > 0,
+  };
+}
+
+export function scopeCourseMetadata(course, lessons, chapter) {
+  if (!course || !chapter) return course;
+  const durations = lessons.map((lesson) => Number(lesson.durationSeconds));
+  const hasCompleteDuration = lessons.length > 0 &&
+    durations.every((duration) => Number.isFinite(duration) && duration > 0);
+  return {
+    ...course,
+    lectures: lessons.length,
+    totalDurationSeconds: hasCompleteDuration
+      ? durations.reduce((sum, duration) => sum + duration, 0)
+      : null,
+    syllabus: [{ ...chapter, subject: lessons[0]?.subject ?? course.subject ?? null }],
+    blockedLessons: lessons.filter(
+      (lesson) => lesson.embeddingStatus === "blocked",
+    ).length,
+  };
+}
 
 function CenteredNotice({ title, detail, onBack, onRetry }) {
   const { t } = useTheme();
@@ -42,8 +83,29 @@ export default function CourseVideoPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const { course, lessons, loading, error, reload } = usePlaylistVideos(playlistId);
-  useCourseMetadata(course);
+  const { course, lessons: allLessons, loading, error, reload } =
+    usePlaylistVideos(playlistId);
+  const scope = useMemo(
+    () => scopeCourseLessons(allLessons, chapterId),
+    [allLessons, chapterId],
+  );
+  const lessons = scope.lessons;
+  const displayedCourse = useMemo(
+    () => scopeCourseMetadata(course, lessons, scope.chapter),
+    [course, lessons, scope.chapter],
+  );
+  const provenInvalidChapter = !loading && !error && Boolean(course) &&
+    scope.requested && !scope.valid;
+  useCourseMetadata(scope.valid ? displayedCourse : null);
+  useEffect(() => {
+    if (!provenInvalidChapter) return;
+    applyPageMetadata({
+      title: "Chapter not found | JEENEETARD",
+      description: "This course does not contain the requested chapter.",
+      robots: "noindex, nofollow",
+      canonicalPath: `/course/${playlistId}`,
+    });
+  }, [location.search, playlistId, provenInvalidChapter]);
 
   const [savedProgress, setSavedProgress] = useState(null);
   useEffect(() => {
@@ -82,8 +144,8 @@ export default function CourseVideoPage() {
       courseTitle: course.title,
       videoId: activeLesson.videoId,
       videoTitle: activeLesson.title,
-      position: activeLesson.position,
-      totalLessons: lessons.length,
+      position: activeLesson.coursePosition ?? activeLesson.position,
+      totalLessons: allLessons.length,
     });
     if (entry) {
       setWatchedIds(entry.watched);
@@ -92,7 +154,11 @@ export default function CourseVideoPage() {
   };
 
   const coursePath = location.pathname;
-  const back = resolveBack({ state: location.state, coursePath, chapterId });
+  const back = resolveBack({
+    state: location.state,
+    coursePath,
+    chapterId: provenInvalidChapter ? undefined : chapterId,
+  });
   useEffect(() => {
     const url = readReturnUrl(location.state);
     if (url) rememberReturn(coursePath, url);
@@ -106,6 +172,15 @@ export default function CourseVideoPage() {
       <CenteredNotice
         title="Course not found"
         detail="This course may have been removed or the link is incorrect."
+        onBack={backToHub}
+      />
+    );
+  }
+  if (!scope.valid) {
+    return (
+      <CenteredNotice
+        title="Chapter not found in this course"
+        detail="This course does not contain lessons for the requested chapter."
         onBack={backToHub}
       />
     );
@@ -134,8 +209,8 @@ export default function CourseVideoPage() {
 
   return (
     <VideoView
-      course={course}
-      chapter={course.title}
+      course={displayedCourse}
+      chapter={scope.chapter?.name ?? course.title}
       videoId={activeLesson.videoId}
       videoTitle={activeLesson.title}
       lessons={lessons}
@@ -146,7 +221,7 @@ export default function CourseVideoPage() {
       onBack={backToHub}
       overview={
         <CourseOverview
-          course={course}
+          course={displayedCourse}
           lessons={lessons}
           watchedIds={watchedIds}
           continueLesson={continueLesson}
