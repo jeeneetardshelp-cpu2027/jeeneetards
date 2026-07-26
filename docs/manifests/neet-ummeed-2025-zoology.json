@@ -1,0 +1,82 @@
+{
+  "version": 1,
+  "request_id": "b9479e2f-05af-4288-808b-4c24d79592bd",
+  "youtube_playlist_id": "PLJyab0VQDBGXyW0SYeXdHFdtUMG9xraBn",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "6NPNQ4mYltg",
+      "chapter": "Body Fluids and Circulation"
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "ypouC2noR50",
+      "chapter": "Breathing and Exchange of Gases"
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "nzJUMxZxycc",
+      "chapter": "Excretory Products and Their Elimination"
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "oTDXScVBqUs",
+      "chapter": "Locomotion and Movement"
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "1DCXvo35nnE",
+      "chapter": "Neural Control and Coordination"
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "n5ETb0Pb9QE",
+      "chapter": "Chemical Coordination and Integration"
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "2vaISXlXZR0",
+      "chapter": "Biomolecules"
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "24KoTmmNFts",
+      "chapter": "Reproductive Health"
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "Hzw60qtYy34",
+      "chapter": "Human Health and Disease"
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "Hxo8am13WFQ",
+      "chapter": "Biotechnology: Principles and Processes"
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "NERzRnB628k",
+      "chapter": "Biotechnology and its Applications"
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "jJ2OlpDe1vU",
+      "chapter": "Evolution"
+    },
+    {
+      "position": 13,
+      "youtube_video_id": "rb7SkOKWz18",
+      "chapter": "Animal Kingdom"
+    },
+    {
+      "position": 14,
+      "youtube_video_id": "nrsCi3G2qWs",
+      "chapter": "Structural Organisation in Animals"
+    },
+    {
+      "position": 15,
+      "youtube_video_id": "gaJfE9fAY_Y",
+      "chapter": "Human Reproduction"
+    }
+  ]
+}
