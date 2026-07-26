@@ -4,21 +4,25 @@ The owner must supply and approve each fact below before the Terms and Privacy
 pages are treated as launch-ready. Engineering must not infer these details
 from an account name, email address, repository, or hosting configuration.
 
-1. **Legal entity or individual operator name — Awaiting owner input**
+Status: values supplied by the owner on 25 July 2026 and wired into the Terms
+and Privacy pages. **A qualified legal/privacy review is still outstanding
+before public launch** (see the note at the end of this file).
+
+1. **Legal entity or individual operator name — Supplied:** Amit
    - Provide the exact public legal name of the person, company, trust, or
-     organisation responsible for the service.
-2. **Contact email — Awaiting owner input**
+     organisation responsible for the service. (Owner note: a fuller legal name
+     may be advisable on legal advice.)
+2. **Contact email — Supplied:** jeeneetardshelp@gmail.com
    - Provide the monitored public address for privacy requests, support,
      corrections, and rights-holder notices.
-3. **Postal address and jurisdiction — Awaiting owner input**
-   - Provide the public postal address, governing law, and court or dispute
-     forum after appropriate professional advice.
-4. **Hosting provider — Awaiting owner input**
-   - Confirm which infrastructure providers should be named publicly. The
-     current implementation communicates with Vercel, Supabase, YouTube, and
-     Google services, but the owner must approve the final disclosure.
-5. **Effective date — Awaiting owner input**
-   - Provide the date on which the approved public text takes effect.
+3. **Postal address and jurisdiction — Supplied:** Jaipur, Rajasthan, India;
+   governed by the laws of India; disputes subject to the courts of Jaipur,
+   Rajasthan.
+   - A full street postal address was not provided; confirm on legal advice
+     whether one must be published.
+4. **Hosting provider — Supplied:** Vercel, Supabase, YouTube, and Google are
+   named publicly in the Privacy Policy.
+5. **Effective date — Supplied:** 25 July 2026
 
 Additional owner decisions that must accompany legal review:
 

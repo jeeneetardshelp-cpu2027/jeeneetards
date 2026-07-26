@@ -240,7 +240,7 @@ describe("filters run before range and count", () => {
     const { q } = await run({});
     expect(q.order).toEqual([
       "display_order",
-      "ratings_count desc",
+      "popularity_score desc",
       "title",
       "id",
     ]);

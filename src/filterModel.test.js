@@ -19,7 +19,7 @@ const parse = (qs) => parseFilters(P(qs));
 describe("URL is the state", () => {
   it("round-trips every filter through the query string", () => {
     const qs = "exam=jee&stage=class-11&sub=3&ch=7&lang=hindi,hinglish&type=one-shot" +
-               "&level=advanced&dur=5to15h&avg=short&updated=1&complete=1&sort=shortest&page=2&q=kine";
+               "&level=advanced&dur=5to15h&avg=short&updated=1&complete=1&sort=popular&page=2&q=kine";
     const f = parse(qs);
     expect(f.exam).toBe("jee");
     expect(f.stage).toBe("class-11");
@@ -32,7 +32,7 @@ describe("URL is the state", () => {
     expect(f.avgLecture).toBe("short");
     expect(f.updated).toBe(true);
     expect(f.completeOnly).toBe(true);
-    expect(f.sort).toBe("shortest");
+    expect(f.sort).toBe("popular");
     expect(f.page).toBe(2);
     expect(f.q).toBe("kine");
   });
@@ -198,7 +198,7 @@ describe("page reset (rule 8)", () => {
     });
 
   it("changing sort does NOT reset the page — it reorders the same results", () => {
-    const next = applyFilter(P("page=5"), "sort", "shortest");
+    const next = applyFilter(P("page=5"), "sort", "popular");
     expect(next.get(KEYS.page)).toBe("5");
   });
 });
@@ -246,13 +246,13 @@ describe("chips (rules 2 and 10)", () => {
   });
 
   it("Clear all removes every result-changing filter but keeps sort and tab", () => {
-    const cleared = clearAll(P("exam=jee&stage=class-11&lang=hindi&page=4&sort=shortest&tab=lectures"));
+    const cleared = clearAll(P("exam=jee&stage=class-11&lang=hindi&page=4&sort=popular&tab=lectures"));
     const f = parseFilters(cleared);
     expect(f.exam).toBeNull();
     expect(f.stage).toBeNull();
     expect(f.language).toEqual([]);
     expect(f.page).toBe(0);
-    expect(f.sort).toBe("shortest");
+    expect(f.sort).toBe("popular");
     expect(f.tab).toBe("lectures");
   });
 });

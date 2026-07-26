@@ -17,7 +17,7 @@ import {
   Star, Clock, Layers, Building2, SlidersHorizontal, X, AlertTriangle,
 } from "lucide-react";
 import { usePlaylistBrowse, formatDuration, PAGE_SIZE } from "./usePlaylistBrowse.js";
-import { COURSE_TYPES, DIFFICULTIES, MIN_COMPARE, MAX_COMPARE } from "./filterModel.js";
+import { COURSE_TYPES, DIFFICULTIES, MIN_COMPARE, MAX_COMPARE, SORTS, DEFAULT_SORT } from "./filterModel.js";
 import { clearAllChips, dropParam, emptyStateMessage } from "./filterChips.js";
 import { FILTER_PARAMS } from "./filterSchema.js";
 import { makeReturnState } from "./returnTo.js";
@@ -222,6 +222,18 @@ export default function PlaylistBrowse({
       return next;
     });
 
+  // Sort is a view preference in the URL (?sort=). Validated against SORTS so a
+  // junk value falls back to the default rather than producing an empty order.
+  const sortRaw = params.get("sort");
+  const sort = SORTS.some((s) => s.id === sortRaw) ? sortRaw : DEFAULT_SORT;
+  const setSort = (value) =>
+    setParams((prev) => {
+      const next = new URLSearchParams(prev);
+      if (value && value !== DEFAULT_SORT) next.set("sort", value); else next.delete("sort");
+      next.delete("page"); // reordering invalidates the current page offset
+      return next;
+    });
+
   const { items, total, loading, error, hasMore, reload } = usePlaylistBrowse({
     // goalId was the defect: accepted by the hook, never supplied by the page.
     goalId: filters.goal, subjectId: filters.subject,
@@ -232,7 +244,7 @@ export default function PlaylistBrowse({
     channelId: filters.channelId, language: filters.language,
     contentType: filters.contentType, difficulty: filters.difficulty,
     teacherId: filters.teacherId,
-    chapterId: filters.chapter, search: filters.search, page,
+    chapterId: filters.chapter, search: filters.search, sort, page,
   });
 
   // Selection lives in ?compare= so a comparison is shareable and survives a
@@ -308,14 +320,33 @@ export default function PlaylistBrowse({
               : total != null ? `${total} course${total === 1 ? "" : "s"}`
               : `${items.length} courses`}
         </p>
-        <button
-          ref={filterButtonRef}
-          onClick={() => setSheetOpen(true)}
-          className={`sticky top-[6.25rem] z-30 flex min-h-11 items-center gap-1.5 rounded-xl border ${t.border} ${t.card} ${t.text} px-3 text-sm sm:top-16 lg:hidden`}
-        >
-          <SlidersHorizontal className="h-4 w-4" />
-          Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
-        </button>
+        <div className="flex items-center gap-2">
+          {/* Sort applies to the Playlists list (usePlaylistBrowse). The
+              lectures tab has its own hook and is intentionally not wired. */}
+          {tab === "playlists" && (
+            <label className="flex items-center gap-2 text-sm">
+              <span className={`hidden sm:inline ${t.muted}`}>Sort</span>
+              <select
+                value={sort}
+                onChange={(e) => setSort(e.target.value)}
+                aria-label="Sort courses"
+                className={`min-h-11 rounded-xl border ${t.border} ${t.card} ${t.text} px-3 text-sm`}
+              >
+                {SORTS.map((s) => (
+                  <option key={s.id} value={s.id}>{s.label}</option>
+                ))}
+              </select>
+            </label>
+          )}
+          <button
+            ref={filterButtonRef}
+            onClick={() => setSheetOpen(true)}
+            className={`sticky top-[6.25rem] z-30 flex min-h-11 items-center gap-1.5 rounded-xl border ${t.border} ${t.card} ${t.text} px-3 text-sm sm:top-16 lg:hidden`}
+          >
+            <SlidersHorizontal className="h-4 w-4" />
+            Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
+          </button>
+        </div>
       </div>
 
       {tab === "lectures" ? (

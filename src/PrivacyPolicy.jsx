@@ -39,15 +39,23 @@ export default function PrivacyPolicy() {
         <Container width="reading">
           <h1 className={`text-2xl font-bold ${t.text}`}>Privacy Policy</h1>
           <p className={`mt-1 text-xs ${t.muted}`}>
-            Effective date: awaiting owner approval
+            Effective date: 25 July 2026
           </p>
 
           <Section title="1. Scope and operator details">
             <p>
               This policy describes the information paths implemented by
-              JEENEETARD. The operator&apos;s legal name, public contact details,
-              postal address, jurisdiction, and final effective date must be
-              supplied and approved by the owner before launch.
+              JEENEETARD. The service is operated by Amit, based in Jaipur,
+              Rajasthan, India, and is governed by the laws of India. Privacy
+              questions and requests can be sent to{" "}
+              <a
+                href="mailto:jeeneetardshelp@gmail.com"
+                className="font-medium underline"
+                style={{ color: BRAND.teal }}
+              >
+                jeeneetardshelp@gmail.com
+              </a>
+              . This version is effective 25 July 2026.
             </p>
           </Section>
 
@@ -167,10 +175,16 @@ export default function PrivacyPolicy() {
               No internet service can promise absolute security.
             </p>
             <p>
-              The public email, postal contact, and procedure for access,
-              correction, deletion, withdrawal, privacy, and rights-holder
-              requests are awaiting owner approval and must be published before
-              launch.
+              For access, correction, deletion, withdrawal, privacy, and
+              rights-holder requests, contact{" "}
+              <a
+                href="mailto:jeeneetardshelp@gmail.com"
+                className="font-medium underline"
+                style={{ color: BRAND.teal }}
+              >
+                jeeneetardshelp@gmail.com
+              </a>
+              .
             </p>
           </Section>
         </Container>

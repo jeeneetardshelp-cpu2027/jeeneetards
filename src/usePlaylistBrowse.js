@@ -37,6 +37,11 @@ function toCard(row) {
     classLevels: row.class_levels ?? [],
     rating: ratings > 0 ? Number(row.average_rating) : null,
     ratingCount: ratings,
+    // Popularity rollups (maintained by refreshVideoStats.js). Null until the
+    // stats job has run, so the card shows nothing rather than a fake "0 views".
+    viewCountTotal: row.view_count_total != null && Number(row.view_count_total) > 0
+      ? Number(row.view_count_total) : null,
+    statsFetchedAt: row.stats_fetched_at ?? null,
     // no coverage column exists yet — the card must say "not assessed", not 0%
     coverage: null,
   };
@@ -51,9 +56,22 @@ function toCard(row) {
  * checks; this is the same rule expressed as the set the DATABASE filters on,
  * and classFilter.test.js asserts the two agree.
  */
+// Maps a SORTS id (filterModel.js) to its Supabase .order() chain. Every chain
+// is followed by .order("id") in the caller so paging stays deterministic when
+// the primary keys tie. "popular"/"most_viewed" read the video_stats rollups
+// on playlists (popularity_score / view_count_total); an unknown id falls back
+// to "recommended". See DESIGN_popularity_sort.md §4.
+const ORDER_BY = {
+  recommended: (q) => q.order("display_order").order("popularity_score", { ascending: false }).order("title"),
+  popular: (q) => q.order("popularity_score", { ascending: false }),
+  most_viewed: (q) => q.order("view_count_total", { ascending: false }),
+  rating: (q) => q.order("average_rating", { ascending: false }).order("ratings_count", { ascending: false }),
+  recent: (q) => q.order("created_at", { ascending: false }),
+};
+
 export function usePlaylistBrowse({
   goalId, boardId, subjectId, chapterId, stage, channelId, teacherId,
-  language, contentType, difficulty, search, page = 0,
+  language, contentType, difficulty, search, sort, page = 0,
   // GATE. When false, no request is issued at all and the hook reports
   // loading. The caller sets this from useCanonicalFilters().ready, so a URL
   // carrying slugs cannot fire a catalogue query before those slugs are ids.
@@ -107,7 +125,7 @@ export function usePlaylistBrowse({
     // videos from the unfiltered view.
     const cols =
       "id, title, display_order, teacher, average_rating, ratings_count, language, content_type," +
-      " difficulty, class_levels, institutes_channels(name), subjects(name)," +
+      " difficulty, class_levels, view_count_total, stats_fetched_at, institutes_channels(name), subjects(name)," +
       " playlist_videos(count)" +
       (goalId ? ", playlist_learning_goals!inner(learning_goal_id)" : "") +
       // Board scoping lives in the QUERY, not in a post-filter. CBSE and ICSE
@@ -128,16 +146,12 @@ export function usePlaylistBrowse({
       (teacherId ? ", pt:playlist_teachers!inner(teacher_id)" : "") +
       (chapterId ? ", pv:playlist_videos!inner(videos!inner(chapter_id))" : "");
 
-    let q = supabase
-      .from("playlists")
-      .select(cols, { count: "exact" })
-      // CURRICULUM ORDER first. New courses default to 1,000,000, so they stay
-      // after deliberately curated rows until an editor places them. Ratings
-      // rank alternative courses at the same curriculum position. The unique
-      // final id makes paging deterministic even when every earlier key ties.
-      .order("display_order")
-      .order("ratings_count", { ascending: false })
-      .order("title")
+    // The sort the student chose (?sort=) selects the ordering. "recommended"
+    // still leads with curated display_order (new courses default to 1,000,000,
+    // so they stay after deliberately placed rows). Every chain ends with a
+    // unique .order("id") so paging is deterministic even when earlier keys tie.
+    const applyOrder = ORDER_BY[sort] ?? ORDER_BY.recommended;
+    let q = applyOrder(supabase.from("playlists").select(cols, { count: "exact" }))
       .order("id")
       .range(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE - 1);
 
@@ -183,7 +197,7 @@ export function usePlaylistBrowse({
     });
   }, [enabled, goalId, boardId, subjectId, chapterId, stage, channelId, teacherId,
       languageKey, contentTypeKey, difficultyKey,
-      search, page]);
+      search, sort, page]);
 
   useEffect(() => { load(); }, [load]);
   return { ...state, reload: load };

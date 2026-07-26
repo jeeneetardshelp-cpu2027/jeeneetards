@@ -49,7 +49,10 @@
     "verify:report-browser": "node src/scripts/reportBrowserFixture.js verify",
     "cleanup:report-browser": "node src/scripts/reportBrowserFixture.js cleanup",
     "verify:production-capabilities": "node src/scripts/verifyProductionCapabilities.js",
-    "verify:frontend-release": "node src/scripts/verifyFrontendRelease.js"
+    "verify:frontend-release": "node src/scripts/verifyFrontendRelease.js",
+    "demo:classify": "node src/scripts/classify/demoClassify.js",
+    "demo:quality": "node src/scripts/classify/demoQualityGate.js",
+    "refresh:stats": "node src/scripts/refreshVideoStats.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.110.7",

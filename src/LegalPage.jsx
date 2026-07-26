@@ -41,7 +41,7 @@ export default function LegalPage() {
             Terms of Service &amp; Disclaimer
           </h1>
           <p className={`mt-1 text-xs ${t.muted}`}>
-            Effective date: awaiting owner approval
+            Effective date: 25 July 2026
           </p>
 
           <Section title="1. About the service">
@@ -127,9 +127,16 @@ export default function LegalPage() {
 
           <Section title="7. Notices, responsibility, and owner details">
             <p>
-              The procedure and public contact for listing corrections,
-              rights-holder notices, privacy requests, and support must be
-              supplied by the owner before launch.
+              Listing corrections, rights-holder notices, privacy requests, and
+              support can be sent to{" "}
+              <a
+                href="mailto:jeeneetardshelp@gmail.com"
+                className="font-medium underline"
+                style={{ color: BRAND.teal }}
+              >
+                jeeneetardshelp@gmail.com
+              </a>
+              .
             </p>
             <p>
               To the extent allowed by applicable law, the service is not
@@ -139,10 +146,10 @@ export default function LegalPage() {
               cannot lawfully be excluded remain unaffected.
             </p>
             <p>
-              The operator&apos;s legal name, public email, postal address,
-              governing law, dispute forum, and final effective date are
-              awaiting owner approval. This page must be reviewed and updated
-              with those facts before public launch.
+              This service is operated by Amit, based in Jaipur, Rajasthan,
+              India. These Terms are governed by the laws of India, and any
+              dispute is subject to the courts of Jaipur, Rajasthan. This
+              version is effective 25 July 2026.
             </p>
           </Section>
         </Container>

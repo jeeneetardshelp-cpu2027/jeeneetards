@@ -170,15 +170,19 @@ if (!exists(legalInputsFile)) {
     "Effective date",
   ];
   const missingFacts = ownerFacts.filter((fact) => !source.includes(fact));
+  // Every owner-only fact must carry an EXPLICIT status on its own line: either
+  // still "Awaiting owner input", or "Supplied:" with the approved value. This
+  // stops a fact from being silently dropped, in either the pre-launch or the
+  // finalised state.
   if (missingFacts.length) {
     fail(`${legalInputsFile} omits owner inputs: ${missingFacts.join(", ")}`);
   } else if (!ownerFacts.every((fact) => {
     const line = source.split(/\r?\n/).find((candidate) => candidate.includes(fact)) ?? "";
-    return /Awaiting owner input/i.test(line);
+    return /Awaiting owner input/i.test(line) || /Supplied:/i.test(line);
   })) {
-    fail(`${legalInputsFile} must clearly mark every owner-only fact as awaiting input`);
+    fail(`${legalInputsFile} must mark every owner-only fact as "Awaiting owner input" or "Supplied:"`);
   } else {
-    pass("owner-supplied legal facts are explicitly listed as outstanding");
+    pass("owner-supplied legal facts each carry an explicit status");
   }
 }
 

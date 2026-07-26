@@ -99,14 +99,26 @@ describe("chapter filtering happens in the database", () => {
 });
 
 describe("pagination", () => {
-  it("uses curated curriculum order before ratings and stable tie-breakers", async () => {
+  it("uses curated curriculum order before popularity and stable tie-breakers", async () => {
     const q = await run({});
     expect(q.cols).toContain("display_order");
+    // Default "recommended" sort: curated display_order leads, popularity_score
+    // ranks alternatives at the same curriculum position, id is the unique tie-break.
     expect(q.orders).toEqual([
       "display_order",
-      "ratings_count desc",
+      "popularity_score desc",
       "title",
       "id",
+    ]);
+  });
+
+  it("applies the chosen sort, keeping id as the unique tie-breaker", async () => {
+    expect((await run({ sort: "most_viewed" })).orders).toEqual(["view_count_total desc", "id"]);
+    expect((await run({ sort: "popular" })).orders).toEqual(["popularity_score desc", "id"]);
+    expect((await run({ sort: "recent" })).orders).toEqual(["created_at desc", "id"]);
+    // an unknown sort falls back to recommended rather than producing no order
+    expect((await run({ sort: "bogus" })).orders).toEqual([
+      "display_order", "popularity_score desc", "title", "id",
     ]);
   });
 

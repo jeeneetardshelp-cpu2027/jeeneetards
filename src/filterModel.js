@@ -101,12 +101,19 @@ export const AVG_LECTURE = [
 export const MIN_COMPARE = 2;
 export const MAX_COMPARE = 4;
 
+// Only sorts that are actually backed by a column/query are offered. Options
+// with no data behind them (a "Most complete" coverage metric, a "Shortest"
+// total-duration column) are deliberately absent rather than decorative — a
+// dropdown option that does nothing is worse than one that isn't there.
+// "popular" / "most_viewed" are driven by the video_stats rollups
+// (view_count_total / popularity_score); usePlaylistBrowse.js maps each id to
+// its .order() chain.
 export const SORTS = [
   { id: "recommended", label: "Recommended" },
-  { id: "complete", label: "Most complete" },
-  { id: "shortest", label: "Shortest" },
-  { id: "rating", label: "Highest-confidence rating" },
-  { id: "updated", label: "Recently updated" },
+  { id: "popular", label: "Most popular" },
+  { id: "most_viewed", label: "Most viewed" },
+  { id: "rating", label: "Highest rated" },
+  { id: "recent", label: "Recently added" },
 ];
 export const DEFAULT_SORT = "recommended";
 

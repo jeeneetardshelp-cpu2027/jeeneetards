@@ -91,8 +91,8 @@ describe("clear all", () => {
   });
 
   it("PRESERVES non-filter state that survives without a chapter", () => {
-    const next = clearAllChips(P(FULL + "&sort=shortest&tab=lectures"));
-    expect(next.get("sort")).toBe("shortest");
+    const next = clearAllChips(P(FULL + "&sort=popular&tab=lectures"));
+    expect(next.get("sort")).toBe("popular");
     expect(next.get("tab")).toBe("lectures");
   });
 

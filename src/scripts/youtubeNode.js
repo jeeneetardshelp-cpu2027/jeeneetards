@@ -106,6 +106,29 @@ export async function getPlaylistVideos(key, playlistId) {
   return videos;
 }
 
+// videos.list part=statistics, 50 ids per call. Returns a Map of
+// youtubeVideoId -> { viewCount, likeCount }. Used by the popularity refresh
+// job; likeCount is null when the creator hides likes. An id missing from the
+// result means the video is deleted/private on YouTube (skip / purge it).
+export async function getVideoStats(key, ids) {
+  const map = new Map();
+  for (let i = 0; i < ids.length; i += 50) {
+    const chunk = ids.slice(i, i + 50);
+    const json = await call(key, "videos", {
+      part: "statistics",
+      id: chunk.join(","),
+    });
+    for (const it of json.items ?? []) {
+      const stats = it.statistics ?? {};
+      map.set(it.id, {
+        viewCount: stats.viewCount == null ? null : Number(stats.viewCount),
+        likeCount: stats.likeCount == null ? null : Number(stats.likeCount),
+      });
+    }
+  }
+  return map;
+}
+
 // videos.list part=contentDetails,status, 50 ids per call.
 export async function getVideoDetails(key, ids) {
   const map = new Map();

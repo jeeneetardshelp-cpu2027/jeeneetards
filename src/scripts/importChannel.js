@@ -35,6 +35,7 @@ import {
   promptCourseMetadata,
   validateCourseAttribution,
 } from "./ingestionSafety.js";
+import { validatePlaylistQuality } from "./classify/validatePlaylistQuality.js";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 
@@ -248,6 +249,14 @@ async function main() {
   // --- 4. import — ONE transactional RPC call per playlist ----------
   if (args.dryRun) {
     const entries = [];
+    // The quality gate needs two catalogue-wide inputs, both public-read:
+    // every existing video id (to detect cross-chapter reuse) and the known
+    // teacher roster (to confirm attribution evidence).
+    const existingVideoIds = await fetchCatalogueVideoIds(db);
+    const { data: teacherRows } = await db.from("playlists").select("teacher");
+    const knownTeachers = [...new Set((teacherRows ?? []).map((r) => r.teacher).filter(Boolean))];
+    let blockedCount = 0;
+    let reviewCount = 0;
     for (const plan of plans) {
       const [{ data: existingPlaylist, error: playlistError }, chapter, ytVideos] =
         await Promise.all([
@@ -260,6 +269,18 @@ async function main() {
         ]);
       if (playlistError) throw playlistError;
       const duplicateVideoIds = findDuplicateVideoIds(ytVideos);
+      // Automated quality gate — the mechanical checks a reviewer used to run by
+      // hand (duplicate ids/lesson numbers, order, cross-chapter reuse, teacher
+      // evidence, usable-count shortfall). Advisory in the dry run: it informs
+      // the go/no-go decision, it does not itself write or block.
+      const quality = validatePlaylistQuality({
+        playlist: { title: plan.playlist.title, videos: ytVideos },
+        existingVideoIds,
+        expectedVideoCount: Number(plan.playlist.videoCount),
+        knownTeachers: [plan.teacher, ...knownTeachers],
+      });
+      if (quality.status === "blocked") blockedCount += 1;
+      else if (quality.status === "review") reviewCount += 1;
       entries.push({
         youtube_playlist_id: plan.playlist.id,
         title: plan.playlist.title,
@@ -269,6 +290,7 @@ async function main() {
           duplicate_youtube_video_ids: duplicateVideoIds,
           production_blocker: duplicateVideoIds.length > 0,
         },
+        quality: { status: quality.status, findings: quality.findings },
         existing_playlist: existingPlaylist
           ? { id: existingPlaylist.id, title: existingPlaylist.title }
           : null,
@@ -284,6 +306,15 @@ async function main() {
         teacher: plan.teacher,
         audience_focus: plan.audienceFocus,
       });
+
+      const badge = quality.status === "blocked" ? `${C.red}BLOCKED${C.reset}`
+        : quality.status === "review" ? `${C.yellow}REVIEW ${C.reset}`
+          : `${C.green}OK     ${C.reset}`;
+      say(`  ${badge} ${plan.playlist.title} ${C.dim}(${ytVideos.length} usable)${C.reset}`);
+      for (const f of quality.findings) {
+        const mark = f.severity === "block" ? `${C.red}✗${C.reset}` : `${C.yellow}!${C.reset}`;
+        say(`    ${mark} ${f.message}`);
+      }
     }
     const outputDirectory = resolve(root, "../outputs");
     const outputPath = resolve(outputDirectory, "ingestion-dry-run.json");
@@ -296,7 +327,11 @@ async function main() {
       entries,
     }, null, 2)}\n`, "utf8");
     say(`\n${C.green}${C.bold}Dry run complete — no Supabase writes${C.reset}`);
-    say(`  ${entries.length} playlist plan(s) saved to ${outputPath}\n`);
+    say(`  ${entries.length} playlist plan(s) saved to ${outputPath}`);
+    say(
+      `  quality gate: ${C.green}${entries.length - blockedCount - reviewCount} ok${C.reset}, ` +
+      `${C.yellow}${reviewCount} review${C.reset}, ${C.red}${blockedCount} blocked${C.reset}\n`
+    );
     return;
   }
 
@@ -363,6 +398,25 @@ function nameMap(rows) {
   const m = new Map();
   for (const r of rows ?? []) m.set(r.name.toLowerCase(), r);
   return m;
+}
+
+// Every YouTube video id already in the catalogue, for the cross-chapter reuse
+// check. Paged in 1000s so a large catalogue is not silently truncated at
+// PostgREST's default row cap. Read-only; failures degrade to an empty set
+// (the overlap check simply reports nothing) rather than aborting the dry run.
+async function fetchCatalogueVideoIds(db) {
+  const ids = new Set();
+  const step = 1000;
+  for (let from = 0; ; from += step) {
+    const { data, error } = await db
+      .from("videos")
+      .select("youtube_video_id")
+      .range(from, from + step - 1);
+    if (error) break;
+    for (const r of data ?? []) ids.add(r.youtube_video_id);
+    if (!data || data.length < step) break;
+  }
+  return ids;
 }
 
 // Accepts "all", "1,3,5", "1-4", or a mix.
