@@ -5,9 +5,9 @@ import; it does not authorize one.
 
 ## Baseline recorded on 25 July 2026
 
-- 45 courses and 527 playlist memberships.
-- Coverage: JEE Physics plus 14 JEE Chemistry courses; 23 Class 11 courses,
-  23 Class 12 courses, and 40 Dropper-compatible courses.
+- 46 courses and 554 playlist memberships.
+- Coverage: JEE Physics plus 15 JEE Chemistry courses; 23 Class 11 courses,
+  24 Class 12 courses, and 41 Dropper-compatible courses.
 - Core metadata missing from 0 courses.
 - Fully contained duplicate candidates: 0.
 - Registered source channel: Mohit Tyagi.
@@ -44,6 +44,8 @@ import; it does not authorize one.
 - Basic Inorganic Nomenclature, source playlist
   `PL_A4M5IAkMaeKDEe14ypLAzo6xPRBZF21`, was added with `ALK Sir`
   attribution, 2 ordered lessons, and 0 video reuse.
+- Gaseous State, source playlist `PL_A4M5IAkMaf71_7enQvAZ41ZdIKAFxf5`, was
+  added with `ALK Sir` attribution, 27 ordered lessons, and 0 video reuse.
 - Nuclear Physics is intentionally excluded: its source playlist repeats a
   YouTube video ID and is blocked before any database write.
 - X-rays is intentionally deferred because its playlist spans multiple
@@ -64,6 +66,9 @@ import; it does not authorize one.
   remaining teacher-attribution gap is reviewed.
 - General Inorganic Chemistry is deferred because the quick video-metadata pass
   did not expose direct teacher-attribution evidence.
+- Redox Reaction and Equivalent Concept is deferred because production dry-run
+  found 16 published videos but only 15 usable videos, so the batch stops before
+  any database write.
 
 Regenerate the read-only baseline immediately before every batch:
 

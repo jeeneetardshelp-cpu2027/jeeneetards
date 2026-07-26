@@ -591,3 +591,41 @@ Validation after the update:
 
 No migrations, schema changes, or application-code changes were made for the
 Basic Inorganic Nomenclature import.
+
+### Gaseous State checkpoint
+
+Gaseous State was promoted after the staging-first gate:
+
+- Gaseous State: 27 new Class 12/Dropper lessons from source playlist
+  `PL_A4M5IAkMaf71_7enQvAZ41ZdIKAFxf5`, source title
+  `CHEMISTRY-GASEOUS STATE`, under production chapter `43`.
+- Production course: `53`, title `CHEMISTRY-GASEOUS STATE`, teacher
+  `ALK Sir`.
+
+The playlist passed source-order, duplicate-video, zero-overlap,
+teacher-attribution, staging import, production dry-run, and production import
+gates. Production now contains 46 courses and exactly 554 ordered playlist
+memberships. Anonymous checks confirmed the course appears through
+`get_chapter_courses(43)`, all 27 lessons are embeddable with duration
+metadata, duplicate-course candidates remain 0, and the production capability
+contract passed. A local route smoke check for `/course/53/chapter/43` returned
+HTTP 200.
+
+Validation after the update:
+
+- 665 Vitest tests passed across 68 files in a standalone full-suite rerun.
+  An earlier concurrent validation attempt hit one transient test timeout while
+  lint/build/audit were also running; the isolated failing test and then the
+  full suite passed immediately afterward.
+- ESLint passed with zero warnings.
+- The production Vite build passed.
+- `npm audit --audit-level=high` still reports the same 7 high-severity
+  dev-only ESLint/minimatch/brace-expansion findings; dependency mutation
+  remains deferred because the proposed fix is forced/breaking.
+
+Redox Reaction and Equivalent Concept was not imported: its production dry-run
+reported 16 published videos but only 15 usable videos, so the batch was
+stopped before any database write.
+
+No migrations, schema changes, or application-code changes were made for the
+Gaseous State import.
