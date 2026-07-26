@@ -217,3 +217,39 @@ Validation after the update:
   dependency mutation was made in this content batch.
 
 No migrations, schema changes, or application-code changes were made.
+
+### Chemistry equilibrium and nuclear checkpoint
+
+A follow-up staging-first Chemistry batch added two more `ALK Sir` courses:
+
+- Chemical Equilibrium: 10 new Class 11/Dropper lessons from playlist
+  `PL_A4M5IAkMaedwEboOyFHzyLrpVALNl_2`, under production chapter `30`.
+- Nuclear Chemistry: 8 new Class 12/Dropper lessons from playlist
+  `PL_A4M5IAkMadFwfHLDsGFGynlaFhM7FJP`, under production chapter `31`.
+
+Both playlists passed source-order, duplicate-video, zero-overlap, staging
+import, production dry-run, and production import gates. Chemical Equilibrium
+was also title-corrected from the source typo `CHEMISTRY-CHEMICAL EQUIIBRIUM`
+to the curated title `Chemical Equilibrium` on the exact staging and production
+playlist rows.
+
+Production now contains 34 courses and exactly 326 ordered playlist
+memberships. Anonymous checks confirmed both new courses appear through their
+chapter course RPCs, all 18 new lessons are embeddable with duration metadata,
+duplicate-course candidates remain 0, and the production capability contract
+passed.
+
+Validation after the update:
+
+- 640 Vitest tests passed across 67 files.
+- ESLint passed with zero warnings.
+- The production Vite build passed.
+- Frontend release gates passed.
+- `npm audit --audit-level=high` still reports the same 7 high-severity
+  dev-only ESLint/minimatch/brace-expansion findings. The non-breaking audit
+  fix path remains unavailable, so dependency changes are still deferred.
+
+General Inorganic Chemistry was not imported because the quick video-metadata
+pass did not expose direct teacher-attribution evidence. Surface Chemistry was
+also deferred until the one video without direct tag evidence is reviewed. No
+migrations, schema changes, or application-code changes were made.
