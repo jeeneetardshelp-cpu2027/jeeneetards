@@ -19,22 +19,18 @@ import {
   ShieldCheck, ListFilter, Sparkles, Activity, Compass,
 } from "lucide-react";
 import { useDebouncedValue } from "./useBrowse.js";
+import { usePlaylistBrowse } from "./usePlaylistBrowse.js";
 import { GlobalHeader, Container } from "./AppShell.jsx";
+import { PlaylistCard } from "./PlaylistBrowse.jsx";
 import { useSearch } from "./useSearch.js";
 import { getContinueWatching } from "./progress.js";
 import { EXAMS } from "./filterModel.js";
 import { useTheme } from "./theme.jsx";
 import { useLearningGoals } from "./useExplore.js";
 import { RELEASE_CAPABILITIES } from "./releaseCapabilities.js";
-import { BRAND_NAVY, BRAND_TEAL } from "./brandColors.js";
+import { BRAND_NAVY, BRAND_TEAL, BRAND_SERIF } from "./brandColors.js";
 
 const BRAND = { navy: BRAND_NAVY, teal: BRAND_TEAL };
-
-// Editorial serif for the wordmark, hero and titles — academic and premium,
-// deliberately not the default sans-everywhere look. System faces only (the
-// build ships no webfonts), highest-quality serif first with graceful fallback.
-const SERIF =
-  '"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,"Times New Roman",serif';
 
 // Per-exam identity for the "Browse by exam" cards.
 const EXAM_META = {
@@ -99,7 +95,7 @@ export default function Home() {
             JEE &amp; NEET · lecture directory
           </p>
           <h1 className="mx-auto mt-4 max-w-2xl text-4xl font-semibold leading-[1.05] tracking-tight sm:text-5xl"
-            style={{ fontFamily: SERIF, textWrap: "balance" }}>
+            style={{ fontFamily: BRAND_SERIF, textWrap: "balance" }}>
             Find the right lecture.{" "}
             <span className="italic" style={{ color: dark ? "#5AD0B4" : BRAND.teal }}>
               Skip the noise.
@@ -167,6 +163,7 @@ function Landing({ navigate }) {
   const [continueWatching] = useState(() => getContinueWatching(3));
   const { t } = useTheme();
   const { goals, loading: goalsLoading, error: goalsError } = useLearningGoals();
+  const jee = (goals ?? []).find((g) => g.slug === "jee");
 
   return (
     <div className="space-y-14">
@@ -222,7 +219,7 @@ function Landing({ navigate }) {
                   style={{ background: `${meta.tint}17`, color: meta.tint }}>
                   <Icon className="h-5 w-5" />
                 </span>
-                <span className="text-xl font-semibold" style={{ fontFamily: SERIF }}>{exam.label}</span>
+                <span className="text-xl font-semibold" style={{ fontFamily: BRAND_SERIF }}>{exam.label}</span>
                 <span className={`mt-1 text-xs ${t.muted}`}>
                   {available ? "Choose class, subject & chapter" : hint}
                 </span>
@@ -253,12 +250,15 @@ function Landing({ navigate }) {
                 style={{ background: `${BRAND.teal}17`, color: BRAND.teal }}>
                 <v.icon className="h-5 w-5" />
               </span>
-              <h3 className="text-lg font-semibold" style={{ fontFamily: SERIF }}>{v.title}</h3>
+              <h3 className="text-lg font-semibold" style={{ fontFamily: BRAND_SERIF }}>{v.title}</h3>
               <p className={`mt-2 text-sm ${t.faint}`}>{v.body}</p>
             </div>
           ))}
         </div>
       </section>
+
+      {/* ---- Featured courses (real data via the shared PlaylistBrowse card) ---- */}
+      {jee?.id && <FeaturedCourses goalId={jee.id} navigate={navigate} />}
 
       {/* ---- Browse the library CTA ---- */}
       <Section title="Browse the library" eyebrow="The full catalogue">
@@ -267,7 +267,7 @@ function Landing({ navigate }) {
           className={`flex w-full items-center justify-between gap-4 rounded-2xl border ${t.border} ${t.card} ${t.cardHover} p-6 text-left shadow-sm transition hover:-translate-y-0.5`}
         >
           <span>
-            <span className="block text-lg font-semibold" style={{ fontFamily: SERIF }}>
+            <span className="block text-lg font-semibold" style={{ fontFamily: BRAND_SERIF }}>
               Explore all courses
             </span>
             <span className={`mt-1 block text-sm ${t.faint}`}>
@@ -281,6 +281,34 @@ function Landing({ navigate }) {
         </button>
       </Section>
     </div>
+  );
+}
+
+// ---------------------------------------------------------------------
+//  Featured courses — reuses the ONE shared PlaylistBrowse card (no drift).
+//  Real data via the browse hook; hides itself on empty/error, never fakes.
+// ---------------------------------------------------------------------
+function FeaturedCourses({ goalId, navigate }) {
+  const { t } = useTheme();
+  const { items, loading, error } = usePlaylistBrowse({ goalId, page: 0, enabled: !!goalId });
+  const courses = (items ?? []).slice(0, 3);
+
+  if (error || (!loading && courses.length === 0)) return null;
+
+  return (
+    <Section title="Courses to start with" eyebrow="From the catalogue"
+      action={{ label: "Browse all", onClick: () => navigate("/browse") }}>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        {loading
+          ? Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className={`h-60 animate-pulse rounded-2xl ${t.input}`} />
+            ))
+          : courses.map((c) => (
+              <PlaylistCard key={c.id} course={c} comparisonEnabled={false}
+                onOpen={() => navigate(`/course/${c.id}`)} />
+            ))}
+      </div>
+    </Section>
   );
 }
 
@@ -367,7 +395,7 @@ function Section({ title, icon: Icon, eyebrow, action, children }) {
               {eyebrow}
             </p>
           )}
-          <h2 className={`flex items-center gap-2 text-xl font-semibold ${t.text}`} style={{ fontFamily: SERIF }}>
+          <h2 className={`flex items-center gap-2 text-xl font-semibold ${t.text}`} style={{ fontFamily: BRAND_SERIF }}>
             {Icon && <Icon className="h-5 w-5" />}
             {title}
           </h2>

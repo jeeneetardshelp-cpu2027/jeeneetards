@@ -23,7 +23,7 @@ import { FILTER_PARAMS } from "./filterSchema.js";
 import { makeReturnState } from "./returnTo.js";
 import { ratingDisplay, RATING_CONFIDENCE_MIN } from "./ratingConfidence.js";
 import { useTheme } from "./theme.jsx";
-import { BRAND_NAVY, BRAND_TEAL } from "./brandColors.js";
+import { BRAND_NAVY, BRAND_TEAL, BRAND_SERIF, subjectColor } from "./brandColors.js";
 
 // Labels come from the canonical filter vocabulary — a second copy here would
 // drift, and the card would say "Advanced" while the filter said something else.
@@ -42,10 +42,18 @@ const BRAND = { navy: BRAND_NAVY, teal: BRAND_TEAL };
 export { ratingDisplay, RATING_CONFIDENCE_MIN };
 
 // ---------------------------------------------------------------- card
-function PlaylistCard({ course, onOpen, selected, onToggle, disabled, comparisonEnabled = true }) {
+// The ONE course card (noSecondResultSystem guard). Exported so Home can reuse
+// it — never re-implemented — keeping catalogue and home visually identical.
+export function PlaylistCard({ course, onOpen, selected, onToggle, disabled, comparisonEnabled = true }) {
   const { t } = useTheme();
   const duration = formatDuration(course.durationSeconds);
   const rating = ratingDisplay(course.rating, course.ratingCount);
+  const color = subjectColor(course.subject);
+  const initials = (course.teacher || "")
+    .split(/\s+/).map((w) => w[0]).filter(Boolean).slice(0, 2).join("").toUpperCase();
+  // Subject leads the kicker; class levels ride alongside it instead of as a
+  // separate chip row, so the card has one clear identity line.
+  const kicker = [course.subject, ...(course.classLevels ?? [])].filter(Boolean).join(" · ");
 
   // Present facts only. Anything unknown is simply absent — repeating
   // "Teacher not recorded / Coverage not assessed / Not yet rated" on every
@@ -68,80 +76,90 @@ function PlaylistCard({ course, onOpen, selected, onToggle, disabled, comparison
   const limited = missing >= 3;
 
   return (
-    <div className={`flex h-full min-h-[15rem] flex-col rounded-2xl border ${t.border} ${t.card} ${t.cardHover} p-4 transition hover:shadow-sm sm:p-5`}>
-      {course.classLevels?.length > 0 && (
-        <div className="mb-2 flex flex-wrap gap-1">
-          {course.classLevels.map((c) => (
-            <span key={c} className={`rounded-full border ${t.border} px-2 py-0.5 text-[11px] ${t.faint}`}>
-              {c}
+    <div className={`flex h-full min-h-[15rem] flex-col overflow-hidden rounded-2xl border ${t.border} ${t.card} shadow-sm transition hover:-translate-y-1 hover:shadow-lg`}>
+      {/* subject colour spine */}
+      <span className="h-1 w-full shrink-0" style={{ background: color }} />
+      <div className="flex flex-1 flex-col p-4 sm:p-5">
+        {kicker && (
+          <span className="text-[0.68rem] font-semibold uppercase tracking-[0.08em]" style={{ color }}>
+            {kicker}
+          </span>
+        )}
+
+        {/* curated title leads; clamped so every card is the same shape */}
+        <h3 className={`mt-1.5 line-clamp-2 text-base font-semibold leading-snug ${t.text}`}
+          style={{ fontFamily: BRAND_SERIF }}>
+          {course.title}
+        </h3>
+
+        {/* Faculty and institute. Omitted when unknown — an absent line reads
+            as "no data", a placeholder reads as "broken product". */}
+        {(course.teacher || course.institute) && (
+          <div className={`mt-2.5 flex min-w-0 items-center gap-2 text-sm ${t.faint}`}>
+            {course.teacher && (
+              <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full text-[0.6rem] font-bold text-white"
+                style={{ background: color }} aria-hidden="true">
+                {initials || "?"}
+              </span>
+            )}
+            <span className="line-clamp-1 flex min-w-0 items-center gap-1">
+              {course.teacher}
+              {course.teacher && course.institute && <span className={t.muted}>·</span>}
+              {course.institute && (
+                <span className={`inline-flex min-w-0 items-center gap-1 ${t.muted}`}>
+                  <Building2 className="h-3.5 w-3.5 shrink-0" />
+                  <span className="truncate">{course.institute}</span>
+                </span>
+              )}
+            </span>
+          </div>
+        )}
+
+        <div className={`mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs ${t.faint}`}>
+          {facts.map((f, i) => (
+            <span key={i} className="flex items-center gap-1">
+              {f.icon && <f.icon className="h-3.5 w-3.5 shrink-0" />}
+              {f.text}
             </span>
           ))}
         </div>
-      )}
 
-      {/* curated title leads; clamped so every card is the same shape */}
-      <h3 className={`line-clamp-2 text-base font-semibold leading-snug ${t.text}`}>
-        {course.title}
-      </h3>
-
-      {/* Faculty and institute on one line. Omitted when unknown — an absent
-          line reads as "no data", a placeholder reads as "broken product". */}
-      {(course.teacher || course.institute) && (
-        <p className={`mt-1 line-clamp-1 flex items-center gap-1 text-sm ${t.faint}`}>
-          {course.teacher}
-          {course.teacher && course.institute && <span className={t.muted}>·</span>}
-          {course.institute && (
-            <span className={`inline-flex items-center gap-1 ${t.muted}`}>
-              <Building2 className="h-3.5 w-3.5 shrink-0" />
-              <span className="truncate">{course.institute}</span>
-            </span>
-          )}
-        </p>
-      )}
-
-      <div className={`mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs ${t.faint}`}>
-        {facts.map((f, i) => (
-          <span key={i} className="flex items-center gap-1">
-            {f.icon && <f.icon className="h-3.5 w-3.5 shrink-0" />}
-            {f.text}
-          </span>
-        ))}
-      </div>
-
-      {(rating || limited) && (
-        <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
-          {rating?.kind === "scored" && (
-            <span className={`flex items-center gap-1 font-medium ${t.text}`}>
-              <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
-              {rating.score.toFixed(1)}
-              <span className={`font-normal ${t.muted}`}>({rating.count})</span>
-            </span>
-          )}
-          {/* neutral, unranked, no star — it is a count, not a score */}
-          {rating?.kind === "low" && <span className={t.muted}>{rating.text}</span>}
-          {limited && <span className={t.muted}>Limited metadata</span>}
-        </div>
-      )}
-
-      <div className="mt-auto flex items-center gap-2 pt-4">
-        <button
-          onClick={() => onOpen(course)}
-          className="flex min-h-11 w-full items-center justify-center rounded-xl px-4 text-sm font-semibold text-white transition hover:opacity-90"
-          style={{ backgroundColor: BRAND.teal }}
-        >
-          View course
-        </button>
-        {comparisonEnabled && (
-          <label
-            className={`flex min-h-11 shrink-0 cursor-pointer items-center gap-1.5 rounded-xl border px-3 text-xs ${
-              selected ? "border-slate-700 bg-slate-800 text-white" : `${t.border} ${t.faint}`
-            } ${disabled ? "cursor-not-allowed opacity-40" : ""}`}
-          >
-            <input type="checkbox" className="sr-only" checked={selected} disabled={disabled}
-                   onChange={() => onToggle(course)} />
-            Compare
-          </label>
+        {(rating || limited) && (
+          <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
+            {rating?.kind === "scored" && (
+              <span className={`flex items-center gap-1 font-semibold ${t.text}`}
+                style={{ fontVariantNumeric: "tabular-nums" }}>
+                <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+                {rating.score.toFixed(1)}
+                <span className={`font-normal ${t.muted}`}>({rating.count})</span>
+              </span>
+            )}
+            {/* neutral, unranked, no star — it is a count, not a score */}
+            {rating?.kind === "low" && <span className={t.muted}>{rating.text}</span>}
+            {limited && <span className={t.muted}>Limited metadata</span>}
+          </div>
         )}
+
+        <div className="mt-auto flex items-center gap-2 pt-4">
+          <button
+            onClick={() => onOpen(course)}
+            className="flex min-h-11 w-full items-center justify-center rounded-xl px-4 text-sm font-semibold text-white transition hover:opacity-90"
+            style={{ backgroundColor: BRAND.teal }}
+          >
+            View course
+          </button>
+          {comparisonEnabled && (
+            <label
+              className={`flex min-h-11 shrink-0 cursor-pointer items-center gap-1.5 rounded-xl border px-3 text-xs ${
+                selected ? "border-slate-700 bg-slate-800 text-white" : `${t.border} ${t.faint}`
+              } ${disabled ? "cursor-not-allowed opacity-40" : ""}`}
+            >
+              <input type="checkbox" className="sr-only" checked={selected} disabled={disabled}
+                     onChange={() => onToggle(course)} />
+              Compare
+            </label>
+          )}
+        </div>
       </div>
     </div>
   );
