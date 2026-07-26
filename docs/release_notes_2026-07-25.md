@@ -945,3 +945,46 @@ Validation after the batch:
 
 No migrations, schema changes, application-code changes, or manual CI reruns
 were made for this batch.
+
+### Differential Equations Mathematics checkpoint
+
+Differential Equations was promoted through the staging-first gate:
+
+- Source playlist `PL_A4M5IAkMaeukUFW7G-KjoL-K2T3B3Mg`.
+- 5 new Class 12/Dropper lessons, teacher `Mohit Tyagi`, with 0 reused videos.
+- Staging course/chapter: `1220` / `129`.
+- Production course/chapter: `67` / `57`.
+
+The source contained 5 unique, public, embeddable videos with complete
+durations, direct `Mohit Tyagi` evidence on every video, no production video
+overlap, and an exact source/title order from 1 through 5. This is the first
+Mathematics course in the production catalog. The source title was normalized
+from `Differential Equation - IIT JEE Mains and advanced , Maths` to
+`Differential Equations` with exact playlist/title guards.
+
+The importer emitted its known title-only teacher advisory because it does not
+fetch video descriptions. The separate read-only source audit supplied 5/5
+teacher evidence before either write.
+
+Production now contains 60 courses and exactly 677 ordered playlist
+memberships: 32 Physics, 27 Chemistry, and 1 Mathematics course, with 28 Class
+11, 33 Class 12, and 55 Dropper-compatible courses. Core metadata, titles, and
+teacher attribution remain complete, and fully contained duplicate-course
+candidates remain 0. The anonymous production capability contract passed.
+
+Browser checks covered lessons 1 and 5 in staging and production. The expected
+YouTube embeds and ordered lesson list rendered, and no console errors
+appeared.
+
+Validation after the batch:
+
+- 683 Vitest tests passed across 69 files in the current local workspace.
+- ESLint passed with zero warnings.
+- The production Vite build passed.
+- The production-only dependency audit found 0 vulnerabilities. The general
+  audit retains the known 7 high-severity dev-only
+  ESLint/minimatch/brace-expansion findings; the forced breaking fix remains
+  deferred.
+
+No migrations, schema changes, application-code changes, or manual CI reruns
+were made for this batch.

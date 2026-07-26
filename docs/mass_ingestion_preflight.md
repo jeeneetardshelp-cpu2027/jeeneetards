@@ -5,9 +5,9 @@ import; it does not authorize one.
 
 ## Baseline recorded on 25 July 2026
 
-- 59 courses and 672 playlist memberships.
-- Coverage: 32 JEE Physics plus 27 JEE Chemistry courses; 28 Class 11
-  courses, 32 Class 12 courses, and 54 Dropper-compatible courses.
+- 60 courses and 677 playlist memberships.
+- Coverage: 32 JEE Physics, 27 JEE Chemistry, and 1 JEE Mathematics course;
+  28 Class 11 courses, 33 Class 12 courses, and 55 Dropper-compatible courses.
 - Core metadata missing from 0 courses.
 - Fully contained duplicate candidates: 0.
 - Registered source channel: Mohit Tyagi.
@@ -100,6 +100,10 @@ import; it does not authorize one.
 - Communication Systems, source playlist
   `PL_A4M5IAkMadLq0IUyZW8s44EHCj3xClG`, was added with `ABJ Sir`
   attribution, 3 ordered Class 12 lessons, and 0 video reuse.
+- Differential Equations, source playlist
+  `PL_A4M5IAkMaeukUFW7G-KjoL-K2T3B3Mg`, was added as the first Mathematics
+  course with direct `Mohit Tyagi` attribution on all 5 ordered Class 12
+  lessons and 0 video reuse.
 - Nuclear Physics is intentionally excluded: its source playlist repeats a
   YouTube video ID and is blocked before any database write.
 - X-rays is intentionally deferred because its playlist spans multiple
@@ -115,9 +119,10 @@ import; it does not authorize one.
 - Ray Optics is blocked because its source repeats one video, duplicates lesson
   number 36, and includes a Unit and Dimension lesson. Wave on String is
   deferred because lessons 6, 7, and 8 are out of source order.
-- IUPAC is deferred because its source playlist exposes one lesson out of
-  sequence. Environmental Chemistry is deferred until the remaining
-  teacher-attribution gap is reviewed.
+- IUPAC is deferred because its source exposes 44 published videos but only 43
+  usable videos, and direct teacher evidence is incomplete. Environmental
+  Chemistry is deferred until the remaining teacher-attribution gap is
+  reviewed.
 - General Inorganic Chemistry is deferred because the quick video-metadata pass
   did not expose direct teacher-attribution evidence.
 - Redox Reaction and Equivalent Concept is deferred because production dry-run
