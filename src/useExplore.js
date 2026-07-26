@@ -10,6 +10,7 @@ import { useState, useEffect } from "react";
 import { supabase, isSupabaseConfigured } from "./supabaseClient";
 
 const MISSING_CATALOG_RPC = /PGRST202|could not find the function|schema cache|function .* does not exist/i;
+const MISSING_BOARD_CAPABILITY = /PGRST200|PGRST205|42P01|does not exist|schema cache/i;
 
 export const isMissingCatalogRpc = (error) =>
   Boolean(error && (error.code === "PGRST202" || MISSING_CATALOG_RPC.test(error.message ?? "")));
@@ -75,9 +76,9 @@ export function useLearningGoals() {
 // The boards a School Boards student can pick, with how many courses each
 // actually has — so an empty board is shown as "Coming soon" rather than
 // leading to a dead end, exactly like goals.
-// A failed query is NOT an empty board list. If either request errors we
-// report the error, because "every board says Coming soon" and "the database
-// is unreachable" look identical to a student otherwise.
+// A failed query is NOT an empty board list. If the request errors we report
+// the error, because "every board says Coming soon" and "the database is
+// unreachable" look identical to a student otherwise.
 export function useBoards(enabled = true) {
   const [boards, setBoards] = useState([]);
   const [loading, setLoading] = useState(enabled);
@@ -102,27 +103,29 @@ export function useBoards(enabled = true) {
     setError(null);
     setUnavailable(false);
 
-    Promise.all([
-      supabase.from("boards").select("id, name, slug").order("display_order"),
-      supabase.from("playlist_boards").select("board_id"),
-    ])
-      .then(([b, links]) => {
+    supabase
+      .from("boards")
+      .select("id, name, slug, playlist_boards(count)")
+      .order("display_order")
+      .then((result) => {
         if (!active) return;
-        if (b.error || links.error) {
-          if (/does not exist|schema cache|42P01/i.test((b.error ?? links.error)?.message || '')) {
+        if (result.error) {
+          if (MISSING_BOARD_CAPABILITY.test(
+            `${result.error.code ?? ""} ${result.error.message ?? ""}`,
+          )) {
             setUnavailable(true); setLoading(false); return;   // capability absent, not a failure
           }
-          console.error("boards:", b.error ?? links.error);
+          console.error("boards:", result.error);
           setError("Couldn't load boards.");
           setBoards([]);
           setLoading(false);
           return;
         }
-        const counts = new Map();
-        for (const r of links.data ?? [])
-          counts.set(r.board_id, (counts.get(r.board_id) ?? 0) + 1);
         setBoards(
-          (b.data ?? []).map((x) => ({ ...x, courseCount: counts.get(x.id) ?? 0 }))
+          (result.data ?? []).map(({ playlist_boards: counts, ...board }) => ({
+            ...board,
+            courseCount: Number(counts?.[0]?.count ?? 0),
+          }))
         );
         setLoading(false);
       })
@@ -137,43 +140,6 @@ export function useBoards(enabled = true) {
   }, [enabled]);
 
   return { boards, loading, error, unavailable };
-}
-
-// The playlist ids belonging to one board.
-//
-// Returns { ids, loading, error } so callers can tell "still resolving" and
-// "query failed" apart from "this board genuinely has nothing". Collapsing
-// those three into a bare null (as this used to) makes a board-scoped page
-// render "no playlists" while it is still loading, and again when the query
-// fails — telling a student their board is empty on no evidence at all.
-export function useBoardPlaylistIds(boardId) {
-  const [state, setState] = useState({ ids: null, loading: false, error: null });
-
-  useEffect(() => {
-    let active = true;
-    if (!boardId) { setState({ ids: null, loading: false, error: null }); return; }
-    if (!isSupabaseConfigured) {
-      setState({ ids: null, loading: false, error: "Supabase isn't configured." });
-      return;
-    }
-    setState({ ids: null, loading: true, error: null });
-    supabase
-      .from("playlist_boards")
-      .select("playlist_id")
-      .eq("board_id", boardId)
-      .then(({ data, error }) => {
-        if (!active) return;
-        if (error) {
-          console.error("board playlists:", error);
-          setState({ ids: null, loading: false, error: "Couldn't load board information." });
-          return;
-        }
-        setState({ ids: new Set((data ?? []).map((r) => r.playlist_id)), loading: false, error: null });
-      });
-    return () => { active = false; };
-  }, [boardId]);
-
-  return state;
 }
 
 export function useClassLevels() {

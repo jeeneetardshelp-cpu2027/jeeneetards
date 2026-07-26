@@ -1,7 +1,7 @@
 // Anonymous, read-only production catalogue inventory.
 //
-// This script uses the same public key as the browser and performs one SELECT.
-// It never imports a service-role key and contains no insert/update/delete/RPC.
+// This script uses the same public key as the browser and performs only paged
+// SELECTs. It never imports a service-role key or calls insert/update/delete/RPC.
 import { createClient } from "@supabase/supabase-js";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
@@ -10,6 +10,7 @@ import {
   buildCatalogInventory,
   findPlaylistOverlaps,
 } from "./catalogInventory.js";
+import { allExact } from "./dbProbe.js";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const outputDirectory = resolve(root, "../outputs");
@@ -37,30 +38,46 @@ const db = createClient(url, anonKey, {
   auth: { persistSession: false, autoRefreshToken: false },
 });
 
-const { data, error } = await db
-  .from("playlists")
-  .select(
-    "id,title,teacher,youtube_playlist_id,language,content_type,difficulty," +
-      "average_rating,ratings_count,subjects(name,slug),institutes_channels(name)," +
-      "playlist_videos(count)," +
-      "playlist_learning_goals(learning_goals(name,slug))," +
-      "playlist_class_levels(class_levels(name,slug))",
-  )
-  .order("id");
+const playlistFields =
+  "id,title,teacher,youtube_playlist_id,language,content_type,difficulty," +
+  "average_rating,ratings_count,subjects(name,slug),institutes_channels(name)," +
+  "playlist_videos(count)," +
+  "playlist_learning_goals(learning_goals(name,slug))," +
+  "playlist_class_levels(class_levels(name,slug))";
 
-if (error) {
+let data;
+let memberships;
+try {
+  data = await allExact(
+    "catalogue inventory",
+    (countMode) => db
+      .from("playlists")
+      .select(playlistFields, countMode ? { count: countMode } : undefined)
+      .order("id"),
+  );
+  memberships = await allExact(
+    "playlist-overlap inventory",
+    (countMode) => db
+      .from("playlist_videos")
+      .select(
+        "id,playlist_id,video_id,position,videos(youtube_video_id,title)",
+        countMode ? { count: countMode } : undefined,
+      )
+      .order("playlist_id")
+      .order("position")
+      .order("id"),
+  );
+} catch (error) {
   console.error(`Catalogue inventory failed: ${error.message}`);
   process.exit(1);
 }
 
 const report = buildCatalogInventory(data);
-const { data: memberships, error: membershipError } = await db
-  .from("playlist_videos")
-  .select("playlist_id,video_id,position,videos(youtube_video_id,title)")
-  .order("playlist_id")
-  .order("position");
-if (membershipError) {
-  console.error(`Playlist-overlap inventory failed: ${membershipError.message}`);
+if (memberships.length !== report.summary.totalLectures) {
+  console.error(
+    `Catalogue inventory failed: fetched ${memberships.length} memberships, ` +
+      `but course counts report ${report.summary.totalLectures}.`,
+  );
   process.exit(1);
 }
 report.overlaps = findPlaylistOverlaps(memberships, report.courses);

@@ -1282,3 +1282,109 @@ No real mapped course was imported, no production SQL or data was changed, no
 production package was regenerated, and no manual CI run was started.
 Production remains blocked by the missing backup/restore evidence. See
 `docs/per_video_chapter_ingestion.md` for the guarded sequence and evidence.
+
+## Limits Mathematics staging checkpoint
+
+Limits passed the source, taxonomy, collision, importer, staging, and runtime
+gates without crossing the production boundary:
+
+- Source playlist `PL_A4M5IAkMaexM2nxZt512ESPt83EshJq`.
+- 99 new Class 11/Dropper lessons by `Mohit Tyagi`, with 0 reused videos.
+- Staging course/chapter: `1251` / `158`.
+- Production course/chapter: absent.
+
+The live source has 99 published, usable, unique, public, embeddable, and
+duration-complete videos totaling 60,387 seconds. All 99 descriptions directly
+identify Mohit Tyagi, no competing faculty evidence was found, and source
+positions plus visible leading lesson numbers are exactly `1` through `99`.
+The automated quality gate returned `ok` with 0 findings.
+
+The canonical chapter and course title are `Limits`. This matches
+[JEE Main 2026 Unit 7](https://cdnbbsr.s3waas.gov.in/s3f8e59f4b2fe7c5705bf878bbd494ccdf/uploads/2025/10/202510311323551056.pdf),
+the [JEE Advanced 2026 Differential Calculus syllabus](https://jeeadv.ac.in/documents/jee-advanced-2026-syllabus.pdf),
+and the current
+[CBSE Class XI Mathematics curriculum](https://cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Maths_SecP2_2026-27.pdf).
+The source title `IIT-JEE-Mathematics-Limits` was normalized to `Limits`
+through `update_managed_playlist` with exact playlist ID and expected-title
+guards after import.
+
+The staging write changed exactly the planned rows:
+
+- playlists: 86 → 87;
+- videos: 1,382 → 1,481;
+- playlist memberships: 1,383 → 1,482;
+- chapters: 76 → 77.
+
+Independent source-to-database verification confirmed all 99 positions, IDs,
+titles, durations, embed statuses, chapter/subject assignments, goal/class
+links, 60,387 total seconds, and zero cross-playlist reuse. Browser QA covered
+Home search; Browse search and facets; course pagination; lessons 1, 50, and
+99; privacy-enhanced YouTube embeds; dark/light mode; and a 390-pixel mobile
+layout. No console warning/error or horizontal overflow appeared.
+
+Production stayed at 83 playlists, 1,303 videos, 1,307 memberships, and 75
+chapters. The playlist and `Limits` chapter remain absent there. The write-free
+production plan correctly reports a missing-chapter blocker, and the
+backup/restore gate remains independently closed.
+
+No migration, production data/schema change, production package regeneration,
+or manual CI run was made for this checkpoint.
+
+## Catalogue scale hardening
+
+The final full integration run after the Limits checkpoint reproduced two
+false failures only after staging crossed the default 1,000-row PostgREST
+response cap. The Browse/Explore parity verifier compared two incomplete,
+unordered slices, and its shared-lecture navigation check downloaded the whole
+goal junction before filtering locally. The production overlap inventory had
+the same evidence gap: production already contains 1,307 playlist memberships,
+so a single response could silently omit the final 307 rows. School-board
+course counts also downloaded the complete `playlist_boards` junction into the
+browser and could eventually label a populated board as `Coming soon`.
+
+The hardening is deliberately small and does not require SQL:
+
+- A shared read-only paginator now requires an exact first-page count, a stable
+  unique row key, deterministic ordering, complete coverage, and advances by
+  the number of rows actually returned when the server enforces a lower cap.
+- The integration parity verifier pages both complete sets; its fixture
+  assertion queries only the fixture and its two expected goals.
+- The anonymous production catalogue inventory pages playlists and
+  memberships, orders memberships by playlist, position, and row ID, and
+  refuses a mismatch between fetched memberships and summed course counts.
+- School-board counts use one server-side relationship aggregate instead of
+  downloading and counting every board mapping in JavaScript. The request
+  remains disabled outside the School journey, and the unused unpaged
+  board-ID hook was removed.
+- The anonymous production capability check now exercises that exact aggregate
+  query shape. Production correctly continues to report the board capability
+  as absent, matching the checked-in release manifest; staging accepts the
+  aggregate query.
+
+Regression and release evidence:
+
+- Focused paginator, inventory, and board-hook checks: 19/19 passed, including
+  1,201 rows, an exact 1,000-row boundary, a simulated 100-row server cap,
+  missing/duplicate keys, intermediate failures, a missing board relationship,
+  and overlap evidence after row 1,000.
+- Full Vitest: 759/759 tests across 73 files.
+- Disposable-staging integration: 88/88 checks passed. Report run `2a8f39`
+  records `cleanup_ran=true`, `fatal=null`, and `guard_failed=false`; an
+  independent read-only residue probe found zero run-scoped catalogue or
+  authentication fixtures.
+- ESLint passed with zero warnings.
+- Vite production build passed with 1,945 modules transformed.
+- All 20 frontend release gates and all 5 anonymous production capability
+  checks passed.
+- The hardened anonymous production inventory completed with 83 courses and
+  all 1,307 memberships. It found five partial one-video overlaps and zero
+  fully contained/duplicate candidates.
+- Staging accepted the board aggregate for all 3 reference boards.
+- The shipped-dependency audit found 0 vulnerabilities. The complete audit
+  retains the known 7 high-severity development-only ESLint dependency
+  findings and 0 critical findings; the semver-major forced fix remains
+  deferred.
+
+Production stayed at 83 playlists, 1,303 videos, 1,307 memberships, and 75
+chapters. No production write, migration, staging migration, production package
+regeneration, or manual CI dispatch was performed.

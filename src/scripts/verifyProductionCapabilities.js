@@ -48,9 +48,13 @@ async function rpc(name, args) {
   return resultFrom(error, name);
 }
 
-async function table(name, column) {
-  const { error } = await db.from(name).select(column).limit(1);
-  return resultFrom(error, name);
+async function boardCounts() {
+  const { error } = await db
+    .from("boards")
+    .select("id, name, slug, playlist_boards(count)")
+    .order("display_order")
+    .limit(1);
+  return resultFrom(error, "boards with playlist counts");
 }
 
 const actual = {
@@ -66,7 +70,7 @@ const actual = {
   facultyRegistry: await rpc("search_teachers", {
     p_query: "abj", p_limit: 1,
   }),
-  boardClassification: await table("playlist_boards", "playlist_id"),
+  boardClassification: await boardCounts(),
 };
 
 let failed = 0;

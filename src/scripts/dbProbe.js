@@ -86,3 +86,76 @@ export async function all(label, build, pageSize = 1000) {
     if (data.length < pageSize) return out;
   }
 }
+
+/**
+ * Fetch an exact, complete, deterministically ordered row set.
+ *
+ * Unlike `all`, this does not assume the server honoured the requested page
+ * size. PostgREST may enforce a lower response cap, so the next range starts
+ * after the number of rows actually received. The first response must include
+ * an exact count and every row must have a stable unique key; otherwise the
+ * probe fails instead of presenting partial evidence as complete.
+ *
+ * `build` receives `"exact"` for the first page and `null` afterwards so the
+ * caller can add `{ count: "exact" }` to its first `.select(...)`.
+ */
+export async function allExact(
+  label,
+  build,
+  { pageSize = 1000, key = (row) => row?.id } = {},
+) {
+  if (!Number.isInteger(pageSize) || pageSize <= 0)
+    throw new ProbeError(label, { message: "pageSize must be a positive integer" });
+  if (typeof build !== "function")
+    throw new ProbeError(label, { message: "build must be a query factory" });
+  if (typeof key !== "function")
+    throw new ProbeError(label, { message: "key must be a function" });
+
+  const out = [];
+  const seen = new Set();
+  let expected = null;
+  let from = 0;
+
+  while (expected === null || from < expected) {
+    const response = must(
+      `${label} (from ${from})`,
+      await build(expected === null ? "exact" : null).range(from, from + pageSize - 1),
+    );
+    if (expected === null) {
+      if (typeof response.count !== "number")
+        throw new ProbeError(label, { message: "first page did not include an exact count" });
+      expected = response.count;
+    }
+
+    if (!Array.isArray(response.data))
+      throw new ProbeError(label, { message: "expected rows, got none" });
+    if (response.data.length === 0) {
+      if (expected === 0 && from === 0) return [];
+      throw new ProbeError(label, {
+        message: `received an empty page after ${from} of ${expected} rows`,
+      });
+    }
+
+    for (const row of response.data) {
+      const value = key(row);
+      if (value === undefined || value === null || value === "")
+        throw new ProbeError(label, { message: `row at offset ${out.length} has no stable key` });
+      if (seen.has(value))
+        throw new ProbeError(label, { message: `duplicate row key ${String(value)}` });
+      seen.add(value);
+      out.push(row);
+    }
+
+    from += response.data.length;
+    if (from > expected)
+      throw new ProbeError(label, {
+        message: `received ${from} rows, exceeding exact count ${expected}`,
+      });
+  }
+
+  if (out.length !== expected)
+    throw new ProbeError(label, {
+      message: `received ${out.length} rows, expected ${expected}`,
+    });
+  return out;
+}

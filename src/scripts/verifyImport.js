@@ -14,6 +14,7 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
 import { randomBytes } from "node:crypto";
+import { allExact } from "./dbProbe.js";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const root = resolve(here, "../..");
@@ -350,28 +351,47 @@ async function main() {
 
   const vJee = must(await db.from("videos").select("id").eq("youtube_video_id", vid(3)).single(), "vJee");
 
-  // The invariant that actually matters, executed the way the two screens do it.
-  //
-  // Browse (useBrowse.useVideos) now resolves its category to the goal(s) in
-  // category_learning_goals and filters video_learning_goals. Explore filters
+  // Browse resolves its category to the goal(s) in category_learning_goals
+  // and filters video_learning_goals. Explore filters
   // video_learning_goals directly. Same query, same axis — so for every
-  // category the two result sets must be identical, video for video.
+  // category the complete result sets must be identical, video for video.
   const catGoals = must(await db.from("category_learning_goals").select("category_id, learning_goal_id"), "catGoals");
   const cats = [...new Set(catGoals.map((m) => m.category_id))];
   const mismatches = [];
   for (const catId of cats) {
     const goalIds = catGoals.filter((m) => m.category_id === catId).map((m) => m.learning_goal_id);
-    // Browse's query
-    const browse = must(await db.from("videos")
-      .select("id, video_learning_goals!inner(learning_goal_id)")
-      .in("video_learning_goals.learning_goal_id", goalIds), "browse set")
-      .map((r) => r.id).sort((x, y) => x - y);
-    // Explore's query
-    const explore = [...new Set(must(await db.from("video_learning_goals")
-      .select("video_id").in("learning_goal_id", goalIds), "explore set")
-      .map((r) => r.video_id))].sort((x, y) => x - y);
-    if (JSON.stringify(browse) !== JSON.stringify(explore))
-      mismatches.push({ catId, browse: browse.length, explore: explore.length });
+    const browseRows = await allExact(
+      "browse set",
+      (countMode) => db.from("videos")
+        .select(
+          "id, video_learning_goals!inner(learning_goal_id)",
+          countMode ? { count: countMode } : undefined,
+        )
+        .in("video_learning_goals.learning_goal_id", goalIds)
+        .order("id"),
+    );
+    const browse = browseRows.map((r) => r.id);
+    const exploreRows = await allExact(
+      "explore set",
+      (countMode) => db.from("video_learning_goals")
+        .select("video_id, learning_goal_id", countMode ? { count: countMode } : undefined)
+        .in("learning_goal_id", goalIds)
+        .order("video_id")
+        .order("learning_goal_id"),
+      { key: (row) => `${row.video_id}:${row.learning_goal_id}` },
+    );
+    const explore = [...new Set(exploreRows.map((r) => r.video_id))];
+    if (JSON.stringify(browse) !== JSON.stringify(explore)) {
+      const browseIds = new Set(browse);
+      const exploreIds = new Set(explore);
+      mismatches.push({
+        catId,
+        browse: browse.length,
+        explore: explore.length,
+        onlyBrowse: browse.filter((id) => !exploreIds.has(id)).slice(0, 5),
+        onlyExplore: explore.filter((id) => !browseIds.has(id)).slice(0, 5),
+      });
+    }
   }
   ok("X3 Browse and Explore return the SAME videos for every category/goal pair",
      mismatches.length === 0, JSON.stringify(mismatches));
@@ -393,12 +413,14 @@ async function main() {
   ok("X4 a shared lecture is reachable from BOTH goals despite one category_id",
      viaJee && viaNeet, `category_id=${shRow.category_id} viaJEE=${viaJee} viaNEET=${viaNeet}`);
 
-  // X5 — the Browse NAVIGATION TREE, built exactly as useCurriculumTree() does.
-  // A shared lecture must create subject AND chapter branches under both goals;
-  // a tree built from the single-valued videos.category_id could only ever put
-  // it under one.
+  // X5 — the junction that powers navigation must create subject and chapter
+  // branches under both goals. Query this fixture directly so catalogue growth
+  // cannot push its evidence past the response cap.
   const treeRows = must(await db.from("video_learning_goals")
-    .select("learning_goal_id, videos!inner(id, subject_id, chapter_id)"), "tree rows");
+    .select("learning_goal_id, videos!inner(id, subject_id, chapter_id)")
+    .eq("video_id", shRow.id)
+    .in("learning_goal_id", [R.jee, R.neet])
+    .order("learning_goal_id"), "tree rows");
   const branch = (goalId) => treeRows.filter(
     (r) => r.learning_goal_id === goalId && r.videos?.id === shRow.id);
   const jeeBranch = branch(R.jee), neetBranch = branch(R.neet);

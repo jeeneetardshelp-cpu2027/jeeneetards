@@ -1,14 +1,23 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { render, waitFor } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 
 const calls = [];
+const responses = new Map();
 
-function builder() {
+function builder(call) {
   const query = {
-    select() { return query; },
-    order() { return query; },
-    then(resolve) {
-      return Promise.resolve({ data: [], error: null }).then(resolve);
+    select(columns) {
+      call.select = columns;
+      return query;
+    },
+    order(column) {
+      call.order = column;
+      return query;
+    },
+    then(resolve, reject) {
+      return Promise.resolve(
+        responses.get(call.table) ?? { data: [], error: null },
+      ).then(resolve, reject);
     },
   };
   return query;
@@ -18,8 +27,9 @@ vi.mock("./supabaseClient", () => ({
   isSupabaseConfigured: true,
   supabase: {
     from(table) {
-      calls.push(table);
-      return builder();
+      const call = { table };
+      calls.push(call);
+      return builder(call);
     },
   },
 }));
@@ -27,12 +37,15 @@ vi.mock("./supabaseClient", () => ({
 import { useBoards } from "./useExplore.js";
 
 function Probe({ enabled }) {
-  useBoards(enabled);
-  return null;
+  const state = useBoards(enabled);
+  return <output data-testid="boards">{JSON.stringify(state)}</output>;
 }
+
+const renderedState = () => JSON.parse(screen.getByTestId("boards").textContent);
 
 beforeEach(() => {
   calls.length = 0;
+  responses.clear();
 });
 
 describe("useBoards request scope", () => {
@@ -44,11 +57,49 @@ describe("useBoards request scope", () => {
     expect(calls).toEqual([]);
   });
 
-  it("requests board data for the School journey", async () => {
+  it("loads board course counts in one server-aggregated request", async () => {
+    responses.set("boards", {
+      data: [{
+        id: 7,
+        name: "CBSE",
+        slug: "cbse",
+        playlist_boards: [{ count: 1201 }],
+      }],
+      error: null,
+    });
+
     render(<Probe enabled />);
 
     await waitFor(() => {
-      expect(calls).toEqual(["boards", "playlist_boards"]);
+      expect(renderedState().boards).toEqual([{
+        id: 7,
+        name: "CBSE",
+        slug: "cbse",
+        courseCount: 1201,
+      }]);
+    });
+    expect(calls).toEqual([{
+      table: "boards",
+      select: "id, name, slug, playlist_boards(count)",
+      order: "display_order",
+    }]);
+  });
+
+  it("treats a missing board relationship as an unavailable capability", async () => {
+    responses.set("boards", {
+      data: null,
+      error: { code: "PGRST200", message: "Relationship unavailable" },
+    });
+
+    render(<Probe enabled />);
+
+    await waitFor(() => {
+      expect(renderedState()).toEqual({
+        boards: [],
+        loading: false,
+        error: null,
+        unavailable: true,
+      });
     });
   });
 
@@ -59,7 +110,8 @@ describe("useBoards request scope", () => {
     view.rerender(<Probe enabled />);
 
     await waitFor(() => {
-      expect(calls).toEqual(["boards", "playlist_boards"]);
+      expect(calls).toHaveLength(1);
     });
+    expect(calls[0].table).toBe("boards");
   });
 });

@@ -56,6 +56,15 @@ Use this checklist at the start and end of every task in this repository.
 - For production, complete
   [backup and restore readiness](backup_restore_readiness.md) first.
 - Record expected counts and stop criteria before mass operations.
+- For a real staging content import, require matching write-free staging and
+  production plans, exact playlist ownership, complete teacher attribution,
+  zero source-ID collisions, and an approved curriculum/class mapping.
+- Compare the live source and staged course position by position: YouTube ID,
+  title, duration, embed status, chapter, subject, and total count. Confirm
+  first, middle, and last playback plus Browse/search at desktop and mobile
+  widths before treating the staging checkpoint as qualified.
+- Recheck anonymous production totals and exact playlist/chapter absence after
+  a staging-only write. A successful staging import never authorizes promotion.
 
 ## Implementation
 
@@ -67,6 +76,13 @@ Use this checklist at the start and end of every task in this repository.
 - For frontend work, run lint, tests, build, and
   `verify:frontend-release`.
 - For responsive work, run `ui:audit` with catalogue network access.
+- Never treat one unbounded Supabase response as complete catalogue evidence.
+  Full-set audits must request an exact count, use a deterministic total order
+  with a stable unique key, page until that count is met, and advance by rows
+  actually received when the server cap is lower than the requested page.
+- Never infer that duplicate or overlap candidates are absent from a truncated
+  membership query. Use `npm run audit:production-catalog`, which now fails
+  closed if its complete membership count differs from summed course counts.
 
 ## Commit and handoff
 

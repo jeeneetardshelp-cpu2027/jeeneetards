@@ -28,6 +28,12 @@ Status: **Applied and verified on a disposable staging project. NOT applied to p
 | 7 | Board isolation was proven only at the database | Added `src/Explore.boards.test.jsx` (jsdom + @testing-library/react): renders the real component at a board URL and asserts CBSE shows / ICSE does not. |
 | 8 | No assertion that goals and categories are fully mapped | **X6/X7** list any unmapped slug by name. |
 
+> Current architecture note (26 July 2026): the legacy
+> `useBoardPlaylistIds()` / `ChapterResults` path described in this historical
+> v6 table has since been removed. Canonical Browse applies the board predicate
+> in its paged server query, while `useBoards()` obtains per-board course counts
+> through one bounded relationship aggregate.
+
 ### Item 2 in detail — Browse is now goal-native end to end
 
 `useCurriculumTree()` queries `video_learning_goals` joined to videos, and

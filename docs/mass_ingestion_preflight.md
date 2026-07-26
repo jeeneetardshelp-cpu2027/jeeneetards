@@ -252,6 +252,31 @@ import; it does not authorize one.
   [official JEE Advanced 2026 syllabus](https://jeeadv.ac.in/documents/jee-advanced-2026-syllabus.pdf).
   Production still reports `chapter.production_blocker: true` and remains
   blocked by the backup/restore gate.
+- Limits, source playlist `PL_A4M5IAkMaexM2nxZt512ESPt83EshJq`, is
+  staging-qualified but not production-approved. Staging course/chapter
+  `1251` / `158` contains 99 new Class 11/Dropper lessons by `Mohit Tyagi`
+  with 0 reuse. The source has 99 published, usable, unique, public,
+  embeddable, duration-complete videos totaling 60,387 seconds. All 99 live
+  descriptions directly identify Mohit Tyagi, positions and visible leading
+  lesson numbers are exactly `1` through `99`, and the automated quality gate
+  passed with 0 findings. The source title was normalized from
+  `IIT-JEE-Mathematics-Limits` to `Limits` through the guarded management RPC
+  after the staging import.
+
+  Limits is part of JEE Main Unit 7 and JEE Advanced Differential Calculus.
+  The Class 11 mapping follows the current CBSE senior-secondary Mathematics
+  curriculum's Limits and Derivatives unit. Production still has neither the
+  playlist nor the chapter; the write-free production plan correctly reports
+  `chapter.production_blocker: true`, and the backup/restore gate independently
+  blocks promotion.
+- Solution/Properties of Triangle, source playlist
+  `PL_A4M5IAkMaerL1K-p5sRRdzjNrqn72Rg`, remains deferred despite 9 clean,
+  fully attributed, overlap-free lessons. Lessons 1–6 are trigonometric
+  solution-of-triangle material, while lessons 7–9 cover centroid,
+  circumcenter, and orthocenter concepts grouped under analytical/coordinate
+  geometry in the current JEE syllabi. Do not force the whole playlist into
+  the existing Trigonometry chapter. A reviewed per-video manifest and a
+  production-capable mapped-import path are required before promotion.
 - Differentiability remains deferred even though its 45 lessons are ordered
   and overlap-free: lesson 16 has no direct teacher evidence, leaving the
   source at 44/45 attributed descriptions on a multi-faculty channel.
@@ -300,16 +325,16 @@ import; it does not authorize one.
   source ends with an unnumbered Cayley-Hamilton lesson credited to Rajat Jain
   Sir. Importing it as one Mohit Tyagi course would lose the mixed-teacher
   attribution; no write was made.
-- Mixed-chapter ingestion has a guarded v12 source implementation but has not
-  been deployed or applied. Its exact manifest contract, staging-only
-  deployment sequence, and current Functions blocker are documented in
-  `docs/per_video_chapter_ingestion.md`. Do not split a source, invent a
-  mapping, apply v12, or rerun an older cumulative production migration as a
-  substitute for that review. Functions is additionally blocked by the
-  deterministic repeated-lesson-57 finding; there is no quality waiver.
-  The separate disposable-staging verifier/helper are source-prepared but
-  unrun, excluded from general tests/CI, and do not count as staging evidence.
-  Run them only through the explicit guarded sequence in that document.
+- Mixed-chapter ingestion v12 is implemented and rehearsal-passed only on the
+  disposable staging database. Its 25-assertion verifier passed, the temporary
+  staging helper was rolled back, and zero fixture or audit residue remained.
+  Production intentionally does not advertise the v12 capability. Its exact
+  manifest contract, staging evidence, and current Functions blocker are
+  documented in `docs/per_video_chapter_ingestion.md`. Do not split a source,
+  invent a mapping, deploy v12 to production, or rerun an older cumulative
+  production migration as a substitute for the required editorial and release
+  review. Functions is additionally blocked by the deterministic repeated
+  lesson `57` finding and 39 unresolved mappings; there is no quality waiver.
 
 Regenerate the read-only baseline immediately before every batch:
 
@@ -317,6 +342,12 @@ Regenerate the read-only baseline immediately before every batch:
 npm run audit:production-catalog
 npm run audit:ingestion -- --env=production
 ```
+
+Do not replace the catalogue audit with an ad hoc single Supabase query. The
+checked-in auditor pages playlists and memberships with an exact count and
+stable total order, then refuses to report overlap evidence unless the fetched
+membership count equals the summed course counts. This matters now that the
+production catalogue contains more than 1,000 memberships.
 
 ## Importer controls
 

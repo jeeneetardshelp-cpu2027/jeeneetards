@@ -125,4 +125,25 @@ describe("read-only catalogue inventory", () => {
       { playlist_id: 2, video_id: 20 },
     ])).toEqual([]);
   });
+
+  it("finds an overlap whose evidence appears after row 1,000", () => {
+    const firstThousand = Array.from({ length: 1000 }, (_, index) => ({
+      playlist_id: 1,
+      video_id: index + 1,
+    }));
+    const overlaps = findPlaylistOverlaps([
+      ...firstThousand,
+      { playlist_id: 2, video_id: 1000 },
+    ]);
+
+    expect(overlaps).toEqual([expect.objectContaining({
+      leftId: 1,
+      rightId: 2,
+      sharedCount: 1,
+      leftCount: 1000,
+      rightCount: 1,
+      leftFullyContained: false,
+      rightFullyContained: true,
+    })]);
+  });
 });
