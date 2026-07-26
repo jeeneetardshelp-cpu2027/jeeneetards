@@ -181,3 +181,48 @@ Validation after the batch:
 
 No migrations, schema changes, application-code changes, or manual CI reruns
 were made for this batch.
+
+## Complex Numbers Mathematics checkpoint
+
+Complex Numbers was promoted through the staging-first gate:
+
+- Source playlist `PL_A4M5IAkMaeLzehBWWVD_EZL7EuaVP-X`.
+- 20 new Class 11/Dropper lessons, teacher `Mohit Tyagi`, with 0 reused videos.
+- Staging course/chapter: `1228` / `137`.
+- Production course/chapter: `75` / `65`.
+
+The source contained 20 unique, public, embeddable videos with complete
+durations, no production video overlap, exact source/title order from `#1`
+through `#20`, and no material outside the Complex Numbers chapter. Every
+live video description contains `#MohitTyagi`, with no competing faculty
+attribution.
+
+The importer emitted its known title-only teacher advisory because it does not
+fetch video descriptions. The separate read-only source audit supplied 20/20
+direct hashtag evidence before either write. The source title was normalized
+from `Complex Number - IIT JEE Mains and Advanced Lecture Series` to
+`Complex Numbers` with exact playlist/title guards.
+
+Production now contains 68 courses and exactly 761 ordered playlist
+memberships: 32 Physics, 27 Chemistry, and 9 Mathematics courses, with 35
+Class 11, 34 Class 12, and 63 Dropper-compatible courses. Core metadata,
+titles, and teacher attribution remain complete, and fully contained
+duplicate-course candidates remain 0. The anonymous production capability
+contract passed.
+
+Browser checks covered lessons 1 and 20 in staging and production, plus the
+production Browse search result. The expected YouTube embeds and ordered
+lesson list rendered, and no console errors appeared.
+
+Validation after the batch:
+
+- All 683 Vitest tests passed across 69 files.
+- ESLint passed with zero warnings.
+- The production Vite build and frontend release safeguards passed.
+- The production-only dependency audit found 0 vulnerabilities. The general
+  audit retains the known 7 high-severity dev-only
+  ESLint/minimatch/brace-expansion findings; the forced breaking fix remains
+  deferred.
+
+No migrations, schema changes, application-code changes, or manual CI reruns
+were made for this batch.
