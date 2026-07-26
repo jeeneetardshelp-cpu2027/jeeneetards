@@ -88,6 +88,16 @@ describe("hasTeacherEvidence (Codex accepts once '#alksir' appears, defers other
   it("accepts an 'X Sir' mention", () => {
     expect(hasTeacherEvidence([{ title: "Kinetics by ALK Sir" }])).toBe(true);
   });
+  it("accepts official video-tag attribution", () => {
+    expect(hasTeacherEvidence([{
+      title: "Biological Classification",
+      tags: ["NEET", "Tarun Sir", "Vardaan"],
+    }])).toBe(true);
+    expect(hasTeacherEvidence([{
+      title: "Biological Classification",
+      tags: ["NEET", "Biology", "Vardaan"],
+    }])).toBe(false);
+  });
   it("matches a known-teacher full name even without a hashtag or 'Sir'", () => {
     expect(hasTeacherEvidence([{ title: "Kinematics Full Course" }], "", ["Mohit Tyagi"])).toBe(false);
     expect(hasTeacherEvidence([{ title: "Kinematics — Mohit Tyagi Classes" }], "", ["Mohit Tyagi"])).toBe(true);

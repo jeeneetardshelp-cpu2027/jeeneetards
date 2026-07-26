@@ -133,17 +133,19 @@ export async function getVideoStats(key, ids) {
   return map;
 }
 
-// videos.list part=contentDetails,status, 50 ids per call.
+// videos.list part=snippet,contentDetails,status, 50 ids per call.
 export async function getVideoDetails(key, ids) {
   const map = new Map();
   for (let i = 0; i < ids.length; i += 50) {
     const chunk = ids.slice(i, i + 50);
     const json = await call(key, "videos", {
-      part: "contentDetails,status",
+      part: "snippet,contentDetails,status",
       id: chunk.join(","),
     });
     for (const it of json.items ?? []) {
       map.set(it.id, {
+        description: it.snippet?.description ?? "",
+        tags: Array.isArray(it.snippet?.tags) ? it.snippet.tags : [],
         durationSeconds: isoDurationToSeconds(it.contentDetails?.duration),
         captionStatus: it.contentDetails?.caption === "true" ? "available" : "none",
         embeddingStatus: it.status?.embeddable === false ? "blocked" : "embeddable",

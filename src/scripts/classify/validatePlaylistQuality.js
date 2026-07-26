@@ -92,7 +92,14 @@ export function mappedImportBlockingFindings(findings = []) {
 // defers when none does. Checks hashtags, "X Sir/Ma'am", "by X", and any
 // known-teacher name/slug.
 export function hasTeacherEvidence(videos = [], description = "", knownTeachers = []) {
-  const haystack = [description, ...videos.map((v) => `${v.title ?? ""} ${v.description ?? ""}`)]
+  const haystack = [
+    description,
+    ...videos.map((v) => [
+      v.title ?? "",
+      v.description ?? "",
+      ...(Array.isArray(v.tags) ? v.tags : []),
+    ].join(" ")),
+  ]
     .join(" \n ");
   if (/#\w*(?:sir|maam|ma'am)\b/i.test(haystack)) return true;
   if (/\b[A-Z][A-Za-z.]+\s+(?:sir|ma'?am)\b/i.test(haystack)) return true;
