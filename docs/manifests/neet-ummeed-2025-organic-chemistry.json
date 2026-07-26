@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "request_id": "4a98950d-2093-476a-8ab2-b4a5ac7f7115",
+  "youtube_playlist_id": "PLJyab0VQDBGUz_l7R4smge3MYHNCskNwu",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "Jeu_NRimKqY",
+      "chapter": "Some Basic Principles of Organic Chemistry"
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "-QTx7dv9z-M",
+      "chapter": "Some Basic Principles of Organic Chemistry"
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "GVBNjAvYk6g",
+      "chapter": "Some Basic Principles of Organic Chemistry"
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "EP3ygwMO55g",
+      "chapter": "Hydrocarbons"
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "UPIHai5JT4Q",
+      "chapter": "Organic Compounds Containing Halogens"
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "zVi3yY88r04",
+      "chapter": "Organic Compounds Containing Oxygen"
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "Ax01K7Dtdss",
+      "chapter": "Organic Compounds Containing Oxygen"
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "9bc1iZsMExc",
+      "chapter": "Organic Compounds Containing Nitrogen"
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "hU2Ja-SR44s",
+      "chapter": "Biomolecules"
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "o1bb1bWn7u0",
+      "chapter": "Purification and Characterisation of Organic Compounds"
+    }
+  ]
+}
