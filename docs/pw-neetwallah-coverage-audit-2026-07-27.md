@@ -315,6 +315,15 @@ review. This family is a candidate for a carefully documented lecture-only
 subset, not a whole-playlist import that silently assigns or drops the broad
 closing videos.
 
+The Chemistry portion of the older `PACE SERIES` was checked next: Redox
+Reaction (5 advertised), Mole Concept (13), Isomerism (5), IUPAC (5), Atomic
+Structure (18), General Organic Chemistry (9), and Periodic Properties (11).
+Although the seven playlist records still advertise 66 videos in total,
+YouTube returned zero public and usable entries for every playlist. No
+manifests can be prepared from unavailable source videos, and none were
+retained. These playlists are deferred unless their visibility changes; the
+advertised counts must not be mistaken for importable lectures.
+
 ## Safe next gates
 
 1. Review the four clean manifests and import only with a separate owner gate.
