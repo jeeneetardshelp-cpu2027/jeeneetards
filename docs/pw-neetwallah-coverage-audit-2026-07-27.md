@@ -39,8 +39,8 @@ and embedding evidence.
 | Physics Mindmap | 33 | Manifest prepared; anonymous dry-run passed |
 | Pankaj Organic Chemistry Class 11 | 8 | Manifest prepared; anonymous dry-run passed |
 | Aayudh Mechanics | 14 | Manifest prepared; anonymous dry-run passed |
-| Vardaan Physics | 5 | Manifest prepared; deferred because the playlist mixes teachers |
-| Vardaan Chemistry | 5 | Manifest prepared; deferred because the playlist mixes teachers |
+| Vardaan Physics | 5 | Combined faculty label verified; anonymous dry-run passed |
+| Vardaan Chemistry | 5 | Combined faculty label verified; anonymous dry-run passed |
 
 ## MISSION 30 review evidence
 
@@ -99,7 +99,7 @@ Six production anonymous dry-runs passed with quality `ok`:
 - Physical Chemistry Mindmap: 10/10, teacher `Sudhanshu Sir`.
 - Physics Mindmap: 33/33, teacher `Siddharth Sir`.
 
-Three are deferred:
+The initial review deferred three:
 
 - Botany Mindmap: 15/15 and teacher evidence for `Harshit Thakuria Sir`, but
   production lacks `Molecular Basis of Inheritance`.
@@ -108,6 +108,15 @@ Three are deferred:
 - Vardaan Chemistry: 5/5, with source credits split across Sarvesh Sir, Pankaj
   Sir, and Amit Sir; position 4 has no accepted teacher tag. A single
   playlist-level teacher would be misleading.
+
+A follow-up on 2026-07-28 confirmed that a single-person label is unnecessary.
+Fresh production anonymous dry-runs passed with the truthful combined labels
+`Aditya Sir & Rohit Sir` and `Sarvesh Sir, Pankaj Sir & Amit Sir`. Both returned
+`ok` with 5/5 usable videos, all five chapters reused, and no overlap, review,
+or blocking finding. No schema change is needed for the currently released UI;
+the exact evidence and later write gates are recorded in
+`vardaan-multiteacher-readiness-2026-07-28.md`. The playlists remain
+unimported pending separate owner approval.
 
 ## Combined-lecture limitation
 
@@ -436,7 +445,8 @@ channel collection as a missing NEET course.
    separate owner approval and a fresh PITR timestamp. Prepared artifact
    SHA-256:
    `b10d955ed96b99fcc03a9a2c513cfdfdf4aae77606c39216c50106510714a877`.
-4. Decide whether multi-teacher playlists need a data-model extension or should
-   remain deferred; do not flatten the Vardaan faculty attribution.
+4. Vardaan Physics and Chemistry need no new data model for the current UI:
+   preserve their reviewed combined faculty labels and import only under the
+   separate gate in `vardaan-multiteacher-readiness-2026-07-28.md`.
 5. Continue triaging the remaining unaudited public playlists; do not equate
    all channel uploads with curriculum lectures.
