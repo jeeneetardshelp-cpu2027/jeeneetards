@@ -312,6 +312,13 @@ finding. These are single-chapter sources, so the importer correctly rejects a
 multi-chapter manifest; no manifest is required or retained. Production remains
 unchanged pending a separate import authorization.
 
+The remaining 13 mechanically clean Biology RAFTAAR playlists were subjected
+to a direct attribution extraction across all 61 current YouTube titles,
+descriptions, and tags. None of the 61 videos contains an explicit
+teacher-credit token. A shared-series or subject-based faculty guess is not
+accepted as evidence, so these 13 remain deferred. This closes the available
+metadata route without weakening the import quality gate.
+
 The six subject-specific `Prashnakal Series` playlists were reviewed next:
 Inorganic Chemistry (6), Zoology (11), Organic Chemistry (12), Physical
 Chemistry (9), Physics (27), and Botany (15), totalling 80 public and usable
