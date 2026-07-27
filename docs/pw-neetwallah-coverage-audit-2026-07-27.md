@@ -345,6 +345,27 @@ Mathematics PACE playlists were intentionally excluded from this NEET audit.
 No PACE manifest was retained and no import should be attempted from metadata
 counts alone.
 
+## Enumeration reconciliation
+
+The remaining named curriculum residuals were reconciled before closing this
+pass. `Biology | NEET - Vardaan Series` is not missing: its reviewed six-video
+manifest is already checked in, and the current read-only production catalogue
+reports it as course `91` with all six lectures and complete metadata. A fresh
+automatic pass left three generic titles unmatched, confirming why the
+existing manual mappings must be preserved rather than redrafted.
+
+`Most Important Concepts and PYQs | NEET 2022` exposes four usable videos but
+mixes Physics, Botany, and Organic Chemistry in one playlist; it cannot be one
+truthful subject course. `NEET Test Series: Video Solution` exposes three
+full-test solution videos with no chapter identity. Neither source received a
+manifest.
+
+The other residual collections are intentionally non-course sources: the
+dynamic `Recent Uploads` aggregation, NEET results, one-minute concept clips,
+Shorts, and JEE-only Vardaan/PACE Mathematics playlists. This completes the
+structured triage of the 218-playlist enumeration without treating every
+channel collection as a missing NEET course.
+
 ## Safe next gates
 
 1. Review the four clean manifests and import only with a separate owner gate.
