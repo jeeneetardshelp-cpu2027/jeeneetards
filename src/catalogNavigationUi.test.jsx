@@ -199,4 +199,54 @@ describe("one contextual facet call", () => {
     expect(screen.getByRole("button", { name: "Class 11, 0 courses" })).toBeTruthy();
     expect(screen.getByRole("button", { name: "Dropper, 4 courses" })).toBeTruthy();
   });
+
+  it("hides zero-course chapter reference rows after counts settle", () => {
+    render(
+      <MemoryRouter>
+        <FilterPanel
+          options={{
+            goal: [{ id: 1, value: "jee", label: "JEE" }],
+            subject: [{ id: 1, value: "physics", label: "Physics" }],
+            chapter: [
+              { id: 1, value: "kinematics", label: "Kinematics" },
+              { id: 80, value: "basic-mathematics-for-physics", label: "Basic Mathematics for Physics" },
+            ],
+          }}
+          params={new URLSearchParams("goal=jee&subject=physics")}
+          onChange={vi.fn()}
+          counts={{ chapter: { kinematics: 4 } }}
+          countsLoading={false}
+        />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByRole("button", { name: "Kinematics, 4 courses" })).toBeTruthy();
+    expect(screen.queryByText("Basic Mathematics for Physics")).toBeNull();
+  });
+
+  it("keeps a selected zero-course chapter removable from a shared URL", () => {
+    render(
+      <MemoryRouter>
+        <FilterPanel
+          options={{
+            goal: [{ id: 1, value: "jee", label: "JEE" }],
+            subject: [{ id: 1, value: "physics", label: "Physics" }],
+            chapter: [
+              { id: 80, value: "basic-mathematics-for-physics", label: "Basic Mathematics for Physics" },
+            ],
+          }}
+          params={new URLSearchParams(
+            "goal=jee&subject=physics&chapter=basic-mathematics-for-physics",
+          )}
+          onChange={vi.fn()}
+          counts={{ chapter: {} }}
+          countsLoading={false}
+        />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByRole("button", {
+      name: "Basic Mathematics for Physics, 0 courses",
+    }).getAttribute("aria-pressed")).toBe("true");
+  });
 });

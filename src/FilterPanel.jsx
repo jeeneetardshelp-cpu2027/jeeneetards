@@ -162,6 +162,17 @@ export default function FilterPanel({
     const raw = filter.kind === "enum"
       ? filter.options.map((o) => ({ value: o.id, label: o.label }))
       : options[filter.key] ?? [];
+    // Chapters are reference data, so the dimension table can legitimately
+    // contain reviewed chapters before any public course uses them. Once the
+    // contextual count RPC has settled, omit those dead-end choices. Preserve
+    // an already-selected value so an old/shared URL can still be cleared.
+    if (filter.key === "chapter" && counts?.chapter && !countsLoading) {
+      const selected = params.get(filter.param);
+      return raw.filter((option) =>
+        String(option.value) === String(selected) ||
+        Number(counts.chapter[String(option.value)] ?? 0) > 0
+      );
+    }
     if (!goalSlug) return raw;
     if (filter.key === "class") {
       const allowed = STAGES_BY_EXAM[goalSlug] ?? [];

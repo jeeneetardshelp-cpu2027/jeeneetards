@@ -17,7 +17,7 @@ export default function Footer({ onNavigate = () => {} }) {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="text-slate-300" style={{ backgroundColor: BRAND.navy }}>
+    <footer className="text-white/80" style={{ backgroundColor: BRAND.navy }}>
       <div className="mx-auto max-w-6xl px-4 py-10">
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {/* Brand + one-line description */}
@@ -28,7 +28,7 @@ export default function Footer({ onNavigate = () => {} }) {
               </div>
               <span className="font-bold text-white">JEENEETARD</span>
             </div>
-            <p className="mt-3 text-sm leading-relaxed text-slate-400">
+            <p className="mt-3 text-sm leading-relaxed text-white/70">
               An independent, free directory that helps students find quality
               educational lectures. We link to videos — we don't host them.
             </p>
@@ -41,7 +41,7 @@ export default function Footer({ onNavigate = () => {} }) {
               <li>
                 <button
                   onClick={() => onNavigate("dashboard")}
-                  className="flex min-h-11 min-w-11 items-center justify-center text-slate-400 transition hover:text-white"
+                  className="flex min-h-11 min-w-11 items-center justify-center text-white/70 transition hover:text-white"
                 >
                   Home
                 </button>
@@ -49,7 +49,7 @@ export default function Footer({ onNavigate = () => {} }) {
               <li>
                 <button
                   onClick={() => onNavigate("legal")}
-                  className="flex min-h-11 min-w-11 items-center justify-center text-slate-400 transition hover:text-white"
+                  className="flex min-h-11 min-w-11 items-center justify-center text-white/70 transition hover:text-white"
                 >
                   Terms &amp; Disclaimer
                 </button>
@@ -57,7 +57,7 @@ export default function Footer({ onNavigate = () => {} }) {
               <li>
                 <button
                   onClick={() => onNavigate("privacy")}
-                  className="flex min-h-11 min-w-11 items-center justify-center text-slate-400 transition hover:text-white"
+                  className="flex min-h-11 min-w-11 items-center justify-center text-white/70 transition hover:text-white"
                 >
                   Privacy Policy
                 </button>
@@ -68,7 +68,7 @@ export default function Footer({ onNavigate = () => {} }) {
           {/* Compliance / attribution */}
           <div>
             <h3 className="text-sm font-semibold text-white">Good to know</h3>
-            <p className="mt-3 text-sm leading-relaxed text-slate-400">
+            <p className="mt-3 text-sm leading-relaxed text-white/70">
               Videos play through YouTube's official embedded player and remain
               the property of their respective creators. This site is not
               affiliated with, endorsed by, or sponsored by YouTube, Google, or
@@ -79,7 +79,7 @@ export default function Footer({ onNavigate = () => {} }) {
 
         {/* Bottom bar */}
         <div
-          className="mt-8 flex flex-col items-center justify-between gap-3 pt-6 text-xs text-slate-400 sm:flex-row"
+          className="mt-8 flex flex-col items-center justify-between gap-3 pt-6 text-xs text-white/70 sm:flex-row"
           style={{ borderTop: `1px solid ${SUBTLE_WHITE}` }}
         >
           <p>© {year} JEENEETARD. All institute names &amp; logos belong to their owners.</p>

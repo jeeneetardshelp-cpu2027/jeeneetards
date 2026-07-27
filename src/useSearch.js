@@ -36,9 +36,13 @@ export function useSearch(query) {
     const phrase = tokens.join(" ");
 
     // chapters + lectures: token-AND on the name/title.
+    // videos!inner: only surface a chapter that actually has lessons mapped to
+    // it. Parked/empty chapters (e.g. reference chapters created ahead of a
+    // content import) would otherwise appear as suggestions and dead-end on
+    // "No courses match this view".
     let chapterQ = supabase
       .from("chapters")
-      .select("id, name, subject_id, subjects(name)")
+      .select("id, name, subject_id, subjects(name), videos!inner(id)")
       .limit(PER_GROUP);
     let lectureQ = supabase
       .from("videos")
