@@ -96,6 +96,38 @@ Use an isolated Supabase project:
 
 Never use production as the destination for a rehearsal.
 
+### NEET isolated restore rehearsal — in progress
+
+```text
+Date: 2026-07-27
+Operator: Codex under owner Amit's approval
+Source production project: youtube / kezelafqhgqrprpadmlf
+Restore point: 27 Jul 2026 15:11:42 (UTC+05:30)
+Isolated project: youtube-neet-restore-rehearsal-20260727
+Isolated project reference: napkhqkdsqmnunxwnurr
+Region: ap-northeast-1
+Compute: Small
+```
+
+The restore created a new project without modifying production. Initial
+read-only integrity checks passed:
+
+- 83 playlists;
+- 1,307 playlist-video memberships;
+- 123 chapter rows with maximum chapter ID 127;
+- 4 subjects;
+- 1 auth user and 1 matching public profile;
+- 49 public-schema RLS policies;
+- anonymous-role reads returned the same 83 playlists, 1,307 memberships, and
+  123 chapters;
+- the legacy `import_playlist(jsonb,text)` lineage and v12 capability were both
+  absent, matching the production preflight.
+
+The isolated project remains retained for the remaining rehearsal. This record
+does **not** yet clear the destructive migration gate: the restored student
+browse flow, representative course/lesson behavior, and the ordered v3-through-
+v12 migration rehearsal still need to pass and be recorded.
+
 ## Change record template
 
 ```text
