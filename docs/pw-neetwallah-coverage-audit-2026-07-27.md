@@ -66,6 +66,24 @@ Three remain deferred:
   Sir, but production lacks the canonical chapter `Molecular Basis of
   Inheritance`. Do not mis-map that lecture to another chapter.
 
+A follow-up external-evidence review on 2026-07-28 checked both teacher gaps
+without changing the quality gate:
+
+- Zoology attribution is now externally confirmed as **Samapti Ma'am**. Her
+  teacher-owned public channel links all ten exact YouTube video IDs in the
+  manifest, from Animal Kingdom through Structural Organisation in Animals:
+  [Samapti Mam Zoology public channel](https://t.me/s/SamaptiMamZoology?before=463).
+  The importer still correctly returns `review`, because it currently evaluates
+  YouTube title/description/tag evidence and has no audited external-evidence
+  input. Do not bypass that result.
+- Inorganic Chemistry remains deferred. The five exact videos appear on PW's
+  official NEET Wallah channel and use one consistent faculty portrait. PW
+  separately identifies Mohit Dadheech Sir as an Inorganic Chemistry faculty
+  member, including for P-Block revision:
+  [PW P-Block faculty article](https://www.pw.live/neet/exams/best-physics-wallah-p-block-chemistry-videos-neet-class-11-12).
+  That supports the visual hypothesis but does not directly attribute all five
+  MISSION 30 video IDs, so it is not sufficient under the present strict gate.
+
 ## Second candidate-batch evidence
 
 All 125 usable source positions and video IDs across the remaining nine
@@ -407,8 +425,10 @@ channel collection as a missing NEET course.
 1. The ten clean mapped candidates are reconciled in
    `pw-neetwallah-next-batch-readiness-2026-07-28.md`; import only named
    manifests, one at a time, under a separate owner gate.
-2. Add/verify teacher evidence for Inorganic Chemistry and Zoology without
-   weakening the global quality gate.
+2. Decide whether the import evidence model should support a reviewed,
+   provenance-recorded external teacher source. Zoology has direct evidence;
+   Inorganic Chemistry still needs direct playlist/video attribution. Do not
+   weaken or bypass the current gate.
 3. Create the missing Botany chapter only through the established additive
    chapter workflow, then repeat its anonymous dry-run.
 4. Decide whether multi-teacher playlists need a data-model extension or should
