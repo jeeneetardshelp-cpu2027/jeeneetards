@@ -1,0 +1,162 @@
+{
+  "version": 1,
+  "request_id": "7abad998-d81e-4795-8198-a5d1423392e4",
+  "youtube_playlist_id": "PLJyab0VQDBGUermB7zRuK7EZ76W_vpX52",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "PAWNZfhGeC4",
+      "chapter": "Units and Measurements"
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "v4sl0bFR1L0",
+      "chapter": "Basic Mathematics for Physics"
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "Rn89vXrn0oc",
+      "chapter": "Kinematics"
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "X-VcFQECekU",
+      "chapter": "Laws of Motion"
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "moDVFeY8DqA",
+      "chapter": "Friction"
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "ml8BotlvRDc",
+      "chapter": "Laws of Motion"
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "9LCnXkkFyXA",
+      "chapter": "Work, Energy and Power"
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "MOKDjVJAmv8",
+      "chapter": "System of Particles and Centre of Mass"
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "bd8LoU8QLkI",
+      "chapter": "Rotational Motion"
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "Y9P69OiWouQ",
+      "chapter": "Gravitation"
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "nbGg7SMNPl8",
+      "chapter": "Mechanical Properties of Solids"
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "62uwD8bSWgw",
+      "chapter": "Mechanical Properties of Fluids"
+    },
+    {
+      "position": 13,
+      "youtube_video_id": "4pK5y1l8mNc",
+      "chapter": "Thermal Properties of Matter"
+    },
+    {
+      "position": 14,
+      "youtube_video_id": "seKW8cVT2vQ",
+      "chapter": "Thermodynamics"
+    },
+    {
+      "position": 15,
+      "youtube_video_id": "3xbDVQvuGd0",
+      "chapter": "Thermodynamics"
+    },
+    {
+      "position": 16,
+      "youtube_video_id": "9Wx-P5LMlUA",
+      "chapter": "Oscillations and Waves"
+    },
+    {
+      "position": 17,
+      "youtube_video_id": "MT22qaQ1AxY",
+      "chapter": "Oscillations and Waves"
+    },
+    {
+      "position": 18,
+      "youtube_video_id": "fLH7G4S-zZ8",
+      "chapter": "Electrostatics"
+    },
+    {
+      "position": 19,
+      "youtube_video_id": "u5Exh-hKRlM",
+      "chapter": "Capacitance"
+    },
+    {
+      "position": 20,
+      "youtube_video_id": "T1cuk7QuRn8",
+      "chapter": "Moving Charges and Magnetism"
+    },
+    {
+      "position": 21,
+      "youtube_video_id": "NDQgfwtqCgE",
+      "chapter": "Current Electricity"
+    },
+    {
+      "position": 22,
+      "youtube_video_id": "7HvVinACmVU",
+      "chapter": "Magnetism and Matter"
+    },
+    {
+      "position": 23,
+      "youtube_video_id": "sN-Ke5RNAj8",
+      "chapter": "Electromagnetic Induction"
+    },
+    {
+      "position": 24,
+      "youtube_video_id": "Ka8eq9yUsuQ",
+      "chapter": "Alternating Current"
+    },
+    {
+      "position": 25,
+      "youtube_video_id": "AySfZJKXlPs",
+      "chapter": "Electromagnetic Waves"
+    },
+    {
+      "position": 26,
+      "youtube_video_id": "md1aSS46ESM",
+      "chapter": "Ray Optics and Optical Instruments"
+    },
+    {
+      "position": 27,
+      "youtube_video_id": "vDI8HPa8ll0",
+      "chapter": "Wave Optics"
+    },
+    {
+      "position": 28,
+      "youtube_video_id": "e-7fb4Hp-OM",
+      "chapter": "Dual Nature of Radiation and Matter"
+    },
+    {
+      "position": 29,
+      "youtube_video_id": "eOICVEFG-pg",
+      "chapter": "Atoms"
+    },
+    {
+      "position": 30,
+      "youtube_video_id": "XkTYKx49gt4",
+      "chapter": "Modern Physics"
+    },
+    {
+      "position": 31,
+      "youtube_video_id": "kVwA6NboXGw",
+      "chapter": "Semiconductor Electronics"
+    }
+  ]
+}

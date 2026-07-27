@@ -130,6 +130,18 @@ the additional blocker that `Molecular Basis of Inheritance` is not yet a
 canonical production chapter. Teacher names used during the dry-runs were
 review hypotheses only, not import authorization.
 
+The older `Complete NEET ... - NEET Mind Map` family was reviewed next.
+Zoology (16), Botany (16), and Physics (31) have complete checked-in mappings
+for all 63 usable videos. Their anonymous dry-runs are deferred because the
+source metadata contains no accepted teacher-attribution evidence; Botany also
+requires `Molecular Basis of Inheritance`.
+
+The Chemistry Mind Map playlist was not retained as a manifest. It advertises
+28 videos but exposes only 26 usable entries, with source-position gaps, and
+one surviving entry is a Physics `Motion in a Plane` lecture. A Chemistry-only
+mapped course cannot represent that source truthfully, so the full playlist is
+deferred rather than misclassifying or silently dropping the contaminated row.
+
 ## Safe next gates
 
 1. Review the four clean manifests and import only with a separate owner gate.

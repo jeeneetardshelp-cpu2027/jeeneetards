@@ -1,0 +1,87 @@
+{
+  "version": 1,
+  "request_id": "c86abd1c-4914-440a-8ff5-56388166c460",
+  "youtube_playlist_id": "PLJyab0VQDBGWFo0v1dSS773zJVQcSD-Gk",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "LphbT_gA0wk",
+      "chapter": "Structural Organisation in Animals"
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "W4SJfRseSp0",
+      "chapter": "Breathing and Exchange of Gases"
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "2RTPr54x5ps",
+      "chapter": "Body Fluids and Circulation"
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "fSOw_LqlzzY",
+      "chapter": "Body Fluids and Circulation"
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "_5hlDeG_tB8",
+      "chapter": "Excretory Products and Their Elimination"
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "r-frPxO-XPQ",
+      "chapter": "Locomotion and Movement"
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "d2vLi8WDvEM",
+      "chapter": "Neural Control and Coordination"
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "enXp5QhnACA",
+      "chapter": "Chemical Coordination and Integration"
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "gW6Jrvi3ZP4",
+      "chapter": "Animal Kingdom"
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "lDBPk4icktA",
+      "chapter": "Biomolecules"
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "5YkVKZq2d3Y",
+      "chapter": "Human Reproduction"
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "5MyhvA3oQGg",
+      "chapter": "Reproductive Health"
+    },
+    {
+      "position": 13,
+      "youtube_video_id": "i5Usq4cCHuM",
+      "chapter": "Biotechnology: Principles and Processes"
+    },
+    {
+      "position": 14,
+      "youtube_video_id": "L4uJ8fOl3Jk",
+      "chapter": "Biotechnology and its Applications"
+    },
+    {
+      "position": 15,
+      "youtube_video_id": "TjCF_XseLBU",
+      "chapter": "Human Health and Disease"
+    },
+    {
+      "position": 16,
+      "youtube_video_id": "ijGQZ4pSYsM",
+      "chapter": "Evolution"
+    }
+  ]
+}
