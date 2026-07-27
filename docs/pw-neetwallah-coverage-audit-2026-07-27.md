@@ -162,6 +162,20 @@ which is not a canonical production chapter and cannot satisfy the mapped
 manifest's multi-chapter contract by itself. Importing this family through v12
 would produce materially incomplete or misleading browse taxonomy.
 
+The four older `Mind Map Revision: ... | Class 12th/NEET` playlists were
+reviewed next. Physics advertises 31 videos but exposes 30 usable entries; all
+30 are mapped in a retained manifest, preserving the source-position gap. Its
+anonymous dry-run is blocked by both the one-video count shortfall and missing
+teacher evidence.
+
+No manifests were retained for Zoology (16), Botany (21), or Chemistry (32
+advertised / 31 usable). Those sources require canonical chapters that
+production does not currently provide: Zoology includes Digestion and
+Absorption and Animal Husbandry; Botany includes Food Production, Transport in
+Plants, Mineral Nutrition, Environmental Issues, and Molecular Basis of
+Inheritance; Chemistry includes Polymers and Environmental Chemistry. Mapping
+those lectures to nearby chapters would be false taxonomy.
+
 ## Safe next gates
 
 1. Review the four clean manifests and import only with a separate owner gate.
