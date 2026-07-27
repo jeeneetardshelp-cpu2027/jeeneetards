@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "request_id": "fb0b9ed5-9172-4f44-9316-3b1e5f9a5eea",
+  "youtube_playlist_id": "PLJyab0VQDBGU-gxLqqPPWiMNgbuWb83uY",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "hJi3S1haN3Y",
+      "chapter": "Cell: The Unit of Life"
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "ln8ZcNjF8xc",
+      "chapter": "Cell Cycle and Cell Division"
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "3i8mHECla2k",
+      "chapter": "The Living World"
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "6ZAttkFaQ1I",
+      "chapter": "Biological Classification"
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "Bxe9iXiX1VQ",
+      "chapter": "Plant Kingdom"
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "H3r8gcnonyU",
+      "chapter": "Morphology of Flowering Plants"
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "HriPOJPRVng",
+      "chapter": "Anatomy of Flowering Plants"
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "kC0hk6_Uxis",
+      "chapter": "Respiration in Plants"
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "d6pfq-0CwZc",
+      "chapter": "Photosynthesis in Higher Plants"
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "5rhSaeXug2k",
+      "chapter": "Plant Growth and Development"
+    }
+  ]
+}
