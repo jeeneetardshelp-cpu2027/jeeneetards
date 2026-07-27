@@ -14,8 +14,19 @@ backup exists or that a restore exercise has passed.
   `26 Jul 2026 18:34:45 (+0000)`.
 - The dashboard states that projects are backed up daily around midnight in the
   project's region and that database backups exclude Storage API objects.
-- Point-in-Time Recovery is **not enabled**: the signed-in `Point in time` page
-  says it is available as an add-on and presents an `Enable add-on` action.
+- On 27 July 2026 at approximately `15:08 (+05:30)`, owner Amit authorized and
+  enabled the seven-day Point-in-Time Recovery add-on after upgrading production
+  compute from Nano to Small. The signed-in `Point in time` page confirms that
+  database changes are logged every two minutes with a recovery retention period
+  of up to seven days. At verification time it reported a restore range from
+  `20 Jul 2026 16:05:50` through `27 Jul 2026 15:07:41` in the dashboard's
+  selected `UTC+05:30` timezone.
+- The compute restart completed successfully. Anonymous production smoke
+  verification subsequently showed the JEE catalogue restored with 83 courses,
+  NEET still marked `Coming soon`, and no browser console warnings or errors.
+- PITR activation satisfies the protection-control half of the destructive
+  migration gate. The v3-through-v11 lineage remains blocked until a restore to
+  an isolated project has been completed, verified, and recorded below.
 - On 27 July 2026, owner Amit accepted the active daily automatic backup as
   sufficient specifically for create-only, additive chapter and reviewed
   content imports. The confirmed restore path is the Supabase Pro daily-backup
