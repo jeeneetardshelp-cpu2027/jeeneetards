@@ -298,6 +298,23 @@ hide most of each video's scope. Prashnakal is therefore deferred pending
 multi-chapter video taxonomy or an explicitly approved narrower editorial
 selection.
 
+The older long-form crash-course block was reviewed next: Physics (46),
+Zoology (21), Botany (35), Physical Chemistry (16), Inorganic Chemistry (12),
+and Organic Chemistry (19). All 149 advertised videos were public and usable.
+The mapping pass produced 88 automatic mappings, 20 review-required mappings,
+and 41 unmatched rows.
+
+No manifests were retained for the complete playlists. Most rows are genuine
+chapter lectures, but the sources also append broad `Last Time Revision`
+sessions and the same general NEET 2021 paper discussion. Other blockers are
+legacy chapters absent from the current catalogue, including Digestion and
+Absorption, Mineral Nutrition, Transport in Plants, Molecular Basis of
+Inheritance, Environmental Issues, Environmental Chemistry, and Polymers.
+Several Physics and Organic Chemistry titles also need explicit canonical-name
+review. This family is a candidate for a carefully documented lecture-only
+subset, not a whole-playlist import that silently assigns or drops the broad
+closing videos.
+
 ## Safe next gates
 
 1. Review the four clean manifests and import only with a separate owner gate.
