@@ -430,7 +430,12 @@ channel collection as a missing NEET course.
    Inorganic Chemistry still needs direct playlist/video attribution. Do not
    weaken or bypass the current gate.
 3. Create the missing Botany chapter only through the established additive
-   chapter workflow, then repeat its anonymous dry-run.
+   chapter workflow, then repeat its anonymous dry-run. A fail-closed,
+   create-only package is prepared but unapplied at
+   `sql/add_molecular_basis_chapter_production_2026-07-28.sql`; it requires
+   separate owner approval and a fresh PITR timestamp. Prepared artifact
+   SHA-256:
+   `b10d955ed96b99fcc03a9a2c513cfdfdf4aae77606c39216c50106510714a877`.
 4. Decide whether multi-teacher playlists need a data-model extension or should
    remain deferred; do not flatten the Vardaan faculty attribution.
 5. Continue triaging the remaining unaudited public playlists; do not equate
