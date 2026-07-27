@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "request_id": "9895ce23-37ae-4f62-8e11-590ccaedc3bb",
+  "youtube_playlist_id": "PLJyab0VQDBGVPk0chK-lvZ11lY4cYr5z1",
+  "assignments": [
+    { "position": 1, "youtube_video_id": "G_UJZbEp4Ek", "chapter": "Cell: The Unit of Life" },
+    { "position": 2, "youtube_video_id": "c1rWTrD-4ms", "chapter": "The Living World" },
+    { "position": 3, "youtube_video_id": "CgTyiSNwHIQ", "chapter": "Plant Kingdom" },
+    { "position": 4, "youtube_video_id": "4DMy9dHZ5dY", "chapter": "Morphology of Flowering Plants" },
+    { "position": 5, "youtube_video_id": "ibLaHRdOp7U", "chapter": "Photosynthesis in Higher Plants" },
+    { "position": 6, "youtube_video_id": "J4iReG4yfDc", "chapter": "Sexual Reproduction in Flowering Plants" },
+    { "position": 7, "youtube_video_id": "DkaSqXN1uNQ", "chapter": "Principles of Inheritance and Variation" },
+    { "position": 8, "youtube_video_id": "Kto-yCX5mt4", "chapter": "Molecular Basis of Inheritance" },
+    { "position": 9, "youtube_video_id": "xYuOAqE-rwc", "chapter": "Organisms and Populations" },
+    { "position": 10, "youtube_video_id": "wrwJ9eP9tIo", "chapter": "Ecosystem" }
+  ]
+}

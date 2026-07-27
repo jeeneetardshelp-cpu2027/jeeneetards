@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "request_id": "59b6c912-8865-48c1-970e-73f7c68f2695",
+  "youtube_playlist_id": "PLJyab0VQDBGX7SDzL7XuurETg0FY9NWXs",
+  "assignments": [
+    { "position": 1, "youtube_video_id": "qzEmlZL4vBQ", "chapter": "Animal Kingdom" },
+    { "position": 2, "youtube_video_id": "uy03wyTy0bc", "chapter": "Biotechnology: Principles and Processes" },
+    { "position": 3, "youtube_video_id": "xlU43SL0qGI", "chapter": "Biomolecules" },
+    { "position": 4, "youtube_video_id": "z4qN35LeNvA", "chapter": "Human Reproduction" },
+    { "position": 5, "youtube_video_id": "BCR0yW_s6Js", "chapter": "Excretory Products and Their Elimination" },
+    { "position": 6, "youtube_video_id": "Gmdd1uc7iRw", "chapter": "Human Health and Disease" },
+    { "position": 7, "youtube_video_id": "wMTlgY6ppEc", "chapter": "Breathing and Exchange of Gases" },
+    { "position": 8, "youtube_video_id": "O4lCGhCdLiE", "chapter": "Evolution" },
+    { "position": 9, "youtube_video_id": "_ekfIGjF3n8", "chapter": "Chemical Coordination and Integration" },
+    { "position": 10, "youtube_video_id": "1Cb83VZlH5Q", "chapter": "Structural Organisation in Animals" }
+  ]
+}

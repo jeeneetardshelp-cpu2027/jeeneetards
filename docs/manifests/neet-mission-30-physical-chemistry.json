@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "request_id": "63c05006-4c6a-46a3-ad4c-192ea5569fd9",
+  "youtube_playlist_id": "PLJyab0VQDBGUUcdtuWiyx9PdkSUEu5zEi",
+  "assignments": [
+    { "position": 1, "youtube_video_id": "L3Eb6FibVjE", "chapter": "Thermodynamics" },
+    { "position": 2, "youtube_video_id": "QzHDLHWFVsI", "chapter": "Chemical Equilibrium" },
+    { "position": 3, "youtube_video_id": "aHqdeGELeqY", "chapter": "Electrochemistry" },
+    { "position": 4, "youtube_video_id": "HFFxW46gs8I", "chapter": "Mole Concept" },
+    { "position": 5, "youtube_video_id": "kJdmR905FEA", "chapter": "Solutions" },
+    { "position": 6, "youtube_video_id": "MtEsWrjr7ZU", "chapter": "Chemical Kinetics" },
+    { "position": 7, "youtube_video_id": "Se1a6GFkTno", "chapter": "Atomic Structure" }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "request_id": "321d20ab-3616-4204-afdf-4a4d3bf78015",
+  "youtube_playlist_id": "PLJyab0VQDBGWnC3N-wwV4Og_UB6FQk9f5",
+  "assignments": [
+    { "position": 1, "youtube_video_id": "XNMJf0cFegs", "chapter": "Kinematics" },
+    { "position": 2, "youtube_video_id": "FPo_9MMi5wY", "chapter": "Laws of Motion" },
+    { "position": 3, "youtube_video_id": "w0s2_eS2wFY", "chapter": "Work, Energy and Power" },
+    { "position": 4, "youtube_video_id": "emqQizrID4I", "chapter": "System of Particles and Centre of Mass" },
+    { "position": 5, "youtube_video_id": "gFWCxyxc2v8", "chapter": "Rotational Motion" },
+    { "position": 6, "youtube_video_id": "uTmmStvVwVw", "chapter": "Mechanical Properties of Solids" },
+    { "position": 7, "youtube_video_id": "SPu_YMZbwK4", "chapter": "Oscillations and Waves" },
+    { "position": 8, "youtube_video_id": "dVognWp0W3c", "chapter": "Thermodynamics" },
+    { "position": 9, "youtube_video_id": "B6u6ny_ydgM", "chapter": "Mechanical Properties of Fluids" },
+    { "position": 10, "youtube_video_id": "k_rCYiorZzs", "chapter": "Gravitation" }
+  ]
+}
