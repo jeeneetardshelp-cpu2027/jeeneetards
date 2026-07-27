@@ -14,7 +14,7 @@
 // dry-run + v12 import against the finished manifest.
 
 import { createClient } from "@supabase/supabase-js";
-import { readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
 import { randomUUID } from "node:crypto";
@@ -36,20 +36,62 @@ function loadEnv() {
   return env;
 }
 
-function parseArgs(argv) {
+export function parseArgs(argv) {
   const a = {};
   for (let i = 0; i < argv.length; i++) {
     if (argv[i] === "--playlist") a.playlist = argv[++i];
     else if (argv[i] === "--subject") a.subject = argv[++i];
     else if (argv[i] === "--out") a.out = argv[++i];
+    else if (argv[i] === "--overwrite") a.overwrite = true;
   }
   return a;
 }
 
-async function main() {
+export function resolveDraftOutputPaths({
+  out,
+  playlist,
+  cwd = process.cwd(),
+  baseDir = here,
+}) {
+  const outPath = out
+    ? resolve(cwd, out)
+    : resolve(baseDir, `../../docs/manifests/draft-${playlist}.json`);
+  if (!outPath.toLowerCase().endsWith(".json")) {
+    throw new Error("draft output must use a .json filename.");
+  }
+  return {
+    outPath,
+    reviewPath: outPath.replace(/\.json$/i, ".review.json"),
+  };
+}
+
+export function assertDraftOutputsAvailable(
+  { outPath, reviewPath },
+  overwrite = false,
+  pathExists = existsSync,
+) {
+  if (overwrite) return;
+  const existing = [outPath, reviewPath].filter((path) => pathExists(path));
+  if (existing.length) {
+    throw new Error(
+      `refusing to overwrite existing draft output: ${existing.join(", ")}. ` +
+      "Choose another --out path or pass --overwrite explicitly.",
+    );
+  }
+}
+
+export async function main() {
   const args = parseArgs(process.argv.slice(2));
   if (!args.playlist || !args.subject)
-    fail('usage: --playlist <PLAYLIST_ID> --subject "<Subject name>" [--out <file>]');
+    fail(
+      'usage: --playlist <PLAYLIST_ID> --subject "<Subject name>" ' +
+      "[--out <file.json>] [--overwrite]",
+    );
+  const { outPath, reviewPath } = resolveDraftOutputPaths({
+    out: args.out,
+    playlist: args.playlist,
+  });
+  assertDraftOutputsAvailable({ outPath, reviewPath }, args.overwrite);
 
   const env = loadEnv();
   // Server key only — never the public/bundled VITE_YOUTUBE_API_KEY (enforced by
@@ -115,10 +157,6 @@ async function main() {
       chapter: r.chapter, // null = you must map it before importing
     })),
   };
-  const outPath = args.out
-    ? resolve(process.cwd(), args.out)
-    : resolve(here, `../../docs/manifests/draft-${args.playlist}.json`);
-  const reviewPath = outPath.replace(/\.json$/, ".review.json");
   writeFileSync(outPath, JSON.stringify(manifest, null, 2) + "\n", "utf8");
   writeFileSync(reviewPath, JSON.stringify({ subject: subject.name, summary, rows }, null, 2) + "\n", "utf8");
 
@@ -132,4 +170,6 @@ async function main() {
   }
 }
 
-main().catch((e) => fail(e.message));
+const isDirectRun = process.argv[1]
+  && resolve(process.argv[1]) === fileURLToPath(import.meta.url);
+if (isDirectRun) main().catch((e) => fail(e.message));
