@@ -142,6 +142,16 @@ one surviving entry is a Physics `Motion in a Plane` lecture. A Chemistry-only
 mapped course cannot represent that source truthfully, so the full playlist is
 deferred rather than misclassifying or silently dropping the contaminated row.
 
+The four `NEET Selection Express` playlists were also reviewed: Zoology (11),
+Physics (28), Chemistry (31), and Botany (11), totalling 81 usable videos.
+They are not safe v12 import candidates. Many source videos intentionally
+combine multiple chapters; others cover an entire class or subject syllabus,
+paper analysis, or post-exam result proof. The current importer permits exactly
+one chapter per video, so retaining a manifest would hide substantial content
+behind an arbitrary primary chapter. All four drafts were discarded and the
+family is deferred pending multi-chapter video taxonomy or a narrower editorial
+selection.
+
 ## Safe next gates
 
 1. Review the four clean manifests and import only with a separate owner gate.
