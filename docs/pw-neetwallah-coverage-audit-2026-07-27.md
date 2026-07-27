@@ -152,6 +152,16 @@ behind an arbitrary primary chapter. All four drafts were discarded and the
 family is deferred pending multi-chapter video taxonomy or a narrower editorial
 selection.
 
+The subject-specific `NEET Maha Revision 2023` family was reviewed next:
+Chemistry (18), Zoology (20), Physics (21), and Botany (1), totalling 60
+videos. These are also deferred without manifests. Chemistry and Zoology
+deliberately combine chapters within many two-hour videos, and the nominal
+Zoology playlist includes Botany revision. Physics contains several composite
+chapter lectures. The lone Botany entry is `Molecular Basis of Inheritance`,
+which is not a canonical production chapter and cannot satisfy the mapped
+manifest's multi-chapter contract by itself. Importing this family through v12
+would produce materially incomplete or misleading browse taxonomy.
+
 ## Safe next gates
 
 1. Review the four clean manifests and import only with a separate owner gate.
