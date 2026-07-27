@@ -1,0 +1,87 @@
+{
+  "version": 1,
+  "request_id": "9f369ff6-9e70-4b84-85e8-23b466546aad",
+  "youtube_playlist_id": "PLJyab0VQDBGU-xW71HcGzifvTUFuUlTXX",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "sXuJM1jn75o",
+      "chapter": "Breathing and Exchange of Gases"
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "IlF_M8fTjBs",
+      "chapter": "Body Fluids and Circulation"
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "EZu4j2yFJYk",
+      "chapter": "Excretory Products and Their Elimination"
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "QA1Dczl0pA8",
+      "chapter": "Excretory Products and Their Elimination"
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "_DeTZYsaag0",
+      "chapter": "Locomotion and Movement"
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "I6Mo8bcsgzM",
+      "chapter": "Neural Control and Coordination"
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "zEuYeq6sMZc",
+      "chapter": "Chemical Coordination and Integration"
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "ogrDdiNiZ7w",
+      "chapter": "Animal Kingdom"
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "YB7Y4wMO3Cw",
+      "chapter": "Biomolecules"
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "ctym9G9clUk",
+      "chapter": "Human Reproduction"
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "kfxuyNF4UK0",
+      "chapter": "Reproductive Health"
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "yQr-6di1ZB4",
+      "chapter": "Structural Organisation in Animals"
+    },
+    {
+      "position": 13,
+      "youtube_video_id": "lu0MIWNeLkc",
+      "chapter": "Human Health and Disease"
+    },
+    {
+      "position": 14,
+      "youtube_video_id": "i6Ltg_YH_Xk",
+      "chapter": "Evolution"
+    },
+    {
+      "position": 15,
+      "youtube_video_id": "MKqNhWRBnv0",
+      "chapter": "Biotechnology: Principles and Processes"
+    },
+    {
+      "position": 16,
+      "youtube_video_id": "ChZW8eKZcvI",
+      "chapter": "Biotechnology and its Applications"
+    }
+  ]
+}

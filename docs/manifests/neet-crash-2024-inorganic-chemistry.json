@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "request_id": "86624c2b-10db-4f36-8dcc-11e90d8acc12",
+  "youtube_playlist_id": "PLJyab0VQDBGWflXzSQe6JdpB57s2jGhHT",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "nt8OOuR2un8",
+      "chapter": "Periodic Table"
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "BBsd2AdKUqw",
+      "chapter": "Chemical Bonding and Molecular Structure"
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "C5oFHS2m2wQ",
+      "chapter": "Coordination Compounds"
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "dHc-lZXI63A",
+      "chapter": "The d and f Block Elements"
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "j6nQojH4uUc",
+      "chapter": "P-Block Elements"
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "3NUt5NJ54Ms",
+      "chapter": "Qualitative Analysis"
+    }
+  ]
+}

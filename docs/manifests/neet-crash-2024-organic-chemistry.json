@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "request_id": "2482de52-7e00-4d7a-a6d2-82c8bb9713b6",
+  "youtube_playlist_id": "PLJyab0VQDBGVSAwJMdNoz0eunAK6fr314",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "GWmNhpIMLUY",
+      "chapter": "Some Basic Principles of Organic Chemistry"
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "y9fbDtgoTFw",
+      "chapter": "Structural Isomerism"
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "ZTJvP73zRi4",
+      "chapter": "Some Basic Principles of Organic Chemistry"
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "6amnhUh7vhU",
+      "chapter": "Hydrocarbons"
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "ZYdYpLTUwRM",
+      "chapter": "Purification and Characterisation of Organic Compounds"
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "7Idf6S6Yo8w",
+      "chapter": "Organic Compounds Containing Halogens"
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "Y22Rjlsi12k",
+      "chapter": "Organic Compounds Containing Oxygen"
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "R-wO1xOd8Io",
+      "chapter": "Organic Compounds Containing Oxygen"
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "MkVThVyXc4c",
+      "chapter": "Amines"
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "ewuao59_qco",
+      "chapter": "Biomolecules"
+    }
+  ]
+}

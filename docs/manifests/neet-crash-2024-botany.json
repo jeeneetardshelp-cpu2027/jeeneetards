@@ -1,0 +1,87 @@
+{
+  "version": 1,
+  "request_id": "d89743e7-12ca-4b47-9c90-bd9d6d920e0e",
+  "youtube_playlist_id": "PLJyab0VQDBGXFO8mnIIIb1HKcgW2nBxIi",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "QO-GfZEBxuY",
+      "chapter": "Cell Cycle and Cell Division"
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "ZPGgzjEegpM",
+      "chapter": "Plant Kingdom"
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "Q_qEoUaWtls",
+      "chapter": "Respiration in Plants"
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "OR9d5iqQrmk",
+      "chapter": "Principles of Inheritance and Variation"
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "zu-H7EqbMFU",
+      "chapter": "Molecular Basis of Inheritance"
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "4SbsHWjtB4s",
+      "chapter": "Sexual Reproduction in Flowering Plants"
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "pbJk3llsYyI",
+      "chapter": "Photosynthesis in Higher Plants"
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "R1ak2fr6x7I",
+      "chapter": "Anatomy of Flowering Plants"
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "02jGXstZop8",
+      "chapter": "Morphology of Flowering Plants"
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "F7tXxwYb7B8",
+      "chapter": "Cell: The Unit of Life"
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "k9nkjj7awNY",
+      "chapter": "Biological Classification"
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "gHAU8sNCxvM",
+      "chapter": "Ecosystem"
+    },
+    {
+      "position": 13,
+      "youtube_video_id": "oenI0fbaVh8",
+      "chapter": "Microbes in Human Welfare"
+    },
+    {
+      "position": 14,
+      "youtube_video_id": "7BV9pcUaWQE",
+      "chapter": "Organisms and Populations"
+    },
+    {
+      "position": 15,
+      "youtube_video_id": "mh5ie8bi9oQ",
+      "chapter": "Biodiversity and Conservation"
+    },
+    {
+      "position": 16,
+      "youtube_video_id": "VZJLWZh_cgk",
+      "chapter": "Plant Growth and Development"
+    }
+  ]
+}

@@ -100,6 +100,36 @@ a separate browse membership. This limitation must be accepted explicitly or
 the data model must be extended before import; it must not be worked around by
 duplicating videos or inventing hybrid chapter names.
 
+## Broader channel triage
+
+The complete 218-playlist enumeration was reviewed after the two
+high-confidence batches. It contains substantial additional curriculum families:
+NEET Premier League, 2024 Crash Courses, older NEET Mind Maps, Maha Revision,
+UMMEED crash courses, Class 12 chapter series, Selection Express, UMEED 2.0,
+RAFTAAR, Prashnakal, long-form subject courses, and PACE. It also contains
+podcasts, interviews, offers, results, strategy sessions, Shorts, and mixed
+recent uploads; those are not course-import candidates merely because they are
+on the channel.
+
+The six NEET Premier League 2024 playlists were tested as the next bounded
+batch: Physical Chemistry (4), Inorganic Chemistry (5), Organic Chemistry (2),
+Botany (6), Zoology (6), and Physics (11), totalling 34 usable videos. All 34
+source titles are generic `Day N / 20-20 Questions Practice` labels and provide
+no reliable chapter identity. The rules-only mapper correctly returned 34
+unmatched rows. No manifests were retained and the batch is deferred unless
+reliable per-video topic evidence can be established.
+
+The six 2024 NEET Crash Course playlists were then reviewed: Inorganic
+Chemistry (6), Organic Chemistry (10), Physical Chemistry (9), Zoology (16),
+Botany (16), and Physics (29), totalling 86 usable videos. All 86 source
+positions and IDs have defensible curriculum mappings in checked-in manifests.
+Anonymous dry-runs confirmed the counts, ordering, chapter resolution, duration,
+and embedding evidence, but all six playlists are deferred because their
+YouTube metadata contains no accepted teacher-attribution evidence. Botany has
+the additional blocker that `Molecular Basis of Inheritance` is not yet a
+canonical production chapter. Teacher names used during the dry-runs were
+review hypotheses only, not import authorization.
+
 ## Safe next gates
 
 1. Review the four clean manifests and import only with a separate owner gate.
