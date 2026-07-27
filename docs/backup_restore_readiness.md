@@ -96,7 +96,7 @@ Use an isolated Supabase project:
 
 Never use production as the destination for a rehearsal.
 
-### NEET isolated restore rehearsal — in progress
+### NEET isolated restore rehearsal — passed
 
 ```text
 Date: 2026-07-27
@@ -131,10 +131,47 @@ read-only integrity checks passed:
 - opening Rectilinear Motion (Kinematics) loaded its embedded YouTube player,
   10-lesson list, lesson navigation, and restored course metadata.
 
-The isolated project remains retained for the remaining rehearsal. This record
-does **not** yet clear the destructive migration gate: the restored student
-browse flow and representative course/lesson behavior have passed, but the
-ordered v3-through-v12 migration rehearsal still needs to pass and be recorded.
+The isolated project remains retained for evidence review. This record now
+clears the restore-rehearsal half of the destructive migration gate.
+
+The migration rehearsal used a read-only capability matrix first. The restored
+project was mixed-version: v6, v7, v8, and content-quality v10 were missing,
+while catalogue navigation v9, playlist-order v10, content reports v10, and
+catalog management v11 were already present. Already-present layers were not
+rerun.
+
+The missing lineage was then applied to the isolated project in dependency
+order:
+
+1. the hash-verified v6 production bundle
+   (`f158df644e7be45d924ff17d0ebb13435cef5e1ee67bc8fda3bddca7a9fdbbe6`);
+2. `teachers_v7.sql`, `teachers_v7_import.sql`,
+   `teachers_v7_admin_ui.sql`, and `universal_search.sql`;
+3. `comparison_metadata_v8.sql`;
+4. `content_quality_v10.sql`;
+5. the read-only v12 preflight;
+6. `per_video_chapter_import_v12.sql`
+   (`e1d755dcc9aacc4c1a7488b98961f4e33d7dff12647bad28c8b3d9ea290482a2`);
+7. the read-only v12 postflight.
+
+Every step succeeded. The v6 migration reported all 83 courses in agreement,
+zero backfills, zero remaining drift, and enabled synchronization triggers.
+The v12 preflight returned true for every prerequisite. Its postflight passed
+and advertised capability version 12 with create-only, request-replay,
+all-or-none mapping, audit snapshot, and per-video chapter support.
+
+Final row counts remained 83 playlists, 1,307 playlist-video memberships, and
+123 chapters. The v12 audit table contained zero records, confirming that the
+rehearsal installed capabilities but imported no content. A post-migration
+frontend regression again showed JEE live with 83 courses, NEET hidden as
+`Coming soon`, and the Rectilinear Motion course with its YouTube player and
+10-lesson list.
+
+The isolated project is retained pending the production decision and can be
+discarded after this evidence is accepted. This rehearsal does not itself
+authorize production migration or content import; production still requires a
+fresh capability preflight, exact artifact hashes, explicit owner approval,
+one migration/import at a time, and stop-on-mismatch handling.
 
 ## Change record template
 
