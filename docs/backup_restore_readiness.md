@@ -238,6 +238,79 @@ Anonymous clone browser verification showed:
 Gate R3 is complete on the clone. This evidence does not authorize any
 production migration or NEET production import.
 
+### Production v6-through-v12 migration — passed
+
+```text
+Date: 2026-07-27
+Operator: Codex under owner Amit's explicit approval
+Production project: youtube / kezelafqhgqrprpadmlf
+PITR rollback target: 27 Jul 2026 16:42:24 (UTC+05:30)
+PITR retention: 7 days; changes logged every 2 minutes
+Content imported: none
+Release branch changed: no
+```
+
+The production capability matrix matched the isolated restore rehearsal before
+the first write:
+
+- missing: v6 importer/validator, v7 faculty, v8 comparison metadata, and
+  content-quality v10;
+- present: catalogue navigation v9 and catalogue management v11;
+- baseline: 83 playlists, 1,307 playlist-video memberships, and 123 chapters;
+- baseline JEE fingerprint:
+  `d7aae3ce7635401ebeffe97e627048bc`.
+
+The migrations were applied and verified one artifact at a time:
+
+1. `production/production_migration.sql`
+   (`f158df644e7be45d924ff17d0ebb13435cef5e1ee67bc8fda3bddca7a9fdbbe6`)
+   reported 83 courses in agreement, zero backfills, zero drift after the
+   migration, and enabled synchronization triggers.
+2. `teachers_v7.sql`
+   (`0f190ff2763096dcdacc29fd11ea2a4c8667e903c52c18fd54366ace788bebff`),
+   `teachers_v7_import.sql`
+   (`49e923bbb5b373b0e502d39e12e77d0051b98879446a2971967a7af5f9f6015c`),
+   `teachers_v7_admin_ui.sql`
+   (`701e0f5a496c0702c66f6c0bd9b2e8307a58f3cdf1cc0c4e5a3234722a8a1e91`),
+   and `universal_search.sql`
+   (`11a2672fb393e83dfcc94fc111a7f8b80c1df992c0225408171171532106212a`)
+   installed the faculty, import, admin-review, and universal-search
+   capabilities. Counts remained 83 / 1,307.
+3. `comparison_metadata_v8.sql`
+   (`5140aacf135c90cb39c430e061c2c2099a97c946ba64e605db80bb1ca450a0ec`)
+   installed the comparison tables and RPC. Counts remained 83 / 1,307.
+4. `content_quality_v10.sql`
+   (`d3feb81f5e4e0695e8d1519bbe3e993d08ed9ca2585e7245b818c7e9e18b2bca`)
+   installed the quality-review capability and left zero missing source
+   titles. Counts remained 83 / 1,307 / 123.
+5. The v12 read-only preflight
+   (`a0fd6453b9918dae7cb88beafdd1c2833f6538d99b64cbb9ab33b7c3474ca46b`)
+   returned true for all nine prerequisites.
+6. `per_video_chapter_import_v12.sql`
+   (`e1d755dcc9aacc4c1a7488b98961f4e33d7dff12647bad28c8b3d9ea290482a2`)
+   installed successfully.
+7. The v12 postflight
+   (`c66c14bb320bacea0997ab6323743dfd1d55961cfc2811a9c689f10c2547bd7b`)
+   passed. The advertised capability is version 12 with create-only,
+   request-replay, all-or-none mapping, audit snapshot, and per-video chapter
+   support.
+
+Final production evidence:
+
+- exactly 83 playlists, 1,307 memberships, and 123 chapters;
+- JEE fingerprint still
+  `d7aae3ce7635401ebeffe97e627048bc`;
+- zero rows in `playlist_import_audit`, proving no mapped content import ran;
+- anonymous production home showed JEE live with 83 courses and NEET still
+  `Coming soon`;
+- representative JEE course `39` retained all 8 lessons and loaded the first
+  and last official YouTube embeds;
+- production home and course reload checks emitted no browser console events or
+  page errors.
+
+No NEET course was imported and the frontend release state was not changed.
+Content imports and the NEET-live frontend switch remain separately gated.
+
 ## Change record template
 
 ```text
