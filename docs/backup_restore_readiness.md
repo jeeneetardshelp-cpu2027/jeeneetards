@@ -410,3 +410,27 @@ The only approved future reopening sequence is:
 3. apply and verify the v3 through v11 lineage in order;
 4. install and verify v12;
 5. revalidate and import the reviewed NEET manifests one at a time.
+
+## RAFTAAR Biology production gate — 28 July 2026
+
+The owner approved the three candidates in the exact order recorded in
+`neet-content-readiness-registry-2026-07-28.json`:
+
+1. Chemical Coordination and Integration
+2. Neural Control and Coordination
+3. Anatomy of Flowering Plants
+
+Immediately before the gated imports, the Supabase production dashboard for
+project `kezelafqhgqrprpadmlf` showed:
+
+```text
+PITR retention: 7 days
+Earliest restore point: 21 Jul 2026 00:41:01 UTC+05:30
+Latest restore point:   28 Jul 2026 00:41:01 UTC+05:30
+Latest point in UTC:    27 Jul 2026 19:11:01 UTC
+```
+
+The latest point is the recorded rollback target for this three-playlist gate.
+The dashboard restore action was not started. Every playlist remains subject
+to its own fresh anonymous dry-run, create-only import, exact delta checks, and
+JEE fingerprint verification before proceeding to the next.

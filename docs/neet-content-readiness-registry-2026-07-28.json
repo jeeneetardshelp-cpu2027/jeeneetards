@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "status": "readiness_only_no_write_authorization",
+  "status": "mixed_12_pending_3_imported",
   "expected_totals": {
     "courses": 15,
     "videos": 160,
@@ -116,7 +116,15 @@
       "teacher": "Diksha Sharma Ma'am",
       "videos": 4,
       "import_mode": "single-existing-chapter",
-      "chapter": "Chemical Coordination and Integration"
+      "chapter": "Chemical Coordination and Integration",
+      "status": "imported",
+      "production_course_id": 105,
+      "actual_delta": {
+        "courses": 1,
+        "videos": 4,
+        "memberships": 4,
+        "chapters": 0
+      }
     },
     {
       "group": "raftaar-biology",
@@ -124,7 +132,15 @@
       "teacher": "Diksha Sharma Ma'am",
       "videos": 6,
       "import_mode": "single-existing-chapter",
-      "chapter": "Neural Control and Coordination"
+      "chapter": "Neural Control and Coordination",
+      "status": "imported",
+      "production_course_id": 106,
+      "actual_delta": {
+        "courses": 1,
+        "videos": 6,
+        "memberships": 6,
+        "chapters": 0
+      }
     },
     {
       "group": "raftaar-biology",
@@ -132,7 +148,15 @@
       "teacher": "Yashika Singh Ma'am",
       "videos": 4,
       "import_mode": "single-existing-chapter",
-      "chapter": "Anatomy of Flowering Plants"
+      "chapter": "Anatomy of Flowering Plants",
+      "status": "imported",
+      "production_course_id": 107,
+      "actual_delta": {
+        "courses": 1,
+        "videos": 4,
+        "memberships": 4,
+        "chapters": 0
+      }
     }
   ]
 }

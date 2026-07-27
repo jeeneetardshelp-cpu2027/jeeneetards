@@ -6,10 +6,10 @@ const registry = JSON.parse(
 );
 
 describe("NEET content readiness registry", () => {
-  it("has unique sources and the reviewed aggregate delta", () => {
+  it("has unique sources and separates pending from imported candidates", () => {
     const ids = registry.candidates.map((candidate) => candidate.youtube_playlist_id);
     expect(new Set(ids).size).toBe(ids.length);
-    expect(registry.status).toBe("readiness_only_no_write_authorization");
+    expect(registry.status).toBe("mixed_12_pending_3_imported");
     expect(registry.candidates).toHaveLength(15);
     expect(registry.candidates.reduce((sum, candidate) => sum + candidate.videos, 0))
       .toBe(160);
@@ -19,6 +19,24 @@ describe("NEET content readiness registry", () => {
       memberships: 160,
       chapters: 0,
     });
+    const imported = registry.candidates.filter((candidate) =>
+      candidate.status === "imported",
+    );
+    const pending = registry.candidates.filter((candidate) =>
+      candidate.status !== "imported",
+    );
+    expect(imported).toHaveLength(3);
+    expect(imported.reduce((sum, candidate) => sum + candidate.videos, 0)).toBe(14);
+    expect(imported.map((candidate) => candidate.production_course_id))
+      .toEqual([105, 106, 107]);
+    expect(imported.every((candidate) =>
+      candidate.actual_delta.courses === 1
+      && candidate.actual_delta.videos === candidate.videos
+      && candidate.actual_delta.memberships === candidate.videos
+      && candidate.actual_delta.chapters === 0,
+    )).toBe(true);
+    expect(pending).toHaveLength(12);
+    expect(pending.reduce((sum, candidate) => sum + candidate.videos, 0)).toBe(146);
   });
 
   it("binds every mapped candidate to its exact checked-in manifest", () => {

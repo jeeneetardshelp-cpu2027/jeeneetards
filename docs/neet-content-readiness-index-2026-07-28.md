@@ -13,8 +13,7 @@ The machine-checked source of truth is
 | --- | ---: | ---: | ---: | ---: | --- |
 | Mapped next batch | 10 | 136 | 136 | 0 | Accept principal-chapter mapping for four MISSION 30 manifests |
 | Vardaan multi-teacher | 2 | 10 | 10 | 0 | Preserve each exact combined faculty label |
-| RAFTAAR Biology | 3 | 14 | 14 | 0 | Name the three playlist IDs and order |
-| **Total** | **15** | **160** | **160** | **0** | |
+| **Pending total** | **12** | **146** | **146** | **0** | |
 
 These groups are deliberately separate. Approval for one group does not
 authorize another, and every actual write remains one playlist at a time with a
@@ -25,6 +24,21 @@ Detailed evidence:
 - `pw-neetwallah-next-batch-readiness-2026-07-28.md`
 - `vardaan-multiteacher-readiness-2026-07-28.md`
 - `raftaar-biology-import-readiness-2026-07-28.md`
+
+## Imported under a completed owner gate
+
+RAFTAAR Biology was imported to production in registry order on 28 July 2026:
+
+| Course ID | Course | Videos | Memberships | Chapters |
+| ---: | --- | ---: | ---: | ---: |
+| 105 | Chemical Coordination & Integration - BIOLOGY RAFTAAR | 4 | 4 | 0 |
+| 106 | Neural Control and Coordination - BIOLOGY RAFTAAR | 6 | 6 | 0 |
+| 107 | Anatomy of Flowering Plants - BIOLOGY RAFTAAR | 4 | 4 | 0 |
+| **Total** | | **14** | **14** | **0** |
+
+These three entries are retained in the machine registry with
+`status: "imported"` and their production course IDs so they cannot be mistaken
+for pending candidates.
 
 ## Still deferred
 
@@ -50,5 +64,6 @@ Before any candidate is imported:
 4. Repeat its anonymous production dry-run.
 5. Import create-only, verify, and stop before the next playlist.
 
-No approval has been recorded for these 15 candidates, so production remains
-unchanged.
+This gate applies only to candidates that do not already have
+`status: "imported"`. No approval has been recorded for the remaining 12
+candidates.

@@ -89,3 +89,38 @@ fingerprint differs.
   lesson count.
 
 No frontend release push is part of this content gate.
+
+## Production completion — 2026-07-28
+
+Owner approval named all three candidates in the registry order. The recorded
+rollback point was `28 Jul 2026 00:41:01 UTC+05:30`
+(`27 Jul 2026 19:11:01 UTC`) within the active 7-day PITR window.
+
+Each playlist passed a fresh anonymous production dry-run immediately before
+its create-only import:
+
+| Course ID | Playlist ID | New videos | Memberships | New chapters |
+| ---: | --- | ---: | ---: | ---: |
+| 105 | `PLJyab0VQDBGXzd_SfmT7RyNS3JrN8BXAO` | 4 | 4 | 0 |
+| 106 | `PLJyab0VQDBGWEHG2llBuC96BZ__ehodpJ` | 6 | 6 | 0 |
+| 107 | `PLJyab0VQDBGXycgtfPfQav8Ya3lFqpdQG` | 4 | 4 | 0 |
+
+All three dry-runs had exact published/usable counts, no existing playlist,
+duplicate video ID, missing duration, embedding blocker, chapter blocker, or
+quality finding. All writes created one course and only new videos/memberships;
+the existing canonical chapters were reused.
+
+Final read-only production verification at `2026-07-28 01:10:48 +05:30`:
+
+- 100 courses, 1,475 unique videos, 1,479 memberships, and 123 chapters.
+- 17 NEET courses and exactly 83 JEE courses.
+- JEE remained at 1,307 memberships with fingerprint
+  `d7aae3ce7635401ebeffe97e627048bc`.
+- The three courses are NEET-only, Class 11, with no missing metadata,
+  catalogue issue, or duplicate candidate.
+- Anonymous NEET Class 11 Biology displayed all three; a JEE-scoped browse
+  displayed none of them.
+- The expected first and last privacy-enhanced YouTube embeds loaded for every
+  course with zero console warnings or errors.
+
+No rollback was triggered. No frontend release push was made.
