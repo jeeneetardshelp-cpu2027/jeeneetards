@@ -249,6 +249,24 @@ batch is deferred pending per-video editorial mapping, a decision for
 multi-chapter practice sessions, canonical Environmental Chemistry coverage,
 and later teacher-evidence verification.
 
+The Physics portion of `RAFTAAR` was reviewed next: Wave Motion, Oscillations,
+Thermodynamics, Kinetic Theory of Gases, Thermal Properties of Matter,
+Mechanical Properties of Fluids, Mechanical Properties of Solids, Gravitation,
+Rotational Motion, Centre of Mass, Work/Energy/Power, Laws of Motion, Motion in
+a Plane, Motion in a Straight Line, and Units and Measurements. All 102
+advertised videos across the 15 playlists were public and usable.
+
+The mapping pass produced 46 automatic mappings, 44 review-required mappings,
+and 12 unmatched rows. No manifests were retained. Many review flags are unsafe
+false positives caused by generic words such as `motion`, while shared practice
+videos intentionally combine adjacent chapters. The source also has a concrete
+cross-subject contamination: the same p-Block Chemistry quiz appears in both
+the Rotational Motion and Centre of Mass playlists. Even otherwise clean
+chapter runs cannot be approved until those shared/contaminated rows are
+handled explicitly and teacher evidence is verified. The Physics RAFTAAR batch
+therefore remains deferred rather than silently dropping or misclassifying
+source videos.
+
 ## Safe next gates
 
 1. Review the four clean manifests and import only with a separate owner gate.
