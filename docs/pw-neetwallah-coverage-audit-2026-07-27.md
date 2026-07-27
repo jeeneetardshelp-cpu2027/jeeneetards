@@ -332,6 +332,19 @@ Line (5). Their records advertise 45 videos in total, but every playlist
 returned zero public and usable entries. No manifests were retained; the
 Physics PACE sources are deferred unless visibility changes.
 
+The 13 Biology `PACE SERIES` playlists complete the same pattern: Neural
+Control (3 advertised), Morphology (4), Biological Classification (5), Plant
+Growth (4), Respiration (3), Photosynthesis (4), Plant Kingdom (5), Transport
+in Plants (4), Locomotion (4), Excretion (4), Circulation (5), Breathing (4),
+and Cell Cycle (3). All 52 advertised entries are currently unavailable; every
+playlist returned zero public and usable videos.
+
+Across Chemistry, Physics, and Biology, the 29 NEET-relevant PACE playlists
+advertise 163 videos but expose zero usable source entries. The JEE-only
+Mathematics PACE playlists were intentionally excluded from this NEET audit.
+No PACE manifest was retained and no import should be attempted from metadata
+counts alone.
+
 ## Safe next gates
 
 1. Review the four clean manifests and import only with a separate owner gate.
