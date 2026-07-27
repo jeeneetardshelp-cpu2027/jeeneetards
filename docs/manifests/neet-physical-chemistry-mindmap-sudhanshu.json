@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "request_id": "91558eeb-20b8-454f-855a-f28eb08abdea",
+  "youtube_playlist_id": "PLJyab0VQDBGWQ3XjCBXxvttq1McW4yQfi",
+  "assignments": [
+    { "position": 1, "youtube_video_id": "Tm453oQRytc", "chapter": "Mole Concept" },
+    { "position": 2, "youtube_video_id": "ke_kmMUoGnw", "chapter": "Atomic Structure" },
+    { "position": 3, "youtube_video_id": "InFAGDdkX6A", "chapter": "Thermodynamics" },
+    { "position": 4, "youtube_video_id": "KLlXmCFWklQ", "chapter": "Redox Reactions" },
+    { "position": 5, "youtube_video_id": "VwJzHQHIV4k", "chapter": "Chemical Equilibrium" },
+    { "position": 6, "youtube_video_id": "kfqIfFxb25g", "chapter": "Ionic Equilibrium" },
+    { "position": 7, "youtube_video_id": "p2KHCWjhIKA", "chapter": "Solutions" },
+    { "position": 8, "youtube_video_id": "bxV40U4YEqM", "chapter": "Electrochemistry" },
+    { "position": 9, "youtube_video_id": "rx3-uA-bj1E", "chapter": "Chemical Kinetics" },
+    { "position": 10, "youtube_video_id": "51HhRwk8afs", "chapter": "Surface Chemistry" }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "request_id": "333d4b50-54fa-4902-99a1-2a5223c3a094",
+  "youtube_playlist_id": "PLJyab0VQDBGXJj0uK_7YRGQcvzyOMEW7_",
+  "assignments": [
+    { "position": 1, "youtube_video_id": "8R_bVUMye_E", "chapter": "Coordination Compounds" },
+    { "position": 2, "youtube_video_id": "FcwoEK9JlEY", "chapter": "Organic Compounds Containing Halogens" },
+    { "position": 3, "youtube_video_id": "05uadv2lAqE", "chapter": "Ionic Equilibrium" },
+    { "position": 4, "youtube_video_id": "2AUUbgrnD0o", "chapter": "Mole Concept" },
+    { "position": 5, "youtube_video_id": "4-aEKLNkVXo", "chapter": "Some Basic Principles of Organic Chemistry" }
+  ]
+}

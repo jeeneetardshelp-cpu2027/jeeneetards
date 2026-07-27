@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "request_id": "32bbcb24-e2af-4d53-bebc-30a04ba25c48",
+  "youtube_playlist_id": "PLJyab0VQDBGXKoJSUTVlNj37J5AZ3DS-m",
+  "assignments": [
+    { "position": 1, "youtube_video_id": "zT0fKF4q7n4", "chapter": "Some Basic Principles of Organic Chemistry" },
+    { "position": 2, "youtube_video_id": "6PXXlzU3GH4", "chapter": "Some Basic Principles of Organic Chemistry" },
+    { "position": 3, "youtube_video_id": "2Vm3-xx6Y5E", "chapter": "Some Basic Principles of Organic Chemistry" },
+    { "position": 4, "youtube_video_id": "09KkYQNOo0I", "chapter": "Some Basic Principles of Organic Chemistry" },
+    { "position": 5, "youtube_video_id": "O-n2wv1bVn8", "chapter": "Hydrocarbons" },
+    { "position": 6, "youtube_video_id": "ohDPREmoGdU", "chapter": "Organic Compounds Containing Halogens" },
+    { "position": 7, "youtube_video_id": "knCN-BT9Lf0", "chapter": "Organic Compounds Containing Oxygen" },
+    { "position": 8, "youtube_video_id": "NJ6mRkaN4UM", "chapter": "Organic Compounds Containing Oxygen" },
+    { "position": 9, "youtube_video_id": "cCxMZa9ONp4", "chapter": "Organic Compounds Containing Nitrogen" },
+    { "position": 10, "youtube_video_id": "zjHUInvbUl4", "chapter": "Biomolecules" }
+  ]
+}

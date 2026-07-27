@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "request_id": "18d5315f-67d8-47d5-8fda-441f81f6adce",
+  "youtube_playlist_id": "PLJyab0VQDBGUMa1ndqTTm2295o939H51g",
+  "assignments": [
+    { "position": 1, "youtube_video_id": "Rvuvp7w0Bj0", "chapter": "Basic Mathematics for Physics" },
+    { "position": 2, "youtube_video_id": "fD0pdWHqYjc", "chapter": "Electrostatics" },
+    { "position": 3, "youtube_video_id": "w1XqlKpbHV4", "chapter": "Electrostatics" },
+    { "position": 4, "youtube_video_id": "euUw_7wF5Go", "chapter": "Basic Mathematics for Physics" },
+    { "position": 5, "youtube_video_id": "KfYTWJGOeJQ", "chapter": "Current Electricity" },
+    { "position": 6, "youtube_video_id": "b9aADz9UTF0", "chapter": "Kinematics" },
+    { "position": 7, "youtube_video_id": "EUeNCFtK83c", "chapter": "Kinematics" },
+    { "position": 8, "youtube_video_id": "5TSe3owJ5fk", "chapter": "Moving Charges and Magnetism" },
+    { "position": 9, "youtube_video_id": "KRvbjzbbRoo", "chapter": "Laws of Motion" },
+    { "position": 10, "youtube_video_id": "jcqORd4czFg", "chapter": "Electromagnetic Induction" },
+    { "position": 11, "youtube_video_id": "PgCMAgUFqG8", "chapter": "Work, Energy and Power" },
+    { "position": 12, "youtube_video_id": "i_In-C2me4s", "chapter": "Alternating Current" },
+    { "position": 13, "youtube_video_id": "r4BKT0xVN7Q", "chapter": "System of Particles and Centre of Mass" },
+    { "position": 14, "youtube_video_id": "GxxVkYDt2Uw", "chapter": "Electromagnetic Waves" },
+    { "position": 15, "youtube_video_id": "mvCGhNxV7HU", "chapter": "Rotational Motion" },
+    { "position": 16, "youtube_video_id": "R54lqy5794w", "chapter": "Ray Optics and Optical Instruments" },
+    { "position": 17, "youtube_video_id": "jDN-kUlF3Iw", "chapter": "Gravitation" },
+    { "position": 18, "youtube_video_id": "tXZQs3M-g_4", "chapter": "Wave Optics" },
+    { "position": 19, "youtube_video_id": "18WWJBui3jg", "chapter": "Mechanical Properties of Solids" },
+    { "position": 20, "youtube_video_id": "4v14GbhEtHc", "chapter": "Modern Physics" },
+    { "position": 21, "youtube_video_id": "Ejx4iTTuD9w", "chapter": "Thermal Properties of Matter" },
+    { "position": 22, "youtube_video_id": "GGvJ9iixU1Q", "chapter": "Semiconductor Electronics" },
+    { "position": 23, "youtube_video_id": "0mbOyNt5qG0", "chapter": "Thermodynamics" },
+    { "position": 24, "youtube_video_id": "nY2eoxezmVA", "chapter": "Oscillations and Waves" },
+    { "position": 25, "youtube_video_id": "M4mPSsgTlTM", "chapter": "Oscillations and Waves" }
+  ]
+}

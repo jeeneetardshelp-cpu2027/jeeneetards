@@ -32,15 +32,15 @@ and embedding evidence.
 | MISSION 30 Botany | 10 | Manifest prepared; needs canonical `Molecular Basis of Inheritance` chapter |
 | MISSION 30 Class 12 Physics | 11 | Manifest prepared; anonymous dry-run passed |
 | MISSION 30 Class 11 Physics | 10 | Manifest prepared; anonymous dry-run passed |
-| SKC Organic Chemistry one-shot | 10 | Later review batch |
-| Good Morning Physics | 25 | Later review batch |
-| Physical Chemistry Mindmap | 10 | Later review batch |
-| Botany Mindmap | 15 | Later review batch |
-| Physics Mindmap | 33 | Later review batch |
-| Pankaj Organic Chemistry Class 11 | 8 | Later review batch |
-| Aayudh Mechanics | 14 | Later review batch |
-| Vardaan Physics | 5 | Later review batch |
-| Vardaan Chemistry | 5 | Later review batch |
+| SKC Organic Chemistry one-shot | 10 | Manifest prepared; anonymous dry-run passed |
+| Good Morning Physics | 25 | Manifest prepared; anonymous dry-run passed |
+| Physical Chemistry Mindmap | 10 | Manifest prepared; anonymous dry-run passed |
+| Botany Mindmap | 15 | Manifest prepared; needs canonical `Molecular Basis of Inheritance` chapter |
+| Physics Mindmap | 33 | Manifest prepared; anonymous dry-run passed |
+| Pankaj Organic Chemistry Class 11 | 8 | Manifest prepared; anonymous dry-run passed |
+| Aayudh Mechanics | 14 | Manifest prepared; anonymous dry-run passed |
+| Vardaan Physics | 5 | Manifest prepared; deferred because the playlist mixes teachers |
+| Vardaan Chemistry | 5 | Manifest prepared; deferred because the playlist mixes teachers |
 
 ## MISSION 30 review evidence
 
@@ -66,6 +66,31 @@ Three remain deferred:
   Sir, but production lacks the canonical chapter `Molecular Basis of
   Inheritance`. Do not mis-map that lecture to another chapter.
 
+## Second candidate-batch evidence
+
+All 125 usable source positions and video IDs across the remaining nine
+high-confidence playlists are bound in checked-in manifests. There were no
+duplicate source video IDs, duplicate lesson positions, or count shortfalls.
+
+Six production anonymous dry-runs passed with quality `ok`:
+
+- SKC Organic Chemistry: 10/10, teacher `SKC Sir`.
+- Pankaj Organic Chemistry Class 11: 8/8, teacher `Pankaj Sijariya`.
+- Aayudh Mechanics: 14/14, teacher `Aayudh Sir`.
+- Good Morning Physics: 25/25, teacher `Abhishek Verma Sir`.
+- Physical Chemistry Mindmap: 10/10, teacher `Sudhanshu Sir`.
+- Physics Mindmap: 33/33, teacher `Siddharth Sir`.
+
+Three are deferred:
+
+- Botany Mindmap: 15/15 and teacher evidence for `Harshit Thakuria Sir`, but
+  production lacks `Molecular Basis of Inheritance`.
+- Vardaan Physics: 5/5, but positions 1–3 credit Aditya Sir and positions 4–5
+  credit Rohit Sir. A single playlist-level teacher would be misleading.
+- Vardaan Chemistry: 5/5, with source credits split across Sarvesh Sir, Pankaj
+  Sir, and Amit Sir; position 4 has no accepted teacher tag. A single
+  playlist-level teacher would be misleading.
+
 ## Combined-lecture limitation
 
 Several MISSION 30 videos cover multiple chapters. Import capability v12 assigns
@@ -82,6 +107,7 @@ duplicating videos or inventing hybrid chapter names.
    weakening the global quality gate.
 3. Create the missing Botany chapter only through the established additive
    chapter workflow, then repeat its anonymous dry-run.
-4. Review the remaining nine high-confidence playlists one at a time.
+4. Decide whether multi-teacher playlists need a data-model extension or should
+   remain deferred; do not flatten the Vardaan faculty attribution.
 5. Continue triaging the other 188 public playlists; do not equate all channel
    uploads with curriculum lectures.

@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "request_id": "f33be5eb-f874-4f0c-bbfe-e4333ab28c41",
+  "youtube_playlist_id": "PLJyab0VQDBGXZ4w4AWoB_fLzoRRyXhBse",
+  "assignments": [
+    { "position": 1, "youtube_video_id": "IzraupTOq8s", "chapter": "Some Basic Principles of Organic Chemistry" },
+    { "position": 2, "youtube_video_id": "ugY_bQ72krs", "chapter": "Some Basic Principles of Organic Chemistry" },
+    { "position": 3, "youtube_video_id": "Hpx19r7-oFs", "chapter": "Some Basic Principles of Organic Chemistry" },
+    { "position": 4, "youtube_video_id": "J7Zb9Uv0eRg", "chapter": "Some Basic Principles of Organic Chemistry" },
+    { "position": 5, "youtube_video_id": "O8kR8QQNNFc", "chapter": "Some Basic Principles of Organic Chemistry" },
+    { "position": 6, "youtube_video_id": "u9Izbe_a994", "chapter": "Purification and Characterisation of Organic Compounds" },
+    { "position": 7, "youtube_video_id": "qjCAPZ3W84E", "chapter": "Hydrocarbons" },
+    { "position": 8, "youtube_video_id": "I815pfsR0Rc", "chapter": "Hydrocarbons" }
+  ]
+}

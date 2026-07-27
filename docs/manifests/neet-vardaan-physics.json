@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "request_id": "691e1b77-08b4-4e9f-8a3e-1af2f84dcc7e",
+  "youtube_playlist_id": "PLJyab0VQDBGVD_EF-V55P2-Yx7mS5mete",
+  "assignments": [
+    { "position": 1, "youtube_video_id": "OLHMhZSOG0Y", "chapter": "Current Electricity" },
+    { "position": 2, "youtube_video_id": "YNXFvHs0p2c", "chapter": "Work, Energy and Power" },
+    { "position": 3, "youtube_video_id": "T-kd6J-tT98", "chapter": "Rotational Motion" },
+    { "position": 4, "youtube_video_id": "zp_9r-yGOLc", "chapter": "Laws of Motion" },
+    { "position": 5, "youtube_video_id": "cDxy_qCw5AA", "chapter": "Kinematics" }
+  ]
+}

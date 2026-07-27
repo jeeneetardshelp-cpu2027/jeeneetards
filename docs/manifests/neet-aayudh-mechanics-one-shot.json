@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "request_id": "1d924538-0af1-4052-ae6b-827044fd63b4",
+  "youtube_playlist_id": "PLJyab0VQDBGWjCjKZ0lslIfdINtObB3Dd",
+  "assignments": [
+    { "position": 1, "youtube_video_id": "y1DH1OCQmTE", "chapter": "Basic Mathematics for Physics" },
+    { "position": 2, "youtube_video_id": "5UOZpT240Go", "chapter": "Basic Mathematics for Physics" },
+    { "position": 3, "youtube_video_id": "BKAiQv-geGY", "chapter": "Kinematics" },
+    { "position": 4, "youtube_video_id": "HyUsemhJJM0", "chapter": "Kinematics" },
+    { "position": 5, "youtube_video_id": "I_KSc6wHEJo", "chapter": "Kinematics" },
+    { "position": 6, "youtube_video_id": "iEqTd2PkLno", "chapter": "Kinematics" },
+    { "position": 7, "youtube_video_id": "PTWgCLmdcaA", "chapter": "Laws of Motion" },
+    { "position": 8, "youtube_video_id": "cs1KkV1ufdQ", "chapter": "Laws of Motion" },
+    { "position": 9, "youtube_video_id": "YF0MyNk9hg4", "chapter": "Laws of Motion" },
+    { "position": 10, "youtube_video_id": "BpM9BwjPLPY", "chapter": "Work, Energy and Power" },
+    { "position": 11, "youtube_video_id": "FYpsUUL3LRU", "chapter": "System of Particles and Centre of Mass" },
+    { "position": 12, "youtube_video_id": "WDrYbW_rKzk", "chapter": "Rotational Motion" },
+    { "position": 13, "youtube_video_id": "nxRonJyxV78", "chapter": "Gravitation" },
+    { "position": 14, "youtube_video_id": "b4QGYATbDCg", "chapter": "Mechanical Properties of Solids" }
+  ]
+}
