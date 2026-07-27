@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "request_id": "78aa7be6-1396-47b3-a9de-38f90bac7e24",
+  "youtube_playlist_id": "PLJyab0VQDBGUkZj45_b2YZmAMHcx66mxs",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "LyvqUtWgtZ0",
+      "chapter": "Biological Classification"
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "E-b27S3eJgY",
+      "chapter": "Biological Classification"
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "jwHib9ZgYQs",
+      "chapter": "Breathing and Exchange of Gases"
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "LI7h_Fxh3OY",
+      "chapter": "Excretory Products and Their Elimination"
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "_O26gb_N6Pk",
+      "chapter": "Biomolecules"
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "AD1XA8T5S_0",
+      "chapter": "Body Fluids and Circulation"
+    }
+  ]
+}

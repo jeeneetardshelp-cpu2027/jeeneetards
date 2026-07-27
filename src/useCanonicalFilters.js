@@ -67,12 +67,26 @@ export function useCanonicalFilters(params) {
     // NOT ready while resolving — the catalogue query must wait.
     setState((s) => ({ ...s, ...base, loading: true, error: null, ready: false, unresolved: [] }));
 
-    Promise.all(
-      need.map((n) =>
-        supabase.from(n.table).select("id, slug, name").eq("slug", n.slug).maybeSingle()
-          .then(({ data, error }) => ({ ...n, id: data?.id ?? null, name: data?.name ?? null, error }))
-      )
-    ).then((rows) => {
+    const resolveLookup = (n, subjectId = null) => {
+      let query = supabase.from(n.table).select("id, slug, name").eq("slug", n.slug);
+      // Chapter slugs are only unique inside a subject. For example,
+      // Chemistry and Physics can both have a "thermodynamics" chapter.
+      // The canonical URL already carries the subject, so preserve that scope
+      // while resolving the chapter instead of letting maybeSingle() see both.
+      if (n.key === "chapter" && subjectId != null) {
+        query = query.eq("subject_id", subjectId);
+      }
+      return query.maybeSingle()
+        .then(({ data, error }) => ({
+          ...n, id: data?.id ?? null, name: data?.name ?? null, error,
+        }));
+    };
+
+    const resolve = async () => {
+      const chapterNeed = need.find((n) => n.key === "chapter") ?? null;
+      const rows = await Promise.all(
+        need.filter((n) => n.key !== "chapter").map((n) => resolveLookup(n))
+      );
       if (!active) return;
 
       const failed = rows.find((r) => r.error);
@@ -90,11 +104,37 @@ export function useCanonicalFilters(params) {
 
       const resolved = { ...base, names: {} };
       const unresolved = [];
-      for (const r of rows) {
-        if (r.id == null) { unresolved.push({ key: r.key, slug: r.slug }); continue; }
+      const applyRow = (r) => {
+        if (r.id == null) {
+          unresolved.push({ key: r.key, slug: r.slug });
+          return;
+        }
         resolved[r.as] = r.id;
         // key by the SLUG, because that is what the URL (and the chip) holds
         if (r.name) (resolved.names[r.as.replace(/Id$/, "")] ??= {})[r.slug] = r.name;
+      };
+      for (const r of rows) {
+        applyRow(r);
+      }
+
+      if (chapterNeed) {
+        const subjectWasRequested = c.subject.id != null || c.subject.slug != null;
+        // If the requested subject itself is unknown, do not broaden the
+        // chapter lookup across every subject. The unresolved subject already
+        // keeps the catalogue gated and tells the student what to remove.
+        if (!subjectWasRequested || resolved.subjectId != null) {
+          const chapterRow = await resolveLookup(chapterNeed, resolved.subjectId);
+          if (!active) return;
+          if (chapterRow.error) {
+            console.error("canonical filters:", chapterRow.error);
+            setState({
+              ...base, loading: false, ready: false, unresolved: [],
+              error: "Couldn’t load this selection.",
+            });
+            return;
+          }
+          applyRow(chapterRow);
+        }
       }
 
       // A slug that matched nothing leaves us NOT ready. Querying without its
@@ -103,7 +143,8 @@ export function useCanonicalFilters(params) {
         ...resolved, loading: false, error: null,
         ready: unresolved.length === 0, unresolved,
       });
-    });
+    };
+    resolve();
 
     return () => { active = false; };
   }, [canonicalKey, nonce]);

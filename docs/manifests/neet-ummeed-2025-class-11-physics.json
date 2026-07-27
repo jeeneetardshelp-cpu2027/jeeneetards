@@ -1,0 +1,82 @@
+{
+  "version": 1,
+  "request_id": "797e2501-8217-4338-a2d3-81074b76bcfc",
+  "youtube_playlist_id": "PLJyab0VQDBGWQ1k4Lx2iuVHiiCzRwsu1j",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "WDjcpSCI-uU",
+      "chapter": "Basic Mathematics for Physics"
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "46CaYBwEp_k",
+      "chapter": "Kinematics"
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "-tIkepyF8aY",
+      "chapter": "Kinematics"
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "YKLZpAjK-M8",
+      "chapter": "Kinematics"
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "2cdRXbYeCqo",
+      "chapter": "Laws of Motion"
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "Ce-1sflLTj8",
+      "chapter": "Work, Energy and Power"
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "wG4uHKZkJRI",
+      "chapter": "System of Particles and Centre of Mass"
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "ec1CLG1jU0I",
+      "chapter": "Rotational Motion"
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "eHIFpPdGuY0",
+      "chapter": "Gravitation"
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "a2T84FeLIdY",
+      "chapter": "Mechanical Properties of Solids"
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "Ele4sqz0cUI",
+      "chapter": "Mechanical Properties of Fluids"
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "CGS6eP-yZec",
+      "chapter": "Thermal Properties of Matter"
+    },
+    {
+      "position": 13,
+      "youtube_video_id": "A8W90UdFyHM",
+      "chapter": "Thermodynamics"
+    },
+    {
+      "position": 14,
+      "youtube_video_id": "wOIRp8B8l-U",
+      "chapter": "Oscillations and Waves"
+    },
+    {
+      "position": 15,
+      "youtube_video_id": "QOYEiy1AUTI",
+      "chapter": "Oscillations and Waves"
+    }
+  ]
+}

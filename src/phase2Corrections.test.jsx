@@ -164,6 +164,7 @@ const calls = [];
 let ROWS = [];
 let FAIL = false;
 let RESOLVE_SLUG = true;
+let REQUIRE_CHAPTER_SUBJECT_SCOPE = false;
 
 function makeBuilder(table) {
   const rec = { table, cols: null, eq: {}, in: {}, range: null };
@@ -173,8 +174,15 @@ function makeBuilder(table) {
     eq(k, v) { rec.eq[k] = v; return b; },
     ilike() { return b; }, in(k, v) { rec.in[k] = v; return b; },
     maybeSingle() {
+      if (REQUIRE_CHAPTER_SUBJECT_SCOPE && table === "chapters" && rec.eq.subject_id == null) {
+        return Promise.resolve({
+          data: null,
+          error: { message: "multiple rows returned", code: "PGRST116" },
+        });
+      }
       // dimension lookup: resolve the slug, or report "not found"
-      return Promise.resolve({ data: RESOLVE_SLUG ? { id: 42, slug: rec.eq.slug, name: "Kinematics" } : null, error: null });
+      const id = table === "subjects" ? 2 : 42;
+      return Promise.resolve({ data: RESOLVE_SLUG ? { id, slug: rec.eq.slug, name: "Kinematics" } : null, error: null });
     },
     then(resolve) {
       if (FAIL) return Promise.resolve({ data: null, error: { message: "boom", code: "500" } }).then(resolve);
@@ -209,7 +217,7 @@ function Wired({ qs }) {
 
 beforeEach(() => {
   calls.length = 0; ROWS = [{ id: 1, title: "A", playlist_videos: [{ count: 1 }] }];
-  FAIL = false; RESOLVE_SLUG = true; seen = undefined;
+  FAIL = false; RESOLVE_SLUG = true; REQUIRE_CHAPTER_SUBJECT_SCOPE = false; seen = undefined;
 });
 
 describe("no catalogue request before slugs resolve", () => {
@@ -227,6 +235,24 @@ describe("no catalogue request before slugs resolve", () => {
     // and it stays at one
     await new Promise((r) => setTimeout(r, 30));
     expect(catalogueCalls()).toHaveLength(1);
+  });
+
+  it.each([
+    ["canonical subject slug", "subject=chemistry&chapter=thermodynamics"],
+    ["legacy subject id", "sub=2&chapter=thermodynamics"],
+  ])("scopes a duplicated chapter slug for a %s", async (_label, qs) => {
+    REQUIRE_CHAPTER_SUBJECT_SCOPE = true;
+    render(
+      <MemoryRouter>
+        <Wired qs={qs} />
+      </MemoryRouter>,
+    );
+
+    await waitFor(() => expect(seen.canonical.ready).toBe(true));
+    const chapterCall = calls.find((call) => call.table === "chapters");
+    expect(chapterCall.eq).toEqual({ slug: "thermodynamics", subject_id: 2 });
+    expect(catalogueCalls()).toHaveLength(1);
+    expect(catalogueCalls()[0].eq["pv.videos.chapter_id"]).toBe(42);
   });
 
   it("holds the skeleton while unresolved rather than showing anything", async () => {

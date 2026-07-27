@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "request_id": "c7d647b8-a125-407f-85c4-177ed50fa011",
+  "youtube_playlist_id": "PLJyab0VQDBGWQcLtbR-TMpSI-Dz4pSJqg",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "AT_Jqc-E1Eg",
+      "chapter": "Sexual Reproduction in Flowering Plants"
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "ylGkeIGOml0",
+      "chapter": "Cell: The Unit of Life"
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "9wKofmQmTJc",
+      "chapter": "The Living World"
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "zKVsIV1B2tY",
+      "chapter": "Biological Classification"
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "L8NGJ4EOzno",
+      "chapter": "Plant Kingdom"
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "orPhMWc0CMw",
+      "chapter": "Photosynthesis in Higher Plants"
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "RkmJ8pGpmEg",
+      "chapter": "Morphology of Flowering Plants"
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "wVEhz_2_S34",
+      "chapter": "Cell Cycle and Cell Division"
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "EAZjIdXKPcQ",
+      "chapter": "Anatomy of Flowering Plants"
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "b_DBXGohhgA",
+      "chapter": "Organisms and Populations"
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "i5t3n9b6Ozw",
+      "chapter": "Respiration in Plants"
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "6jDgD3evozA",
+      "chapter": "Microbes in Human Welfare"
+    },
+    {
+      "position": 13,
+      "youtube_video_id": "pNHlqqpkUMA",
+      "chapter": "Ecosystem"
+    }
+  ]
+}

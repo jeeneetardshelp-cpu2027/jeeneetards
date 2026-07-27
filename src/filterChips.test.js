@@ -29,6 +29,8 @@ describe("what the chips say", () => {
   it("labels Dropper and each class correctly", () => {
     expect(buildChips(P("class=dropper")).map((c) => c.label)).toEqual(["Dropper"]);
     expect(buildChips(P("class=12")).map((c) => c.label)).toEqual(["Class 12"]);
+    expect(buildChips(P("class=class-11")).map((c) => c.label)).toEqual(["Class 11"]);
+    expect(buildChips(P("class=11th")).map((c) => c.label)).toEqual(["Class 11"]);
   });
 
   it("falls back to the raw value rather than inventing a name", () => {
