@@ -7,17 +7,18 @@ authorization.
 The machine-checked source of truth is
 `neet-content-readiness-registry-2026-07-28.json`.
 
-## Cleared for a later owner gate
+## Imported under completed owner gates
 
-| Group | Courses | Videos | Memberships | New chapters | Additional approval wording |
+| Group | Courses | Videos | Memberships | New chapters | Production course IDs |
 | --- | ---: | ---: | ---: | ---: | --- |
-| Mapped next batch | 10 | 136 | 136 | 0 | Accept principal-chapter mapping for four MISSION 30 manifests |
-| Vardaan multi-teacher | 2 | 10 | 10 | 0 | Preserve each exact combined faculty label |
-| **Pending total** | **12** | **146** | **146** | **0** | |
+| Mapped next batch | 10 | 136 | 136 | 0 | 108–117 |
+| Vardaan multi-teacher | 2 | 10 | 10 | 0 | 118–119 |
+| RAFTAAR Biology | 3 | 14 | 14 | 0 | 105–107 |
+| **Imported total** | **15** | **160** | **160** | **0** | **105–119** |
 
-These groups are deliberately separate. Approval for one group does not
-authorize another, and every actual write remains one playlist at a time with a
-fresh anonymous dry-run and post-import stop.
+All 12 previously pending candidates were imported to production in registry
+order on 28 July 2026. Each passed a fresh anonymous dry-run, create-only mapped
+v12 import, and immediate JEE fingerprint verification.
 
 Detailed evidence:
 
@@ -25,7 +26,7 @@ Detailed evidence:
 - `vardaan-multiteacher-readiness-2026-07-28.md`
 - `raftaar-biology-import-readiness-2026-07-28.md`
 
-## Imported under a completed owner gate
+### RAFTAAR Biology detail
 
 RAFTAAR Biology was imported to production in registry order on 28 July 2026:
 
@@ -36,8 +37,8 @@ RAFTAAR Biology was imported to production in registry order on 28 July 2026:
 | 107 | Anatomy of Flowering Plants - BIOLOGY RAFTAAR | 4 | 4 | 0 |
 | **Total** | | **14** | **14** | **0** |
 
-These three entries are retained in the machine registry with
-`status: "imported"` and their production course IDs so they cannot be mistaken
+All 15 entries are retained in the machine registry with `status: "imported"`,
+their production course IDs, and exact actual deltas so none can be mistaken
 for pending candidates.
 
 ## Still deferred
@@ -64,6 +65,5 @@ Before any candidate is imported:
 4. Repeat its anonymous production dry-run.
 5. Import create-only, verify, and stop before the next playlist.
 
-This gate applies only to candidates that do not already have
-`status: "imported"`. No approval has been recorded for the remaining 12
-candidates.
+This gate applies only to future candidates that do not already have
+`status: "imported"`. The current registry has no pending candidates.

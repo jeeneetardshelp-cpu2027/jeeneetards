@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "status": "mixed_12_pending_3_imported",
+  "status": "all_15_imported",
   "expected_totals": {
     "courses": 15,
     "videos": 160,
@@ -15,7 +15,10 @@
       "teacher": "Pankaj Sijariya",
       "videos": 8,
       "import_mode": "mapped-v12",
-      "approval_note": "accept-primary-chapter-only"
+      "approval_note": "accept-primary-chapter-only",
+      "status": "imported",
+      "production_course_id": 108,
+      "actual_delta": {"courses": 1, "videos": 8, "memberships": 8, "chapters": 0}
     },
     {
       "group": "mapped-next-batch",
@@ -24,7 +27,10 @@
       "teacher": "Amit Mahajan",
       "videos": 7,
       "import_mode": "mapped-v12",
-      "approval_note": "accept-primary-chapter-only"
+      "approval_note": "accept-primary-chapter-only",
+      "status": "imported",
+      "production_course_id": 109,
+      "actual_delta": {"courses": 1, "videos": 7, "memberships": 7, "chapters": 0}
     },
     {
       "group": "mapped-next-batch",
@@ -33,7 +39,10 @@
       "teacher": "Manish Raj",
       "videos": 11,
       "import_mode": "mapped-v12",
-      "approval_note": "accept-primary-chapter-only"
+      "approval_note": "accept-primary-chapter-only",
+      "status": "imported",
+      "production_course_id": 110,
+      "actual_delta": {"courses": 1, "videos": 11, "memberships": 11, "chapters": 0}
     },
     {
       "group": "mapped-next-batch",
@@ -42,7 +51,10 @@
       "teacher": "Saleem Sir",
       "videos": 10,
       "import_mode": "mapped-v12",
-      "approval_note": "accept-primary-chapter-only"
+      "approval_note": "accept-primary-chapter-only",
+      "status": "imported",
+      "production_course_id": 111,
+      "actual_delta": {"courses": 1, "videos": 10, "memberships": 10, "chapters": 0}
     },
     {
       "group": "mapped-next-batch",
@@ -50,7 +62,10 @@
       "manifest": "docs/manifests/neet-skc-organic-chemistry-one-shot.json",
       "teacher": "SKC Sir",
       "videos": 10,
-      "import_mode": "mapped-v12"
+      "import_mode": "mapped-v12",
+      "status": "imported",
+      "production_course_id": 112,
+      "actual_delta": {"courses": 1, "videos": 10, "memberships": 10, "chapters": 0}
     },
     {
       "group": "mapped-next-batch",
@@ -58,7 +73,10 @@
       "manifest": "docs/manifests/neet-pankaj-organic-chemistry-class-11.json",
       "teacher": "Pankaj Sijariya",
       "videos": 8,
-      "import_mode": "mapped-v12"
+      "import_mode": "mapped-v12",
+      "status": "imported",
+      "production_course_id": 113,
+      "actual_delta": {"courses": 1, "videos": 8, "memberships": 8, "chapters": 0}
     },
     {
       "group": "mapped-next-batch",
@@ -66,7 +84,10 @@
       "manifest": "docs/manifests/neet-aayudh-mechanics-one-shot.json",
       "teacher": "Aayudh Sir",
       "videos": 14,
-      "import_mode": "mapped-v12"
+      "import_mode": "mapped-v12",
+      "status": "imported",
+      "production_course_id": 114,
+      "actual_delta": {"courses": 1, "videos": 14, "memberships": 14, "chapters": 0}
     },
     {
       "group": "mapped-next-batch",
@@ -74,7 +95,10 @@
       "manifest": "docs/manifests/neet-good-morning-physics-abhishek-verma.json",
       "teacher": "Abhishek Verma Sir",
       "videos": 25,
-      "import_mode": "mapped-v12"
+      "import_mode": "mapped-v12",
+      "status": "imported",
+      "production_course_id": 115,
+      "actual_delta": {"courses": 1, "videos": 25, "memberships": 25, "chapters": 0}
     },
     {
       "group": "mapped-next-batch",
@@ -82,7 +106,10 @@
       "manifest": "docs/manifests/neet-physical-chemistry-mindmap-sudhanshu.json",
       "teacher": "Sudhanshu Sir",
       "videos": 10,
-      "import_mode": "mapped-v12"
+      "import_mode": "mapped-v12",
+      "status": "imported",
+      "production_course_id": 116,
+      "actual_delta": {"courses": 1, "videos": 10, "memberships": 10, "chapters": 0}
     },
     {
       "group": "mapped-next-batch",
@@ -90,7 +117,10 @@
       "manifest": "docs/manifests/neet-physics-mindmap-siddharth.json",
       "teacher": "Siddharth Sir",
       "videos": 33,
-      "import_mode": "mapped-v12"
+      "import_mode": "mapped-v12",
+      "status": "imported",
+      "production_course_id": 117,
+      "actual_delta": {"courses": 1, "videos": 33, "memberships": 33, "chapters": 0}
     },
     {
       "group": "vardaan-multi-teacher",
@@ -99,7 +129,10 @@
       "teacher": "Aditya Sir & Rohit Sir",
       "videos": 5,
       "import_mode": "mapped-v12",
-      "approval_note": "preserve-combined-faculty-label"
+      "approval_note": "preserve-combined-faculty-label",
+      "status": "imported",
+      "production_course_id": 118,
+      "actual_delta": {"courses": 1, "videos": 5, "memberships": 5, "chapters": 0}
     },
     {
       "group": "vardaan-multi-teacher",
@@ -108,7 +141,10 @@
       "teacher": "Sarvesh Sir, Pankaj Sir & Amit Sir",
       "videos": 5,
       "import_mode": "mapped-v12",
-      "approval_note": "preserve-combined-faculty-label"
+      "approval_note": "preserve-combined-faculty-label",
+      "status": "imported",
+      "production_course_id": 119,
+      "actual_delta": {"courses": 1, "videos": 5, "memberships": 5, "chapters": 0}
     },
     {
       "group": "raftaar-biology",

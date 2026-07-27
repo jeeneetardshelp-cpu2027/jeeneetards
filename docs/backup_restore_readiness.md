@@ -434,3 +434,23 @@ The latest point is the recorded rollback target for this three-playlist gate.
 The dashboard restore action was not started. Every playlist remains subject
 to its own fresh anonymous dry-run, create-only import, exact delta checks, and
 JEE fingerprint verification before proceeding to the next.
+
+## Remaining readiness-registry production gate — 28 July 2026
+
+After courses 105 through 107 passed postflight, the owner granted standing
+authorization for all 12 remaining registry candidates, including the recorded
+principal-chapter mapping decisions and exact combined Vardaan faculty labels.
+
+The refreshed production PITR dashboard showed:
+
+```text
+PITR retention: 7 days
+Earliest restore point: 21 Jul 2026 01:13:03 UTC+05:30
+Latest restore point:   28 Jul 2026 01:13:03 UTC+05:30
+Latest point in UTC:    27 Jul 2026 19:43:03 UTC
+```
+
+This post-RAFTAAR point is the rollback target for the remaining registry gate.
+The restore action was not started. Standing authorization does not waive the
+per-playlist anonymous dry-run, create-only boundary, or immediate JEE
+fingerprint stop condition.
