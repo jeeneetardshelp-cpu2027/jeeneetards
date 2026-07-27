@@ -18,9 +18,9 @@ begin
     raise exception 'refusing chapter plan: app_environment is not production-empty';
   end if;
 
-  if (select count(*) from public.playlists) <> 97
-     or (select count(*) from public.videos) <> 1461
-     or (select count(*) from public.playlist_videos) <> 1465
+  if (select count(*) from public.playlists) <> 112
+     or (select count(*) from public.videos) <> 1621
+     or (select count(*) from public.playlist_videos) <> 1625
      or (select count(*) from public.chapters) <> 123 then
     raise exception 'refusing chapter plan: catalogue baseline drifted';
   end if;

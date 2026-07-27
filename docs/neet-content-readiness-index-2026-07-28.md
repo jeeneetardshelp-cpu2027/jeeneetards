@@ -49,6 +49,10 @@ for pending candidates.
   exact video IDs.
 - MISSION 30 Botany and Botany Mindmap require the separately prepared
   `Molecular Basis of Inheritance` chapter insert before fresh dry-runs.
+  The fail-closed create-only plan was rebased after course 119 to the verified
+  production baseline of 112 courses, 1,621 videos, 1,625 memberships, and 123
+  chapters. It remains prepared-only pending a fresh PITR point and a separate
+  chapter-write gate.
 - Other checked-in manifests retain the blockers recorded in
   `pw-neetwallah-coverage-audit-2026-07-27.md`; presence in `docs/manifests`
   alone does not mean ready.

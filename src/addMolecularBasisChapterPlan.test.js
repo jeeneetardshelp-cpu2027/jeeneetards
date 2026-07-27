@@ -13,6 +13,10 @@ describe("Molecular Basis chapter production plan", () => {
     expect(source).toMatch(/Molecular Basis of Inheritance/);
     expect(source).toMatch(/molecular-basis-of-inheritance/);
     expect(source).toMatch(/app_environment is not production-empty/);
+    expect(source).toMatch(/count\(\*\) from public\.playlists\) <> 112/);
+    expect(source).toMatch(/count\(\*\) from public\.videos\) <> 1621/);
+    expect(source).toMatch(/count\(\*\) from public\.playlist_videos\) <> 1625/);
+    expect(source).toMatch(/count\(\*\) from public\.chapters\) <> 123/);
     expect(source).toMatch(/JEE fingerprint mismatch/);
     expect(source).toContain("d7aae3ce7635401ebeffe97e627048bc");
     expect(source).toMatch(/expected one insert/);
