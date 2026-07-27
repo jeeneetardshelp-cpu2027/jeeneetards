@@ -230,6 +230,25 @@ Silently omitting the non-lecture rows or forcing missing chapters into nearby
 taxonomy would misrepresent the source. This family is deferred pending a
 deliberate editorial subset and any required additive chapter work.
 
+The Chemistry portion of `RAFTAAR` was then reviewed as a bounded batch:
+Environmental Chemistry, Equilibrium, Hydrocarbons, Thermodynamics and
+Thermochemistry, State of Matter, p-Block, s-Block, Hydrogen, Redox Reactions,
+Chemical Bonding, Periodic Classification, Atomic Structure, Mole Concept, and
+General Organic Chemistry. All 112 advertised videos across the 14 playlists
+were public and usable.
+
+The rules-only pass produced 25 automatic mappings, 75 review-required
+mappings, and 12 unmatched rows. No manifests were retained. The family
+contains shared live-practice videos that intentionally span adjacent chapters,
+while several source names do not align one-to-one with the current canonical
+catalogue. The pass also demonstrated why automatic acceptance is unsafe:
+`Environmental Chemistry` was falsely proposed as `Hydrocarbons`, and individual
+Periodic Classification, Chemical Bonding, and GOC rows were proposed under
+unrelated chapters based on incidental title words. The Chemistry RAFTAAR
+batch is deferred pending per-video editorial mapping, a decision for
+multi-chapter practice sessions, canonical Environmental Chemistry coverage,
+and later teacher-evidence verification.
+
 ## Safe next gates
 
 1. Review the four clean manifests and import only with a separate owner gate.
