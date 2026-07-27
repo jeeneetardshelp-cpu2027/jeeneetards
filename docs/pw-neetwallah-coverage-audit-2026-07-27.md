@@ -176,6 +176,43 @@ Plants, Mineral Nutrition, Environmental Issues, and Molecular Basis of
 Inheritance; Chemistry includes Polymers and Environmental Chemistry. Mapping
 those lectures to nearby chapters would be false taxonomy.
 
+The next 21 chapter-specific Class 12/NEET playlists were checked with the
+legacy single-chapter anonymous dry-run, totalling 184 usable videos. This was
+discovery QA only: no v12 manifests were created and no production writes were
+made.
+
+| Playlist | Subject | Usable | Audit result |
+| --- | --- | ---: | --- |
+| Electromagnetic Induction | Physics | 6 | Review: no accepted teacher evidence |
+| Haloalkanes and Haloarenes | Chemistry | 12 | Review: no accepted teacher evidence |
+| Biotechnology Principles and Processes | Biology | 6 | Review: no accepted teacher evidence |
+| Magnetism and Matter | Physics | 5 | Blocked: one duplicate video ID and no accepted teacher evidence |
+| Molecular Basis of Inheritance | Biology | 10 | Blocked: canonical production chapter absent and no accepted teacher evidence |
+| Magnetic Effects of Current | Physics | 8 | Review: no accepted teacher evidence |
+| Human Health and Disease | Biology | 13 | Review: no accepted teacher evidence |
+| Coordination Compounds | Chemistry | 12 | Blocked: duplicate lesson numbers 1 and 2 and no accepted teacher evidence |
+| Capacitors | Physics | 6 | Review: no accepted teacher evidence |
+| Reproductive Health | Biology | 6 | Review: no accepted teacher evidence |
+| The d and f Block Elements | Chemistry | 7 | Review: no accepted teacher evidence |
+| Principles of Inheritance and Variation | Biology | 11 | Review: no accepted teacher evidence |
+| Current Electricity | Physics | 11 | Review: no accepted teacher evidence |
+| Electro Chemistry | Chemistry | 8 | Review: no accepted teacher evidence |
+| Electrostatic Potential | Physics | 6 | Review: no accepted teacher evidence |
+| Chemical Kinetics | Chemistry | 7 | Review: no accepted teacher evidence |
+| Sexual Reproduction in Flowering Plants | Biology | 8 | Review: no accepted teacher evidence |
+| Human Reproduction | Biology | 14 | Review: no accepted teacher evidence |
+| Solutions | Chemistry | 10 | Review: no accepted teacher evidence |
+| Reproduction in Organisms | Biology | 4 | Blocked: canonical production chapter absent and no accepted teacher evidence |
+| Electric Charges & Fields | Physics | 14 | Mechanical quality gate passed; exact faculty attribution still requires review |
+
+Twenty playlists lack accepted teacher attribution. Two of those also need
+additive canonical chapters, and two others have independent duplicate-data
+blockers. Electric Charges & Fields is the
+only mechanically clean result, but the audit used a placeholder teacher name:
+its pass means the source supplies accepted teacher evidence, not that the
+faculty identity has been verified for an import. Every candidate therefore
+remains non-importable until its stated review is completed.
+
 ## Safe next gates
 
 1. Review the four clean manifests and import only with a separate owner gate.
