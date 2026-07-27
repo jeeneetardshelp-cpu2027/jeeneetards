@@ -173,6 +173,71 @@ authorize production migration or content import; production still requires a
 fresh capability preflight, exact artifact hashes, explicit owner approval,
 one migration/import at a time, and stop-on-mismatch handling.
 
+### NEET Gate R3 clone import rehearsal — passed
+
+```text
+Date: 2026-07-27
+Target: youtube-neet-restore-rehearsal-20260727 / napkhqkdsqmnunxwnurr
+Scope: isolated clone only
+Production writes: zero
+Release pushes: zero
+```
+
+The owner dropped Path B to avoid a second billable clone and directed Gate R3
+to use the existing migrated clone. The accidentally created fresh Path B clone
+was permanently deleted before this gate; it held no unique data.
+
+Both mapped v12 anonymous dry-runs passed:
+
+- `neet-vardaan-biology.json`: 6 published / 6 usable videos, 6 exact
+  assignments, 5 resolved chapters, zero duplicate video IDs, zero duplicate
+  lesson numbers, zero missing durations, zero non-embeddable videos, teacher
+  evidence present, and no blocking or review findings.
+- `neet-ummeed-2025-class-11-physics.json`: 15 published / 15 usable videos,
+  15 exact assignments, 12 resolved chapters, zero duplicate video IDs, zero
+  duplicate lesson numbers, zero missing durations, zero non-embeddable videos,
+  teacher evidence present, and no blocking or review findings.
+
+The importer then executed both create-only mapped v12 writes, one manifest at
+a time, with explicit production-mode confirmation pointed at the clone:
+
+- Vardaan Biology created course `91`, 6 videos, and 6 memberships; it reused
+  the pre-created chapter reference rows and created no chapters.
+- UMMEED Class 11 Physics created course `92`, 15 videos, and 15 memberships;
+  it reused the pre-created chapter reference rows and created no chapters.
+
+The before/after catalogue evidence was:
+
+| Metric | Before | After | Delta |
+| --- | ---: | ---: | ---: |
+| Courses | 83 | 85 | +2 |
+| Playlist-video memberships | 1,307 | 1,328 | +21 |
+| Unique videos | 1,303 | 1,324 | +21 |
+| Chapters | 123 | 123 | 0 |
+| JEE courses | 83 | 83 | 0 |
+| JEE memberships | 1,307 | 1,307 | 0 |
+| NEET courses | 0 | 2 | +2 |
+| NEET memberships | 0 | 21 | +21 |
+
+The ordered JEE course-and-membership SHA-256 fingerprint was
+`85d5f2e462f07bcc72b1223bc200c0d9413137182f1a98f341ac18fd8993832e`
+both before and after the imports.
+
+Anonymous clone browser verification showed:
+
+- JEE browse: exactly 83 courses; Competition Wallah/NEET content contributed
+  zero results to the JEE-scoped facets.
+- NEET Class 11 browse: one Physics and one Biology course; a NEET-scoped
+  chapter view showed zero JEE courses.
+- Vardaan Biology course `91` displayed all 6 lessons across the 5 mapped
+  chapters. Its first and last official YouTube embeds loaded with the expected
+  video IDs (`LyvqUtWgtZ0` and `AD1XA8T5S_0`).
+- Representative JEE course `39` displayed its original 8 lessons. Its first
+  and last official YouTube embeds loaded successfully.
+
+Gate R3 is complete on the clone. This evidence does not authorize any
+production migration or NEET production import.
+
 ## Change record template
 
 ```text

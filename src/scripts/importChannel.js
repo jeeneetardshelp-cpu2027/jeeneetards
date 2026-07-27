@@ -60,7 +60,7 @@ function loadEnv(environment) {
   } catch {
     fail(`Couldn't read .env at ${envPath}`);
   }
-  return env;
+  return { ...env, ...process.env };
 }
 
 const C = {
@@ -149,17 +149,18 @@ async function main() {
   });
 
   // --- reference data for the prompts -------------------------------
-  const [{ data: categories }, { data: subjects }, { data: goals }, { data: boards }] =
-    await Promise.all([
-      db.from("categories").select("id, name"),
-      db.from("subjects").select("id, name"),
-      db.from("learning_goals").select("id, name, slug").order("display_order"),
-      db.from("boards").select("id, name, slug").order("display_order"),
-    ]);
+  const referenceResults = await Promise.all([
+    db.from("categories").select("id, name"),
+    db.from("subjects").select("id, name"),
+    db.from("learning_goals").select("id, name, slug").order("display_order"),
+  ]);
+  const referenceError = referenceResults.find((result) => result.error)?.error;
+  if (referenceError) throw referenceError;
+  const [categories, subjects, goals] =
+    referenceResults.map((result) => result.data);
   const catByName = nameMap(categories);
   const subjByName = nameMap(subjects);
   const goalByName = nameMap(goals);
-  const boardByName = nameMap(boards);
 
   say(`\n${C.dim}Categories: ${categories.map((c) => c.name).join(", ")}${C.reset}`);
   say(`${C.dim}Goals:      ${goals.map((g) => g.name).join(", ")}${C.reset}`);
@@ -196,6 +197,12 @@ async function main() {
     const goalSlug = goals.find((g) => g.id === learningGoalId)?.slug;
     let boardIds = [];
     if (goalSlug === "school") {
+      const { data: boards, error: boardsError } = await db
+        .from("boards")
+        .select("id, name, slug")
+        .order("display_order");
+      if (boardsError) throw boardsError;
+      const boardByName = nameMap(boards);
       const answer = args.nonInteractive
         ? (args.board ?? "")
         : (await ask(`  Board(s) ${C.dim}(e.g. CBSE)${C.reset}: `)).trim();

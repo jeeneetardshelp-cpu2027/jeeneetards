@@ -35,6 +35,19 @@ describe("channel ingestion metadata", () => {
       .toBeLessThan(source.indexOf("db.rpc(rpc"));
   });
 
+  it("lets ephemeral runtime credentials override ignored env files", () => {
+    const source = readFileSync(resolve("src/scripts/importChannel.js"), "utf8");
+    expect(source).toMatch(/return \{ \.\.\.env, \.\.\.process\.env \}/);
+  });
+
+  it("only loads board reference data for the School learning goal", () => {
+    const source = readFileSync(resolve("src/scripts/importChannel.js"), "utf8");
+    const schoolBranch = source.indexOf('if (goalSlug === "school")');
+    const boardsQuery = source.indexOf('.from("boards")');
+    expect(schoolBranch).toBeGreaterThan(-1);
+    expect(boardsQuery).toBeGreaterThan(schoolBranch);
+  });
+
   it("uses a focused ownership lookup and existing production chapters", () => {
     const source = readFileSync(resolve("src/scripts/importChannel.js"), "utf8");
     expect(source).toMatch(/getPlaylistOwner\(ytKey, args\.playlistId\)/);
