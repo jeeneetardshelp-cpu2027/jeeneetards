@@ -404,7 +404,9 @@ channel collection as a missing NEET course.
 
 ## Safe next gates
 
-1. Review the four clean manifests and import only with a separate owner gate.
+1. The ten clean mapped candidates are reconciled in
+   `pw-neetwallah-next-batch-readiness-2026-07-28.md`; import only named
+   manifests, one at a time, under a separate owner gate.
 2. Add/verify teacher evidence for Inorganic Chemistry and Zoology without
    weakening the global quality gate.
 3. Create the missing Botany chapter only through the established additive
