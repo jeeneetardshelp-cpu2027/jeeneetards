@@ -65,4 +65,18 @@ export default [
       },
     },
   },
+  {
+    // Vercel Edge Middleware + its shared pure helper. The edge runtime is a
+    // web-worker-like environment (fetch/URL/Response/AbortController/timers)
+    // plus process.env for configuration.
+    files: ["middleware.js", "ogInject.js"],
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
+      globals: {
+        ...globals.browser,
+        process: "readonly",
+      },
+    },
+  },
 ];
