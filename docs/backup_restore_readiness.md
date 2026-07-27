@@ -122,11 +122,19 @@ read-only integrity checks passed:
   123 chapters;
 - the legacy `import_playlist(jsonb,text)` lineage and v12 capability were both
   absent, matching the production preflight.
+- a production-mode frontend build pointed only at the isolated project loaded
+  the restored catalogue successfully;
+- the anonymous home page showed JEE live with 83 courses and NEET still
+  hidden as `Coming soon`;
+- the representative student path JEE -> Class 11 -> Physics -> Kinematics
+  returned 4 courses;
+- opening Rectilinear Motion (Kinematics) loaded its embedded YouTube player,
+  10-lesson list, lesson navigation, and restored course metadata.
 
 The isolated project remains retained for the remaining rehearsal. This record
 does **not** yet clear the destructive migration gate: the restored student
-browse flow, representative course/lesson behavior, and the ordered v3-through-
-v12 migration rehearsal still need to pass and be recorded.
+browse flow and representative course/lesson behavior have passed, but the
+ordered v3-through-v12 migration rehearsal still needs to pass and be recorded.
 
 ## Change record template
 
