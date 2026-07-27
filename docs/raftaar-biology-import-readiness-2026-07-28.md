@@ -44,10 +44,18 @@ Recorded at `2026-07-28 00:20:01 +05:30` using anonymous exact-count queries:
 | NEET courses | 14 |
 
 All three candidate YouTube playlist IDs returned zero existing production
-matches. The repository does not currently provide a stable read-only command
-that reconstructs the recorded JEE fingerprint, so that exact hash check
-remains an explicit pre-write gate. Matching counts must not be treated as a
-substitute.
+matches. The historical JEE fingerprint was independently reconstructed from
+the exact playlist and membership fields and verified as
+`d7aae3ce7635401ebeffe97e627048bc` (83 playlists, 1,307 memberships).
+
+Repeat that anonymous, read-only verification with:
+
+```powershell
+node src/scripts/verifyJeeIntegrityFingerprint.js
+```
+
+The command exits nonzero if the live fingerprint differs from the recorded
+value. Matching counts must not be treated as a substitute for this hash.
 
 ## Required production gate
 
