@@ -3,4 +3,4 @@ Allow: /
 Disallow: /admin
 
 # Search queries and not-yet-released feature routes set noindex at runtime.
-# A sitemap will be added once the permanent production domain is confirmed.
+Sitemap: https://www.jeeneetard.com/sitemap.xml
