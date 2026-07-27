@@ -29,6 +29,26 @@ duration, embedding, chapter-resolution, and teacher-evidence checks. These are
 single-chapter sources; the importer's multi-chapter manifest format is neither
 required nor valid for them.
 
+## Read-only production baseline
+
+Recorded at `2026-07-28 00:20:01 +05:30` using anonymous exact-count queries:
+
+| Metric | Current |
+| --- | ---: |
+| Courses | 97 |
+| Unique videos | 1,461 |
+| Playlist-video memberships | 1,465 |
+| Chapters | 123 |
+| JEE courses | 83 |
+| JEE memberships | 1,307 |
+| NEET courses | 14 |
+
+All three candidate YouTube playlist IDs returned zero existing production
+matches. The repository does not currently provide a stable read-only command
+that reconstructs the recorded JEE fingerprint, so that exact hash check
+remains an explicit pre-write gate. Matching counts must not be treated as a
+substitute.
+
 ## Required production gate
 
 Before any write:
