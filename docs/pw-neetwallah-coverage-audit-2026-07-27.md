@@ -297,6 +297,21 @@ attribution was found. None was blocked mechanically. No manifest was retained:
 even the three automated passes still need exact faculty identity confirmed
 before an honest course record can be prepared.
 
+That faculty review is now complete for the three passing playlists. All four
+Chemical Coordination lessons and the first three Neural Control lessons
+explicitly credit `Diksha Sharma ma'am` in their YouTube descriptions, with no
+conflicting attribution in the continuation lessons. All four Anatomy lessons
+credit `Yashika ma'am`; the official PW NEET faculty listing identifies her as
+`Yashika Singh Ma'am`.
+
+Fresh anonymous single-chapter dry-runs using `Diksha Sharma Ma'am` and
+`Yashika Singh Ma'am` returned `ok` for all three playlists: 4/4 Chemical
+Coordination, 6/6 Neural Control, and 4/4 Anatomy. Counts, ordering, chapters,
+durations, embedding, and teacher evidence passed with no review or blocking
+finding. These are single-chapter sources, so the importer correctly rejects a
+multi-chapter manifest; no manifest is required or retained. Production remains
+unchanged pending a separate import authorization.
+
 The six subject-specific `Prashnakal Series` playlists were reviewed next:
 Inorganic Chemistry (6), Zoology (11), Organic Chemistry (12), Physical
 Chemistry (9), Physics (27), and Botany (15), totalling 80 public and usable
