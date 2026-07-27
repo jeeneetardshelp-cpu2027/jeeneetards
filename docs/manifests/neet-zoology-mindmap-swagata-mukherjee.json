@@ -1,0 +1,77 @@
+{
+  "version": 1,
+  "request_id": "da80edd9-18a6-4476-9e9c-8711797b79d3",
+  "youtube_playlist_id": "PLJyab0VQDBGVpMaJJ0q2E2-RHnvDmOFOg",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "BoLjr8Tr6nw",
+      "chapter": "Structural Organisation in Animals"
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "6SXr6Pr4_ns",
+      "chapter": "Breathing and Exchange of Gases"
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "r35rt-gy5Zs",
+      "chapter": "Body Fluids and Circulation"
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "CrantF9mUQE",
+      "chapter": "Excretory Products and Their Elimination"
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "BRmnsrBeQ38",
+      "chapter": "Locomotion and Movement"
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "vfroDkpTDSs",
+      "chapter": "Neural Control and Coordination"
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "Pz2teV809fs",
+      "chapter": "Chemical Coordination and Integration"
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "cwwElg-2eYY",
+      "chapter": "Animal Kingdom"
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "A9bhASv7yfk",
+      "chapter": "Biomolecules"
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "rxVSOi5HeXU",
+      "chapter": "Human Reproduction"
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "eH9AEJij0d8",
+      "chapter": "Reproductive Health"
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "b4bhx0TR5hY",
+      "chapter": "Human Health and Disease"
+    },
+    {
+      "position": 13,
+      "youtube_video_id": "f__8KoNKs6w",
+      "chapter": "Biotechnology: Principles and Processes"
+    },
+    {
+      "position": 14,
+      "youtube_video_id": "-deXvSNr74Y",
+      "chapter": "Biotechnology and its Applications"
+    }
+  ]
+}
