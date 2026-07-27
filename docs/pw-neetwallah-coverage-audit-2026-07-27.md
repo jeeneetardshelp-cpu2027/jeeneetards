@@ -283,6 +283,21 @@ No manifests were retained at this discovery gate. The clean Biology subset is
 a strong follow-up candidate for teacher-evidence dry-runs, while the three
 missing-chapter playlists remain deferred pending additive taxonomy work.
 
+The six subject-specific `Prashnakal Series` playlists were reviewed next:
+Inorganic Chemistry (6), Zoology (11), Organic Chemistry (12), Physical
+Chemistry (9), Physics (27), and Botany (15), totalling 80 public and usable
+videos. The mapping pass produced 28 automatic mappings, 16 review-required
+mappings, and 36 unmatched rows.
+
+No manifests were retained. These are question-practice compilations in which
+many individual videos intentionally combine two or more chapters; later rows
+expand to complete-class or full-syllabus mock tests. Every subject playlist
+also contains the same general NEET 2021 paper discussion, which has no honest
+single-chapter placement. Assigning only the first recognized chapter would
+hide most of each video's scope. Prashnakal is therefore deferred pending
+multi-chapter video taxonomy or an explicitly approved narrower editorial
+selection.
+
 ## Safe next gates
 
 1. Review the four clean manifests and import only with a separate owner gate.
