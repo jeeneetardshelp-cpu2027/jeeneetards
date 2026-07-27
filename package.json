@@ -53,6 +53,7 @@
     "cleanup:report-browser": "node src/scripts/reportBrowserFixture.js cleanup",
     "verify:production-capabilities": "node src/scripts/verifyProductionCapabilities.js",
     "verify:frontend-release": "node src/scripts/verifyFrontendRelease.js",
+    "draft:manifest": "node src/scripts/draftManifest.js",
     "demo:classify": "node src/scripts/classify/demoClassify.js",
     "demo:quality": "node src/scripts/classify/demoQualityGate.js",
     "refresh:stats": "node src/scripts/refreshVideoStats.js"
