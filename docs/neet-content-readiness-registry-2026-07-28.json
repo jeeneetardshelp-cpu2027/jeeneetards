@@ -1,0 +1,138 @@
+{
+  "version": 1,
+  "status": "readiness_only_no_write_authorization",
+  "expected_totals": {
+    "courses": 15,
+    "videos": 160,
+    "memberships": 160,
+    "chapters": 0
+  },
+  "candidates": [
+    {
+      "group": "mapped-next-batch",
+      "youtube_playlist_id": "PLJyab0VQDBGUlZybgOULmNV1vbvWmUGxn",
+      "manifest": "docs/manifests/neet-mission-30-organic-chemistry.json",
+      "teacher": "Pankaj Sijariya",
+      "videos": 8,
+      "import_mode": "mapped-v12",
+      "approval_note": "accept-primary-chapter-only"
+    },
+    {
+      "group": "mapped-next-batch",
+      "youtube_playlist_id": "PLJyab0VQDBGUUcdtuWiyx9PdkSUEu5zEi",
+      "manifest": "docs/manifests/neet-mission-30-physical-chemistry.json",
+      "teacher": "Amit Mahajan",
+      "videos": 7,
+      "import_mode": "mapped-v12",
+      "approval_note": "accept-primary-chapter-only"
+    },
+    {
+      "group": "mapped-next-batch",
+      "youtube_playlist_id": "PLJyab0VQDBGWvRw8liU4B8s-OB75jv-og",
+      "manifest": "docs/manifests/neet-mission-30-class-12-physics.json",
+      "teacher": "Manish Raj",
+      "videos": 11,
+      "import_mode": "mapped-v12",
+      "approval_note": "accept-primary-chapter-only"
+    },
+    {
+      "group": "mapped-next-batch",
+      "youtube_playlist_id": "PLJyab0VQDBGWnC3N-wwV4Og_UB6FQk9f5",
+      "manifest": "docs/manifests/neet-mission-30-class-11-physics.json",
+      "teacher": "Saleem Sir",
+      "videos": 10,
+      "import_mode": "mapped-v12",
+      "approval_note": "accept-primary-chapter-only"
+    },
+    {
+      "group": "mapped-next-batch",
+      "youtube_playlist_id": "PLJyab0VQDBGXKoJSUTVlNj37J5AZ3DS-m",
+      "manifest": "docs/manifests/neet-skc-organic-chemistry-one-shot.json",
+      "teacher": "SKC Sir",
+      "videos": 10,
+      "import_mode": "mapped-v12"
+    },
+    {
+      "group": "mapped-next-batch",
+      "youtube_playlist_id": "PLJyab0VQDBGXZ4w4AWoB_fLzoRRyXhBse",
+      "manifest": "docs/manifests/neet-pankaj-organic-chemistry-class-11.json",
+      "teacher": "Pankaj Sijariya",
+      "videos": 8,
+      "import_mode": "mapped-v12"
+    },
+    {
+      "group": "mapped-next-batch",
+      "youtube_playlist_id": "PLJyab0VQDBGWjCjKZ0lslIfdINtObB3Dd",
+      "manifest": "docs/manifests/neet-aayudh-mechanics-one-shot.json",
+      "teacher": "Aayudh Sir",
+      "videos": 14,
+      "import_mode": "mapped-v12"
+    },
+    {
+      "group": "mapped-next-batch",
+      "youtube_playlist_id": "PLJyab0VQDBGUMa1ndqTTm2295o939H51g",
+      "manifest": "docs/manifests/neet-good-morning-physics-abhishek-verma.json",
+      "teacher": "Abhishek Verma Sir",
+      "videos": 25,
+      "import_mode": "mapped-v12"
+    },
+    {
+      "group": "mapped-next-batch",
+      "youtube_playlist_id": "PLJyab0VQDBGWQ3XjCBXxvttq1McW4yQfi",
+      "manifest": "docs/manifests/neet-physical-chemistry-mindmap-sudhanshu.json",
+      "teacher": "Sudhanshu Sir",
+      "videos": 10,
+      "import_mode": "mapped-v12"
+    },
+    {
+      "group": "mapped-next-batch",
+      "youtube_playlist_id": "PLJyab0VQDBGXTDms0LZOP4VfBlGVkPd0S",
+      "manifest": "docs/manifests/neet-physics-mindmap-siddharth.json",
+      "teacher": "Siddharth Sir",
+      "videos": 33,
+      "import_mode": "mapped-v12"
+    },
+    {
+      "group": "vardaan-multi-teacher",
+      "youtube_playlist_id": "PLJyab0VQDBGVD_EF-V55P2-Yx7mS5mete",
+      "manifest": "docs/manifests/neet-vardaan-physics.json",
+      "teacher": "Aditya Sir & Rohit Sir",
+      "videos": 5,
+      "import_mode": "mapped-v12",
+      "approval_note": "preserve-combined-faculty-label"
+    },
+    {
+      "group": "vardaan-multi-teacher",
+      "youtube_playlist_id": "PLJyab0VQDBGXJj0uK_7YRGQcvzyOMEW7_",
+      "manifest": "docs/manifests/neet-vardaan-chemistry.json",
+      "teacher": "Sarvesh Sir, Pankaj Sir & Amit Sir",
+      "videos": 5,
+      "import_mode": "mapped-v12",
+      "approval_note": "preserve-combined-faculty-label"
+    },
+    {
+      "group": "raftaar-biology",
+      "youtube_playlist_id": "PLJyab0VQDBGXzd_SfmT7RyNS3JrN8BXAO",
+      "teacher": "Diksha Sharma Ma'am",
+      "videos": 4,
+      "import_mode": "single-existing-chapter",
+      "chapter": "Chemical Coordination and Integration"
+    },
+    {
+      "group": "raftaar-biology",
+      "youtube_playlist_id": "PLJyab0VQDBGWEHG2llBuC96BZ__ehodpJ",
+      "teacher": "Diksha Sharma Ma'am",
+      "videos": 6,
+      "import_mode": "single-existing-chapter",
+      "chapter": "Neural Control and Coordination"
+    },
+    {
+      "group": "raftaar-biology",
+      "youtube_playlist_id": "PLJyab0VQDBGXycgtfPfQav8Ya3lFqpdQG",
+      "teacher": "Yashika Singh Ma'am",
+      "videos": 4,
+      "import_mode": "single-existing-chapter",
+      "chapter": "Anatomy of Flowering Plants"
+    }
+  ]
+}
