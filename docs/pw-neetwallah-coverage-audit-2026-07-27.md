@@ -267,6 +267,22 @@ handled explicitly and teacher evidence is verified. The Physics RAFTAAR batch
 therefore remains deferred rather than silently dropping or misclassifying
 source videos.
 
+The Biology portion of `RAFTAAR` completed the family review. It covers 22
+chapter playlists from Plant Kingdom through Structural Organisation in
+Animals; all 101 advertised videos were public and usable. The mapping pass
+produced 75 automatic mappings, 23 review-required mappings, and 3 unmatched
+rows.
+
+Sixteen playlists mapped completely without a review flag. Morphology of
+Flowering Plants, Excretory Products and Their Elimination, and Structural
+Organisation in Animals need straightforward editorial confirmation of
+source-versus-canonical naming. Digestion and Absorption, Mineral Nutrition,
+and Transport in Plants cannot proceed because those canonical chapters are
+absent; the mapper's nearby alternatives are false and must not be accepted.
+No manifests were retained at this discovery gate. The clean Biology subset is
+a strong follow-up candidate for teacher-evidence dry-runs, while the three
+missing-chapter playlists remain deferred pending additive taxonomy work.
+
 ## Safe next gates
 
 1. Review the four clean manifests and import only with a separate owner gate.
