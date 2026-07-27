@@ -324,6 +324,14 @@ manifests can be prepared from unavailable source videos, and none were
 retained. These playlists are deferred unless their visibility changes; the
 advertised counts must not be mistaken for importable lectures.
 
+The nine Physics `PACE SERIES` playlists have the same availability failure:
+Mechanical Properties of Solids (1 advertised), Gravitation (3), Rotational
+Motion (8), Centre of Mass (5), Work/Energy/Power (5), Newton's Laws of Motion
+(10), Motion in a Plane (6), Basic Mathematics (2), and Motion in a Straight
+Line (5). Their records advertise 45 videos in total, but every playlist
+returned zero public and usable entries. No manifests were retained; the
+Physics PACE sources are deferred unless visibility changes.
+
 ## Safe next gates
 
 1. Review the four clean manifests and import only with a separate owner gate.
