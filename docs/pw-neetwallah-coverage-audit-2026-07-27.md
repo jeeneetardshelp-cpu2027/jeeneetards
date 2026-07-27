@@ -429,6 +429,18 @@ Shorts, and JEE-only Vardaan/PACE Mathematics playlists. This completes the
 structured triage of the 218-playlist enumeration without treating every
 channel collection as a missing NEET course.
 
+## Inventory refresh — 2026-07-28
+
+A fresh read-only YouTube Data API enumeration returned the same 218 public
+channel playlists. The ordered endpoints also remained the same: MISSION 30
+Inorganic Chemistry was first and PACE Biology Cell Cycle & Cell Division was
+last. No new playlist-level discovery gap was present at refresh time.
+
+This refresh does not claim that the dynamic upload feed is permanently
+unchanged. Future coverage checks should compare a fresh channel enumeration
+with this reviewed 218-playlist baseline before triaging only genuinely new
+playlists.
+
 ## Safe next gates
 
 1. The ten clean mapped candidates are reconciled in
@@ -448,5 +460,6 @@ channel collection as a missing NEET course.
 4. Vardaan Physics and Chemistry need no new data model for the current UI:
    preserve their reviewed combined faculty labels and import only under the
    separate gate in `vardaan-multiteacher-readiness-2026-07-28.md`.
-5. Continue triaging the remaining unaudited public playlists; do not equate
-   all channel uploads with curriculum lectures.
+5. Periodically refresh the channel enumeration and triage only playlists that
+   are new relative to the reviewed 218-playlist baseline; do not equate all
+   channel uploads with curriculum lectures.
