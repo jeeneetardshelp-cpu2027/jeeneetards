@@ -1,0 +1,77 @@
+{
+  "version": 1,
+  "request_id": "eed759ea-ddac-4c30-8e09-46d065845fdb",
+  "youtube_playlist_id": "PLJyab0VQDBGXoWnZejGT1Ujg4_fHgmv3d",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "LzqXYKJ-g3s",
+      "chapter": "Breathing and Exchange of Gases"
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "PuQgqqfOIjg",
+      "chapter": "Human Reproduction"
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "FVOLD9qqAEA",
+      "chapter": "Body Fluids and Circulation"
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "D2Pqlh3Unes",
+      "chapter": "Animal Kingdom"
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "0kRjQDUOizg",
+      "chapter": "Excretory Products and Their Elimination"
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "sR1DIf4jOcE",
+      "chapter": "Locomotion and Movement"
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "iP_DSgVLgow",
+      "chapter": "Neural Control and Coordination"
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "P9Mzt6NZL0U",
+      "chapter": "Biomolecules"
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "zhkE5Iz1SXw",
+      "chapter": "Chemical Coordination and Integration"
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "XEJTf9xET74",
+      "chapter": "Structural Organisation in Animals"
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "tYg31l3MB5s",
+      "chapter": "Evolution"
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "1n0OWx_MQQM",
+      "chapter": "Human Health and Disease"
+    },
+    {
+      "position": 13,
+      "youtube_video_id": "ARvz62i6ekw",
+      "chapter": "Structural Organisation in Animals"
+    },
+    {
+      "position": 14,
+      "youtube_video_id": "S0HVAMi4zU4",
+      "chapter": "Reproductive Health"
+    }
+  ]
+}
