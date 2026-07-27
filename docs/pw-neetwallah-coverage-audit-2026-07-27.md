@@ -283,6 +283,20 @@ No manifests were retained at this discovery gate. The clean Biology subset is
 a strong follow-up candidate for teacher-evidence dry-runs, while the three
 missing-chapter playlists remain deferred pending additive taxonomy work.
 
+Anonymous production dry-runs were then completed for all 16 automatically
+mapped Biology RAFTAAR playlists, using a deliberately non-matching placeholder
+teacher so the quality gate had to rely on source evidence. All 75 videos
+matched their advertised counts and passed duplicate-ID, duration, embedding,
+and existing-chapter checks.
+
+Three playlists, totalling 14 videos, passed the automated source-evidence
+gate: Chemical Coordination and Integration (4), Neural Control and
+Coordination (6), and Anatomy of Flowering Plants (4). The other 13 playlists,
+totalling 61 videos, returned `review` solely because no accepted teacher
+attribution was found. None was blocked mechanically. No manifest was retained:
+even the three automated passes still need exact faculty identity confirmed
+before an honest course record can be prepared.
+
 The six subject-specific `Prashnakal Series` playlists were reviewed next:
 Inorganic Chemistry (6), Zoology (11), Organic Chemistry (12), Physical
 Chemistry (9), Physics (27), and Botany (15), totalling 80 public and usable
