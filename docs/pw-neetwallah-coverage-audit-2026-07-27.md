@@ -213,6 +213,23 @@ its pass means the source supplies accepted teacher evidence, not that the
 faculty identity has been verified for an import. Every candidate therefore
 remains non-importable until its stated review is completed.
 
+The four `UMEED 2.0 | NEET 2022` subject playlists were reviewed next:
+Zoology (21), Chemistry (36), Botany (23), and Physics (30), totalling 110
+usable videos with no source count shortfall. The rules-only mapping pass
+produced 61 automatic mappings, 19 review-required mappings, and 30 unmatched
+rows.
+
+No manifests were retained. The playlists mix chapter lectures with post-exam
+proof/reaction and paper-analysis videos, which are not chapter courses.
+Several real lectures also require canonical chapters absent from production,
+including Digestion and Absorption, Animal Tissues, Animal Husbandry, Transport
+in Plants, Mineral Nutrition, Molecular Basis of Inheritance, Environmental
+Issues, Polymers, and Environmental Chemistry. Other unmatched rows use legacy
+Physics/Chemistry chapter names that require explicit editorial mapping.
+Silently omitting the non-lecture rows or forcing missing chapters into nearby
+taxonomy would misrepresent the source. This family is deferred pending a
+deliberate editorial subset and any required additive chapter work.
+
 ## Safe next gates
 
 1. Review the four clean manifests and import only with a separate owner gate.
@@ -222,5 +239,5 @@ remains non-importable until its stated review is completed.
    chapter workflow, then repeat its anonymous dry-run.
 4. Decide whether multi-teacher playlists need a data-model extension or should
    remain deferred; do not flatten the Vardaan faculty attribution.
-5. Continue triaging the other 188 public playlists; do not equate all channel
-   uploads with curriculum lectures.
+5. Continue triaging the remaining unaudited public playlists; do not equate
+   all channel uploads with curriculum lectures.
