@@ -15,7 +15,7 @@ export const RELEASE_CAPABILITIES = Object.freeze({
   universalSearch: true,
   comparison: true,
   facultyRegistry: true,
-  boardClassification: false,
+  boardClassification: true,
 });
 
 // Product rollout decisions are separate from database capability. In

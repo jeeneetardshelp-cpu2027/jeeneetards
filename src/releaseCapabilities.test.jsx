@@ -21,7 +21,7 @@ describe("current production capability contract", () => {
       universalSearch: true,
       comparison: true,
       facultyRegistry: true,
-      boardClassification: false,
+      boardClassification: true,
     });
     expect(RELEASE_FEATURES).toEqual({
       studentAccounts: false,

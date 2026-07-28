@@ -26,7 +26,7 @@ security controls and release evidence must also be present.
 | Universal search | Enabled |
 | Course comparison | Enabled |
 | Faculty profiles and filtering | Enabled |
-| School-board classification | Disabled |
+| School-board classification | Enabled |
 | Public student accounts | Disabled |
 | Rating submission | Disabled |
 | Content reporting | Disabled |

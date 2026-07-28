@@ -29,19 +29,15 @@ describe("repository onboarding contract", () => {
       universalSearch: true,
       comparison: true,
       facultyRegistry: true,
-      boardClassification: false,
+      boardClassification: true,
     });
     for (const label of [
       "Universal search",
       "Course comparison",
       "Faculty profiles and filtering",
-    ]) {
-      expect(readme).toMatch(new RegExp(`\\| ${label} \\| Enabled \\|`));
-    }
-    for (const label of [
       "School-board classification",
     ]) {
-      expect(readme).toMatch(new RegExp(`\\| ${label} \\| Disabled \\|`));
+      expect(readme).toMatch(new RegExp(`\\| ${label} \\| Enabled \\|`));
     }
   });
 
