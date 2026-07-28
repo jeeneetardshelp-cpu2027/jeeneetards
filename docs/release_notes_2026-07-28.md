@@ -2,19 +2,19 @@
 
 ## NEET catalogue checkpoint
 
-The reviewed NEET readiness registry is complete. All 30 approved candidates
+The reviewed NEET readiness registry is complete. All 31 approved candidates
 were imported through the create-only mapped workflow:
 
-- 30 courses;
-- 252 videos;
-- 252 playlist memberships;
+- 31 courses;
+- 256 videos;
+- 256 playlist memberships;
 - zero import-created chapters.
 
-Production now contains 127 courses and 1,717 memberships:
+Production now contains 128 courses and 1,721 memberships:
 
 - JEE: 83 courses and 1,307 memberships;
-- NEET: 44 courses;
-- Biology: 25 courses.
+- NEET: 45 courses;
+- Biology: 26 courses.
 
 The final reviewed-evidence candidate was MISSION 30 Zoology, imported as
 course 122 with 10 new videos and memberships. Its teacher attribution is
@@ -88,10 +88,17 @@ create-only import added 6 videos and memberships, reused the canonical
 `Structural Organisation in Animals` chapter, and left the protected JEE
 catalogue unchanged.
 
+Plant Kingdom - BIOLOGY RAFTAAR was imported as course 135. The first three
+consecutive source descriptions directly credit Yashika ma'am, the fourth
+continuation has no conflicting attribution, and the established PW faculty
+identity is Yashika Singh Ma'am. The create-only import added 4 videos and
+memberships, reused the existing Plant Kingdom chapter, and left the protected
+JEE catalogue unchanged.
+
 ## Integrity and rollback evidence
 
 Seven-day PITR was active before the latest write. The recorded rollback point
-for course 134 is `28 Jul 2026 11:33:24 UTC+05:30`; no restore was started.
+for course 135 is `28 Jul 2026 11:37:24 UTC+05:30`; no restore was started.
 
 The protected JEE catalogue remains unchanged:
 
@@ -130,6 +137,13 @@ Morphology of Plants - BIOLOGY RAFTAAR remains deferred because none of its
 five current YouTube descriptions or tags identifies the teacher. The videos
 are otherwise public and embeddable, but faculty identity is not inferred from
 the shared series.
+
+The refreshed RAFTAAR closure audit leaves six unimported playlists in total.
+Living World and Animal Kingdom, like Morphology, have no teacher attribution
+in their current descriptions or tags. Digestion and Absorption, Mineral
+Nutrition, and Transport in Plants have direct teacher evidence but their
+canonical Biology chapters do not exist in production, so they remain blocked
+pending a separately approved additive taxonomy step.
 
 The PW NEET Wallah inventory refresh still contains exactly 218 public
 playlists, matching the reviewed baseline. No newly published playlist requires
