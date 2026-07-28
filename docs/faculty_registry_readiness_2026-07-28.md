@@ -36,6 +36,12 @@ teacher strings. The prepared first NEET batch covers Diksha Sharma and Yashika
 Singh across 16 courses; see
 `docs/faculty_identity_review_neet_batch_1_2026-07-28.md`.
 
+The second source-reviewed batch covers Vipin Sharma, Pankaj Sijariya, Amit
+Mahajan, and Manish Raj across another 11 courses; see
+`docs/faculty_identity_review_neet_batch_2_2026-07-28.md`. Together the two
+reviewed batches cover 27 of 45 NEET courses, but only batch 1 currently has a
+prepared SQL artifact. Neither is authorized for execution.
+
 ## Review blockers
 
 Three source values explicitly represent more than one teacher and must be
