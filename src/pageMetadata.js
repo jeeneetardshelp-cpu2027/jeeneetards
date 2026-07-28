@@ -1,7 +1,18 @@
+import { RELEASE_CAPABILITIES } from "./releaseCapabilities.js";
+
 export const SITE_NAME = "JEENEETARD";
 export const DEFAULT_TITLE = "JEENEETARD - Free course finder";
 export const DEFAULT_DESCRIPTION =
   "Browse free educational YouTube courses by exam, class, subject and chapter.";
+
+// A capability-gated page still under review keeps a neutral, noindex title.
+const comingSoon = (base) => ({
+  ...base,
+  title: `Feature coming soon | ${SITE_NAME}`,
+  description:
+    "This catalogue feature is still under review and is not available in the current release.",
+  robots: "noindex, follow",
+});
 
 const ACRONYMS = new Map([
   ["jee", "JEE"],
@@ -154,17 +165,26 @@ export function metadataForLocation(pathname = "/", search = "") {
     };
   }
 
-  if (
-    path === "/search" ||
-    path === "/compare"
-  ) {
-    return {
-      ...base,
-      title: `Feature coming soon | ${SITE_NAME}`,
-      description:
-        "This catalogue feature is still under review and is not available in the current release.",
-      robots: "noindex, follow",
-    };
+  if (path === "/search") {
+    return RELEASE_CAPABILITIES.universalSearch
+      ? {
+          ...base,
+          title: `Search the library | ${SITE_NAME}`,
+          description: "Search across chapters, courses, lectures and faculty.",
+          robots: "noindex, follow",
+        }
+      : comingSoon(base);
+  }
+
+  if (path === "/compare") {
+    return RELEASE_CAPABILITIES.comparison
+      ? {
+          ...base,
+          title: `Compare courses | ${SITE_NAME}`,
+          description: "Compare courses that teach the same chapter, side by side.",
+          robots: "noindex, follow",
+        }
+      : comingSoon(base);
   }
 
   return { ...base, canonicalPath: "/" };
