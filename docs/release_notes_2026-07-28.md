@@ -10,11 +10,11 @@ were imported through the create-only mapped workflow:
 - 195 playlist memberships;
 - zero import-created chapters.
 
-Production now contains 120 courses and 1,690 memberships:
+Production now contains 121 courses and 1,694 memberships:
 
 - JEE: 83 courses and 1,307 memberships;
-- NEET: 37 courses;
-- Biology: 18 courses.
+- NEET: 38 courses;
+- Biology: 19 courses.
 
 The final reviewed-evidence candidate was MISSION 30 Zoology, imported as
 course 122 with 10 new videos and memberships. Its teacher attribution is
@@ -50,10 +50,15 @@ All six source descriptions directly credit Yashika ma’am. The create-only
 import added 6 videos and memberships, reused the existing Photosynthesis in
 Higher Plants chapter, and left the protected JEE catalogue unchanged.
 
+Respiration in Plants - BIOLOGY RAFTAAR was imported as course 128. All four
+source descriptions directly credit Yashika ma’am. The create-only import
+added 4 videos and memberships, reused the existing Respiration in Plants
+chapter, and left the protected JEE catalogue unchanged.
+
 ## Integrity and rollback evidence
 
 Seven-day PITR was active before the latest write. The recorded rollback point
-for course 127 is `28 Jul 2026 11:07:23 UTC+05:30`; no restore was started.
+for course 128 is `28 Jul 2026 11:11:23 UTC+05:30`; no restore was started.
 
 The protected JEE catalogue remains unchanged:
 
