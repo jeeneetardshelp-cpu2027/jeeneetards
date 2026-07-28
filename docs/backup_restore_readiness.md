@@ -800,3 +800,29 @@ remained exact.
 
 The course-91 artifact was not applied. It remains a separate production gate
 requiring fresh PITR evidence and explicit approval naming its exact SHA-256.
+
+## NEET faculty course-91 additive migration — 28 July 2026
+
+Before the separately approved production write, the signed-in production PITR
+dashboard showed active 7-day retention and latest restore point
+`28 Jul 2026 15:58:25 UTC+05:30`.
+
+The approved clone-rehearsed artifact SHA-256 was
+`992df1e36d7c38ff3aaae12ed5cc7884c8bfacd44d5c97a2eacc413a18eb20d6`.
+Production matched the expected post-batch-2–3 baseline: 128 playlists, 83 JEE
+courses, 45 NEET courses, 1,721 memberships, 1,307 JEE memberships,
+124 chapters, 24 teachers, 37 aliases, and 125 faculty links. Course 91 had
+zero normalized faculty links, Tarun Kumar did not yet exist, Samapti Sinha
+did exist, the legacy label remained `Tarun Sir & Samapti Ma'am`, and the
+protected JEE fingerprint matched
+`d7aae3ce7635401ebeffe97e627048bc`.
+
+The transaction added exactly one verified teacher, two verified aliases, and
+two course links. Course 91 now links Tarun Kumar at position 1 and Samapti
+Sinha at position 2. Anonymous faculty-profile calls returned HTTP 200:
+Tarun Kumar returned one course and Samapti Sinha returned two. Postflight
+totals were 25 teachers, 39 aliases, and 127 faculty links. Courses 118 and 119
+remain intentionally unlinked, the course-91 legacy combined label remains
+unchanged, and there were zero JEE cross-goal links. Playlist, membership,
+chapter, JEE-course, and JEE-membership counts remained unchanged, and the
+protected JEE fingerprint remained exact.
