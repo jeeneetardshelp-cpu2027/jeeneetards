@@ -84,10 +84,10 @@ describe("Dashboard route → playlist query", () => {
     expect(q.cols).not.toContain("playlist_learning_goals");
   });
 
-  it("does not call the unavailable faculty registry from the public browse page", async () => {
+  it("loads scoped faculty facets from the public browse page", async () => {
     renderAt("/browse");
     await screen.findByText("Playlists");
-    expect(rpcCalls).not.toContain("get_faculty_facets");
+    await waitFor(() => expect(rpcCalls).toContain("get_faculty_facets"));
   });
 
   it("carries subject and chapter from the URL too", async () => {

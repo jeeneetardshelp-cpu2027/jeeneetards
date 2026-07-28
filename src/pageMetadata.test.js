@@ -38,9 +38,16 @@ describe("public page metadata", () => {
     expect(metadataForLocation("/admin/").robots).toBe("noindex, nofollow");
     expect(metadataForLocation("/reset").robots).toBe("noindex, nofollow");
     expect(metadataForLocation("/compare").robots).toBe("noindex, follow");
-    expect(metadataForLocation("/faculty/example").robots).toBe(
-      "noindex, follow",
+  });
+
+  it("publishes route-specific metadata for enabled faculty profiles", () => {
+    const page = metadataForLocation("/faculty/amit-bijarnia");
+    expect(page.title).toBe(
+      "Amit Bijarnia faculty profile | JEENEETARD",
     );
+    expect(page.description).toContain("courses taught by Amit Bijarnia");
+    expect(page.robots).toBe("index, follow");
+    expect(page.type).toBe("profile");
   });
 
   it("uses loaded course data when a course finishes loading", () => {

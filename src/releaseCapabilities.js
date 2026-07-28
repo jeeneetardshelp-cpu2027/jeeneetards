@@ -14,7 +14,7 @@ export const RELEASE_CAPABILITIES = Object.freeze({
   catalogNavigation: true,
   universalSearch: true,
   comparison: true,
-  facultyRegistry: false,
+  facultyRegistry: true,
   boardClassification: false,
 });
 

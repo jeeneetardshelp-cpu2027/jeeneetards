@@ -25,7 +25,7 @@ security controls and release evidence must also be present.
 | Device-local watch progress | Enabled |
 | Universal search | Enabled |
 | Course comparison | Enabled |
-| Faculty profiles and filtering | Disabled |
+| Faculty profiles and filtering | Enabled |
 | School-board classification | Disabled |
 | Public student accounts | Disabled |
 | Rating submission | Disabled |

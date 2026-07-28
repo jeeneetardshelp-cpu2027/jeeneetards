@@ -20,7 +20,7 @@ describe("current production capability contract", () => {
       catalogNavigation: true,
       universalSearch: true,
       comparison: true,
-      facultyRegistry: false,
+      facultyRegistry: true,
       boardClassification: false,
     });
     expect(RELEASE_FEATURES).toEqual({

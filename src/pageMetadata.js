@@ -43,6 +43,14 @@ export function readablePathSegment(value) {
     .join(" ");
 }
 
+function readableFacultySlug(value) {
+  return String(value ?? "")
+    .split("-")
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
+    .join(" ");
+}
+
 export function metadataForLocation(pathname = "/", search = "") {
   const rawPath = pathname || "/";
   const path = rawPath.length > 1 ? rawPath.replace(/\/+$/, "") : rawPath;
@@ -133,10 +141,22 @@ export function metadataForLocation(pathname = "/", search = "") {
     };
   }
 
+  if (path.startsWith("/faculty/")) {
+    const slug = path.split("/")[2] ?? "";
+    const name = readableFacultySlug(slug);
+    return {
+      ...base,
+      title: `${name ? `${name} faculty profile` : "Faculty profile"} | ${SITE_NAME}`,
+      description: name
+        ? `Browse verified aliases and free courses taught by ${name}.`
+        : "Browse verified faculty aliases and free courses.",
+      type: "profile",
+    };
+  }
+
   if (
     path === "/search" ||
-    path === "/compare" ||
-    path.startsWith("/faculty/")
+    path === "/compare"
   ) {
     return {
       ...base,
