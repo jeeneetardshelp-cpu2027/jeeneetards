@@ -727,3 +727,25 @@ institute links, four subject links, four JEE learning-goal links, and exactly
 course or membership. Anonymous search, facets, profiles, public JEE browse,
 and representative course 39 passed postflight with no console warnings or
 errors. The JEE fingerprint remained exact.
+
+## NEET faculty normalization backup boundary — 28 July 2026
+
+NEET faculty review and artifact preparation performed no database writes.
+Source review covers 43 of 45 NEET courses, but none of the three prepared NEET
+faculty artifacts has been executed on a clone or production.
+
+The existing restore clone predates production course IDs 91–135. It is not a
+valid rehearsal target for this work. A future execution requires:
+
+1. explicit approval to create a fresh current-production restore clone;
+2. baseline verification of 128 courses, 83 JEE, 45 NEET, and JEE fingerprint
+   `d7aae3ce7635401ebeffe97e627048bc`;
+3. the artifact-by-artifact clone gates in
+   `docs/faculty_registry_neet_rollout_plan_2026-07-28.md`;
+4. owner review of the complete clone report;
+5. a new exact production PITR restore point and separate approval naming one
+   hash-pinned artifact.
+
+The PITR timestamp recorded for the completed JEE faculty migration is
+historical evidence only. It must not be reused as the rollback target for a
+future NEET faculty write.

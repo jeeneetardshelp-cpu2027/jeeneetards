@@ -20,6 +20,12 @@ Use this checklist at the start and end of every task in this repository.
 - Do not run migrations merely because SQL files exist.
 - Do not rerun completed staging or production migrations without a named
   reason and owner approval.
+- Do not rerun the completed JEE faculty batch-1 migration or push faculty
+  commit `0318c91093cabb13c9a73af7a7b2309a16909f76` to `release`; both are
+  already live and verified.
+- Treat all `faculty_registry_neet_*_prepared.sql` files as unexecuted
+  artifacts. A general `continue` instruction does not authorize a clone or
+  database write.
 - Do not manually dispatch CI when a push already triggers it.
 - Do not add a one-off staging verifier or migration to `test:all`, CI, or a
   schedule, and do not rerun one automatically or manually without an explicit
@@ -55,6 +61,13 @@ Use this checklist at the start and end of every task in this repository.
   on.
 - For production, complete
   [backup and restore readiness](backup_restore_readiness.md) first.
+- For NEET faculty normalization, follow the hash-pinned order and stop gates
+  in [the rollout plan](faculty_registry_neet_rollout_plan_2026-07-28.md).
+  The current restore clone is stale for course IDs 91–135; do not use it to
+  claim a valid rehearsal.
+- Never normalize NEET courses 118 or 119 without new exact-video evidence,
+  identity review, a separately tested additive artifact, and explicit
+  approval.
 - Record expected counts and stop criteria before mass operations.
 - For a real staging content import, require matching write-free staging and
   production plans, exact playlist ownership, complete teacher attribution,

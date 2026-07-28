@@ -193,3 +193,34 @@ Faculty and Boards remain disabled. The faculty RPC exists but an anonymous
 without any classified courses. The production capability verifier now
 requires meaningful release-ready data, so its full contract passes without
 mistaking empty database foundations for student-ready features.
+
+## Faculty discovery and NEET normalization checkpoint
+
+The source-verified JEE faculty registry was subsequently rehearsed and applied
+additively to production:
+
+- four verified teachers;
+- eight verified aliases;
+- 83 JEE course links;
+- zero NEET links;
+- unchanged JEE fingerprint
+  `d7aae3ce7635401ebeffe97e627048bc`.
+
+Frontend faculty discovery was released at commit
+`0318c91093cabb13c9a73af7a7b2309a16909f76`. Production smoke checks confirmed
+JEE faculty facets and profiles, no faculty leakage into NEET, and no console
+errors.
+
+NEET faculty normalization is prepared but not applied. Source review covers
+43 of 45 NEET courses. Three hash-pinned additive artifacts would add 21
+teachers, 33 aliases, and 44 course-teacher links across those 43 courses.
+Courses 118 and 119 remain deliberately unresolved.
+
+The existing restore clone predates production NEET course IDs 91–135 and
+cannot rehearse these artifacts. The next permitted phase is a separately
+authorized fresh restore clone following
+`docs/faculty_registry_neet_rollout_plan_2026-07-28.md`.
+
+Do not execute any prepared NEET faculty SQL directly on production, do not
+push another faculty release, and do not rerun the completed JEE faculty
+migration or frontend release under a general continuation instruction.
