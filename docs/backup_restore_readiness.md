@@ -775,3 +775,28 @@ JEE fingerprint remained exact.
 No batch 2–3 or course-91 artifact was applied. Each remains a separate
 production gate requiring fresh PITR evidence and explicit approval naming its
 exact SHA-256.
+
+## NEET faculty batch 2–3 additive migration — 28 July 2026
+
+Before the separately approved production write, the signed-in production PITR
+dashboard showed active 7-day retention and latest restore point
+`28 Jul 2026 15:54:24 UTC+05:30`.
+
+The approved clone-rehearsed artifact SHA-256 was
+`2ffde08d54e5049c38da413406fd5c914937d5a81b93145e717b010b1bec6f64`.
+Production matched the expected post-batch-1 baseline: 128 playlists, 83 JEE
+courses, 45 NEET courses, 1,721 memberships, 1,307 JEE memberships,
+124 chapters, six teachers, 11 aliases, 99 faculty links, and fingerprint
+`d7aae3ce7635401ebeffe97e627048bc`.
+
+The transaction added exactly 18 verified teachers, 26 verified aliases, and
+26 reviewed NEET course links. Postflight totals were 24 teachers, 37 aliases,
+and 125 faculty links. All 18 new faculty profiles returned HTTP 200
+anonymously, were verified, matched their requested slugs, and collectively
+returned 26 mapped courses. There were zero JEE cross-goal links. Courses 91,
+118, and 119 remained unlinked. Playlist, membership, chapter, JEE-course, and
+JEE-membership counts remained unchanged, and the protected JEE fingerprint
+remained exact.
+
+The course-91 artifact was not applied. It remains a separate production gate
+requiring fresh PITR evidence and explicit approval naming its exact SHA-256.
