@@ -2,8 +2,8 @@
 
 ## Status
 
-Source-verified; pending owner approval. This file records identity evidence
-only. It does not authorize a clone or production write.
+Source-verified and rehearsed successfully on the isolated restore clone.
+Production remains out of scope without a separate owner approval.
 
 ## Source
 
@@ -73,3 +73,55 @@ Clone postflight must prove:
 
 Production remains out of scope until the clone rehearsal passes and a fresh
 PITR restore point plus a separate owner approval are recorded.
+
+## Isolated clone rehearsal result
+
+Target:
+`youtube-neet-restore-rehearsal-20260727`
+(`napkhqkdsqmnunxwnurr`), not production.
+
+Artifact:
+`src/migrations/faculty_registry_jee_batch1_clone_rehearsal.sql`
+
+SHA-256:
+`3e2c481904a900e1f6053722b9aa39ed3e947a71a564283e2867330386bf4da4`
+
+The clone preflight recorded:
+
+```text
+total courses:       85
+total memberships:   1,328
+chapters:             123
+JEE courses:           83
+JEE memberships:    1,307
+teachers:               0
+aliases:                0
+playlist links:         0
+JEE fingerprint: d7aae3ce7635401ebeffe97e627048bc
+```
+
+The first exact artifact execution succeeded. Postflight recorded:
+
+```text
+reviewed teachers:          4
+verified aliases:           8
+institute links:            4
+subject links:              4
+JEE learning-goal links:    4
+JEE playlist links:        83
+NEET playlist links:        0
+JEE courses:               83
+JEE memberships:        1,307
+JEE fingerprint: d7aae3ce7635401ebeffe97e627048bc
+```
+
+The exact artifact was executed a second time and succeeded with the same
+postflight counts, proving idempotency.
+
+With the database role set to `anon`, `search_teachers` resolved all four short
+aliases and all four full names to their expected slugs. The returned course
+counts were `33`, `23`, `4`, and `23`; `get_faculty_facets` returned four JEE
+faculty entries; and `get_faculty_profile` returned the same per-teacher course
+counts.
+
+No production SQL was run and no `main` or `release` push was made.
