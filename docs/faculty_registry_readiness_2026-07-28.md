@@ -42,6 +42,12 @@ Mahajan, and Manish Raj across another 11 courses; see
 reviewed batches cover 27 of 45 NEET courses, but only batch 1 currently has a
 prepared SQL artifact. Neither is authorized for execution.
 
+The third source-reviewed batch covers the remaining 15 single-teacher courses;
+see `docs/faculty_identity_review_neet_batch_3_2026-07-28.md`. The three
+reviews together cover 42 of 45 NEET courses. The only unresolved course-level
+credits are the three mixed-teacher rows below. Batches 2 and 3 have no SQL
+artifact, and no reviewed NEET batch is authorized for execution.
+
 ## Review blockers
 
 Three source values explicitly represent more than one teacher and must be
@@ -51,14 +57,11 @@ split only after each person is reviewed:
 - `Sarvesh Sir, Pankaj Sir & Amit Sir` — course 119
 - `Tarun Sir & Samapti Ma'am` — course 91
 
-`Mohit Dadheech` and `Mohit Dadheech Sir` occur on separate courses. They are a
-likely honorific variant, but must not be auto-merged without reviewed identity
-evidence.
-
-Initials and short names such as `ABJ Sir`, `ALK Sir`, `NS Sir`, `SKC Sir`,
-`Aayudh Sir`, `Saleem Sir`, and `Siddharth Sir` are not sufficient by themselves
-to establish a canonical legal/display identity. The existing free-text value
-may remain visible while registry review is pending.
+The `Mohit Dadheech` honorific variant and the NEET short labels `SKC Sir`,
+`Aayudh Sir`, `Saleem Sir`, `Sudhanshu Sir`, and `Siddharth Sir` now have
+first-party PW evidence recorded in batch 3. Short names remain non-actionable
+unless that explicit identity evidence has been reviewed; no general
+name-expansion rule is authorized.
 
 ## Safe additive sequence
 
