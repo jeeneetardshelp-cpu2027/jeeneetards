@@ -26,6 +26,9 @@ describe("NEET faculty batch-4 course-91 prepared artifact", () => {
   });
 
   it("creates only additive, idempotent normalized records", () => {
+    expect(sql).toContain("'Tarun Sir', 'short'");
+    expect(sql).toContain("'Samapti Ma''am', 'short'");
+    expect(sql).not.toContain("'short-name'");
     expect(sql).toMatch(/on conflict \(slug\) do nothing/i);
     expect(sql).toMatch(/on conflict \(teacher_id, normalized_alias\) do nothing/i);
     expect(sql).toMatch(/on conflict \(playlist_id, teacher_id\) do nothing/i);

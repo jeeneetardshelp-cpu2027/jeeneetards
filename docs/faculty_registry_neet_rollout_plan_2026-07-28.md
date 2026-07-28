@@ -17,7 +17,7 @@ Apply only these exact files, in this order:
 | ---: | --- | --- | ---: | ---: |
 | 1 | `src/migrations/faculty_registry_neet_batch1_prepared.sql` | `cdc67cc1fa3bb9f975a9610b1e78b0997e49fc8d035a0bad51bf4e7f09a75c94` | 16 | 16 |
 | 2 | `src/migrations/faculty_registry_neet_batch23_prepared.sql` | `2ffde08d54e5049c38da413406fd5c914937d5a81b93145e717b010b1bec6f64` | 26 | 26 |
-| 3 | `src/migrations/faculty_registry_neet_batch4_course91_prepared.sql` | `b60cc52e5eb51d11c9102c73076e498ad564def2f98f53dda0212a5bd6192848` | 1 | 2 |
+| 3 | `src/migrations/faculty_registry_neet_batch4_course91_prepared.sql` | `992df1e36d7c38ff3aaae12ed5cc7884c8bfacd44d5c97a2eacc413a18eb20d6` | 1 | 2 |
 
 The order matters because batch 2–3 creates the reviewed Samapti Sinha identity
 for course 122. The course-91 package then reuses that identity and creates only
@@ -153,6 +153,17 @@ been run on this clone yet. The resulting artifact is repinned at
 - The protected JEE fingerprint remains
   `d7aae3ce7635401ebeffe97e627048bc`.
 
-F4 remains blocked until the course-91 artifact replaces its two
-schema-incompatible `short-name` values with `short`, passes tests, and is
-repinned.
+Before F4, the course-91 artifact replaced its two schema-incompatible
+`short-name` values with `short` and was repinned at
+`992df1e36d7c38ff3aaae12ed5cc7884c8bfacd44d5c97a2eacc413a18eb20d6`.
+
+- F4 succeeded twice. Course 91 has exactly two ordered links: Tarun Kumar at
+  position 1 and Samapti Sinha at position 2.
+- Its legacy label remains `Tarun Sir & Samapti Ma'am`; courses 118 and 119
+  still have zero normalized faculty links.
+- Clone totals are now 25 teachers, 39 aliases, and 127 faculty links, matching
+  the complete expected delta.
+- Anonymous clone REST checks returned HTTP 200, exposed Tarun Kumar, and
+  returned the two course-91 links in positions 1 and 2.
+- The protected JEE fingerprint remains
+  `d7aae3ce7635401ebeffe97e627048bc`.

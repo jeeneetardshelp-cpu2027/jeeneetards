@@ -68,9 +68,9 @@ insert into public.teacher_aliases
 select t.id, expected.alias, '', expected.alias_type, 'verified', 'manual', now()
 from (values
   ('tarun-kumar', 'Tarun Kumar Sir', 'full-name'),
-  ('tarun-kumar', 'Tarun Sir', 'short-name'),
+  ('tarun-kumar', 'Tarun Sir', 'short'),
   ('samapti-sinha', 'Samapti Sinha Ma''am', 'full-name'),
-  ('samapti-sinha', 'Samapti Ma''am', 'short-name')
+  ('samapti-sinha', 'Samapti Ma''am', 'short')
 ) expected(slug, alias, alias_type)
 join public.teachers t on t.slug = expected.slug
 on conflict (teacher_id, normalized_alias) do nothing;
