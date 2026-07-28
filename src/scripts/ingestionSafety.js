@@ -197,32 +197,71 @@ export function validateChapterManifest({ manifest, playlistId, teacher, videos 
   if (!Array.isArray(manifest.assignments)) {
     throw new Error("Chapter manifest assignments must be an array.");
   }
-  if (manifest.assignments.length !== videos.length) {
+  const exclusions = manifest.exclusions ?? [];
+  if (!Array.isArray(exclusions)) {
+    throw new Error("Chapter manifest exclusions must be an array.");
+  }
+  if (manifest.assignments.length + exclusions.length !== videos.length) {
     throw new Error(
-      `Chapter manifest must map all ${videos.length} source videos exactly once.`,
+      `Chapter manifest must map or exclude all ${videos.length} source videos exactly once.`,
     );
   }
+  for (const decisions of [manifest.assignments, exclusions]) {
+    for (let index = 1; index < decisions.length; index += 1) {
+      if (decisions[index - 1]?.position >= decisions[index]?.position) {
+        throw new Error(
+          `Chapter manifest position ${decisions[index]?.position} is missing or out of order.`,
+        );
+      }
+    }
+  }
 
+  const assignmentByPosition = new Map(
+    manifest.assignments.map((assignment) => [assignment?.position, assignment]),
+  );
+  const exclusionByPosition = new Map(
+    exclusions.map((exclusion) => [exclusion?.position, exclusion]),
+  );
+  if (
+    assignmentByPosition.size !== manifest.assignments.length
+    || exclusionByPosition.size !== exclusions.length
+  ) {
+    throw new Error("Chapter manifest repeats a source position.");
+  }
   const seenIds = new Set();
   const chapters = new Set();
   const sourcePositions = validateMappedSourcePositions(videos);
-  const mapped = videos.map((video, index) => {
-    const assignment = manifest.assignments[index];
+  const mapped = [];
+  const excluded = [];
+  videos.forEach((video, index) => {
     const expectedPosition = sourcePositions[index];
-    if (!assignment || assignment.position !== expectedPosition) {
+    const assignment = assignmentByPosition.get(expectedPosition);
+    const exclusion = exclusionByPosition.get(expectedPosition);
+    if (Boolean(assignment) === Boolean(exclusion)) {
       throw new Error(
-        `Chapter manifest position ${expectedPosition} is missing or out of order.`,
+        `Chapter manifest position ${expectedPosition} must be mapped or excluded exactly once.`,
       );
     }
-    if (assignment.youtube_video_id !== video.videoId) {
+    const decision = assignment ?? exclusion;
+    if (decision.youtube_video_id !== video.videoId) {
       throw new Error(
         `Chapter manifest video at position ${expectedPosition} does not match the source.`,
       );
     }
-    if (seenIds.has(assignment.youtube_video_id)) {
+    if (seenIds.has(decision.youtube_video_id)) {
       throw new Error(
-        `Chapter manifest repeats video ${assignment.youtube_video_id}.`,
+        `Chapter manifest repeats video ${decision.youtube_video_id}.`,
       );
+    }
+    seenIds.add(decision.youtube_video_id);
+    if (exclusion) {
+      if (!String(exclusion.reason ?? "").trim()) {
+        throw new Error(
+          `Chapter manifest exclusion at position ${expectedPosition} requires a reason.`,
+        );
+      }
+      excluded.push({ ...video, exclusionReason: exclusion.reason.trim() });
+      return;
     }
     const chapterName = String(assignment.chapter ?? "").trim();
     if (!chapterName) {
@@ -230,9 +269,8 @@ export function validateChapterManifest({ manifest, playlistId, teacher, videos 
         `Chapter manifest position ${expectedPosition} has no chapter.`,
       );
     }
-    seenIds.add(assignment.youtube_video_id);
     chapters.add(chapterName);
-    return { ...video, chapterName };
+    mapped.push({ ...video, chapterName });
   });
 
   if (chapters.size < 2) {
@@ -244,10 +282,11 @@ export function validateChapterManifest({ manifest, playlistId, teacher, videos 
     evidence: manifest.teacher_evidence,
     playlistId,
     teacher,
-    videos,
+    videos: mapped,
   });
   return {
     videos: mapped,
+    excludedVideos: excluded,
     chapterNames: [...chapters],
     requestId: manifest.request_id,
     ...(teacherEvidence ? { teacherEvidence } : {}),

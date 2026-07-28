@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "request_id": "50e17c7b-e6e8-47ca-85dd-6666713c4a70",
+  "youtube_playlist_id": "PLKrMFg1EPRmF7h3fJGVnt765pPGdWB-Y3",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "JXeryAV8JNE",
+      "chapter": "The Rise of Nationalism in Europe"
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "UWBwLodPMwg",
+      "chapter": "Print Culture and the Modern World"
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "QXHtptFKVm8",
+      "chapter": "The Making of a Global World"
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "exByrWPeYvk",
+      "chapter": "Nationalism in India"
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "9XWKDo5LElU",
+      "chapter": "The Age of Industrialisation"
+    }
+  ],
+  "exclusions": [
+    {
+      "position": 5,
+      "youtube_video_id": "FBs0wVgD2kU",
+      "reason": "Duplicate live-session revision of the reviewed chapter course"
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "--9xF8A6jNE",
+      "reason": "Full-syllabus marathon spanning multiple subjects and chapters"
+    }
+  ]
+}

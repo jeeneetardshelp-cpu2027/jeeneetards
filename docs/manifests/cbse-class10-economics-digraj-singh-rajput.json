@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "request_id": "6e80d047-7e85-4498-a4fd-d095dc934d4d",
+  "youtube_playlist_id": "PLKrMFg1EPRmEgXtUtF9cCVwh2-6O6wNUH",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "PK2YonJyUeg",
+      "chapter": "Globalisation and the Indian Economy"
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "yr--rGEyKac",
+      "chapter": "Money and Credit"
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "6avWRnhAvSU",
+      "chapter": "Sectors of the Indian Economy"
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "kNh_4EtB31A",
+      "chapter": "Development"
+    }
+  ]
+}

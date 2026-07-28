@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "request_id": "32982272-83d9-48dc-a234-076ae1b6e610",
+  "youtube_playlist_id": "PLKrMFg1EPRmFEeLMjmfgbQWP2_idaE5y-",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "JVBWKBYsvH4",
+      "chapter": "Outcomes of Democracy"
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "rCNNEZFLwtM",
+      "chapter": "Political Parties"
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "VGC5hMiR8j8",
+      "chapter": "Gender, Religion and Caste"
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "FngG6lgrNrk",
+      "chapter": "Power Sharing"
+    }
+  ]
+}
