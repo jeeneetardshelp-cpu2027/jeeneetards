@@ -17,7 +17,86 @@ import {
   validateCourseMetadata,
   validateMappedVideoDetails,
   validateMappedSourcePositions,
+  validateReviewedTeacherEvidence,
 } from "./ingestionSafety.js";
+
+describe("reviewed external teacher evidence", () => {
+  const videos = [{ videoId: "one" }, { videoId: "two" }];
+  const evidence = {
+    version: 1,
+    kind: "reviewed_external_source",
+    decision_id: "c8cf544a-bd1f-4a2c-9a7e-d8490185a86c",
+    youtube_playlist_id: "PL_source",
+    teacher: "Samapti Ma'am",
+    source_url: "https://t.me/s/SamaptiMamZoology?before=463",
+    source_label: "Teacher-owned public channel",
+    reviewed_by: "Codex",
+    reviewed_on: "2026-07-28",
+    youtube_video_ids: ["one", "two"],
+  };
+
+  it("accepts exact, complete, reviewed provenance", () => {
+    expect(validateReviewedTeacherEvidence({
+      evidence,
+      playlistId: "PL_source",
+      teacher: "Samapti Ma'am",
+      videos,
+    })).toMatchObject({
+      decisionId: evidence.decision_id,
+      teacher: "Samapti Ma'am",
+      videoCount: 2,
+      reviewedOn: "2026-07-28",
+    });
+  });
+
+  it("fails closed on teacher, playlist, URL, or video drift", () => {
+    const validate = (overrides = {}) => validateReviewedTeacherEvidence({
+      evidence: { ...evidence, ...overrides },
+      playlistId: "PL_source",
+      teacher: "Samapti Ma'am",
+      videos,
+    });
+    expect(() => validate({ teacher: "Someone Else" })).toThrow(/teacher/i);
+    expect(() => validate({ youtube_playlist_id: "PL_other" })).toThrow(/playlist/i);
+    expect(() => validate({ source_url: "http://example.com" })).toThrow(/HTTPS/i);
+    expect(() => validate({ youtube_video_ids: ["one"] })).toThrow(/every source video/i);
+    expect(() => validate({ youtube_video_ids: ["one", "one"] })).toThrow(/repeats/i);
+  });
+});
+
+describe("reviewed external teacher evidence execution gate", () => {
+  it("parses an exact decision confirmation separately from course mapping", () => {
+    const args = parseImporterArgs([
+      "UC_source",
+      "--env=production",
+      "--dry-run",
+      "--expected-playlists=1",
+      "--max-playlists=1",
+      "--playlist-id=PL_source",
+      "--category=NEET",
+      "--goal=NEET",
+      "--subject=Biology",
+      "--classes=11th,12th",
+      "--content-type=one-shot",
+      "--language=hinglish",
+      "--difficulty=intermediate",
+      "--teacher=Samapti Ma'am",
+      "--audience-focus=11th",
+      "--chapter-manifest=docs/manifest.json",
+      "--confirm-teacher-evidence=c8cf544a-bd1f-4a2c-9a7e-d8490185a86c",
+    ]);
+    expect(args.reviewedTeacherEvidenceDecision)
+      .toBe("c8cf544a-bd1f-4a2c-9a7e-d8490185a86c");
+  });
+
+  it("keeps the write path bound to the validated decision ID", () => {
+    const source = readFileSync(resolve("src/scripts/importChannel.js"), "utf8");
+    expect(source).toContain(
+      "args.reviewedTeacherEvidenceDecision !== mapped.teacherEvidence.decisionId",
+    );
+    expect(source).toContain("--confirm-teacher-evidence=");
+  });
+});
 
 describe("channel ingestion metadata", () => {
   it("wires the metadata payload builder into the importer RPC call", () => {

@@ -104,7 +104,77 @@ export function mappedSourceSnapshotEvidence(videos = []) {
     .join("\n")}\n`;
 }
 
-export function validateChapterManifest({ manifest, playlistId, videos }) {
+export function validateReviewedTeacherEvidence({
+  evidence,
+  playlistId,
+  teacher,
+  videos,
+}) {
+  if (evidence == null) return null;
+  if (!evidence || typeof evidence !== "object" || Array.isArray(evidence)) {
+    throw new Error("Reviewed teacher evidence must be a JSON object.");
+  }
+  if (evidence.version !== 1 || evidence.kind !== "reviewed_external_source") {
+    throw new Error(
+      "Reviewed teacher evidence must use version 1 and kind reviewed_external_source.",
+    );
+  }
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+    .test(evidence.decision_id ?? "")) {
+    throw new Error("Reviewed teacher evidence decision_id must be a UUID.");
+  }
+  if (evidence.youtube_playlist_id !== playlistId) {
+    throw new Error("Reviewed teacher evidence playlist ID does not match.");
+  }
+  if (String(evidence.teacher ?? "").trim() !== String(teacher ?? "").trim()) {
+    throw new Error("Reviewed teacher evidence teacher does not match the import.");
+  }
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(evidence.reviewed_on ?? "")) {
+    throw new Error("Reviewed teacher evidence reviewed_on must be YYYY-MM-DD.");
+  }
+  if (!String(evidence.reviewed_by ?? "").trim()) {
+    throw new Error("Reviewed teacher evidence must name its reviewer.");
+  }
+  if (!String(evidence.source_label ?? "").trim()) {
+    throw new Error("Reviewed teacher evidence must describe its source.");
+  }
+  let source;
+  try {
+    source = new URL(evidence.source_url);
+  } catch {
+    throw new Error("Reviewed teacher evidence source_url must be a valid URL.");
+  }
+  if (source.protocol !== "https:") {
+    throw new Error("Reviewed teacher evidence source_url must use HTTPS.");
+  }
+  if (!Array.isArray(evidence.youtube_video_ids)) {
+    throw new Error("Reviewed teacher evidence youtube_video_ids must be an array.");
+  }
+  const sourceIds = videos.map((video) => video.videoId);
+  const evidenceIds = evidence.youtube_video_ids;
+  if (new Set(evidenceIds).size !== evidenceIds.length) {
+    throw new Error("Reviewed teacher evidence repeats a YouTube video ID.");
+  }
+  if (
+    evidenceIds.length !== sourceIds.length
+    || sourceIds.some((id) => !evidenceIds.includes(id))
+  ) {
+    throw new Error(
+      "Reviewed teacher evidence must cover every source video ID exactly once.",
+    );
+  }
+  return {
+    decisionId: evidence.decision_id,
+    sourceUrl: source.href,
+    sourceLabel: evidence.source_label.trim(),
+    reviewedBy: evidence.reviewed_by.trim(),
+    reviewedOn: evidence.reviewed_on,
+    teacher: evidence.teacher.trim(),
+    videoCount: evidenceIds.length,
+  };
+}
+
+export function validateChapterManifest({ manifest, playlistId, teacher, videos }) {
   if (!manifest || typeof manifest !== "object" || Array.isArray(manifest)) {
     throw new Error("Chapter manifest must be a JSON object.");
   }
@@ -164,10 +234,17 @@ export function validateChapterManifest({ manifest, playlistId, videos }) {
       "A chapter manifest must map the source to at least two chapters; use --chapter for a single chapter.",
     );
   }
+  const teacherEvidence = validateReviewedTeacherEvidence({
+    evidence: manifest.teacher_evidence,
+    playlistId,
+    teacher,
+    videos,
+  });
   return {
     videos: mapped,
     chapterNames: [...chapters],
     requestId: manifest.request_id,
+    ...(teacherEvidence ? { teacherEvidence } : {}),
   };
 }
 
@@ -324,6 +401,7 @@ export function parseImporterArgs(argv) {
     audienceFocus: value("audience-focus"),
     chapterManifest: value("chapter-manifest"),
   };
+  const reviewedTeacherEvidenceDecision = value("confirm-teacher-evidence");
   const nonInteractive = Object.values(mapping).some(Boolean);
   if (nonInteractive) {
     if (mapping.chapter && mapping.chapterManifest) {
@@ -352,6 +430,7 @@ export function parseImporterArgs(argv) {
     environment,
     dryRun: argv.includes("--dry-run"),
     confirmProduction: argv.includes("--confirm-production"),
+    reviewedTeacherEvidenceDecision,
     expectedPlaylists,
     maxPlaylists,
     channelId: argv.find((arg) => !arg.startsWith("--")) ?? null,

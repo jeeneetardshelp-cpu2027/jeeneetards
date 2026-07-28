@@ -45,8 +45,9 @@ for pending candidates.
 
 ## Still deferred
 
-- MISSION 30 Zoology has strong external Samapti Ma'am attribution, but the
-  importer has no audited external-evidence input.
+- MISSION 30 Zoology now has a tested, provenance-recorded external-evidence
+  input and a green anonymous dry-run. It remains unimported pending explicit
+  owner approval of the evidence policy and exact playlist.
 - MISSION 30 Inorganic Chemistry still lacks direct faculty attribution for all
   exact video IDs.
 - MISSION 30 Botany and Botany Mindmap are no longer deferred. The guarded plan

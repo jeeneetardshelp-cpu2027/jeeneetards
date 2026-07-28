@@ -304,6 +304,7 @@ async function main() {
         ? validateChapterManifest({
           manifest: plan.chapterManifest,
           playlistId: plan.playlist.id,
+          teacher: plan.teacher,
           videos: ytVideos,
         })
         : null;
@@ -327,6 +328,7 @@ async function main() {
         existingVideoIds,
         expectedVideoCount: Number(plan.playlist.videoCount),
         knownTeachers: [plan.teacher, ...knownTeachers],
+        reviewedTeacherEvidence: Boolean(mapped?.teacherEvidence),
       });
       const missingChapters = chapterRows
         .filter(({ chapter }) => !chapter)
@@ -422,6 +424,7 @@ async function main() {
               manifest_sha256: plan.chapterManifestSha256,
               source_snapshot_sha256: sourceSnapshotSha256(ytVideos),
               assignment_count: plan.chapterManifest.assignments.length,
+              teacher_evidence: mapped.teacherEvidence,
             },
             capability: mappedCapability,
             chapters: chapterRows.map(({ name, chapter }) => ({
@@ -512,8 +515,18 @@ async function main() {
       const mapped = validateChapterManifest({
         manifest: plan.chapterManifest,
         playlistId: plan.playlist.id,
+        teacher: plan.teacher,
         videos: ytVideos,
       });
+      if (
+        mapped.teacherEvidence
+        && args.reviewedTeacherEvidenceDecision !== mapped.teacherEvidence.decisionId
+      ) {
+        fail(
+          "A write using reviewed external teacher evidence requires " +
+          `--confirm-teacher-evidence=${mapped.teacherEvidence.decisionId}.`,
+        );
+      }
       await assertMappedImportCapability(db);
       const chapterRows = await Promise.all(
         mapped.chapterNames.map(async (name) => ({
@@ -587,6 +600,7 @@ async function main() {
           existingVideoIds,
           expectedVideoCount: Number(plan.playlist.videoCount),
           knownTeachers: [plan.teacher, ...knownTeachers],
+          reviewedTeacherEvidence: Boolean(mapped.teacherEvidence),
         });
         // Exact subject/chapter equality for reused videos is enforced inside
         // the atomic RPC. That resolves only the generic overlap warning; every

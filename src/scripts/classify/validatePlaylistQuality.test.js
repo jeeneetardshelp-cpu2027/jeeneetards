@@ -120,6 +120,14 @@ describe("hasTeacherEvidence (Codex accepts once '#alksir' appears, defers other
   it("defers when no evidence at all", () => {
     expect(hasTeacherEvidence([{ title: "General Inorganic Chemistry" }])).toBe(false);
   });
+  it("allows a separately validated reviewed source to satisfy only attribution", () => {
+    const report = validatePlaylistQuality({
+      playlist: pl(["Lesson one", "Lesson two"]),
+      expectedVideoCount: 2,
+      reviewedTeacherEvidence: true,
+    });
+    expect(report.findings.map(({ code }) => code)).not.toContain("no_teacher_evidence");
+  });
 });
 
 describe("validatePlaylistQuality — overall status", () => {

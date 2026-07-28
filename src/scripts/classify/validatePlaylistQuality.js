@@ -119,6 +119,7 @@ export function validatePlaylistQuality({
   existingVideoIds = new Set(),
   expectedVideoCount = null,
   knownTeachers = [],
+  reviewedTeacherEvidence = false,
 } = {}) {
   const videos = byPosition(playlist?.videos ?? []);
   const findings = [];
@@ -153,7 +154,11 @@ export function validatePlaylistQuality({
   }
 
   // 5. Missing teacher evidence (review).
-  if (videos.length && !hasTeacherEvidence(videos, playlist?.description ?? "", knownTeachers)) {
+  if (
+    videos.length
+    && !reviewedTeacherEvidence
+    && !hasTeacherEvidence(videos, playlist?.description ?? "", knownTeachers)
+  ) {
     add("no_teacher_evidence", "warn",
       "No teacher-attribution evidence found (hashtag, \"X Sir/Ma'am\", or a known name).", null);
   }
