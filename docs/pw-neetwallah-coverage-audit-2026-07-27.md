@@ -458,6 +458,25 @@ digestion chapter. Those three legacy playlist titles therefore do not justify
 new student-facing taxonomy rows. No chapters or courses were created for
 them.
 
+## Checked-in legacy manifest reconciliation — 2026-07-28
+
+Eleven checked-in manifest files are not represented in production. MISSION 30
+Inorganic Chemistry remains separately deferred for missing reviewed teacher
+evidence. The other ten are mapping drafts, not production approvals:
+
+- Class 12 Physics Mind Map has 31 advertised source entries, 30 currently
+  usable videos, and 30 matching manifest assignments.
+- The six remaining NEET Crash Course 2024 subject manifests and the Botany,
+  Physics, and Zoology NEET Mind Map manifests have current usable counts that
+  match their checked-in assignments.
+- None of those ten playlist/video sources currently provides genuine teacher
+  attribution in its YouTube descriptions or tags. Generic PW promotional text
+  and chapter timestamps such as `Mammalia` are not faculty evidence.
+
+No anonymous production dry-run or write was attempted for this legacy set.
+Their presence under `docs/manifests/` records reviewed mappings only; each
+remains deferred until a separately reviewed teacher-evidence decision exists.
+
 ## Safe next gates
 
 1. The ten clean mapped candidates are reconciled in

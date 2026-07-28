@@ -147,6 +147,13 @@ canonical Biology chapters do not exist in production. The official NEET UG
 so no production taxonomy rows were created merely to accommodate legacy
 playlist titles.
 
+The remaining ten checked-in legacy Crash Course and Mind Map manifests were
+also reconciled against their current YouTube sources. Their usable counts
+match the retained mappings, except that Class 12 Physics has 30 usable videos
+from 31 advertised entries and a matching 30-row manifest. None has genuine
+teacher attribution in its current descriptions or tags, so these files remain
+mapping drafts rather than production-approved imports.
+
 The PW NEET Wallah inventory refresh still contains exactly 218 public
 playlists, matching the reviewed baseline. No newly published playlist requires
 triage at this checkpoint.
