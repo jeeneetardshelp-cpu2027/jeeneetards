@@ -1,12 +1,14 @@
 # Faculty registry readiness — 28 July 2026
 
-## Decision
+## Current decision
 
-Keep `facultyRegistry` disabled. The v7 tables and anonymous RPCs exist in
-production, but the registry contains no publishable data.
+`facultyRegistry` is enabled for the source-verified JEE batch. Production now
+contains four verified JEE teachers, eight verified aliases, and normalized
+links for all 83 JEE courses.
 
-This was a read-only audit. No production rows were created, updated, or
-deleted.
+NEET normalization remains incremental. Courses without reviewed normalized
+links correctly expose no faculty facet; the UI must not infer identities from
+their legacy free-text values.
 
 ## Production evidence
 
@@ -17,17 +19,22 @@ Server-side counts:
 | Courses | 128 |
 | Curated non-empty `playlists.teacher` values | 128 |
 | Distinct teacher strings | 28 |
-| Normalized `teachers` rows | 0 |
-| Verified teachers | 0 |
-| Teacher aliases | 0 |
-| `playlist_teachers` links | 0 |
-| Courses linked to normalized teachers | 0 |
-| Unlinked JEE courses | 83 |
+| Normalized `teachers` rows | 4 |
+| Verified teachers | 4 |
+| Teacher aliases | 8 |
+| `playlist_teachers` links | 83 |
+| Courses linked to normalized teachers | 83 |
+| Unlinked JEE courses | 0 |
 | Unlinked NEET courses | 45 |
 
-Anonymous `search_teachers('ABJ')` returns no rows. This confirms why merely
-detecting the RPC is not sufficient to release faculty search, filtering, or
-profiles.
+Anonymous search, facets, and profiles resolve the reviewed JEE identities.
+The protected JEE fingerprint remains
+`d7aae3ce7635401ebeffe97e627048bc`.
+
+The refreshed NEET-only inventory contains 45 courses and 24 distinct legacy
+teacher strings. The prepared first NEET batch covers Diksha Sharma and Yashika
+Singh across 16 courses; see
+`docs/faculty_identity_review_neet_batch_1_2026-07-28.md`.
 
 ## Review blockers
 
@@ -70,9 +77,8 @@ may remain visible while registry review is pending.
    - every profile links only to its actual courses.
 6. Apply to production only after a fresh PITR restore point and explicit owner
    approval, one reviewed batch at a time.
-7. Enable `facultyRegistry` only when public coverage and runtime QA meet the
-   agreed release threshold. Until then the readiness verifier must continue to
-   report it as false.
+7. Keep each goal scoped to its reviewed links. Empty NEET facets remain hidden
+   until a reviewed NEET batch is applied.
 
 ## Boundary
 
