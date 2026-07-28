@@ -1,6 +1,7 @@
 # NEET next-gate readiness — 28 July 2026
 
-This is preparation evidence only. It authorizes no production write.
+This began as preparation evidence. The Botany gate was subsequently approved
+and completed; the final results are recorded below.
 
 ## Fresh anonymous production dry-runs
 
@@ -43,6 +44,32 @@ The plan remains **prepared only**. Before it can run:
 3. execute the guarded create-only plan and verify 124 chapters;
 4. rerun both anonymous Botany dry-runs;
 5. import one course at a time with immediate JEE fingerprint checks.
+
+## Completed Botany gate
+
+The owner supplied a fresh PITR screenshot and standing authorization. The
+production dashboard showed 7-day retention with a latest restore point of
+28 Jul 2026 01:47:03 UTC+05:30.
+
+The guarded SQL plan created exactly one row:
+
+```text
+chapter 128: Molecular Basis of Inheritance
+chapters after insert: 124
+```
+
+Both candidates then passed fresh anonymous dry-runs and create-only mapped-v12
+imports:
+
+| Course ID | Candidate | Videos | Memberships | Import-created chapters |
+| ---: | --- | ---: | ---: | ---: |
+| 120 | MISSION 30 Botany | 10 | 10 | 0 |
+| 121 | Botany Mindmap | 15 | 15 | 0 |
+
+The JEE fingerprint remained
+`d7aae3ce7635401ebeffe97e627048bc` after the chapter insert and after each
+course. Anonymous browser QA loaded the first and last lesson embeds for both
+courses (1/10 and 10/10; 1/15 and 15/15) with no console warnings or errors.
 
 Zoology and Inorganic Chemistry remain deferred. Their faculty hypotheses are
 not a substitute for evidence accepted by the importer, and the quality gate

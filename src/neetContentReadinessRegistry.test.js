@@ -9,14 +9,14 @@ describe("NEET content readiness registry", () => {
   it("has unique sources and records every completed import", () => {
     const ids = registry.candidates.map((candidate) => candidate.youtube_playlist_id);
     expect(new Set(ids).size).toBe(ids.length);
-    expect(registry.status).toBe("all_15_imported");
-    expect(registry.candidates).toHaveLength(15);
+    expect(registry.status).toBe("all_17_imported");
+    expect(registry.candidates).toHaveLength(17);
     expect(registry.candidates.reduce((sum, candidate) => sum + candidate.videos, 0))
-      .toBe(160);
+      .toBe(185);
     expect(registry.expected_totals).toEqual({
-      courses: 15,
-      videos: 160,
-      memberships: 160,
+      courses: 17,
+      videos: 185,
+      memberships: 185,
       chapters: 0,
     });
     const imported = registry.candidates.filter((candidate) =>
@@ -25,10 +25,10 @@ describe("NEET content readiness registry", () => {
     const pending = registry.candidates.filter((candidate) =>
       candidate.status !== "imported",
     );
-    expect(imported).toHaveLength(15);
-    expect(imported.reduce((sum, candidate) => sum + candidate.videos, 0)).toBe(160);
+    expect(imported).toHaveLength(17);
+    expect(imported.reduce((sum, candidate) => sum + candidate.videos, 0)).toBe(185);
     expect(imported.map((candidate) => candidate.production_course_id))
-      .toEqual([108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 105, 106, 107]);
+      .toEqual([108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 105, 106, 107, 120, 121]);
     expect(imported.every((candidate) =>
       candidate.actual_delta.courses === 1
       && candidate.actual_delta.videos === candidate.videos
@@ -61,7 +61,7 @@ describe("NEET content readiness registry", () => {
     const mission = registry.candidates.filter((candidate) =>
       candidate.manifest?.includes("neet-mission-30-"),
     );
-    expect(mission).toHaveLength(4);
+    expect(mission).toHaveLength(5);
     expect(mission.every((candidate) =>
       candidate.approval_note === "accept-primary-chapter-only",
     )).toBe(true);

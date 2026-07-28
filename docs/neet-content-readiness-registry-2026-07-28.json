@@ -1,10 +1,10 @@
 {
-  "version": 1,
-  "status": "all_15_imported",
+  "version": 2,
+  "status": "all_17_imported",
   "expected_totals": {
-    "courses": 15,
-    "videos": 160,
-    "memberships": 160,
+    "courses": 17,
+    "videos": 185,
+    "memberships": 185,
     "chapters": 0
   },
   "candidates": [
@@ -193,6 +193,29 @@
         "memberships": 4,
         "chapters": 0
       }
+    },
+    {
+      "group": "botany-chapter-followup",
+      "youtube_playlist_id": "PLJyab0VQDBGVPk0chK-lvZ11lY4cYr5z1",
+      "manifest": "docs/manifests/neet-mission-30-botany.json",
+      "teacher": "Vipin Sharma Sir",
+      "videos": 10,
+      "import_mode": "mapped-v12",
+      "approval_note": "accept-primary-chapter-only",
+      "status": "imported",
+      "production_course_id": 120,
+      "actual_delta": {"courses": 1, "videos": 10, "memberships": 10, "chapters": 0}
+    },
+    {
+      "group": "botany-chapter-followup",
+      "youtube_playlist_id": "PLJyab0VQDBGWLDzyNceHh103c8KT2dHUe",
+      "manifest": "docs/manifests/neet-botany-mindmap-harshit-thakuria.json",
+      "teacher": "Harshit Thakuria Sir",
+      "videos": 15,
+      "import_mode": "mapped-v12",
+      "status": "imported",
+      "production_course_id": 121,
+      "actual_delta": {"courses": 1, "videos": 15, "memberships": 15, "chapters": 0}
     }
   ]
 }

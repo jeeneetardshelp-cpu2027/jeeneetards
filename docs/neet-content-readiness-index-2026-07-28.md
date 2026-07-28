@@ -14,7 +14,8 @@ The machine-checked source of truth is
 | Mapped next batch | 10 | 136 | 136 | 0 | 108–117 |
 | Vardaan multi-teacher | 2 | 10 | 10 | 0 | 118–119 |
 | RAFTAAR Biology | 3 | 14 | 14 | 0 | 105–107 |
-| **Imported total** | **15** | **160** | **160** | **0** | **105–119** |
+| Botany chapter follow-up | 2 | 25 | 25 | 0 | 120–121 |
+| **Imported total** | **17** | **185** | **185** | **0** | **105–121** |
 
 All 12 previously pending candidates were imported to production in registry
 order on 28 July 2026. Each passed a fresh anonymous dry-run, create-only mapped
@@ -25,6 +26,7 @@ Detailed evidence:
 - `pw-neetwallah-next-batch-readiness-2026-07-28.md`
 - `vardaan-multiteacher-readiness-2026-07-28.md`
 - `raftaar-biology-import-readiness-2026-07-28.md`
+- `neet-botany-import-evidence-2026-07-28.md`
 
 ### RAFTAAR Biology detail
 
@@ -37,7 +39,7 @@ RAFTAAR Biology was imported to production in registry order on 28 July 2026:
 | 107 | Anatomy of Flowering Plants - BIOLOGY RAFTAAR | 4 | 4 | 0 |
 | **Total** | | **14** | **14** | **0** |
 
-All 15 entries are retained in the machine registry with `status: "imported"`,
+All 17 entries are retained in the machine registry with `status: "imported"`,
 their production course IDs, and exact actual deltas so none can be mistaken
 for pending candidates.
 
@@ -47,12 +49,8 @@ for pending candidates.
   importer has no audited external-evidence input.
 - MISSION 30 Inorganic Chemistry still lacks direct faculty attribution for all
   exact video IDs.
-- MISSION 30 Botany and Botany Mindmap require the separately prepared
-  `Molecular Basis of Inheritance` chapter insert before fresh dry-runs.
-  The fail-closed create-only plan was rebased after course 119 to the verified
-  production baseline of 112 courses, 1,621 videos, 1,625 memberships, and 123
-  chapters. It remains prepared-only pending a fresh PITR point and a separate
-  chapter-write gate.
+- MISSION 30 Botany and Botany Mindmap are no longer deferred. The guarded plan
+  created chapter 128, and the courses were imported as IDs 120 and 121.
 - Other checked-in manifests retain the blockers recorded in
   `pw-neetwallah-coverage-audit-2026-07-27.md`; presence in `docs/manifests`
   alone does not mean ready.
