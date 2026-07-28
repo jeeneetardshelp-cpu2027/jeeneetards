@@ -2,19 +2,19 @@
 
 ## NEET catalogue checkpoint
 
-The reviewed NEET readiness registry is complete. All 18 approved candidates
+The reviewed NEET readiness registry is complete. All 26 approved candidates
 were imported through the create-only mapped workflow:
 
-- 18 courses;
-- 195 videos;
-- 195 playlist memberships;
+- 26 courses;
+- 236 videos;
+- 236 playlist memberships;
 - zero import-created chapters.
 
-Production now contains 122 courses and 1,697 memberships:
+Production now contains 123 courses and 1,701 memberships:
 
 - JEE: 83 courses and 1,307 memberships;
-- NEET: 39 courses;
-- Biology: 20 courses.
+- NEET: 40 courses;
+- Biology: 21 courses.
 
 The final reviewed-evidence candidate was MISSION 30 Zoology, imported as
 course 122 with 10 new videos and memberships. Its teacher attribution is
@@ -60,10 +60,16 @@ source descriptions directly credit Yashika ma’am. The create-only import
 added 4 videos and memberships, reused the existing Respiration in Plants
 chapter, and left the protected JEE catalogue unchanged.
 
+Breathing and Exchange of Gases - BIOLOGY RAFTAAR was imported as course 130.
+All four source descriptions directly credit Diksha Sharma Ma'am. The
+create-only import added 4 videos and memberships, reused the existing
+Breathing and Exchange of Gases chapter, and left the protected JEE catalogue
+unchanged.
+
 ## Integrity and rollback evidence
 
 Seven-day PITR was active before the latest write. The recorded rollback point
-for course 129 is `28 Jul 2026 11:13:23 UTC+05:30`; no restore was started.
+for course 130 is `28 Jul 2026 11:17:23 UTC+05:30`; no restore was started.
 
 The protected JEE catalogue remains unchanged:
 
