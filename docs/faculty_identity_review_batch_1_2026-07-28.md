@@ -2,8 +2,8 @@
 
 ## Status
 
-Source-verified and rehearsed successfully on the isolated restore clone.
-Production remains out of scope without a separate owner approval.
+Source-verified, rehearsed successfully on the isolated restore clone, and
+applied successfully to production after separate owner approval.
 
 ## Source
 
@@ -124,4 +124,46 @@ counts were `33`, `23`, `4`, and `23`; `get_faculty_facets` returned four JEE
 faculty entries; and `get_faculty_profile` returned the same per-teacher course
 counts.
 
-No production SQL was run and no `main` or `release` push was made.
+No production SQL was run during the clone rehearsal and no `main` or `release`
+push was made.
+
+## Production result
+
+The owner separately approved the exact hash-verified artifact. Before the
+write, the production PITR dashboard showed active 7-day retention and the
+latest restore point:
+
+```text
+28 Jul 2026, 13:21:28 UTC+05:30
+```
+
+Production preflight recorded 128 courses, 1,721 memberships, 124 chapters,
+83 JEE courses, 1,307 JEE memberships, zero normalized teachers/aliases/course
+links, and the protected JEE fingerprint
+`d7aae3ce7635401ebeffe97e627048bc`.
+
+The exact rehearsed artifact
+(`3e2c481904a900e1f6053722b9aa39ed3e947a71a564283e2867330386bf4da4`)
+then succeeded. Production postflight matched the clone:
+
+```text
+reviewed teachers:          4
+verified aliases:           8
+institute links:            4
+subject links:              4
+JEE learning-goal links:    4
+JEE playlist links:        83
+NEET playlist links:        0
+JEE courses:               83
+JEE memberships:        1,307
+JEE fingerprint: d7aae3ce7635401ebeffe97e627048bc
+```
+
+Anonymous-role searches resolved all eight reviewed full-name/short-alias
+queries. JEE facets returned four teachers and profiles returned exact course
+counts `33`, `23`, `4`, and `23`. The public production JEE browse and
+representative course 39 loaded successfully with its eight lessons and no
+console warnings or errors.
+
+The normalized faculty feature remains controlled by its existing frontend
+readiness gate. No `main` or `release` push accompanied this data-only change.

@@ -708,3 +708,22 @@ The create-only import produced course 135 with 4 new videos and memberships,
 zero reuse, and zero chapters. Anonymous first/last embed checks passed with no
 console warnings or errors. JEE remained exactly 83 courses and 1,307
 memberships with the unchanged fingerprint.
+
+## JEE faculty batch-1 additive migration — 28 July 2026
+
+Before the separately approved production write, the signed-in PITR dashboard
+showed active 7-day retention and latest restore point
+`28 Jul 2026 13:21:28 UTC+05:30`.
+
+The exact clone-rehearsed artifact SHA-256 was
+`3e2c481904a900e1f6053722b9aa39ed3e947a71a564283e2867330386bf4da4`.
+Production preflight showed 128 courses, 1,721 memberships, 124 chapters,
+83 JEE courses, 1,307 JEE memberships, zero existing normalized faculty rows,
+and fingerprint `d7aae3ce7635401ebeffe97e627048bc`.
+
+The transaction added four verified teachers, eight verified aliases, four
+institute links, four subject links, four JEE learning-goal links, and exactly
+83 JEE course links. It added zero NEET links and changed no existing JEE
+course or membership. Anonymous search, facets, profiles, public JEE browse,
+and representative course 39 passed postflight with no console warnings or
+errors. The JEE fingerprint remained exact.
