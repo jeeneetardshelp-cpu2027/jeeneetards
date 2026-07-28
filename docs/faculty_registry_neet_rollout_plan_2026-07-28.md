@@ -16,7 +16,7 @@ Apply only these exact files, in this order:
 | Order | Artifact | SHA-256 | Courses | New links |
 | ---: | --- | --- | ---: | ---: |
 | 1 | `src/migrations/faculty_registry_neet_batch1_prepared.sql` | `cdc67cc1fa3bb9f975a9610b1e78b0997e49fc8d035a0bad51bf4e7f09a75c94` | 16 | 16 |
-| 2 | `src/migrations/faculty_registry_neet_batch23_prepared.sql` | `510c3c203709262616aff20614fa27809055697b396ef4b13df10b245947ed5f` | 26 | 26 |
+| 2 | `src/migrations/faculty_registry_neet_batch23_prepared.sql` | `2ffde08d54e5049c38da413406fd5c914937d5a81b93145e717b010b1bec6f64` | 26 | 26 |
 | 3 | `src/migrations/faculty_registry_neet_batch4_course91_prepared.sql` | `b60cc52e5eb51d11c9102c73076e498ad564def2f98f53dda0212a5bd6192848` | 1 | 2 |
 
 The order matters because batch 2–3 creates the reviewed Samapti Sinha identity
@@ -34,7 +34,7 @@ Starting from the recorded production baseline:
 | Measure | Before | Delta | Expected after |
 | --- | ---: | ---: | ---: |
 | `teachers` | 4 | +21 | 25 |
-| `teacher_aliases` | 8 | +33 | 41 |
+| `teacher_aliases` | 8 | +31 | 39 |
 | `playlist_teachers` | 83 | +44 | 127 |
 | Courses with normalized faculty | 83 | +43 | 126 |
 | Unlinked NEET courses | 45 | -43 | 2 |
@@ -73,7 +73,7 @@ The two intentionally unlinked NEET courses are 118 and 119.
 
 1. Recalculate and compare the artifact SHA-256.
 2. Run once, then repeat for idempotency.
-3. Verify 18 additional teachers, 28 additional aliases, and 26 course links.
+3. Verify 18 additional teachers, 26 additional aliases, and 26 course links.
 4. Verify no link exists for courses 91, 118, or 119.
 5. Recheck the JEE fingerprint and anonymous faculty browse.
 6. Stop and report before the next artifact.
@@ -132,6 +132,27 @@ Clone `nxicoflvbxiemqjiqraz` was restored from production at
   Catalogue counts remain unchanged and the JEE fingerprint is still
   `d7aae3ce7635401ebeffe97e627048bc`.
 
-F3 remains blocked until every `short-name` value in the batch 2–3 artifact is
-changed to the schema-supported `short`, its tests pass, and its hash is
-repinned. No batch 2–3 or course-91 SQL has been run on this clone yet.
+Before F3, every `short-name` value in batch 2–3 was changed to the
+schema-supported `short`. The first corrected attempt then failed closed because
+the restored normalizer treats the exact evidence string `MR Sir` as honorifics
+only and refuses its empty normalized value. That transaction also rolled back.
+The unusable short alias was omitted while the reviewed `Manish Raj Sir`
+full-name alias remains. Clone verification also proved that `SKC Sir` and
+`Skc Sir` share the same normalized key, so the redundant casing variant was
+omitted while the canonical uppercase initials remain. No course-91 SQL has
+been run on this clone yet. The resulting artifact is repinned at
+`2ffde08d54e5049c38da413406fd5c914937d5a81b93145e717b010b1bec6f64`.
+
+- Final F3 artifact succeeded twice. Clone totals are now 24 teachers,
+  37 aliases, and 125 faculty links, matching the exact `+18/+26/+26` delta
+  from the F2 baseline.
+- Courses 91, 118, and 119 still have zero normalized faculty links.
+- Anonymous clone REST checks returned HTTP 200 for teachers, faculty links,
+  learning goals, and teacher-goal mappings. All 18 batch 2–3 identities are
+  visible; the anonymous NEET faculty set contains 20 reviewed identities.
+- The protected JEE fingerprint remains
+  `d7aae3ce7635401ebeffe97e627048bc`.
+
+F4 remains blocked until the course-91 artifact replaces its two
+schema-incompatible `short-name` values with `short`, passes tests, and is
+repinned.

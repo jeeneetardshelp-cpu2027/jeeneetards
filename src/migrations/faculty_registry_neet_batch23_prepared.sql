@@ -130,12 +130,11 @@ insert into public.teacher_aliases
 select t.id, expected.alias, '', expected.alias_type, 'verified', 'manual', now()
 from (values
   ('vipin-sharma', 'Vipin Sharma Sir', 'full-name'),
-  ('vipin-sharma', 'Vipin Sir', 'short-name'),
+  ('vipin-sharma', 'Vipin Sir', 'short'),
   ('pankaj-sijariya', 'Pankaj Sijariya Sir', 'full-name'),
-  ('pankaj-sijariya', 'Pankaj Sir', 'short-name'),
+  ('pankaj-sijariya', 'Pankaj Sir', 'short'),
   ('amit-mahajan', 'Amit Mahajan Sir', 'full-name'),
   ('manish-raj', 'Manish Raj Sir', 'full-name'),
-  ('manish-raj', 'MR Sir', 'initials'),
   ('pawan-kumar-pandey', 'Pawan Kumar Pandey Sir', 'full-name'),
   ('mohit-dadheech', 'Mohit Dadheech Sir', 'full-name'),
   ('nikhil-saini', 'Nikhil Saini Sir', 'full-name'),
@@ -143,20 +142,19 @@ from (values
   ('swagata-mukherjee', 'Swagata Mukherjee Ma''am', 'full-name'),
   ('tulika-jha', 'Tulika Jha Ma''am', 'full-name'),
   ('saleem-ahmad', 'Saleem Ahmad Sir', 'full-name'),
-  ('saleem-ahmad', 'Saleem Sir', 'short-name'),
+  ('saleem-ahmad', 'Saleem Sir', 'short'),
   ('shubh-karan-choudhary', 'Shubh Karan Choudhary Sir', 'full-name'),
   ('shubh-karan-choudhary', 'SKC Sir', 'initials'),
-  ('shubh-karan-choudhary', 'Skc Sir', 'initials'),
   ('aayudh-yashlaha', 'Aayudh Yashlaha Sir', 'full-name'),
-  ('aayudh-yashlaha', 'Aayudh Sir', 'short-name'),
+  ('aayudh-yashlaha', 'Aayudh Sir', 'short'),
   ('abhishek-verma', 'Abhishek Verma Sir', 'full-name'),
   ('sudhanshu-kumar', 'Sudhanshu Kumar Sir', 'full-name'),
-  ('sudhanshu-kumar', 'Sudhanshu Sir', 'short-name'),
+  ('sudhanshu-kumar', 'Sudhanshu Sir', 'short'),
   ('siddharth-sharma', 'Siddharth Sharma Sir', 'full-name'),
-  ('siddharth-sharma', 'Siddharth Sir', 'short-name'),
+  ('siddharth-sharma', 'Siddharth Sir', 'short'),
   ('harshit-thakuria', 'Harshit Thakuria Sir', 'full-name'),
   ('samapti-sinha', 'Samapti Sinha Ma''am', 'full-name'),
-  ('samapti-sinha', 'Samapti Ma''am', 'short-name')
+  ('samapti-sinha', 'Samapti Ma''am', 'short')
 ) expected(slug, alias, alias_type)
 join public.teachers t on t.slug = expected.slug
 on conflict (teacher_id, normalized_alias) do nothing;
