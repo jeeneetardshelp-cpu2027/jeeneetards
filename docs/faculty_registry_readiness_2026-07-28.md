@@ -63,6 +63,11 @@ Two source values still represent unresolved multi-teacher credits:
 - `Aditya Sir & Rohit Sir` — course 118
 - `Sarvesh Sir, Pankaj Sir & Amit Sir` — course 119
 
+The exact video IDs, candidate full names, reviewed first-party sources, and
+missing-proof boundary are recorded in
+`docs/faculty_identity_unresolved_neet_vardaan_2026-07-28.md`. Neither course
+has a prepared SQL package.
+
 Course 91's `Tarun Sir & Samapti Ma'am` credit is now fully reviewed as Tarun
 Kumar and Samapti Sinha. Any future link must preserve both instructors.
 
