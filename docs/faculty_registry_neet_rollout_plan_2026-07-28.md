@@ -167,3 +167,32 @@ Before F4, the course-91 artifact replaced its two schema-incompatible
   returned the two course-91 links in positions 1 and 2.
 - The protected JEE fingerprint remains
   `d7aae3ce7635401ebeffe97e627048bc`.
+
+### Gate F5 result
+
+F5 passed on the isolated clone; no production writes were made.
+
+- Cumulative totals remain 128 playlists, 83 JEE courses, 45 NEET courses,
+  1,721 memberships, 1,307 JEE memberships, 124 chapters, 25 teachers,
+  39 aliases, and 127 faculty links.
+- All 25 anonymous `get_faculty_profile` responses matched their exact mapped
+  courses. Course 91 appears on both Tarun Kumar and Samapti Sinha profiles.
+  No faculty link crosses between the JEE and NEET learning goals.
+- Anonymous NEET browse showed only reviewed faculty for the inspected chapter:
+  Vipin Sharma (3), Harshit Thakuria (1), and Yashika Singh (1).
+- Tarun Kumar and Samapti Sinha profiles were verified in the UI; Amit
+  Bijarnia's JEE profile still showed 33 courses.
+- Mobile JEE browse (390 x 844) reached Class 11 > Physics > Kinematics,
+  showed four courses and the verified Amit Bijarnia (4) faculty filter without
+  layout or interaction failure.
+- Representative JEE course 16 retained all 12 lessons. Its first and last
+  lessons loaded the YouTube embed; the last page reported lesson 12 of 12.
+- Courses 118 and 119 retained their truthful legacy combined teacher labels,
+  remained playable, and still have no normalized faculty link.
+- Light/dark theme switching worked. Browser logs filtered to the clone-backed
+  local origin contained no errors or warnings.
+- The protected JEE fingerprint remains
+  `d7aae3ce7635401ebeffe97e627048bc`.
+
+Production remains blocked pending a separate approval naming the exact
+hash-pinned artifact to apply.
