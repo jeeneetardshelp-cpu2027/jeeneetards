@@ -544,3 +544,19 @@ The create-only import produced course 125 with 6 new videos and memberships,
 zero reuse, and zero chapters. Anonymous first/last embed checks passed with no
 console warnings or errors. JEE remained exactly 83 courses and 1,307
 memberships with the unchanged fingerprint.
+
+## Cell Cycle RAFTAAR additive import — 28 July 2026
+
+The signed-in PITR dashboard showed active 7-day retention and latest restore
+point `28 Jul 2026 10:57:23 UTC+05:30`. The pre-write JEE fingerprint matched
+`d7aae3ce7635401ebeffe97e627048bc`.
+
+Playlist `PLJyab0VQDBGUTn_FLRZy6bOmEQsaYU04W` passed a fresh anonymous
+production dry-run with 4 published and usable videos, no existing playlist or
+duplicate IDs, explicit existing-chapter reuse, and zero blockers or findings.
+All four descriptions directly credit Yashika ma’am.
+
+The create-only import produced course 126 with 4 new videos and memberships,
+zero reuse, and zero chapters. Anonymous first/last embed checks passed with no
+console warnings or errors. JEE remained exactly 83 courses and 1,307
+memberships with the unchanged fingerprint.
