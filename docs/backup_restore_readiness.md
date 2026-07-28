@@ -842,3 +842,12 @@ Production `youtube` (`kezelafqhgqrprpadmlf`) remained present and untouched.
 
 The older rehearsal clone `youtube-neet-restore-rehearsal-20260727`
 (`napkhqkdsqmnunxwnurr`) was outside this approval and remains present.
+
+The owner subsequently gave a separate explicit approval to permanently delete
+that older rehearsal clone. Its project page was verified as
+`youtube-neet-restore-rehearsal-20260727`
+(`napkhqkdsqmnunxwnurr`) immediately before deletion. After deletion completed,
+it no longer appeared in the organization project list. Production `youtube`
+(`kezelafqhgqrprpadmlf`) remained present and untouched. No restore rehearsal
+clones remain; the organization list contains the two staging projects and
+production.
