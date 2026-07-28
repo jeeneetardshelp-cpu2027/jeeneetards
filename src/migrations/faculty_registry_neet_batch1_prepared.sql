@@ -79,7 +79,7 @@ select t.id, expected.alias, '', expected.alias_type, 'verified', 'manual', now(
 from (values
   ('diksha-sharma', 'Diksha Sharma Ma''am', 'full-name'),
   ('yashika-singh', 'Yashika Singh Ma''am', 'full-name'),
-  ('yashika-singh', 'Yashika Ma''am', 'short-name')
+  ('yashika-singh', 'Yashika Ma''am', 'short')
 ) expected(slug, alias, alias_type)
 join public.teachers t on t.slug = expected.slug
 on conflict (teacher_id, normalized_alias) do nothing;

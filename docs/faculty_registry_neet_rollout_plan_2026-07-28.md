@@ -15,13 +15,17 @@ Apply only these exact files, in this order:
 
 | Order | Artifact | SHA-256 | Courses | New links |
 | ---: | --- | --- | ---: | ---: |
-| 1 | `src/migrations/faculty_registry_neet_batch1_prepared.sql` | `c59c374c469ff58cafe2ec485ce6605b8ee4f728da9e7a5c30f669557dab77da` | 16 | 16 |
+| 1 | `src/migrations/faculty_registry_neet_batch1_prepared.sql` | `cdc67cc1fa3bb9f975a9610b1e78b0997e49fc8d035a0bad51bf4e7f09a75c94` | 16 | 16 |
 | 2 | `src/migrations/faculty_registry_neet_batch23_prepared.sql` | `510c3c203709262616aff20614fa27809055697b396ef4b13df10b245947ed5f` | 26 | 26 |
 | 3 | `src/migrations/faculty_registry_neet_batch4_course91_prepared.sql` | `b60cc52e5eb51d11c9102c73076e498ad564def2f98f53dda0212a5bd6192848` | 1 | 2 |
 
 The order matters because batch 2–3 creates the reviewed Samapti Sinha identity
 for course 122. The course-91 package then reuses that identity and creates only
 Tarun Kumar plus their two ordered course links.
+
+Batch 1 was repinned after the fresh-clone rehearsal proved that the production
+schema accepts alias type `short`, not `short-name`. The failed transaction
+rolled back completely before this correction.
 
 ## Expected cumulative delta
 
@@ -110,3 +114,24 @@ Production remains a separate approval:
 Never chain all three production artifacts under a general “continue”
 instruction. Never include courses 118–119 without new exact-video identity
 evidence and a separate reviewed package.
+
+## Fresh-clone rehearsal evidence
+
+Clone `nxicoflvbxiemqjiqraz` was restored from production at
+`28 Jul 2026 14:27:31 UTC+05:30`.
+
+- F1 passed: 128 playlists, 83 JEE, 45 NEET, 1,721 memberships,
+  1,307 JEE memberships, 124 chapters, 4 teachers, 8 aliases, and 83 faculty
+  links. The JEE fingerprint matched.
+- The first F2 attempt failed closed because `short-name` violates the restored
+  `teacher_aliases_alias_type_check`; the transaction rolled back completely.
+- Batch 1 was corrected to the allowed `short` value and repinned at
+  `cdc67cc1fa3bb9f975a9610b1e78b0997e49fc8d035a0bad51bf4e7f09a75c94`.
+- Corrected batch 1 succeeded twice. The resulting clone totals are 6 teachers,
+  11 aliases, and 99 faculty links, matching the exact `+2/+3/+16` delta.
+  Catalogue counts remain unchanged and the JEE fingerprint is still
+  `d7aae3ce7635401ebeffe97e627048bc`.
+
+F3 remains blocked until every `short-name` value in the batch 2–3 artifact is
+changed to the schema-supported `short`, its tests pass, and its hash is
+repinned. No batch 2–3 or course-91 SQL has been run on this clone yet.

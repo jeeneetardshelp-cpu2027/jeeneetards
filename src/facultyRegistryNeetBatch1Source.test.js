@@ -12,6 +12,8 @@ describe("NEET faculty batch-1 prepared artifact", () => {
     expect(sql).toContain("Diksha Sharma Ma''am");
     expect(sql).toContain("Yashika Singh Ma''am");
     expect(sql).toContain("Yashika Ma''am");
+    expect(sql).toContain("'Yashika Ma''am', 'short'");
+    expect(sql).not.toContain("'short-name'");
   });
 
   it("fails closed on the exact 45-course and 8/8 production baseline", () => {
