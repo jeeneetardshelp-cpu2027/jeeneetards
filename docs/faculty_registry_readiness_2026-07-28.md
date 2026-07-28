@@ -46,7 +46,9 @@ The third source-reviewed batch covers the remaining 15 single-teacher courses;
 see `docs/faculty_identity_review_neet_batch_3_2026-07-28.md`. The three
 reviews together cover 42 of 45 NEET courses. The only unresolved course-level
 credits are the three mixed-teacher rows below. Batches 2 and 3 have no SQL
-artifact, and no reviewed NEET batch is authorized for execution.
+execution authorization. Their combined additive package is prepared at
+`src/migrations/faculty_registry_neet_batch23_prepared.sql`, but remains
+unexecuted because the existing clone predates the reviewed course IDs.
 
 ## Review blockers
 
