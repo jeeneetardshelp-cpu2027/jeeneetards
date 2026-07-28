@@ -509,3 +509,21 @@ zero reused videos, and zero chapters. Anonymous verification confirmed the
 embeds with no console warnings or errors. The immediate post-write JEE check
 remained exactly 83 courses and 1,307 memberships with the unchanged
 fingerprint above.
+
+## Cell RAFTAAR additive import — 28 July 2026
+
+The signed-in PITR dashboard showed active 7-day retention and latest restore
+point `28 Jul 2026 10:41:21 UTC+05:30`. The pre-write JEE fingerprint matched
+`d7aae3ce7635401ebeffe97e627048bc`.
+
+Playlist `PLJyab0VQDBGXssnsUu88TqpFCSdDuRiCA` had 6 public, embeddable videos;
+all six descriptions directly credited Yashika ma’am. An initial production
+command used the non-existent spelling `Cell - The Unit of Life` and stopped
+before any mutation. The corrected anonymous dry-run used the exact existing
+chapter `Cell: The Unit of Life` and explicitly reported `action: reuse`,
+zero production blockers, no existing playlist, and zero quality findings.
+
+The create-only retry produced course 124 with 6 new videos and memberships,
+zero reuse, and zero chapters. Anonymous first/last embed checks passed with no
+console warnings or errors. JEE remained exactly 83 courses and 1,307
+memberships with the unchanged fingerprint.
