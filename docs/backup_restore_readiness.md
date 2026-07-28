@@ -624,3 +624,19 @@ The create-only import produced course 130 with 4 new videos and memberships,
 zero reuse, and zero chapters. Anonymous first/last embed checks passed with no
 console warnings or errors. JEE remained exactly 83 courses and 1,307
 memberships with the unchanged fingerprint.
+
+## Locomotion RAFTAAR additive import — 28 July 2026
+
+The signed-in PITR dashboard showed active 7-day retention and latest restore
+point `28 Jul 2026 11:21:23 UTC+05:30`. The pre-write JEE fingerprint matched
+`d7aae3ce7635401ebeffe97e627048bc`.
+
+Playlist `PLJyab0VQDBGUhrtC9k3dU95QfeSN86siz` passed a fresh anonymous
+production dry-run with 3 published and usable videos, no existing playlist or
+duplicate IDs, explicit existing-chapter reuse, and zero blockers or findings.
+All three descriptions directly credit Diksha Sharma Ma'am.
+
+The create-only import produced course 131 with 3 new videos and memberships,
+zero reuse, and zero chapters. Anonymous first/last embed checks passed with no
+console warnings or errors. JEE remained exactly 83 courses and 1,307
+memberships with the unchanged fingerprint.

@@ -2,19 +2,19 @@
 
 ## NEET catalogue checkpoint
 
-The reviewed NEET readiness registry is complete. All 26 approved candidates
+The reviewed NEET readiness registry is complete. All 27 approved candidates
 were imported through the create-only mapped workflow:
 
-- 26 courses;
-- 236 videos;
-- 236 playlist memberships;
+- 27 courses;
+- 239 videos;
+- 239 playlist memberships;
 - zero import-created chapters.
 
-Production now contains 123 courses and 1,701 memberships:
+Production now contains 124 courses and 1,704 memberships:
 
 - JEE: 83 courses and 1,307 memberships;
-- NEET: 40 courses;
-- Biology: 21 courses.
+- NEET: 41 courses;
+- Biology: 22 courses.
 
 The final reviewed-evidence candidate was MISSION 30 Zoology, imported as
 course 122 with 10 new videos and memberships. Its teacher attribution is
@@ -66,10 +66,15 @@ create-only import added 4 videos and memberships, reused the existing
 Breathing and Exchange of Gases chapter, and left the protected JEE catalogue
 unchanged.
 
+Locomotion and Movement - BIOLOGY RAFTAAR was imported as course 131. All
+three source descriptions directly credit Diksha Sharma Ma'am. The create-only
+import added 3 videos and memberships, reused the existing Locomotion and
+Movement chapter, and left the protected JEE catalogue unchanged.
+
 ## Integrity and rollback evidence
 
 Seven-day PITR was active before the latest write. The recorded rollback point
-for course 130 is `28 Jul 2026 11:17:23 UTC+05:30`; no restore was started.
+for course 131 is `28 Jul 2026 11:21:23 UTC+05:30`; no restore was started.
 
 The protected JEE catalogue remains unchanged:
 
@@ -103,6 +108,11 @@ Local production-backed QA confirmed:
 MISSION 30 Inorganic Chemistry remains deferred because no reviewed source
 directly attributes all five exact playlist videos to a teacher. General
 faculty evidence and visual face matching are not sufficient.
+
+Morphology of Plants - BIOLOGY RAFTAAR remains deferred because none of its
+five current YouTube descriptions or tags identifies the teacher. The videos
+are otherwise public and embeddable, but faculty identity is not inferred from
+the shared series.
 
 The PW NEET Wallah inventory refresh still contains exactly 218 public
 playlists, matching the reviewed baseline. No newly published playlist requires
