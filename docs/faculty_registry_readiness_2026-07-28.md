@@ -38,9 +38,9 @@ Singh across 16 courses; see
 
 The second source-reviewed batch covers Vipin Sharma, Pankaj Sijariya, Amit
 Mahajan, and Manish Raj across another 11 courses; see
-`docs/faculty_identity_review_neet_batch_2_2026-07-28.md`. Together the two
-reviewed batches cover 27 of 45 NEET courses, but only batch 1 currently has a
-prepared SQL artifact. Neither is authorized for execution.
+`docs/faculty_identity_review_neet_batch_2_2026-07-28.md`. Together the first
+two reviewed batches cover 27 of 45 NEET courses. Preparation does not
+authorize execution.
 
 The third source-reviewed batch covers the remaining 15 single-teacher courses;
 see `docs/faculty_identity_review_neet_batch_3_2026-07-28.md`. The three
@@ -78,6 +78,10 @@ unless that explicit identity evidence has been reviewed; no general
 name-expansion rule is authorized.
 
 ## Safe additive sequence
+
+The hash-pinned artifact order, exact expected deltas, fresh-clone gates, and
+production stop conditions are consolidated in
+`docs/faculty_registry_neet_rollout_plan_2026-07-28.md`.
 
 1. Export all 28 distinct strings with course IDs and source/channel context.
 2. Review one identity decision at a time, recording the source URL, reviewer,
