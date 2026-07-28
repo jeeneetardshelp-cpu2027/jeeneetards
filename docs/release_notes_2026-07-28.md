@@ -164,3 +164,25 @@ This checkpoint does not authorize a `release` push, production migration, or
 additional content import. Future candidates must repeat the documented
 pre-write gate: exact owner approval, fresh PITR restore point, JEE fingerprint,
 anonymous dry-run, create-only import, and immediate postflight verification.
+
+## Post-batch hardening checkpoint
+
+The final read-only catalogue and ingestion audits completed after the Biology
+batch. Production remains at 128 courses and 1,721 memberships: 83 JEE courses
+with 1,307 memberships and 45 NEET courses. Metadata, teacher, title, and
+fully-contained duplicate checks all report zero issues.
+
+Local validation passed 79 test files / 805 tests, strict lint, and the
+production build. The generated sitemap contains 128 course routes plus five
+static routes. The production dependency audit reports zero vulnerabilities.
+The full audit still reports seven high-severity findings confined to the
+ESLint development dependency tree; the available automatic remediation is a
+breaking ESLint 10 upgrade, so no force-fix was applied.
+
+The JEE integrity fingerprint remains
+`d7aae3ce7635401ebeffe97e627048bc`. The read-only capability contract correctly
+detected a release gate: production now exposes universal search, comparison,
+faculty registry, and board classification, while the frontend capability map
+still deliberately keeps them disabled. Those four switches must stay off
+until their own frontend release QA is approved; the mismatch is recorded
+rather than silently enabling unreviewed features.
