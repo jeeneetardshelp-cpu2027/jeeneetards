@@ -826,3 +826,19 @@ remain intentionally unlinked, the course-91 legacy combined label remains
 unchanged, and there were zero JEE cross-goal links. Playlist, membership,
 chapter, JEE-course, and JEE-membership counts remained unchanged, and the
 protected JEE fingerprint remained exact.
+
+## NEET faculty restore-clone cleanup — 28 July 2026
+
+After all clone-rehearsed NEET faculty artifacts passed their separately gated
+production writes and final read-only production QA, the owner explicitly
+approved permanent deletion of only
+`youtube-neet-faculty-restore-rehearsal-20260728`
+(`nxicoflvbxiemqjiqraz`).
+
+The Supabase project settings page was checked immediately before deletion and
+showed that exact project name and reference. After the permanent deletion
+completed, the project no longer appeared in the organization project list.
+Production `youtube` (`kezelafqhgqrprpadmlf`) remained present and untouched.
+
+The older rehearsal clone `youtube-neet-restore-rehearsal-20260727`
+(`napkhqkdsqmnunxwnurr`) was outside this approval and remains present.
