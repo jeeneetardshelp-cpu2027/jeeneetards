@@ -673,3 +673,20 @@ The create-only import produced course 133 with 3 new videos and memberships,
 zero reuse, and zero chapters. Anonymous first/last embed checks passed with no
 console warnings or errors. JEE remained exactly 83 courses and 1,307
 memberships with the unchanged fingerprint.
+
+## Structural Organisation RAFTAAR additive import — 28 July 2026
+
+The signed-in PITR dashboard showed active 7-day retention and latest restore
+point `28 Jul 2026 11:33:24 UTC+05:30`. The pre-write JEE fingerprint matched
+`d7aae3ce7635401ebeffe97e627048bc`.
+
+Playlist `PLJyab0VQDBGVQx0FZY8t4IUWMSOQwlmhb` passed a fresh anonymous
+production dry-run with 6 published and usable videos, no existing playlist or
+duplicate IDs, explicit reuse of the canonical `Structural Organisation in
+Animals` chapter, and zero blockers or findings. All six descriptions directly
+credit Diksha Sharma Ma'am.
+
+The create-only import produced course 134 with 6 new videos and memberships,
+zero reuse, and zero chapters. Anonymous first/last embed checks passed with no
+console warnings or errors. JEE remained exactly 83 courses and 1,307
+memberships with the unchanged fingerprint.
