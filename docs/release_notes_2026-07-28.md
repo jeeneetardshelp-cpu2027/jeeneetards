@@ -10,11 +10,11 @@ were imported through the create-only mapped workflow:
 - 195 playlist memberships;
 - zero import-created chapters.
 
-Production now contains 121 courses and 1,694 memberships:
+Production now contains 122 courses and 1,697 memberships:
 
 - JEE: 83 courses and 1,307 memberships;
-- NEET: 38 courses;
-- Biology: 19 courses.
+- NEET: 39 courses;
+- Biology: 20 courses.
 
 The final reviewed-evidence candidate was MISSION 30 Zoology, imported as
 course 122 with 10 new videos and memberships. Its teacher attribution is
@@ -40,6 +40,11 @@ sixth practice session carried no conflicting attribution. The create-only
 import added 6 videos and memberships, reused the existing Biomolecules
 chapter, and left the protected JEE catalogue unchanged.
 
+Plant Growth and Development - BIOLOGY RAFTAAR was imported as course 129.
+All three source descriptions directly credit Yashika ma’am. The create-only
+import added 3 videos and memberships, reused the existing Plant Growth and
+Development chapter, and left the protected JEE catalogue unchanged.
+
 Cell Cycle and Cell Division - BIOLOGY RAFTAAR was imported as course 126.
 All four source descriptions directly credit Yashika ma’am. The create-only
 import added 4 videos and memberships, reused the existing Cell Cycle and Cell
@@ -58,7 +63,7 @@ chapter, and left the protected JEE catalogue unchanged.
 ## Integrity and rollback evidence
 
 Seven-day PITR was active before the latest write. The recorded rollback point
-for course 128 is `28 Jul 2026 11:11:23 UTC+05:30`; no restore was started.
+for course 129 is `28 Jul 2026 11:13:23 UTC+05:30`; no restore was started.
 
 The protected JEE catalogue remains unchanged:
 
