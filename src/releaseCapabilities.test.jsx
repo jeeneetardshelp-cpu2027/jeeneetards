@@ -15,11 +15,11 @@ function LocationProbe() {
 }
 
 describe("current production capability contract", () => {
-  it("does not promise database features that are absent from production", () => {
+  it("exposes only features with release-ready production data", () => {
     expect(RELEASE_CAPABILITIES).toEqual({
       catalogNavigation: true,
-      universalSearch: false,
-      comparison: false,
+      universalSearch: true,
+      comparison: true,
       facultyRegistry: false,
       boardClassification: false,
     });
@@ -28,7 +28,7 @@ describe("current production capability contract", () => {
       courseRatingSubmission: false,
       contentReporting: false,
     });
-    expect(homeTagline()).not.toMatch(/compare/i);
+    expect(homeTagline()).toMatch(/compare/i);
   });
 
   it("keeps every student-owned write surface hidden for the browse-only MVP", () => {

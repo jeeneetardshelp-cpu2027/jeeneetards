@@ -1,18 +1,19 @@
-// releaseCapabilities.js — the capabilities the CURRENT production database
-// can honestly support.
+// releaseCapabilities.js — the capabilities the CURRENT production release
+// can honestly expose to students.
 //
 // This is deliberately explicit. The frontend previously exposed Search,
 // Compare and Faculty because their React code existed, even though the RPCs
 // they require had never been deployed to production. Green component tests
 // could not detect that mismatch.
 //
-// After a database feature is deployed and verified, change its value here in
-// the same release. `npm run verify:production-capabilities` checks this file
-// against the anonymous production API before GitHub/Vercel deployment.
+// After a database feature and its release-ready data are deployed and verified,
+// change its value here in the same release. `npm run
+// verify:production-capabilities` checks this file against meaningful anonymous
+// production results before GitHub/Vercel deployment.
 export const RELEASE_CAPABILITIES = Object.freeze({
   catalogNavigation: true,
-  universalSearch: false,
-  comparison: false,
+  universalSearch: true,
+  comparison: true,
   facultyRegistry: false,
   boardClassification: false,
 });

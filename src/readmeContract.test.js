@@ -24,16 +24,17 @@ describe("repository onboarding contract", () => {
     }
   });
 
-  it("documents every disabled release capability", () => {
+  it("documents the enabled and disabled release capabilities", () => {
     expect(RELEASE_CAPABILITIES).toMatchObject({
-      universalSearch: false,
-      comparison: false,
+      universalSearch: true,
+      comparison: true,
       facultyRegistry: false,
       boardClassification: false,
     });
+    for (const label of ["Universal search", "Course comparison"]) {
+      expect(readme).toMatch(new RegExp(`\\| ${label} \\| Enabled \\|`));
+    }
     for (const label of [
-      "Universal search",
-      "Course comparison",
       "Faculty profiles and filtering",
       "School-board classification",
     ]) {

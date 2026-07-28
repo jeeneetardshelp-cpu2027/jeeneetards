@@ -23,8 +23,8 @@ security controls and release evidence must also be present.
 | Curriculum navigation | Enabled |
 | YouTube privacy-enhanced playback | Enabled |
 | Device-local watch progress | Enabled |
-| Universal search | Disabled |
-| Course comparison | Disabled |
+| Universal search | Enabled |
+| Course comparison | Enabled |
 | Faculty profiles and filtering | Disabled |
 | School-board classification | Disabled |
 | Public student accounts | Disabled |

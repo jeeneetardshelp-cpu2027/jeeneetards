@@ -180,9 +180,16 @@ ESLint development dependency tree; the available automatic remediation is a
 breaking ESLint 10 upgrade, so no force-fix was applied.
 
 The JEE integrity fingerprint remains
-`d7aae3ce7635401ebeffe97e627048bc`. The read-only capability contract correctly
-detected a release gate: production now exposes universal search, comparison,
-faculty registry, and board classification, while the frontend capability map
-still deliberately keeps them disabled. Those four switches must stay off
-until their own frontend release QA is approved; the mismatch is recorded
-rather than silently enabling unreviewed features.
+`d7aae3ce7635401ebeffe97e627048bc`.
+
+Dedicated anonymous runtime QA then separated database-object presence from
+release readiness. Universal search returned grouped Kinematics chapter,
+playlist, and lecture results. Chapter-scoped comparison selected two real
+Kinematics courses and rendered their verified side-by-side metadata. These
+two capabilities are now enabled in the frontend release map.
+
+Faculty and Boards remain disabled. The faculty RPC exists but an anonymous
+`ABJ` search returns no public registry rows, while board classification exists
+without any classified courses. The production capability verifier now
+requires meaningful release-ready data, so its full contract passes without
+mistaking empty database foundations for student-ready features.

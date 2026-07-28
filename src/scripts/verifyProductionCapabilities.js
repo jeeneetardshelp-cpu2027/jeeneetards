@@ -43,33 +43,44 @@ function resultFrom(error, label) {
   return { supported: false, detail: error.code ?? error.message ?? "unavailable" };
 }
 
-async function rpc(name, args) {
-  const { error } = await db.rpc(name, args);
-  return resultFrom(error, name);
+async function rpc(name, args, isReady = () => true) {
+  const { data, error } = await db.rpc(name, args);
+  const result = resultFrom(error, name);
+  if (result.supported && !isReady(data)) {
+    return { supported: false, detail: "available but no release-ready data" };
+  }
+  return result;
 }
 
 async function boardCounts() {
-  const { error } = await db
+  const { data, error } = await db
     .from("boards")
     .select("id, name, slug, playlist_boards(count)")
     .order("display_order")
-    .limit(1);
-  return resultFrom(error, "boards with playlist counts");
+    .limit(100);
+  const result = resultFrom(error, "boards with playlist counts");
+  const hasCourses = (data ?? []).some((board) =>
+    Number(board.playlist_boards?.[0]?.count ?? 0) > 0);
+  return result.supported && !hasCourses
+    ? { supported: false, detail: "available but no classified courses" }
+    : result;
 }
 
 const actual = {
   catalogNavigation: await rpc("get_browse_curriculum", {
     p_goal: null, p_class: null, p_subject: null,
-  }),
+  }, (data) => Array.isArray(data) && data.length > 0),
   universalSearch: await rpc("universal_search", {
     p_query: "kinematics", p_types: null, p_limit: 1, p_offset: 0,
-  }),
+  }, (data) => Array.isArray(data) && data.length > 0),
   comparison: await rpc("get_playlist_comparison", {
-    p_playlist_ids: [1, 2], p_chapter_id: 1, p_learning_goal_id: null,
-  }),
+    p_playlist_ids: [5, 6], p_chapter_id: 1, p_learning_goal_id: 1,
+  }, (data) => Array.isArray(data)
+    && data.length === 2
+    && data.every((row) => row.course_status === "ok")),
   facultyRegistry: await rpc("search_teachers", {
     p_query: "abj", p_limit: 1,
-  }),
+  }, (data) => Array.isArray(data) && data.length > 0),
   boardClassification: await boardCounts(),
 };
 
