@@ -115,7 +115,7 @@ teachers, and zero fully-contained duplicate-course candidates.
 
 Local production-backed QA confirmed:
 
-- Home advertises 83 JEE and 32 NEET courses.
+- Home advertises 83 JEE and 45 NEET courses.
 - NEET -> Class 11 -> Biology -> Animal Kingdom lists the expected three courses.
 - Course 122 opens from browse and teacher search.
 - Its first and final mapped lessons load through the official YouTube player.
@@ -142,8 +142,10 @@ The refreshed RAFTAAR closure audit leaves six unimported playlists in total.
 Living World and Animal Kingdom, like Morphology, have no teacher attribution
 in their current descriptions or tags. Digestion and Absorption, Mineral
 Nutrition, and Transport in Plants have direct teacher evidence but their
-canonical Biology chapters do not exist in production, so they remain blocked
-pending a separately approved additive taxonomy step.
+canonical Biology chapters do not exist in production. The official NEET UG
+2026 syllabus does not enumerate those three as standalone Biology chapters,
+so no production taxonomy rows were created merely to accommodate legacy
+playlist titles.
 
 The PW NEET Wallah inventory refresh still contains exactly 218 public
 playlists, matching the reviewed baseline. No newly published playlist requires

@@ -441,6 +441,23 @@ unchanged. Future coverage checks should compare a fresh channel enumeration
 with this reviewed 218-playlist baseline before triaging only genuinely new
 playlists.
 
+## RAFTAAR Biology closure refresh — 2026-07-28
+
+A read-only source-versus-production reconciliation found 16 of the 22 Biology
+RAFTAAR playlists imported and six still absent. Living World, Morphology of
+Plants, and Animal Kingdom remain deferred because their current YouTube
+descriptions and tags contain no teacher attribution.
+
+Digestion and Absorption, Mineral Nutrition, and Transport in Plants have
+usable videos and direct teacher evidence but no matching production chapter.
+The official NTA/NMC
+[NEET UG 2026 syllabus](https://www.nta.ac.in/Download/Notice/Notice_20260108180635.pdf)
+lists Plant Physiology as photosynthesis, respiration, and plant growth and
+development, and its Human Physiology unit does not enumerate a standalone
+digestion chapter. Those three legacy playlist titles therefore do not justify
+new student-facing taxonomy rows. No chapters or courses were created for
+them.
+
 ## Safe next gates
 
 1. The ten clean mapped candidates are reconciled in
