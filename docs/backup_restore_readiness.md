@@ -487,3 +487,25 @@ The latest point is the rollback target for evidence decision
 `c8cf544a-bd1f-4a2c-9a7e-d8490185a86c`. The restore action was not started.
 The create-only import produced course 122 with 10 new videos and memberships,
 zero reused videos, and zero chapters. The JEE fingerprint remained exact.
+
+## Biological Classification RAFTAAR additive import — 28 July 2026
+
+Before the create-only import, the Supabase PITR dashboard showed active
+7-day retention and a latest restore point of `28 Jul 2026 10:37:21
+UTC+05:30`. Production held 115 courses and 1,660 memberships; JEE held
+exactly 83 courses and 1,307 memberships with fingerprint
+`d7aae3ce7635401ebeffe97e627048bc`.
+
+Playlist `PLJyab0VQDBGUif6J3v0VsGbqnM8v0_cAv` passed a fresh anonymous
+production dry-run with 8 published and 8 usable videos, no existing playlist,
+no duplicate video IDs, no missing duration or embedding blocker, and the
+existing Biological Classification chapter resolved. All eight source
+descriptions directly credit Yashika ma’am; the importer now treats the
+Unicode apostrophe in that honorific as equivalent to the ASCII spelling.
+
+The create-only import produced course 123 with 8 new videos, 8 memberships,
+zero reused videos, and zero chapters. Anonymous verification confirmed the
+`neet` goal, Class 11 taxonomy, and working first and last official YouTube
+embeds with no console warnings or errors. The immediate post-write JEE check
+remained exactly 83 courses and 1,307 memberships with the unchanged
+fingerprint above.

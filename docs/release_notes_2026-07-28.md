@@ -10,15 +10,22 @@ were imported through the create-only mapped workflow:
 - 195 playlist memberships;
 - zero import-created chapters.
 
-Production now contains 115 courses and 1,660 memberships:
+Production now contains 116 courses and 1,668 memberships:
 
 - JEE: 83 courses and 1,307 memberships;
-- NEET: 32 courses;
-- Biology: 13 courses.
+- NEET: 33 courses;
+- Biology: 14 courses.
 
 The final reviewed-evidence candidate was MISSION 30 Zoology, imported as
 course 122 with 10 new videos and memberships. Its teacher attribution is
 bound to evidence decision `c8cf544a-bd1f-4a2c-9a7e-d8490185a86c`.
+
+An additional direct-source candidate, Biological Classification - BIOLOGY
+RAFTAAR, was imported as course 123 after all eight YouTube descriptions
+explicitly credited Yashika ma’am. The additive import created 8 videos and 8
+memberships, reused the existing Biological Classification chapter, and left
+the JEE fingerprint unchanged. The attribution quality gate now recognizes
+the Unicode apostrophe commonly emitted by YouTube in `ma’am`.
 
 ## Integrity and rollback evidence
 

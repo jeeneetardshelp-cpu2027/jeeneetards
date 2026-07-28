@@ -88,6 +88,10 @@ describe("hasTeacherEvidence (Codex accepts once '#alksir' appears, defers other
   it("accepts an 'X Sir' mention", () => {
     expect(hasTeacherEvidence([{ title: "Kinetics by ALK Sir" }])).toBe(true);
     expect(hasTeacherEvidence([{ title: "Biology with Yashika Ma'am" }])).toBe(true);
+    expect(hasTeacherEvidence([{
+      title: "Biological Classification",
+      description: "Yashika ma’am explains the chapter.",
+    }])).toBe(true);
   });
   it("accepts official video-tag attribution", () => {
     expect(hasTeacherEvidence([{

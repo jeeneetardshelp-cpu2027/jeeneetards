@@ -102,8 +102,8 @@ export function hasTeacherEvidence(videos = [], description = "", knownTeachers 
     ].join(" ")),
   ]
     .join(" \n ");
-  if (/#\w*(?:sir|maam|ma'am)\b/i.test(haystack)) return true;
-  if (/\b[A-Z][A-Za-z.]+\s+(?:sir|ma'?am)\b/i.test(haystack)) return true;
+  if (/#\w*(?:sir|maam|ma['’]am)\b/i.test(haystack)) return true;
+  if (/\b[A-Z][A-Za-z.]+\s+(?:sir|ma(?:['’])?am)\b/i.test(haystack)) return true;
   for (const name of knownTeachers) {
     const tokens = String(name).toLowerCase().match(/[a-z0-9]+/g) ?? [];
     if (tokens.length === 0) continue;
