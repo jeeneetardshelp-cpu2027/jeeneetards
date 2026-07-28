@@ -10,11 +10,11 @@ were imported through the create-only mapped workflow:
 - 195 playlist memberships;
 - zero import-created chapters.
 
-Production now contains 117 courses and 1,674 memberships:
+Production now contains 118 courses and 1,680 memberships:
 
 - JEE: 83 courses and 1,307 memberships;
-- NEET: 34 courses;
-- Biology: 15 courses.
+- NEET: 35 courses;
+- Biology: 16 courses.
 
 The final reviewed-evidence candidate was MISSION 30 Zoology, imported as
 course 122 with 10 new videos and memberships. Its teacher attribution is
@@ -34,10 +34,16 @@ Life` chapter. An initial write attempt using a hyphenated chapter spelling
 stopped before mutation; the corrected anonymous dry-run explicitly confirmed
 chapter reuse before the successful retry.
 
+Biomolecules - BIOLOGY RAFTAAR was imported as course 125 after five
+consecutive source descriptions directly credited Diksha Sharma ma’am and the
+sixth practice session carried no conflicting attribution. The create-only
+import added 6 videos and memberships, reused the existing Biomolecules
+chapter, and left the protected JEE catalogue unchanged.
+
 ## Integrity and rollback evidence
 
-Seven-day PITR was active before the final write. The recorded rollback point
-for course 122 is `28 Jul 2026 09:41:19 UTC+05:30`; no restore was started.
+Seven-day PITR was active before the latest write. The recorded rollback point
+for course 125 is `28 Jul 2026 10:51:22 UTC+05:30`; no restore was started.
 
 The protected JEE catalogue remains unchanged:
 
