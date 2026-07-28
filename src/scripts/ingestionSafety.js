@@ -181,6 +181,12 @@ export function validateChapterManifest({ manifest, playlistId, teacher, videos 
   if (manifest.version !== 1) {
     throw new Error("Chapter manifest version must be 1.");
   }
+  if (manifest.status === "superseded" || manifest.superseded_by) {
+    const replacement = String(manifest.superseded_by ?? "").trim();
+    throw new Error(
+      `Chapter manifest is superseded${replacement ? `; use ${replacement}` : ""}.`,
+    );
+  }
   if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
     .test(manifest.request_id ?? "")) {
     throw new Error("Chapter manifest request_id must be a UUID.");

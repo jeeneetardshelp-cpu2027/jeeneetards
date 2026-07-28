@@ -1,5 +1,7 @@
 {
   "version": 1,
+  "status": "superseded",
+  "superseded_by": "docs/manifests/neet-physical-chemistry-mindmap-sudhanshu.json",
   "request_id": "1e074caa-bf84-422c-9ca8-62cd6c7c5c90",
   "youtube_playlist_id": "PLJyab0VQDBGWQ3XjCBXxvttq1McW4yQfi",
   "assignments": [

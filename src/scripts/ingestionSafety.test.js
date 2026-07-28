@@ -288,6 +288,15 @@ describe("channel ingestion metadata", () => {
       videos,
     })).toThrow(/request_id.*UUID/i);
     expect(() => validateChapterManifest({
+      manifest: {
+        ...manifest,
+        status: "superseded",
+        superseded_by: "docs/manifests/reviewed-replacement.json",
+      },
+      playlistId: "PL_real",
+      videos,
+    })).toThrow(/superseded.*reviewed-replacement/i);
+    expect(() => validateChapterManifest({
       manifest: { ...manifest, youtube_playlist_id: "PL_other" },
       playlistId: "PL_real",
       videos,
