@@ -50,14 +50,20 @@ execution authorization. Their combined additive package is prepared at
 `src/migrations/faculty_registry_neet_batch23_prepared.sql`, but remains
 unexecuted because the existing clone predates the reviewed course IDs.
 
+The fourth review resolves both teachers on mixed Biology course 91; see
+`docs/faculty_identity_review_neet_batch_4_2026-07-28.md`. Source-reviewed
+coverage is therefore 43 of 45 NEET courses. No course-91 SQL artifact or
+execution is authorized.
+
 ## Review blockers
 
-Three source values explicitly represent more than one teacher and must be
-split only after each person is reviewed:
+Two source values still represent unresolved multi-teacher credits:
 
 - `Aditya Sir & Rohit Sir` — course 118
 - `Sarvesh Sir, Pankaj Sir & Amit Sir` — course 119
-- `Tarun Sir & Samapti Ma'am` — course 91
+
+Course 91's `Tarun Sir & Samapti Ma'am` credit is now fully reviewed as Tarun
+Kumar and Samapti Sinha. Any future link must preserve both instructors.
 
 The `Mohit Dadheech` honorific variant and the NEET short labels `SKC Sir`,
 `Aayudh Sir`, `Saleem Sir`, `Sudhanshu Sir`, and `Siddharth Sir` now have
