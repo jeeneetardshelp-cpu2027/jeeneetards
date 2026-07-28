@@ -15,7 +15,8 @@ The machine-checked source of truth is
 | Vardaan multi-teacher | 2 | 10 | 10 | 0 | 118–119 |
 | RAFTAAR Biology | 3 | 14 | 14 | 0 | 105–107 |
 | Botany chapter follow-up | 2 | 25 | 25 | 0 | 120–121 |
-| **Imported total** | **17** | **185** | **185** | **0** | **105–121** |
+| Reviewed-evidence Zoology | 1 | 10 | 10 | 0 | 122 |
+| **Imported total** | **18** | **195** | **195** | **0** | **105–122** |
 
 All 12 previously pending candidates were imported to production in registry
 order on 28 July 2026. Each passed a fresh anonymous dry-run, create-only mapped
@@ -27,6 +28,7 @@ Detailed evidence:
 - `vardaan-multiteacher-readiness-2026-07-28.md`
 - `raftaar-biology-import-readiness-2026-07-28.md`
 - `neet-botany-import-evidence-2026-07-28.md`
+- `reviewed-external-teacher-evidence-2026-07-28.md`
 
 ### RAFTAAR Biology detail
 
@@ -39,15 +41,14 @@ RAFTAAR Biology was imported to production in registry order on 28 July 2026:
 | 107 | Anatomy of Flowering Plants - BIOLOGY RAFTAAR | 4 | 4 | 0 |
 | **Total** | | **14** | **14** | **0** |
 
-All 17 entries are retained in the machine registry with `status: "imported"`,
+All 18 entries are retained in the machine registry with `status: "imported"`,
 their production course IDs, and exact actual deltas so none can be mistaken
 for pending candidates.
 
 ## Still deferred
 
-- MISSION 30 Zoology now has a tested, provenance-recorded external-evidence
-  input and a green anonymous dry-run. It remains unimported pending explicit
-  owner approval of the evidence policy and exact playlist.
+- MISSION 30 Zoology is no longer deferred. It was imported as course 122 under
+  reviewed evidence decision `c8cf544a-bd1f-4a2c-9a7e-d8490185a86c`.
 - MISSION 30 Inorganic Chemistry still lacks direct faculty attribution for all
   exact video IDs.
 - MISSION 30 Botany and Botany Mindmap are no longer deferred. The guarded plan

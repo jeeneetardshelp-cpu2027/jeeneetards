@@ -57,7 +57,35 @@ blocked: 0
 Supabase writes: 0
 ```
 
-The course remains unimported pending explicit owner approval of this evidence
-policy and this exact playlist. MISSION 30 Inorganic Chemistry remains
-deferred: its external material does not directly attribute all five exact
-videos, so no evidence block was added to that manifest.
+## Production result
+
+The owner explicitly approved decision
+`c8cf544a-bd1f-4a2c-9a7e-d8490185a86c` and the exact Zoology playlist.
+Immediately before the write, the production PITR dashboard showed 7-day
+retention and a latest restore point of 28 Jul 2026 09:41:19 UTC+05:30.
+
+The final anonymous dry-run remained 10/10 and `ok`. The create-only mapped-v12
+import created course 122, 10 videos, and 10 memberships; it reused all mapped
+chapters and created none.
+
+Postflight:
+
+```text
+courses: 115
+memberships: 1,660
+JEE courses: 83
+NEET courses: 32
+Biology courses: 13
+JEE fingerprint: d7aae3ce7635401ebeffe97e627048bc
+metadata gaps: 0
+teacher gaps: 0
+duplicate candidates: 0
+```
+
+Anonymous browser QA found the course under NEET Class 11 Biology and Animal
+Kingdom, loaded the first and last YouTube embeds (lessons 1 and 10), and
+reported no console warnings or errors.
+
+MISSION 30 Inorganic Chemistry remains deferred: its external material does not
+directly attribute all five exact videos, so no evidence block was added to
+that manifest.

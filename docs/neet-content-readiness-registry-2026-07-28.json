@@ -1,10 +1,10 @@
 {
-  "version": 2,
-  "status": "all_17_imported",
+  "version": 3,
+  "status": "all_18_imported",
   "expected_totals": {
-    "courses": 17,
-    "videos": 185,
-    "memberships": 185,
+    "courses": 18,
+    "videos": 195,
+    "memberships": 195,
     "chapters": 0
   },
   "candidates": [
@@ -216,6 +216,18 @@
       "status": "imported",
       "production_course_id": 121,
       "actual_delta": {"courses": 1, "videos": 15, "memberships": 15, "chapters": 0}
+    },
+    {
+      "group": "reviewed-external-teacher-evidence",
+      "youtube_playlist_id": "PLJyab0VQDBGX7SDzL7XuurETg0FY9NWXs",
+      "manifest": "docs/manifests/neet-mission-30-zoology.json",
+      "teacher": "Samapti Ma'am",
+      "videos": 10,
+      "import_mode": "mapped-v12",
+      "approval_note": "external-evidence-decision-c8cf544a-bd1f-4a2c-9a7e-d8490185a86c",
+      "status": "imported",
+      "production_course_id": 122,
+      "actual_delta": {"courses": 1, "videos": 10, "memberships": 10, "chapters": 0}
     }
   ]
 }

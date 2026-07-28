@@ -471,3 +471,19 @@ action was not started. The guarded plan created chapter 128, after which
 course 120 (10 lessons) and course 121 (15 lessons) were imported create-only.
 The JEE fingerprint remained
 `d7aae3ce7635401ebeffe97e627048bc` after every write.
+
+## Reviewed-evidence Zoology production gate — 28 July 2026
+
+Before the approved MISSION 30 Zoology import, the signed-in production
+dashboard showed:
+
+```text
+PITR retention: 7 days
+Earliest restore point: 22 Jul 2026 00:02:47 UTC+05:30
+Latest restore point:   28 Jul 2026 09:41:19 UTC+05:30
+```
+
+The latest point is the rollback target for evidence decision
+`c8cf544a-bd1f-4a2c-9a7e-d8490185a86c`. The restore action was not started.
+The create-only import produced course 122 with 10 new videos and memberships,
+zero reused videos, and zero chapters. The JEE fingerprint remained exact.
