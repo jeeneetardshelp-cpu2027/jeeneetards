@@ -52,8 +52,9 @@ unexecuted because the existing clone predates the reviewed course IDs.
 
 The fourth review resolves both teachers on mixed Biology course 91; see
 `docs/faculty_identity_review_neet_batch_4_2026-07-28.md`. Source-reviewed
-coverage is therefore 43 of 45 NEET courses. No course-91 SQL artifact or
-execution is authorized.
+coverage is therefore 43 of 45 NEET courses. Its additive package is prepared
+at `src/migrations/faculty_registry_neet_batch4_course91_prepared.sql`, but
+execution is not authorized.
 
 ## Review blockers
 

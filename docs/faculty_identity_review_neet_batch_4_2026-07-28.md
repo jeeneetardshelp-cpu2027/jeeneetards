@@ -2,8 +2,8 @@
 
 ## Status
 
-Source-verified identity review for one mixed-teacher course. No SQL artifact was
-created or executed, and no database or release write occurred.
+Source-verified identity review for one mixed-teacher course. An additive SQL
+artifact is prepared but unexecuted; no database or release write occurred.
 
 ## Reviewed course
 
@@ -58,6 +58,14 @@ courses 118–119.
   JEE fingerprint `d7aae3ce7635401ebeffe97e627048bc`.
 - The existing restore clone predates production course 91 and cannot rehearse
   this mapping.
+
+Prepared artifact:
+
+`src/migrations/faculty_registry_neet_batch4_course91_prepared.sql`
+
+It is exact-ID scoped, refuses a changed 45-course NEET baseline or conflicting
+course-91 faculty link, preserves the two-teacher order, and verifies the
+protected JEE fingerprint.
 
 With this decision, 43 of 45 NEET courses have source-reviewed faculty
 identities. Only courses 118 and 119 remain unresolved.
