@@ -749,3 +749,29 @@ valid rehearsal target for this work. A future execution requires:
 The PITR timestamp recorded for the completed JEE faculty migration is
 historical evidence only. It must not be reused as the rollback target for a
 future NEET faculty write.
+
+## NEET faculty batch-1 additive migration — 28 July 2026
+
+Before the separately approved production write, the signed-in production PITR
+dashboard showed active 7-day retention and latest restore point
+`28 Jul 2026 15:16:22 UTC+05:30`.
+
+The approved clone-rehearsed artifact SHA-256 was
+`cdc67cc1fa3bb9f975a9610b1e78b0997e49fc8d035a0bad51bf4e7f09a75c94`.
+Production matched the rehearsal baseline exactly: 128 playlists, 83 JEE
+courses, 45 NEET courses, 1,721 memberships, 1,307 JEE memberships,
+124 chapters, four teachers, eight aliases, 83 faculty links, and no existing
+batch-1 teachers. The protected JEE fingerprint was
+`d7aae3ce7635401ebeffe97e627048bc`.
+
+The transaction added exactly two verified teachers, three verified aliases,
+and 16 reviewed NEET course links. Postflight totals were six teachers,
+11 aliases, and 99 faculty links. Diksha Sharma and Yashika Singh each returned
+eight courses through the anonymous faculty-profile RPC; both responses were
+HTTP 200. There were zero JEE cross-goal links. Playlist, membership, chapter,
+JEE-course, and JEE-membership counts remained unchanged, and the protected
+JEE fingerprint remained exact.
+
+No batch 2–3 or course-91 artifact was applied. Each remains a separate
+production gate requiring fresh PITR evidence and explicit approval naming its
+exact SHA-256.
