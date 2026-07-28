@@ -31,6 +31,11 @@ export function lessonNumber(title = "") {
     if (/^years?\b/i.test(rest)) return null;
     return Number(lead[1]);
   }
+  // Chapter playlists commonly put their authoritative sequence at the end
+  // of the first pipe-delimited segment: "Coordination Compounds 04 | ...".
+  // Read that before an internal "(Part-1)" subseries label.
+  const beforeFirstPipe = title.match(/^[^|]*?\b(\d{1,3})\s*\|/);
+  if (beforeFirstPipe) return Number(beforeFirstPipe[1]);
   const kw = title.match(/\b(?:lecture|lesson|part|ep|episode|l)\s*[-.:]?\s*(\d{1,3})\b/i);
   if (kw) return Number(kw[1]);
   return null;
