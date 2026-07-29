@@ -140,10 +140,13 @@ export default function PrivacyPolicy() {
             <p>
               Information may be shared with the providers above when necessary
               to operate their services, when a user directs the sharing, or
-              when law requires it. The current frontend contains no
-              first-party advertising system or third-party audience analytics
-              integration and does not implement the sale of personal
-              information.
+              when law requires it. The site measures traffic with Vercel's
+              aggregate, cookieless page-view analytics: it counts visits and
+              page views without cookies, device fingerprinting, cross-site
+              tracking, or individual visitor profiles. Beyond that, the
+              current frontend contains no first-party advertising system or
+              third-party audience analytics integration and does not
+              implement the sale of personal information.
             </p>
           </Section>
 

@@ -18,6 +18,10 @@ import {
   Routes, Route, Outlet, Navigate,
   useParams, useLocation, useNavigationType,
 } from "react-router";
+// Cookieless, aggregate page-view counting served by the site's own host —
+// no cookies, no cross-site tracking, no individual profiles (see the
+// privacy policy's "Purposes and sharing" section, which describes it).
+import { Analytics } from "@vercel/analytics/react";
 
 import { ThemeProvider, useTheme } from "./theme.jsx";
 import Home from "./Home.jsx";
@@ -244,6 +248,7 @@ export default function App() {
       <AppErrorBoundary>
       <RouteMetadata />
       <ScrollToTop />
+      <Analytics />
       <Routes>
         {/* Admin sits OUTSIDE the student layout — no site footer. */}
         <Route path="/admin" element={<Deferred><AdminPanel /></Deferred>} />
