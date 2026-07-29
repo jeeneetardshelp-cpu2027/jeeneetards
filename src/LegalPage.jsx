@@ -146,9 +146,9 @@ export default function LegalPage() {
               cannot lawfully be excluded remain unaffected.
             </p>
             <p>
-              This service is operated by Amit, based in Jaipur, Rajasthan,
+              This service is operated by JEENEETARD, based in Kota, Rajasthan,
               India. These Terms are governed by the laws of India, and any
-              dispute is subject to the courts of Jaipur, Rajasthan. This
+              dispute is subject to the courts of Kota, Rajasthan. This
               version is effective 25 July 2026.
             </p>
           </Section>
