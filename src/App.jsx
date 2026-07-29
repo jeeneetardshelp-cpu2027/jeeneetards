@@ -18,6 +18,7 @@ import {
   Routes, Route, Outlet, Navigate,
   useNavigate, useParams, useLocation, useNavigationType,
 } from "react-router";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 import { ThemeProvider, useTheme } from "./theme.jsx";
 import Home from "./Home.jsx";
@@ -259,6 +260,7 @@ export default function App() {
       <AppErrorBoundary>
       <RouteMetadata />
       <ScrollToTop />
+      <SpeedInsights />
       <Routes>
         {/* Admin sits OUTSIDE the student layout — no site footer. */}
         <Route path="/admin" element={<Deferred><AdminPanel /></Deferred>} />
