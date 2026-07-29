@@ -1,0 +1,104 @@
+{
+  "version": 1,
+  "request_id": "23468b6c-7013-43e1-bfc4-ba0980fe55f4",
+  "youtube_playlist_id": "PLxBrTGIVCrU6jrCpF1DO41wzK5skEiw48",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "61fc0a7d-22ae-4df6-8449-6ef24fb2cb7a",
+    "youtube_playlist_id": "PLxBrTGIVCrU6jrCpF1DO41wzK5skEiw48",
+    "teacher": "ExpHub",
+    "source_url": "https://www.youtube.com/@exphub10th",
+    "source_label": "Owner-reviewed official ExpHub Class 10 YouTube channel",
+    "reviewed_by": "Owner/Claude",
+    "reviewed_on": "2026-07-29",
+    "youtube_video_ids": [
+      "Aqy975c0cok",
+      "y3rEK3AuFu4",
+      "Oot7sRggai8",
+      "ERSMkFlqT24",
+      "bWEuTmmSRHQ",
+      "nTOn8oYMHUA",
+      "tLGLWo0F7lM",
+      "uz7VwP21IeE",
+      "mKiApTv7ppQ",
+      "yjxwVo6MdVU",
+      "CtXXnSO94SY",
+      "8KjgQ-djm0k"
+    ]
+  },
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "Aqy975c0cok",
+      "chapter": "Triangles"
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "y3rEK3AuFu4",
+      "chapter": "Circles"
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "Oot7sRggai8",
+      "chapter": "Introduction to Trigonometry"
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "ERSMkFlqT24",
+      "chapter": "Some Applications of Trigonometry"
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "bWEuTmmSRHQ",
+      "chapter": "Polynomials"
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "nTOn8oYMHUA",
+      "chapter": "Pair of Linear Equations in Two Variables"
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "tLGLWo0F7lM",
+      "chapter": "Quadratic Equations"
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "uz7VwP21IeE",
+      "chapter": "Arithmetic Progressions"
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "mKiApTv7ppQ",
+      "chapter": "Coordinate Geometry"
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "yjxwVo6MdVU",
+      "chapter": "Areas Related to Circles"
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "CtXXnSO94SY",
+      "chapter": "Surface Areas and Volumes"
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "8KjgQ-djm0k",
+      "chapter": "Probability"
+    }
+  ],
+  "exclusions": [
+    {
+      "position": 13,
+      "youtube_video_id": "GuQIflkaCR4",
+      "reason": "Non-chapter Science versus Maths promotional video"
+    },
+    {
+      "position": 14,
+      "youtube_video_id": "ikqeIZF16Pg",
+      "reason": "Non-chapter repeated PYQ compilation"
+    }
+  ]
+}
