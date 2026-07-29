@@ -1,0 +1,168 @@
+{
+  "version": 1,
+  "request_id": "45e0c1c0-47af-4592-9ba0-a512d11ea9a5",
+  "youtube_playlist_id": "PLf1QWmNs-KXH4jie9NRD8v8r9vU4xubfN",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "7454bef8-5451-45b1-8bce-a58169431b75",
+    "youtube_playlist_id": "PLf1QWmNs-KXH4jie9NRD8v8r9vU4xubfN",
+    "teacher": "Hindi Adhyapak",
+    "source_url": "https://www.youtube.com/@HindiAdhyapak",
+    "source_label": "Owner-reviewed official Hindi Adhyapak YouTube channel",
+    "reviewed_by": "Owner/Claude",
+    "reviewed_on": "2026-07-29",
+    "youtube_video_ids": [
+      "KK8oftpIkT0",
+      "1Mcb4atw94U",
+      "ZT59fcNArnw",
+      "5d1y_1bm9dI",
+      "JyYJYMVzGqk",
+      "ZpzQQuuqP5o",
+      "pnGv-20CSM4",
+      "vSXnZLNjnLY",
+      "X9hgIVhfaTg",
+      "YLPPwRUwf7k",
+      "YlwnLhYl5PU",
+      "fiew-74s4pA",
+      "Yd-ZC_lcYNc",
+      "aaz-01ND9dw",
+      "wCfVrwzZXiA",
+      "pHcSzT4aV0k"
+    ]
+  },
+  "exclusions": [
+    {
+      "position": 2,
+      "youtube_video_id": "Vo-BAt4T1p0",
+      "reason": "Supplementary MCQ video; keep one chapter explanation only."
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "8Tc5gBajjj4",
+      "reason": "Supplementary MCQ video; keep one chapter explanation only."
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "cmvzTFKhZ30",
+      "reason": "Supplementary MCQ video; keep one chapter explanation only."
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "ZMaNJq6sYZI",
+      "reason": "Shorter duplicate summary; retained the fuller chapter explanation at position 13."
+    },
+    {
+      "position": 14,
+      "youtube_video_id": "x_ccRTnSbkE",
+      "reason": "Supplementary MCQ video; keep one chapter explanation only."
+    },
+    {
+      "position": 17,
+      "youtube_video_id": "SAUZT5JOb84",
+      "reason": "Supplementary MCQ video; keep one chapter explanation only."
+    },
+    {
+      "position": 21,
+      "youtube_video_id": "iecED7DbJjo",
+      "reason": "Supplementary MCQ video; keep one chapter explanation only."
+    },
+    {
+      "position": 24,
+      "youtube_video_id": "6aUu3a5l3lQ",
+      "reason": "Supplementary MCQ video; keep one chapter explanation only."
+    },
+    {
+      "position": 25,
+      "youtube_video_id": "1LpxH-uzYcQ",
+      "reason": "Supplementary PYQ analysis, not a chapter explanation."
+    },
+    {
+      "position": 26,
+      "youtube_video_id": "xP2mYeMVx8E",
+      "reason": "Syllabus overview, not a chapter explanation."
+    }
+  ],
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "KK8oftpIkT0",
+      "chapter": "कबीर की साखी"
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "1Mcb4atw94U",
+      "chapter": "मीरा के पद"
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "ZT59fcNArnw",
+      "chapter": "मनुष्यता"
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "5d1y_1bm9dI",
+      "chapter": "पर्वत प्रदेश में पावस"
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "JyYJYMVzGqk",
+      "chapter": "तोप"
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "ZpzQQuuqP5o",
+      "chapter": "कर चले हम फ़िदा"
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "pnGv-20CSM4",
+      "chapter": "आत्मत्राण"
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "vSXnZLNjnLY",
+      "chapter": "बड़े भाई साहब"
+    },
+    {
+      "position": 13,
+      "youtube_video_id": "X9hgIVhfaTg",
+      "chapter": "डायरी का एक पन्ना"
+    },
+    {
+      "position": 15,
+      "youtube_video_id": "YLPPwRUwf7k",
+      "chapter": "तताँरा वामीरो कथा"
+    },
+    {
+      "position": 16,
+      "youtube_video_id": "YlwnLhYl5PU",
+      "chapter": "अब कहाँ दूसरे के दुख से दुखी होने वाले"
+    },
+    {
+      "position": 18,
+      "youtube_video_id": "fiew-74s4pA",
+      "chapter": "पतझर में टूटी पत्तियाँ"
+    },
+    {
+      "position": 19,
+      "youtube_video_id": "Yd-ZC_lcYNc",
+      "chapter": "कारतूस"
+    },
+    {
+      "position": 20,
+      "youtube_video_id": "aaz-01ND9dw",
+      "chapter": "हरिहर काका"
+    },
+    {
+      "position": 22,
+      "youtube_video_id": "wCfVrwzZXiA",
+      "chapter": "सपनों के से दिन"
+    },
+    {
+      "position": 23,
+      "youtube_video_id": "pHcSzT4aV0k",
+      "chapter": "टोपी शुक्ला"
+    }
+  ]
+}
