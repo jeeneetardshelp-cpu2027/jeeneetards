@@ -12,7 +12,10 @@ describe("production metadata assets", () => {
     );
     expect(html.toLowerCase()).not.toContain("find and compare");
     expect(html).toContain('rel="icon"');
-    expect(html).toContain('rel="canonical"');
+    // The shell is served for EVERY route, so it must NOT ship a static
+    // canonical (it would claim the homepage on all of them). Canonicals are
+    // injected per-route: edge middleware for courses, PageMetadata client-side.
+    expect(html).not.toContain('rel="canonical"');
     expect(html).toContain('property="og:image"');
     expect(html).toContain('name="twitter:card"');
   });

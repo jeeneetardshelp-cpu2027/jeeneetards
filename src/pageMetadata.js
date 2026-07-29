@@ -115,6 +115,9 @@ export function metadataForLocation(pathname = "/", search = "") {
       description:
         "Browse the lesson sequence and watch this free course through YouTube's privacy-enhanced player.",
       type: "article",
+      // Chapter sub-URLs canonicalize to the course root — the same URL the
+      // sitemap and the edge middleware emit for this course.
+      canonicalPath: path.match(/^\/course\/\d+/)?.[0] ?? path,
     };
   }
 

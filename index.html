@@ -9,7 +9,10 @@
     <meta name="application-name" content="JEENEETARD" />
     <meta name="google-site-verification" content="7yEuDEQPeBynhlyy9_xJWkGH7fe-8Zq2qJqLSSFFkw8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="canonical" href="https://www.jeeneetard.com/" vite-ignore />
+    <!-- No static canonical: this shell is served for EVERY route, so a fixed
+         canonical would tell crawlers every page is really the homepage.
+         Course pages get their canonical from the edge middleware (ogInject.js);
+         all routes get it client-side from PageMetadata.jsx. -->
     <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fafafa" />
     <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0a0a0a" />
     <meta property="og:type" content="website" />
