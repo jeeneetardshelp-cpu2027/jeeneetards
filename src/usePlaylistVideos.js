@@ -5,7 +5,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { supabase, isSupabaseConfigured } from "./supabaseClient";
 
-const EMPTY = { course: null, lessons: [], loading: true, error: null };
+// forPlaylistId records WHICH course the resolved state belongs to: state
+// survives param-only navigations (the page instance is preserved), so a
+// consumer must not treat another course's resolved emptiness as "not found".
+const EMPTY = { course: null, lessons: [], loading: true, error: null, forPlaylistId: null };
 
 // PostgREST projects commonly cap a single response at 1,000 rows. Fetching
 // the lesson junction in explicit pages prevents a large course from looking
@@ -179,13 +182,14 @@ export function usePlaylistVideos(playlistId) {
     activeRequest.current = null;
     const id = Number(playlistId);
     if (!Number.isInteger(id) || id <= 0) {
-      setState({ course: null, lessons: [], loading: false, error: null });
+      setState({ course: null, lessons: [], loading: false, error: null, forPlaylistId: playlistId });
       return;
     }
     if (!isSupabaseConfigured) {
       setState({
         course: null, lessons: [], loading: false,
         error: "Course details aren’t available right now.",
+        forPlaylistId: playlistId,
       });
       return;
     }
@@ -218,17 +222,19 @@ export function usePlaylistVideos(playlistId) {
         setState({
           course: null, lessons: [], loading: false,
           error: "Couldn’t load this course.",
+          forPlaylistId: playlistId,
         });
         return;
       }
       const mapped = mapCourseDetail(playlistRes.data, videosRes.data);
-      setState({ ...mapped, loading: false, error: null });
+      setState({ ...mapped, loading: false, error: null, forPlaylistId: playlistId });
     } catch (failure) {
       if (!current() || controller.signal.aborted) return;
       console.error("course detail:", failure);
       setState({
         course: null, lessons: [], loading: false,
         error: "Couldn’t reach the course library.",
+        forPlaylistId: playlistId,
       });
     }
   }, [playlistId]);

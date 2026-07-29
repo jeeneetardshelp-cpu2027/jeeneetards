@@ -105,7 +105,17 @@ export default function Home() {
             choose before you commit.
           </p>
 
-          <div className="relative mx-auto mt-8 max-w-xl">
+          <form
+            role="search"
+            className="relative mx-auto mt-8 max-w-xl"
+            // Results are already live below as you type; Enter (the "Go" key
+            // on phone keyboards) previously did nothing at all. Dismiss the
+            // keyboard so the results are actually visible.
+            onSubmit={(e) => {
+              e.preventDefault();
+              e.currentTarget.querySelector("input")?.blur();
+            }}
+          >
             <Search className={`pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 ${t.muted}`} />
             <input
               autoFocus
@@ -117,6 +127,7 @@ export default function Home() {
             />
             {input && (
               <button
+                type="button"
                 onClick={() => setInput("")}
                 aria-label="Clear search"
                 className={`absolute right-1.5 top-1/2 flex min-h-11 min-w-11 -translate-y-1/2 items-center justify-center rounded-xl ${t.muted} ${t.hover}`}
@@ -124,7 +135,7 @@ export default function Home() {
                 <X className="h-4 w-4" />
               </button>
             )}
-          </div>
+          </form>
 
           {!searching && (
             <div className={`mt-5 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs ${t.muted}`}>

@@ -108,6 +108,13 @@ export function metadataForLocation(pathname = "/", search = "") {
     };
   }
 
+  if (path.startsWith("/chapter/")) {
+    // Legacy compatibility redirect to /browse?ch= — a supported URL that is
+    // never a destination. Without this branch it would fall through to the
+    // "Page not found" fallback below and briefly mislabel a working link.
+    return { ...base, robots: "noindex, follow" };
+  }
+
   if (path.startsWith("/course/")) {
     return {
       ...base,
@@ -190,7 +197,16 @@ export function metadataForLocation(pathname = "/", search = "") {
       : comingSoon(base);
   }
 
-  return { ...base, canonicalPath: "/" };
+  // Unmatched URLs render the NotFound page. Say so honestly instead of
+  // claiming the homepage as this URL's canonical — that combination is what
+  // made every bad link a soft-404.
+  return {
+    ...base,
+    title: `Page not found | ${SITE_NAME}`,
+    description:
+      "This page does not exist. Browse free courses by exam, class, subject and chapter instead.",
+    robots: "noindex, nofollow",
+  };
 }
 
 export function metadataForCourse(course) {

@@ -80,7 +80,7 @@ export default function Explore() {
   const classNode = classLevels.find((c) => c.slug === cls);
   const {
     subjects, chaptersBySubject, loading: catLoading,
-    error: catalogError, retry: retryCatalog,
+    error: catalogError, ready: catalogReady, retry: retryCatalog,
   } = useGoalCatalog({
     // Subjects are not needed until a real class has been selected. Waiting
     // also prevents a broad unclassified request during the class step.
@@ -113,6 +113,35 @@ export default function Explore() {
     chapterId: chapterNode?.id,
   });
   const searching = Boolean(goalNode) && debouncedSearch.trim().length > 0;
+
+  // A slug that matches nothing must not render a lying step: /explore/boards
+  // used to show the exam picker under an "Explore Boards courses" title — a
+  // soft-404 with mismatched metadata. Once the relevant list has actually
+  // loaded FOR THIS SCOPE, send the student to the nearest real step instead.
+  // The subject/chapter guards gate on `catalogReady` — not just !loading —
+  // because catalogue state survives param-only navigations, so the first
+  // render after a Back-jump can hold another goal/class's subjects with
+  // loading still false. The class guard mirrors the stage step's own
+  // CLASS_LEVELS_BY_GOAL filter: a globally valid class the goal never offers
+  // (JEE Class 10) is as unknown as a garbage slug.
+  const offeredClassSlugs =
+    CLASS_LEVELS_BY_GOAL[goal] ?? classLevels.map((x) => x.slug);
+  const unknownSlugTarget =
+    goal && !goalsLoading && !goalsError && goals.length > 0 && !goalNode
+      ? "/explore"
+      : isSchool && board && !boardsLoading && !boardsError && !boardsUnavailable &&
+          boards.length > 0 && !boardNode
+        ? path(goal)
+        : cls && classLevels.length > 0 &&
+            (!classNode || !offeredClassSlugs.includes(cls))
+          ? p()
+          : subject && classNode && catalogReady &&
+              subjects.length > 0 && !subjectNode
+            ? p(cls)
+            : chapter && subjectNode && catalogReady && !chapterNode
+              ? p(cls, subject)
+              : null;
+  if (unknownSlugTarget) return <Navigate to={unknownSlugTarget} replace />;
 
   return (
     <div className={`min-h-screen ${t.page} ${t.text}`}>

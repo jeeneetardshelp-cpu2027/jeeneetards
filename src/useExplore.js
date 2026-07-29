@@ -168,14 +168,23 @@ export function useGoalCatalog({ goal, stage, subject } = {}) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [nonce, setNonce] = useState(0);
+  // Which {goal, stage, subject} the data in state belongs to. State survives
+  // param-only navigations (the component instance is preserved), and `loading`
+  // only flips inside this effect — so on the FIRST render after such a
+  // navigation the consumer sees loading=false with another scope's data.
+  // Consumers that must not act on stale data check `ready` instead.
+  const [loadedKey, setLoadedKey] = useState(null);
+  const requestKey = `${goal ?? ""}|${stage ?? ""}|${subject ?? ""}`;
 
   useEffect(() => {
     let active = true;
+    const key = `${goal ?? ""}|${stage ?? ""}|${subject ?? ""}`;
     if (!isSupabaseConfigured || !goal) {
       setSubjects([]);
       setChaptersBySubject({});
       setError(isSupabaseConfigured ? null : "The course guide isn't available right now.");
       setLoading(false);
+      setLoadedKey(null);
       return;
     }
     setLoading(true);
@@ -201,6 +210,7 @@ export function useGoalCatalog({ goal, stage, subject } = {}) {
       if (!active) return;
       setSubjects(nextSubjects);
       setChaptersBySubject(nextChapters);
+      setLoadedKey(key);
       setLoading(false);
     };
 
@@ -211,6 +221,7 @@ export function useGoalCatalog({ goal, stage, subject } = {}) {
       setChaptersBySubject({});
       setError("We couldn't load this part of the course guide.");
       setLoading(false);
+      setLoadedKey(null);
     });
 
     return () => { active = false; };
@@ -218,6 +229,9 @@ export function useGoalCatalog({ goal, stage, subject } = {}) {
 
   return {
     subjects, chaptersBySubject, loading, error,
+    // True only when the data in state was loaded for exactly the current
+    // request — never true for another scope's leftovers.
+    ready: !loading && !error && loadedKey === requestKey,
     retry: () => setNonce((n) => n + 1),
   };
 }

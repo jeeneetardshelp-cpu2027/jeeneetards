@@ -83,7 +83,7 @@ export default function CourseVideoPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const { course, lessons: allLessons, loading, error, reload } =
+  const { course, lessons: allLessons, loading, error, forPlaylistId, reload } =
     usePlaylistVideos(playlistId);
   const scope = useMemo(
     () => scopeCourseLessons(allLessons, chapterId),
@@ -96,6 +96,13 @@ export default function CourseVideoPage() {
   );
   const provenInvalidChapter = !loading && !error && Boolean(course) &&
     scope.requested && !scope.valid;
+  // A deleted or never-existing course id must not stay indexable: the
+  // route-level "Free course" metadata is index,follow, so without this a
+  // removed course is a soft-404 served at HTTP 200. Gated on forPlaylistId
+  // so another course's resolved emptiness (state survives param-only
+  // navigations) is never read as THIS course being missing.
+  const provenNotFound =
+    !loading && !error && !course && forPlaylistId === playlistId;
   useCourseMetadata(scope.valid ? displayedCourse : null);
   useEffect(() => {
     if (!provenInvalidChapter) return;
@@ -106,6 +113,15 @@ export default function CourseVideoPage() {
       canonicalPath: `/course/${playlistId}`,
     });
   }, [location.search, playlistId, provenInvalidChapter]);
+  useEffect(() => {
+    if (!provenNotFound) return;
+    applyPageMetadata({
+      title: "Course not found | JEENEETARD",
+      description: "This course may have been removed or the link is incorrect.",
+      robots: "noindex, nofollow",
+      canonicalPath: `/course/${playlistId}`,
+    });
+  }, [location.search, playlistId, provenNotFound]);
 
   const [savedProgress, setSavedProgress] = useState(null);
   useEffect(() => {

@@ -237,7 +237,15 @@ export function Page({ crumbs, search, width = "catalogue", children }) {
 export function HeaderSearch({ value, onChange, placeholder = "Search…", onClear }) {
   const { t } = useTheme();
   return (
-    <div className="relative">
+    <form
+      role="search"
+      className="relative"
+      // Results update live as you type; Enter/Go just closes the keyboard.
+      onSubmit={(e) => {
+        e.preventDefault();
+        e.currentTarget.querySelector("input")?.blur();
+      }}
+    >
       <Search className={`pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 ${t.faint}`} />
       <input
         value={value}
@@ -248,6 +256,7 @@ export function HeaderSearch({ value, onChange, placeholder = "Search…", onCle
       />
       {value && onClear && (
         <button
+          type="button"
           onClick={onClear}
           aria-label="Clear search"
           className={`absolute right-0 top-1/2 flex min-h-11 min-w-11 -translate-y-1/2 items-center justify-center rounded-lg ${t.faint} ${t.hover}`}
@@ -255,7 +264,7 @@ export function HeaderSearch({ value, onChange, placeholder = "Search…", onCle
           <X className="h-4 w-4" />
         </button>
       )}
-    </div>
+    </form>
   );
 }
 
