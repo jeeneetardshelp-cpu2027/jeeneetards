@@ -1,0 +1,92 @@
+{
+  "version": 1,
+  "request_id": "f180f5fe-d3ae-4a28-8570-a1ded4aff69c",
+  "youtube_playlist_id": "PLSLNfEuYoURJqfhtU3rE-F7YXtyytJeya",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "64523af2-60a9-4ead-b22c-b53531fb2bbe",
+    "youtube_playlist_id": "PLSLNfEuYoURJqfhtU3rE-F7YXtyytJeya",
+    "teacher": "Alakh Pandey",
+    "source_url": "https://www.youtube.com/@AlakhSir-Class9.10",
+    "source_label": "Owner-reviewed official Alakh Pandey Class 9 and 10 YouTube channel",
+    "reviewed_by": "Owner/Claude",
+    "reviewed_on": "2026-07-29",
+    "youtube_video_ids": [
+      "tAJkacN88ic",
+      "VhpiowlliLI",
+      "lYGBsKJ0LYs",
+      "dCAnbdRAsFo",
+      "YihPV4eSHsQ",
+      "G7zDZwrP6O4",
+      "vKfpJ2QejNA",
+      "NLv0qeWmBDk",
+      "EJcnBv691cY",
+      "5bSXK0QttdY",
+      "s0CttpllLxM",
+      "kHVAk96r05Y"
+    ]
+  },
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "tAJkacN88ic",
+      "chapter": "Heredity"
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "VhpiowlliLI",
+      "chapter": "Carbon and its Compounds"
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "lYGBsKJ0LYs",
+      "chapter": "Magnetic Effects of Electric Current"
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "dCAnbdRAsFo",
+      "chapter": "How do Organisms Reproduce?"
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "YihPV4eSHsQ",
+      "chapter": "Metals and Non-metals"
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "G7zDZwrP6O4",
+      "chapter": "The Human Eye and the Colourful World"
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "vKfpJ2QejNA",
+      "chapter": "Control and Coordination"
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "NLv0qeWmBDk",
+      "chapter": "Life Processes"
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "EJcnBv691cY",
+      "chapter": "Electricity"
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "5bSXK0QttdY",
+      "chapter": "Acids, Bases and Salts"
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "s0CttpllLxM",
+      "chapter": "Chemical Reactions and Equations"
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "kHVAk96r05Y",
+      "chapter": "Light: Reflection and Refraction"
+    }
+  ]
+}
