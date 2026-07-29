@@ -1,0 +1,103 @@
+{
+  "subject": "Social Science",
+  "summary": {
+    "total": 5,
+    "auto": 5,
+    "review": 0,
+    "unmatched": 0,
+    "excluded": 2
+  },
+  "rows": [
+    {
+      "position": 1,
+      "youtube_video_id": "JXeryAV8JNE",
+      "title": "The Rise of Nationalism in Europe | New One Shot  2026-27 | Chapter 1 History | Class 10",
+      "chapter": "The Rise of Nationalism in Europe",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "The Rise of Nationalism in Europe",
+        "Nationalism in India"
+      ]
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "UWBwLodPMwg",
+      "title": "Print Culture and The Modern World | New One Shot Revision Series | Class 10 History 2026-27",
+      "chapter": "Print Culture and the Modern World",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Print Culture and the Modern World",
+        "The Making of a Global World"
+      ]
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "QXHtptFKVm8",
+      "title": "The Making Of A Global World | New One shot | History Class 10th 2026-27",
+      "chapter": "The Making of a Global World",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "The Making of a Global World",
+        "Print Culture and the Modern World"
+      ]
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "exByrWPeYvk",
+      "title": "Nationalism in INDIA | New One Shot | CBSE Class 10 History 2026-27",
+      "chapter": "Nationalism in India",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Nationalism in India",
+        "The Rise of Nationalism in Europe"
+      ]
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "FBs0wVgD2kU",
+      "title": "The Rise of Nationalism in Europe | Live Session IMP Topics MIQs & PYQs | Class 10 History 2025-26",
+      "chapter": "The Rise of Nationalism in Europe",
+      "excluded": true,
+      "exclusion_reason": "Duplicate live-session revision of the reviewed chapter course",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "The Rise of Nationalism in Europe",
+        "Nationalism in India"
+      ]
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "9XWKDo5LElU",
+      "title": "The Age of Industrialisation | New One Shot  | Class 10 History 2026-27",
+      "chapter": "The Age of Industrialisation",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "The Age of Industrialisation"
+      ]
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "--9xF8A6jNE",
+      "title": "Class 10 SST Full Syllabus in 1 Video | All 19 Chapters | Last Minute Revision #digrajsir",
+      "chapter": null,
+      "excluded": true,
+      "exclusion_reason": "Full-syllabus marathon spanning multiple subjects and chapters",
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": []
+    }
+  ]
+}

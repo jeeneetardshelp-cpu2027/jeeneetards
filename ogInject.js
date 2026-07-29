@@ -40,12 +40,22 @@ export function injectCourseMeta(html, meta) {
   const t = escapeHtml(meta.title);
   const d = escapeHtml(meta.description);
   const u = escapeHtml(meta.url);
-  return html
-    .replace(/<title>[\s\S]*?<\/title>/, `<title>${t}</title>`)
-    .replace(/(<meta name="description" content=")[^"]*(")/, `$1${d}$2`)
-    .replace(/(<meta property="og:title" content=")[^"]*(")/, `$1${t}$2`)
-    .replace(/(<meta property="og:description" content=")[^"]*(")/, `$1${d}$2`)
-    .replace(/(<meta property="og:url" content=")[^"]*(")/, `$1${u}$2`)
-    .replace(/(<meta name="twitter:title" content=")[^"]*(")/, `$1${t}$2`)
-    .replace(/(<meta name="twitter:description" content=")[^"]*(")/, `$1${d}$2`);
+  // Function replacements throughout: a string replacement would expand `$`
+  // sequences ($&, $', $1, …) in course titles as replace() patterns and
+  // corrupt the page — a title like `worth $199` must stay literal text.
+  const out = html
+    .replace(/<title>[\s\S]*?<\/title>/, () => `<title>${t}</title>`)
+    .replace(/(<meta name="description" content=")[^"]*(")/, (m, a, z) => `${a}${d}${z}`)
+    .replace(/(<meta property="og:title" content=")[^"]*(")/, (m, a, z) => `${a}${t}${z}`)
+    .replace(/(<meta property="og:description" content=")[^"]*(")/, (m, a, z) => `${a}${d}${z}`)
+    .replace(/(<meta property="og:url" content=")[^"]*(")/, (m, a, z) => `${a}${u}${z}`)
+    .replace(/(<meta name="twitter:title" content=")[^"]*(")/, (m, a, z) => `${a}${t}${z}`)
+    .replace(/(<meta name="twitter:description" content=")[^"]*(")/, (m, a, z) => `${a}${d}${z}`);
+  // Canonical: the shell deliberately ships WITHOUT one (a static canonical
+  // would claim the homepage for every route). Replace it if an old shell
+  // still has it, otherwise insert it next to <title> — which always exists.
+  const canonicalTag = `<link rel="canonical" href="${u}" />`;
+  return /<link rel="canonical"[^>]*>/.test(out)
+    ? out.replace(/<link rel="canonical"[^>]*>/, () => canonicalTag)
+    : out.replace(/<title>/, () => `${canonicalTag}\n    <title>`);
 }

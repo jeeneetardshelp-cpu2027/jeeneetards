@@ -20,7 +20,7 @@
 // so a 2560px monitor shows a usable page instead of a strip.
 
 import { useState } from "react";
-import { useNavigate, useLocation } from "react-router";
+import { Link, useLocation } from "react-router";
 import {
   ChevronRight, Search, LogOut, Moon, Sun, X,
 } from "lucide-react";
@@ -28,6 +28,7 @@ import { useTheme } from "./theme.jsx";
 import { BRAND_NAVY, BRAND_TEAL, BRAND_SERIF } from "./brandColors.js";
 import { useSession } from "./useSession.js";
 import { supabase } from "./supabaseClient.js";
+import { RELEASE_CAPABILITIES } from "./releaseCapabilities.js";
 
 const BRAND = { navy: BRAND_NAVY, teal: BRAND_TEAL };
 
@@ -48,7 +49,6 @@ export function Container({ width = "catalogue", className = "", children }) {
  *  search: optional node (context search, filter entry point)
  */
 export function GlobalHeader({ crumbs = [], search = null, leading = null, width = "catalogue" }) {
-  const navigate = useNavigate();
   const { pathname } = useLocation();
   const { dark, t, toggle } = useTheme();
   const { session } = useSession();
@@ -58,6 +58,9 @@ export function GlobalHeader({ crumbs = [], search = null, leading = null, width
     { label: "Home", to: "/" },
     { label: "Find a course", to: "/explore" },
     { label: "Browse courses", to: "/browse" },
+    // The ranked, keyboard-friendly library search. Gated like its route: the
+    // header must never advertise a page the release cannot honestly serve.
+    ...(RELEASE_CAPABILITIES.universalSearch ? [{ label: "Search", to: "/search" }] : []),
   ];
   const signOut = async () => {
     setSigningOut(true);
@@ -72,8 +75,8 @@ export function GlobalHeader({ crumbs = [], search = null, leading = null, width
       <Container width={width}>
         <div className="flex min-h-14 items-center gap-2 sm:gap-3">
           {leading}
-          <button
-            onClick={() => navigate("/")}
+          <Link
+            to="/"
             aria-label="JEENEETARD home"
             className="flex min-h-11 shrink-0 items-center gap-2.5 px-1"
           >
@@ -93,15 +96,15 @@ export function GlobalHeader({ crumbs = [], search = null, leading = null, width
             >
               JEENEETARD
             </span>
-          </button>
+          </Link>
 
           <nav aria-label="Primary navigation" className="ml-2 hidden items-center gap-1 sm:flex">
             {nav.map((n) => {
               const active = n.to === "/" ? pathname === "/" : pathname.startsWith(n.to);
               return (
-                <button
+                <Link
                   key={n.to}
-                  onClick={() => navigate(n.to)}
+                  to={n.to}
                   aria-current={active ? "page" : undefined}
                   className={`flex min-h-11 items-center rounded-lg px-2.5 text-sm transition sm:px-3 ${
                     active
@@ -110,7 +113,7 @@ export function GlobalHeader({ crumbs = [], search = null, leading = null, width
                   }`}
                 >
                   {n.label}
-                </button>
+                </Link>
               );
             })}
           </nav>
@@ -149,13 +152,16 @@ export function GlobalHeader({ crumbs = [], search = null, leading = null, width
           </p>
         )}
 
-        <nav aria-label="Primary navigation" className={`grid grid-cols-3 border-t ${t.border} sm:hidden`}>
+        <nav
+          aria-label="Primary navigation"
+          className={`grid ${nav.length === 4 ? "grid-cols-4" : "grid-cols-3"} border-t ${t.border} sm:hidden`}
+        >
           {nav.map((n) => {
             const active = n.to === "/" ? pathname === "/" : pathname.startsWith(n.to);
             return (
-              <button
+              <Link
                 key={n.to}
-                onClick={() => navigate(n.to)}
+                to={n.to}
                 aria-current={active ? "page" : undefined}
                 className={`flex min-h-11 min-w-0 items-center justify-center px-1 text-center text-xs transition ${
                   active
@@ -164,7 +170,7 @@ export function GlobalHeader({ crumbs = [], search = null, leading = null, width
                 }`}
               >
                 {n.label}
-              </button>
+              </Link>
             );
           })}
         </nav>
@@ -180,16 +186,23 @@ export function GlobalHeader({ crumbs = [], search = null, leading = null, width
             {crumbs.map((c, i) => (
               <span key={`${c.to ?? c.label}-${i}`} className="flex shrink-0 items-center gap-1">
                 {i > 0 && <ChevronRight className={`h-3.5 w-3.5 ${t.faint}`} />}
-                {c.to || c.onClick ? (
+                {c.onClick ? (
                   <button
                     // A crumb may carry an explicit handler instead of a URL:
                     // the course page returns to the exact filtered results it
                     // came from, which a hardcoded /browse would discard.
-                    onClick={() => (c.onClick ? c.onClick() : navigate(c.to))}
+                    onClick={() => c.onClick()}
                     className={`flex min-h-11 items-center px-1 ${t.muted} ${t.hover}`}
                   >
                     {c.label}
                   </button>
+                ) : c.to ? (
+                  <Link
+                    to={c.to}
+                    className={`flex min-h-11 items-center px-1 ${t.muted} ${t.hover}`}
+                  >
+                    {c.label}
+                  </Link>
                 ) : (
                   <span
                     aria-current={i === crumbs.length - 1 ? "page" : undefined}
@@ -224,7 +237,15 @@ export function Page({ crumbs, search, width = "catalogue", children }) {
 export function HeaderSearch({ value, onChange, placeholder = "Search…", onClear }) {
   const { t } = useTheme();
   return (
-    <div className="relative">
+    <form
+      role="search"
+      className="relative"
+      // Results update live as you type; Enter/Go just closes the keyboard.
+      onSubmit={(e) => {
+        e.preventDefault();
+        e.currentTarget.querySelector("input")?.blur();
+      }}
+    >
       <Search className={`pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 ${t.faint}`} />
       <input
         value={value}
@@ -235,6 +256,7 @@ export function HeaderSearch({ value, onChange, placeholder = "Search…", onCle
       />
       {value && onClear && (
         <button
+          type="button"
           onClick={onClear}
           aria-label="Clear search"
           className={`absolute right-0 top-1/2 flex min-h-11 min-w-11 -translate-y-1/2 items-center justify-center rounded-lg ${t.faint} ${t.hover}`}
@@ -242,7 +264,7 @@ export function HeaderSearch({ value, onChange, placeholder = "Search…", onCle
           <X className="h-4 w-4" />
         </button>
       )}
-    </div>
+    </form>
   );
 }
 

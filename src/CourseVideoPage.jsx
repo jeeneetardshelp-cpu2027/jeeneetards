@@ -1,11 +1,14 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   useLocation, useNavigate, useParams, useSearchParams,
 } from "react-router";
 import { VideoView } from "./MinimalUI.jsx";
 import { useTheme } from "./theme.jsx";
 import { usePlaylistVideos } from "./usePlaylistVideos.js";
-import { getCourseProgress, getWatchedVideoIds, recordLessonView } from "./progress.js";
+import {
+  getCourseProgress, getLessonPosition, getPlayerPrefs, getWatchedVideoIds,
+  recordLessonPosition, recordLessonView, savePlayerPrefs,
+} from "./progress.js";
 import { readReturnUrl, rememberReturn, resolveBack } from "./returnTo.js";
 import CourseRating from "./CourseRating.jsx";
 import VideoReport from "./VideoReport.jsx";
@@ -83,7 +86,7 @@ export default function CourseVideoPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const { course, lessons: allLessons, loading, error, reload } =
+  const { course, lessons: allLessons, loading, error, forPlaylistId, reload } =
     usePlaylistVideos(playlistId);
   const scope = useMemo(
     () => scopeCourseLessons(allLessons, chapterId),
@@ -96,6 +99,13 @@ export default function CourseVideoPage() {
   );
   const provenInvalidChapter = !loading && !error && Boolean(course) &&
     scope.requested && !scope.valid;
+  // A deleted or never-existing course id must not stay indexable: the
+  // route-level "Free course" metadata is index,follow, so without this a
+  // removed course is a soft-404 served at HTTP 200. Gated on forPlaylistId
+  // so another course's resolved emptiness (state survives param-only
+  // navigations) is never read as THIS course being missing.
+  const provenNotFound =
+    !loading && !error && !course && forPlaylistId === playlistId;
   useCourseMetadata(scope.valid ? displayedCourse : null);
   useEffect(() => {
     if (!provenInvalidChapter) return;
@@ -106,6 +116,15 @@ export default function CourseVideoPage() {
       canonicalPath: `/course/${playlistId}`,
     });
   }, [location.search, playlistId, provenInvalidChapter]);
+  useEffect(() => {
+    if (!provenNotFound) return;
+    applyPageMetadata({
+      title: "Course not found | JEENEETARD",
+      description: "This course may have been removed or the link is incorrect.",
+      robots: "noindex, nofollow",
+      canonicalPath: `/course/${playlistId}`,
+    });
+  }, [location.search, playlistId, provenNotFound]);
 
   const [savedProgress, setSavedProgress] = useState(null);
   useEffect(() => {
@@ -136,6 +155,34 @@ export default function CourseVideoPage() {
     setWatchedIds(getWatchedVideoIds(playlistId));
   }, [playlistId]);
 
+  // Autoplay only follows an in-page lesson selection. A fresh page load or
+  // deep link must never start playback on its own.
+  const [autoplayNext, setAutoplayNext] = useState(false);
+  // Bumped to play the CURRENT video without a rebuild — the overview's
+  // Continue button usually targets the lesson that is already active, so a
+  // URL write alone would do nothing.
+  const [playSignal, setPlaySignal] = useState(0);
+  // A history jump can land on another course while this instance survives;
+  // the new course must behave like a fresh load, not inherit "may autoplay".
+  useEffect(() => {
+    setAutoplayNext(false);
+    setPlaySignal(0);
+  }, [playlistId]);
+  // Saved playback rate is read once per mount; rate changes made in the
+  // player persist and carry into the next lesson's player build.
+  const [playbackRate, setPlaybackRate] = useState(() => getPlayerPrefs().rate);
+  // Duration from the player's most recent progress report; the fallback when
+  // a lesson ends before its first report is the catalogue metadata.
+  const lastProgressRef = useRef({ videoId: null, duration: 0 });
+
+  const activeVideoId = activeLesson?.videoId ?? null;
+  // The resume point recomputes only when the lesson changes: positions
+  // written DURING playback must not move the player's startSeconds prop.
+  const startSeconds = useMemo(
+    () => (activeVideoId ? getLessonPosition(playlistId, activeVideoId) : 0),
+    [playlistId, activeVideoId],
+  );
+
   const recordActiveLessonPlayback = () => {
     if (!course || !activeLesson) return;
     const entry = recordLessonView({
@@ -151,6 +198,40 @@ export default function CourseVideoPage() {
       setWatchedIds(entry.watched);
       setSavedProgress(entry);
     }
+  };
+
+  // Player reports carry the videoId THEY were measured against: an old
+  // player's final flush can land after the active lesson (or, on a history
+  // jump, the whole course) has changed. A report for a lesson of THIS course
+  // is recorded against that lesson; anything else is another course's tail
+  // and is dropped rather than written under the wrong ids.
+  const reportedLesson = (videoId) =>
+    allLessons.find((lesson) => lesson.videoId === videoId) ?? null;
+
+  const recordLessonProgressReport = ({ videoId, seconds, duration }) => {
+    if (!reportedLesson(videoId)) return;
+    if (Number.isFinite(duration) && duration > 0) {
+      lastProgressRef.current = { videoId, duration };
+    }
+    recordLessonPosition({ playlistId, videoId, seconds, duration });
+  };
+
+  // A finished lesson is stored at seconds=duration, which getLessonPosition
+  // reads as "finished — restart from 0 next time".
+  const recordLessonFinished = ({ videoId } = {}) => {
+    const lesson = reportedLesson(videoId);
+    if (!lesson) return;
+    const last = lastProgressRef.current;
+    const metaDuration = Number(lesson.durationSeconds);
+    const duration = last.videoId === videoId && last.duration > 0
+      ? last.duration
+      : Number.isFinite(metaDuration) && metaDuration > 0 ? metaDuration : 0;
+    recordLessonPosition({ playlistId, videoId, seconds: duration, duration });
+  };
+
+  const persistPlaybackRate = (rate) => {
+    savePlayerPrefs({ rate });
+    setPlaybackRate(rate);
   };
 
   const coursePath = location.pathname;
@@ -188,9 +269,19 @@ export default function CourseVideoPage() {
   if (!activeLesson) return <CenteredNotice title="No lessons yet" detail="This course exists, but its lesson sequence is still empty." onBack={backToHub} />;
 
   const selectLesson = (lesson, { scrollToPlayer = true } = {}) => {
-    const next = new URLSearchParams(searchParams);
-    next.set("v", lesson.videoId);
-    setSearchParams(next, { replace: true });
+    // The student is already on the page and chose to move — from here on,
+    // lesson changes (including auto-advance) may start playback.
+    setAutoplayNext(true);
+    if (lesson.videoId === activeLesson.videoId) {
+      // Selecting the lesson that is already loaded (the overview's Continue
+      // button on a revisit is the common case): a URL write would change
+      // nothing and the iframe never rebuilds, so ask the player to play.
+      setPlaySignal((signal) => signal + 1);
+    } else {
+      const next = new URLSearchParams(searchParams);
+      next.set("v", lesson.videoId);
+      setSearchParams(next, { replace: true });
+    }
     if (scrollToPlayer) {
       requestAnimationFrame(() => {
         const player = document.getElementById("course-player");
@@ -219,6 +310,13 @@ export default function CourseVideoPage() {
       onSelectLesson={selectLesson}
       onLessonPlay={recordActiveLessonPlayback}
       onBack={backToHub}
+      startSeconds={startSeconds}
+      autoplay={autoplayNext}
+      playSignal={playSignal}
+      playbackRate={playbackRate}
+      onPlaybackRateChange={persistPlaybackRate}
+      onProgress={recordLessonProgressReport}
+      onEnded={recordLessonFinished}
       overview={
         <CourseOverview
           course={displayedCourse}

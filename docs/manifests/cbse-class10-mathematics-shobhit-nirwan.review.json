@@ -1,0 +1,191 @@
+{
+  "subject": "Mathematics",
+  "summary": {
+    "total": 14,
+    "auto": 12,
+    "review": 2,
+    "unmatched": 0
+  },
+  "rows": [
+    {
+      "position": 1,
+      "youtube_video_id": "c4s8NxJ7Swk",
+      "title": "Class 10th Triangles One Shot 🔥 | Class 10 Maths Chapter 6 | #14Days14Chapters",
+      "chapter": "Triangles",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Triangles"
+      ]
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "2wYLgSGVNqY",
+      "title": "Class 10th Trigonometry One Shot 🔥 | Class 10 Maths Chapter 8 | #14Days14Chapters",
+      "chapter": "Introduction to Trigonometry",
+      "confidence": 1,
+      "review": true,
+      "reason": "owner-confirmed Class 10 mapping",
+      "alternatives": [
+        "Trigonometry",
+        "Introduction to Trigonometry",
+        "Some Applications of Trigonometry"
+      ]
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "fnipHHsib94",
+      "title": "Class 10th Some Applications of Trigonometry One Shot 🔥 | Class 10 Maths Ch 9 | #14Days14Chapters",
+      "chapter": "Some Applications of Trigonometry",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Some Applications of Trigonometry",
+        "Trigonometry",
+        "Introduction to Trigonometry"
+      ]
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "tnpV2VhiQnE",
+      "title": "Class 10th Circles One Shot 🔥 | Class 10 Maths Chapter 10 | #14Days14Chapters",
+      "chapter": "Circles",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Circles",
+        "Areas Related to Circles"
+      ]
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "Q0hZNlAlyxk",
+      "title": "Class 10th Areas Related to Circles One Shot 🔥 | Class 10 Maths Ch 11 | #14Days14Chapters",
+      "chapter": "Areas Related to Circles",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Areas Related to Circles",
+        "Circles",
+        "Surface Areas and Volumes"
+      ]
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "nL48cLNpdOE",
+      "title": "Class 10th Surface Areas and Volumes One Shot 🔥 | Class 10 Maths Chapter 12 | #14Days14Chapters",
+      "chapter": "Surface Areas and Volumes",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Surface Areas and Volumes",
+        "Areas Related to Circles"
+      ]
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "a9P3hJ7VcrM",
+      "title": "Class 10th Statistics One Shot 🔥 | Class 10 Maths Ch 13 | #14Days14Chapters",
+      "chapter": "Statistics",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Statistics"
+      ]
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "rLiA1jqxqDM",
+      "title": "Class 10th Probability One Shot 🔥 | Class 10 Maths Chapter 14 | #14Days14Chapters",
+      "chapter": "Probability",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Probability"
+      ]
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "7wYSGOJcK10",
+      "title": "Class 10th Real Numbers One Shot 🔥 | Class 10 Maths Ch 1 | #14Days14Chapters",
+      "chapter": "Real Numbers",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Real Numbers",
+        "Complex Numbers"
+      ]
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "Uill15OhzjE",
+      "title": "Class 10th Polynomials One Shot 🔥 | Class 10 Maths Chapter 2 | #14Days14Chapters",
+      "chapter": "Polynomials",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Polynomials"
+      ]
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "mDV43Sdoq2Y",
+      "title": "Class 10th Pair of Linear Eq in 2 Variables One Shot 🔥 | Class 10 Maths Ch 3 | #14Days14Chapters",
+      "chapter": "Pair of Linear Equations in Two Variables",
+      "confidence": 0.6,
+      "review": true,
+      "reason": "medium confidence",
+      "alternatives": [
+        "Pair of Linear Equations in Two Variables"
+      ]
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "UkstzZACyQ8",
+      "title": "Class 10th Quadratic Equations One Shot 🔥 | Class 10 Maths Chapter 4 | #14Days14Chapters",
+      "chapter": "Quadratic Equations",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Quadratic Equations",
+        "Trigonometric Equations",
+        "Differential Equations"
+      ]
+    },
+    {
+      "position": 13,
+      "youtube_video_id": "pVgBUVf-oTM",
+      "title": "Class 10th Coordinate Geometry One Shot 🔥 | Class 10 Maths Ch 7 | #14Days14Chapters",
+      "chapter": "Coordinate Geometry",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Coordinate Geometry",
+        "Vectors and Three-Dimensional Geometry"
+      ]
+    },
+    {
+      "position": 14,
+      "youtube_video_id": "buTk-CqJlIA",
+      "title": "Class 10th Arithmetic Progressions One Shot 🔥 | Class 10 Maths Chapter 5 | #14Days14Chapters",
+      "chapter": "Arithmetic Progressions",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Arithmetic Progressions"
+      ]
+    }
+  ]
+}

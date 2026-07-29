@@ -12,7 +12,7 @@
 //      NOT presented as a resolved faculty identity.
 
 import { useEffect, useRef, useState } from "react";
-import { useSearchParams, useNavigate, useLocation } from "react-router";
+import { Link, useSearchParams, useNavigate, useLocation } from "react-router";
 import {
   Star, Clock, Layers, Building2, SlidersHorizontal, X, AlertTriangle,
 } from "lucide-react";
@@ -44,7 +44,7 @@ export { ratingDisplay, RATING_CONFIDENCE_MIN };
 // ---------------------------------------------------------------- card
 // The ONE course card (noSecondResultSystem guard). Exported so Home can reuse
 // it — never re-implemented — keeping catalogue and home visually identical.
-export function PlaylistCard({ course, onOpen, selected, onToggle, disabled, comparisonEnabled = true }) {
+export function PlaylistCard({ course, onOpen, to, state, selected, onToggle, disabled, comparisonEnabled = true }) {
   const { t } = useTheme();
   const duration = formatDuration(course.durationSeconds);
   const rating = ratingDisplay(course.rating, course.ratingCount);
@@ -141,13 +141,26 @@ export function PlaylistCard({ course, onOpen, selected, onToggle, disabled, com
         )}
 
         <div className="mt-auto flex items-center gap-2 pt-4">
-          <button
-            onClick={() => onOpen(course)}
-            className="flex min-h-11 w-full items-center justify-center rounded-xl px-4 text-sm font-semibold text-white transition hover:opacity-90"
-            style={{ backgroundColor: BRAND.teal }}
-          >
-            View course
-          </button>
+          {/* A real link when the caller supplies `to` (crawlable, open-in-new-tab);
+              the legacy onOpen button is kept for callers that haven't migrated. */}
+          {to ? (
+            <Link
+              to={to}
+              state={state}
+              className="flex min-h-11 w-full items-center justify-center rounded-xl px-4 text-sm font-semibold text-white transition hover:opacity-90"
+              style={{ backgroundColor: BRAND.teal }}
+            >
+              View course
+            </Link>
+          ) : (
+            <button
+              onClick={() => onOpen(course)}
+              className="flex min-h-11 w-full items-center justify-center rounded-xl px-4 text-sm font-semibold text-white transition hover:opacity-90"
+              style={{ backgroundColor: BRAND.teal }}
+            >
+              View course
+            </button>
+          )}
           {comparisonEnabled && (
             <label
               className={`flex min-h-11 shrink-0 cursor-pointer items-center gap-1.5 rounded-xl border px-3 text-xs ${
@@ -300,11 +313,9 @@ export default function PlaylistBrowse({
   // Stamp an explicit marker carrying the FULL Browse URL. The course page
   // trusts Back only when it sees this; without it a shared link would send a
   // student out of the app.
-  const openCourse = (course) =>
-    navigate(
-      filters.chapter ? `/course/${course.id}/chapter/${filters.chapter}` : `/course/${course.id}`,
-      { state: makeReturnState(location.pathname, location.search) },
-    );
+  const courseUrl = (course) =>
+    filters.chapter ? `/course/${course.id}/chapter/${filters.chapter}` : `/course/${course.id}`;
+  const courseReturnState = makeReturnState(location.pathname, location.search);
 
   return (
     <>
@@ -430,7 +441,8 @@ export default function PlaylistBrowse({
             <>
               <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
                 {items.map((c) => (
-                  <PlaylistCard key={c.id} course={c} onOpen={openCourse}
+                  <PlaylistCard key={c.id} course={c}
+                    to={courseUrl(c)} state={courseReturnState}
                     selected={compareIds.includes(c.id)}
                     disabled={!compareIds.includes(c.id) && compareIds.length >= MAX_COMPARE}
                     onToggle={toggleCompare}

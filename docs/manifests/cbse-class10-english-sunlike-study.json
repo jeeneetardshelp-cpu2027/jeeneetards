@@ -1,0 +1,128 @@
+{
+  "version": 1,
+  "request_id": "64d2c9c9-8d59-40a7-a075-b31009be7bbc",
+  "youtube_playlist_id": "PLULAEleqt7dtgPcOuO7XeQPl4axC2QZ8D",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "2e06c772-03cf-4d02-a71f-dff432c5298f",
+    "youtube_playlist_id": "PLULAEleqt7dtgPcOuO7XeQPl4axC2QZ8D",
+    "teacher": "Sunlike Study",
+    "source_url": "https://www.youtube.com/@Sunlikestudy",
+    "source_label": "Owner-reviewed official Sunlike Study YouTube channel",
+    "reviewed_by": "Owner/Claude",
+    "reviewed_on": "2026-07-29",
+    "youtube_video_ids": [
+      "2w6r4mWykIE",
+      "UXpLYES-n3o",
+      "DCqd00umZ0g",
+      "fc7QwZ_JMyI",
+      "rKeRU4s8e_8",
+      "LWWpoM_U9iw",
+      "91mmR37Ma3M",
+      "jyBbUsk-8Ic",
+      "CXKVT_8z_IA",
+      "SfzWqWwrwyU",
+      "3_B9T9Y5c9c",
+      "4sZl3KPBD_A",
+      "NtND5TsNvQ0",
+      "g68_SHwGC-o",
+      "TtZMjKuuF4Q",
+      "V3GnocR2-0o",
+      "oszdnvwDfTQ",
+      "w9FpgW5I1Io"
+    ]
+  },
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "2w6r4mWykIE",
+      "chapter": "A Letter to God"
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "UXpLYES-n3o",
+      "chapter": "Nelson Mandela: Long Walk to Freedom"
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "DCqd00umZ0g",
+      "chapter": "Two Stories about Flying"
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "fc7QwZ_JMyI",
+      "chapter": "From the Diary of Anne Frank"
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "rKeRU4s8e_8",
+      "chapter": "Glimpses of India"
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "LWWpoM_U9iw",
+      "chapter": "Glimpses of India"
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "91mmR37Ma3M",
+      "chapter": "Glimpses of India"
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "jyBbUsk-8Ic",
+      "chapter": "Mijbil the Otter"
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "CXKVT_8z_IA",
+      "chapter": "Madam Rides the Bus"
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "SfzWqWwrwyU",
+      "chapter": "The Sermon at Benares"
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "3_B9T9Y5c9c",
+      "chapter": "The Proposal"
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "4sZl3KPBD_A",
+      "chapter": "The Thief's Story"
+    },
+    {
+      "position": 13,
+      "youtube_video_id": "NtND5TsNvQ0",
+      "chapter": "The Midnight Visitor"
+    },
+    {
+      "position": 14,
+      "youtube_video_id": "g68_SHwGC-o",
+      "chapter": "A Question of Trust"
+    },
+    {
+      "position": 15,
+      "youtube_video_id": "TtZMjKuuF4Q",
+      "chapter": "The Necklace"
+    },
+    {
+      "position": 16,
+      "youtube_video_id": "V3GnocR2-0o",
+      "chapter": "Bholi"
+    },
+    {
+      "position": 17,
+      "youtube_video_id": "oszdnvwDfTQ",
+      "chapter": "Footprints Without Feet"
+    },
+    {
+      "position": 18,
+      "youtube_video_id": "w9FpgW5I1Io",
+      "chapter": "A Triumph of Surgery"
+    }
+  ]
+}

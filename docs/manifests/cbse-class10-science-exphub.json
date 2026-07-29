@@ -1,0 +1,157 @@
+{
+  "version": 1,
+  "request_id": "67517d0d-9f51-4b3c-8f93-50124000ceb9",
+  "youtube_playlist_id": "PLxBrTGIVCrU6ubed6HFyvOx-E4gjwPkww",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "28ad3d0c-31c1-42c9-8f1d-623b4b4a134b",
+    "youtube_playlist_id": "PLxBrTGIVCrU6ubed6HFyvOx-E4gjwPkww",
+    "teacher": "ExpHub",
+    "source_url": "https://www.youtube.com/@exphub10th",
+    "source_label": "Owner-reviewed official ExpHub Class 10 YouTube channel",
+    "reviewed_by": "Owner/Claude",
+    "reviewed_on": "2026-07-29",
+    "youtube_video_ids": [
+      "gQ-X9wV8TXQ",
+      "qKl4mieovu0",
+      "YV1BFWi-AWY",
+      "7pGHWkSRFU4",
+      "2anxgj0TUgQ",
+      "RxXsUm8pwaA",
+      "2SvKmS99xhM",
+      "LE3PUf5ueS4",
+      "8Rwv2hvdZFo",
+      "VWNxgkOr55Y",
+      "J3DvsZfYEfs",
+      "5YMxdILh5II",
+      "fKZDHRTbu8Q",
+      "EsdydS5tVsE",
+      "PeoNpqD73aU"
+    ]
+  },
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "gQ-X9wV8TXQ",
+      "chapter": "Chemical Reactions and Equations"
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "qKl4mieovu0",
+      "chapter": "Acids, Bases and Salts"
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "YV1BFWi-AWY",
+      "chapter": "Metals and Non-metals"
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "7pGHWkSRFU4",
+      "chapter": "Carbon and its Compounds"
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "2anxgj0TUgQ",
+      "chapter": "Life Processes"
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "RxXsUm8pwaA",
+      "chapter": "How do Organisms Reproduce?"
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "2SvKmS99xhM",
+      "chapter": "Control and Coordination"
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "LE3PUf5ueS4",
+      "chapter": "Heredity"
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "8Rwv2hvdZFo",
+      "chapter": "Light: Reflection and Refraction"
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "VWNxgkOr55Y",
+      "chapter": "The Human Eye and the Colourful World"
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "J3DvsZfYEfs",
+      "chapter": "Electricity"
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "5YMxdILh5II",
+      "chapter": "Magnetic Effects of Electric Current"
+    },
+    {
+      "position": 13,
+      "youtube_video_id": "fKZDHRTbu8Q",
+      "chapter": "Our Environment"
+    },
+    {
+      "position": 22,
+      "youtube_video_id": "EsdydS5tVsE",
+      "chapter": "Electricity"
+    },
+    {
+      "position": 23,
+      "youtube_video_id": "PeoNpqD73aU",
+      "chapter": "Heredity"
+    }
+  ],
+  "exclusions": [
+    {
+      "position": 14,
+      "youtube_video_id": "sDXxVqy91mk",
+      "reason": "Non-chapter balancing-equations short trick"
+    },
+    {
+      "position": 15,
+      "youtube_video_id": "PYWHW_JK5Yk",
+      "reason": "Non-chapter repeated PYQ compilation"
+    },
+    {
+      "position": 16,
+      "youtube_video_id": "FRx5LPCmpaw",
+      "reason": "Non-chapter important-activities compilation"
+    },
+    {
+      "position": 17,
+      "youtube_video_id": "PgMmbKIlTSw",
+      "reason": "Non-chapter expected-questions compilation"
+    },
+    {
+      "position": 18,
+      "youtube_video_id": "AMIQ07Gsru8",
+      "reason": "Non-chapter last-minute revision"
+    },
+    {
+      "position": 19,
+      "youtube_video_id": "HkbbIpNkvKo",
+      "reason": "Non-chapter diagrams compilation"
+    },
+    {
+      "position": 20,
+      "youtube_video_id": "EGcGou2Y6tA",
+      "reason": "Non-chapter full-science revision"
+    },
+    {
+      "position": 21,
+      "youtube_video_id": "T9DgvXpCnwo",
+      "reason": "Redundant second full Life Processes lecture"
+    },
+    {
+      "position": 24,
+      "youtube_video_id": "1o7IuDldhRQ",
+      "reason": "Redundant second full Control and Coordination lecture"
+    }
+  ]
+}

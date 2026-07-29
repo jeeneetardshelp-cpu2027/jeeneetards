@@ -1,19 +1,18 @@
 // =====================================================================
 //  Footer.jsx  —  site footer with links + compliance microcopy
 //
-//  Props:
-//    onNavigate(pageName)  -> optional. Called when a footer link is
-//                             clicked, e.g. onNavigate("legal").
-//                             Defaults to doing nothing so this file
-//                             also renders on its own.
+//  Navigation uses real <Link> anchors (crawlable <a href>), so this
+//  component must render inside the app's router.
 // =====================================================================
 
+import { Link } from "react-router";
 import { GraduationCap } from "lucide-react";
+import { RELEASE_CAPABILITIES } from "./releaseCapabilities.js";
 
 const BRAND = { navy: "#142A4F" };
 const SUBTLE_WHITE = "rgba(255,255,255,0.10)";
 
-export default function Footer({ onNavigate = () => {} }) {
+export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
@@ -39,28 +38,38 @@ export default function Footer({ onNavigate = () => {} }) {
             <h3 className="text-sm font-semibold text-white">Explore</h3>
             <ul className="mt-1 text-sm">
               <li>
-                <button
-                  onClick={() => onNavigate("dashboard")}
-                  className="flex min-h-11 min-w-11 items-center justify-center text-white/70 transition hover:text-white"
+                <Link
+                  to="/"
+                  className="inline-flex min-h-11 min-w-11 items-center justify-center text-white/70 transition hover:text-white"
                 >
                   Home
-                </button>
+                </Link>
               </li>
+              {RELEASE_CAPABILITIES.universalSearch && (
+                <li>
+                  <Link
+                    to="/search"
+                    className="inline-flex min-h-11 min-w-11 items-center justify-center text-white/70 transition hover:text-white"
+                  >
+                    Search the library
+                  </Link>
+                </li>
+              )}
               <li>
-                <button
-                  onClick={() => onNavigate("legal")}
-                  className="flex min-h-11 min-w-11 items-center justify-center text-white/70 transition hover:text-white"
+                <Link
+                  to="/terms"
+                  className="inline-flex min-h-11 min-w-11 items-center justify-center text-white/70 transition hover:text-white"
                 >
                   Terms &amp; Disclaimer
-                </button>
+                </Link>
               </li>
               <li>
-                <button
-                  onClick={() => onNavigate("privacy")}
-                  className="flex min-h-11 min-w-11 items-center justify-center text-white/70 transition hover:text-white"
+                <Link
+                  to="/privacy"
+                  className="inline-flex min-h-11 min-w-11 items-center justify-center text-white/70 transition hover:text-white"
                 >
                   Privacy Policy
-                </button>
+                </Link>
               </li>
             </ul>
           </div>

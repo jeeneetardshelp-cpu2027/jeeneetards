@@ -13,7 +13,7 @@
 // =====================================================================
 
 import { useState } from "react";
-import { useNavigate, useSearchParams } from "react-router";
+import { Link, useSearchParams } from "react-router";
 import {
   Search, GraduationCap, BookOpen, PlayCircle, Users, ArrowRight, X, History,
   ShieldCheck, ListFilter, Sparkles, Activity, Compass,
@@ -66,7 +66,6 @@ export function examCardState(
 }
 
 export default function Home() {
-  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   // Seed from ?q= so "search the entire library" from Explore lands here
   // with the query already run.
@@ -106,7 +105,17 @@ export default function Home() {
             choose before you commit.
           </p>
 
-          <div className="relative mx-auto mt-8 max-w-xl">
+          <form
+            role="search"
+            className="relative mx-auto mt-8 max-w-xl"
+            // Results are already live below as you type; Enter (the "Go" key
+            // on phone keyboards) previously did nothing at all. Dismiss the
+            // keyboard so the results are actually visible.
+            onSubmit={(e) => {
+              e.preventDefault();
+              e.currentTarget.querySelector("input")?.blur();
+            }}
+          >
             <Search className={`pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 ${t.muted}`} />
             <input
               autoFocus
@@ -118,6 +127,7 @@ export default function Home() {
             />
             {input && (
               <button
+                type="button"
                 onClick={() => setInput("")}
                 aria-label="Clear search"
                 className={`absolute right-1.5 top-1/2 flex min-h-11 min-w-11 -translate-y-1/2 items-center justify-center rounded-xl ${t.muted} ${t.hover}`}
@@ -125,7 +135,7 @@ export default function Home() {
                 <X className="h-4 w-4" />
               </button>
             )}
-          </div>
+          </form>
 
           {!searching && (
             <div className={`mt-5 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs ${t.muted}`}>
@@ -145,10 +155,10 @@ export default function Home() {
           {searching ? (
             <SearchResults
               results={results} loading={loading} total={total} error={error}
-              retry={retry} query={debounced.trim()} navigate={navigate}
+              retry={retry} query={debounced.trim()}
             />
           ) : (
-            <Landing navigate={navigate} />
+            <Landing />
           )}
         </Container>
       </main>
@@ -159,7 +169,7 @@ export default function Home() {
 // ---------------------------------------------------------------------
 //  Default landing (no query)
 // ---------------------------------------------------------------------
-function Landing({ navigate }) {
+function Landing() {
   const [continueWatching] = useState(() => getContinueWatching(3));
   const { t } = useTheme();
   const { goals, loading: goalsLoading, error: goalsError } = useLearningGoals();
@@ -171,10 +181,10 @@ function Landing({ navigate }) {
         <Section title="Continue watching" icon={History}>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
             {continueWatching.map((e) => (
-              <button
+              <Link
                 key={e.playlistId}
-                onClick={() => navigate(`/course/${e.playlistId}/chapter/${e.chapterId}?v=${e.lastVideoId}`)}
-                className={`rounded-2xl border ${t.border} ${t.card} ${t.cardHover} p-4 text-left shadow-sm transition hover:-translate-y-0.5`}
+                to={`/course/${e.playlistId}/chapter/${e.chapterId}?v=${e.lastVideoId}`}
+                className={`block rounded-2xl border ${t.border} ${t.card} ${t.cardHover} p-4 text-left shadow-sm transition hover:-translate-y-0.5`}
               >
                 <span className={`block truncate text-sm font-semibold ${t.text}`}>
                   {e.lastVideoTitle || e.courseTitle}
@@ -183,7 +193,7 @@ function Landing({ navigate }) {
                   {e.courseTitle}
                   {e.totalLessons ? ` · lesson ${e.lastPosition ?? "?"} of ${e.totalLessons}` : ""}
                 </span>
-              </button>
+              </Link>
             ))}
           </div>
         </Section>
@@ -199,16 +209,13 @@ function Landing({ navigate }) {
             });
             const meta = EXAM_META[exam.id] ?? { icon: GraduationCap, tint: BRAND.teal };
             const Icon = meta.icon;
-            return (
-              <button
-                key={exam.id}
-                type="button"
-                disabled={!available}
-                onClick={() => available && navigate(`/explore/${exam.id}`)}
-                className={`group relative flex min-h-[9.5rem] flex-col rounded-2xl border ${t.border} ${t.card} p-5 text-left shadow-sm transition ${
-                  available ? "hover:-translate-y-1 hover:shadow-lg" : "cursor-not-allowed opacity-60"
-                }`}
-              >
+            // One class string and one body for both branches, so the live
+            // Link and the "Soon" disabled button stay pixel-identical.
+            const cardClass = `group relative flex min-h-[9.5rem] flex-col rounded-2xl border ${t.border} ${t.card} p-5 text-left shadow-sm transition ${
+              available ? "hover:-translate-y-1 hover:shadow-lg" : "cursor-not-allowed opacity-60"
+            }`;
+            const cardBody = (
+              <>
                 <span className="absolute right-4 top-4 rounded-full px-2 py-0.5 text-[0.62rem] font-semibold uppercase tracking-wide"
                   style={available
                     ? { color: meta.tint, background: `${meta.tint}1a` }
@@ -228,6 +235,15 @@ function Landing({ navigate }) {
                     <b className={t.text} style={{ fontWeight: 600 }}>{count}</b> courses
                   </span>
                 )}
+              </>
+            );
+            return available ? (
+              <Link key={exam.id} to={`/explore/${exam.id}`} className={cardClass}>
+                {cardBody}
+              </Link>
+            ) : (
+              <button key={exam.id} type="button" disabled className={cardClass}>
+                {cardBody}
               </button>
             );
           })}
@@ -258,12 +274,12 @@ function Landing({ navigate }) {
       </section>
 
       {/* ---- Featured courses (real data via the shared PlaylistBrowse card) ---- */}
-      {jee?.id && <FeaturedCourses goalId={jee.id} navigate={navigate} />}
+      {jee?.id && <FeaturedCourses goalId={jee.id} />}
 
       {/* ---- Browse the library CTA ---- */}
       <Section title="Browse the library" eyebrow="The full catalogue">
-        <button
-          onClick={() => navigate("/browse")}
+        <Link
+          to="/browse"
           className={`flex w-full items-center justify-between gap-4 rounded-2xl border ${t.border} ${t.card} ${t.cardHover} p-6 text-left shadow-sm transition hover:-translate-y-0.5`}
         >
           <span>
@@ -278,7 +294,7 @@ function Landing({ navigate }) {
             style={{ background: `${BRAND.teal}17`, color: BRAND.teal }}>
             <ArrowRight className="h-5 w-5" />
           </span>
-        </button>
+        </Link>
       </Section>
     </div>
   );
@@ -288,7 +304,7 @@ function Landing({ navigate }) {
 //  Featured courses — reuses the ONE shared PlaylistBrowse card (no drift).
 //  Real data via the browse hook; hides itself on empty/error, never fakes.
 // ---------------------------------------------------------------------
-function FeaturedCourses({ goalId, navigate }) {
+function FeaturedCourses({ goalId }) {
   const { t } = useTheme();
   const { items, loading, error } = usePlaylistBrowse({ goalId, page: 0, enabled: !!goalId });
   const courses = (items ?? []).slice(0, 3);
@@ -297,7 +313,7 @@ function FeaturedCourses({ goalId, navigate }) {
 
   return (
     <Section title="Courses to start with" eyebrow="From the catalogue"
-      action={{ label: "Browse all", onClick: () => navigate("/browse") }}>
+      action={{ label: "Browse all", to: "/browse" }}>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         {loading
           ? Array.from({ length: 3 }).map((_, i) => (
@@ -305,7 +321,7 @@ function FeaturedCourses({ goalId, navigate }) {
             ))
           : courses.map((c) => (
               <PlaylistCard key={c.id} course={c} comparisonEnabled={false}
-                onOpen={() => navigate(`/course/${c.id}`)} />
+                to={`/course/${c.id}`} />
             ))}
       </div>
     </Section>
@@ -315,7 +331,7 @@ function FeaturedCourses({ goalId, navigate }) {
 // ---------------------------------------------------------------------
 //  Grouped search results
 // ---------------------------------------------------------------------
-function SearchResults({ results, loading, total, error, retry, query, navigate }) {
+function SearchResults({ results, loading, total, error, retry, query }) {
   if (loading) return <SkeletonRow />;
 
   if (error)
@@ -344,7 +360,7 @@ function SearchResults({ results, loading, total, error, retry, query, navigate 
         <Section title="Chapters" icon={BookOpen}>
           <ResultList items={chapters.map((c) => ({
             key: `ch-${c.id}`, title: c.name, subtitle: c.subject,
-            onClick: () => navigate(`/browse?ch=${c.id}`),
+            to: `/browse?ch=${c.id}`,
           }))} />
         </Section>
       )}
@@ -355,7 +371,7 @@ function SearchResults({ results, loading, total, error, retry, query, navigate 
             key: `pl-${p.id}`, title: p.title,
             subtitle: [p.teacher, p.institute].filter(Boolean).join(" · "),
             badges: p.classLevels, disabled: !p.chapterId,
-            onClick: () => p.chapterId && navigate(`/course/${p.id}/chapter/${p.chapterId}`),
+            to: p.chapterId ? `/course/${p.id}/chapter/${p.chapterId}` : undefined,
           }))} />
         </Section>
       )}
@@ -364,7 +380,7 @@ function SearchResults({ results, loading, total, error, retry, query, navigate 
         <Section title="Lectures" icon={PlayCircle}>
           <ResultList items={lectures.map((v) => ({
             key: `v-${v.id}`, title: v.title, subtitle: "Lecture",
-            onClick: () => navigate(`/browse?sub=${v.subjectId}` + (v.chapterId ? `&ch=${v.chapterId}` : "")),
+            to: `/browse?sub=${v.subjectId}` + (v.chapterId ? `&ch=${v.chapterId}` : ""),
           }))} />
         </Section>
       )}
@@ -373,7 +389,7 @@ function SearchResults({ results, loading, total, error, retry, query, navigate 
         <Section title="Channels" icon={Users}>
           <ResultList items={teachers.map((teacher) => ({
             key: `t-${teacher.id}`, title: teacher.name, subtitle: "Channel",
-            onClick: () => navigate("/browse"),
+            to: "/browse",
           }))} />
         </Section>
       )}
@@ -401,12 +417,12 @@ function Section({ title, icon: Icon, eyebrow, action, children }) {
           </h2>
         </div>
         {action && (
-          <button onClick={action.onClick}
+          <Link to={action.to}
             className="inline-flex shrink-0 items-center gap-1.5 text-sm font-semibold"
             style={{ color: BRAND.teal }}>
             {action.label}
             <ArrowRight className="h-4 w-4" />
-          </button>
+          </Link>
         )}
       </div>
       {children}
@@ -418,10 +434,10 @@ function ResultList({ items }) {
   const { t } = useTheme();
   return (
     <ul className={`divide-y overflow-hidden rounded-2xl border ${t.divider} ${t.border} ${t.card} shadow-sm`}>
-      {items.map((it) => (
-        <li key={it.key}>
-          <button onClick={it.onClick} disabled={it.disabled}
-            className={`flex min-h-11 w-full items-center gap-3 px-4 py-3 text-left transition ${t.hover} disabled:opacity-50`}>
+      {items.map((it) => {
+        const rowClass = `flex min-h-11 w-full items-center gap-3 px-4 py-3 text-left transition ${t.hover} disabled:opacity-50`;
+        const rowBody = (
+          <>
             <span className="min-w-0 flex-1">
               <span className={`block truncate text-sm font-medium ${t.text}`}>{it.title}</span>
               {it.subtitle && (
@@ -437,9 +453,18 @@ function ResultList({ items }) {
               </span>
             )}
             <ArrowRight className={`h-4 w-4 shrink-0 ${t.muted}`} />
-          </button>
-        </li>
-      ))}
+          </>
+        );
+        return (
+          <li key={it.key}>
+            {it.disabled ? (
+              <button disabled className={rowClass}>{rowBody}</button>
+            ) : (
+              <Link to={it.to} className={rowClass}>{rowBody}</Link>
+            )}
+          </li>
+        );
+      })}
     </ul>
   );
 }

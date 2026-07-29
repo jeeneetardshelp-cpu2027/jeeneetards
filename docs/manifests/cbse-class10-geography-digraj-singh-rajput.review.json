@@ -1,0 +1,79 @@
+{
+  "subject": "Social Science",
+  "summary": {
+    "total": 5,
+    "auto": 5,
+    "review": 0,
+    "unmatched": 0
+  },
+  "rows": [
+    {
+      "position": 1,
+      "youtube_video_id": "zaiju4KFOPg",
+      "title": "Minerals and Energy Resources | New One Shot  | Class 10 Geography 2026-27",
+      "chapter": "Minerals and Energy Resources",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Minerals and Energy Resources",
+        "Resources and Development",
+        "Water Resources"
+      ]
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "q0R-WDKp8N8",
+      "title": "Agriculture | New One shot | Class 10 Geography 2026-27",
+      "chapter": "Agriculture",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Agriculture"
+      ]
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "xOyDX8nAc_o",
+      "title": "Water Resources | New One Shot | Class 10 Geography 2026-27",
+      "chapter": "Water Resources",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Water Resources",
+        "Resources and Development",
+        "Forest and Wildlife Resources"
+      ]
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "GqLBGoMkEVA",
+      "title": "Forest and Wildlife Resources | New One Shot | CBSE Class 10 Geography 2026-27",
+      "chapter": "Forest and Wildlife Resources",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Forest and Wildlife Resources",
+        "Resources and Development",
+        "Water Resources"
+      ]
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "sUHHh9bcM74",
+      "title": "Resources and Development | New One shot  | Chapter 1 Geography Class 10 2026-27",
+      "chapter": "Resources and Development",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Resources and Development",
+        "Development",
+        "Water Resources"
+      ]
+    }
+  ]
+}

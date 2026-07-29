@@ -727,3 +727,127 @@ institute links, four subject links, four JEE learning-goal links, and exactly
 course or membership. Anonymous search, facets, profiles, public JEE browse,
 and representative course 39 passed postflight with no console warnings or
 errors. The JEE fingerprint remained exact.
+
+## NEET faculty normalization backup boundary — 28 July 2026
+
+NEET faculty review and artifact preparation performed no database writes.
+Source review covers 43 of 45 NEET courses, but none of the three prepared NEET
+faculty artifacts has been executed on a clone or production.
+
+The existing restore clone predates production course IDs 91–135. It is not a
+valid rehearsal target for this work. A future execution requires:
+
+1. explicit approval to create a fresh current-production restore clone;
+2. baseline verification of 128 courses, 83 JEE, 45 NEET, and JEE fingerprint
+   `d7aae3ce7635401ebeffe97e627048bc`;
+3. the artifact-by-artifact clone gates in
+   `docs/faculty_registry_neet_rollout_plan_2026-07-28.md`;
+4. owner review of the complete clone report;
+5. a new exact production PITR restore point and separate approval naming one
+   hash-pinned artifact.
+
+The PITR timestamp recorded for the completed JEE faculty migration is
+historical evidence only. It must not be reused as the rollback target for a
+future NEET faculty write.
+
+## NEET faculty batch-1 additive migration — 28 July 2026
+
+Before the separately approved production write, the signed-in production PITR
+dashboard showed active 7-day retention and latest restore point
+`28 Jul 2026 15:16:22 UTC+05:30`.
+
+The approved clone-rehearsed artifact SHA-256 was
+`cdc67cc1fa3bb9f975a9610b1e78b0997e49fc8d035a0bad51bf4e7f09a75c94`.
+Production matched the rehearsal baseline exactly: 128 playlists, 83 JEE
+courses, 45 NEET courses, 1,721 memberships, 1,307 JEE memberships,
+124 chapters, four teachers, eight aliases, 83 faculty links, and no existing
+batch-1 teachers. The protected JEE fingerprint was
+`d7aae3ce7635401ebeffe97e627048bc`.
+
+The transaction added exactly two verified teachers, three verified aliases,
+and 16 reviewed NEET course links. Postflight totals were six teachers,
+11 aliases, and 99 faculty links. Diksha Sharma and Yashika Singh each returned
+eight courses through the anonymous faculty-profile RPC; both responses were
+HTTP 200. There were zero JEE cross-goal links. Playlist, membership, chapter,
+JEE-course, and JEE-membership counts remained unchanged, and the protected
+JEE fingerprint remained exact.
+
+No batch 2–3 or course-91 artifact was applied. Each remains a separate
+production gate requiring fresh PITR evidence and explicit approval naming its
+exact SHA-256.
+
+## NEET faculty batch 2–3 additive migration — 28 July 2026
+
+Before the separately approved production write, the signed-in production PITR
+dashboard showed active 7-day retention and latest restore point
+`28 Jul 2026 15:54:24 UTC+05:30`.
+
+The approved clone-rehearsed artifact SHA-256 was
+`2ffde08d54e5049c38da413406fd5c914937d5a81b93145e717b010b1bec6f64`.
+Production matched the expected post-batch-1 baseline: 128 playlists, 83 JEE
+courses, 45 NEET courses, 1,721 memberships, 1,307 JEE memberships,
+124 chapters, six teachers, 11 aliases, 99 faculty links, and fingerprint
+`d7aae3ce7635401ebeffe97e627048bc`.
+
+The transaction added exactly 18 verified teachers, 26 verified aliases, and
+26 reviewed NEET course links. Postflight totals were 24 teachers, 37 aliases,
+and 125 faculty links. All 18 new faculty profiles returned HTTP 200
+anonymously, were verified, matched their requested slugs, and collectively
+returned 26 mapped courses. There were zero JEE cross-goal links. Courses 91,
+118, and 119 remained unlinked. Playlist, membership, chapter, JEE-course, and
+JEE-membership counts remained unchanged, and the protected JEE fingerprint
+remained exact.
+
+The course-91 artifact was not applied. It remains a separate production gate
+requiring fresh PITR evidence and explicit approval naming its exact SHA-256.
+
+## NEET faculty course-91 additive migration — 28 July 2026
+
+Before the separately approved production write, the signed-in production PITR
+dashboard showed active 7-day retention and latest restore point
+`28 Jul 2026 15:58:25 UTC+05:30`.
+
+The approved clone-rehearsed artifact SHA-256 was
+`992df1e36d7c38ff3aaae12ed5cc7884c8bfacd44d5c97a2eacc413a18eb20d6`.
+Production matched the expected post-batch-2–3 baseline: 128 playlists, 83 JEE
+courses, 45 NEET courses, 1,721 memberships, 1,307 JEE memberships,
+124 chapters, 24 teachers, 37 aliases, and 125 faculty links. Course 91 had
+zero normalized faculty links, Tarun Kumar did not yet exist, Samapti Sinha
+did exist, the legacy label remained `Tarun Sir & Samapti Ma'am`, and the
+protected JEE fingerprint matched
+`d7aae3ce7635401ebeffe97e627048bc`.
+
+The transaction added exactly one verified teacher, two verified aliases, and
+two course links. Course 91 now links Tarun Kumar at position 1 and Samapti
+Sinha at position 2. Anonymous faculty-profile calls returned HTTP 200:
+Tarun Kumar returned one course and Samapti Sinha returned two. Postflight
+totals were 25 teachers, 39 aliases, and 127 faculty links. Courses 118 and 119
+remain intentionally unlinked, the course-91 legacy combined label remains
+unchanged, and there were zero JEE cross-goal links. Playlist, membership,
+chapter, JEE-course, and JEE-membership counts remained unchanged, and the
+protected JEE fingerprint remained exact.
+
+## NEET faculty restore-clone cleanup — 28 July 2026
+
+After all clone-rehearsed NEET faculty artifacts passed their separately gated
+production writes and final read-only production QA, the owner explicitly
+approved permanent deletion of only
+`youtube-neet-faculty-restore-rehearsal-20260728`
+(`nxicoflvbxiemqjiqraz`).
+
+The Supabase project settings page was checked immediately before deletion and
+showed that exact project name and reference. After the permanent deletion
+completed, the project no longer appeared in the organization project list.
+Production `youtube` (`kezelafqhgqrprpadmlf`) remained present and untouched.
+
+The older rehearsal clone `youtube-neet-restore-rehearsal-20260727`
+(`napkhqkdsqmnunxwnurr`) was outside this approval and remains present.
+
+The owner subsequently gave a separate explicit approval to permanently delete
+that older rehearsal clone. Its project page was verified as
+`youtube-neet-restore-rehearsal-20260727`
+(`napkhqkdsqmnunxwnurr`) immediately before deletion. After deletion completed,
+it no longer appeared in the organization project list. Production `youtube`
+(`kezelafqhgqrprpadmlf`) remained present and untouched. No restore rehearsal
+clones remain; the organization list contains the two staging projects and
+production.

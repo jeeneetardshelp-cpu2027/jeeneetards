@@ -81,9 +81,13 @@ export function useCourseMetadata(course) {
   useEffect(() => {
     const metadata = metadataForCourse(course);
     if (!metadata) return;
+    // Chapter sub-URLs (/course/5/chapter/2) canonicalize to the course root:
+    // the sitemap and the edge middleware both emit /course/5, and all three
+    // signals must agree or crawlers pick one arbitrarily.
+    const courseRoot = pathname.match(/^\/course\/\d+/)?.[0] ?? pathname;
     applyPageMetadata({
       ...metadata,
-      canonicalPath: pathname,
+      canonicalPath: courseRoot,
       robots: "index, follow",
     });
   }, [course, pathname, search]);

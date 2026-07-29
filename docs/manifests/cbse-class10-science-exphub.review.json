@@ -1,0 +1,285 @@
+{
+  "subject": "Science",
+  "summary": {
+    "total": 24,
+    "auto": 16,
+    "review": 0,
+    "unmatched": 8
+  },
+  "rows": [
+    {
+      "position": 1,
+      "youtube_video_id": "gQ-X9wV8TXQ",
+      "title": "Chemical Reactions and Equations🔥| CLASS 10 Science | Complete Chapter | Prashant Kirad",
+      "chapter": "Chemical Reactions and Equations",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Chemical Reactions and Equations"
+      ]
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "qKl4mieovu0",
+      "title": "Acids Bases and Salts 🔥| CLASS 10 Science | Complete Chapter | NCERT Covered | Prashant Kirad",
+      "chapter": "Acids, Bases and Salts",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Acids, Bases and Salts"
+      ]
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "YV1BFWi-AWY",
+      "title": "Metals and Non Metals 🔥| CLASS 10 Science | NCERT Covered| Prashant Kirad",
+      "chapter": "Metals and Non-metals",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Metals and Non-metals"
+      ]
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "7pGHWkSRFU4",
+      "title": "Carbon and it's Compounds🔥| Class 10th Science| NCERT covered| Prashant Kirad",
+      "chapter": "Carbon and its Compounds",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Carbon and its Compounds"
+      ]
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "2anxgj0TUgQ",
+      "title": "Life Processes Complete Chapter🔥| CLASS 10 Science | NCERT Covered| Prashant Kirad",
+      "chapter": "Life Processes",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Life Processes"
+      ]
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "RxXsUm8pwaA",
+      "title": "How Do Organisms Reproduce 🔥| Class 10th Science| NCERT covered| Prashant Kirad",
+      "chapter": "How do Organisms Reproduce?",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "How do Organisms Reproduce?"
+      ]
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "2SvKmS99xhM",
+      "title": "Control and Coordination 🔥| CLASS 10 Science | NCERT Covered| Prashant Kirad",
+      "chapter": "Control and Coordination",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Control and Coordination"
+      ]
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "LE3PUf5ueS4",
+      "title": "Heredity 🔥| Class 10th Science| NCERT covered| Prashant Kirad",
+      "chapter": "Heredity",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Heredity"
+      ]
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "8Rwv2hvdZFo",
+      "title": "Light - Reflection & Refraction 🔥| CLASS 10 Science | Complete Chapter | Prashant Kirad",
+      "chapter": "Light: Reflection and Refraction",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Light: Reflection and Refraction"
+      ]
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "VWNxgkOr55Y",
+      "title": "Human Eye and the Colourful World 🔥| CLASS 10 Science | NCERT Covered| Prashant Kirad",
+      "chapter": "The Human Eye and the Colourful World",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "The Human Eye and the Colourful World"
+      ]
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "J3DvsZfYEfs",
+      "title": "Electricity 🔥| CLASS 10 Science | NCERT Covered| Prashant Kirad",
+      "chapter": "Electricity",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Electricity"
+      ]
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "5YMxdILh5II",
+      "title": "Magnetic Effects of Electric Current 🔥| Class 10th Science | NCERT covered| Prashant Kirad",
+      "chapter": "Magnetic Effects of Electric Current",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Magnetic Effects of Electric Current"
+      ]
+    },
+    {
+      "position": 13,
+      "youtube_video_id": "fKZDHRTbu8Q",
+      "title": "Our Environment Complete Chapter🔥|Class 10 Science| NCERT covered| Prashant Kirad",
+      "chapter": "Our Environment",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Our Environment"
+      ]
+    },
+    {
+      "position": 14,
+      "youtube_video_id": "sDXxVqy91mk",
+      "title": "How to Balance any Chemical Equation in 30 seconds🤯| Short Trick| Class 10",
+      "chapter": null,
+      "confidence": 0.33,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": [
+        "Chemical Reactions and Equations"
+      ]
+    },
+    {
+      "position": 15,
+      "youtube_video_id": "PYWHW_JK5Yk",
+      "title": "25 Most Repeated Previous Year Questions⚡ in the Last 10 Years from Science Class10",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": []
+    },
+    {
+      "position": 16,
+      "youtube_video_id": "FRx5LPCmpaw",
+      "title": "Class 10th - Science All Important Activities🔥| Important Questions | Prashant Kirad",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": []
+    },
+    {
+      "position": 17,
+      "youtube_video_id": "PgMmbKIlTSw",
+      "title": "Class 10th- 66 Most Expected Questions Science🔥| Prashant Kirad",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": []
+    },
+    {
+      "position": 18,
+      "youtube_video_id": "AMIQ07Gsru8",
+      "title": "Complete Science Last minute Revision🔥| Most Important Questions| Class 10th| Prashant Kirad",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": []
+    },
+    {
+      "position": 19,
+      "youtube_video_id": "HkbbIpNkvKo",
+      "title": "Class 10th Complete Science Most Important Diagrams🔥| Diagram Based Questions | Prashant Kirad",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": []
+    },
+    {
+      "position": 20,
+      "youtube_video_id": "EGcGou2Y6tA",
+      "title": "Class 10th  - Complete Science Revision🔥| Most Important Questions | Prashant Kirad",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": []
+    },
+    {
+      "position": 21,
+      "youtube_video_id": "T9DgvXpCnwo",
+      "title": "Life Processes Complete Chapter🔥| CLASS 10 Science | NCERT Covered| Prashant Kirad",
+      "chapter": "Life Processes",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Life Processes"
+      ]
+    },
+    {
+      "position": 22,
+      "youtube_video_id": "EsdydS5tVsE",
+      "title": "Electricity -15 Most important numericals⚡| Class 10 Science|",
+      "chapter": "Electricity",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Electricity"
+      ]
+    },
+    {
+      "position": 23,
+      "youtube_video_id": "PeoNpqD73aU",
+      "title": "Heridity and Evolution Complete Chapter🔥|Class 10 Science| NCERT covered| Prashant Kirad",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": []
+    },
+    {
+      "position": 24,
+      "youtube_video_id": "1o7IuDldhRQ",
+      "title": "Control And Coordination Complete Chapter🔥| CLASS 10 Science | NCERT Covered| Prashant Kirad",
+      "chapter": "Control and Coordination",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Control and Coordination"
+      ]
+    }
+  ]
+}

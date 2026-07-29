@@ -1,0 +1,59 @@
+{
+  "subject": "Social Science",
+  "summary": {
+    "total": 4,
+    "auto": 4,
+    "review": 0,
+    "unmatched": 0
+  },
+  "rows": [
+    {
+      "position": 1,
+      "youtube_video_id": "JVBWKBYsvH4",
+      "title": "Outcomes of Democracy | New One Shot | Class 10 Civics 2025-26",
+      "chapter": "Outcomes of Democracy",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Outcomes of Democracy"
+      ]
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "rCNNEZFLwtM",
+      "title": "Political Parties | New One Shot | Class 10 Civics 2026-27",
+      "chapter": "Political Parties",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Political Parties"
+      ]
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "VGC5hMiR8j8",
+      "title": "Gender Religion and Caste | New One Shot | Civics Class 10 2026-27",
+      "chapter": "Gender, Religion and Caste",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Gender, Religion and Caste"
+      ]
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "FngG6lgrNrk",
+      "title": "Power Sharing | New One Shot Full Chapter | Civics Chapter 1 Class 10th CBSE 2026-27",
+      "chapter": "Power Sharing",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Power Sharing"
+      ]
+    }
+  ]
+}

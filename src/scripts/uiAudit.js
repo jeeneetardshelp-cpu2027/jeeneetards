@@ -63,7 +63,7 @@ const browser = await chromium.launch(
 const discoveryContext = await browser.newContext({ viewport: { width: 390, height: 844 } });
 const discoveryPage = await discoveryContext.newPage();
 await discoveryPage.goto(BASE + RESTORATION_PATH, { waitUntil: "networkidle" });
-const firstCourse = discoveryPage.getByRole("button", { name: "View course" }).first();
+const firstCourse = discoveryPage.getByRole("link", { name: "View course" }).first();
 try {
   await firstCourse.waitFor({ state: "visible", timeout: 15_000 });
 } catch {
@@ -141,10 +141,10 @@ async function probe(page) {
       })
       .filter((x) => x.h < 44);
     const header = document.querySelector("header");
-    const crumbs = [...document.querySelectorAll('header nav[aria-label="Breadcrumb"] button')].map((b) => b.textContent.trim());
-    const nav = [...document.querySelectorAll("header nav button")]
+    const crumbs = [...document.querySelectorAll('header nav[aria-label="Breadcrumb"] a, header nav[aria-label="Breadcrumb"] button')].map((b) => b.textContent.trim());
+    const nav = [...document.querySelectorAll("header nav a, header nav button")]
       .map((b) => ({ t: b.textContent.trim(), cur: b.getAttribute("aria-current") }))
-      .filter((x) => ["Home", "Find a course", "Browse courses"].includes(x.t));
+      .filter((x) => ["Home", "Find a course", "Browse courses", "Search"].includes(x.t));
     return {
       overflowPx: d.scrollWidth - window.innerWidth,
       overflowingEls: rects.length,
@@ -260,10 +260,11 @@ const beforeNav = await page.evaluate(() => ({
   scrollable: document.documentElement.scrollHeight > window.innerHeight,
 }));
 
-// Click the real catalogue action. Selecting an arbitrary button previously
-// clicked "Try again" whenever a request failed, which was not a course journey.
+// Click the real catalogue action ("View course" is a crawlable link now).
+// Selecting an arbitrary control previously clicked "Try again" whenever a
+// request failed, which was not a course journey.
 const clicked = await page.evaluate(() => {
-  const b = [...document.querySelectorAll("main button")]
+  const b = [...document.querySelectorAll("main a")]
     .find((x) => x.textContent.trim() === "View course");
   if (!b) return null;
   b.click();

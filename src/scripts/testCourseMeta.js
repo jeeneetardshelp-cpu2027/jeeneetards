@@ -49,13 +49,18 @@ async function main() {
     const gotOgTitle = grab(html, /<meta property="og:title" content="([^"]*)"/);
     const gotOgDesc = grab(html, /<meta property="og:description" content="([^"]*)"/);
     const gotOgUrl = grab(html, /<meta property="og:url" content="([^"]*)"/);
+    const gotCanonical = grab(html, /<link rel="canonical" href="([^"]*)"/);
 
     const titleOk = gotTitle === meta.title && gotOgTitle === meta.title;
     const descOk = gotOgDesc === meta.description && !/course finder/.test(gotOgDesc);
     const urlOk = gotOgUrl === meta.url;
+    // The canonical must be the course URL, present exactly once.
+    const canonicalOk =
+      gotCanonical === meta.url &&
+      (html.match(/<link rel="canonical"/g) || []).length === 1;
     // og:image must remain the default branded card (unchanged).
     const imageOk = /og:image" content="https:\/\/www\.jeeneetard\.com\/social-preview\.png"/.test(html);
-    const ok = titleOk && descOk && urlOk && imageOk;
+    const ok = titleOk && descOk && urlOk && canonicalOk && imageOk;
     ok ? pass++ : fail++;
 
     console.log(`\n/course/${c.id}  ${ok ? "✓" : "✗ FAIL"}`);
@@ -63,6 +68,7 @@ async function main() {
     console.log(`  og:title     ${gotOgTitle}`);
     console.log(`  og:desc      ${gotOgDesc}`);
     console.log(`  og:url       ${gotOgUrl}`);
+    console.log(`  canonical    ${gotCanonical}`);
     console.log(`  og:image kept default: ${imageOk}`);
   }
 

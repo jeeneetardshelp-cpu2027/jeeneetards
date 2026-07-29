@@ -115,12 +115,19 @@ if (exists("index.html")) {
 
   for (const required of [
     'rel="icon"',
-    'rel="canonical"',
     'property="og:image"',
     'name="twitter:card"',
   ]) {
     if (!source.includes(required)) fail(`index.html is missing ${required}`);
   }
+
+  // The shell is served for EVERY route, so a static canonical would claim
+  // the homepage on all of them. Canonicals are injected per-route instead
+  // (edge middleware for courses, PageMetadata client-side) — the shell
+  // shipping one is a release failure, not a requirement.
+  if (source.includes('rel="canonical"'))
+    fail("index.html ships a static canonical, which would claim the homepage on every route");
+  else pass("index.html leaves canonicals to per-route injection");
 }
 
 if (exists("dist/index.html") && !read("dist/index.html").includes('name="description"'))

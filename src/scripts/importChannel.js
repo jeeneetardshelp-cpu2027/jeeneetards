@@ -315,18 +315,21 @@ async function main() {
           chapter: await findChapter(db, name, plan.subjectId),
         })),
       );
-      const duplicateVideoIds = findDuplicateVideoIds(ytVideos);
+      const qualityVideos = mapped?.videos ?? ytVideos;
+      const duplicateVideoIds = findDuplicateVideoIds(qualityVideos);
       const detailValidation = mapped
-        ? validateMappedVideoDetails(ytVideos)
+        ? validateMappedVideoDetails(qualityVideos)
         : null;
       // Automated quality gate — the mechanical checks a reviewer used to run by
       // hand (duplicate ids/lesson numbers, order, cross-chapter reuse, teacher
       // evidence, usable-count shortfall). Legacy findings remain advisory;
       // mapped mode applies the same blocking policy here and in write mode.
       const quality = validatePlaylistQuality({
-        playlist: { title: plan.playlist.title, videos: ytVideos },
+        playlist: { title: plan.playlist.title, videos: qualityVideos },
         existingVideoIds,
-        expectedVideoCount: Number(plan.playlist.videoCount),
+        expectedVideoCount: mapped
+          ? qualityVideos.length
+          : Number(plan.playlist.videoCount),
         knownTeachers: [plan.teacher, ...knownTeachers],
         reviewedTeacherEvidence: Boolean(mapped?.teacherEvidence),
       });
@@ -424,6 +427,12 @@ async function main() {
               manifest_sha256: plan.chapterManifestSha256,
               source_snapshot_sha256: sourceSnapshotSha256(ytVideos),
               assignment_count: plan.chapterManifest.assignments.length,
+              excluded_count: mapped.excludedVideos.length,
+              exclusions: mapped.excludedVideos.map((video) => ({
+                position: video.sourcePosition + 1,
+                youtube_video_id: video.videoId,
+                reason: video.exclusionReason,
+              })),
               teacher_evidence: mapped.teacherEvidence,
             },
             capability: mappedCapability,
@@ -577,7 +586,7 @@ async function main() {
       }
 
       if (!priorAudit) {
-        const detailValidation = validateMappedVideoDetails(ytVideos);
+        const detailValidation = validateMappedVideoDetails(mapped.videos);
         if (!detailValidation.ok) {
           fail(
             "Mapped import requires complete duration metadata and embeddable videos.",
@@ -596,9 +605,9 @@ async function main() {
           ),
         ];
         const quality = validatePlaylistQuality({
-          playlist: { title: plan.playlist.title, videos: ytVideos },
+          playlist: { title: plan.playlist.title, videos: mapped.videos },
           existingVideoIds,
-          expectedVideoCount: Number(plan.playlist.videoCount),
+          expectedVideoCount: mapped.videos.length,
           knownTeachers: [plan.teacher, ...knownTeachers],
           reviewedTeacherEvidence: Boolean(mapped.teacherEvidence),
         });

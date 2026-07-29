@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "request_id": "5fd8f25c-42c5-4f11-be03-94c9c8240043",
+  "youtube_playlist_id": "PLKrMFg1EPRmGAkAUNEE6XdLrd-Oa-51sJ",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "zaiju4KFOPg",
+      "chapter": "Minerals and Energy Resources"
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "q0R-WDKp8N8",
+      "chapter": "Agriculture"
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "xOyDX8nAc_o",
+      "chapter": "Water Resources"
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "GqLBGoMkEVA",
+      "chapter": "Forest and Wildlife Resources"
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "sUHHh9bcM74",
+      "chapter": "Resources and Development"
+    }
+  ]
+}

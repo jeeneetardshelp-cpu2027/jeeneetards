@@ -31,6 +31,7 @@ describe("legal release truth", () => {
       "YouTube",
       "Vercel and Supabase",
       "request and security logs",
+      "aggregate, cookieless page-view analytics",
     ]) {
       expect(privacy).toContain(fact);
     }

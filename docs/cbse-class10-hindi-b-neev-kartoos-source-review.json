@@ -1,0 +1,116 @@
+{
+  "version": 1,
+  "request_id": "db46b4a0-63c8-468a-91f6-7c58329d285f",
+  "youtube_playlist_id": "PLgWXZcKGZpCqC4yx7WIjnNXw7I38jghuG",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "48b263a2-6942-441b-826e-edadad057f58",
+    "youtube_playlist_id": "PLgWXZcKGZpCqC4yx7WIjnNXw7I38jghuG",
+    "teacher": "NEEV Competishun",
+    "source_url": "https://www.youtube.com/@NEEVCompetishun",
+    "source_label": "Owner-reviewed official NEEV Competishun YouTube channel",
+    "reviewed_by": "Owner/Claude",
+    "reviewed_on": "2026-07-29",
+    "youtube_video_ids": [
+      "4R4LnfCwEzo",
+      "KodhTkgUhyI",
+      "ZT9vTBv7Xzk",
+      "OLsGJd-oAFs",
+      "ATj45w8LU5o",
+      "XnwRVi6qtJM",
+      "ehl0BLCqm2s",
+      "RMFjZWuYktg",
+      "BXhwk7nsvnU",
+      "2XoRFp3i9ys",
+      "ofDo_0p_B08",
+      "e79oStyOJTE",
+      "H-jXqFXTwZ0",
+      "2MNN6yia5iM",
+      "E60pizP4Z0M",
+      "7bi_QjuxasE"
+    ]
+  },
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "4R4LnfCwEzo",
+      "chapter": "कारतूस"
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "KodhTkgUhyI",
+      "chapter": "कारतूस"
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "ZT9vTBv7Xzk",
+      "chapter": "कारतूस"
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "OLsGJd-oAFs",
+      "chapter": "कारतूस"
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "ATj45w8LU5o",
+      "chapter": "कारतूस"
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "XnwRVi6qtJM",
+      "chapter": "कारतूस"
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "ehl0BLCqm2s",
+      "chapter": "कारतूस"
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "RMFjZWuYktg",
+      "chapter": "कारतूस"
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "BXhwk7nsvnU",
+      "chapter": "कारतूस"
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "2XoRFp3i9ys",
+      "chapter": "कारतूस"
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "ofDo_0p_B08",
+      "chapter": "कारतूस"
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "e79oStyOJTE",
+      "chapter": "कारतूस"
+    },
+    {
+      "position": 13,
+      "youtube_video_id": "H-jXqFXTwZ0",
+      "chapter": "कारतूस"
+    },
+    {
+      "position": 14,
+      "youtube_video_id": "2MNN6yia5iM",
+      "chapter": "कारतूस"
+    },
+    {
+      "position": 15,
+      "youtube_video_id": "E60pizP4Z0M",
+      "chapter": "कारतूस"
+    },
+    {
+      "position": 16,
+      "youtube_video_id": "7bi_QjuxasE",
+      "chapter": "कारतूस"
+    }
+  ]
+}

@@ -1,0 +1,439 @@
+{
+  "version": 1,
+  "request_id": "a189e4f5-3b5d-41ed-bad4-52a064d1de98",
+  "youtube_playlist_id": "PLf1QWmNs-KXFYrkQ2tcmrnGKwFNlJFbJG",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "95ce1d83-a12d-43b8-9c29-d2175c8349a6",
+    "youtube_playlist_id": "PLf1QWmNs-KXFYrkQ2tcmrnGKwFNlJFbJG",
+    "teacher": "Hindi Adhyapak",
+    "source_url": "https://www.youtube.com/@HindiAdhyapak",
+    "source_label": "Owner-reviewed official Hindi Adhyapak YouTube channel",
+    "reviewed_by": "Owner/Claude",
+    "reviewed_on": "2026-07-29",
+    "youtube_video_ids": [
+      "AMRpWtOdOKk",
+      "qJd1fVKrbfI",
+      "VZVwJG6Y2NE",
+      "ggA-giofYvk",
+      "hQBFW6L6cgQ",
+      "_lSHGdVGv1Q",
+      "qkxz3fZPgcw",
+      "pxC7pwFL4g8",
+      "IVw_Y5SPA_g",
+      "KKIsRkbpT84",
+      "uWzw6kcr0CM",
+      "yfd13BTk6VU",
+      "awcnTE7qtAM",
+      "VcLlY1jJCig",
+      "Nt2qe5LPDxo",
+      "AOUr5Tsi6V4",
+      "G_J3Xrv-p2k"
+    ]
+  },
+  "exclusions": [
+    {
+      "position": 1,
+      "youtube_video_id": "YNU-_nU1ZNA",
+      "reason": "Duplicate summary/animation; retained the fuller chapter explanation."
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "3Ax6caYlzSw",
+      "reason": "Duplicate summary/animation; retained the fuller chapter explanation."
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "I8FYfaCOY0I",
+      "reason": "Duplicate summary/animation; retained the fuller chapter explanation."
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "0TsfpnVKfo4",
+      "reason": "Supplementary MCQ-only video; keep one literature explanation per chapter."
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "DyYdwqsAXDQ",
+      "reason": "Duplicate summary/animation; retained the fuller chapter explanation."
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "uYLO7jkrLjI",
+      "reason": "Duplicate summary/animation; retained the fuller chapter explanation."
+    },
+    {
+      "position": 14,
+      "youtube_video_id": "GSPxbt9cj7E",
+      "reason": "Supplementary MCQ-only video; keep one literature explanation per chapter."
+    },
+    {
+      "position": 18,
+      "youtube_video_id": "2ANtis2z4Js",
+      "reason": "Supplementary MCQ-only video; keep one literature explanation per chapter."
+    },
+    {
+      "position": 20,
+      "youtube_video_id": "Rweezd2TZDw",
+      "reason": "Supplementary MCQ-only video; keep one literature explanation per chapter."
+    },
+    {
+      "position": 21,
+      "youtube_video_id": "JrFk0IA0od0",
+      "reason": "Duplicate summary/animation; retained the fuller chapter explanation."
+    },
+    {
+      "position": 23,
+      "youtube_video_id": "wNHvMTOxqco",
+      "reason": "Supplementary MCQ-only video; keep one literature explanation per chapter."
+    },
+    {
+      "position": 24,
+      "youtube_video_id": "8mg6iD-TutY",
+      "reason": "Duplicate summary/animation; retained the fuller chapter explanation."
+    },
+    {
+      "position": 26,
+      "youtube_video_id": "OrKdm-EsphY",
+      "reason": "Supplementary MCQ-only video; keep one literature explanation per chapter."
+    },
+    {
+      "position": 27,
+      "youtube_video_id": "Izq4CBNeKjc",
+      "reason": "Duplicate summary/animation; retained the fuller chapter explanation."
+    },
+    {
+      "position": 29,
+      "youtube_video_id": "jNn6HF18V68",
+      "reason": "Supplementary MCQ-only video; keep one literature explanation per chapter."
+    },
+    {
+      "position": 30,
+      "youtube_video_id": "TO_ZtRhzrdM",
+      "reason": "Duplicate summary/animation; retained the fuller chapter explanation."
+    },
+    {
+      "position": 34,
+      "youtube_video_id": "_RGt0EER84M",
+      "reason": "Supplementary MCQ-only video; keep one literature explanation per chapter."
+    },
+    {
+      "position": 37,
+      "youtube_video_id": "Tm9imptUnRs",
+      "reason": "Supplementary MCQ-only video; keep one literature explanation per chapter."
+    },
+    {
+      "position": 38,
+      "youtube_video_id": "39E1Zxvoab0",
+      "reason": "Duplicate summary/animation; retained the fuller chapter explanation."
+    },
+    {
+      "position": 40,
+      "youtube_video_id": "akmol5SjCOM",
+      "reason": "Supplementary MCQ-only video; keep one literature explanation per chapter."
+    },
+    {
+      "position": 42,
+      "youtube_video_id": "TiEeVh0OxZg",
+      "reason": "Supplementary MCQ-only video; keep one literature explanation per chapter."
+    },
+    {
+      "position": 43,
+      "youtube_video_id": "T9bzDeFnGWA",
+      "reason": "Hindi grammar content, outside the literature-only course."
+    },
+    {
+      "position": 44,
+      "youtube_video_id": "QIIvFV8jyw0",
+      "reason": "Hindi grammar content, outside the literature-only course."
+    },
+    {
+      "position": 45,
+      "youtube_video_id": "Ujiwb7zxWXQ",
+      "reason": "Hindi grammar content, outside the literature-only course."
+    },
+    {
+      "position": 46,
+      "youtube_video_id": "DZ13n5BzGwU",
+      "reason": "Hindi grammar content, outside the literature-only course."
+    },
+    {
+      "position": 47,
+      "youtube_video_id": "UPkCFpGkjQ0",
+      "reason": "Hindi grammar content, outside the literature-only course."
+    },
+    {
+      "position": 48,
+      "youtube_video_id": "3YivlRWM_Io",
+      "reason": "Hindi grammar content, outside the literature-only course."
+    },
+    {
+      "position": 49,
+      "youtube_video_id": "SmY0GX23yvU",
+      "reason": "Hindi grammar content, outside the literature-only course."
+    },
+    {
+      "position": 50,
+      "youtube_video_id": "CSPwq_KpKTM",
+      "reason": "Hindi grammar content, outside the literature-only course."
+    },
+    {
+      "position": 51,
+      "youtube_video_id": "iGkl71D2fow",
+      "reason": "Hindi grammar content, outside the literature-only course."
+    },
+    {
+      "position": 52,
+      "youtube_video_id": "2GAD8tK193o",
+      "reason": "Hindi grammar: Pad Parichay; explicitly excluded to prevent false Surdas mapping."
+    },
+    {
+      "position": 53,
+      "youtube_video_id": "JqEz_g0XswI",
+      "reason": "Hindi grammar: Pad Parichay; explicitly excluded to prevent false Surdas mapping."
+    },
+    {
+      "position": 54,
+      "youtube_video_id": "BimWkABg3os",
+      "reason": "Hindi grammar: Pad Parichay; explicitly excluded to prevent false Surdas mapping."
+    },
+    {
+      "position": 55,
+      "youtube_video_id": "z-MbSM5BHdI",
+      "reason": "Hindi grammar: Pad Parichay; explicitly excluded to prevent false Surdas mapping."
+    },
+    {
+      "position": 56,
+      "youtube_video_id": "q-7t0weBWBk",
+      "reason": "Hindi grammar content, outside the literature-only course."
+    },
+    {
+      "position": 57,
+      "youtube_video_id": "34uxCysmJ9I",
+      "reason": "Hindi grammar content, outside the literature-only course."
+    },
+    {
+      "position": 58,
+      "youtube_video_id": "lRElBPQwKyA",
+      "reason": "Hindi grammar content, outside the literature-only course."
+    },
+    {
+      "position": 59,
+      "youtube_video_id": "XqBDz5Lbeok",
+      "reason": "Hindi writing-skills content, outside the literature-only course."
+    },
+    {
+      "position": 61,
+      "youtube_video_id": "gPuUv6aT6sY",
+      "reason": "Hindi writing-skills content, outside the literature-only course."
+    },
+    {
+      "position": 62,
+      "youtube_video_id": "bN8IAJM61-I",
+      "reason": "Hindi writing-skills content, outside the literature-only course."
+    },
+    {
+      "position": 63,
+      "youtube_video_id": "unrxWUZko1I",
+      "reason": "Hindi writing-skills content, outside the literature-only course."
+    },
+    {
+      "position": 65,
+      "youtube_video_id": "xgsxSD8XAoo",
+      "reason": "Hindi writing-skills content, outside the literature-only course."
+    },
+    {
+      "position": 66,
+      "youtube_video_id": "Jns59Hyvyjk",
+      "reason": "Duplicate summary/animation; retained the fuller chapter explanation."
+    },
+    {
+      "position": 67,
+      "youtube_video_id": "uT99t6Sv1rk",
+      "reason": "Non-chapter syllabus, strategy, tips, or overview content."
+    },
+    {
+      "position": 68,
+      "youtube_video_id": "O9RnA2fh-lo",
+      "reason": "Non-chapter syllabus, strategy, tips, or overview content."
+    },
+    {
+      "position": 69,
+      "youtube_video_id": "ixi-nUm4UGk",
+      "reason": "Non-chapter syllabus, strategy, tips, or overview content."
+    },
+    {
+      "position": 70,
+      "youtube_video_id": "pb6nupovoEY",
+      "reason": "Supplementary MCQ-only video; keep one literature explanation per chapter."
+    },
+    {
+      "position": 71,
+      "youtube_video_id": "CwrR-uXWOuQ",
+      "reason": "Supplementary PYQ/question-paper content, not a chapter explanation."
+    },
+    {
+      "position": 73,
+      "youtube_video_id": "8uDu1EUFTPM",
+      "reason": "Hindi writing-skills content, outside the literature-only course."
+    },
+    {
+      "position": 75,
+      "youtube_video_id": "K550nktEZJQ",
+      "reason": "Non-chapter syllabus, strategy, tips, or overview content."
+    },
+    {
+      "position": 76,
+      "youtube_video_id": "Fo_gMdmM_0Y",
+      "reason": "Non-chapter syllabus, strategy, tips, or overview content."
+    },
+    {
+      "position": 77,
+      "youtube_video_id": "t4r5ahrg4iY",
+      "reason": "Supplementary PYQ/question-paper content, not a chapter explanation."
+    },
+    {
+      "position": 78,
+      "youtube_video_id": "-CK1FomDZGY",
+      "reason": "Non-chapter syllabus, strategy, tips, or overview content."
+    },
+    {
+      "position": 79,
+      "youtube_video_id": "bSrKgDYy-bs",
+      "reason": "Hindi grammar content, outside the literature-only course."
+    },
+    {
+      "position": 80,
+      "youtube_video_id": "LCWZkNl4WFg",
+      "reason": "Hindi grammar content, outside the literature-only course."
+    },
+    {
+      "position": 85,
+      "youtube_video_id": "WUt-AVcFHzw",
+      "reason": "Non-chapter syllabus, strategy, tips, or overview content."
+    },
+    {
+      "position": 86,
+      "youtube_video_id": "fOCSCKu7hu4",
+      "reason": "Non-chapter syllabus, strategy, tips, or overview content."
+    },
+    {
+      "position": 87,
+      "youtube_video_id": "-7war963jLQ",
+      "reason": "Non-chapter syllabus, strategy, tips, or overview content."
+    },
+    {
+      "position": 88,
+      "youtube_video_id": "lT2_lXn3fV0",
+      "reason": "Hindi grammar content, outside the literature-only course."
+    },
+    {
+      "position": 89,
+      "youtube_video_id": "mMrNf5DDjmw",
+      "reason": "Hindi grammar content, outside the literature-only course."
+    },
+    {
+      "position": 90,
+      "youtube_video_id": "XbFe8UJ2CpA",
+      "reason": "Hindi grammar content, outside the literature-only course."
+    },
+    {
+      "position": 91,
+      "youtube_video_id": "Nd9vSt278aI",
+      "reason": "Non-chapter syllabus, strategy, tips, or overview content."
+    },
+    {
+      "position": 92,
+      "youtube_video_id": "rrwd4PVxlfs",
+      "reason": "Duplicate summary/animation; retained the fuller chapter explanation."
+    }
+  ],
+  "assignments": [
+    {
+      "position": 2,
+      "youtube_video_id": "AMRpWtOdOKk",
+      "chapter": "सूरदास के पद"
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "qJd1fVKrbfI",
+      "chapter": "राम-लक्ष्मण-परशुराम संवाद"
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "VZVwJG6Y2NE",
+      "chapter": "आत्मकथ्य"
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "ggA-giofYvk",
+      "chapter": "उत्साह"
+    },
+    {
+      "position": 13,
+      "youtube_video_id": "hQBFW6L6cgQ",
+      "chapter": "अट नहीं रही है"
+    },
+    {
+      "position": 16,
+      "youtube_video_id": "_lSHGdVGv1Q",
+      "chapter": "यह दंतुरित मुसकान"
+    },
+    {
+      "position": 17,
+      "youtube_video_id": "qkxz3fZPgcw",
+      "chapter": "फसल"
+    },
+    {
+      "position": 19,
+      "youtube_video_id": "pxC7pwFL4g8",
+      "chapter": "संगतकार"
+    },
+    {
+      "position": 22,
+      "youtube_video_id": "IVw_Y5SPA_g",
+      "chapter": "नेताजी का चश्मा"
+    },
+    {
+      "position": 25,
+      "youtube_video_id": "KKIsRkbpT84",
+      "chapter": "बालगोबिन भगत"
+    },
+    {
+      "position": 28,
+      "youtube_video_id": "uWzw6kcr0CM",
+      "chapter": "लखनवी अंदाज़"
+    },
+    {
+      "position": 31,
+      "youtube_video_id": "yfd13BTk6VU",
+      "chapter": "एक कहानी यह भी"
+    },
+    {
+      "position": 32,
+      "youtube_video_id": "awcnTE7qtAM",
+      "chapter": "नौबतखाने में इबादत"
+    },
+    {
+      "position": 33,
+      "youtube_video_id": "VcLlY1jJCig",
+      "chapter": "संस्कृति"
+    },
+    {
+      "position": 36,
+      "youtube_video_id": "Nt2qe5LPDxo",
+      "chapter": "माता का आँचल"
+    },
+    {
+      "position": 39,
+      "youtube_video_id": "AOUr5Tsi6V4",
+      "chapter": "साना-साना हाथ जोड़ि"
+    },
+    {
+      "position": 41,
+      "youtube_video_id": "G_J3Xrv-p2k",
+      "chapter": "मैं क्यों लिखता हूँ"
+    }
+  ]
+}

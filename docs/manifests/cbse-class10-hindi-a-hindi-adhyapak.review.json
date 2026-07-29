@@ -1,0 +1,1097 @@
+{
+  "subject": "Hindi A",
+  "summary": {
+    "total": 80,
+    "retained": 17,
+    "excluded": 63
+  },
+  "rows": [
+    {
+      "position": 1,
+      "youtube_video_id": "YNU-_nU1ZNA",
+      "title": "Surdas ke Pad Class 10 Summary in Hindi | Class 10 Hindi Surdas ke Pad Summary",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": [],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Duplicate summary/animation; retained the fuller chapter explanation."
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "AMRpWtOdOKk",
+      "title": "Surdas Ke Pad Class 10 | Class 10 Hindi Surdas Ke Pad Explanation | सूरदास के पद Class 10",
+      "chapter": "सूरदास के पद",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "सूरदास के पद"
+      ],
+      "retained": true
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "3Ax6caYlzSw",
+      "title": "Ram Lakshman Parshuram Samvad Class 10 Summary | राम लक्ष्मण परशुराम संवाद व्याख्या",
+      "chapter": null,
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "राम-लक्ष्मण-परशुराम संवाद"
+      ],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Duplicate summary/animation; retained the fuller chapter explanation."
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "qJd1fVKrbfI",
+      "title": "Ram Lakshman Parshuram Samvad | Class 10 Hindi Ram Lakshman Parshuram Samvad | राम लक्ष्मण परशुराम",
+      "chapter": "राम-लक्ष्मण-परशुराम संवाद",
+      "confidence": 0.75,
+      "review": true,
+      "reason": "medium confidence",
+      "alternatives": [
+        "राम-लक्ष्मण-परशुराम संवाद"
+      ],
+      "retained": true
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "I8FYfaCOY0I",
+      "title": "Aatmkathya Class 10 Summary | Class 10 Hindi Aatmkathya Summary | आत्मकथ्य कविता की व्याख्या",
+      "chapter": null,
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "आत्मकथ्य"
+      ],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Duplicate summary/animation; retained the fuller chapter explanation."
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "VZVwJG6Y2NE",
+      "title": "Aatmkathya Class 10 Explanation  | Class 10 Hindi Aatmkathya | आत्मकथ्य Class 10 Hindi",
+      "chapter": "आत्मकथ्य",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "आत्मकथ्य"
+      ],
+      "retained": true
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "0TsfpnVKfo4",
+      "title": "Atmakatha MCQ Class 10th | Class 10 Hindi Atmakatha MCQ | Aatmkathya Class 10 MCQ | आत्मकथ्य MCQ",
+      "chapter": null,
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "आत्मकथ्य"
+      ],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Supplementary MCQ-only video; keep one literature explanation per chapter."
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "DyYdwqsAXDQ",
+      "title": "utsah class 10 summary | utsah summary class 10th | class 10 hindi chapter utsah summary",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": [],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Duplicate summary/animation; retained the fuller chapter explanation."
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "ggA-giofYvk",
+      "title": "Utsah Class 10 Hindi Explanation | उत्साह Class 10 | Hindi Utsah Class 10 Explanation",
+      "chapter": "उत्साह",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "उत्साह"
+      ],
+      "retained": true
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "uYLO7jkrLjI",
+      "title": "At Nahi Rahi Hai Class 10 Summary | Class 10 Hindi At Nahi Rahi Hai Summary | अट नहीं रही है Summary",
+      "chapter": null,
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "अट नहीं रही है"
+      ],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Duplicate summary/animation; retained the fuller chapter explanation."
+    },
+    {
+      "position": 13,
+      "youtube_video_id": "hQBFW6L6cgQ",
+      "title": "Class 10 Hindi At Nahi Rahi Hai | At Nhi Rhi h Class 10 | अट नहीं रही है कविता",
+      "chapter": "अट नहीं रही है",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "अट नहीं रही है"
+      ],
+      "retained": true
+    },
+    {
+      "position": 14,
+      "youtube_video_id": "GSPxbt9cj7E",
+      "title": "Utsah Class 10 MCQ | Class 10 Hindi Utsah MCQ | उत्साह Class 10 MCQ | Utsah MCQ",
+      "chapter": null,
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "उत्साह"
+      ],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Supplementary MCQ-only video; keep one literature explanation per chapter."
+    },
+    {
+      "position": 16,
+      "youtube_video_id": "_lSHGdVGv1Q",
+      "title": "Yah Danturit Muskan Class 10 | Class 10 Hindi Yah Danturit Muskan | यह दंतुरित मुसकान Class 10",
+      "chapter": "यह दंतुरित मुसकान",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "यह दंतुरित मुसकान",
+        "एक कहानी यह भी"
+      ],
+      "retained": true
+    },
+    {
+      "position": 17,
+      "youtube_video_id": "qkxz3fZPgcw",
+      "title": "Fasal Class 10 | Class 10 Hindi Fasal | फसल Class 10  | Class 10 फसल | Fasal Class 10 Line by Line",
+      "chapter": "फसल",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "फसल"
+      ],
+      "retained": true
+    },
+    {
+      "position": 18,
+      "youtube_video_id": "2ANtis2z4Js",
+      "title": "Yeh Danturit Muskan MCQ | Fasal MCQ | Yeh Danturit Muskan Class 10 MCQ | Fasal Class 10 MCQ",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": [],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Supplementary MCQ-only video; keep one literature explanation per chapter."
+    },
+    {
+      "position": 19,
+      "youtube_video_id": "pxC7pwFL4g8",
+      "title": "Sangatkar Class 10 | Class 10 Hindi Sangatkar |Class 10 Hindi Sangatkar Explanation•संगतकार Class 10",
+      "chapter": "संगतकार",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "संगतकार"
+      ],
+      "retained": true
+    },
+    {
+      "position": 20,
+      "youtube_video_id": "Rweezd2TZDw",
+      "title": "Sangatkar Class 10 MCQ | Sangatkar MCQ Class 10 | Class 10 Hindi Sangatkar MCQ | संगतकार प्रश्न उतर",
+      "chapter": null,
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "संगतकार"
+      ],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Supplementary MCQ-only video; keep one literature explanation per chapter."
+    },
+    {
+      "position": 21,
+      "youtube_video_id": "JrFk0IA0od0",
+      "title": "Netaji ka Chashma Summary | Class 10th Hindi Chapter 10 Netaji ka Chashma Summary | नेताजी का चश्मा",
+      "chapter": null,
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "नेताजी का चश्मा"
+      ],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Duplicate summary/animation; retained the fuller chapter explanation."
+    },
+    {
+      "position": 22,
+      "youtube_video_id": "IVw_Y5SPA_g",
+      "title": "Netaji ka Chashma Class 10 | Class 10 Hindi Netaji ka Chashma | नेताजी का चश्मा Class 10",
+      "chapter": "नेताजी का चश्मा",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "नेताजी का चश्मा"
+      ],
+      "retained": true
+    },
+    {
+      "position": 23,
+      "youtube_video_id": "wNHvMTOxqco",
+      "title": "Netaji ka Chashma MCQ | Class 10 Hindi Chapter Netaji ka Chashma MCQ | नेताजी का चश्मा Class 10 MCQ",
+      "chapter": null,
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "नेताजी का चश्मा"
+      ],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Supplementary MCQ-only video; keep one literature explanation per chapter."
+    },
+    {
+      "position": 24,
+      "youtube_video_id": "8mg6iD-TutY",
+      "title": "Balgobin Bhagat Class 10 Animation | Balgobin Bhagat Class 10 | बालगोबिन भगत Class 10",
+      "chapter": null,
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "बालगोबिन भगत"
+      ],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Duplicate summary/animation; retained the fuller chapter explanation."
+    },
+    {
+      "position": 25,
+      "youtube_video_id": "KKIsRkbpT84",
+      "title": "Balgobin Bhagat Class 10  | Class 10 Hindi Balgobin Bhagat | बालगोबिन भगत Class 10",
+      "chapter": "बालगोबिन भगत",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "बालगोबिन भगत"
+      ],
+      "retained": true
+    },
+    {
+      "position": 26,
+      "youtube_video_id": "OrKdm-EsphY",
+      "title": "Balgobin Bhagat MCQ Questions and Answers | Class 10 Hindi Balgobin Bhagat MCQ | बालगोबिन भगत MCQ",
+      "chapter": null,
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "बालगोबिन भगत"
+      ],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Supplementary MCQ-only video; keep one literature explanation per chapter."
+    },
+    {
+      "position": 27,
+      "youtube_video_id": "Izq4CBNeKjc",
+      "title": "Lakhnavi Andaaz Class 10 Summary◆Class 10 Hindi Chapter Lakhnavi Andaaz Summary ◆लखनवी अंदाज Summary",
+      "chapter": null,
+      "confidence": 0.5,
+      "review": true,
+      "reason": "medium confidence",
+      "alternatives": [
+        "लखनवी अंदाज़"
+      ],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Duplicate summary/animation; retained the fuller chapter explanation."
+    },
+    {
+      "position": 28,
+      "youtube_video_id": "uWzw6kcr0CM",
+      "title": "Lakhnavi Andaaz Class 10 | Lakhnavi Andaaz Class 10 Animation | Class 10 Hindi Lakhnavi Andaaz",
+      "chapter": "लखनवी अंदाज़",
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": [],
+      "retained": true
+    },
+    {
+      "position": 29,
+      "youtube_video_id": "jNn6HF18V68",
+      "title": "Lakhnavi Andaaz MCQ Questions | Class 10 Hindi Lakhnavi Andaaz MCQ | लखनवी अंदाज Class 10 MCQ",
+      "chapter": null,
+      "confidence": 0.5,
+      "review": true,
+      "reason": "medium confidence",
+      "alternatives": [
+        "लखनवी अंदाज़"
+      ],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Supplementary MCQ-only video; keep one literature explanation per chapter."
+    },
+    {
+      "position": 30,
+      "youtube_video_id": "TO_ZtRhzrdM",
+      "title": "Class 10th Hindi Chapter Ek Kahani Yah Bhi Summary | Ek Kahani Yah Bhi Summary | एक कहानी यह भी",
+      "chapter": null,
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "एक कहानी यह भी",
+        "यह दंतुरित मुसकान"
+      ],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Duplicate summary/animation; retained the fuller chapter explanation."
+    },
+    {
+      "position": 31,
+      "youtube_video_id": "yfd13BTk6VU",
+      "title": "Ek Kahani Yeh Bhi Hindi Class 10 | Class 10 Ek Kahani Yeh Bhi | एक कहानी यह भी Class 10 मन्नू भंडारी",
+      "chapter": "एक कहानी यह भी",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "एक कहानी यह भी",
+        "यह दंतुरित मुसकान"
+      ],
+      "retained": true
+    },
+    {
+      "position": 32,
+      "youtube_video_id": "awcnTE7qtAM",
+      "title": "Naubatkhane me Ibadat Class 10 | Class 10 Hindi Naubatkhane me Ibadat | नौबतखाने में इबादत Class 10",
+      "chapter": "नौबतखाने में इबादत",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "नौबतखाने में इबादत"
+      ],
+      "retained": true
+    },
+    {
+      "position": 33,
+      "youtube_video_id": "VcLlY1jJCig",
+      "title": "Class 10th Hindi Chapter 17 Sanskriti | Sanskriti Chapter Class 10 | संस्कृति Class 10",
+      "chapter": "संस्कृति",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "संस्कृति"
+      ],
+      "retained": true
+    },
+    {
+      "position": 34,
+      "youtube_video_id": "_RGt0EER84M",
+      "title": "Sanskriti MCQ Class 10 | Class 10 Hindi Chapter Sanskriti MCQ | संस्कृति Class 10 MCQ",
+      "chapter": null,
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "संस्कृति"
+      ],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Supplementary MCQ-only video; keep one literature explanation per chapter."
+    },
+    {
+      "position": 36,
+      "youtube_video_id": "Nt2qe5LPDxo",
+      "title": "Mata ka Aanchal Class 10  | Class 10 Mata ka Anchal | माता का आँचल | कक्षा 10 हिंदी माता का अंचल",
+      "chapter": "माता का आँचल",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "माता का आँचल"
+      ],
+      "retained": true
+    },
+    {
+      "position": 37,
+      "youtube_video_id": "Tm9imptUnRs",
+      "title": "Mata Ka Anchal MCQ Questions Class 10 | Class 10 Hindi Mata Ka Aanchal MCQ | माता का आँचल MCQ",
+      "chapter": null,
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "माता का आँचल"
+      ],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Supplementary MCQ-only video; keep one literature explanation per chapter."
+    },
+    {
+      "position": 38,
+      "youtube_video_id": "39E1Zxvoab0",
+      "title": "Sana Sana Hath Jodi Animation Story | Class 10 Sana Sana Hath Jodi Summary | साना साना हाथ जोड़ी",
+      "chapter": null,
+      "confidence": 0.75,
+      "review": true,
+      "reason": "medium confidence",
+      "alternatives": [
+        "साना-साना हाथ जोड़ि"
+      ],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Duplicate summary/animation; retained the fuller chapter explanation."
+    },
+    {
+      "position": 39,
+      "youtube_video_id": "AOUr5Tsi6V4",
+      "title": "Sana Sana Hath Jodi CBSE Class 10 | Class 10 Hindi Sana Sana Hath Jodi |साना साना हाथ जोड़ि class 10",
+      "chapter": "साना-साना हाथ जोड़ि",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "साना-साना हाथ जोड़ि"
+      ],
+      "retained": true
+    },
+    {
+      "position": 40,
+      "youtube_video_id": "akmol5SjCOM",
+      "title": "Sana Sana Hath Jodi MCQ | Class 10 Hindi Sana Sana Hath Jodi MCQ | साना साना हाथ जोड़ि MCQ",
+      "chapter": null,
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "साना-साना हाथ जोड़ि"
+      ],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Supplementary MCQ-only video; keep one literature explanation per chapter."
+    },
+    {
+      "position": 41,
+      "youtube_video_id": "G_J3Xrv-p2k",
+      "title": "Mai Kyu Likhta Hu Class 10 | Class 10 Hindi Main Kyu Likhta Hu Animation | मैं क्यों लिखता हूँ 10th",
+      "chapter": "मैं क्यों लिखता हूँ",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "मैं क्यों लिखता हूँ"
+      ],
+      "retained": true
+    },
+    {
+      "position": 42,
+      "youtube_video_id": "TiEeVh0OxZg",
+      "title": "Class 10 Hindi Mai Kyu Likhta Hu MCQ | Main Kyon Likhta Hun MCQ | मैं क्यों लिखता हूँ class 10 MCQ",
+      "chapter": null,
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "मैं क्यों लिखता हूँ"
+      ],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Supplementary MCQ-only video; keep one literature explanation per chapter."
+    },
+    {
+      "position": 43,
+      "youtube_video_id": "T9bzDeFnGWA",
+      "title": "Apathit Gadyansh in Hindi | How to Solve Apathit Kavyansh | हिंदी अपठित गद्यांश पद्यांश",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": [],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Hindi grammar content, outside the literature-only course."
+    },
+    {
+      "position": 44,
+      "youtube_video_id": "QIIvFV8jyw0",
+      "title": "Vachya Hindi Grammar | Vachya Hindi Grammar Class 10 Tricks | वाच्य हिंदी व्याकरण",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": [],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Hindi grammar content, outside the literature-only course."
+    },
+    {
+      "position": 45,
+      "youtube_video_id": "Ujiwb7zxWXQ",
+      "title": "Vachya Important Questions Class 10 | Vachya Practice Test | Class 10 Hindi Vachya Practice Question",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": [],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Hindi grammar content, outside the literature-only course."
+    },
+    {
+      "position": 46,
+      "youtube_video_id": "DZ13n5BzGwU",
+      "title": "Vachya Hindi Grammar Class 10 PYQS | Vachya Class 10 PYQ | वाच्य हिंदी व्याकरण Class 10 PYQ",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": [],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Hindi grammar content, outside the literature-only course."
+    },
+    {
+      "position": 47,
+      "youtube_video_id": "UPkCFpGkjQ0",
+      "title": "Vachya Hindi Grammar MCQ | Vachya Parivartan MCQ | Vachya MCQ",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": [],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Hindi grammar content, outside the literature-only course."
+    },
+    {
+      "position": 48,
+      "youtube_video_id": "3YivlRWM_Io",
+      "title": "Rachna ke Aadhar Par Vakya Bhed Class 10th Hindi Grammar | Vakya Rupantaran | उपवाक्य हिंदी व्याकरण",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": [],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Hindi grammar content, outside the literature-only course."
+    },
+    {
+      "position": 49,
+      "youtube_video_id": "SmY0GX23yvU",
+      "title": "Important questions of Vakya Bhed Rachna ke Aadhar Par | Class 10 Hindi Grammar | CBSE Board Exam  🚀",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": [],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Hindi grammar content, outside the literature-only course."
+    },
+    {
+      "position": 50,
+      "youtube_video_id": "CSPwq_KpKTM",
+      "title": "Vakya Class 10 PYQ | Rachna ke Aadhar Par Vakya Bhed Class 10 PYQs | वाक्य के भेद Class 10 PYQs",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": [],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Hindi grammar content, outside the literature-only course."
+    },
+    {
+      "position": 51,
+      "youtube_video_id": "iGkl71D2fow",
+      "title": "Rachna Ke Aadhar Par Vakya Bhed MCQ | Vakya Hindi Grammar Class 10 MCQ | Vakya MCQ",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": [],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Hindi grammar content, outside the literature-only course."
+    },
+    {
+      "position": 52,
+      "youtube_video_id": "2GAD8tK193o",
+      "title": "Pad Parichay Hindi Grammar Class 10 | Class 10 Pad Parichay | पद परिचय Class 10 CBSE | Trick",
+      "chapter": null,
+      "confidence": 0.5,
+      "review": true,
+      "reason": "medium confidence",
+      "alternatives": [
+        "सूरदास के पद"
+      ],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Hindi grammar: Pad Parichay; explicitly excluded to prevent false Surdas mapping."
+    },
+    {
+      "position": 53,
+      "youtube_video_id": "JqEz_g0XswI",
+      "title": "Pad Parichay Hindi Grammar Class 10 Question Practice | Class 10th Pad Parichay Practice Questions",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": [],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Hindi grammar: Pad Parichay; explicitly excluded to prevent false Surdas mapping."
+    },
+    {
+      "position": 54,
+      "youtube_video_id": "BimWkABg3os",
+      "title": "Pad Parichay Class 10 PYQ | Pad Parichay Hindi Grammar Class 10 PYQs | पद परिचय Class 10 Cbse PYQs",
+      "chapter": null,
+      "confidence": 0.5,
+      "review": true,
+      "reason": "medium confidence",
+      "alternatives": [
+        "सूरदास के पद"
+      ],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Hindi grammar: Pad Parichay; explicitly excluded to prevent false Surdas mapping."
+    },
+    {
+      "position": 55,
+      "youtube_video_id": "z-MbSM5BHdI",
+      "title": "Pad Parichay MCQ Questions | Pad Parichay Hindi Grammar Class 10 MCQ | Pad Parichay MCQ",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": [],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Hindi grammar: Pad Parichay; explicitly excluded to prevent false Surdas mapping."
+    },
+    {
+      "position": 56,
+      "youtube_video_id": "q-7t0weBWBk",
+      "title": "CBSE Class 10th Hindi Grammar Alankar | Alankar CBSE Class 10 | Alankar Class 10 Tricks",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": [],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Hindi grammar content, outside the literature-only course."
+    },
+    {
+      "position": 57,
+      "youtube_video_id": "34uxCysmJ9I",
+      "title": "Alankar Important Questions | Alankar Class 10 Important Questions | अलंकार हिंदी व्याकरण Class 10",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": [],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Hindi grammar content, outside the literature-only course."
+    },
+    {
+      "position": 58,
+      "youtube_video_id": "lRElBPQwKyA",
+      "title": "Alankar Class 10 MCQ | Class 10 Hindi Grammar Alankar MCQ | अलंकार हिंदी व्याकरण MCQ",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": [],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Hindi grammar content, outside the literature-only course."
+    },
+    {
+      "position": 59,
+      "youtube_video_id": "XqBDz5Lbeok",
+      "title": "How to Write Swavrit Lekhan | Swavrit Lekhan Class 10 | Swavrit Lekhan Class 11 | स्ववृत लेखन",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": [],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Hindi writing-skills content, outside the literature-only course."
+    },
+    {
+      "position": 61,
+      "youtube_video_id": "gPuUv6aT6sY",
+      "title": "Patra Lekhan Hindi Vyakaran | Aupcharik Patra Lekhan | Anopcharik Patra Lekhan | हिंदी व्याकरण पत्र",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": [],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Hindi writing-skills content, outside the literature-only course."
+    },
+    {
+      "position": 62,
+      "youtube_video_id": "bN8IAJM61-I",
+      "title": "How to Write Email Lekhan in Hindi | Email Lekhan in Hindi Class 9 | Email Lekhan in Hindi Class 10",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": [],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Hindi writing-skills content, outside the literature-only course."
+    },
+    {
+      "position": 63,
+      "youtube_video_id": "unrxWUZko1I",
+      "title": "Vigyapan Lekhan | Vigyapan Lekhan in Hindi Class 10 | How to Write Vigyapan Lekhan | विज्ञापन लेखन",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": [],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Hindi writing-skills content, outside the literature-only course."
+    },
+    {
+      "position": 65,
+      "youtube_video_id": "xgsxSD8XAoo",
+      "title": "Sandesh Lekhan Class 10 | Sandesh Lekhan Format | Class 10 Hindi Sandesh Lekhan |संदेश लेखन कक्षा 10",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": [],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Hindi writing-skills content, outside the literature-only course."
+    },
+    {
+      "position": 66,
+      "youtube_video_id": "Jns59Hyvyjk",
+      "title": "Class 10 Hindi Netaji Ka Chashma | Netaji Ka Chashma Class 10 Animation | नेताजी का चश्मा Class 10",
+      "chapter": null,
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "नेताजी का चश्मा"
+      ],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Duplicate summary/animation; retained the fuller chapter explanation."
+    },
+    {
+      "position": 67,
+      "youtube_video_id": "uT99t6Sv1rk",
+      "title": "बहुत बड़ा बदलाव | Hindi Syllabus Class 10 CBSE 2025-26 | CBSE Syllabus 2025-26 Class 10",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": [],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Non-chapter syllabus, strategy, tips, or overview content."
+    },
+    {
+      "position": 68,
+      "youtube_video_id": "O9RnA2fh-lo",
+      "title": "How to Study for Exams Hindi Subject | Strategy For Hindi Class 10 | Tips for Hindi Exam Class 12",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": [],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Non-chapter syllabus, strategy, tips, or overview content."
+    },
+    {
+      "position": 69,
+      "youtube_video_id": "ixi-nUm4UGk",
+      "title": "Big Changes 🔥 Syllabus Of Class 10 CBSE 2022-23 Hindi | Hindi Reduced Syllabus Class 10 CBSE 2022-23",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": [],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Non-chapter syllabus, strategy, tips, or overview content."
+    },
+    {
+      "position": 70,
+      "youtube_video_id": "pb6nupovoEY",
+      "title": "MCQ Tricks Class 10 | Class 12 MCQ Hindi | MCQ Tricks",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": [],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Supplementary MCQ-only video; keep one literature explanation per chapter."
+    },
+    {
+      "position": 71,
+      "youtube_video_id": "CwrR-uXWOuQ",
+      "title": "Sample Paper Class 10 2023 CBSE Hindi | Class 10th Sample Paper 2023 CBSE Hindi",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": [],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Supplementary PYQ/question-paper content, not a chapter explanation."
+    },
+    {
+      "position": 73,
+      "youtube_video_id": "8uDu1EUFTPM",
+      "title": "Plzzz ये गलती मत करना | Class 10 CBSE 2022-23 कौन सा लिखें Email Lekhan vs Swavrit Lekhan",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": [],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Hindi writing-skills content, outside the literature-only course."
+    },
+    {
+      "position": 75,
+      "youtube_video_id": "K550nktEZJQ",
+      "title": "बाहुबली Tips for Board Exam | Board Exam Tips | Board Exam Tips Class 10 and 12 2023",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": [],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Non-chapter syllabus, strategy, tips, or overview content."
+    },
+    {
+      "position": 76,
+      "youtube_video_id": "Fo_gMdmM_0Y",
+      "title": "इस बार होगी मुश्किल | Board Exam me Hindi ka Paper Kaise Likhe Class 10 | How to Do Hindi Board Exam",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": [],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Non-chapter syllabus, strategy, tips, or overview content."
+    },
+    {
+      "position": 77,
+      "youtube_video_id": "t4r5ahrg4iY",
+      "title": "Hindi Class 10 Important Questions CBSE | Most Important Question Hindi Class 10 2023",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": [],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Supplementary PYQ/question-paper content, not a chapter explanation."
+    },
+    {
+      "position": 78,
+      "youtube_video_id": "-CK1FomDZGY",
+      "title": "ये नहीं पता तो क्या पता | Important Things for Class 10 CBSE",
+      "chapter": null,
+      "confidence": 0.33,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": [
+        "अट नहीं रही है"
+      ],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Non-chapter syllabus, strategy, tips, or overview content."
+    },
+    {
+      "position": 79,
+      "youtube_video_id": "bSrKgDYy-bs",
+      "title": "Class 10 Hindi Grammar Practice Questions | Hindi Grammar Class 10 CBSE 2022-23 Practice",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": [],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Hindi grammar content, outside the literature-only course."
+    },
+    {
+      "position": 80,
+      "youtube_video_id": "LCWZkNl4WFg",
+      "title": "CBSE Class 10 Hindi Grammar Practice Questions | Hindi Grammar Class 10 CBSE Sample Questions",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": [],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Hindi grammar content, outside the literature-only course."
+    },
+    {
+      "position": 85,
+      "youtube_video_id": "WUt-AVcFHzw",
+      "title": "क्या भसड़ आ गई | Class 9th & 10th CBSE Hindi Syllabus 2024-25 | Hindi Syllabus Class 9th 10th CBSE",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": [],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Non-chapter syllabus, strategy, tips, or overview content."
+    },
+    {
+      "position": 86,
+      "youtube_video_id": "fOCSCKu7hu4",
+      "title": "How to Do Time Management During Exam | How to Do Hindi Exam | Time Management for Class 10 Student",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": [],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Non-chapter syllabus, strategy, tips, or overview content."
+    },
+    {
+      "position": 87,
+      "youtube_video_id": "-7war963jLQ",
+      "title": "One Shot Hindi Class 10 CBSE | Class 10 Hindi One Shot All Chapters | Full Book One Shot Hindi 10th",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": [],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Non-chapter syllabus, strategy, tips, or overview content."
+    },
+    {
+      "position": 88,
+      "youtube_video_id": "lT2_lXn3fV0",
+      "title": "वाच्य | Vachya | पिछले सालों में पूछे गए प्रश्न (Part-1) | Last Year's Question of Vachya | CBSE",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": [],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Hindi grammar content, outside the literature-only course."
+    },
+    {
+      "position": 89,
+      "youtube_video_id": "mMrNf5DDjmw",
+      "title": "वाच्य | Vachya | पिछले सालों में पूछे गए प्रश्न (Part-2) | Last Year's Question of Vachya | CBSE",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": [],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Hindi grammar content, outside the literature-only course."
+    },
+    {
+      "position": 90,
+      "youtube_video_id": "XbFe8UJ2CpA",
+      "title": "वाक्य | Vakya | पिछले सालों में पूछे गए प्रश्न | Last Year's Question of Vakya | CBSE",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": [],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Hindi grammar content, outside the literature-only course."
+    },
+    {
+      "position": 91,
+      "youtube_video_id": "Nd9vSt278aI",
+      "title": "Class 10 Hindi - Half Yearly Exam 🎯 | Poora Syllabus Ek Shot Mein 🔥 | Marathon Class 🚀",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": [],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Non-chapter syllabus, strategy, tips, or overview content."
+    },
+    {
+      "position": 92,
+      "youtube_video_id": "rrwd4PVxlfs",
+      "title": "Mata ka Anchal Summary | Class 10 Mata ka Anchal Summary | माता का आँचल Class 10 Summary",
+      "chapter": null,
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "माता का आँचल"
+      ],
+      "retained": false,
+      "excluded": true,
+      "exclusion_reason": "Duplicate summary/animation; retained the fuller chapter explanation."
+    }
+  ]
+}

@@ -1,10 +1,10 @@
 // =====================================================================
 //  buildSitemap.js — generate public/sitemap.xml at build time.
 //
-//  The app is a client-rendered SPA, so search engines cannot discover
-//  course pages by crawling (there are no <a href> links to follow). A
-//  sitemap gives Google the full URL list directly: the static routes plus
-//  one entry per course (/course/:id).
+//  The app is a client-rendered SPA. Navigation now uses real <a href>
+//  links crawlers can follow; this sitemap complements them by giving
+//  Google the full URL list directly: the static routes plus one entry
+//  per course (/course/:id).
 //
 //  Runs as a prebuild step (see package.json). It is FAIL-SOFT by design:
 //  a sitemap must NEVER break a production deploy, so any failure falls back
@@ -21,8 +21,10 @@ import { dirname, resolve } from "node:path";
 
 const BASE = "https://www.jeeneetard.com";
 // Public, indexable routes. Admin/search-query URLs are intentionally excluded
-// (robots.txt disallows /admin; /search is a tool, not content, but harmless).
-const STATIC_ROUTES = ["/", "/browse", "/search", "/terms", "/privacy"];
+// (robots.txt disallows /admin). /search is deliberately absent: the page is
+// noindex (a tool, not content) and a sitemap must not advertise noindexed
+// URLs — crawlers reach it through the header/footer links instead.
+const STATIC_ROUTES = ["/", "/browse", "/terms", "/privacy"];
 
 const here = dirname(fileURLToPath(import.meta.url));
 const OUT = resolve(here, "../../public/sitemap.xml");

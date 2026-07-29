@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "request_id": "52089374-53e6-4d0f-a076-bedc6fd3910c",
+  "youtube_playlist_id": "PLo9JtLytZaK1wxHXpkXanN_XNxhXg-aoV",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "bcdcd82a-52dd-4f3a-b7da-75a1b637293e",
+    "youtube_playlist_id": "PLo9JtLytZaK1wxHXpkXanN_XNxhXg-aoV",
+    "teacher": "Shobhit Nirwan",
+    "source_url": "https://www.youtube.com/@ShobhitNirwan17",
+    "source_label": "Shobhit Nirwan official YouTube channel publishing the reviewed Class 10 Science playlist",
+    "reviewed_by": "Owner/Claude",
+    "reviewed_on": "2026-07-28",
+    "youtube_video_ids": [
+      "oge4qITWRr8",
+      "JVv4rem9TRk",
+      "vpiQGcD_3Eo",
+      "MzRBHMT7-es",
+      "jcHI9lK_tQg",
+      "uuVIydxIjb8",
+      "hJj4D6BZ49Y",
+      "wwwE27Kk6gA",
+      "h3ZpsBcCpAU"
+    ]
+  },
+  "assignments": [
+    {
+      "position": 3,
+      "youtube_video_id": "oge4qITWRr8",
+      "chapter": "Chemical Reactions and Equations"
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "JVv4rem9TRk",
+      "chapter": "Acids, Bases and Salts"
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "vpiQGcD_3Eo",
+      "chapter": "Magnetic Effects of Electric Current"
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "MzRBHMT7-es",
+      "chapter": "Metals and Non-metals"
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "jcHI9lK_tQg",
+      "chapter": "The Human Eye and the Colourful World"
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "uuVIydxIjb8",
+      "chapter": "Carbon and its Compounds"
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "hJj4D6BZ49Y",
+      "chapter": "How do Organisms Reproduce?"
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "wwwE27Kk6gA",
+      "chapter": "Light: Reflection and Refraction"
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "h3ZpsBcCpAU",
+      "chapter": "Electricity"
+    }
+  ],
+  "exclusions": [
+    {
+      "position": 1,
+      "youtube_video_id": "W6qKiMwqBYs",
+      "reason": "Non-chapter Bahubali strategy introduction"
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "RpJZz91y5_A",
+      "reason": "Periodic Classification of Elements is outside the reviewed rationalized syllabus"
+    }
+  ]
+}

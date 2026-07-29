@@ -1,0 +1,86 @@
+{
+  "subject": "Social Science",
+  "summary": {
+    "total": 6,
+    "auto": 4,
+    "review": 1,
+    "unmatched": 1
+  },
+  "rows": [
+    {
+      "position": 1,
+      "youtube_video_id": "VdB4nZMqE2U",
+      "title": "Nationalism in India | Social Science One Shot Revision | Term 2 | Quick Revision",
+      "chapter": "Nationalism in India",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Nationalism in India",
+        "The Rise of Nationalism in Europe"
+      ]
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "BfRp7gUFUjA",
+      "title": "Globalisation and Indian Economy | Social Science One Shot Revision | Term 2 | Quick Revision",
+      "chapter": "Globalisation and the Indian Economy",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Globalisation and the Indian Economy",
+        "Sectors of the Indian Economy",
+        "Lifelines of National Economy"
+      ]
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "UXmqrZ5QY-I",
+      "title": "Political Parties | Social Science One Shot Revision | Term 2 | Quick Revision",
+      "chapter": "Political Parties",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Political Parties"
+      ]
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "RpLYj3BChXM",
+      "title": "Lifeline of National Economy | Social Science One Shot Revision | Term 2 | Quick Revision",
+      "chapter": "Lifelines of National Economy",
+      "confidence": 0.67,
+      "review": true,
+      "reason": "medium confidence",
+      "alternatives": [
+        "Lifelines of National Economy",
+        "Globalisation and the Indian Economy",
+        "Sectors of the Indian Economy"
+      ]
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "erpDYZbWBL0",
+      "title": "One Shot revision Manufacturing Industries",
+      "chapter": "Manufacturing Industries",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Manufacturing Industries"
+      ]
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "_8fhRr5kJxM",
+      "title": "One Shot Map Work | Social Science One Shot Revision | Term 2 | Quick Revision",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": []
+    }
+  ]
+}

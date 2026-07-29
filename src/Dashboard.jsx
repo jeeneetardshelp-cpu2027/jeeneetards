@@ -191,7 +191,15 @@ function VideoModal({ video, onClose }) {
 function SearchBar({ value, onChange, ariaLabel = "Search courses and lessons" }) {
   const { t } = useTheme();
   return (
-    <div className="relative w-full">
+    <form
+      role="search"
+      className="relative w-full"
+      // The list filters live as you type; Enter/Go just closes the keyboard.
+      onSubmit={(e) => {
+        e.preventDefault();
+        e.currentTarget.querySelector("input")?.blur();
+      }}
+    >
       <Search className={`pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 ${t.muted}`} />
       <input
         type="text"
@@ -203,6 +211,7 @@ function SearchBar({ value, onChange, ariaLabel = "Search courses and lessons" }
       />
       {value && (
         <button
+          type="button"
           onClick={() => onChange("")}
           aria-label="Clear search"
           className={`absolute right-0 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded ${t.muted} ${t.hover}`}
@@ -210,7 +219,7 @@ function SearchBar({ value, onChange, ariaLabel = "Search courses and lessons" }
           <X className="h-4 w-4" />
         </button>
       )}
-    </div>
+    </form>
   );
 }
 

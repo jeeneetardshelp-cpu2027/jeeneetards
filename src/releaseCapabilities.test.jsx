@@ -81,7 +81,7 @@ describe("unavailable feature page", () => {
     );
 
     expect(screen.getByRole("heading", { name: "Course comparison is coming soon" })).toBeTruthy();
-    fireEvent.click(screen.getByRole("button", { name: "Browse available courses" }));
+    fireEvent.click(screen.getByRole("link", { name: "Browse available courses" }));
     expect(screen.getByTestId("location").textContent).toBe("/browse");
   });
 });

@@ -40,6 +40,21 @@ describe("public page metadata", () => {
     expect(metadataForLocation("/compare").robots).toBe("noindex, follow");
   });
 
+  it("treats the legacy /chapter redirect as supported, not as a 404", () => {
+    const page = metadataForLocation("/chapter/123");
+    expect(page.robots).toBe("noindex, follow");
+    expect(page.title).not.toContain("not found");
+  });
+
+  it("keeps unknown URLs out of the index instead of claiming the homepage", () => {
+    const page = metadataForLocation("/no-such-page");
+    expect(page.title).toBe("Page not found | JEENEETARD");
+    expect(page.robots).toBe("noindex, nofollow");
+    // Self-referential, NOT "/" — a bad URL claiming the homepage as its
+    // canonical is exactly the soft-404 signal this exists to remove.
+    expect(page.canonicalPath).toBe("/no-such-page");
+  });
+
   it("publishes route-specific metadata for enabled faculty profiles", () => {
     const page = metadataForLocation("/faculty/amit-bijarnia");
     expect(page.title).toBe(

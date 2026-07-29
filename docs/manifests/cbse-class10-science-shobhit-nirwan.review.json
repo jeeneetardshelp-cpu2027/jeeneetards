@@ -1,0 +1,144 @@
+{
+  "subject": "Science",
+  "summary": {
+    "total": 9,
+    "auto": 9,
+    "review": 0,
+    "unmatched": 0,
+    "excluded": 2
+  },
+  "rows": [
+    {
+      "position": 1,
+      "youtube_video_id": "W6qKiMwqBYs",
+      "title": "Class 10 Science Bahubali Strategy !! | How to Score 98% in Class 10 Science Boards 2021",
+      "chapter": null,
+      "excluded": true,
+      "exclusion_reason": "Non-chapter Bahubali strategy introduction",
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": []
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "RpJZz91y5_A",
+      "title": "Periodic Classification of Elements Notes with PYQs for Boards Class 10",
+      "chapter": null,
+      "excluded": true,
+      "exclusion_reason": "Periodic Classification of Elements is outside the reviewed rationalized syllabus",
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": []
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "oge4qITWRr8",
+      "title": "Chemical Reactions and Equations Notes with PYQs | CBSE Class 10",
+      "chapter": "Chemical Reactions and Equations",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Chemical Reactions and Equations"
+      ]
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "JVv4rem9TRk",
+      "title": "Acids Bases and Salts Notes with PYQs for Boards Class 10",
+      "chapter": "Acids, Bases and Salts",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Acids, Bases and Salts"
+      ]
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "vpiQGcD_3Eo",
+      "title": "Class 10 Magnetic Effects of Electric Current Notes with PYQs",
+      "chapter": "Magnetic Effects of Electric Current",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Magnetic Effects of Electric Current"
+      ]
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "MzRBHMT7-es",
+      "title": "Metals and Non-Metals Notes for Class 10 Board Exam with PYQs",
+      "chapter": "Metals and Non-metals",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Metals and Non-metals"
+      ]
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "jcHI9lK_tQg",
+      "title": "Human Eye and Colourful World Notes for Class 10 Board Exam with PYQs",
+      "chapter": "The Human Eye and the Colourful World",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "The Human Eye and the Colourful World"
+      ]
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "uuVIydxIjb8",
+      "title": "Carbon and Its Compounds Notes for Class 10 Board Exam with PYQs",
+      "chapter": "Carbon and its Compounds",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Carbon and its Compounds"
+      ]
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "hJj4D6BZ49Y",
+      "title": "How do Organisms Reproduce Notes for Class 10 Board Exam with PYQs",
+      "chapter": "How do Organisms Reproduce?",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "How do Organisms Reproduce?"
+      ]
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "wwwE27Kk6gA",
+      "title": "Light : Reflection and Refraction Notes for Class 10 Board Exam with PYQs",
+      "chapter": "Light: Reflection and Refraction",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Light: Reflection and Refraction"
+      ]
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "h3ZpsBcCpAU",
+      "title": "Electricity Notes for Class 10 Board Exam",
+      "chapter": "Electricity",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Electricity"
+      ]
+    }
+  ]
+}

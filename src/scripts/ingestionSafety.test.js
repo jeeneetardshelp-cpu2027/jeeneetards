@@ -279,6 +279,7 @@ describe("channel ingestion metadata", () => {
         { ...videos[0], chapterName: "Functions" },
         { ...videos[1], chapterName: "Inverse Trigonometric Functions" },
       ],
+      excludedVideos: [],
       chapterNames: ["Functions", "Inverse Trigonometric Functions"],
       requestId: "018f7e3b-39b0-4f3e-8ee4-7a8d4d5a6b7c",
     });
@@ -313,7 +314,7 @@ describe("channel ingestion metadata", () => {
       manifest: { ...manifest, assignments: manifest.assignments.slice(0, 1) },
       playlistId: "PL_real",
       videos,
-    })).toThrow(/map all 2 source videos/i);
+    })).toThrow(/map or exclude all 2 source videos/i);
     expect(() => validateChapterManifest({
       manifest: {
         ...manifest,
@@ -322,6 +323,89 @@ describe("channel ingestion metadata", () => {
       playlistId: "PL_real",
       videos,
     })).toThrow(/at least two chapters/i);
+  });
+
+  it("supports reviewed exclusions while binding every source position", () => {
+    const videos = [
+      { videoId: "vid_a", sourcePosition: 0 },
+      { videoId: "vid_live", sourcePosition: 1 },
+      { videoId: "vid_b", sourcePosition: 2 },
+      { videoId: "vid_marathon", sourcePosition: 3 },
+    ];
+    const manifest = {
+      version: 1,
+      request_id: "c8cf544a-bd1f-4a2c-9a7e-d8490185a86c",
+      youtube_playlist_id: "PL_real",
+      assignments: [
+        { position: 1, youtube_video_id: "vid_a", chapter: "Chapter A" },
+        { position: 3, youtube_video_id: "vid_b", chapter: "Chapter B" },
+      ],
+      exclusions: [
+        {
+          position: 2,
+          youtube_video_id: "vid_live",
+          reason: "Duplicate live session",
+        },
+        {
+          position: 4,
+          youtube_video_id: "vid_marathon",
+          reason: "Full-syllabus marathon",
+        },
+      ],
+    };
+
+    const result = validateChapterManifest({
+      manifest,
+      playlistId: "PL_real",
+      teacher: "Teacher",
+      videos,
+    });
+
+    expect(result.videos.map(({ videoId }) => videoId)).toEqual(["vid_a", "vid_b"]);
+    expect(result.excludedVideos).toEqual([
+      expect.objectContaining({
+        videoId: "vid_live",
+        exclusionReason: "Duplicate live session",
+      }),
+      expect.objectContaining({
+        videoId: "vid_marathon",
+        exclusionReason: "Full-syllabus marathon",
+      }),
+    ]);
+  });
+
+  it("fails closed when an exclusion is unreasoned or leaves a source undecided", () => {
+    const videos = [
+      { videoId: "vid_a", sourcePosition: 0 },
+      { videoId: "vid_b", sourcePosition: 1 },
+      { videoId: "vid_c", sourcePosition: 2 },
+    ];
+    const base = {
+      version: 1,
+      request_id: "c8cf544a-bd1f-4a2c-9a7e-d8490185a86c",
+      youtube_playlist_id: "PL_real",
+      assignments: [
+        { position: 1, youtube_video_id: "vid_a", chapter: "Chapter A" },
+        { position: 3, youtube_video_id: "vid_c", chapter: "Chapter B" },
+      ],
+    };
+
+    expect(() => validateChapterManifest({
+      manifest: {
+        ...base,
+        exclusions: [{ position: 2, youtube_video_id: "vid_b", reason: "" }],
+      },
+      playlistId: "PL_real",
+      teacher: "Teacher",
+      videos,
+    })).toThrow(/requires a reason/i);
+
+    expect(() => validateChapterManifest({
+      manifest: { ...base, exclusions: [] },
+      playlistId: "PL_real",
+      teacher: "Teacher",
+      videos,
+    })).toThrow(/map or exclude all 3 source videos/i);
   });
 
   it("uses YouTube source positions and requires complete embeddable details", () => {

@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "request_id": "88ee4b6e-37f1-4119-afb4-9ac971020b97",
+  "youtube_playlist_id": "PLgWXZcKGZpCoCrm_FxsGUAUxUvPf85_rC",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "9c9e2d18-6e03-4e50-93d2-3d1c456033b1",
+    "youtube_playlist_id": "PLgWXZcKGZpCoCrm_FxsGUAUxUvPf85_rC",
+    "teacher": "NEEV Competishun",
+    "source_url": "https://www.youtube.com/@NEEVCompetishun",
+    "source_label": "Owner-reviewed official NEEV Competishun YouTube channel",
+    "reviewed_by": "Owner/Claude",
+    "reviewed_on": "2026-07-29",
+    "youtube_video_ids": [
+      "VdB4nZMqE2U",
+      "BfRp7gUFUjA",
+      "UXmqrZ5QY-I",
+      "RpLYj3BChXM",
+      "erpDYZbWBL0"
+    ]
+  },
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "VdB4nZMqE2U",
+      "chapter": "Nationalism in India"
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "BfRp7gUFUjA",
+      "chapter": "Globalisation and the Indian Economy"
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "UXmqrZ5QY-I",
+      "chapter": "Political Parties"
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "RpLYj3BChXM",
+      "chapter": "Lifelines of National Economy"
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "erpDYZbWBL0",
+      "chapter": "Manufacturing Industries"
+    }
+  ],
+  "exclusions": [
+    {
+      "position": 6,
+      "youtube_video_id": "_8fhRr5kJxM",
+      "reason": "Non-chapter map-work revision video"
+    }
+  ]
+}
