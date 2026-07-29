@@ -123,6 +123,17 @@ export function proposeChapter(title, chapters = []) {
   };
 }
 
+/** Auto / review / unmatched counts. Exported so a later pass (the LLM one)
+ *  can recompute them after changing rows. */
+export function summariseRows(rows = []) {
+  return {
+    total: rows.length,
+    auto: rows.filter((r) => !r.review).length,
+    review: rows.filter((r) => r.review && r.chapter).length,
+    unmatched: rows.filter((r) => !r.chapter).length,
+  };
+}
+
 /**
  * Draft assignments for a whole playlist.
  * @param videos [{ videoId, title, position }]
@@ -147,11 +158,5 @@ export function draftAssignments(videos = [], chapters = []) {
       };
     });
 
-  const summary = {
-    total: rows.length,
-    auto: rows.filter((r) => !r.review).length,
-    review: rows.filter((r) => r.review && r.chapter).length,
-    unmatched: rows.filter((r) => !r.chapter).length,
-  };
-  return { rows, summary };
+  return { rows, summary: summariseRows(rows) };
 }

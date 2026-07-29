@@ -18,8 +18,10 @@ import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
 import { randomUUID } from "node:crypto";
+import Anthropic from "@anthropic-ai/sdk";
 import { getPlaylistVideos } from "./youtubeNode.js";
-import { draftAssignments } from "./classify/mapChapters.js";
+import { draftAssignments, summariseRows } from "./classify/mapChapters.js";
+import { proposeWithLLM, rowsNeedingLLM } from "./classify/mapChaptersLLM.js";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const C = { dim: "\x1b[2m", red: "\x1b[31m", yellow: "\x1b[33m", green: "\x1b[32m", reset: "\x1b[0m" };
@@ -43,6 +45,7 @@ export function parseArgs(argv) {
     else if (argv[i] === "--subject") a.subject = argv[++i];
     else if (argv[i] === "--out") a.out = argv[++i];
     else if (argv[i] === "--overwrite") a.overwrite = true;
+    else if (argv[i] === "--llm") a.llm = true;
   }
   return a;
 }
@@ -129,7 +132,37 @@ export async function main() {
     title: v.title,
     position: (Number.isInteger(v.sourcePosition) ? v.sourcePosition : v.position ?? i) + 1,
   }));
-  const { rows, summary } = draftAssignments(mapped, chapterNames);
+  let { rows, summary } = draftAssignments(mapped, chapterNames);
+
+  // --- optional LLM pass over the flagged rows (Phase 2b) -----------
+  // The rules pass handles the easy majority for free; --llm asks Claude to
+  // resolve only what it flagged. Failures here are non-fatal: the rows simply
+  // stay flagged for the human review step that already exists.
+  if (args.llm) {
+    const pending = rowsNeedingLLM(rows).length;
+    if (!pending) {
+      console.log(`${C.dim}--llm: nothing flagged, skipping the model call.${C.reset}`);
+    } else {
+      console.log(`${C.dim}--llm: asking Claude to resolve ${pending} flagged row(s)…${C.reset}`);
+      try {
+        const client = new Anthropic(); // reads ANTHROPIC_API_KEY / ant profile
+        const out = await proposeWithLLM(client, rows, chapterNames);
+        if (out.refused) {
+          console.log(`${C.yellow}--llm: model declined; keeping rules-only result.${C.reset}`);
+        } else if (out.parseError) {
+          console.log(`${C.yellow}--llm: unparseable response; keeping rules-only result.${C.reset}`);
+        } else {
+          rows = out.rows;
+          summary = summariseRows(rows);
+          if (out.usage) {
+            console.log(`${C.dim}--llm: ${out.usage.input_tokens} in / ${out.usage.output_tokens} out tokens.${C.reset}`);
+          }
+        }
+      } catch (e) {
+        console.log(`${C.yellow}--llm: ${e.message}; keeping rules-only result.${C.reset}`);
+      }
+    }
+  }
 
   // --- review table -------------------------------------------------
   console.log(`\n${subject.name} · ${chapterNames.length} chapters · ${videos.length} videos\n`);
