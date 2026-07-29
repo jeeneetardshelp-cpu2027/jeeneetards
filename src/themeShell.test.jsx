@@ -28,7 +28,7 @@ describe("shared shell accessibility and theme", () => {
   it("names the icon-only mobile brand and does not make inert crumbs focusable", () => {
     renderHeader();
 
-    expect(screen.getByRole("button", { name: "JEENEETARD home" })).toBeTruthy();
+    expect(screen.getByRole("link", { name: "JEENEETARD home" })).toBeTruthy();
     expect(screen.queryByRole("button", { name: "Complete Kinematics" })).toBeNull();
     expect(screen.queryByRole("button", { name: "Relative motion" })).toBeNull();
     expect(screen.getByText("Relative motion").getAttribute("aria-current")).toBe("page");

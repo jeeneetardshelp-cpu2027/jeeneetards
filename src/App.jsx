@@ -16,7 +16,7 @@
 import { lazy, Suspense, useEffect } from "react";
 import {
   Routes, Route, Outlet, Navigate,
-  useNavigate, useParams, useLocation, useNavigationType,
+  useParams, useLocation, useNavigationType,
 } from "react-router";
 
 import { ThemeProvider, useTheme } from "./theme.jsx";
@@ -37,22 +37,6 @@ const SearchPage = lazy(() => import("./SearchPage.jsx"));
 const Dashboard = lazy(() => import("./Dashboard.jsx"));
 const AdminPanel = lazy(() => import("./AdminPanel.jsx"));
 const CourseVideoPage = lazy(() => import("./CourseVideoPage.jsx"));
-
-// ---------------------------------------------------------------------
-//  Footer bridge
-//  Footer.jsx speaks in page names — onNavigate("dashboard") — because it
-//  predates the router. We translate those names into real urls here, so
-//  Footer.jsx itself needs no changes.
-// ---------------------------------------------------------------------
-function SiteFooter() {
-  const navigate = useNavigate();
-  const go = (page) => {
-    if (page === "legal") navigate("/terms");
-    else if (page === "privacy") navigate("/privacy");
-    else navigate("/");
-  };
-  return <Footer onNavigate={go} />;
-}
 
 function RouteFallback() {
   const { t } = useTheme();
@@ -171,7 +155,7 @@ function Layout() {
           <Outlet />
         </Suspense>
       </div>
-      <SiteFooter />
+      <Footer />
     </div>
   );
 }

@@ -26,7 +26,7 @@
 // =====================================================================
 
 import { useState } from "react";
-import { useNavigate, useParams, Navigate } from "react-router";
+import { Link, useParams, Navigate } from "react-router";
 import { BookOpen, PlayCircle } from "lucide-react";
 import {
   useLearningGoals, useClassLevels, useGoalCatalog, useBoards,
@@ -54,7 +54,6 @@ export function scopedChapterUrl(chapter, context) {
 }
 
 export default function Explore() {
-  const navigate = useNavigate();
   const { t } = useTheme();
   const { goal, s1, s2, s3, s4 } = useParams();
 
@@ -138,7 +137,6 @@ export default function Explore() {
             scoped={scoped}
             scopeLabel={scopeLabel}
             query={debouncedSearch.trim()}
-            navigate={navigate}
             context={{
               goal: goalNode?.slug,
               cls: classNode?.slug,
@@ -161,7 +159,7 @@ export default function Explore() {
               hint: g.slug === "school" && boardsUnavailable ? "Coming soon"
                     : g.count > 0 ? countHint(g) : "Coming soon",
               disabled: g.count === 0 || (g.slug === "school" && boardsUnavailable),
-              onClick: () => navigate(path(g.slug)),
+              to: path(g.slug),
             }))}
           />
         ) : isSchool && boardsUnavailable ? (
@@ -182,7 +180,7 @@ export default function Explore() {
               label: b.name,
               hint: b.courseCount > 0 ? `${b.courseCount} courses` : "Coming soon",
               disabled: b.courseCount === 0,
-              onClick: () => navigate(path(goal, b.slug)),
+              to: path(goal, b.slug),
             }))}
           />
         ) : !classNode ? (
@@ -197,7 +195,7 @@ export default function Explore() {
               .map((c) => ({
                 key: c.id,
                 label: c.name,
-                onClick: () => navigate(p(c.slug)),
+                to: p(c.slug),
               }))}
           />
         ) : !subjectNode ? (
@@ -209,13 +207,13 @@ export default function Explore() {
             emptyMessage={`No ${classNode.name} courses are available yet.`}
             emptyAction={{
               label: "Choose another stage",
-              onClick: () => navigate(p()),
+              to: p(),
             }}
             options={subjects.map((s) => ({
               key: s.id,
               label: s.name,
               hint: countHint(s),
-              onClick: () => navigate(p(cls, s.slug)),
+              to: p(cls, s.slug),
             }))}
           />
         ) : !chapterNode ? (
@@ -228,7 +226,7 @@ export default function Explore() {
               key: ch.id,
               label: ch.name,
               hint: countHint(ch),
-              onClick: () => navigate(p(cls, subject, ch.slug)),
+              to: p(cls, subject, ch.slug),
             }))}
           />
         ) : (
@@ -257,7 +255,7 @@ export default function Explore() {
 //  Context search results — chapters + lectures within the current scope,
 //  with an escape hatch to search the whole library.
 // ---------------------------------------------------------------------
-function ScopedResults({ scoped, scopeLabel, query, navigate, context }) {
+function ScopedResults({ scoped, scopeLabel, query, context }) {
   const { results, loading, total } = scoped;
   const { t } = useTheme();
 
@@ -268,13 +266,13 @@ function ScopedResults({ scoped, scopeLabel, query, navigate, context }) {
           {loading ? "Searching…" : `${total} result${total === 1 ? "" : "s"}`} in{" "}
           <span className={`font-semibold ${t.text}`}>{scopeLabel}</span>
         </h1>
-        <button
-          onClick={() => navigate(`/?q=${encodeURIComponent(query)}`)}
-          className="min-h-11 px-2 text-xs font-medium"
+        <Link
+          to={`/?q=${encodeURIComponent(query)}`}
+          className="inline-flex min-h-11 items-center px-2 text-xs font-medium"
           style={{ color: BRAND.teal }}
         >
           Search the entire library →
-        </button>
+        </Link>
       </div>
 
       {!loading && total === 0 && (
@@ -292,7 +290,7 @@ function ScopedResults({ scoped, scopeLabel, query, navigate, context }) {
               subtitle={c.subject}
               // Scoped search already knows the goal and subject the student
               // is inside, so emit the full canonical URL, not a bare ?ch=.
-              onClick={() => navigate(scopedChapterUrl(c, context))}
+              to={scopedChapterUrl(c, context)}
             />
           ))}
         </ResultGroup>
@@ -305,15 +303,13 @@ function ScopedResults({ scoped, scopeLabel, query, navigate, context }) {
               key={`v-${v.id}`}
               title={v.title}
               subtitle="Lecture"
-              onClick={() =>
-                // Browse's top level is a learning goal now. A search row
-                // carries a category_id, not a goal, and inventing one would be
-                // a guess — so link by subject/chapter and leave the goal
-                // filter unset rather than pre-selecting the wrong branch.
-                navigate(
-                  `/browse?sub=${v.subjectId}` +
-                    (v.chapterId ? `&ch=${v.chapterId}` : "")
-                )
+              // Browse's top level is a learning goal now. A search row
+              // carries a category_id, not a goal, and inventing one would be
+              // a guess — so link by subject/chapter and leave the goal
+              // filter unset rather than pre-selecting the wrong branch.
+              to={
+                `/browse?sub=${v.subjectId}` +
+                (v.chapterId ? `&ch=${v.chapterId}` : "")
               }
             />
           ))}
@@ -338,19 +334,19 @@ function ResultGroup({ title, icon: Icon, children }) {
   );
 }
 
-function ResultRow({ title, subtitle, onClick }) {
+function ResultRow({ title, subtitle, to }) {
   const { t } = useTheme();
   return (
     <li>
-      <button
-        onClick={onClick}
+      <Link
+        to={to}
         className={`flex min-h-11 w-full items-center gap-3 px-4 py-3 text-left transition ${t.hover}`}
       >
         <span className="min-w-0 flex-1">
           <span className={`block truncate text-sm font-medium ${t.text}`}>{title}</span>
           {subtitle && <span className={`block truncate text-xs ${t.muted}`}>{subtitle}</span>}
         </span>
-      </button>
+      </Link>
     </li>
   );
 }
@@ -396,27 +392,39 @@ function Step({
         <div className={`mt-6 rounded-xl border border-dashed ${t.border} ${t.card} p-6`}>
           <p className={`text-sm font-medium ${t.text}`}>{emptyMessage}</p>
           {emptyAction && (
-            <button
-              onClick={emptyAction.onClick}
-              className={`mt-3 min-h-11 rounded-xl border ${t.border} px-4 text-sm font-medium ${t.hover}`}
+            <Link
+              to={emptyAction.to}
+              className={`mt-3 inline-flex min-h-11 items-center rounded-xl border ${t.border} px-4 text-sm font-medium ${t.hover}`}
             >
               {emptyAction.label}
-            </button>
+            </Link>
           )}
         </div>
       ) : (
         <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3">
-          {options.map((o) => (
-            <button
-              key={o.key}
-              onClick={o.onClick}
-              disabled={o.disabled}
-              className={`min-h-11 rounded-xl border ${t.border} ${t.card} ${t.cardHover} p-4 text-left transition disabled:cursor-not-allowed disabled:opacity-50`}
-            >
-              <span className={`block font-semibold ${t.text}`}>{o.label}</span>
-              {o.hint && <span className={`mt-0.5 block text-xs ${t.muted}`}>{o.hint}</span>}
-            </button>
-          ))}
+          {options.map((o) =>
+            // Anchors cannot be disabled, so a "Coming soon" option stays a
+            // real disabled <button>; only live options become crawlable links.
+            o.disabled ? (
+              <button
+                key={o.key}
+                disabled
+                className={`min-h-11 rounded-xl border ${t.border} ${t.card} ${t.cardHover} p-4 text-left transition disabled:cursor-not-allowed disabled:opacity-50`}
+              >
+                <span className={`block font-semibold ${t.text}`}>{o.label}</span>
+                {o.hint && <span className={`mt-0.5 block text-xs ${t.muted}`}>{o.hint}</span>}
+              </button>
+            ) : (
+              <Link
+                key={o.key}
+                to={o.to}
+                className={`block min-h-11 rounded-xl border ${t.border} ${t.card} ${t.cardHover} p-4 text-left transition disabled:cursor-not-allowed disabled:opacity-50`}
+              >
+                <span className={`block font-semibold ${t.text}`}>{o.label}</span>
+                {o.hint && <span className={`mt-0.5 block text-xs ${t.muted}`}>{o.hint}</span>}
+              </Link>
+            )
+          )}
         </div>
       )}
     </section>

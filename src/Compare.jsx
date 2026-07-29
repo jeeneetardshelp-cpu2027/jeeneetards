@@ -20,7 +20,7 @@
 //   * differences are highlighted; no winner is declared
 
 import { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router";
+import { Link, useNavigate, useSearchParams } from "react-router";
 import { ArrowLeft, AlertTriangle } from "lucide-react";
 import { supabase, isSupabaseConfigured } from "./supabaseClient";
 import { Page } from "./AppShell.jsx";
@@ -201,8 +201,7 @@ export default function Compare() {
   // history.back() preserves the query string AND the scroll position, which a
   // fresh navigate("/browse") would discard.
   const back = () => (window.history.length > 1 ? navigate(-1) : navigate("/browse"));
-  const chooseAnother = () =>
-    navigate(chapterId ? `/browse?ch=${chapterId}` : "/browse");
+  const chooseAnotherUrl = chapterId ? `/browse?ch=${chapterId}` : "/browse";
 
   const crumbs = [{ label: "Browse courses", to: "/browse" }, { label: "Compare" }];
 
@@ -224,12 +223,12 @@ export default function Compare() {
       <p className={`text-sm font-semibold ${t.text}`}>{title}</p>
       {detail && <p className={`mt-1 text-sm ${t.muted}`}>{detail}</p>}
       {action && (
-        <button
-          onClick={chooseAnother}
-          className={`mt-4 min-h-11 rounded-xl border ${t.border} px-4 text-sm font-medium ${t.hover}`}
+        <Link
+          to={chooseAnotherUrl}
+          className={`mt-4 inline-flex min-h-11 items-center rounded-xl border ${t.border} px-4 text-sm font-medium ${t.hover}`}
         >
           Choose another course
-        </button>
+        </Link>
       )}
     </div>
   );

@@ -140,7 +140,7 @@ describe("a stale id must never weaken validation", () => {
     EXISTING = [course(1)];
     CHAPTER_OF = { 1: [77] };
     renderAt("/compare?chapter=77&ids=1,999");
-    expect(await screen.findByRole("button", { name: /Choose another course/i })).toBeTruthy();
+    expect(await screen.findByRole("link", { name: /Choose another course/i })).toBeTruthy();
   });
 
   it("says the link is out of date when nothing resolves", async () => {

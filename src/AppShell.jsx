@@ -20,7 +20,7 @@
 // so a 2560px monitor shows a usable page instead of a strip.
 
 import { useState } from "react";
-import { useNavigate, useLocation } from "react-router";
+import { Link, useLocation } from "react-router";
 import {
   ChevronRight, Search, LogOut, Moon, Sun, X,
 } from "lucide-react";
@@ -48,7 +48,6 @@ export function Container({ width = "catalogue", className = "", children }) {
  *  search: optional node (context search, filter entry point)
  */
 export function GlobalHeader({ crumbs = [], search = null, leading = null, width = "catalogue" }) {
-  const navigate = useNavigate();
   const { pathname } = useLocation();
   const { dark, t, toggle } = useTheme();
   const { session } = useSession();
@@ -72,8 +71,8 @@ export function GlobalHeader({ crumbs = [], search = null, leading = null, width
       <Container width={width}>
         <div className="flex min-h-14 items-center gap-2 sm:gap-3">
           {leading}
-          <button
-            onClick={() => navigate("/")}
+          <Link
+            to="/"
             aria-label="JEENEETARD home"
             className="flex min-h-11 shrink-0 items-center gap-2.5 px-1"
           >
@@ -93,15 +92,15 @@ export function GlobalHeader({ crumbs = [], search = null, leading = null, width
             >
               JEENEETARD
             </span>
-          </button>
+          </Link>
 
           <nav aria-label="Primary navigation" className="ml-2 hidden items-center gap-1 sm:flex">
             {nav.map((n) => {
               const active = n.to === "/" ? pathname === "/" : pathname.startsWith(n.to);
               return (
-                <button
+                <Link
                   key={n.to}
-                  onClick={() => navigate(n.to)}
+                  to={n.to}
                   aria-current={active ? "page" : undefined}
                   className={`flex min-h-11 items-center rounded-lg px-2.5 text-sm transition sm:px-3 ${
                     active
@@ -110,7 +109,7 @@ export function GlobalHeader({ crumbs = [], search = null, leading = null, width
                   }`}
                 >
                   {n.label}
-                </button>
+                </Link>
               );
             })}
           </nav>
@@ -153,9 +152,9 @@ export function GlobalHeader({ crumbs = [], search = null, leading = null, width
           {nav.map((n) => {
             const active = n.to === "/" ? pathname === "/" : pathname.startsWith(n.to);
             return (
-              <button
+              <Link
                 key={n.to}
-                onClick={() => navigate(n.to)}
+                to={n.to}
                 aria-current={active ? "page" : undefined}
                 className={`flex min-h-11 min-w-0 items-center justify-center px-1 text-center text-xs transition ${
                   active
@@ -164,7 +163,7 @@ export function GlobalHeader({ crumbs = [], search = null, leading = null, width
                 }`}
               >
                 {n.label}
-              </button>
+              </Link>
             );
           })}
         </nav>
@@ -180,16 +179,23 @@ export function GlobalHeader({ crumbs = [], search = null, leading = null, width
             {crumbs.map((c, i) => (
               <span key={`${c.to ?? c.label}-${i}`} className="flex shrink-0 items-center gap-1">
                 {i > 0 && <ChevronRight className={`h-3.5 w-3.5 ${t.faint}`} />}
-                {c.to || c.onClick ? (
+                {c.onClick ? (
                   <button
                     // A crumb may carry an explicit handler instead of a URL:
                     // the course page returns to the exact filtered results it
                     // came from, which a hardcoded /browse would discard.
-                    onClick={() => (c.onClick ? c.onClick() : navigate(c.to))}
+                    onClick={() => c.onClick()}
                     className={`flex min-h-11 items-center px-1 ${t.muted} ${t.hover}`}
                   >
                     {c.label}
                   </button>
+                ) : c.to ? (
+                  <Link
+                    to={c.to}
+                    className={`flex min-h-11 items-center px-1 ${t.muted} ${t.hover}`}
+                  >
+                    {c.label}
+                  </Link>
                 ) : (
                   <span
                     aria-current={i === crumbs.length - 1 ? "page" : undefined}
