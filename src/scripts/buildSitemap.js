@@ -21,8 +21,10 @@ import { dirname, resolve } from "node:path";
 
 const BASE = "https://www.jeeneetard.com";
 // Public, indexable routes. Admin/search-query URLs are intentionally excluded
-// (robots.txt disallows /admin; /search is a tool, not content, but harmless).
-const STATIC_ROUTES = ["/", "/browse", "/search", "/terms", "/privacy"];
+// (robots.txt disallows /admin). /search is deliberately absent: the page is
+// noindex (a tool, not content) and a sitemap must not advertise noindexed
+// URLs — crawlers reach it through the header/footer links instead.
+const STATIC_ROUTES = ["/", "/browse", "/terms", "/privacy"];
 
 const here = dirname(fileURLToPath(import.meta.url));
 const OUT = resolve(here, "../../public/sitemap.xml");

@@ -7,6 +7,7 @@
 
 import { Link } from "react-router";
 import { GraduationCap } from "lucide-react";
+import { RELEASE_CAPABILITIES } from "./releaseCapabilities.js";
 
 const BRAND = { navy: "#142A4F" };
 const SUBTLE_WHITE = "rgba(255,255,255,0.10)";
@@ -44,6 +45,16 @@ export default function Footer() {
                   Home
                 </Link>
               </li>
+              {RELEASE_CAPABILITIES.universalSearch && (
+                <li>
+                  <Link
+                    to="/search"
+                    className="inline-flex min-h-11 min-w-11 items-center justify-center text-white/70 transition hover:text-white"
+                  >
+                    Search the library
+                  </Link>
+                </li>
+              )}
               <li>
                 <Link
                   to="/terms"

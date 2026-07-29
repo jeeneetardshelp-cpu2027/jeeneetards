@@ -144,7 +144,7 @@ async function probe(page) {
     const crumbs = [...document.querySelectorAll('header nav[aria-label="Breadcrumb"] a, header nav[aria-label="Breadcrumb"] button')].map((b) => b.textContent.trim());
     const nav = [...document.querySelectorAll("header nav a, header nav button")]
       .map((b) => ({ t: b.textContent.trim(), cur: b.getAttribute("aria-current") }))
-      .filter((x) => ["Home", "Find a course", "Browse courses"].includes(x.t));
+      .filter((x) => ["Home", "Find a course", "Browse courses", "Search"].includes(x.t));
     return {
       overflowPx: d.scrollWidth - window.innerWidth,
       overflowingEls: rects.length,

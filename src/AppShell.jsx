@@ -28,6 +28,7 @@ import { useTheme } from "./theme.jsx";
 import { BRAND_NAVY, BRAND_TEAL, BRAND_SERIF } from "./brandColors.js";
 import { useSession } from "./useSession.js";
 import { supabase } from "./supabaseClient.js";
+import { RELEASE_CAPABILITIES } from "./releaseCapabilities.js";
 
 const BRAND = { navy: BRAND_NAVY, teal: BRAND_TEAL };
 
@@ -57,6 +58,9 @@ export function GlobalHeader({ crumbs = [], search = null, leading = null, width
     { label: "Home", to: "/" },
     { label: "Find a course", to: "/explore" },
     { label: "Browse courses", to: "/browse" },
+    // The ranked, keyboard-friendly library search. Gated like its route: the
+    // header must never advertise a page the release cannot honestly serve.
+    ...(RELEASE_CAPABILITIES.universalSearch ? [{ label: "Search", to: "/search" }] : []),
   ];
   const signOut = async () => {
     setSigningOut(true);
@@ -148,7 +152,10 @@ export function GlobalHeader({ crumbs = [], search = null, leading = null, width
           </p>
         )}
 
-        <nav aria-label="Primary navigation" className={`grid grid-cols-3 border-t ${t.border} sm:hidden`}>
+        <nav
+          aria-label="Primary navigation"
+          className={`grid ${nav.length === 4 ? "grid-cols-4" : "grid-cols-3"} border-t ${t.border} sm:hidden`}
+        >
           {nav.map((n) => {
             const active = n.to === "/" ? pathname === "/" : pathname.startsWith(n.to);
             return (
