@@ -50,6 +50,10 @@ vi.mock("./progress.js", () => ({
   recordLessonView: phase.record,
   getContinueWatching: () => [],
   getRecentChapters: () => [],
+  getLessonPosition: () => 0,
+  getPlayerPrefs: () => ({ rate: null }),
+  recordLessonPosition: () => null,
+  savePlayerPrefs: () => {},
 }));
 
 vi.mock("./CourseRating.jsx", () => ({ default: () => null }));

@@ -49,17 +49,48 @@ function FallbackOverlay({ videoId, message }) {
   );
 }
 
-export default function YouTubePlayer({ videoId = "", title = "", onPlay = null }) {
+export default function YouTubePlayer({
+  videoId = "",
+  title = "",
+  onPlay = null,
+  onPlaying = null,
+  onEnded = null,
+  onProgress = null,
+  startSeconds = 0,
+  autoplay = false,
+  playbackRate = null,
+  onPlaybackRateChange = null,
+  playSignal = 0,
+}) {
   const hostRef = useRef(null);   // stable node that React controls
   const playerRef = useRef(null);
+  // All optional props are read through refs so the effect can keep its
+  // [videoId, title] dependency array — a parent re-render must never
+  // rebuild the iframe mid-watch.
   const onPlayRef = useRef(onPlay);
   onPlayRef.current = onPlay;
+  const onPlayingRef = useRef(onPlaying);
+  onPlayingRef.current = onPlaying;
+  const onEndedRef = useRef(onEnded);
+  onEndedRef.current = onEnded;
+  const onProgressRef = useRef(onProgress);
+  onProgressRef.current = onProgress;
+  const startSecondsRef = useRef(startSeconds);
+  startSecondsRef.current = startSeconds;
+  const autoplayRef = useRef(autoplay);
+  autoplayRef.current = autoplay;
+  const playbackRateRef = useRef(playbackRate);
+  playbackRateRef.current = playbackRate;
+  const onPlaybackRateChangeRef = useRef(onPlaybackRateChange);
+  onPlaybackRateChangeRef.current = onPlaybackRateChange;
   // status: "loading" | "ready" | "blocked" | "error"
   const [status, setStatus] = useState("loading");
 
   useEffect(() => {
     let cancelled = false;
     let playbackRecorded = false;
+    let endedRecorded = false;
+    let progressTimer = null;
     setStatus("loading");
 
     // Safety net: if the player never loads (adblocker, network), after 8s
@@ -67,6 +98,29 @@ export default function YouTubePlayer({ videoId = "", title = "", onPlay = null 
     const timer = setTimeout(() => {
       if (!cancelled) setStatus((s) => (s === "loading" ? "error" : s));
     }, 8000);
+
+    // Every report carries the videoId THIS player was built for. Reports can
+    // fire in the window between a lesson-change render and this effect's
+    // cleanup, so the consumer must be able to tell whose numbers these are.
+    // Defined at effect scope so the cleanup can flush one final position
+    // before the player is destroyed (a lesson switch or route change must
+    // not silently discard up to 5s of resume point).
+    const reportProgress = () => {
+      const player = playerRef.current;
+      if (!player) return;
+      try {
+        onProgressRef.current?.({
+          videoId,
+          seconds: player.getCurrentTime(),
+          duration: player.getDuration(),
+        });
+      } catch {
+        // Destroyed players throw on any method call — skip the report.
+      }
+    };
+    // A closed tab is the same story as a route change: flush what we have.
+    const flushOnPageHide = () => reportProgress();
+    window.addEventListener("pagehide", flushOnPageHide);
 
     loadYouTubeAPI().then((YT) => {
       if (cancelled || !YT || !hostRef.current) return;
@@ -79,9 +133,12 @@ export default function YouTubePlayer({ videoId = "", title = "", onPlay = null 
       );
       embedUrl.searchParams.set("enablejsapi", "1");
       embedUrl.searchParams.set("origin", window.location.origin);
-      embedUrl.searchParams.set("autoplay", "0");
+      embedUrl.searchParams.set("autoplay", autoplayRef.current ? "1" : "0");
       embedUrl.searchParams.set("rel", "0");
       embedUrl.searchParams.set("playsinline", "1");
+      // Resume point: YouTube only accepts whole seconds in start=.
+      const startAt = Math.floor(startSecondsRef.current || 0);
+      if (startAt > 0) embedUrl.searchParams.set("start", String(startAt));
       iframe.src = embedUrl.toString();
       iframe.title = title || "YouTube video player";
       iframe.width = "100%";
@@ -92,12 +149,29 @@ export default function YouTubePlayer({ videoId = "", title = "", onPlay = null 
       hostRef.current.innerHTML = "";
       hostRef.current.appendChild(iframe);
 
+      const stopProgressTimer = () => {
+        if (progressTimer) {
+          clearInterval(progressTimer);
+          progressTimer = null;
+        }
+      };
+
       playerRef.current = new YT.Player(iframe, {
         events: {
           onReady: () => {
             if (!cancelled) {
               clearTimeout(timer);
               setStatus("ready");
+              // Saved playback rate is applied once here; later changes come
+              // from the user via YouTube's own controls.
+              const rate = playbackRateRef.current;
+              if (rate) {
+                try {
+                  playerRef.current?.setPlaybackRate(rate);
+                } catch {
+                  // The player may have been torn down before ready settled.
+                }
+              }
             }
           },
           onError: (e) => {
@@ -108,11 +182,40 @@ export default function YouTubePlayer({ videoId = "", title = "", onPlay = null 
             }
           },
           onStateChange: (e) => {
+            if (cancelled) return;
             const playing = YT.PlayerState?.PLAYING ?? 1;
-            if (!cancelled && !playbackRecorded && e.data === playing) {
-              playbackRecorded = true;
-              onPlayRef.current?.();
+            const paused = YT.PlayerState?.PAUSED ?? 2;
+            const ended = YT.PlayerState?.ENDED ?? 0;
+            if (e.data === playing) {
+              if (!playbackRecorded) {
+                playbackRecorded = true;
+                onPlayRef.current?.();
+              }
+              // Unlike onPlay (first playback only, feeds the watch history),
+              // onPlaying fires on EVERY resume — the up-next overlay uses it
+              // to get out of the way when the student replays a lesson.
+              onPlayingRef.current?.({ videoId });
+              // A replay must be allowed to end again: re-arm ENDED so the
+              // overlay and the finished-position write both fire next time.
+              endedRecorded = false;
             }
+            // Progress ticks only while PLAYING; any other state stops them.
+            if (e.data === playing) {
+              if (!progressTimer) {
+                progressTimer = setInterval(reportProgress, 5000);
+              }
+            } else {
+              stopProgressTimer();
+              // One final report on pause so the resume point is fresh.
+              if (e.data === paused) reportProgress();
+            }
+            if (!endedRecorded && e.data === ended) {
+              endedRecorded = true;
+              onEndedRef.current?.({ videoId });
+            }
+          },
+          onPlaybackRateChange: (e) => {
+            if (!cancelled) onPlaybackRateChangeRef.current?.(e.data);
           },
         },
       });
@@ -120,8 +223,16 @@ export default function YouTubePlayer({ videoId = "", title = "", onPlay = null 
 
     // Cleanup when the modal closes or the video changes.
     return () => {
+      // Final flush BEFORE destroying: the interval only reports every 5s,
+      // and a lesson switch mid-tick would otherwise lose that tail.
+      reportProgress();
       cancelled = true;
       clearTimeout(timer);
+      window.removeEventListener("pagehide", flushOnPageHide);
+      if (progressTimer) {
+        clearInterval(progressTimer);
+        progressTimer = null;
+      }
       if (playerRef.current && playerRef.current.destroy) {
         try {
           playerRef.current.destroy();
@@ -132,6 +243,18 @@ export default function YouTubePlayer({ videoId = "", title = "", onPlay = null 
       }
     };
   }, [videoId, title]);
+
+  // "Play the current video" without rebuilding the iframe: the overview's
+  // Continue button targets a lesson that is usually ALREADY active, so a
+  // URL write alone changes nothing. Parents bump playSignal instead.
+  useEffect(() => {
+    if (!playSignal) return;
+    try {
+      playerRef.current?.playVideo?.();
+    } catch {
+      // Player not ready yet — the student still has the normal play button.
+    }
+  }, [playSignal]);
 
   return (
     <div className="relative aspect-video w-full overflow-hidden bg-black">

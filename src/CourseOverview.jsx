@@ -62,10 +62,13 @@ export default function CourseOverview({
               <span key={label} className={`rounded-full px-2.5 py-1 text-xs ${t.chip}`}>{label}</span>
             ))}
           </div>
-          <h1 id="course-title" className={`mt-3 text-2xl font-semibold tracking-tight sm:text-3xl ${t.text}`}
+          {/* h2, not h1: the overview card renders below the player now, and
+              the page's h1 (sr-only, in VideoView) must stay first in
+              reading order. */}
+          <h2 id="course-title" className={`mt-3 text-2xl font-semibold tracking-tight sm:text-3xl ${t.text}`}
             style={{ fontFamily: BRAND_SERIF }}>
             {course.title}
-          </h1>
+          </h2>
           {(course.teacher || course.institute) && (
             <div className={`mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm ${t.muted}`}>
               {course.teacher && (

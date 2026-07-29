@@ -1,20 +1,24 @@
 // =====================================================================
-//  MinimalUI.jsx  —  three screens for the student-facing app
+//  MinimalUI.jsx  —  the watch screen (player + lesson sequence)
 //
 //  Contains:
-//    • ThemeProvider / useTheme  -> shared student-page colours
-//    • VideoView                 -> real player, progress and lesson sequence
+//    • PlayerArea  -> the embedded YouTube player, resume/autoplay/rate
+//                     props passed straight through
+//    • LessonList  -> searchable, filterable, paged lesson sequence
+//    • VideoView   -> the watch page: player first on mobile, player plus a
+//                     sticky lesson rail on desktop, with an up-next overlay
+//                     when a lesson ends
 //
-//  THEMING: instead of Tailwind's `dark:` variant (which needs config),
-//  we keep two small palettes of class names and swap them with a toggle.
-//  Every component reads its colours from useTheme().t — that's it.
+//  THEMING: theme.jsx owns the light/dark palettes (re-exported below for
+//  compatibility). Components read colours from useTheme().t — never
+//  Tailwind's `dark:` variant. Brand accents are applied via inline style.
 // =====================================================================
 
 import { GlobalHeader, Container } from "./AppShell.jsx";
 import {
   ArrowLeft, Check, ChevronLeft, ChevronRight, ExternalLink, Search, X,
 } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import YouTubePlayer from "./YouTubePlayer.jsx";
 import { useTheme } from "./theme.jsx";
 import { formatDuration } from "./metadata.js";
@@ -30,10 +34,45 @@ const ACCENT = { teal: BRAND_TEAL };
 //       YouTubePlayer handles the "embedding disabled by creator" case
 //       and falls back to a direct link, so we just hand it an ID.
 // =====================================================================
-function PlayerArea({ videoId, title, onPlay }) {
+function PlayerArea({
+  videoId, title, onPlay, onPlaying, onEnded, onProgress,
+  startSeconds, autoplay, playbackRate, onPlaybackRateChange, playSignal,
+}) {
   return (
     <div className="aspect-video w-full overflow-hidden rounded-2xl bg-neutral-900">
-      <YouTubePlayer videoId={videoId} title={title} onPlay={onPlay} />
+      <YouTubePlayer
+        videoId={videoId}
+        title={title}
+        onPlay={onPlay}
+        onPlaying={onPlaying}
+        onEnded={onEnded}
+        onProgress={onProgress}
+        startSeconds={startSeconds}
+        autoplay={autoplay}
+        playbackRate={playbackRate}
+        onPlaybackRateChange={onPlaybackRateChange}
+        playSignal={playSignal}
+      />
+    </div>
+  );
+}
+
+// Shared chrome for the end-of-lesson overlays. Fully covering the ended
+// player also hides YouTube's own suggestion wall — this site is meant to
+// keep students inside the course sequence, not hand them to the algorithm.
+// An alertdialog, not a live region: the countdown re-renders every second,
+// and an atomic status region would re-announce the whole overlay each tick.
+// The caller moves focus in (so keyboard users can reach Cancel in time) and
+// announces the event once through its own sr-only status line.
+function PlayerOverlay({ label, children }) {
+  const { t } = useTheme();
+  return (
+    <div
+      role="alertdialog"
+      aria-label={label}
+      className={`absolute inset-0 z-20 flex flex-col items-center justify-center gap-4 rounded-2xl ${t.card} p-6 text-center`}
+    >
+      {children}
     </div>
   );
 }
@@ -258,6 +297,9 @@ export function LessonList({ lessons, activeLessonId, onSelectLesson, watchedIds
   );
 }
 
+// Seconds the up-next overlay counts down before auto-advancing.
+export const UP_NEXT_SECONDS = 5;
+
 export function VideoView({
   course,
   chapter,
@@ -273,6 +315,13 @@ export function VideoView({
   onSelectLesson = () => {},
   onLessonPlay = () => {},
   onBack,
+  startSeconds = 0,
+  autoplay = false,
+  playbackRate = null,
+  onPlaybackRateChange = null,
+  onEnded = null,
+  onProgress = null,
+  playSignal = 0,
 }) {
   const { t } = useTheme();
   const crumbs = crumbsProp ?? [
@@ -288,12 +337,87 @@ export function VideoView({
     ? lessons[activeIndex + 1]
     : null;
 
+  // End-of-lesson overlay: "next" counts down to the next lesson, "complete"
+  // marks the end of the course. null = no overlay showing.
+  const [overlay, setOverlay] = useState(null);
+  const [countdown, setCountdown] = useState(UP_NEXT_SECONDS);
+  // The overlay auto-navigates on a timer, so keyboard users must land ON its
+  // cancel control the moment it appears — their focus is otherwise trapped
+  // inside YouTube's iframe with no realistic path to Cancel in 5 seconds.
+  const overlayFocusRef = useRef(null);
+
+  // Any lesson change (auto-advance, list click, prev/next) clears the
+  // overlay and re-arms the countdown, so a stale overlay can never linger
+  // over — or navigate away from — a lesson it does not belong to.
+  useEffect(() => {
+    setOverlay(null);
+    setCountdown(UP_NEXT_SECONDS);
+  }, [activeLessonId]);
+
+  useEffect(() => {
+    if (overlay) overlayFocusRef.current?.focus();
+  }, [overlay]);
+
+  // Focus must have somewhere real to go when the overlay unmounts —
+  // dropping it to <body> strands keyboard and screen-reader users.
+  const focusPlayerAnchor = () => {
+    document.getElementById("course-player")?.focus({ preventScroll: true });
+  };
+
+  // The interval lives and dies with the overlay: Cancel, advancing, a lesson
+  // change or unmount all clear it via this effect's cleanup.
+  useEffect(() => {
+    if (overlay !== "next") return undefined;
+    const timer = setInterval(
+      () => setCountdown((value) => Math.max(0, value - 1)),
+      1000,
+    );
+    return () => clearInterval(timer);
+  }, [overlay]);
+
+  const advanceToNext = useCallback(() => {
+    setOverlay(null);
+    focusPlayerAnchor();
+    if (nextLesson) onSelectLesson(nextLesson, { scrollToPlayer: false });
+  }, [nextLesson, onSelectLesson]);
+
+  const dismissOverlay = () => {
+    setOverlay(null);
+    focusPlayerAnchor();
+  };
+
+  // Advancing happens in an effect — not inside the interval callback — so a
+  // Cancel that lands in the same tick always wins over the countdown.
+  useEffect(() => {
+    if (overlay === "next" && countdown === 0) advanceToNext();
+  }, [advanceToNext, countdown, overlay]);
+
+  const handleLessonEnded = (payload) => {
+    // An old player's ENDED can arrive during a lesson switch; only the
+    // CURRENT lesson's end may raise the overlay. The page-level handler
+    // does its own payload routing.
+    onEnded?.(payload);
+    if (payload?.videoId && payload.videoId !== videoId) return;
+    setCountdown(UP_NEXT_SECONDS);
+    setOverlay(nextLesson ? "next" : "complete");
+  };
+
+  // Replaying the ended lesson (YouTube's own controls still work under the
+  // overlay for pointer users, and Space/k for keyboard users focused there)
+  // must get the overlay out of the way instead of counting down over live
+  // audio and then yanking the replay away.
+  const handlePlaying = (payload) => {
+    if (payload?.videoId && payload.videoId !== videoId) return;
+    setOverlay(null);
+  };
+
+  const watchedCount = lessons.filter((lesson) => watchedIds.includes(lesson.videoId)).length;
+
   return (
     <div className={`min-h-screen ${t.page}`}>
       {/* top bar */}
       <GlobalHeader crumbs={crumbs} />
 
-      {/* split layout: stacks on mobile, side-by-side on large screens */}
       <main className="py-6 sm:py-8">
        {/* An explicit way back to the results. `onBack` was previously accepted
            as a prop and never rendered, so the course page had no return
@@ -308,50 +432,166 @@ export function VideoView({
            </button>
          </Container>
        )}
-       {overview && <Container className="pb-7">{overview}</Container>}
-       <Container width="reading">
-        <div id="course-player" tabIndex={-1} className="scroll-mt-44 focus:outline-none sm:scroll-mt-28">
-          <PlayerArea videoId={videoId} title={videoTitle} onPlay={onLessonPlay} />
-          <h2 className={`mt-5 text-2xl font-semibold leading-snug ${t.text}`} style={{ fontFamily: BRAND_SERIF }}>{videoTitle}</h2>
-          <p className={`mt-1 text-sm ${t.muted}`}>
-            {lessons.length > 0
-              ? `Lesson ${
-                  lessons.find((l) => l.id === activeLessonId)?.position ?? 1
-                } of ${lessons.length}`
-              : `Lesson 1 of ${course.lectures}`}
-          </p>
+       {/* Watch layout. Mobile: the player is the first thing under the header
+           and back link — the overview used to sit above it and pushed the
+           video below the fold. Desktop (xl+): a main column beside a sticky
+           lesson rail, so the sequence stays reachable while watching. The
+           split waits for xl because at lg a fixed rail would shrink the
+           video below its portrait-tablet size. */}
+       <Container>
+        {/* The document's h1 stays first in reading order even though the
+            course overview card (which shows the title visually) now renders
+            below the player. */}
+        <h1 className="sr-only">{course.title}</h1>
+        <div className="flex flex-col gap-8 xl:grid xl:grid-cols-[minmax(0,1fr)_400px] xl:items-start">
+          <div
+            id="course-player"
+            tabIndex={-1}
+            className="min-w-0 scroll-mt-44 focus:outline-none sm:scroll-mt-32 xl:col-start-1 xl:row-start-1"
+          >
+            <div className="relative">
+              <PlayerArea
+                videoId={videoId}
+                title={videoTitle}
+                onPlay={onLessonPlay}
+                onPlaying={handlePlaying}
+                onEnded={handleLessonEnded}
+                onProgress={onProgress}
+                startSeconds={startSeconds}
+                autoplay={autoplay}
+                playbackRate={playbackRate}
+                onPlaybackRateChange={onPlaybackRateChange}
+                playSignal={playSignal}
+              />
+              {/* One-shot announcement: the overlay itself is NOT a live
+                  region, so the per-second countdown never re-announces. */}
+              {overlay && (
+                <p role="status" className="sr-only">
+                  {overlay === "next" && nextLesson
+                    ? `Lesson complete. Up next: lesson ${nextLesson.position}, ${nextLesson.title}. Plays automatically in ${UP_NEXT_SECONDS} seconds. Cancel to stay here.`
+                    : "Course complete."}
+                </p>
+              )}
+              {overlay === "next" && nextLesson && (
+                <PlayerOverlay label="Up next">
+                  <div>
+                    <p className={`text-base font-semibold ${t.text}`} style={{ fontFamily: BRAND_SERIF }}>
+                      Lesson complete
+                    </p>
+                    <p className={`mt-2 text-sm ${t.muted}`}>
+                      Up next: Lesson {nextLesson.position} · {nextLesson.title}
+                    </p>
+                    <p className={`mt-1 text-xs ${t.faint}`}>Playing in {countdown}s</p>
+                  </div>
+                  <div className="flex flex-wrap items-center justify-center gap-2">
+                    <button
+                      type="button"
+                      onClick={advanceToNext}
+                      className="min-h-11 rounded-xl px-5 text-sm font-semibold text-white"
+                      style={{ backgroundColor: ACCENT.teal }}
+                    >
+                      Play now
+                    </button>
+                    <button
+                      type="button"
+                      ref={overlayFocusRef}
+                      onClick={dismissOverlay}
+                      className={`min-h-11 rounded-xl border ${t.border} px-5 text-sm font-medium ${t.text}`}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </PlayerOverlay>
+              )}
+              {overlay === "complete" && (
+                <PlayerOverlay label="Course complete">
+                  <div>
+                    <p className={`text-base font-semibold ${t.text}`} style={{ fontFamily: BRAND_SERIF }}>
+                      Course complete
+                    </p>
+                    {lessons.length > 0 && (
+                      <p className={`mt-2 text-sm ${t.muted}`}>
+                        You watched {watchedCount} of {lessons.length} lesson{lessons.length === 1 ? "" : "s"} in this course.
+                      </p>
+                    )}
+                  </div>
+                  <div className="flex flex-wrap items-center justify-center gap-2">
+                    {onBack && (
+                      <button
+                        type="button"
+                        onClick={onBack}
+                        className="min-h-11 rounded-xl px-5 text-sm font-semibold text-white"
+                        style={{ backgroundColor: ACCENT.teal }}
+                      >
+                        Back to results
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      ref={overlayFocusRef}
+                      onClick={dismissOverlay}
+                      className={`min-h-11 rounded-xl border ${t.border} px-5 text-sm font-medium ${t.text}`}
+                    >
+                      Dismiss
+                    </button>
+                  </div>
+                </PlayerOverlay>
+              )}
+            </div>
+            <h2 className={`mt-5 text-2xl font-semibold leading-snug ${t.text}`} style={{ fontFamily: BRAND_SERIF }}>{videoTitle}</h2>
+            <p className={`mt-1 text-sm ${t.muted}`}>
+              {lessons.length > 0
+                ? `Lesson ${
+                    lessons.find((l) => l.id === activeLessonId)?.position ?? 1
+                  } of ${lessons.length}`
+                : `Lesson 1 of ${course.lectures}`}
+            </p>
 
-          {lessons.length > 1 && (
-            <nav className="mt-4 flex gap-2" aria-label="Lesson navigation">
-              <button
-                type="button"
-                disabled={!previousLesson}
-                onClick={() => previousLesson && onSelectLesson(previousLesson)}
-                className={`inline-flex min-h-11 flex-1 items-center justify-center gap-1 rounded-xl border ${t.border} px-3 text-sm font-medium ${t.text} disabled:cursor-not-allowed disabled:opacity-40`}
-              >
-                <ChevronLeft className="h-4 w-4" /> Previous lesson
-              </button>
-              <button
-                type="button"
-                disabled={!nextLesson}
-                onClick={() => nextLesson && onSelectLesson(nextLesson)}
-                className="inline-flex min-h-11 flex-1 items-center justify-center gap-1 rounded-xl bg-teal-700 px-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40"
-              >
-                Next lesson <ChevronRight className="h-4 w-4" />
-              </button>
-            </nav>
+            {lessons.length > 1 && (
+              <nav className="mt-4 flex gap-2" aria-label="Lesson navigation">
+                <button
+                  type="button"
+                  disabled={!previousLesson}
+                  onClick={() => previousLesson && onSelectLesson(previousLesson)}
+                  className={`inline-flex min-h-11 flex-1 items-center justify-center gap-1 rounded-xl border ${t.border} px-3 text-sm font-medium ${t.text} disabled:cursor-not-allowed disabled:opacity-40`}
+                >
+                  <ChevronLeft className="h-4 w-4" /> Previous lesson
+                </button>
+                <button
+                  type="button"
+                  disabled={!nextLesson}
+                  onClick={() => nextLesson && onSelectLesson(nextLesson)}
+                  className="inline-flex min-h-11 flex-1 items-center justify-center gap-1 rounded-xl bg-teal-700 px-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  Next lesson <ChevronRight className="h-4 w-4" />
+                </button>
+              </nav>
+            )}
+
+            {reportSlot}
+          </div>
+
+          {/* On desktop the rail is sticky below the header and scrolls its
+              own contents; on mobile it stacks directly under the player
+              block so the sequence is one swipe away, not below the fold.
+              The aside carries no aria-label: LessonList's own labelled
+              section is the named landmark, and naming both identically
+              made landmark navigation announce "Course lessons" twice. */}
+          <aside className="min-w-0 xl:sticky xl:top-32 xl:col-start-2 xl:row-start-1 xl:row-span-2 xl:max-h-[calc(100vh-9rem)] xl:overflow-y-auto">
+            <LessonList
+              lessons={lessons}
+              activeLessonId={activeLessonId}
+              watchedIds={watchedIds}
+              onSelectLesson={onSelectLesson}
+            />
+          </aside>
+
+          {(overview || ratingPanel) && (
+            <div className="min-w-0 xl:col-start-1 xl:row-start-2">
+              {overview}
+              {ratingPanel}
+            </div>
           )}
-
-          {reportSlot}
-
-          <LessonList
-            lessons={lessons}
-            activeLessonId={activeLessonId}
-            watchedIds={watchedIds}
-            onSelectLesson={onSelectLesson}
-          />
-
-          {ratingPanel}
         </div>
       </Container>
       </main>
