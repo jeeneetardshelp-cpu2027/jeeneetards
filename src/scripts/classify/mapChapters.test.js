@@ -17,6 +17,18 @@ const BIO = [
   "Photosynthesis in Higher Plants",
 ];
 
+describe("Devanagari / Unicode support", () => {
+  it("keeps Devanagari letters when normalizing", () => {
+    expect(normalizeForMatch("कबीर की साखी | Class 10")).toBe("कबीर की साखी class 10");
+  });
+  it("matches a Devanagari chapter in a mixed romanized+Devanagari title", () => {
+    const chapters = ["कबीर की साखी", "मीरा के पद", "मनुष्यता"];
+    const p = proposeChapter("Kabir ki Sakhiyan Class 10 | कबीर की साखी Class 10", chapters);
+    expect(p.chapter).toBe("कबीर की साखी");
+    expect(p.review).toBe(false);
+  });
+});
+
 describe("normalizeForMatch / tokenize", () => {
   it("strips punctuation and lowercases", () => {
     expect(normalizeForMatch("Cell: The Unit of Life!")).toBe("cell the unit of life");

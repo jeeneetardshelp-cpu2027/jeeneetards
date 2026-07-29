@@ -17,7 +17,14 @@ const STOPWORDS = new Set([
   "mam", "series", "batch", "video", "playlist", "revision", "marathon", "live",
   "crash", "course", "the", "of", "and", "for", "with", "to", "an", "by", "on",
   "vs", "in", "a", "from", "your", "you", "how", "what", "all", "best", "hindi",
-  "english", "hinglish", "pw", "physics", "chemistry", "biology", // subject words are too broad to disambiguate a chapter
+  "english", "hinglish", "pw", "physics", "chemistry", "biology", "maths",
+  "science", "social", // subject words are too broad to disambiguate a chapter
+  // common title filler across sources
+  "mcq", "pyq", "summary", "explanation", "animation", "cbse", "ncert", "board",
+  "exam", "questions", "important", "expected", "repeated", "th",
+  // Hindi function words (romanized + Devanagari) — high-frequency, low signal
+  "ki", "ke", "ka", "ko", "mein", "se", "hai", "aur", "ek",
+  "के", "की", "का", "को", "में", "से", "है", "और", "एक", "पर",
 ]);
 
 // Common source-title names that differ from the canonical catalogue names.
@@ -34,13 +41,14 @@ const CHAPTER_ALIASES = new Map([
   ]],
 ]);
 
-/** Lowercase, drop apostrophes, punctuation → space, collapse. ASCII-focused;
- *  chapter names and lecture titles here are English. */
+/** Lowercase, drop apostrophes, then collapse anything that is NOT a Unicode
+ *  letter or number to a space. Script-agnostic: keeps Latin, Devanagari, etc.,
+ *  so it works for Hindi (Devanagari) chapter names as well as English. */
 export function normalizeForMatch(text) {
   return String(text ?? "")
     .toLowerCase()
     .replace(/['’`´]/g, "")
-    .replace(/[^a-z0-9]+/g, " ")
+    .replace(/[^\p{L}\p{N}\p{M}]+/gu, " ")
     .replace(/\s+/g, " ")
     .trim();
 }
