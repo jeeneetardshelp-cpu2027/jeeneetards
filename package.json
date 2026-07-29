@@ -56,7 +56,8 @@
     "draft:manifest": "node src/scripts/draftManifest.js",
     "demo:classify": "node src/scripts/classify/demoClassify.js",
     "demo:quality": "node src/scripts/classify/demoQualityGate.js",
-    "refresh:stats": "node src/scripts/refreshVideoStats.js"
+    "refresh:stats": "node src/scripts/refreshVideoStats.js",
+    "verify:course": "node src/scripts/verifyImportedCourse.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.110.7",
