@@ -45,7 +45,7 @@ export default function PrivacyPolicy() {
           <Section title="1. Scope and operator details">
             <p>
               This policy describes the information paths implemented by
-              JEENEETARD. The service is operated by Amit, based in Jaipur,
+              JEENEETARD. The service is operated by JEENEETARD, based in Kota,
               Rajasthan, India, and is governed by the laws of India. Privacy
               questions and requests can be sent to{" "}
               <a
