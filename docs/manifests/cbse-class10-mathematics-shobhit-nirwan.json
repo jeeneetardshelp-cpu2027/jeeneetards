@@ -1,0 +1,104 @@
+{
+  "version": 1,
+  "request_id": "7ad2b0e4-d636-4de0-add7-8639dbab3398",
+  "youtube_playlist_id": "PLzYa_EgDSEDJQG-HEQaFMHEIVBq_oMm35",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "a8feac65-7e60-43a2-bc45-e88f5979c9c1",
+    "youtube_playlist_id": "PLzYa_EgDSEDJQG-HEQaFMHEIVBq_oMm35",
+    "teacher": "Shobhit Nirwan",
+    "source_url": "https://www.youtube.com/@MathsByShobhitNirwan",
+    "source_label": "Owner-reviewed official Maths by Shobhit Nirwan YouTube channel",
+    "reviewed_by": "Owner/Claude",
+    "reviewed_on": "2026-07-29",
+    "youtube_video_ids": [
+      "c4s8NxJ7Swk",
+      "2wYLgSGVNqY",
+      "fnipHHsib94",
+      "tnpV2VhiQnE",
+      "Q0hZNlAlyxk",
+      "nL48cLNpdOE",
+      "a9P3hJ7VcrM",
+      "rLiA1jqxqDM",
+      "7wYSGOJcK10",
+      "Uill15OhzjE",
+      "mDV43Sdoq2Y",
+      "UkstzZACyQ8",
+      "pVgBUVf-oTM",
+      "buTk-CqJlIA"
+    ]
+  },
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "c4s8NxJ7Swk",
+      "chapter": "Triangles"
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "2wYLgSGVNqY",
+      "chapter": "Introduction to Trigonometry"
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "fnipHHsib94",
+      "chapter": "Some Applications of Trigonometry"
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "tnpV2VhiQnE",
+      "chapter": "Circles"
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "Q0hZNlAlyxk",
+      "chapter": "Areas Related to Circles"
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "nL48cLNpdOE",
+      "chapter": "Surface Areas and Volumes"
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "a9P3hJ7VcrM",
+      "chapter": "Statistics"
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "rLiA1jqxqDM",
+      "chapter": "Probability"
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "7wYSGOJcK10",
+      "chapter": "Real Numbers"
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "Uill15OhzjE",
+      "chapter": "Polynomials"
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "mDV43Sdoq2Y",
+      "chapter": "Pair of Linear Equations in Two Variables"
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "UkstzZACyQ8",
+      "chapter": "Quadratic Equations"
+    },
+    {
+      "position": 13,
+      "youtube_video_id": "pVgBUVf-oTM",
+      "chapter": "Coordinate Geometry"
+    },
+    {
+      "position": 14,
+      "youtube_video_id": "buTk-CqJlIA",
+      "chapter": "Arithmetic Progressions"
+    }
+  ]
+}
