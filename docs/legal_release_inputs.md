@@ -50,3 +50,8 @@ still no moderation path for reported content.
 
 This is a record of the decision the owner made, not a substitute for the
 qualified legal/privacy review still recommended above.
+
+The owner then enabled "Allow new users to sign up" in the Supabase dashboard
+(the manual step this codebase cannot perform). Verified read-only afterward
+— `docs/ratings_launch_auth_evidence.json` — that production's Auth settings
+now show `disable_signup: false` with `anonymous_users` still `false`.
