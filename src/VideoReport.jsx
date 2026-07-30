@@ -22,7 +22,14 @@ const REASONS = [
 
 export function reportErrorMessage(error) {
   const text = String(error?.message ?? "").toLowerCase();
-  if (/equivalent pending report|already.*report|duplicate/.test(text))
+  // These patterns must match the ACTUAL text raised by
+  // enforce_content_report_submission() (content_reports_hardening_v10.sql),
+  // not a guess — a prior version matched a fabricated "duplicate key
+  // violates ..." index-style message that Postgres never raises here (the
+  // trigger uses an explicit RAISE EXCEPTION, not a unique constraint), so
+  // every duplicate/unknown-target report silently fell through to the
+  // generic fallback below despite the tests being green.
+  if (/equivalent report is already pending|duplicate/.test(text))
     return "You've already reported this issue. We'll review it.";
   if (/hourly report limit|rate limit|too many/.test(text))
     return "You've sent several reports recently. Please try again later.";
@@ -30,7 +37,7 @@ export function reportErrorMessage(error) {
     return "Your session expired. Sign in again, then retry.";
   if (/1000|too long|oversized/.test(text))
     return `Keep the note within ${MAX_NOTE} characters.`;
-  if (/unknown target|does not exist|not found/.test(text))
+  if (/unknown (video|playlist) target|does not exist|not found/.test(text))
     return "This lecture is no longer available to report.";
   return "Couldn't send your report. Please try again.";
 }

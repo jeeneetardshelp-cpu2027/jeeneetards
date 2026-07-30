@@ -82,8 +82,11 @@ describe("signed-in content reporting", () => {
 
   it("does not expose raw database errors to students", async () => {
     mocks.authState = { session: { user: { id: "student-1" } }, loading: false };
+    // The real text raised by enforce_content_report_submission() (see
+    // content_reports_hardening_v10.sql) — not a unique-constraint message,
+    // since the trigger dedupes via an explicit RAISE EXCEPTION.
     mocks.insert.mockResolvedValue({
-      error: { message: "duplicate key violates content_reports_pending_equivalent_idx" },
+      error: { message: "an equivalent report is already pending" },
     });
     show();
     open();
@@ -107,8 +110,17 @@ describe("report error translation", () => {
   it("maps authorization, rate and unknown-target errors to student-safe text", () => {
     expect(reportErrorMessage({ message: "permission denied" })).toMatch(/session expired/i);
     expect(reportErrorMessage({ message: "hourly report limit reached" })).toMatch(/try again later/i);
-    expect(reportErrorMessage({ message: "unknown target" })).toMatch(/no longer available/i);
+    // Real trigger text: "unknown video target" / "unknown playlist target"
+    // (content_reports_hardening_v10.sql) — always has video/playlist between
+    // the two words, so a bare "unknown target" would never actually occur.
+    expect(reportErrorMessage({ message: "unknown video target" })).toMatch(/no longer available/i);
+    expect(reportErrorMessage({ message: "unknown playlist target" })).toMatch(/no longer available/i);
     expect(reportErrorMessage({ message: "relation details" })).toBe("Couldn't send your report. Please try again.");
+  });
+
+  it("maps the real duplicate-pending-report trigger text", () => {
+    expect(reportErrorMessage({ message: "an equivalent report is already pending" }))
+      .toMatch(/already reported/i);
   });
 });
 
