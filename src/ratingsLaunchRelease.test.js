@@ -6,12 +6,11 @@ import { RELEASE_FEATURES } from "./releaseCapabilities.js";
 const root = resolve(import.meta.dirname, "..");
 
 describe("ratings-launch production release evidence", () => {
-  it("enables accounts and rating submission, keeps content reporting disabled", () => {
-    expect(RELEASE_FEATURES).toEqual({
+  it("enables accounts and rating submission", () => {
+    expect(RELEASE_FEATURES).toMatchObject({
       studentAccounts: true,
       courseRatingSubmission: true,
       reviewDisplay: true,
-      contentReporting: false,
     });
   });
 

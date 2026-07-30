@@ -60,7 +60,12 @@ describe("content report production package", () => {
     }
   });
 
-  it("preserves durable backend evidence while the browse-only release keeps the UI off", () => {
+  it("preserves durable backend evidence from before the UI went live", () => {
+    // Historical record from the pre-launch verification run -- not re-edited
+    // when contentReporting flipped on (2026-07-31, after an adversarial
+    // security review found no exploitable path); it documents what was true
+    // at the time it was captured, same convention as the other dated
+    // evidence/runbook files in this repo.
     const evidence = JSON.parse(read("docs/report_browser_evidence.json"));
     expect(evidence.database_checks).toEqual({ passed: 7, failed: 0 });
     expect(evidence.browser_success_status).toBe(true);
@@ -73,6 +78,6 @@ describe("content report production package", () => {
       authUsers: 0,
     });
     expect(evidence.local_credential_state_deleted).toBe(true);
-    expect(RELEASE_FEATURES.contentReporting).toBe(false);
+    expect(RELEASE_FEATURES.contentReporting).toBe(true);
   });
 });

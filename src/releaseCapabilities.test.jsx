@@ -25,7 +25,7 @@ describe("current production capability contract", () => {
       studentAccounts: true,
       courseRatingSubmission: true,
       reviewDisplay: true,
-      contentReporting: false,
+      contentReporting: true,
     });
     expect(homeTagline()).toMatch(/compare/i);
   });
@@ -33,13 +33,13 @@ describe("current production capability contract", () => {
   // CourseRating's own signed-out/signed-in behavior is covered in depth by
   // CourseRatingAuth.test.jsx (which mocks useSession so it isn't racing a
   // real async auth check). This file stays a capability-contract check.
-  it("keeps content reporting hidden while it has no moderation path", () => {
+  it("shows content reporting now that its moderation queue (AdminPanel Reports tab) is live", () => {
     render(
       <ThemeProvider>
         <VideoReport videoId={1} videoTitle="Lecture" />
       </ThemeProvider>,
     );
-    expect(screen.queryByRole("button", { name: "Report an issue" })).toBeNull();
+    expect(screen.getByRole("button", { name: "Report an issue" })).toBeTruthy();
   });
 
   it("enables only exam cards with real course counts", () => {

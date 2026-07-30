@@ -30,7 +30,7 @@ security controls and release evidence must also be present.
 | Public student accounts | Enabled |
 | Rating submission | Enabled |
 | Review display | Enabled |
-| Content reporting | Disabled |
+| Content reporting | Enabled |
 
 The source of truth is
 [`src/releaseCapabilities.js`](src/releaseCapabilities.js). Do not enable a

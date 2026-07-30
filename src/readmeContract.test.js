@@ -46,12 +46,13 @@ describe("repository onboarding contract", () => {
       studentAccounts: true,
       courseRatingSubmission: true,
       reviewDisplay: true,
-      contentReporting: false,
+      contentReporting: true,
     });
-    for (const label of ["Public student accounts", "Rating submission", "Review display"]) {
+    for (const label of [
+      "Public student accounts", "Rating submission", "Review display", "Content reporting",
+    ]) {
       expect(readme).toMatch(new RegExp(`\\| ${label} \\| Enabled \\|`));
     }
-    expect(readme).toMatch(/\| Content reporting \| Disabled \|/);
   });
 
   it("keeps privileged keys out of frontend guidance", () => {
