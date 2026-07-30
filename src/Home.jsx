@@ -32,6 +32,8 @@ import { EXAMS } from "./filterModel.js";
 import { useTheme } from "./theme.jsx";
 import { useLearningGoals } from "./useExplore.js";
 import { RELEASE_CAPABILITIES } from "./releaseCapabilities.js";
+import { useStructuredData } from "./PageMetadata.jsx";
+import { organizationSchema, websiteSchema } from "./structuredData.js";
 import { BRAND_NAVY, BRAND_TEAL, BRAND_SERIF } from "./brandColors.js";
 
 const BRAND = { navy: BRAND_NAVY, teal: BRAND_TEAL };
@@ -79,6 +81,10 @@ export default function Home() {
   const { groups, loading, error, tooShort, retry } = useUniversalSearch(input, { limit: 6 });
   const searching = input.trim().length > 0;
   const { t, dark } = useTheme();
+  // Site identity, not search-state-dependent — written once, never removed
+  // while Home stays mounted. organizationSchema describes the SITE itself,
+  // never a course's provider (that's courseSchema's job, on the course page).
+  useStructuredData([websiteSchema(), organizationSchema()], []);
 
   return (
     <div className={`min-h-screen ${t.page} ${t.text}`}>
