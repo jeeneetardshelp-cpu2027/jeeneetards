@@ -783,17 +783,14 @@ export default function AdminPanel() {
     setAccess("checking");
     setAccessError(null);
     supabase
-      .from("profiles")
-      .select("is_admin")
-      .eq("id", session.user.id)
-      .maybeSingle()
+      .rpc("is_admin")
       .then(({ data, error }) => {
         if (!active) return;
         if (error) {
           setAccess("error");
           setAccessError("Could not verify administrator access.");
         } else {
-          setAccess(hasAdminAccess(data) ? "allowed" : "denied");
+          setAccess(hasAdminAccess({ is_admin: data }) ? "allowed" : "denied");
         }
       });
     return () => { active = false; };
