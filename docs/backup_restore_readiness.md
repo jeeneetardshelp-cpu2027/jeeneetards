@@ -851,3 +851,35 @@ it no longer appeared in the organization project list. Production `youtube`
 (`kezelafqhgqrprpadmlf`) remained present and untouched. No restore rehearsal
 clones remain; the organization list contains the two staging projects and
 production.
+
+## Competishun+ ordered Mathematics imports — 30 July 2026
+
+The owner reviewed and accepted a protected-baseline change caused by 43
+memberships appended to existing JEE course 13, `Kinematics | Irodov
+solutions`. The additions are Irodov Q.1.28 through Q.1.70. All 43 YouTube
+video IDs existed and were embeddable when checked, but the official source
+playlist exposed only its original 24 items at verification time. This is an
+explicit owner-approved catalogue exception; it must not be mistaken for an
+exact mirror of the current YouTube playlist.
+
+The newly approved protected set is exactly 83 JEE courses and 1,350
+memberships with fingerprint
+`6829fcb6eae22479db7b82b7b3da654d`. Future protected-set checks must use this
+fingerprint unless a later owner-approved baseline change is recorded.
+
+Three reviewed Competishun+ Mathematics manifests were then imported
+create-only in natural lecture-number order:
+
+- course 193, Statistics Class XI: 2 new videos, zero reused;
+- course 194, Complex Numbers Class XII: 9 new videos, zero reused;
+- course 195, Probability Class XII: 8 new videos, zero reused.
+
+Every manifest passed an anonymous dry-run before writing. After each import,
+the protected 83-course fingerprint remained
+`6829fcb6eae22479db7b82b7b3da654d`. The final rolling JEE catalogue was 112
+courses and 1,570 memberships with fingerprint
+`56f00c7db6fc1e8ff9b6f19250614e3f`.
+
+Production browser QA confirmed the correct JEE Mathematics and class tags,
+natural L1-to-final ordering, and working first and final YouTube embeds for
+all three courses. No browser console warnings or errors were observed.
