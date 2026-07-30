@@ -23,27 +23,35 @@ The frontend release gate also refuses to pass while the Terms or Privacy page
 contains template placeholders. The approved inputs and browse-only decision
 are recorded in `docs/legal_release_inputs.md`.
 
-## Browse-only privacy gate
+## Public accounts and ratings gate
 
-Before deploying the public site, open the **youtube production project** in
-Supabase and go to Authentication > Sign In / Providers. Turn off **Allow new
-users to sign up** and **Allow anonymous sign-ins**. Existing admin users can
-still sign in; do not delete them. Supabase documents that disabling new
-sign-ups preserves sign-in for existing users.
+Updated 2026-07-30: the owner reviewed the under-18 consent/age-assurance
+question (see `docs/legal_release_inputs.md`'s 2026-07-30 addendum) and chose
+to enable public student accounts and rating submission. This reverses the
+prior browse-only gate for those two features specifically.
+
+Before this can work end-to-end, open the **youtube production project** in
+Supabase and go to Authentication > Sign In / Providers. Turn ON **Allow new
+users to sign up**. Keep **Allow anonymous sign-ins** OFF — named accounts are
+required for one-rating-per-student. This is a dashboard-only setting; it
+cannot be changed from this repository or by an automated agent (account
+creation, including to test this, is outside what an automated assistant
+should do here).
 
 The last captured settings evidence is stored in
-`docs/browse_only_auth_evidence.json`. Treat that file as historical evidence,
-not as a live settings check. Re-check both controls immediately before a public
-deployment.
+`docs/browse_only_auth_evidence.json`. Treat that file as a historical record
+of the state *before* this decision (2026-07-23), not a live settings check.
+Re-check the actual dashboard state before any deployment that depends on it.
 
-Then confirm all three values remain `false` in `src/releaseCapabilities.js`:
+Then confirm the current intent in `src/releaseCapabilities.js`:
 
-- `studentAccounts`
-- `courseRatingSubmission`
-- `contentReporting`
+- `studentAccounts: true`
+- `courseRatingSubmission: true`
+- `contentReporting: false` — unchanged; still no moderation path for
+  reported content, so this stays off until that exists.
 
-The report backend may remain hardened and deployed. The browse-only gate is a
-product/privacy control, not a rollback of that security work.
+The report backend may remain hardened and deployed regardless of
+`contentReporting`'s value. That flag controls only the public UI surface.
 
 Both `vercel.json` and `netlify.toml` provide the required SPA fallback so a
 direct visit to `/browse`, `/course/:id`, `/faculty/:slug`, or `/compare` loads

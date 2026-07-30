@@ -4,8 +4,6 @@ import { MemoryRouter, Route, Routes, useLocation } from "react-router";
 import { ThemeProvider } from "./theme.jsx";
 import FeatureUnavailable from "./FeatureUnavailable.jsx";
 import VideoReport from "./VideoReport.jsx";
-import CourseRating from "./CourseRating.jsx";
-import StudentAuth from "./StudentAuth.jsx";
 import { RELEASE_CAPABILITIES, RELEASE_FEATURES } from "./releaseCapabilities.js";
 import { examCardState, homeTagline } from "./Home.jsx";
 
@@ -24,25 +22,23 @@ describe("current production capability contract", () => {
       boardClassification: true,
     });
     expect(RELEASE_FEATURES).toEqual({
-      studentAccounts: false,
-      courseRatingSubmission: false,
+      studentAccounts: true,
+      courseRatingSubmission: true,
       contentReporting: false,
     });
     expect(homeTagline()).toMatch(/compare/i);
   });
 
-  it("keeps every student-owned write surface hidden for the browse-only MVP", () => {
+  // CourseRating's own signed-out/signed-in behavior is covered in depth by
+  // CourseRatingAuth.test.jsx (which mocks useSession so it isn't racing a
+  // real async auth check). This file stays a capability-contract check.
+  it("keeps content reporting hidden while it has no moderation path", () => {
     render(
       <ThemeProvider>
         <VideoReport videoId={1} videoTitle="Lecture" />
-        <CourseRating playlistId={1} initialAverage={5} initialCount={1} />
-        <StudentAuth />
       </ThemeProvider>,
     );
     expect(screen.queryByRole("button", { name: "Report an issue" })).toBeNull();
-    expect(screen.queryByRole("button", { name: "Sign in to rate" })).toBeNull();
-    expect(screen.queryByLabelText("Email")).toBeNull();
-    expect(screen.getByText("1 student rating")).toBeTruthy();
   });
 
   it("enables only exam cards with real course counts", () => {

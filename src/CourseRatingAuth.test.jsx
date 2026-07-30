@@ -22,26 +22,27 @@ import CourseRating from "./CourseRating.jsx";
 import { ThemeProvider } from "./theme.jsx";
 
 describe("course rating sign-in disclosure", () => {
-  it("exposes no account or contribution controls in the browse-only release", () => {
+  it("offers a real sign-in entry point now that rating submission is released", () => {
     render(
       <ThemeProvider>
         <CourseRating playlistId={1} initialAverage={0} initialCount={0} />
       </ThemeProvider>,
     );
     expect(screen.queryByLabelText("Email")).toBeNull();
-    expect(screen.queryByRole("button", { name: "Sign in to rate" })).toBeNull();
-    expect(screen.getByRole("heading", { name: "Student ratings" })).toBeTruthy();
-  });
-
-  it("keeps the reviewed interactive flow available behind an explicit future gate", () => {
-    render(
-      <ThemeProvider>
-        <CourseRating playlistId={1} initialAverage={0} initialCount={0} released />
-      </ThemeProvider>,
-    );
     fireEvent.click(screen.getByRole("button", { name: "Sign in to rate" }));
     expect(screen.getByLabelText("Email")).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: "Cancel" }));
     expect(screen.queryByLabelText("Email")).toBeNull();
+  });
+
+  it("still supports the pre-launch summary-only view via an explicit override", () => {
+    render(
+      <ThemeProvider>
+        <CourseRating playlistId={1} initialAverage={0} initialCount={0} released={false} />
+      </ThemeProvider>,
+    );
+    expect(screen.queryByLabelText("Email")).toBeNull();
+    expect(screen.queryByRole("button", { name: "Sign in to rate" })).toBeNull();
+    expect(screen.getByRole("heading", { name: "Student ratings" })).toBeTruthy();
   });
 });
