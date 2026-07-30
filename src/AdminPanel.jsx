@@ -620,6 +620,16 @@ const REASON_LABELS = {
 function ReportsPanel() {
   const { t } = useTheme();
   const { reports, loading, error, setStatus } = useReports();
+  const [busyId, setBusyId] = useState(null);
+  const [actionError, setActionError] = useState(null);
+
+  const resolve = async (id, status) => {
+    setBusyId(id);
+    setActionError(null);
+    const err = await setStatus(id, status);
+    setBusyId(null);
+    if (err) setActionError(err.message);
+  };
 
   if (loading) return <p className={`text-sm ${t.muted}`}>Loading reports…</p>;
   if (error)
@@ -638,6 +648,11 @@ function ReportsPanel() {
 
   return (
     <div className="space-y-3">
+      {actionError && (
+        <p className="text-sm" style={{ color: ACCENT.red }}>
+          Couldn't update that report: {actionError}
+        </p>
+      )}
       {reports.map((r) => (
         <div key={r.id} className={`rounded-2xl border ${t.card} ${t.border} p-5`}>
           <div className="flex items-start justify-between gap-4">
@@ -654,17 +669,19 @@ function ReportsPanel() {
             </div>
             <div className="flex shrink-0 gap-2">
               <button
-                onClick={() => setStatus(r.id, "reviewed")}
-                className="rounded-lg px-3 py-1.5 text-xs font-semibold text-white"
+                onClick={() => resolve(r.id, "reviewed")}
+                disabled={busyId === r.id}
+                className="rounded-lg px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-50"
                 style={{ backgroundColor: ACCENT.teal }}
               >
-                Reviewed
+                {busyId === r.id ? "…" : "Reviewed"}
               </button>
               <button
-                onClick={() => setStatus(r.id, "dismissed")}
-                className={`rounded-lg border px-3 py-1.5 text-xs font-medium ${t.border} ${t.muted} ${t.hover}`}
+                onClick={() => resolve(r.id, "dismissed")}
+                disabled={busyId === r.id}
+                className={`rounded-lg border px-3 py-1.5 text-xs font-medium ${t.border} ${t.muted} ${t.hover} disabled:opacity-50`}
               >
-                Dismiss
+                {busyId === r.id ? "…" : "Dismiss"}
               </button>
             </div>
           </div>

@@ -25,8 +25,16 @@ export const RELEASE_FEATURES = Object.freeze({
   // Ratings launch (2026-07-30): the site owner reviewed the under-18
   // consent/age-assurance question and chose to proceed. Enabling ratings
   // requires accounts (rating.jsx gates submission on a signed-in user), so
-  // both flip together. contentReporting is a separate, unrelated decision
-  // and stays off — there is still no moderation path for reported content.
+  // both flip together. contentReporting is a separate decision and stays
+  // off for now — NOT because a moderation path is missing (AdminPanel's
+  // "Reports" tab / useReports.js is a complete is_admin-gated queue, and
+  // the backend hardening (content_reports_hardening_v10.sql) is confirmed
+  // live in production, adversarially reviewed 2026-07-31, verdict SAFE TO
+  // FLIP). This is now a pure product-timing call, not an infra blocker:
+  // any signed-in account can already insert a report via the console
+  // regardless of this flag (VideoReport.jsx's reportUiEnabled() only hides
+  // the UI control, DB RLS is the real boundary) — the flag just decides
+  // when students are actually shown the "Report an issue" button.
   //
   // NOTE: flipping this flag alone does not turn on real sign-ups. Supabase
   // Auth's own project setting ("Allow new users to sign up") was verified
