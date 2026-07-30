@@ -143,10 +143,14 @@ export default function PrivacyPolicy() {
               when law requires it. The site measures traffic with Vercel's
               aggregate, cookieless page-view analytics: it counts visits and
               page views without cookies, device fingerprinting, cross-site
-              tracking, or individual visitor profiles. Beyond that, the
-              current frontend contains no first-party advertising system or
-              third-party audience analytics integration and does not
-              implement the sale of personal information.
+              tracking, or individual visitor profiles. It also uses
+              Vercel Speed Insights, which measures aggregate page-load
+              performance (Core Web Vitals) the same cookieless,
+              non-identifying way. Beyond that, the current frontend
+              contains no first-party
+              advertising system or third-party audience analytics
+              integration and does not implement the sale of personal
+              information.
             </p>
           </Section>
 

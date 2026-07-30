@@ -22,6 +22,9 @@ import {
 // no cookies, no cross-site tracking, no individual profiles (see the
 // privacy policy's "Purposes and sharing" section, which describes it).
 import { Analytics } from "@vercel/analytics/react";
+// Same privacy characteristics as Analytics above, but measures aggregate
+// page-load performance (Core Web Vitals) instead of page views.
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 import { ThemeProvider, useTheme } from "./theme.jsx";
 import Home from "./Home.jsx";
@@ -249,6 +252,7 @@ export default function App() {
       <RouteMetadata />
       <ScrollToTop />
       <Analytics />
+      <SpeedInsights />
       <Routes>
         {/* Admin sits OUTSIDE the student layout — no site footer. */}
         <Route path="/admin" element={<Deferred><AdminPanel /></Deferred>} />
