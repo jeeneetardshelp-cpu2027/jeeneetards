@@ -7,8 +7,10 @@ import { useTheme } from "./theme.jsx";
 import { usePlaylistVideos } from "./usePlaylistVideos.js";
 import {
   getCourseProgress, getLessonPosition, getPlayerPrefs, getWatchedVideoIds,
-  recordLessonPosition, recordLessonView, savePlayerPrefs,
+  mergeRemoteEntry, recordLessonPosition, recordLessonView, savePlayerPrefs,
 } from "./progress.js";
+import { pullServerProgress, queueProgressSync } from "./progressSync.js";
+import { useSession } from "./useSession.js";
 import { readReturnUrl, rememberReturn, resolveBack } from "./returnTo.js";
 import CourseRating from "./CourseRating.jsx";
 import VideoReport from "./VideoReport.jsx";
@@ -128,6 +130,9 @@ export default function CourseVideoPage() {
     });
   }, [location.search, playlistId, provenNotFound]);
 
+  const { session } = useSession();
+  const userId = session?.user?.id ?? null;
+
   const [savedProgress, setSavedProgress] = useState(null);
   useEffect(() => {
     setSavedProgress(getCourseProgress(playlistId));
@@ -156,6 +161,24 @@ export default function CourseVideoPage() {
   useEffect(() => {
     setWatchedIds(getWatchedVideoIds(playlistId));
   }, [playlistId]);
+
+  // Signed-in students may have progress from another device. Pulled once
+  // per course-page visit (cheap, and idempotent — mergeRemoteEntry only
+  // ever moves a video's position forward) and folded into localStorage so
+  // this page's resume point and watched ticks reflect it immediately.
+  useEffect(() => {
+    if (!userId) return;
+    let active = true;
+    pullServerProgress(userId).then((rows) => {
+      if (!active || !rows.length) return;
+      rows.forEach((row) => mergeRemoteEntry(row));
+      setSavedProgress(getCourseProgress(playlistId));
+      setWatchedIds(getWatchedVideoIds(playlistId));
+    });
+    return () => {
+      active = false;
+    };
+  }, [userId, playlistId]);
 
   // Autoplay only follows an in-page lesson selection. A fresh page load or
   // deep link must never start playback on its own.
@@ -200,6 +223,17 @@ export default function CourseVideoPage() {
       setWatchedIds(entry.watched);
       setSavedProgress(entry);
     }
+    // Lesson-start is the "mark watched" event — synced immediately, not
+    // throttled. Position carries the resume point rather than 0 so a
+    // returning student's server row never regresses to the beginning.
+    queueProgressSync(userId, {
+      playlistId,
+      videoDbId: activeLesson.id,
+      chapterId: activeLesson.chapter?.id ?? null,
+      position: getLessonPosition(playlistId, activeLesson.videoId),
+      duration: null,
+      watched: true,
+    }, { force: true });
   };
 
   // Player reports carry the videoId THEY were measured against: an old
@@ -211,11 +245,24 @@ export default function CourseVideoPage() {
     allLessons.find((lesson) => lesson.videoId === videoId) ?? null;
 
   const recordLessonProgressReport = ({ videoId, seconds, duration }) => {
-    if (!reportedLesson(videoId)) return;
+    const lesson = reportedLesson(videoId);
+    if (!lesson) return;
     if (Number.isFinite(duration) && duration > 0) {
       lastProgressRef.current = { videoId, duration };
     }
     recordLessonPosition({ playlistId, videoId, seconds, duration });
+    // Throttled (~25s): this fires every 5s while playing, plus once on
+    // pause and once on pagehide/lesson-switch (YouTubePlayer's own
+    // reportProgress/flushOnPageHide) — the throttle is what turns that
+    // into the owner's chosen "periodic + on pause/leave" cadence server-side.
+    queueProgressSync(userId, {
+      playlistId,
+      videoDbId: lesson.id,
+      chapterId: lesson.chapter?.id ?? null,
+      position: seconds,
+      duration,
+      watched: true,
+    });
   };
 
   // A finished lesson is stored at seconds=duration, which getLessonPosition
@@ -229,6 +276,14 @@ export default function CourseVideoPage() {
       ? last.duration
       : Number.isFinite(metaDuration) && metaDuration > 0 ? metaDuration : 0;
     recordLessonPosition({ playlistId, videoId, seconds: duration, duration });
+    queueProgressSync(userId, {
+      playlistId,
+      videoDbId: lesson.id,
+      chapterId: lesson.chapter?.id ?? null,
+      position: duration,
+      duration,
+      watched: true,
+    }, { force: true });
   };
 
   const persistPlaybackRate = (rate) => {
@@ -397,6 +452,7 @@ export default function CourseVideoPage() {
           watchedIds={watchedIds}
           continueLesson={continueLesson}
           onStart={startCourse}
+          signedIn={Boolean(userId)}
         />
       }
       ratingPanel={

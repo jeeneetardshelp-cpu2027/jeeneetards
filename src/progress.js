@@ -147,3 +147,45 @@ export function getWatchedVideoIds(playlistId) {
 export function getCourseProgress(playlistId) {
   return readAll()[String(playlistId)] ?? null;
 }
+
+// Fold one server-side video_progress row into this device's localStorage,
+// called once per row after a sign-in pull (see progressSync.js). Only ever
+// moves data FORWARD: a row is applied only where it is more advanced than
+// what is already on this device, so a fresh sign-in on a second device
+// can't overwrite progress this device made moments ago but hasn't synced
+// yet. `updatedAt` must be the server row's own timestamp (ms), not now().
+export function mergeRemoteEntry({
+  playlistId, chapterId, courseTitle, videoId, videoTitle, position, duration, watched, updatedAt,
+}) {
+  if (!playlistId || !videoId || !Number.isFinite(updatedAt)) return null;
+  const all = readAll();
+  const key = String(playlistId);
+  const prev = all[key] ?? { playlistId: Number(playlistId), watched: [] };
+
+  const priorPos = prev.positions?.[videoId];
+  if (!priorPos || updatedAt > priorPos.at) {
+    prev.positions = {
+      ...(prev.positions ?? {}),
+      [videoId]: { t: Number(position) || 0, d: Number(duration) > 0 ? Number(duration) : null, at: updatedAt },
+    };
+  }
+
+  if (watched && !prev.watched.includes(videoId)) {
+    prev.watched = [...prev.watched, videoId];
+  }
+
+  // "Most recently watched" course-level fields only move forward too — a
+  // stale row for a video the student opened months ago must not clobber
+  // what this device already knows was watched more recently.
+  if (!prev.updatedAt || updatedAt > prev.updatedAt) {
+    prev.chapterId = chapterId ?? prev.chapterId;
+    prev.courseTitle = courseTitle ?? prev.courseTitle ?? "Course";
+    prev.lastVideoId = videoId;
+    prev.lastVideoTitle = videoTitle ?? prev.lastVideoTitle ?? "";
+    prev.updatedAt = updatedAt;
+  }
+
+  all[key] = prev;
+  writeAll(all);
+  return prev;
+}
