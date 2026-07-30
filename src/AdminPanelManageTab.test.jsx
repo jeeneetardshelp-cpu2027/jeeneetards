@@ -34,16 +34,10 @@ vi.mock("./supabaseClient", () => ({
       }),
       signOut,
     },
-    from: () => ({
-      select: () => ({
-        eq: () => ({
-          maybeSingle: async () => ({
-            data: { is_admin: true },
-            error: null,
-          }),
-        }),
-      }),
-    }),
+    rpc: (fn) =>
+      fn === "is_admin"
+        ? Promise.resolve({ data: true, error: null })
+        : Promise.resolve({ data: null, error: null }),
   },
 }));
 
