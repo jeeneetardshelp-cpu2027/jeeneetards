@@ -29,6 +29,7 @@ security controls and release evidence must also be present.
 | School-board classification | Enabled |
 | Public student accounts | Enabled |
 | Rating submission | Enabled |
+| Review display | Enabled |
 | Content reporting | Disabled |
 
 The source of truth is

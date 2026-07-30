@@ -36,6 +36,10 @@ export const RELEASE_FEATURES = Object.freeze({
   // what this assistant will do, including to test it).
   studentAccounts: true,
   courseRatingSubmission: true,
+  // Deliberately sequenced AFTER admin review moderation shipped
+  // (rating_review_moderation.sql) -- the owner explicitly chose to hold
+  // public display until an admin could hide an inappropriate review.
+  reviewDisplay: true,
   contentReporting: false,
 });
 

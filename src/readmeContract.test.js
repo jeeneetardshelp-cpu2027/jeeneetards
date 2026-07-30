@@ -45,9 +45,10 @@ describe("repository onboarding contract", () => {
     expect(RELEASE_FEATURES).toEqual({
       studentAccounts: true,
       courseRatingSubmission: true,
+      reviewDisplay: true,
       contentReporting: false,
     });
-    for (const label of ["Public student accounts", "Rating submission"]) {
+    for (const label of ["Public student accounts", "Rating submission", "Review display"]) {
       expect(readme).toMatch(new RegExp(`\\| ${label} \\| Enabled \\|`));
     }
     expect(readme).toMatch(/\| Content reporting \| Disabled \|/);
