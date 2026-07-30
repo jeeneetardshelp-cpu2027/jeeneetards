@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "request_id": "58f33115-138b-4795-b82b-812044b23cce",
+  "youtube_playlist_id": "PLQsNiHo64JI-8-GPMA_RVGhmRN2MVLueU",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "d30HY8joHuY",
+      "chapter": "IOQC Solutions",
+      "lesson_number": 1
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "OTG8SCcgjIE",
+      "chapter": "IOQC Solutions",
+      "lesson_number": 2
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "AM_K4lSAHHs",
+      "chapter": "IOQC Solutions",
+      "lesson_number": 3
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "BezhcOxJbh0",
+      "chapter": "IOQC Solutions",
+      "lesson_number": 4
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "1yZ_I_vb4YM",
+      "chapter": "IOQC Solutions",
+      "lesson_number": 5
+    }
+  ]
+}

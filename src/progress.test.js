@@ -15,6 +15,7 @@ import {
   savePlayerPrefs,
   getWatchedVideoIds,
   getCourseProgress,
+  mergeRemoteEntry,
 } from "./progress.js";
 
 const KEY = "ll_progress_v1";
@@ -174,6 +175,74 @@ describe("player prefs", () => {
   it("a non-numeric stored rate reads as null", () => {
     localStorage.setItem(PREFS_KEY, JSON.stringify({ rate: "fast" }));
     expect(getPlayerPrefs()).toEqual({ rate: null });
+  });
+});
+
+describe("mergeRemoteEntry (server → localStorage, sign-in pull)", () => {
+  it("creates a fresh course entry on a device that has never seen it", () => {
+    const entry = mergeRemoteEntry({
+      playlistId: 9, chapterId: 3, courseTitle: "Mechanics", videoId: "vidA",
+      videoTitle: "Lesson A", position: 250, duration: 1000, watched: true, updatedAt: 1000,
+    });
+    expect(entry.lastVideoId).toBe("vidA");
+    expect(entry.lastVideoTitle).toBe("Lesson A");
+    expect(entry.courseTitle).toBe("Mechanics");
+    expect(getWatchedVideoIds(9)).toEqual(["vidA"]);
+    expect(getLessonPosition(9, "vidA")).toBe(250);
+  });
+
+  it("a newer remote row overwrites this device's older position", () => {
+    recordLessonPosition({ playlistId: 1, videoId: "vidA", seconds: 100, duration: 1000 });
+    mergeRemoteEntry({
+      playlistId: 1, chapterId: 7, courseTitle: "Optics", videoId: "vidA",
+      videoTitle: "Lesson A", position: 400, duration: 1000, watched: true,
+      updatedAt: Date.now() + 60000,
+    });
+    expect(getLessonPosition(1, "vidA")).toBe(400);
+  });
+
+  it("an older remote row never regresses this device's newer position", () => {
+    recordLessonPosition({ playlistId: 1, videoId: "vidA", seconds: 500, duration: 1000 });
+    mergeRemoteEntry({
+      playlistId: 1, chapterId: 7, courseTitle: "Optics", videoId: "vidA",
+      videoTitle: "Lesson A", position: 50, duration: 1000, watched: true, updatedAt: 1,
+    });
+    expect(getLessonPosition(1, "vidA")).toBe(500);
+  });
+
+  it("a stale remote row never moves lastVideoId backward", () => {
+    recordLessonView({
+      playlistId: 1, chapterId: 7, courseTitle: "Optics", videoId: "vidB",
+      videoTitle: "Lesson B", position: 2, totalLessons: 12,
+    });
+    const fresh = getCourseProgress(1).updatedAt;
+    mergeRemoteEntry({
+      playlistId: 1, chapterId: 7, courseTitle: "Optics", videoId: "vidA",
+      videoTitle: "Lesson A", position: 300, duration: 1000, watched: true,
+      updatedAt: fresh - 60000,
+    });
+    expect(getCourseProgress(1).lastVideoId).toBe("vidB");
+    // The per-video position still merges even though it didn't win lastVideoId.
+    expect(getLessonPosition(1, "vidA")).toBe(300);
+  });
+
+  it("adds a remote-watched video to the local watched list without duplicating it", () => {
+    recordLessonView({
+      playlistId: 1, chapterId: 7, courseTitle: "Optics", videoId: "vidA",
+      videoTitle: "Lesson A", position: 1, totalLessons: 12,
+    });
+    mergeRemoteEntry({
+      playlistId: 1, chapterId: 7, courseTitle: "Optics", videoId: "vidA",
+      videoTitle: "Lesson A", position: 10, duration: 1000, watched: true, updatedAt: 1,
+    });
+    expect(getWatchedVideoIds(1)).toEqual(["vidA"]);
+  });
+
+  it("rejects calls without a playlist, video id, or a valid updatedAt", () => {
+    expect(mergeRemoteEntry({ playlistId: null, videoId: "x", updatedAt: 1 })).toBeNull();
+    expect(mergeRemoteEntry({ playlistId: 1, videoId: "", updatedAt: 1 })).toBeNull();
+    expect(mergeRemoteEntry({ playlistId: 1, videoId: "x", updatedAt: NaN })).toBeNull();
+    expect(localStorage.getItem(KEY)).toBeNull();
   });
 });
 

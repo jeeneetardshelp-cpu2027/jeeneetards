@@ -28,6 +28,9 @@ describe("lessonNumber", () => {
   it("returns null when there is no number", () => {
     expect(lessonNumber("Introduction to Solutions")).toBeNull();
   });
+  it("does not treat '20 Years' PYQ titles as lesson 20", () => {
+    expect(lessonNumber("20 Years of JEE Advanced PYQs | Aldehydes, Ketones & Carboxylic Acids")).toBeNull();
+  });
 });
 
 describe("findDuplicateLessonNumbers (Codex blocked Ray Optics: 'duplicates lesson 36')", () => {

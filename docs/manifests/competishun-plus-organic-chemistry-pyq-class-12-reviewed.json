@@ -1,0 +1,121 @@
+{
+  "version": 1,
+  "request_id": "8cc41251-cef7-438f-84e0-e9f2e8fa37d5",
+  "youtube_playlist_id": "PLQsNiHo64JI82vTo5kGbD7EtVkNkFMyw5",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "i59LKT_DgjY",
+      "chapter": "Some Basic Principles of Organic Chemistry",
+      "lesson_number": 1
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "7ME_SzpFOMw",
+      "chapter": "Stereoisomerism",
+      "lesson_number": 2
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "a90HQrHixto",
+      "chapter": "Polymers",
+      "lesson_number": 3
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "ZiMgUfrS8HE",
+      "chapter": "Organic Reaction Mechanisms",
+      "lesson_number": 4
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "o4BIUlwe4Wk",
+      "chapter": "Organic Reaction Mechanisms",
+      "lesson_number": 5
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "VBPjUrqoH-o",
+      "chapter": "Organic Reaction Mechanisms",
+      "lesson_number": 6
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "OG7ra7EchQg",
+      "chapter": "Organic Reaction Mechanisms",
+      "lesson_number": 7
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "T4By4XwAsKM",
+      "chapter": "Biomolecules",
+      "lesson_number": 8
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "YXhSZ6XOVao",
+      "chapter": "Organic Compounds Containing Oxygen",
+      "lesson_number": 9
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "E1K91qjJve8",
+      "chapter": "Organic Compounds Containing Oxygen",
+      "lesson_number": 10
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "5_bTNI53Dpw",
+      "chapter": "Organic Compounds Containing Oxygen",
+      "lesson_number": 11
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "6YuYm2wNolU",
+      "chapter": "Organic Compounds Containing Oxygen",
+      "lesson_number": 12
+    },
+    {
+      "position": 13,
+      "youtube_video_id": "lFIONq5QOr4",
+      "chapter": "Organic Compounds Containing Oxygen",
+      "lesson_number": 13
+    },
+    {
+      "position": 14,
+      "youtube_video_id": "hgcR6hPwf98",
+      "chapter": "Organic Compounds Containing Oxygen",
+      "lesson_number": 14
+    },
+    {
+      "position": 15,
+      "youtube_video_id": "ZOL1FjuW5hU",
+      "chapter": "Aromatic Compounds",
+      "lesson_number": 15
+    },
+    {
+      "position": 16,
+      "youtube_video_id": "u5Oqrae_1XI",
+      "chapter": "Aromatic Compounds",
+      "lesson_number": 16
+    },
+    {
+      "position": 17,
+      "youtube_video_id": "xHSRaO4ARWg",
+      "chapter": "Aromatic Compounds",
+      "lesson_number": 17
+    },
+    {
+      "position": 18,
+      "youtube_video_id": "qoa7zQVzRsI",
+      "chapter": "Aromatic Compounds",
+      "lesson_number": 18
+    },
+    {
+      "position": 19,
+      "youtube_video_id": "fAC2hqyzpzQ",
+      "chapter": "Aromatic Compounds",
+      "lesson_number": 19
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "request_id": "3cc0824a-1faf-4f3c-bc56-79a34002890e",
+  "youtube_playlist_id": "PLQsNiHo64JI9_oCLcWIWAVVpMqOgaPJaA",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "ZLAUGsStvY8",
+      "chapter": "INChO Solutions",
+      "lesson_number": 1
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "7_76h3YvwJk",
+      "chapter": "INChO Solutions",
+      "lesson_number": 2
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "cKQieZzijUw",
+      "chapter": "INChO Solutions",
+      "lesson_number": 3
+    }
+  ]
+}

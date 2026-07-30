@@ -20,7 +20,7 @@ const formatCheckedDate = (value) => {
 };
 
 export default function CourseOverview({
-  course, lessons, watchedIds = [], continueLesson = null, onStart,
+  course, lessons, watchedIds = [], continueLesson = null, onStart, signedIn = false,
 }) {
   const { t } = useTheme();
   const color = subjectColor(course.subject);
@@ -114,7 +114,9 @@ export default function CourseOverview({
           >
             <Play className="h-4 w-4" fill="white" /> {cta}
           </button>
-          <p className={`mt-2 text-center text-xs ${t.faint}`}>Free on YouTube · progress stays on this device</p>
+          <p className={`mt-2 text-center text-xs ${t.faint}`}>
+            Free on YouTube · {signedIn ? "progress syncs to your account" : "progress stays on this device"}
+          </p>
         </div>
       </div>
 
