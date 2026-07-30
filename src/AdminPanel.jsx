@@ -13,6 +13,7 @@ import { useState, useEffect, useMemo } from "react";
 import { supabase, isSupabaseConfigured } from "./supabaseClient";
 import { useAdminData } from "./useAdminData";
 import { useReports } from "./useReports.js";
+import { useReviewModeration } from "./useReviewModeration.js";
 import { useTheme } from "./theme.jsx";
 import {
   ACCENT, Labeled, Input, Select, SubmitButton, FormCard, useSubmit,
@@ -674,6 +675,67 @@ function ReportsPanel() {
 }
 
 // ---------------------------------------------------------------------
+//  REVIEWS  —  every written review, hide/un-hide. No public display
+//  surface exists yet for review text, so this is proactive moderation
+//  (spot-checking) rather than a response to student reports.
+// ---------------------------------------------------------------------
+function ReviewModerationPanel() {
+  const { t } = useTheme();
+  const { reviews, loading, error, setHidden } = useReviewModeration();
+  const [busyId, setBusyId] = useState(null);
+
+  const toggle = async (review) => {
+    setBusyId(review.id);
+    await setHidden(review.id, !review.review_hidden);
+    setBusyId(null);
+  };
+
+  if (loading) return <p className={`text-sm ${t.muted}`}>Loading reviews…</p>;
+  if (error)
+    return (
+      <p className="text-sm" style={{ color: ACCENT.red }}>
+        Couldn't load reviews: {error}
+      </p>
+    );
+  if (reviews.length === 0)
+    return (
+      <div className={`rounded-2xl border border-dashed ${t.border} p-12 text-center`}>
+        <p className={`text-sm font-semibold ${t.text}`}>No written reviews yet</p>
+        <p className={`mt-1 text-sm ${t.muted}`}>Reviews with text will appear here.</p>
+      </div>
+    );
+
+  return (
+    <div className="space-y-3">
+      {reviews.map((r) => (
+        <div key={r.id} className={`rounded-2xl border ${t.card} ${t.border} p-5 ${r.review_hidden ? "opacity-60" : ""}`}>
+          <div className="flex items-start justify-between gap-4">
+            <div className="min-w-0">
+              <p className={`text-sm font-semibold ${t.text}`}>
+                {r.playlist_title} · {r.rating}/5
+                {r.review_hidden && (
+                  <span className="ml-2 rounded-full px-2 py-0.5 text-xs font-medium" style={{ backgroundColor: ACCENT.red, color: "white" }}>
+                    Hidden
+                  </span>
+                )}
+              </p>
+              <p className={`mt-2 text-sm ${t.muted}`}>“{r.review}”</p>
+            </div>
+            <button
+              onClick={() => toggle(r)}
+              disabled={busyId === r.id}
+              className={`shrink-0 rounded-lg border px-3 py-1.5 text-xs font-medium ${t.border} ${t.muted} ${t.hover} disabled:opacity-50`}
+            >
+              {busyId === r.id ? "…" : r.review_hidden ? "Un-hide" : "Hide"}
+            </button>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------
 //  SIGN IN
 // ---------------------------------------------------------------------
 function SignIn() {
@@ -862,6 +924,7 @@ export default function AdminPanel() {
     { id: "quality", label: "Content Quality" },
     { id: "faculty", label: "Faculty Review" },
     { id: "reports", label: "Reports" },
+    { id: "reviews", label: "Reviews" },
   ];
 
   return (
@@ -916,6 +979,8 @@ export default function AdminPanel() {
 
         {tab === "reports" ? (
           <ReportsPanel />
+        ) : tab === "reviews" ? (
+          <ReviewModerationPanel />
         ) : tab === "quality" ? (
           <ContentQualityPanel />
         ) : tab === "faculty" ? (
