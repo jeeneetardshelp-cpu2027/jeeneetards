@@ -48,6 +48,15 @@ SQL (run in the Supabase SQL Editor, in this order):
 - community_schema.sql — profiles, playlists, playlist_videos, playlist_ratings, video_comments + auto-average + RLS.
 - courses_data.sql     — adds tags + teacher to playlists; get_chapter_courses() RPC.
 
+These three files are the ORIGINAL schema only. Production has grown far
+beyond them since (40 tables, 76 RPC functions as of 2026-07-30 — faculty
+management, catalog quality review, content reports, ratings moderation,
+search infrastructure, and more, each added by its own incremental
+migration file scattered across the repo root, `src/migrations/`, and
+`docs/sql/`). For the current, live-verified full picture, see
+[`docs/schema_reference.md`](docs/schema_reference.md) — do not assume
+these three files are the whole database.
+
 React / JS:
 - Dashboard.jsx, MinimalUI.jsx, YouTubePlayer.jsx, Footer.jsx, LegalPage.jsx, PrivacyPolicy.jsx
 - supabaseClient.js    — Supabase client from env vars.
