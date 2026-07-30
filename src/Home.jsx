@@ -26,6 +26,7 @@ import { PlaylistCard } from "./PlaylistBrowse.jsx";
 // separate ranking that disagreed with /search. It now calls the same
 // server-ranked universal_search RPC that /search does.
 import { useUniversalSearch, MIN_QUERY } from "./useUniversalSearch.js";
+import { resultHref } from "./searchDestinations.js";
 import { getContinueWatching } from "./progress.js";
 import { EXAMS } from "./filterModel.js";
 import { useTheme } from "./theme.jsx";
@@ -335,49 +336,6 @@ function FeaturedCourses({ goalId }) {
 // ---------------------------------------------------------------------
 //  Grouped search results
 // ---------------------------------------------------------------------
-// Where a result row leads. Every group must land somewhere watchable or
-// filtered — a row that navigates to a bare /browse throws away the very
-// thing the student searched for.
-export function resultHref(groupKey, row) {
-  const extra = row.extra ?? {};
-  switch (groupKey) {
-    case "chapter":
-      // ?ch= is the legacy id key; the canonical ?chapter= form needs a slug,
-      // which the RPC does not return.
-      return `/browse?ch=${extra.chapter_id ?? row.id}`;
-    case "playlist":
-      // A course with no chapter context is still a real destination, so this
-      // never has to disable the row.
-      return extra.chapter_id
-        ? `/course/${row.id}/chapter/${extra.chapter_id}`
-        : `/course/${row.id}`;
-    case "lecture": {
-      // Prefer the lesson itself — a lecture result that lands on a filtered
-      // catalogue makes the student hunt for what they already found. Falls
-      // back to the chapter filter where the deployed RPC does not yet carry
-      // playlist_id for lectures.
-      if (!extra.playlist_id) {
-        return extra.chapter_id
-          ? `/browse?ch=${extra.chapter_id}`
-          : `/browse${extra.subject_id ? `?sub=${extra.subject_id}` : ""}`;
-      }
-      const base = extra.chapter_id
-        ? `/course/${extra.playlist_id}/chapter/${extra.chapter_id}`
-        : `/course/${extra.playlist_id}`;
-      // ?v= selects the lesson on the watch page (a YouTube id, not a row id).
-      return extra.youtube_video_id
-        ? `${base}?v=${encodeURIComponent(extra.youtube_video_id)}`
-        : base;
-    }
-    case "institute":
-      return `/browse?channel=${extra.institute_id ?? row.id}`;
-    case "faculty":
-      return row.slug ? `/faculty/${row.slug}` : "/browse";
-    default:
-      return "/browse";
-  }
-}
-
 const HOME_GROUPS = [
   { key: "chapter", label: "Chapters", icon: BookOpen },
   { key: "playlist", label: "Courses", icon: PlayCircle },

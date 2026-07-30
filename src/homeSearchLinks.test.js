@@ -6,7 +6,7 @@
 // regressing.
 
 import { describe, expect, it } from "vitest";
-import { resultHref } from "./Home.jsx";
+import { resultHref } from "./searchDestinations.js";
 
 const row = (id, extra = {}, rest = {}) => ({ id, extra, ...rest });
 

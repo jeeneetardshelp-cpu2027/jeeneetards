@@ -19,6 +19,7 @@ import { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import { useSearchParams, useNavigate } from "react-router";
 import { Search, X, Loader2, AlertTriangle, Users } from "lucide-react";
 import { useUniversalSearch, GROUPS, MIN_QUERY } from "./useUniversalSearch.js";
+import { resultHref } from "./searchDestinations.js";
 import { normalizeForHighlight } from "./searchHighlight.js";
 import { useTheme } from "./theme.jsx";
 import { BRAND_NAVY, BRAND_TEAL } from "./brandColors.js";
@@ -165,21 +166,11 @@ export default function UniversalSearch() {
 
   const listRef = useRef(null);
 
+  // Destinations are shared with the homepage search (searchDestinations.js).
+  // This used to be a second copy that had drifted: lecture rows here went to
+  // a filtered catalogue instead of the lesson.
   const pick = useCallback((item, group) => {
-    if (group === "faculty") {
-      // A faculty slug is the only safe handle; the display name is not unique.
-      navigate(item.slug ? `/faculty/${item.slug}` : `/browse?q=${encodeURIComponent(item.title)}`);
-    } else if (group === "chapter") {
-      navigate(`/browse?ch=${item.id}`);
-    } else if (group === "playlist") {
-      navigate(item.extra?.chapter_id
-        ? `/course/${item.id}/chapter/${item.extra.chapter_id}`
-        : `/course/${item.id}`);
-    } else if (group === "lecture") {
-      navigate(item.extra?.chapter_id ? `/browse?ch=${item.extra.chapter_id}` : "/browse");
-    } else {
-      navigate(`/browse?q=${encodeURIComponent(item.title)}`);
-    }
+    navigate(resultHref(group, item));
   }, [navigate]);
 
   const onKeyDown = (e) => {
