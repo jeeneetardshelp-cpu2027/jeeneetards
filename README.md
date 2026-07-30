@@ -27,8 +27,8 @@ security controls and release evidence must also be present.
 | Course comparison | Enabled |
 | Faculty profiles and filtering | Enabled |
 | School-board classification | Enabled |
-| Public student accounts | Disabled |
-| Rating submission | Disabled |
+| Public student accounts | Enabled |
+| Rating submission | Enabled |
 | Content reporting | Disabled |
 
 The source of truth is

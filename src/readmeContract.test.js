@@ -41,19 +41,16 @@ describe("repository onboarding contract", () => {
     }
   });
 
-  it("documents every disabled public write feature", () => {
+  it("documents which public write features are enabled and which remain disabled", () => {
     expect(RELEASE_FEATURES).toEqual({
-      studentAccounts: false,
-      courseRatingSubmission: false,
+      studentAccounts: true,
+      courseRatingSubmission: true,
       contentReporting: false,
     });
-    for (const label of [
-      "Public student accounts",
-      "Rating submission",
-      "Content reporting",
-    ]) {
-      expect(readme).toMatch(new RegExp(`\\| ${label} \\| Disabled \\|`));
+    for (const label of ["Public student accounts", "Rating submission"]) {
+      expect(readme).toMatch(new RegExp(`\\| ${label} \\| Enabled \\|`));
     }
+    expect(readme).toMatch(/\| Content reporting \| Disabled \|/);
   });
 
   it("keeps privileged keys out of frontend guidance", () => {

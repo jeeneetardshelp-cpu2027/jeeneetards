@@ -5,16 +5,16 @@ import { RELEASE_FEATURES } from "./releaseCapabilities.js";
 
 const root = resolve(import.meta.dirname, "..");
 
-describe("browse-only production release evidence", () => {
-  it("keeps every public student-owned write feature disabled", () => {
+describe("ratings-launch production release evidence", () => {
+  it("enables accounts and rating submission, keeps content reporting disabled", () => {
     expect(RELEASE_FEATURES).toEqual({
-      studentAccounts: false,
-      courseRatingSubmission: false,
+      studentAccounts: true,
+      courseRatingSubmission: true,
       contentReporting: false,
     });
   });
 
-  it("records the production Auth controls that were verified read-only", () => {
+  it("records the pre-decision production Auth controls (2026-07-23, before the ratings launch)", () => {
     const evidence = JSON.parse(
       readFileSync(resolve(root, "docs/browse_only_auth_evidence.json"), "utf8"),
     );

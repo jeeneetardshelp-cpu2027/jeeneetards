@@ -37,3 +37,16 @@ Additional owner decisions that must accompany legal review:
 This checklist is an engineering release control, not legal advice. The final
 public text should receive qualified legal and privacy review for the markets
 and ages the service will support.
+
+## 2026-07-30 addendum: accounts and ratings enabled
+
+The owner was asked directly whether to proceed with public student accounts
+and rating submission given that the under-18 consent/age-assurance question
+above had not yet had a qualified legal review, and chose to proceed and
+accept that risk. `studentAccounts` and `courseRatingSubmission` in
+`src/releaseCapabilities.js` were changed to `true` on this basis.
+`contentReporting` was left disabled — it is a separate decision and there is
+still no moderation path for reported content.
+
+This is a record of the decision the owner made, not a substitute for the
+qualified legal/privacy review still recommended above.
