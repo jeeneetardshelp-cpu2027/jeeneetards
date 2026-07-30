@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useLocation } from "react-router";
 import {
   DEFAULT_DESCRIPTION,
@@ -7,6 +7,9 @@ import {
   metadataForCourse,
   metadataForLocation,
 } from "./pageMetadata.js";
+// Only the serializer, never the schema builders: this file's job is DOM
+// upsert/cleanup, not deciding what a Course or VideoObject looks like.
+import { safeStructuredDataJson } from "./structuredData.js";
 
 const SOCIAL_IMAGE_PATH = "/social-preview.png";
 
@@ -91,4 +94,94 @@ export function useCourseMetadata(course) {
       robots: "index, follow",
     });
   }, [course, pathname, search]);
+}
+
+const STRUCTURED_DATA_ATTR = "data-schema-key";
+const STRUCTURED_DATA_SELECTOR = `script[type="application/ld+json"][${STRUCTURED_DATA_ATTR}]`;
+const structuredDataSelectorForKey = (key) =>
+  `script[type="application/ld+json"][${STRUCTURED_DATA_ATTR}="${key}"]`;
+
+// A JS-created <script type="application/ld+json"> is not a JavaScript MIME
+// type, so it is not subject to CSP `script-src` enforcement in Chrome or
+// Firefox even though vercel.json's script-src has no 'unsafe-inline' — this
+// is standard practice (Google's own rich-results examples do it this way),
+// but it is an assumption: verify there is no CSP console warning live.
+function upsertStructuredDataElement(key, schema) {
+  let element = document.head.querySelector(structuredDataSelectorForKey(key));
+  if (!element) {
+    element = document.createElement("script");
+    element.type = "application/ld+json";
+    element.setAttribute(STRUCTURED_DATA_ATTR, key);
+    document.head.appendChild(element);
+  }
+  // safeStructuredDataJson escapes "<" so a title/description containing a
+  // literal "</script>" cannot break out of this tag — textContent alone
+  // does not protect against that, the HTML parser closes on the substring
+  // regardless of the element's type attribute.
+  element.textContent = safeStructuredDataJson(schema);
+}
+
+/**
+ * Upsert one <script type="application/ld+json"> per schema object into
+ * document.head, keyed by the schema's own `@type` (e.g. "Course",
+ * "VideoObject", "BreadcrumbList"). Any previously-written schema script
+ * whose key is not present in this call is removed, so navigating between
+ * pages never leaves a stale Course/VideoObject describing the old page.
+ *
+ * `schemas` is an array of plain schema.org objects (already built by
+ * src/structuredData.js's schema-builder functions); null/undefined entries
+ * are skipped so callers can pass conditional schemas inline. If a page ever
+ * needs two schemas of the same `@type` at once, that collides on this key
+ * and is the caller's bug, not this function's — split them or nest them
+ * under a single schema instead (e.g. an ItemList of Courses).
+ *
+ * Returns the Set of keys written, for callers that need to track them.
+ */
+export function applyStructuredData(schemas) {
+  const keys = new Set();
+
+  for (const schema of schemas ?? []) {
+    if (!schema) continue;
+    const key = schema["@type"];
+    upsertStructuredDataElement(key, schema);
+    keys.add(key);
+  }
+
+  document.head.querySelectorAll(STRUCTURED_DATA_SELECTOR).forEach((element) => {
+    if (!keys.has(element.getAttribute(STRUCTURED_DATA_ATTR))) {
+      element.remove();
+    }
+  });
+
+  return keys;
+}
+
+function removeStructuredDataElement(key) {
+  document.head.querySelector(structuredDataSelectorForKey(key))?.remove();
+}
+
+/**
+ * Hook form of applyStructuredData, run from a useEffect keyed on an
+ * explicit `deps` array supplied by the caller (mirrors useCourseMetadata
+ * above). Written keys are tracked in a ref so that on unmount — not on
+ * every dep change, only when this component stops rendering entirely —
+ * every schema script this hook is responsible for is removed rather than
+ * left behind for whatever route renders next.
+ */
+export function useStructuredData(schemas, deps) {
+  const writtenKeysRef = useRef(new Set());
+
+  useEffect(() => {
+    writtenKeysRef.current = applyStructuredData(schemas);
+    // `deps` is the caller's explicit dependency list (schemas is rebuilt
+    // fresh every render and would otherwise re-run this on every render).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, deps);
+
+  useEffect(() => {
+    return () => {
+      writtenKeysRef.current.forEach(removeStructuredDataElement);
+      writtenKeysRef.current = new Set();
+    };
+  }, []);
 }

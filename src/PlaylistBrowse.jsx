@@ -23,6 +23,8 @@ import { FILTER_PARAMS } from "./filterSchema.js";
 import { makeReturnState } from "./returnTo.js";
 import { ratingDisplay, RATING_CONFIDENCE_MIN } from "./ratingConfidence.js";
 import { useTheme } from "./theme.jsx";
+import { useStructuredData } from "./PageMetadata.jsx";
+import { itemListSchema } from "./structuredData.js";
 import { BRAND_NAVY, BRAND_TEAL, BRAND_SERIF, subjectColor } from "./brandColors.js";
 
 // Labels come from the canonical filter vocabulary — a second copy here would
@@ -316,6 +318,27 @@ export default function PlaylistBrowse({
   const courseUrl = (course) =>
     filters.chapter ? `/course/${course.id}/chapter/${filters.chapter}` : `/course/${course.id}`;
   const courseReturnState = makeReturnState(location.pathname, location.search);
+
+  // ItemList for the currently visible page of COURSE cards (the lecture-tab
+  // view has no card-per-course identity worth marking up). Position folds in
+  // the real pagination offset so page 2 reads 21-40, not 1-20 again — never
+  // just the on-screen index. Nothing to describe on loading/error/empty, so
+  // those states pass an empty list and the hook clears any prior markup.
+  const canListCourses = tab === "playlists" && !loading && !error && items.length > 0;
+  useStructuredData(
+    canListCourses
+      ? [
+          itemListSchema(
+            items.map((course, index) => ({
+              title: course.title,
+              url: courseUrl(course), // the exact href the card's own Link uses
+              position: page * PAGE_SIZE + index + 1,
+            })),
+          ),
+        ]
+      : [],
+    [canListCourses, items, page, filters.chapter],
+  );
 
   return (
     <>

@@ -13,7 +13,9 @@ import { readReturnUrl, rememberReturn, resolveBack } from "./returnTo.js";
 import CourseRating from "./CourseRating.jsx";
 import VideoReport from "./VideoReport.jsx";
 import CourseOverview from "./CourseOverview.jsx";
-import { applyPageMetadata, useCourseMetadata } from "./PageMetadata.jsx";
+import { applyPageMetadata, useCourseMetadata, useStructuredData } from "./PageMetadata.jsx";
+import { breadcrumbListSchema, courseSchema, videoObjectSchema } from "./structuredData.js";
+import { metadataForCourse } from "./pageMetadata.js";
 import { BRAND_TEAL } from "./brandColors.js";
 
 const TEAL = BRAND_TEAL;
@@ -245,6 +247,77 @@ export default function CourseVideoPage() {
     if (url) rememberReturn(coursePath, url);
   }, [coursePath, location.state]);
   const backToHub = () => back.mode === "back" ? navigate(-1) : navigate(back.url);
+
+  // Rule 1 (never fabricate): only mark up a course once it has actually
+  // resolved to something real — not while loading, not on a failed fetch,
+  // not for a chapter/course that doesn't exist, and not before there is a
+  // lesson to point a VideoObject at. Matches the guards the early returns
+  // below use, computed here (unconditionally, before any of them) because
+  // hooks cannot follow those returns.
+  const canDescribeCourse =
+    !loading && !error && Boolean(course) && scope.valid && Boolean(activeLesson);
+
+  // The SAME three levels VideoView's own crumbsProp fallback renders
+  // (MinimalUI.jsx) — course title or chapter name in the middle, current
+  // lesson last — read directly from what's already resolved here rather
+  // than re-derived inside MinimalUI, so markup can never drift from what
+  // the student sees. Converted to the {label,url} shape breadcrumbListSchema
+  // expects.
+  // The visible "Browse courses" crumb calls onBack (== backToHub below), not
+  // a fixed URL — when there IS a concrete return address (arriving from a
+  // filtered Explore/Browse view) that address, not a bare "/browse", is
+  // where the student actually lands, and JSON-LD must not name a URL the
+  // real breadcrumb doesn't go to. Pure history-back (back.mode==="back") has
+  // no static URL to report; /browse is still an honest hierarchy parent.
+  const browseCrumbUrl = back.mode === "back" ? "/browse" : back.url;
+  const structuredDataCrumbs = canDescribeCourse
+    ? [
+        { label: "Browse courses", url: browseCrumbUrl },
+        // A chapter sub-URL canonicalizes to the bare course URL (see
+        // useCourseMetadata above) — that IS this crumb's real, indexable
+        // address, whichever label (chapter or course title) it shows.
+        { label: scope.chapter?.name ?? course.title, url: `/course/${playlistId}` },
+        // Terminal crumb: the page the student is already on. Matches every
+        // other breadcrumb on this site — the current page carries no
+        // separate url of its own.
+        { label: activeLesson.title, url: null },
+      ]
+    : [];
+
+  useStructuredData(
+    canDescribeCourse
+      ? [
+          courseSchema({
+            title: course.title,
+            // No description column exists on playlists; rather than ship
+            // Course markup permanently missing Google's required
+            // `description` property, reuse the exact real-data sentence
+            // (subject + lesson count) already shown to Google in this same
+            // page's <meta name="description"> via useCourseMetadata/
+            // metadataForCourse — same facts, one source, never fabricated.
+            description: metadataForCourse(displayedCourse)?.description,
+            institute: course.institute,
+            teacher: course.teacher,
+            averageRating: course.averageRating,
+            ratingsCount: course.ratingsCount,
+            url: `/course/${playlistId}`,
+          }),
+          // Whichever lesson is ACTUALLY active right now — never "the whole
+          // course" as one video (rule 5). Recomputes whenever activeLesson
+          // changes, via the deps array below.
+          videoObjectSchema({
+            title: activeLesson.title,
+            description: activeLesson.description,
+            youtubeVideoId: activeLesson.videoId,
+            durationSeconds: activeLesson.durationSeconds,
+          }),
+          breadcrumbListSchema(structuredDataCrumbs),
+        ]
+      : [],
+    // displayedCourse (Course.description) and back (the breadcrumb's real
+    // return URL) are both read inside this effect now — both belong here.
+    [canDescribeCourse, playlistId, course, displayedCourse, scope.chapter, activeLesson, back],
+  );
 
   if (loading) return <CenteredNotice title="Loading course…" />;
   if (error) return <CenteredNotice title="Couldn't load course" detail={error} onRetry={reload} onBack={backToHub} />;

@@ -37,6 +37,8 @@ import { useScopedSearch } from "./useScopedSearch.js";
 import { canonicalBrowseUrl } from "./canonicalUrl.js";
 import { GlobalHeader, HeaderSearch, Container } from "./AppShell.jsx";
 import { useTheme } from "./theme.jsx";
+import { useStructuredData } from "./PageMetadata.jsx";
+import { breadcrumbListSchema } from "./structuredData.js";
 import { BRAND_NAVY, BRAND_TEAL } from "./brandColors.js";
 
 const BRAND = { navy: BRAND_NAVY, teal: BRAND_TEAL };
@@ -141,6 +143,23 @@ export default function Explore() {
             : chapter && subjectNode && catalogReady && !chapterNode
               ? p(cls, subject)
               : null;
+  // The SAME `crumbs` this component already builds for its own header — no
+  // second derivation to drift from what students see. Skipped while
+  // searching (a live query isn't a stable page identity worth marking up)
+  // and — critically — computed AFTER unknownSlugTarget above: this render
+  // is about to bail into a redirect for an unknown slug, and writing a
+  // BreadcrumbList that names a URL the app itself has just decided is not
+  // real would put invalid markup in the DOM for the render this component
+  // never actually settles on.
+  // `to` -> `url`: breadcrumbListSchema returns null outright for the <2-item
+  // trail on the bare /explore step, so nothing is written there either.
+  useStructuredData(
+    searching || unknownSlugTarget
+      ? []
+      : [breadcrumbListSchema(crumbs.map((c) => ({ label: c.label, url: c.to ?? null })))],
+    [searching, unknownSlugTarget, goalNode?.slug, boardNode?.slug, classNode?.slug, subjectNode?.slug, chapterNode?.slug],
+  );
+
   if (unknownSlugTarget) return <Navigate to={unknownSlugTarget} replace />;
 
   return (

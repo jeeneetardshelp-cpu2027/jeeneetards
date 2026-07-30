@@ -361,6 +361,51 @@ describe("mobile filter dialog accessibility", () => {
   });
 });
 
+describe("structured data (course ItemList)", () => {
+  beforeEach(() => {
+    COUNT = 3;
+    ROWS = [
+      row(11, "Complete Kinematics"),
+      row(12, "Newton's Laws"),
+      row(13, "Rotational Motion"),
+    ];
+  });
+
+  function itemList() {
+    const el = document.head.querySelector(
+      'script[type="application/ld+json"][data-schema-key="ItemList"]',
+    );
+    return el ? JSON.parse(el.textContent) : null;
+  }
+
+  it("numbers the visible course cards from 1 and links to the same href the card uses", async () => {
+    renderBrowse({ subject: null, chapter: null, search: "" });
+    await screen.findAllByText("View course");
+    const list = itemList();
+    expect(list.itemListElement.map((i) => i.position)).toEqual([1, 2, 3]);
+    expect(list.itemListElement[0]).toMatchObject({
+      name: "Complete Kinematics",
+      url: "https://www.jeeneetard.com/course/11",
+    });
+  });
+
+  it("folds in the real pagination offset — page 3 is numbered 25-27, not 1-3", async () => {
+    renderBrowse({ subject: null, chapter: null, search: "" }, "/browse?page=2");
+    await screen.findAllByText("View course");
+    const list = itemList();
+    expect(list.itemListElement.map((i) => i.position)).toEqual([
+      2 * PAGE_SIZE + 1, 2 * PAGE_SIZE + 2, 2 * PAGE_SIZE + 3,
+    ]);
+  });
+
+  it("writes nothing while courses are still loading", () => {
+    renderBrowse({ subject: null, chapter: null, search: "" });
+    // Asserted synchronously, before the faked Supabase promise has resolved —
+    // rule 1 forbids describing a catalogue page before it has real results.
+    expect(itemList()).toBeNull();
+  });
+});
+
 describe("honest metadata", () => {
   it("omits duration entirely when unknown", () => {
     expect(formatDuration(null)).toBeNull();
