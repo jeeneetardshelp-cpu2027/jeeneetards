@@ -52,7 +52,16 @@ export function titleQualityIssues(value) {
     issues.push({ code: "too-long", severity: "blocking", message: "Keep the course title under 90 characters; move exam and chapter details into filters." });
   if (/\|/u.test(title))
     issues.push({ code: "pipe-list", severity: "warning", message: "This looks like a keyword list. Use one concise course name." });
-  if (/^\s*(?:#\s*\d+|(?:lecture|lesson|part|episode)\s*[-:#]?\s*\d+)/iu.test(title))
+  // A bare leading number ("1- Rectilinear motion", "22 Questions on ...") is
+  // the same defect as "#1" or "Lecture 1": the lesson list already shows the
+  // position. Excludes a number that is part of the subject ("12th Chemistry",
+  // "3D Geometry", "2 Variables") — only a number followed by a separator or
+  // by a capitalised/Devanagari word counts as numbering.
+  if (
+    /^\s*(?:#\s*\d+|(?:lecture|lesson|part|episode|l)\s*[-:#.]?\s*\d+)/iu.test(title) ||
+    /^\s*\d{1,3}\s*[-–—.):]\s*(?=\S)/u.test(title) ||
+    /^\s*\d{1,3}\s+(?=\p{Lu}|\p{Script=Devanagari})/u.test(title)
+  )
     issues.push({ code: "episode-prefix", severity: "warning", message: "Remove lecture or episode numbering from a course title." });
   if (/\b(?:complete playlist|must watch|best ever|100% guaranteed)\b/iu.test(title))
     issues.push({ code: "promotional", severity: "warning", message: "Remove promotional claims that the directory cannot verify." });

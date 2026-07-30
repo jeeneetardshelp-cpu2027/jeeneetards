@@ -24,6 +24,32 @@ describe("editorial title quality", () => {
     expect(codes).toContain("episode-prefix");
   });
 
+  it("warns about a BARE leading position number, not just #1 or Lecture 1", () => {
+    // These shipped as "clean" in the first title pass and left lessons 1-3 of
+    // a course reading "1- Rectilinear motion" beside cleaned siblings.
+    for (const title of [
+      "1- Rectilinear motion",
+      "2 - Rectilinear motion",
+      "22 Questions on Line spectrum of atomic hydrogen",
+      "3) Nature of Roots",
+      "04. Motion Under Gravity",
+      "5 सरल रेखीय गति",
+    ]) {
+      expect(titleQualityIssues(title).map((i) => i.code)).toContain("episode-prefix");
+    }
+  });
+
+  it("does not mistake a number that belongs to the topic for numbering", () => {
+    for (const title of [
+      "3D Geometry Basics",
+      "12th Chemistry Revision",
+      "Pair of Linear Equations in 2 Variables",
+      "2026 Question Paper Analysis",
+    ]) {
+      expect(titleQualityIssues(title).map((i) => i.code)).not.toContain("episode-prefix");
+    }
+  });
+
   it("blocks blank and overlong titles but leaves warnings for human judgement", () => {
     expect(titleCanBeApproved(" ")).toBe(false);
     expect(titleCanBeApproved("x".repeat(91))).toBe(false);
