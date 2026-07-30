@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "request_id": "ebd50d21-f140-4a9c-a8f5-2e057377ecdb",
+  "youtube_playlist_id": "PLQsNiHo64JI_oIPpXjazL4mfkWQaJaE3V",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "hheyjyui70I",
+      "chapter": "IChO Solutions",
+      "lesson_number": 1
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "HiLOVCXmW2s",
+      "chapter": "IChO Solutions",
+      "lesson_number": 2
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "pVzHK1y9loo",
+      "chapter": "IChO Solutions",
+      "lesson_number": 3
+    }
+  ]
+}
