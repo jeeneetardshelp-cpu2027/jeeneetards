@@ -1,0 +1,290 @@
+{
+  "version": 1,
+  "request_id": "9f1521e5-ec7b-4d88-8b78-684a7b773a4e",
+  "youtube_playlist_id": "PLQsNiHo64JI-5zKxeVKuhjTzvV-Cwd2Ku",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "EqNB_3OiNLA",
+      "chapter": "Oscillations and Waves",
+      "lesson_number": 1
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "eNvH2SLz18I",
+      "chapter": "Gravitation",
+      "lesson_number": 2
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "6Htbr9Fof7o",
+      "chapter": "Gravitation",
+      "lesson_number": 3
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "-zEuCflRW3g",
+      "chapter": "Gravitation",
+      "lesson_number": 4
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "qOffFIm0jdI",
+      "chapter": "Thermodynamics",
+      "lesson_number": 5
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "g1eMZ9bMcD8",
+      "chapter": "Thermodynamics",
+      "lesson_number": 6
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "MmXXm6-QC1U",
+      "chapter": "Thermodynamics",
+      "lesson_number": 7
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "Y-78jb7ta5E",
+      "chapter": "Mechanical Properties of Fluids",
+      "lesson_number": 8
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "iMLGJLkw-Uc",
+      "chapter": "Mechanical Properties of Fluids",
+      "lesson_number": 9
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "X8UHxwQeVA0",
+      "chapter": "Thermodynamics",
+      "lesson_number": 10
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "seZgHo3mekI",
+      "chapter": "Thermal Properties of Matter",
+      "lesson_number": 11
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "bbaRHY4P-Hg",
+      "chapter": "Electromagnetic Induction",
+      "lesson_number": 12
+    },
+    {
+      "position": 13,
+      "youtube_video_id": "einq6bKvTjs",
+      "chapter": "Electromagnetic Induction",
+      "lesson_number": 13
+    },
+    {
+      "position": 14,
+      "youtube_video_id": "xTaMLQe-LW0",
+      "chapter": "Electromagnetic Induction",
+      "lesson_number": 14
+    },
+    {
+      "position": 15,
+      "youtube_video_id": "lFWvVqiIaK0",
+      "chapter": "Electromagnetic Induction",
+      "lesson_number": 15
+    },
+    {
+      "position": 16,
+      "youtube_video_id": "IZExLa4A01E",
+      "chapter": "Thermal Properties of Matter",
+      "lesson_number": 16
+    },
+    {
+      "position": 17,
+      "youtube_video_id": "WtwOliQoTh4",
+      "chapter": "Thermal Properties of Matter",
+      "lesson_number": 17
+    },
+    {
+      "position": 18,
+      "youtube_video_id": "sk0AndvKmfE",
+      "chapter": "Modern Physics",
+      "lesson_number": 18
+    },
+    {
+      "position": 19,
+      "youtube_video_id": "t0W23jE9epM",
+      "chapter": "Modern Physics",
+      "lesson_number": 19
+    },
+    {
+      "position": 20,
+      "youtube_video_id": "urdIbEsjPas",
+      "chapter": "Electromagnetic Waves",
+      "lesson_number": 20
+    },
+    {
+      "position": 21,
+      "youtube_video_id": "cpeSiV0FR7s",
+      "chapter": "Modern Physics",
+      "lesson_number": 21
+    },
+    {
+      "position": 22,
+      "youtube_video_id": "t_6V4CLcqwY",
+      "chapter": "Atoms",
+      "lesson_number": 22
+    },
+    {
+      "position": 23,
+      "youtube_video_id": "cQEkC0nSo80",
+      "chapter": "Atoms",
+      "lesson_number": 23
+    },
+    {
+      "position": 24,
+      "youtube_video_id": "kHHVHoAM6g8",
+      "chapter": "Dual Nature of Radiation and Matter",
+      "lesson_number": 24
+    },
+    {
+      "position": 25,
+      "youtube_video_id": "hhlZTqukaL4",
+      "chapter": "Dual Nature of Radiation and Matter",
+      "lesson_number": 25
+    },
+    {
+      "position": 26,
+      "youtube_video_id": "UC3qqIG_eQI",
+      "chapter": "Mechanical Properties of Fluids",
+      "lesson_number": 26
+    },
+    {
+      "position": 27,
+      "youtube_video_id": "8-l-6X4O5Oc",
+      "chapter": "Capacitance",
+      "lesson_number": 27
+    },
+    {
+      "position": 28,
+      "youtube_video_id": "VGh_CHZUULw",
+      "chapter": "Capacitance",
+      "lesson_number": 28
+    },
+    {
+      "position": 29,
+      "youtube_video_id": "c95CG42QCDE",
+      "chapter": "Mechanical Properties of Fluids",
+      "lesson_number": 29
+    },
+    {
+      "position": 30,
+      "youtube_video_id": "DTLM17doWFM",
+      "chapter": "Oscillations and Waves",
+      "lesson_number": 30
+    },
+    {
+      "position": 31,
+      "youtube_video_id": "PRmuj5qkTdg",
+      "chapter": "Oscillations and Waves",
+      "lesson_number": 31
+    },
+    {
+      "position": 33,
+      "youtube_video_id": "cnuCUfAgYcs",
+      "chapter": "Wave Optics",
+      "lesson_number": 32
+    },
+    {
+      "position": 34,
+      "youtube_video_id": "FTZ0i92oPbQ",
+      "chapter": "Current Electricity",
+      "lesson_number": 33
+    },
+    {
+      "position": 35,
+      "youtube_video_id": "fJdEp6jUT2I",
+      "chapter": "Current Electricity",
+      "lesson_number": 34
+    },
+    {
+      "position": 36,
+      "youtube_video_id": "K_r88ilu9ew",
+      "chapter": "Electrostatics",
+      "lesson_number": 35
+    },
+    {
+      "position": 37,
+      "youtube_video_id": "EBwKuLCzlNU",
+      "chapter": "Electrostatics",
+      "lesson_number": 36
+    },
+    {
+      "position": 38,
+      "youtube_video_id": "XPndhd54uPg",
+      "chapter": "Work, Energy and Power",
+      "lesson_number": 37
+    },
+    {
+      "position": 39,
+      "youtube_video_id": "p8CewMPJbqo",
+      "chapter": "Rotational Motion",
+      "lesson_number": 38
+    },
+    {
+      "position": 40,
+      "youtube_video_id": "pzUKgqwCPKY",
+      "chapter": "Rotational Motion",
+      "lesson_number": 39
+    },
+    {
+      "position": 41,
+      "youtube_video_id": "s4fHzCsOc1E",
+      "chapter": "System of Particles and Centre of Mass",
+      "lesson_number": 40
+    },
+    {
+      "position": 42,
+      "youtube_video_id": "VaZYr1WQ7Vs",
+      "chapter": "Rotational Motion",
+      "lesson_number": 41
+    },
+    {
+      "position": 43,
+      "youtube_video_id": "-6muQNvDRtw",
+      "chapter": "Units and Measurements",
+      "lesson_number": 42
+    },
+    {
+      "position": 44,
+      "youtube_video_id": "G_m3fXBgqJE",
+      "chapter": "Friction",
+      "lesson_number": 43
+    },
+    {
+      "position": 45,
+      "youtube_video_id": "3UTLFFvHkOM",
+      "chapter": "Ray Optics and Optical Instruments",
+      "lesson_number": 44
+    },
+    {
+      "position": 46,
+      "youtube_video_id": "isaAs6sKdsw",
+      "chapter": "Ray Optics and Optical Instruments",
+      "lesson_number": 45
+    },
+    {
+      "position": 47,
+      "youtube_video_id": "MBA60Ydnmk8",
+      "chapter": "Kinematics",
+      "lesson_number": 46
+    }
+  ],
+  "exclusions": [
+    {
+      "position": 32,
+      "youtube_video_id": "xVSu1iaKyj8",
+      "reason": "Generic selected-question video has no reliable chapter cue in title or description; deferred rather than guessing."
+    }
+  ]
+}

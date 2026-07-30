@@ -1,57 +1,47 @@
-# Competishun+ Physics PYQ pilot review — 2026-07-31
+# Competishun+ Physics PYQ coverage review — 2026-07-31
 
-Scope: read-only review for a possible future `content_type=pyq` import. No
-production write has been performed for this playlist.
+Source: Competishun+ playlist `PLQsNiHo64JI-5zKxeVKuhjTzvV-Cwd2Ku`
 
-Source:
+Title: `Physics- JEE Advanced PYQs`
 
-- Channel: Competishun+ (`UC6ieIswHA9WInRsa2r88hRw`)
-- Playlist: `PLQsNiHo64JI-5zKxeVKuhjTzvV-Cwd2Ku`
-- Title: `Physics- JEE Advanced PYQs`
-- Usable videos returned by YouTube API: 47
+Attribution decision: `1c06eb34-fbdc-4d3b-a239-39f256f889e8` — Competishun+ brand/channel attribution, no personal teacher assigned.
 
-Automated draft result:
+## Outcome
 
-- `21 auto`
-- `6 review`
-- `20 unmatched`
-- Draft manifest: `docs/manifests/draft-PLQsNiHo64JI-5zKxeVKuhjTzvV-Cwd2Ku.json`
-- Review detail: `docs/manifests/draft-PLQsNiHo64JI-5zKxeVKuhjTzvV-Cwd2Ku.review.json`
+Do not import this playlist as a new create-only course under the current no-reuse guard.
 
-## Import readiness
+The reviewed manifest has 46 usable mapped videos and 1 deferred video, but the production dry-run found the 46 usable videos are already present in the catalogue. Treat the playlist as already covered unless the owner later approves an intentional reuse/aggregation course.
 
-Not ready for production import without owner/Claude review.
+## Dry-run result
 
-Reasons:
+Command shape:
 
-- The playlist spans many Physics chapters and mixes short PYQs with longer
-  chapter-wise PYQ sessions.
-- Several rows are ambiguous or need exact chapter decisions:
-  - SHM with elastic collision + COM frame;
-  - Fluid Mechanics rows;
-  - Heat Transfer, Thermal Expansion, Calorimetry;
-  - EMF/EMI rows;
-  - Nuclear Physics, Bohr Model, Photoelectric Effect, Matter Waves;
-  - Surface Tension rows;
-  - Sound Wave / Wave on String;
-  - Rigid Body Dynamics;
-  - Unit and Dimension;
-  - Geometrical Optics rows.
-- The drafter suggested some wrong or too-broad alternatives, for example
-  Geometrical Optics → Wave Optics, which should be reviewed against
-  `Ray Optics and Optical Instruments`.
+```powershell
+npm.cmd run import -- UC6ieIswHA9WInRsa2r88hRw --env=production --dry-run --expected-playlists=1 --max-playlists=5 --playlist-id=PLQsNiHo64JI-5zKxeVKuhjTzvV-Cwd2Ku --category=JEE --goal=JEE --subject=Physics --classes=11th,12th --content-type=pyq --language=hinglish --difficulty=advanced --teacher="Competishun+" --audience-focus=12th --chapter-manifest=docs/manifests/competishun-plus-physics-pyq-reviewed.json --confirm-teacher-evidence=1c06eb34-fbdc-4d3b-a239-39f256f889e8
+```
 
-## Safe next gate
+Result:
 
-If this playlist is approved as a PYQ course, do a dedicated review table before
-writing:
+- `0 ok`
+- `0 review`
+- `1 blocked`
+- blocker: `46 video(s) already exist in the catalogue`
+- additional mechanical finding: duplicate source title numbers `2` and `10`
 
-1. confirm every video maps to one Physics chapter;
-2. create any missing reference chapters additively if needed;
-3. keep source order unless owner wants chapter-cluster order;
-4. dry-run with `content_type=pyq`;
-5. import create-only;
-6. verify protected original-83 JEE fingerprint.
+Read-only evidence showed the reviewed videos already live across existing chapter courses, including course `188` (`JEE Advanced Physics PYQs — Additional Topics`) and existing Physics chapter courses such as Capacitance, Current Electricity, Electrostatics, Thermodynamics, Modern Physics, and others.
 
-Recommended priority: finish the smaller Organic Chemistry PYQ pilot first,
-then use the same pattern for this larger Physics playlist.
+## Reviewed manifest
+
+Reviewed manifest retained for audit only: `docs/manifests/competishun-plus-physics-pyq-reviewed.json`
+
+- 46 usable mapped videos
+- source order preserved
+- `content_type=pyq`
+- classes `11th,12th`
+- audience focus `12th`
+
+## Deferred source row
+
+- source position `32`, video `xVSu1iaKyj8`
+- title: `The Best Selected Question of JEE Advanced 2020 See If You Can Crack It! ABJ SIR`
+- reason: no reliable chapter cue in title or description; deferred rather than guessing

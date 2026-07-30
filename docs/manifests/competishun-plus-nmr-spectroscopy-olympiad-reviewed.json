@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "request_id": "01e0dc7a-4949-4769-a627-1788fcf2193a",
+  "youtube_playlist_id": "PLQsNiHo64JI8AQCHxVJiXLl7p26CHmnhR",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "cqYMetpd7ng",
+      "chapter": "NMR Spectroscopy",
+      "lesson_number": 1
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "P7xP7e6YFbg",
+      "chapter": "NMR Spectroscopy",
+      "lesson_number": 2
+    }
+  ]
+}
