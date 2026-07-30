@@ -1,0 +1,76 @@
+{
+  "version": 1,
+  "request_id": "7ed039d3-9f2c-44dc-9ba9-82c01c46bbad",
+  "youtube_playlist_id": "PLQsNiHo64JI_PdPiOMukykHeRRZkja-jD",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "OyroH311pcw",
+      "chapter": "Probability",
+      "lesson_number": 8
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "kWQwIxOzEyc",
+      "chapter": "Probability",
+      "lesson_number": 7
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "zURfEPHBHWU",
+      "chapter": "Probability",
+      "lesson_number": 6
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "B0mG2FgFMl8",
+      "chapter": "Probability",
+      "lesson_number": 5
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "VdjlTF8okDI",
+      "chapter": "Probability",
+      "lesson_number": 4
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "RrdL8zUG5CM",
+      "chapter": "Probability",
+      "lesson_number": 3
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "0Awb8vSQ-C8",
+      "chapter": "Probability",
+      "lesson_number": 2
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "2xYdgyvGOWQ",
+      "chapter": "Probability",
+      "lesson_number": 1
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "1c06eb34-fbdc-4d3b-a239-39f256f889e8",
+    "youtube_playlist_id": "PLQsNiHo64JI_PdPiOMukykHeRRZkja-jD",
+    "teacher": "Competishun+",
+    "reviewed_on": "2026-07-30",
+    "reviewed_by": "Owner",
+    "source_url": "https://www.youtube.com/@competishun",
+    "source_label": "Official Competishun+ channel",
+    "youtube_video_ids": [
+      "OyroH311pcw",
+      "kWQwIxOzEyc",
+      "zURfEPHBHWU",
+      "B0mG2FgFMl8",
+      "VdjlTF8okDI",
+      "RrdL8zUG5CM",
+      "0Awb8vSQ-C8",
+      "2xYdgyvGOWQ"
+    ]
+  }
+}

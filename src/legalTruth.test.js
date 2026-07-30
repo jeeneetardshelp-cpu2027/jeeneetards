@@ -32,6 +32,7 @@ describe("legal release truth", () => {
       "Vercel and Supabase",
       "request and security logs",
       "aggregate, cookieless page-view analytics",
+      "Vercel Speed Insights",
     ]) {
       expect(privacy).toContain(fact);
     }

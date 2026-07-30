@@ -1,0 +1,83 @@
+{
+  "version": 1,
+  "request_id": "b80aa014-4db3-4d1b-8049-742f3df39417",
+  "youtube_playlist_id": "PLQsNiHo64JI9V1OtWwvyGbhWxW62-TkHw",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "30wXh8qrQp4",
+      "chapter": "Complex Numbers",
+      "lesson_number": 9
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "x_1UYRg3AvY",
+      "chapter": "Complex Numbers",
+      "lesson_number": 8
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "akJBu87Qt-U",
+      "chapter": "Complex Numbers",
+      "lesson_number": 7
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "eG-yDjV0IZM",
+      "chapter": "Complex Numbers",
+      "lesson_number": 6
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "hpIKzUXnH2o",
+      "chapter": "Complex Numbers",
+      "lesson_number": 5
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "yHjGuxQTJBc",
+      "chapter": "Complex Numbers",
+      "lesson_number": 4
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "gDRC4TzPaBs",
+      "chapter": "Complex Numbers",
+      "lesson_number": 3
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "JGgIs6jYspk",
+      "chapter": "Complex Numbers",
+      "lesson_number": 2
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "6bf2qc8RZcE",
+      "chapter": "Complex Numbers",
+      "lesson_number": 1
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "1c06eb34-fbdc-4d3b-a239-39f256f889e8",
+    "youtube_playlist_id": "PLQsNiHo64JI9V1OtWwvyGbhWxW62-TkHw",
+    "teacher": "Competishun+",
+    "reviewed_on": "2026-07-30",
+    "reviewed_by": "Owner",
+    "source_url": "https://www.youtube.com/@competishun",
+    "source_label": "Official Competishun+ channel",
+    "youtube_video_ids": [
+      "30wXh8qrQp4",
+      "x_1UYRg3AvY",
+      "akJBu87Qt-U",
+      "eG-yDjV0IZM",
+      "hpIKzUXnH2o",
+      "yHjGuxQTJBc",
+      "gDRC4TzPaBs",
+      "JGgIs6jYspk",
+      "6bf2qc8RZcE"
+    ]
+  }
+}

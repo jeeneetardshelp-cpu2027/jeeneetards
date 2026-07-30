@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "request_id": "ca3aed89-5543-4010-a772-c61e3916915a",
+  "youtube_playlist_id": "PLQsNiHo64JI-KSdqil7xhvrddxbFjZAmZ",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "syBZa8QpGaI",
+      "chapter": "Statistics",
+      "lesson_number": 2
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "HNeNQZhBKrg",
+      "chapter": "Statistics",
+      "lesson_number": 1
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "1c06eb34-fbdc-4d3b-a239-39f256f889e8",
+    "youtube_playlist_id": "PLQsNiHo64JI-KSdqil7xhvrddxbFjZAmZ",
+    "teacher": "Competishun+",
+    "reviewed_on": "2026-07-30",
+    "reviewed_by": "Owner",
+    "source_url": "https://www.youtube.com/@competishun",
+    "source_label": "Official Competishun+ channel",
+    "youtube_video_ids": [
+      "syBZa8QpGaI",
+      "HNeNQZhBKrg"
+    ]
+  }
+}
