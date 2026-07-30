@@ -48,7 +48,10 @@ export const RELEASE_FEATURES = Object.freeze({
   // (rating_review_moderation.sql) -- the owner explicitly chose to hold
   // public display until an admin could hide an inappropriate review.
   reviewDisplay: true,
-  contentReporting: false,
+  // Flipped 2026-07-31 after an adversarial security review found no
+  // exploitable path (unauthorized read/write, rate-limit/dedup bypass,
+  // XSS) -- see the comment above and site-audit memory item #24.
+  contentReporting: true,
 });
 
 export const hasReleaseCapability = (name) =>
