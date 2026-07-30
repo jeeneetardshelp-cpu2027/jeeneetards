@@ -1,0 +1,12 @@
+{
+  "date": "2026-07-30",
+  "environment": "production",
+  "project_name": "youtube",
+  "project_ref": "kezelafqhgqrprpadmlf",
+  "verification_method": "GET /auth/v1/settings with the public anon key (read-only, no account created)",
+  "disable_signup": false,
+  "anonymous_users": false,
+  "mailer_autoconfirm": true,
+  "email_provider_enabled": true,
+  "note": "Supersedes docs/browse_only_auth_evidence.json (2026-07-23) for the studentAccounts/courseRatingSubmission decision recorded in docs/legal_release_inputs.md's 2026-07-30 addendum. The prior file remains as a historical record of the browse-only state before that decision -- it is not being overwritten."
+}
