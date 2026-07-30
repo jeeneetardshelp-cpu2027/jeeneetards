@@ -18,11 +18,15 @@ import {
   Search, GraduationCap, BookOpen, PlayCircle, Users, ArrowRight, X, History,
   ShieldCheck, ListFilter, Sparkles, Activity, Compass,
 } from "lucide-react";
-import { useDebouncedValue } from "./useBrowse.js";
 import { usePlaylistBrowse } from "./usePlaylistBrowse.js";
 import { GlobalHeader, Container } from "./AppShell.jsx";
 import { PlaylistCard } from "./PlaylistBrowse.jsx";
-import { useSearch } from "./useSearch.js";
+// ONE search system. The hero box used to run its own ilike queries against
+// raw columns — no index use, no typo tolerance, no Devanagari bridge, and a
+// separate ranking that disagreed with /search. It now calls the same
+// server-ranked universal_search RPC that /search does.
+import { useUniversalSearch, MIN_QUERY } from "./useUniversalSearch.js";
+import { resultHref } from "./searchDestinations.js";
 import { getContinueWatching } from "./progress.js";
 import { EXAMS } from "./filterModel.js";
 import { useTheme } from "./theme.jsx";
@@ -70,9 +74,10 @@ export default function Home() {
   // Seed from ?q= so "search the entire library" from Explore lands here
   // with the query already run.
   const [input, setInput] = useState(searchParams.get("q") ?? "");
-  const debounced = useDebouncedValue(input, 250);
-  const { results, loading, total, error, retry } = useSearch(debounced);
-  const searching = debounced.trim().length > 0;
+  // The hook debounces, cancels obsolete requests and enforces the same
+  // minimum length the database does, so no local debounce is needed.
+  const { groups, loading, error, tooShort, retry } = useUniversalSearch(input, { limit: 6 });
+  const searching = input.trim().length > 0;
   const { t, dark } = useTheme();
 
   return (
@@ -154,8 +159,8 @@ export default function Home() {
         <Container>
           {searching ? (
             <SearchResults
-              results={results} loading={loading} total={total} error={error}
-              retry={retry} query={debounced.trim()}
+              groups={groups} loading={loading} error={error}
+              tooShort={tooShort} retry={retry} query={input.trim()}
             />
           ) : (
             <Landing />
@@ -331,7 +336,16 @@ function FeaturedCourses({ goalId }) {
 // ---------------------------------------------------------------------
 //  Grouped search results
 // ---------------------------------------------------------------------
-function SearchResults({ results, loading, total, error, retry, query }) {
+const HOME_GROUPS = [
+  { key: "chapter", label: "Chapters", icon: BookOpen },
+  { key: "playlist", label: "Courses", icon: PlayCircle },
+  { key: "lecture", label: "Lectures", icon: PlayCircle },
+  { key: "faculty", label: "Teachers", icon: Users, gated: "facultyRegistry" },
+  { key: "institute", label: "Channels", icon: Users },
+];
+
+function SearchResults({ groups, loading, error, tooShort, retry, query }) {
+  const { t } = useTheme();
   if (loading) return <SkeletonRow />;
 
   if (error)
@@ -345,54 +359,47 @@ function SearchResults({ results, loading, total, error, retry, query }) {
       </Empty>
     );
 
-  if (total === 0)
+  if (tooShort)
+    return <Empty>Type at least {MIN_QUERY} characters to search.</Empty>;
+
+  const visible = HOME_GROUPS.filter(
+    (g) => (groups[g.key]?.rows?.length ?? 0) > 0 &&
+           (!g.gated || RELEASE_CAPABILITIES[g.gated]),
+  );
+
+  if (visible.length === 0)
     return (
       <Empty>
         No results for “{query}”. Try a chapter, course, channel or lecture.
       </Empty>
     );
 
-  const { chapters, playlists, lectures, teachers } = results;
-
   return (
     <div className="space-y-8">
-      {chapters.length > 0 && (
-        <Section title="Chapters" icon={BookOpen}>
-          <ResultList items={chapters.map((c) => ({
-            key: `ch-${c.id}`, title: c.name, subtitle: c.subject,
-            to: `/browse?ch=${c.id}`,
-          }))} />
-        </Section>
-      )}
-
-      {playlists.length > 0 && (
-        <Section title="Playlists" icon={PlayCircle}>
-          <ResultList items={playlists.map((p) => ({
-            key: `pl-${p.id}`, title: p.title,
-            subtitle: [p.teacher, p.institute].filter(Boolean).join(" · "),
-            badges: p.classLevels, disabled: !p.chapterId,
-            to: p.chapterId ? `/course/${p.id}/chapter/${p.chapterId}` : undefined,
-          }))} />
-        </Section>
-      )}
-
-      {lectures.length > 0 && (
-        <Section title="Lectures" icon={PlayCircle}>
-          <ResultList items={lectures.map((v) => ({
-            key: `v-${v.id}`, title: v.title, subtitle: "Lecture",
-            to: `/browse?sub=${v.subjectId}` + (v.chapterId ? `&ch=${v.chapterId}` : ""),
-          }))} />
-        </Section>
-      )}
-
-      {teachers.length > 0 && (
-        <Section title="Channels" icon={Users}>
-          <ResultList items={teachers.map((teacher) => ({
-            key: `t-${teacher.id}`, title: teacher.name, subtitle: "Channel",
-            to: "/browse",
-          }))} />
-        </Section>
-      )}
+      {visible.map((g) => {
+        const group = groups[g.key];
+        return (
+          <Section key={g.key} title={g.label} icon={g.icon}>
+            <ResultList items={group.rows.map((row) => ({
+              key: `${g.key}-${row.id}`,
+              title: row.title,
+              subtitle: row.subtitle,
+              // Verified aliases, e.g. "also ABJ Sir" — only faculty has them.
+              badges: row.aka ? [row.aka] : undefined,
+              to: resultHref(g.key, row),
+            }))} />
+            {group.total > group.rows.length && (
+              <p className={`mt-2 text-xs ${t.faint}`}>
+                Showing {group.rows.length} of {group.total} —{" "}
+                <Link to={`/search?q=${encodeURIComponent(query)}`}
+                  className="font-semibold" style={{ color: BRAND.teal }}>
+                  see all
+                </Link>
+              </p>
+            )}
+          </Section>
+        );
+      })}
     </div>
   );
 }
