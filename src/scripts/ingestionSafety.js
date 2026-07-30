@@ -230,6 +230,33 @@ export function validateChapterManifest({ manifest, playlistId, teacher, videos 
   }
   const seenIds = new Set();
   const chapters = new Set();
+  const lessonNumbers = manifest.assignments.map(
+    (assignment) => assignment?.lesson_number,
+  );
+  const hasReviewedLessonOrder = lessonNumbers.some(
+    (lessonNumber) => lessonNumber != null,
+  );
+  if (hasReviewedLessonOrder) {
+    if (
+      lessonNumbers.some(
+        (lessonNumber) =>
+          !Number.isSafeInteger(lessonNumber) || lessonNumber <= 0,
+      )
+    ) {
+      throw new Error(
+        "Reviewed lesson_number values must be positive integers for every assignment.",
+      );
+    }
+    const orderedLessonNumbers = [...lessonNumbers].sort((left, right) => left - right);
+    if (
+      new Set(orderedLessonNumbers).size !== lessonNumbers.length ||
+      orderedLessonNumbers.some((lessonNumber, index) => lessonNumber !== index + 1)
+    ) {
+      throw new Error(
+        "Reviewed lesson_number values must form one complete sequence from 1.",
+      );
+    }
+  }
   const sourcePositions = validateMappedSourcePositions(videos);
   const mapped = [];
   const excluded = [];
@@ -270,13 +297,25 @@ export function validateChapterManifest({ manifest, playlistId, teacher, videos 
       );
     }
     chapters.add(chapterName);
-    mapped.push({ ...video, chapterName });
+    mapped.push({
+      ...video,
+      chapterName,
+      ...(hasReviewedLessonOrder
+        ? {
+          lessonNumber: assignment.lesson_number,
+          position: assignment.lesson_number - 1,
+        }
+        : {}),
+    });
   });
 
-  if (chapters.size < 2) {
+  if (chapters.size < 2 && !hasReviewedLessonOrder) {
     throw new Error(
-      "A chapter manifest must map the source to at least two chapters; use --chapter for a single chapter.",
+      "A chapter manifest must map at least two chapters, or a single chapter with a complete reviewed lesson_number sequence; otherwise use --chapter.",
     );
+  }
+  if (hasReviewedLessonOrder) {
+    mapped.sort((left, right) => left.lessonNumber - right.lessonNumber);
   }
   const teacherEvidence = validateReviewedTeacherEvidence({
     evidence: manifest.teacher_evidence,

@@ -374,6 +374,69 @@ describe("channel ingestion metadata", () => {
     ]);
   });
 
+  it("supports a reviewed natural lesson order without weakening source binding", () => {
+    const videos = [
+      { videoId: "lesson-two", sourcePosition: 0 },
+      { videoId: "lesson-one", sourcePosition: 1 },
+    ];
+    const manifest = {
+      version: 1,
+      request_id: "018f7e3b-39b0-4f3e-8ee4-7a8d4d5a6b7c",
+      youtube_playlist_id: "PL_reverse",
+      assignments: [
+        {
+          position: 1,
+          youtube_video_id: "lesson-two",
+          chapter: "Statistics",
+          lesson_number: 2,
+        },
+        {
+          position: 2,
+          youtube_video_id: "lesson-one",
+          chapter: "Statistics",
+          lesson_number: 1,
+        },
+      ],
+    };
+
+    const result = validateChapterManifest({
+      manifest,
+      playlistId: "PL_reverse",
+      videos,
+    });
+
+    expect(result.videos.map(({ videoId, lessonNumber, position }) => ({
+      videoId,
+      lessonNumber,
+      position,
+    }))).toEqual([
+      { videoId: "lesson-one", lessonNumber: 1, position: 0 },
+      { videoId: "lesson-two", lessonNumber: 2, position: 1 },
+    ]);
+    expect(() => validateChapterManifest({
+      manifest: {
+        ...manifest,
+        assignments: manifest.assignments.map((assignment) => ({
+          ...assignment,
+          lesson_number: 1,
+        })),
+      },
+      playlistId: "PL_reverse",
+      videos,
+    })).toThrow(/complete sequence/i);
+    expect(() => validateChapterManifest({
+      manifest: {
+        ...manifest,
+        assignments: [
+          { ...manifest.assignments[0], lesson_number: null },
+          manifest.assignments[1],
+        ],
+      },
+      playlistId: "PL_reverse",
+      videos,
+    })).toThrow(/every assignment/i);
+  });
+
   it("fails closed when an exclusion is unreasoned or leaves a source undecided", () => {
     const videos = [
       { videoId: "vid_a", sourcePosition: 0 },

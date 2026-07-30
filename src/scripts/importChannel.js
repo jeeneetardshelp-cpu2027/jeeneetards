@@ -536,7 +536,6 @@ async function main() {
           `--confirm-teacher-evidence=${mapped.teacherEvidence.decisionId}.`,
         );
       }
-      await assertMappedImportCapability(db);
       const chapterRows = await Promise.all(
         mapped.chapterNames.map(async (name) => ({
           name,
@@ -550,6 +549,55 @@ async function main() {
           `${missing.join(", ")}.`,
         );
       }
+      const isReviewedSingleChapterOrder =
+        mapped.chapterNames.length === 1
+        && mapped.videos.every(
+          (video) => Number.isSafeInteger(video.lessonNumber) && video.lessonNumber > 0,
+        );
+      if (isReviewedSingleChapterOrder) {
+        const detailValidation = validateMappedVideoDetails(mapped.videos);
+        if (!detailValidation.ok) {
+          fail(
+            "Reviewed lesson-order import requires complete duration metadata and embeddable videos.",
+          );
+        }
+        const [existingVideoIds, teacherResult] = await Promise.all([
+          fetchCatalogueVideoIds(db, { strict: true }),
+          db.from("playlists").select("teacher"),
+        ]);
+        if (teacherResult.error) {
+          fail(`reading teacher evidence roster: ${teacherResult.error.message}`);
+        }
+        const knownTeachers = [
+          ...new Set(
+            (teacherResult.data ?? []).map((row) => row.teacher).filter(Boolean),
+          ),
+        ];
+        const quality = validatePlaylistQuality({
+          playlist: { title: plan.playlist.title, videos: mapped.videos },
+          existingVideoIds,
+          expectedVideoCount: mapped.videos.length,
+          knownTeachers: [plan.teacher, ...knownTeachers],
+          reviewedTeacherEvidence: Boolean(mapped.teacherEvidence),
+        });
+        const unresolvedFindings = mappedImportBlockingFindings(quality.findings);
+        if (unresolvedFindings.length > 0) {
+          fail(
+            `Reviewed lesson-order import has ${unresolvedFindings.length} unresolved ` +
+            "quality finding(s). Run the dry-run and resolve each one first.",
+          );
+        }
+        chapterId = chapterRows[0].chapter.id;
+        importVideos = mapped.videos;
+        importPayload = buildImportPayload({
+          plan,
+          channel,
+          channelId,
+          chapterId,
+          videos: importVideos,
+        });
+      } else {
+        await assertMappedImportCapability(db);
       const chapterByName = new Map(
         chapterRows.map(({ name, chapter }) => [name, chapter.id]),
       );
@@ -621,6 +669,7 @@ async function main() {
             "finding(s). Run the dry-run and resolve each one first.",
           );
         }
+      }
       }
     } else {
       const existingChapter = await findChapter(db, plan.chapterName, plan.subjectId);
