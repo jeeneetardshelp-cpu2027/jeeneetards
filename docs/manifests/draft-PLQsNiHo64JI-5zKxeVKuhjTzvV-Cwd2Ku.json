@@ -1,0 +1,242 @@
+{
+  "version": 1,
+  "request_id": "70e9cd9f-ccf2-4883-a7c4-9bff73c2e775",
+  "youtube_playlist_id": "PLQsNiHo64JI-5zKxeVKuhjTzvV-Cwd2Ku",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "EqNB_3OiNLA",
+      "chapter": null
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "eNvH2SLz18I",
+      "chapter": "Gravitation"
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "6Htbr9Fof7o",
+      "chapter": "Gravitation"
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "-zEuCflRW3g",
+      "chapter": "Gravitation"
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "qOffFIm0jdI",
+      "chapter": "Thermodynamics"
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "g1eMZ9bMcD8",
+      "chapter": "Thermodynamics"
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "MmXXm6-QC1U",
+      "chapter": "Thermodynamics"
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "Y-78jb7ta5E",
+      "chapter": null
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "iMLGJLkw-Uc",
+      "chapter": "Thermodynamics"
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "X8UHxwQeVA0",
+      "chapter": "Thermodynamics"
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "seZgHo3mekI",
+      "chapter": null
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "bbaRHY4P-Hg",
+      "chapter": null
+    },
+    {
+      "position": 13,
+      "youtube_video_id": "einq6bKvTjs",
+      "chapter": null
+    },
+    {
+      "position": 14,
+      "youtube_video_id": "xTaMLQe-LW0",
+      "chapter": null
+    },
+    {
+      "position": 15,
+      "youtube_video_id": "lFWvVqiIaK0",
+      "chapter": null
+    },
+    {
+      "position": 16,
+      "youtube_video_id": "IZExLa4A01E",
+      "chapter": null
+    },
+    {
+      "position": 17,
+      "youtube_video_id": "WtwOliQoTh4",
+      "chapter": null
+    },
+    {
+      "position": 18,
+      "youtube_video_id": "sk0AndvKmfE",
+      "chapter": null
+    },
+    {
+      "position": 19,
+      "youtube_video_id": "t0W23jE9epM",
+      "chapter": null
+    },
+    {
+      "position": 20,
+      "youtube_video_id": "urdIbEsjPas",
+      "chapter": "Electromagnetic Waves"
+    },
+    {
+      "position": 21,
+      "youtube_video_id": "cpeSiV0FR7s",
+      "chapter": "Modern Physics"
+    },
+    {
+      "position": 22,
+      "youtube_video_id": "t_6V4CLcqwY",
+      "chapter": "Modern Physics"
+    },
+    {
+      "position": 23,
+      "youtube_video_id": "cQEkC0nSo80",
+      "chapter": null
+    },
+    {
+      "position": 24,
+      "youtube_video_id": "kHHVHoAM6g8",
+      "chapter": "Oscillations and Waves"
+    },
+    {
+      "position": 25,
+      "youtube_video_id": "hhlZTqukaL4",
+      "chapter": null
+    },
+    {
+      "position": 26,
+      "youtube_video_id": "UC3qqIG_eQI",
+      "chapter": null
+    },
+    {
+      "position": 27,
+      "youtube_video_id": "8-l-6X4O5Oc",
+      "chapter": "Capacitance"
+    },
+    {
+      "position": 28,
+      "youtube_video_id": "VGh_CHZUULw",
+      "chapter": "Capacitance"
+    },
+    {
+      "position": 29,
+      "youtube_video_id": "c95CG42QCDE",
+      "chapter": null
+    },
+    {
+      "position": 30,
+      "youtube_video_id": "DTLM17doWFM",
+      "chapter": "Wave Optics"
+    },
+    {
+      "position": 31,
+      "youtube_video_id": "PRmuj5qkTdg",
+      "chapter": "Wave Optics"
+    },
+    {
+      "position": 32,
+      "youtube_video_id": "xVSu1iaKyj8",
+      "chapter": null
+    },
+    {
+      "position": 33,
+      "youtube_video_id": "cnuCUfAgYcs",
+      "chapter": "Wave Optics"
+    },
+    {
+      "position": 34,
+      "youtube_video_id": "FTZ0i92oPbQ",
+      "chapter": "Current Electricity"
+    },
+    {
+      "position": 35,
+      "youtube_video_id": "fJdEp6jUT2I",
+      "chapter": "Current Electricity"
+    },
+    {
+      "position": 36,
+      "youtube_video_id": "K_r88ilu9ew",
+      "chapter": "Electrostatics"
+    },
+    {
+      "position": 37,
+      "youtube_video_id": "EBwKuLCzlNU",
+      "chapter": "Electrostatics"
+    },
+    {
+      "position": 38,
+      "youtube_video_id": "XPndhd54uPg",
+      "chapter": "Work, Energy and Power"
+    },
+    {
+      "position": 39,
+      "youtube_video_id": "p8CewMPJbqo",
+      "chapter": null
+    },
+    {
+      "position": 40,
+      "youtube_video_id": "pzUKgqwCPKY",
+      "chapter": null
+    },
+    {
+      "position": 41,
+      "youtube_video_id": "s4fHzCsOc1E",
+      "chapter": null
+    },
+    {
+      "position": 42,
+      "youtube_video_id": "VaZYr1WQ7Vs",
+      "chapter": "Rotational Motion"
+    },
+    {
+      "position": 43,
+      "youtube_video_id": "-6muQNvDRtw",
+      "chapter": null
+    },
+    {
+      "position": 44,
+      "youtube_video_id": "G_m3fXBgqJE",
+      "chapter": "Friction"
+    },
+    {
+      "position": 45,
+      "youtube_video_id": "3UTLFFvHkOM",
+      "chapter": "Wave Optics"
+    },
+    {
+      "position": 46,
+      "youtube_video_id": "isaAs6sKdsw",
+      "chapter": "Wave Optics"
+    },
+    {
+      "position": 47,
+      "youtube_video_id": "MBA60Ydnmk8",
+      "chapter": "Kinematics"
+    }
+  ]
+}

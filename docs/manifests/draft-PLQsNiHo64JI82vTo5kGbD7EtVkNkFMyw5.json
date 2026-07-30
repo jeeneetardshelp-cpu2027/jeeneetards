@@ -1,0 +1,102 @@
+{
+  "version": 1,
+  "request_id": "847e544a-6548-44c7-80b5-8028c9d9260f",
+  "youtube_playlist_id": "PLQsNiHo64JI82vTo5kGbD7EtVkNkFMyw5",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "i59LKT_DgjY",
+      "chapter": null
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "7ME_SzpFOMw",
+      "chapter": null
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "a90HQrHixto",
+      "chapter": null
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "ZiMgUfrS8HE",
+      "chapter": null
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "o4BIUlwe4Wk",
+      "chapter": null
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "VBPjUrqoH-o",
+      "chapter": null
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "OG7ra7EchQg",
+      "chapter": null
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "T4By4XwAsKM",
+      "chapter": "Biomolecules"
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "YXhSZ6XOVao",
+      "chapter": "Carboxylic Acids and Derivatives"
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "E1K91qjJve8",
+      "chapter": "Carboxylic Acids and Derivatives"
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "5_bTNI53Dpw",
+      "chapter": "Carboxylic Acids and Derivatives"
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "6YuYm2wNolU",
+      "chapter": "Carboxylic Acids and Derivatives"
+    },
+    {
+      "position": 13,
+      "youtube_video_id": "lFIONq5QOr4",
+      "chapter": "Carboxylic Acids and Derivatives"
+    },
+    {
+      "position": 14,
+      "youtube_video_id": "hgcR6hPwf98",
+      "chapter": "Carboxylic Acids and Derivatives"
+    },
+    {
+      "position": 15,
+      "youtube_video_id": "ZOL1FjuW5hU",
+      "chapter": "Coordination Compounds"
+    },
+    {
+      "position": 16,
+      "youtube_video_id": "u5Oqrae_1XI",
+      "chapter": "Coordination Compounds"
+    },
+    {
+      "position": 17,
+      "youtube_video_id": "xHSRaO4ARWg",
+      "chapter": "Coordination Compounds"
+    },
+    {
+      "position": 18,
+      "youtube_video_id": "qoa7zQVzRsI",
+      "chapter": "Coordination Compounds"
+    },
+    {
+      "position": 19,
+      "youtube_video_id": "fAC2hqyzpzQ",
+      "chapter": "Coordination Compounds"
+    }
+  ]
+}

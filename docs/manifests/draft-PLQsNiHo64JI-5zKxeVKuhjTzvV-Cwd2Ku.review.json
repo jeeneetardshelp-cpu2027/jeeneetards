@@ -1,0 +1,555 @@
+{
+  "subject": "Physics",
+  "summary": {
+    "total": 47,
+    "auto": 21,
+    "review": 6,
+    "unmatched": 20
+  },
+  "rows": [
+    {
+      "position": 1,
+      "youtube_video_id": "EqNB_3OiNLA",
+      "title": "JEE Advanced SHM PYQ Decoded | Elastic Collision + COM Frame Trick",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": []
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "eNvH2SLz18I",
+      "title": "This Gravitation PYQ Builds Real JEE Advanced Thinking",
+      "chapter": "Gravitation",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Gravitation"
+      ]
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "6Htbr9Fof7o",
+      "title": "JEE Advanced Gravitation PYQ 2017 | Escape Velocity in Sun-Earth System",
+      "chapter": "Gravitation",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Gravitation",
+        "System of Particles and Centre of Mass"
+      ]
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "-zEuCflRW3g",
+      "title": "This EASY Question Can Boost Your Rank 😳 | JEE Advanced 2025 Gravitation PYQ",
+      "chapter": "Gravitation",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Gravitation"
+      ]
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "qOffFIm0jdI",
+      "title": "JEE Advanced Thermodynamics PYQ (Comprehension) | Can You Solve This?",
+      "chapter": "Thermodynamics",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Thermodynamics"
+      ]
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "g1eMZ9bMcD8",
+      "title": "JEE Advanced Thermodynamics PYQ | Rank Booster Question (Don’t Miss) | JEE Advanced 2019 Physics PYQ",
+      "chapter": "Thermodynamics",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Thermodynamics"
+      ]
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "MmXXm6-QC1U",
+      "title": "KTG + Spring in 1 Shot | JEE Advanced 2025 Thermodynamics PYQ",
+      "chapter": "Thermodynamics",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Thermodynamics"
+      ]
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "Y-78jb7ta5E",
+      "title": "JEE Advanced 2024 Fluid Mechanics PYQ | Tank Emptying Concept Explained",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": []
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "iMLGJLkw-Uc",
+      "title": "JEE Advanced 2021 Fluid Mechanics Comprehension | Buoyancy + Thermodynamics Explained",
+      "chapter": "Thermodynamics",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Thermodynamics"
+      ]
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "X8UHxwQeVA0",
+      "title": "JEE Advanced PYQ 2022 | Fluid Mechanics + KTG + Thermodynamics | Multi Correct Question Explained",
+      "chapter": "Thermodynamics",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Thermodynamics"
+      ]
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "seZgHo3mekI",
+      "title": "JEE Advanced Physics PYQs🔥 | Heat Transfer | Complete Problem Practice with Concepts",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": []
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "bbaRHY4P-Hg",
+      "title": "JEE Advanced Physics PYQs🔥 | EMF-2 | Must Watch for Every Adv Aspirant",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": []
+    },
+    {
+      "position": 13,
+      "youtube_video_id": "einq6bKvTjs",
+      "title": "JEE Advanced Physics PYQs🔥 | EMF-1 | Must Watch for Every Adv Aspirant",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": []
+    },
+    {
+      "position": 14,
+      "youtube_video_id": "xTaMLQe-LW0",
+      "title": "JEE Advanced Physics PYQs🔥 | EMI Part -2| Must Watch for Every Adv Aspirant!",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": []
+    },
+    {
+      "position": 15,
+      "youtube_video_id": "lFWvVqiIaK0",
+      "title": "JEE Advanced Physics PYQs🔥 | EMI Part -1  Must Watch for Every Adv Aspirant!",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": []
+    },
+    {
+      "position": 16,
+      "youtube_video_id": "IZExLa4A01E",
+      "title": "JEE Advanced Physics PYQs🔥 | Thermal Expansion | Must Watch for Every Adv Aspirant!",
+      "chapter": null,
+      "confidence": 0.33,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": [
+        "Thermal Properties of Matter"
+      ]
+    },
+    {
+      "position": 17,
+      "youtube_video_id": "WtwOliQoTh4",
+      "title": "JEE Advanced Physics PYQs🔥 | Calorimetry | Must Watch for Every Adv Aspirant",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": []
+    },
+    {
+      "position": 18,
+      "youtube_video_id": "sk0AndvKmfE",
+      "title": "JEE Advanced Physics PYQs🔥 | Nuclear Physics | Must Watch for Every Adv Aspirant | Part-2",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": []
+    },
+    {
+      "position": 19,
+      "youtube_video_id": "t0W23jE9epM",
+      "title": "JEE Advanced Physics PYQs🔥 | Nuclear Physics | Must Watch for Every Adv Aspirant",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": []
+    },
+    {
+      "position": 20,
+      "youtube_video_id": "urdIbEsjPas",
+      "title": "JEE Advanced Physics PYQs🔥| Electromagnetic Waves | Must watch for every Adv aspirant!",
+      "chapter": "Electromagnetic Waves",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Electromagnetic Waves",
+        "Electromagnetic Induction",
+        "Oscillations and Waves"
+      ]
+    },
+    {
+      "position": 21,
+      "youtube_video_id": "cpeSiV0FR7s",
+      "title": "JEE Advanced Physics PYQs🔥| X Ray | Modern Physics| IIT | IIT advanced",
+      "chapter": "Modern Physics",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Modern Physics",
+        "Ray Optics and Optical Instruments"
+      ]
+    },
+    {
+      "position": 22,
+      "youtube_video_id": "t_6V4CLcqwY",
+      "title": "JEE Advanced Physics PYQs🔥 | Bohr Model | Atomic structure IIT | Modern Physics|",
+      "chapter": "Modern Physics",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Modern Physics"
+      ]
+    },
+    {
+      "position": 23,
+      "youtube_video_id": "cQEkC0nSo80",
+      "title": "JEE Advanced Bohr Model PYQs🔥 | Don’t Miss These Questions",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": []
+    },
+    {
+      "position": 24,
+      "youtube_video_id": "kHHVHoAM6g8",
+      "title": "JEE Advanced Physics PYQs🔥 | Matter Waves / De Broglie Waves | Must Watch for Every Adv Aspirant",
+      "chapter": "Oscillations and Waves",
+      "confidence": 0.5,
+      "review": true,
+      "reason": "medium confidence",
+      "alternatives": [
+        "Oscillations and Waves",
+        "Electromagnetic Waves",
+        "Magnetism and Matter"
+      ]
+    },
+    {
+      "position": 25,
+      "youtube_video_id": "hhlZTqukaL4",
+      "title": "JEE Advanced Physics PYQs 🔥 | Photoelectric Effect | Must Master Questions",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": []
+    },
+    {
+      "position": 26,
+      "youtube_video_id": "UC3qqIG_eQI",
+      "title": "Surface Tension PYQ That Teaches Real Concepts | JEE Advanced",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": []
+    },
+    {
+      "position": 27,
+      "youtube_video_id": "8-l-6X4O5Oc",
+      "title": "JEE Advanced Physics PYQs🔥| Capacitance 2006 - 2025 | Capacitor IIT advanced | Part 2",
+      "chapter": "Capacitance",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Capacitance"
+      ]
+    },
+    {
+      "position": 28,
+      "youtube_video_id": "VGh_CHZUULw",
+      "title": "JEE Advanced Physics PYQs🔥| Capacitance 2006 - 2025 | Capacitor IIT advanced |",
+      "chapter": "Capacitance",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Capacitance"
+      ]
+    },
+    {
+      "position": 29,
+      "youtube_video_id": "c95CG42QCDE",
+      "title": "4- JEE Advanced Physics PYQs 🔥 |  Surface Tension (2024 -2006)  | IIT JEE Physics | ABJ Sir",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": []
+    },
+    {
+      "position": 30,
+      "youtube_video_id": "DTLM17doWFM",
+      "title": "13- JEE Advanced Physics PYQs🔥 Sound Wave (2024 -2006) Must attend for Every JEE ADV Aspirant",
+      "chapter": "Wave Optics",
+      "confidence": 0.5,
+      "review": true,
+      "reason": "medium confidence",
+      "alternatives": [
+        "Wave Optics"
+      ]
+    },
+    {
+      "position": 31,
+      "youtube_video_id": "PRmuj5qkTdg",
+      "title": "12- JEE Advanced Physics PYQs🔥 WAVE ON STRING (2024-2006) | Must attend for Every JEE ADV Aspirant",
+      "chapter": "Wave Optics",
+      "confidence": 0.5,
+      "review": true,
+      "reason": "medium confidence",
+      "alternatives": [
+        "Wave Optics"
+      ]
+    },
+    {
+      "position": 32,
+      "youtube_video_id": "xVSu1iaKyj8",
+      "title": "The Best Selected Question of JEE Advanced 2020 See If You Can Crack It! ABJ SIR",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": []
+    },
+    {
+      "position": 33,
+      "youtube_video_id": "cnuCUfAgYcs",
+      "title": "10- JEE Advanced Physics PYQs🔥| WAVE OPTICS |2006 - 2023| Must watch for every Advanced Aspirant",
+      "chapter": "Wave Optics",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Wave Optics",
+        "Ray Optics and Optical Instruments"
+      ]
+    },
+    {
+      "position": 34,
+      "youtube_video_id": "FTZ0i92oPbQ",
+      "title": "16- JEE Adv Physics PYQs: Current Electricity (2006-2023) PART- 2 | JEE 2024 Preparation",
+      "chapter": "Current Electricity",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Current Electricity",
+        "Alternating Current"
+      ]
+    },
+    {
+      "position": 35,
+      "youtube_video_id": "fJdEp6jUT2I",
+      "title": "15- JEE Advanced Physics PYQs: Current Electricity (2006-2023) Solved | JEE 2024 Preparation",
+      "chapter": "Current Electricity",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Current Electricity",
+        "Alternating Current"
+      ]
+    },
+    {
+      "position": 36,
+      "youtube_video_id": "K_r88ilu9ew",
+      "title": "21- JEE Advanced Physics PYQs🔥| ELECTROSTATICS Part-2 || Electric Charges, Field and Potential PYQs",
+      "chapter": "Electrostatics",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Electrostatics",
+        "Moving Charges and Magnetism"
+      ]
+    },
+    {
+      "position": 37,
+      "youtube_video_id": "EBwKuLCzlNU",
+      "title": "20- JEE Advanced Physics PYQs🔥| ELECTROSTATICS | Electric Charges, Field and Potential PYQs",
+      "chapter": "Electrostatics",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Electrostatics",
+        "Moving Charges and Magnetism"
+      ]
+    },
+    {
+      "position": 38,
+      "youtube_video_id": "XPndhd54uPg",
+      "title": "11- JEE Advanced Physics PYQs🔥| WORK POWER & ENERGY |2006 - 2023| Must watch for every Adv aspirant",
+      "chapter": "Work, Energy and Power",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Work, Energy and Power"
+      ]
+    },
+    {
+      "position": 39,
+      "youtube_video_id": "p8CewMPJbqo",
+      "title": "17- JEE Advanced Physics PYQs🔥 | Rigid Body Dynamics | RBD | 2006- 2023| Must Watch | ABJ Sir",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": []
+    },
+    {
+      "position": 40,
+      "youtube_video_id": "pzUKgqwCPKY",
+      "title": "18- JEE Advanced Physics PYQs🔥| Rigid Body Dynamics 2006 - 2023| Must watch for every Adv aspirant!",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": []
+    },
+    {
+      "position": 41,
+      "youtube_video_id": "s4fHzCsOc1E",
+      "title": "10- JEE Advanced Physics PYQs🔥| Center of Mass 2006 - 2023 | Must watch for every Advanced aspirant!",
+      "chapter": null,
+      "confidence": 0.25,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": [
+        "System of Particles and Centre of Mass"
+      ]
+    },
+    {
+      "position": 42,
+      "youtube_video_id": "VaZYr1WQ7Vs",
+      "title": "8- JEE Advanced Physics PYQs🔥| Circular Motion 2006 - 2023 | Must watch for every Advanced aspirant!",
+      "chapter": "Rotational Motion",
+      "confidence": 0.5,
+      "review": true,
+      "reason": "medium confidence",
+      "alternatives": [
+        "Rotational Motion",
+        "Laws of Motion",
+        "Newton's Laws of Motion (NLM)"
+      ]
+    },
+    {
+      "position": 43,
+      "youtube_video_id": "-6muQNvDRtw",
+      "title": "68- JEE Advanced Physics PYQs🔥| Unit and Dimension 2006 - 2023 | Must watch for every Adv aspirant!",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": []
+    },
+    {
+      "position": 44,
+      "youtube_video_id": "G_m3fXBgqJE",
+      "title": "6- JEE Advanced Physics PYQs | NLM & FRICTION 2004 to 2023 | Must Attend For Every Adv Aspirants!",
+      "chapter": "Friction",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Friction",
+        "Newton's Laws of Motion (NLM)"
+      ]
+    },
+    {
+      "position": 45,
+      "youtube_video_id": "3UTLFFvHkOM",
+      "title": "67-JEE Advanced Physics PYQs | Geometrical Optics 2017 to 2023 | Must Attend For Every Adv Aspirants",
+      "chapter": "Wave Optics",
+      "confidence": 0.5,
+      "review": true,
+      "reason": "medium confidence",
+      "alternatives": [
+        "Wave Optics",
+        "Ray Optics and Optical Instruments"
+      ]
+    },
+    {
+      "position": 46,
+      "youtube_video_id": "isaAs6sKdsw",
+      "title": "66- Geometrical Optics JEE Advanced Previous Year Questions PYQ (2004-2023)",
+      "chapter": "Wave Optics",
+      "confidence": 0.5,
+      "review": true,
+      "reason": "medium confidence",
+      "alternatives": [
+        "Wave Optics",
+        "Ray Optics and Optical Instruments"
+      ]
+    },
+    {
+      "position": 47,
+      "youtube_video_id": "MBA60Ydnmk8",
+      "title": "#9- Kinematics JEE advanced previous year questions PYQ (2004-2023)",
+      "chapter": "Kinematics",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Kinematics"
+      ]
+    }
+  ]
+}
