@@ -1,0 +1,59 @@
+{
+  "version": 1,
+  "request_id": "9dfd25c1-a57f-47d7-b7f5-31d4c8e8c7cc",
+  "youtube_playlist_id": "PLQsNiHo64JI92nFYMSfOhGrq7bct9haT3",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "bBilbxPk6xc",
+      "chapter": "Permutations and Combinations"
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "JwOZdiIQYxU",
+      "chapter": "Differential Equations"
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "Ygtka3DN0dI",
+      "chapter": "Application of Integrals"
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "eELR9jtUijE",
+      "chapter": "Complex Numbers"
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "YTSVd8z5Muo",
+      "chapter": "Probability"
+    }
+  ],
+  "exclusions": [
+    {
+      "position": 6,
+      "youtube_video_id": "g-Fa0TIitRc",
+      "reason": "Chemistry practice lecture; excluded from the Mathematics course."
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "oWxR8SdYllY",
+      "reason": "Chemistry practice lecture; excluded from the Mathematics course."
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "L4dnuL2EAfY",
+      "reason": "Chemistry practice lecture; excluded from the Mathematics course."
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "25WiaWXrh_A",
+      "reason": "Chemistry practice lecture; excluded from the Mathematics course."
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "1yIPYj0vEdk",
+      "reason": "Chemistry practice lecture; excluded from the Mathematics course."
+    }
+  ]
+}
