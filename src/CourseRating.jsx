@@ -17,8 +17,11 @@ import { useState, useEffect, useCallback } from "react";
 import { Star } from "lucide-react";
 import { supabase } from "./supabaseClient";
 import { useSession } from "./useSession.js";
+import { useVisibleReviews } from "./useVisibleReviews.js";
 import { useTheme } from "./theme.jsx";
-import { RATING_DIFFICULTY, RATING_BEST_FOR } from "./metadata.js";
+import {
+  RATING_DIFFICULTY, RATING_BEST_FOR, RATING_DIFFICULTY_LABELS, RATING_BEST_FOR_LABELS,
+} from "./metadata.js";
 import { ratingDisplay } from "./ratingConfidence.js";
 import StudentAuth from "./StudentAuth.jsx";
 import { RELEASE_FEATURES } from "./releaseCapabilities.js";
@@ -305,25 +308,72 @@ export function CourseRatingSummary({ initialAverage = 0, initialCount = 0 }) {
   );
 }
 
+// Shown to everyone, signed in or not -- excludes anything an admin hid
+// (see rating_review_moderation.sql). No reviewer name is shown: sign-up
+// only collects an email and password, so there is no real display name to
+// attach, and inventing one would violate this project's own "nothing is
+// invented" rule (see the file header of PlaylistBrowse.jsx).
+function ReviewsList({ playlistId, released = RELEASE_FEATURES.reviewDisplay }) {
+  const { t } = useTheme();
+  const { reviews, loading } = useVisibleReviews(released ? playlistId : null);
+
+  if (!released || loading || reviews.length === 0) return null;
+
+  return (
+    <div className={`mt-8 rounded-2xl border ${t.card} ${t.border} p-6`}>
+      <h2 className={`text-base font-semibold ${t.text}`}>What students are saying</h2>
+      <ul className="mt-4 space-y-4">
+        {reviews.map((r) => (
+          <li key={r.id} className={`border-t pt-4 first:border-t-0 first:pt-0 ${t.border}`}>
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="flex items-center gap-0.5" aria-label={`${r.rating} out of 5 stars`}>
+                {[1, 2, 3, 4, 5].map((n) => (
+                  <Star
+                    key={n}
+                    className="h-3.5 w-3.5"
+                    style={{ color: ACCENT.star }}
+                    fill={n <= r.rating ? ACCENT.star : "none"}
+                    aria-hidden="true"
+                  />
+                ))}
+              </span>
+              {r.difficulty && (
+                <span className={`text-xs ${t.muted}`}>{RATING_DIFFICULTY_LABELS[r.difficulty] ?? r.difficulty}</span>
+              )}
+              {r.best_for && (
+                <span className={`text-xs ${t.muted}`}>· {RATING_BEST_FOR_LABELS[r.best_for] ?? r.best_for}</span>
+              )}
+              <span className={`text-xs ${t.faint}`}>{new Date(r.created_at).toLocaleDateString()}</span>
+            </div>
+            <p className={`mt-1.5 text-sm ${t.text}`}>{r.review}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 export default function CourseRating({
   playlistId,
   initialAverage = 0,
   initialCount = 0,
   released = RELEASE_FEATURES.courseRatingSubmission,
 }) {
-  if (!released) {
-    return (
-      <CourseRatingSummary
-        initialAverage={initialAverage}
-        initialCount={initialCount}
-      />
-    );
-  }
   return (
-    <CourseRatingInteractive
-      playlistId={playlistId}
-      initialAverage={initialAverage}
-      initialCount={initialCount}
-    />
+    <>
+      {released ? (
+        <CourseRatingInteractive
+          playlistId={playlistId}
+          initialAverage={initialAverage}
+          initialCount={initialCount}
+        />
+      ) : (
+        <CourseRatingSummary
+          initialAverage={initialAverage}
+          initialCount={initialCount}
+        />
+      )}
+      <ReviewsList playlistId={playlistId} />
+    </>
   );
 }

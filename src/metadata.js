@@ -41,6 +41,8 @@ const labelMap = (arr) => Object.fromEntries(arr.map((x) => [x.value, x.label]))
 export const CONTENT_TYPE_LABELS = labelMap(CONTENT_TYPES);
 export const LANGUAGE_LABELS = labelMap(LANGUAGES);
 export const DIFFICULTY_LABELS = labelMap(DIFFICULTIES);
+export const RATING_DIFFICULTY_LABELS = labelMap(RATING_DIFFICULTY);
+export const RATING_BEST_FOR_LABELS = labelMap(RATING_BEST_FOR);
 
 // "PT1H2M3S" -> 3723 seconds. Returns null if unparseable.
 export function isoDurationToSeconds(iso) {

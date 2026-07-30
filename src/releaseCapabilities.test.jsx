@@ -24,6 +24,7 @@ describe("current production capability contract", () => {
     expect(RELEASE_FEATURES).toEqual({
       studentAccounts: true,
       courseRatingSubmission: true,
+      reviewDisplay: true,
       contentReporting: false,
     });
     expect(homeTagline()).toMatch(/compare/i);

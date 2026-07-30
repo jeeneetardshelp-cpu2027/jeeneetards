@@ -10,6 +10,7 @@ describe("ratings-launch production release evidence", () => {
     expect(RELEASE_FEATURES).toEqual({
       studentAccounts: true,
       courseRatingSubmission: true,
+      reviewDisplay: true,
       contentReporting: false,
     });
   });

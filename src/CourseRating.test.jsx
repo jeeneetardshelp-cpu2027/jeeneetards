@@ -6,10 +6,14 @@ vi.mock("./useSession.js", () => ({
 }));
 
 vi.mock("./supabaseClient", () => ({
+  isSupabaseConfigured: true,
   supabase: {
     from: () => ({
       select() { return this; },
       eq() { return this; },
+      not() { return this; },
+      order() { return this; },
+      limit() { return Promise.resolve({ data: [], error: null }); },
       maybeSingle() { return Promise.resolve({ data: null, error: null }); },
     }),
   },
