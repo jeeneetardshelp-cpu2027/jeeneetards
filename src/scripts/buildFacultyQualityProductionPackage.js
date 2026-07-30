@@ -9,7 +9,15 @@ const order = [
   "src/migrations/teachers_v7.sql",
   "src/migrations/teachers_v7_import.sql",
   "src/migrations/teachers_v7_admin_ui.sql",
-  "src/migrations/universal_search.sql",
+  // search_latin_key_v11 must precede universal_search_v11: the latter's own
+  // preflight refuses to continue without it. Was "universal_search.sql" (the
+  // pre-v11 file) until 2026-07-30 -- that stale copy would have silently
+  // regressed search_v11_2026-07-30.sql's already-live fixes (non-sargable
+  // predicates, single-token-only matching, no Hinglish bridge) on any future
+  // rebuild of this package. See docs/schema_reference.md's Import/Catalog
+  // Management "Discrepancies" section for how this was found.
+  "src/migrations/search_latin_key_v11.sql",
+  "src/migrations/universal_search_v11.sql",
   "src/migrations/content_quality_v10.sql",
   "src/migrations/faculty_quality_production_postflight.sql",
 ];

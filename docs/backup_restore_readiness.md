@@ -883,3 +883,35 @@ courses and 1,570 memberships with fingerprint
 Production browser QA confirmed the correct JEE Mathematics and class tags,
 natural L1-to-final ordering, and working first and final YouTube embeds for
 all three courses. No browser console warnings or errors were observed.
+
+## Addendum, 31 July 2026 — a from-scratch restore today needs one more step
+
+The two lineages recorded above (the 27 July isolated-restore rehearsal and
+the 27 July production migration) both applied `universal_search.sql` as
+step 2 of the missing-lineage list. That was correct and complete for what
+existed on 27 July. It is no longer complete: on 30 July 2026, production's
+search was further upgraded by `docs/sql/search_v11_2026-07-30.sql` (built
+from `src/migrations/search_latin_key_v11.sql` +
+`src/migrations/universal_search_v11.sql`, in that order — the second file's
+own preflight refuses to continue without the first), fixing a
+non-sargable-predicate performance bug and a single-token-only fuzzy-match
+bug. That upgrade is not reflected in either lineage list above.
+
+A restore performed strictly by replaying the lineages recorded above —
+including applying `universal_search.sql` at step 2 exactly as written —
+would leave a restored database on the pre-v11 search implementation, not
+the search production actually runs today. **A restore performed after this
+addendum's date should apply `docs/sql/search_v11_2026-07-30.sql` (or the
+two `src/migrations/` files it concatenates, in the stated order)
+immediately after the same step where `universal_search.sql` is applied
+above**, not as a substitute for reading this document, but as an explicit
+correction the historical entries above cannot self-update to reflect.
+
+This gap was found by `docs/schema_reference.md`'s schema audit while
+tracing a different, related issue: `production/faculty_quality_production.sql`
+(an unrelated bundle file that also concatenates a copy of search) embedded
+the same stale `universal_search.sql` and has separately been corrected to
+reference the v11 files (see that file's own header and
+`src/scripts/buildFacultyQualityProductionPackage.js`). The two fixes are
+independent — this addendum covers the restore-lineage document specifically,
+since a restore does not go through that bundle file at all.
