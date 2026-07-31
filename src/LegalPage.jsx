@@ -41,7 +41,7 @@ export default function LegalPage() {
             Terms of Service &amp; Disclaimer
           </h1>
           <p className={`mt-1 text-xs ${t.muted}`}>
-            Effective date: 25 July 2026
+            Effective date: 31 July 2026
           </p>
 
           <Section title="1. About the service">
@@ -59,10 +59,11 @@ export default function LegalPage() {
 
           <Section title="2. Accounts and contributions">
             <p>
-              Browsing does not require an account. Account, rating, review, and
-              report controls may be enabled only through an explicit release
-              decision. When available, users must protect their credentials,
-              provide accurate information, and sign out on a shared device.
+              Browsing does not require an account. Account, rating, review,
+              and report controls are enabled. Users must protect their
+              credentials, provide accurate information, and sign out on a
+              shared device. A written review is published publicly on the
+              course page, without any name attached.
             </p>
             <p>
               Students under 18 should use the service with a parent or
@@ -149,7 +150,7 @@ export default function LegalPage() {
               This service is operated by JEENEETARD, based in Kota, Rajasthan,
               India. These Terms are governed by the laws of India, and any
               dispute is subject to the courts of Kota, Rajasthan. This
-              version is effective 25 July 2026.
+              version is effective 31 July 2026.
             </p>
           </Section>
         </Container>
