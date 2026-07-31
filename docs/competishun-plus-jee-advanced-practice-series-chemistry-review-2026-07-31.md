@@ -80,3 +80,30 @@ Owner review is required for the five mappings and the source-ID-null split.
 After approval: take a fresh production preflight, prepare/hash the guarded
 create-only SQL artifact, execute it once, verify exact deltas and both JEE
 fingerprints, then stop.
+
+## Owner approval and guarded artifact
+
+The owner approved the reviewed five-video mapping and the create-only,
+source-ID-null split under attribution decision
+`1c06eb34-fbdc-4d3b-a239-39f256f889e8`.
+
+Fresh production preflight immediately before artifact preparation:
+
+- catalogue: 291 playlists / 3,083 videos / 3,089 memberships / 241 chapters;
+- source owner: exactly course 248, Mathematics;
+- target Chemistry title: absent;
+- selected video rows: 0;
+- all five reviewed chapter references: exact;
+- protected original JEE: 83 courses / 1,350 memberships /
+  `6829fcb6eae22479db7b82b7b3da654d`;
+- rolling JEE: 166 courses / 1,889 memberships /
+  `7b1e9be740b8f68f092ead95f19120ec`.
+
+Guarded artifact:
+
+- `docs/sql/competishun_jee_advanced_practice_chemistry_2026-07-31.sql`
+- SHA-256: `f9e279dc34fc34f5c8eddb360ebcd4cbc6023cc61acbb61a3501cc29d76ff075`
+- insert-only transaction; zero `UPDATE`, `DELETE`, `DROP`, `ALTER`, or
+  `TRUNCATE` statements;
+- exact baseline, source owner, title, chapter, video-reuse, post-total, null
+  source-ID, and protected-fingerprint guards.
