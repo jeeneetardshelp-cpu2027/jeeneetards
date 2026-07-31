@@ -107,3 +107,24 @@ Guarded artifact:
   `TRUNCATE` statements;
 - exact baseline, source owner, title, chapter, video-reuse, post-total, null
   source-ID, and protected-fingerprint guards.
+
+## Production result
+
+The committed artifact was copied back from the authenticated production SQL
+editor and matched the recorded SHA-256 exactly before execution. The guarded
+transaction completed with `Success. No rows returned`.
+
+- course created: `302`, `JEE Advanced Practice Series — Chemistry`;
+- source ID: null;
+- delta: +1 course / +5 videos / +5 memberships / +0 chapters;
+- all five videos: `embedding_status = allowed` and exactly one membership;
+- final catalogue: 292 playlists / 3,088 videos / 3,094 memberships /
+  241 chapters;
+- sole real source owner remains Mathematics course 248;
+- protected original JEE: 83 courses / 1,350 memberships /
+  `6829fcb6eae22479db7b82b7b3da654d`;
+- rolling JEE: 167 courses / 1,894 memberships /
+  `69e0b86fe613faf73f005b95dec38397`.
+
+No update, delete, schema migration, video reuse, chapter creation, or
+`release` push was performed.
