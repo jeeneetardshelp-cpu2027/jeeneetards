@@ -1,0 +1,70 @@
+{
+  "version": 1,
+  "request_id": "d17e8edd-cade-448d-b74e-a860da5d5334",
+  "youtube_playlist_id": "PLQsNiHo64JI9ID8qNxB0yOEd0x8HbzkIq",
+  "assignments": [
+    {
+      "position": 6,
+      "youtube_video_id": "TbAYRp5R_BM",
+      "chapter": "Some Basic Principles of Organic Chemistry",
+      "lesson_number": 1
+    }
+  ],
+  "exclusions": [
+    {
+      "position": 1,
+      "youtube_video_id": "qIYfXUTtRhw",
+      "reason": "JoSAA seat-allotment guidance, not a curriculum lecture."
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "iKYaTb-dMUs",
+      "reason": "JoSAA choice-filling guidance, not a curriculum lecture."
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "GV5JShgGGZ8",
+      "reason": "JoSAA counselling guidance, not a curriculum lecture."
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "2f4H1p2qsSM",
+      "reason": "JoSAA counselling guidance, not a curriculum lecture."
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "YVg4_AgaZAM",
+      "reason": "JoSAA counselling Q&A, not a curriculum lecture."
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "NzyxjEJUCaM",
+      "reason": "Personalized-guidance form announcement, not a curriculum lecture."
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "cpeSiV0FR7s",
+      "reason": "Physics X-ray PYQ lecture already covered in the live catalogue; excluded to preserve zero reuse."
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "9u_WImkYoiM",
+      "reason": "Exam strategy guidance, not a curriculum lecture."
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "tEQt8Q7Lg4k",
+      "reason": "Test-series promotion, not a curriculum lecture."
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "btg9vkPPywg",
+      "reason": "Batch plan and preparation guidance, not a curriculum lecture."
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "Bp3jKUWNOQU",
+      "reason": "General revision-method guidance, not a chapter lecture."
+    }
+  ]
+}

@@ -39,13 +39,22 @@ export function lessonNumber(title = "") {
 const byPosition = (videos) =>
   [...videos].sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
 
+// A reviewed single-chapter manifest carries an explicit lessonNumber. That
+// value is the curator-approved order and must take precedence over incidental
+// numbers in problem titles (years, question numbers, parts, and so on).
+// Unreviewed playlists continue to use the original title parser.
+const effectiveLessonNumber = (video) =>
+  Number.isSafeInteger(video?.lessonNumber) && video.lessonNumber > 0
+    ? video.lessonNumber
+    : lessonNumber(video?.title);
+
 // A lesson number appearing on more than one video. Codex blocked Ray Optics
 // partly for "duplicates lesson number 36".
 export function findDuplicateLessonNumbers(videos = []) {
   const seen = new Map();
   const dupes = new Set();
   for (const v of videos) {
-    const n = lessonNumber(v.title);
+    const n = effectiveLessonNumber(v);
     if (n == null) continue;
     if (seen.has(n)) dupes.add(n);
     else seen.set(n, true);
@@ -58,7 +67,10 @@ export function findDuplicateLessonNumbers(videos = []) {
 // Only assessed when most videos carry a parseable number.
 export function findOrderInversions(videos = []) {
   const ordered = byPosition(videos);
-  const numbered = ordered.map((v) => ({ title: v.title, n: lessonNumber(v.title) }));
+  const numbered = ordered.map((v) => ({
+    title: v.title,
+    n: effectiveLessonNumber(v),
+  }));
   const parsed = numbered.filter((x) => x.n != null);
   if (parsed.length < Math.ceil(ordered.length * 0.6)) return { assessable: false, inversions: [] };
   const inversions = [];

@@ -36,7 +36,7 @@ begin
   select v_playlist_id, cl.id from public.class_levels cl where cl.slug = 'class-11';
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('sStUJVDB54A', 'Biodiversity and Conservation Part 1', 'Biodiversity & Conservation Part-1 | Day 49 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚', v_channel_id, 4, (select id from public.chapters where slug = 'biodiversity-and-conservation'), 2, 3671, 'allowed', now())
+  values ('sStUJVDB54A', 'Biodiversity and Conservation Part 1', 'Biodiversity & Conservation Part-1 | Day 49 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚', v_channel_id, 4, (select id from public.chapters where slug = 'biodiversity-and-conservation' and subject_id = 4), 2, 3671, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -46,7 +46,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('2249I-J2svI', 'Ecosystem Part 2', 'Ecosystem Part-2 | Day 48 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚 ALLEN NEET', v_channel_id, 4, (select id from public.chapters where slug = 'ecosystem'), 2, 3390, 'allowed', now())
+  values ('2249I-J2svI', 'Ecosystem Part 2', 'Ecosystem Part-2 | Day 48 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚 ALLEN NEET', v_channel_id, 4, (select id from public.chapters where slug = 'ecosystem' and subject_id = 4), 2, 3390, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -56,7 +56,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('E54XnveeTII', 'Ecosystem Part 1', 'Ecosystem Part-1 | Day 47 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚 ALLEN NEET', v_channel_id, 4, (select id from public.chapters where slug = 'ecosystem'), 2, 3650, 'allowed', now())
+  values ('E54XnveeTII', 'Ecosystem Part 1', 'Ecosystem Part-1 | Day 47 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚 ALLEN NEET', v_channel_id, 4, (select id from public.chapters where slug = 'ecosystem' and subject_id = 4), 2, 3650, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -66,7 +66,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('jDuf-kNEJtY', 'Organisms and Populations Part 2', 'Organisms and Populations Part-2 | Day 46 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚 ALLEN NEET', v_channel_id, 4, (select id from public.chapters where slug = 'organisms-and-populations'), 2, 4461, 'allowed', now())
+  values ('jDuf-kNEJtY', 'Organisms and Populations Part 2', 'Organisms and Populations Part-2 | Day 46 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚 ALLEN NEET', v_channel_id, 4, (select id from public.chapters where slug = 'organisms-and-populations' and subject_id = 4), 2, 4461, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -76,7 +76,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('DalVC-7K6T0', 'Organisms and Populations Part 1', 'Organisms and Populations | Part-1 | Day 45 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚', v_channel_id, 4, (select id from public.chapters where slug = 'organisms-and-populations'), 2, 3660, 'allowed', now())
+  values ('DalVC-7K6T0', 'Organisms and Populations Part 1', 'Organisms and Populations | Part-1 | Day 45 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚', v_channel_id, 4, (select id from public.chapters where slug = 'organisms-and-populations' and subject_id = 4), 2, 3660, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -86,7 +86,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('rtQZxgj3ufU', 'Microbes in Human Welfare', 'Microbes in Human Welfare | Day 44 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚', v_channel_id, 4, (select id from public.chapters where slug = 'microbes-in-human-welfare'), 2, 3731, 'allowed', now())
+  values ('rtQZxgj3ufU', 'Microbes in Human Welfare', 'Microbes in Human Welfare | Day 44 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚', v_channel_id, 4, (select id from public.chapters where slug = 'microbes-in-human-welfare' and subject_id = 4), 2, 3731, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -96,7 +96,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('0QnUI7hN7U8', 'Biotechnology and Its Applications', 'Biotechnology And Its Application | Day 43 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚', v_channel_id, 4, (select id from public.chapters where slug = 'biotechnology-and-its-applications'), 2, 4406, 'allowed', now())
+  values ('0QnUI7hN7U8', 'Biotechnology and Its Applications', 'Biotechnology And Its Application | Day 43 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚', v_channel_id, 4, (select id from public.chapters where slug = 'biotechnology-and-its-applications' and subject_id = 4), 2, 4406, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -106,7 +106,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('JeKhmHQ43ek', 'Biotechnology: Principles and Processes', 'Biotechnology: Principles & Processes | Day 42 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚', v_channel_id, 4, (select id from public.chapters where slug = 'biotechnology-principles-and-processes'), 2, 5095, 'allowed', now())
+  values ('JeKhmHQ43ek', 'Biotechnology: Principles and Processes', 'Biotechnology: Principles & Processes | Day 42 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚', v_channel_id, 4, (select id from public.chapters where slug = 'biotechnology-principles-and-processes' and subject_id = 4), 2, 5095, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -116,7 +116,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('tqthhtofrdE', 'Evolution', 'Evolution  | Day 41 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚 ALLEN NEET', v_channel_id, 4, (select id from public.chapters where slug = 'evolution'), 2, 4720, 'allowed', now())
+  values ('tqthhtofrdE', 'Evolution', 'Evolution  | Day 41 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚 ALLEN NEET', v_channel_id, 4, (select id from public.chapters where slug = 'evolution' and subject_id = 4), 2, 4720, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -126,7 +126,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('JQMQon2ia0A', 'Molecular Basis of Inheritance Part 3', 'Molecular Basis of Inheritance Part-3 | Day 40 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚', v_channel_id, 4, (select id from public.chapters where slug = 'molecular-basis-of-inheritance'), 2, 3540, 'allowed', now())
+  values ('JQMQon2ia0A', 'Molecular Basis of Inheritance Part 3', 'Molecular Basis of Inheritance Part-3 | Day 40 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚', v_channel_id, 4, (select id from public.chapters where slug = 'molecular-basis-of-inheritance' and subject_id = 4), 2, 3540, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -136,7 +136,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('Xzpfdk7GtAI', 'Molecular Basis of Inheritance Part 2', 'Molecular Basis of Inheritance Part-2 | Day 39 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚', v_channel_id, 4, (select id from public.chapters where slug = 'molecular-basis-of-inheritance'), 2, 3605, 'allowed', now())
+  values ('Xzpfdk7GtAI', 'Molecular Basis of Inheritance Part 2', 'Molecular Basis of Inheritance Part-2 | Day 39 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚', v_channel_id, 4, (select id from public.chapters where slug = 'molecular-basis-of-inheritance' and subject_id = 4), 2, 3605, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -146,7 +146,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('NxDZR461t1w', 'Molecular Basis of Inheritance Part 1', 'Molecular Basis of Inheritance Part-1 | Day 38 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚', v_channel_id, 4, (select id from public.chapters where slug = 'molecular-basis-of-inheritance'), 2, 3568, 'allowed', now())
+  values ('NxDZR461t1w', 'Molecular Basis of Inheritance Part 1', 'Molecular Basis of Inheritance Part-1 | Day 38 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚', v_channel_id, 4, (select id from public.chapters where slug = 'molecular-basis-of-inheritance' and subject_id = 4), 2, 3568, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -156,7 +156,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('930-Z9lIKcA', 'Principles of Inheritance and Variation Part 3', 'Principle of Inheritance & Variations Part-3 | Day 37 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚', v_channel_id, 4, (select id from public.chapters where slug = 'principles-of-inheritance-and-variation'), 2, 3626, 'allowed', now())
+  values ('930-Z9lIKcA', 'Principles of Inheritance and Variation Part 3', 'Principle of Inheritance & Variations Part-3 | Day 37 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚', v_channel_id, 4, (select id from public.chapters where slug = 'principles-of-inheritance-and-variation' and subject_id = 4), 2, 3626, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -166,7 +166,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('MLPCeFF8Oeo', 'Principles of Inheritance and Variation Part 2', 'Principle of Inheritance & Variations Part-2 | Day 36 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚', v_channel_id, 4, (select id from public.chapters where slug = 'principles-of-inheritance-and-variation'), 2, 3870, 'allowed', now())
+  values ('MLPCeFF8Oeo', 'Principles of Inheritance and Variation Part 2', 'Principle of Inheritance & Variations Part-2 | Day 36 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚', v_channel_id, 4, (select id from public.chapters where slug = 'principles-of-inheritance-and-variation' and subject_id = 4), 2, 3870, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -176,7 +176,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('DaX3loxwNI4', 'Principles of Inheritance and Variation Part 1', 'Principle of Inheritance & Variations Part-1 | Day 35 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚', v_channel_id, 4, (select id from public.chapters where slug = 'principles-of-inheritance-and-variation'), 2, 4556, 'allowed', now())
+  values ('DaX3loxwNI4', 'Principles of Inheritance and Variation Part 1', 'Principle of Inheritance & Variations Part-1 | Day 35 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚', v_channel_id, 4, (select id from public.chapters where slug = 'principles-of-inheritance-and-variation' and subject_id = 4), 2, 4556, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -186,7 +186,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('zq4SOivtqBE', 'Human Health and Disease', 'Human Health And Disease | Day 34 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚 ALLEN NEET', v_channel_id, 4, (select id from public.chapters where slug = 'human-health-and-disease'), 2, 4835, 'allowed', now())
+  values ('zq4SOivtqBE', 'Human Health and Disease', 'Human Health And Disease | Day 34 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚 ALLEN NEET', v_channel_id, 4, (select id from public.chapters where slug = 'human-health-and-disease' and subject_id = 4), 2, 4835, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -196,7 +196,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('BdihZsHcerY', 'Reproductive Health', 'Reproductive Health | Day 33 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚 ALLEN NEET', v_channel_id, 4, (select id from public.chapters where slug = 'reproductive-health'), 2, 4985, 'allowed', now())
+  values ('BdihZsHcerY', 'Reproductive Health', 'Reproductive Health | Day 33 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚 ALLEN NEET', v_channel_id, 4, (select id from public.chapters where slug = 'reproductive-health' and subject_id = 4), 2, 4985, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -206,7 +206,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('uxbg1jL5bHI', 'Human Reproduction Part 2', 'Human Reproduction Part-2 | Day 32 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚 ALLEN NEET', v_channel_id, 4, (select id from public.chapters where slug = 'human-reproduction'), 2, 5557, 'allowed', now())
+  values ('uxbg1jL5bHI', 'Human Reproduction Part 2', 'Human Reproduction Part-2 | Day 32 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚 ALLEN NEET', v_channel_id, 4, (select id from public.chapters where slug = 'human-reproduction' and subject_id = 4), 2, 5557, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -216,7 +216,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('ZW7fvinclzU', 'Human Reproduction Part 1', 'Human Reproduction Part-1 | Day 31 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚 ALLEN NEET', v_channel_id, 4, (select id from public.chapters where slug = 'human-reproduction'), 2, 5105, 'allowed', now())
+  values ('ZW7fvinclzU', 'Human Reproduction Part 1', 'Human Reproduction Part-1 | Day 31 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚 ALLEN NEET', v_channel_id, 4, (select id from public.chapters where slug = 'human-reproduction' and subject_id = 4), 2, 5105, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -226,7 +226,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('8P3aaitoi0w', 'Sexual Reproduction in Flowering Plants Part 2', 'Sexual Reproduction in Flowering Plants (Part-2) | Day 30 of Bio-Fest 2.0 | NEET 2025 📚', v_channel_id, 4, (select id from public.chapters where slug = 'sexual-reproduction-in-flowering-plants'), 2, 4213, 'allowed', now())
+  values ('8P3aaitoi0w', 'Sexual Reproduction in Flowering Plants Part 2', 'Sexual Reproduction in Flowering Plants (Part-2) | Day 30 of Bio-Fest 2.0 | NEET 2025 📚', v_channel_id, 4, (select id from public.chapters where slug = 'sexual-reproduction-in-flowering-plants' and subject_id = 4), 2, 4213, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -236,7 +236,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('E3v4V-bMd-8', 'Sexual Reproduction in Flowering Plants Part 1', 'Sexual Reproduction in Flowering Plants (Part-1) | Day 29 of Bio-Fest 2.0 | NEET 2025 📚', v_channel_id, 4, (select id from public.chapters where slug = 'sexual-reproduction-in-flowering-plants'), 2, 3905, 'allowed', now())
+  values ('E3v4V-bMd-8', 'Sexual Reproduction in Flowering Plants Part 1', 'Sexual Reproduction in Flowering Plants (Part-1) | Day 29 of Bio-Fest 2.0 | NEET 2025 📚', v_channel_id, 4, (select id from public.chapters where slug = 'sexual-reproduction-in-flowering-plants' and subject_id = 4), 2, 3905, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -246,7 +246,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('VdB4qE3FPEY', 'Chemical Coordination and Integration', 'Chemical Coordination and Integration | Day 28 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚', v_channel_id, 4, (select id from public.chapters where slug = 'chemical-coordination-and-integration'), 2, 3701, 'allowed', now())
+  values ('VdB4qE3FPEY', 'Chemical Coordination and Integration', 'Chemical Coordination and Integration | Day 28 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚', v_channel_id, 4, (select id from public.chapters where slug = 'chemical-coordination-and-integration' and subject_id = 4), 2, 3701, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -256,7 +256,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('_WL5KXSUZ1Q', 'Neural Control and Coordination', 'Neural Control and Coordination | Day 27 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚', v_channel_id, 4, (select id from public.chapters where slug = 'neural-control-and-coordination'), 2, 3341, 'allowed', now())
+  values ('_WL5KXSUZ1Q', 'Neural Control and Coordination', 'Neural Control and Coordination | Day 27 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚', v_channel_id, 4, (select id from public.chapters where slug = 'neural-control-and-coordination' and subject_id = 4), 2, 3341, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -266,7 +266,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('LwLdSmoCmko', 'Locomotion and Movement', 'Locomotion and Movement | Day 26 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚 ALLEN', v_channel_id, 4, (select id from public.chapters where slug = 'locomotion-and-movement'), 2, 3689, 'allowed', now())
+  values ('LwLdSmoCmko', 'Locomotion and Movement', 'Locomotion and Movement | Day 26 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚 ALLEN', v_channel_id, 4, (select id from public.chapters where slug = 'locomotion-and-movement' and subject_id = 4), 2, 3689, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -276,7 +276,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('T2RIX3D9ZIc', 'Excretory Products and Their Elimination', 'Excretory Products and Their Elimination | Day 25 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚', v_channel_id, 4, (select id from public.chapters where slug = 'excretory-products-and-their-elimination'), 2, 3905, 'allowed', now())
+  values ('T2RIX3D9ZIc', 'Excretory Products and Their Elimination', 'Excretory Products and Their Elimination | Day 25 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚', v_channel_id, 4, (select id from public.chapters where slug = 'excretory-products-and-their-elimination' and subject_id = 4), 2, 3905, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -286,7 +286,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('707-A6VEsfM', 'Body Fluids and Circulation', 'Body Fluids and Circulation | Day 24 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚 ALLEN', v_channel_id, 4, (select id from public.chapters where slug = 'body-fluids-and-circulation'), 2, 3750, 'allowed', now())
+  values ('707-A6VEsfM', 'Body Fluids and Circulation', 'Body Fluids and Circulation | Day 24 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚 ALLEN', v_channel_id, 4, (select id from public.chapters where slug = 'body-fluids-and-circulation' and subject_id = 4), 2, 3750, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -296,7 +296,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('wpqpDTOaGac', 'Breathing and Exchange of Gases', 'Breathing and Exchange of Gases | Day 23 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚   ALLEN NEET', v_channel_id, 4, (select id from public.chapters where slug = 'breathing-and-exchange-of-gases'), 2, 3930, 'allowed', now())
+  values ('wpqpDTOaGac', 'Breathing and Exchange of Gases', 'Breathing and Exchange of Gases | Day 23 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚   ALLEN NEET', v_channel_id, 4, (select id from public.chapters where slug = 'breathing-and-exchange-of-gases' and subject_id = 4), 2, 3930, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -306,7 +306,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('CyTKLx9JlVA', 'Plant Growth and Development', 'Plant Growth and Development | Day 22 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚 ALLEN', v_channel_id, 4, (select id from public.chapters where slug = 'plant-growth-and-development'), 2, 4655, 'allowed', now())
+  values ('CyTKLx9JlVA', 'Plant Growth and Development', 'Plant Growth and Development | Day 22 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚 ALLEN', v_channel_id, 4, (select id from public.chapters where slug = 'plant-growth-and-development' and subject_id = 4), 2, 4655, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -316,7 +316,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('s1W86aPkP4c', 'Respiration in Plants', 'Respiration in Plants  | Day 21 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚 ALLEN NEET', v_channel_id, 4, (select id from public.chapters where slug = 'respiration-in-plants'), 2, 4721, 'allowed', now())
+  values ('s1W86aPkP4c', 'Respiration in Plants', 'Respiration in Plants  | Day 21 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚 ALLEN NEET', v_channel_id, 4, (select id from public.chapters where slug = 'respiration-in-plants' and subject_id = 4), 2, 4721, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -326,7 +326,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('w1D__na1qlc', 'Photosynthesis in Higher Plants Part 2', 'Photosynthesis in Higher Plants Part-2 | Day 20 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚 ALLEN', v_channel_id, 4, (select id from public.chapters where slug = 'photosynthesis-in-higher-plants'), 2, 4120, 'allowed', now())
+  values ('w1D__na1qlc', 'Photosynthesis in Higher Plants Part 2', 'Photosynthesis in Higher Plants Part-2 | Day 20 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚 ALLEN', v_channel_id, 4, (select id from public.chapters where slug = 'photosynthesis-in-higher-plants' and subject_id = 4), 2, 4120, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -336,7 +336,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('aawNyAnDDTg', 'Photosynthesis in Higher Plants Part 1', 'Photosynthesis in Higher Plants Part-1 | Day 19 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚 ALLEN', v_channel_id, 4, (select id from public.chapters where slug = 'photosynthesis-in-higher-plants'), 2, 3980, 'allowed', now())
+  values ('aawNyAnDDTg', 'Photosynthesis in Higher Plants Part 1', 'Photosynthesis in Higher Plants Part-1 | Day 19 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚 ALLEN', v_channel_id, 4, (select id from public.chapters where slug = 'photosynthesis-in-higher-plants' and subject_id = 4), 2, 3980, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -346,7 +346,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('_yRS0e2Ocso', 'Biomolecules Part 2', 'Biomolecules Part-2 | Day 18 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚 ALLEN', v_channel_id, 4, (select id from public.chapters where slug = 'biomolecules'), 2, 4700, 'allowed', now())
+  values ('_yRS0e2Ocso', 'Biomolecules Part 2', 'Biomolecules Part-2 | Day 18 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚 ALLEN', v_channel_id, 4, (select id from public.chapters where slug = 'biomolecules' and subject_id = 4), 2, 4700, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -356,7 +356,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('CzJ5kSZwC_A', 'Biomolecules Part 1', 'Biomolecules Part-1 | Day 17 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚 ALLEN NEET', v_channel_id, 4, (select id from public.chapters where slug = 'biomolecules'), 2, 3941, 'allowed', now())
+  values ('CzJ5kSZwC_A', 'Biomolecules Part 1', 'Biomolecules Part-1 | Day 17 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚 ALLEN NEET', v_channel_id, 4, (select id from public.chapters where slug = 'biomolecules' and subject_id = 4), 2, 3941, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -366,7 +366,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('3eThoF65Cq4', 'Cell Cycle and Cell Division', 'Cell Cycle and Cell Division | Day 16 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚 ALLEN', v_channel_id, 4, (select id from public.chapters where slug = 'cell-cycle-and-cell-division'), 2, 3296, 'allowed', now())
+  values ('3eThoF65Cq4', 'Cell Cycle and Cell Division', 'Cell Cycle and Cell Division | Day 16 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚 ALLEN', v_channel_id, 4, (select id from public.chapters where slug = 'cell-cycle-and-cell-division' and subject_id = 4), 2, 3296, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -376,7 +376,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('KzSZykxYDNE', 'Cell: The Unit of Life Part 2', 'Cell: The Unit of Life Part-2 | Day 15 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚 ALLEN', v_channel_id, 4, (select id from public.chapters where slug = 'cell-the-unit-of-life'), 2, 4741, 'allowed', now())
+  values ('KzSZykxYDNE', 'Cell: The Unit of Life Part 2', 'Cell: The Unit of Life Part-2 | Day 15 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚 ALLEN', v_channel_id, 4, (select id from public.chapters where slug = 'cell-the-unit-of-life' and subject_id = 4), 2, 4741, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -386,7 +386,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('KOJb2N0ipPQ', 'Cell: The Unit of Life Part 1', 'Cell: The Unit of Life Part-1 | Day 14 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚 ALLEN', v_channel_id, 4, (select id from public.chapters where slug = 'cell-the-unit-of-life'), 2, 2940, 'allowed', now())
+  values ('KOJb2N0ipPQ', 'Cell: The Unit of Life Part 1', 'Cell: The Unit of Life Part-1 | Day 14 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚 ALLEN', v_channel_id, 4, (select id from public.chapters where slug = 'cell-the-unit-of-life' and subject_id = 4), 2, 2940, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -396,7 +396,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('I-CiicwdzJA', 'Anatomy of Flowering Plants Part 2', 'Anatomy of Flowering Plants Part-2 | Day 13 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚 ALLEN', v_channel_id, 4, (select id from public.chapters where slug = 'anatomy-of-flowering-plants'), 2, 5406, 'allowed', now())
+  values ('I-CiicwdzJA', 'Anatomy of Flowering Plants Part 2', 'Anatomy of Flowering Plants Part-2 | Day 13 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚 ALLEN', v_channel_id, 4, (select id from public.chapters where slug = 'anatomy-of-flowering-plants' and subject_id = 4), 2, 5406, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -406,7 +406,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('cPMy9tlw4rg', 'Anatomy of Flowering Plants Part 1', 'Anatomy of Flowering Plants Part-1 | Day 12 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚 ALLEN', v_channel_id, 4, (select id from public.chapters where slug = 'anatomy-of-flowering-plants'), 2, 4987, 'allowed', now())
+  values ('cPMy9tlw4rg', 'Anatomy of Flowering Plants Part 1', 'Anatomy of Flowering Plants Part-1 | Day 12 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚 ALLEN', v_channel_id, 4, (select id from public.chapters where slug = 'anatomy-of-flowering-plants' and subject_id = 4), 2, 4987, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -416,7 +416,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('_SN62mkrARA', 'Morphology of Flowering Plants Part 2', 'Morphology of Flowering Plants Part-2 | Day 11 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚 ALLEN', v_channel_id, 4, (select id from public.chapters where slug = 'morphology-of-flowering-plants'), 2, 5120, 'allowed', now())
+  values ('_SN62mkrARA', 'Morphology of Flowering Plants Part 2', 'Morphology of Flowering Plants Part-2 | Day 11 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚 ALLEN', v_channel_id, 4, (select id from public.chapters where slug = 'morphology-of-flowering-plants' and subject_id = 4), 2, 5120, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -426,7 +426,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('zFb_qkl5QQY', 'Morphology of Flowering Plants Part 1', 'Morphology of Flowering Plants Part-1 | Day 10 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚 ALLEN', v_channel_id, 4, (select id from public.chapters where slug = 'morphology-of-flowering-plants'), 2, 4550, 'allowed', now())
+  values ('zFb_qkl5QQY', 'Morphology of Flowering Plants Part 1', 'Morphology of Flowering Plants Part-1 | Day 10 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚 ALLEN', v_channel_id, 4, (select id from public.chapters where slug = 'morphology-of-flowering-plants' and subject_id = 4), 2, 4550, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -436,7 +436,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('n2-n3XzScFA', 'Structural Organisation in Animals', 'Structural Organisation In Animals | Day 9 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚 ALLEN NEET', v_channel_id, 4, (select id from public.chapters where slug = 'structural-organisation-in-animals'), 2, 3575, 'allowed', now())
+  values ('n2-n3XzScFA', 'Structural Organisation in Animals', 'Structural Organisation In Animals | Day 9 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚 ALLEN NEET', v_channel_id, 4, (select id from public.chapters where slug = 'structural-organisation-in-animals' and subject_id = 4), 2, 3575, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -446,7 +446,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('zEJRF348TMs', 'Animal Kingdom Part 2', 'Animal Kingdom Part-2 | Day 8 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚   ALLEN NEET', v_channel_id, 4, (select id from public.chapters where slug = 'animal-kingdom'), 2, 4055, 'allowed', now())
+  values ('zEJRF348TMs', 'Animal Kingdom Part 2', 'Animal Kingdom Part-2 | Day 8 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚   ALLEN NEET', v_channel_id, 4, (select id from public.chapters where slug = 'animal-kingdom' and subject_id = 4), 2, 4055, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -456,7 +456,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('4IyDz8FzpwQ', 'Animal Kingdom Part 1', 'Animal Kingdom Part-1 | Day 7 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚   ALLEN NEET', v_channel_id, 4, (select id from public.chapters where slug = 'animal-kingdom'), 2, 3761, 'allowed', now())
+  values ('4IyDz8FzpwQ', 'Animal Kingdom Part 1', 'Animal Kingdom Part-1 | Day 7 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚   ALLEN NEET', v_channel_id, 4, (select id from public.chapters where slug = 'animal-kingdom' and subject_id = 4), 2, 3761, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -466,7 +466,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('su-uJJOqNMQ', 'Plant Kingdom Part 2', 'Plant Kingdom Part-2 | Day 6 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚   ALLEN NEET', v_channel_id, 4, (select id from public.chapters where slug = 'plant-kingdom'), 2, 3561, 'allowed', now())
+  values ('su-uJJOqNMQ', 'Plant Kingdom Part 2', 'Plant Kingdom Part-2 | Day 6 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚   ALLEN NEET', v_channel_id, 4, (select id from public.chapters where slug = 'plant-kingdom' and subject_id = 4), 2, 3561, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -476,7 +476,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('Vgh25KZz-XM', 'Plant Kingdom Part 1', 'Plant Kingdom Part-1 | Day 5 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚   ALLEN NEET', v_channel_id, 4, (select id from public.chapters where slug = 'plant-kingdom'), 2, 4121, 'allowed', now())
+  values ('Vgh25KZz-XM', 'Plant Kingdom Part 1', 'Plant Kingdom Part-1 | Day 5 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚   ALLEN NEET', v_channel_id, 4, (select id from public.chapters where slug = 'plant-kingdom' and subject_id = 4), 2, 4121, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -486,7 +486,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('94UdLH6dsOg', 'Biological Classification Part 3', 'Biological Classification Part-3 | Day 4 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚  @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'biological-classification'), 2, 4285, 'allowed', now())
+  values ('94UdLH6dsOg', 'Biological Classification Part 3', 'Biological Classification Part-3 | Day 4 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚  @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'biological-classification' and subject_id = 4), 2, 4285, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -496,7 +496,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('vbIYAJLwX2Q', 'Biological Classification Part 2', 'Biological Classification Part-2 | Day 3 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚   ALLEN NEET', v_channel_id, 4, (select id from public.chapters where slug = 'biological-classification'), 2, 4490, 'allowed', now())
+  values ('vbIYAJLwX2Q', 'Biological Classification Part 2', 'Biological Classification Part-2 | Day 3 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚   ALLEN NEET', v_channel_id, 4, (select id from public.chapters where slug = 'biological-classification' and subject_id = 4), 2, 4490, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -506,7 +506,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('W2VGKjRemKQ', 'Biological Classification Part 1', 'Biological Classification | Day 2 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚  @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'biological-classification'), 2, 4387, 'allowed', now())
+  values ('W2VGKjRemKQ', 'Biological Classification Part 1', 'Biological Classification | Day 2 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚  @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'biological-classification' and subject_id = 4), 2, 4387, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -516,7 +516,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('TD7187-LJ24', 'The Living World', 'The Living World | Day 1 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚 @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'the-living-world'), 2, 3670, 'allowed', now())
+  values ('TD7187-LJ24', 'The Living World', 'The Living World | Day 1 of Bio-Fest 2.0 | Boost Your NEET 2025 Score 📚 @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'the-living-world' and subject_id = 4), 2, 3670, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then

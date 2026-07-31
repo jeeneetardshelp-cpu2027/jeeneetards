@@ -40,7 +40,7 @@ begin
   select v_playlist_id, cl.id from public.class_levels cl where cl.slug = 'class-11';
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('ijbmw7JhKG0', 'The Living World Class 11 Biology NEET Concepts (L 1)', 'The Living World Class 11 Biology NEET Concepts (L 1) | Class 11 Botany | NEET 2023 Exam Prep', v_channel_id, 4, (select id from public.chapters where slug = 'the-living-world'), 2, 4445, 'allowed', now())
+  values ('ijbmw7JhKG0', 'The Living World Class 11 Biology NEET Concepts (L 1)', 'The Living World Class 11 Biology NEET Concepts (L 1) | Class 11 Botany | NEET 2023 Exam Prep', v_channel_id, 4, (select id from public.chapters where slug = 'the-living-world' and subject_id = 4), 2, 4445, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -50,7 +50,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('e62RYW5XNZI', 'Taxonomy and Binomial Nomenclature Class 11 Biology - The Living World Concepts (L 2)', 'Taxonomy and Binomial Nomenclature Class 11 Biology - The Living World Concepts (L 2) | NEET 2023', v_channel_id, 4, (select id from public.chapters where slug = 'the-living-world'), 2, 4805, 'allowed', now())
+  values ('e62RYW5XNZI', 'Taxonomy and Binomial Nomenclature Class 11 Biology - The Living World Concepts (L 2)', 'Taxonomy and Binomial Nomenclature Class 11 Biology - The Living World Concepts (L 2) | NEET 2023', v_channel_id, 4, (select id from public.chapters where slug = 'the-living-world' and subject_id = 4), 2, 4805, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -60,7 +60,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('vYdT5v7REZ8', 'Taxonomic Hierarchy and Taxonomic Aids Class 11 Biology - The Living World Concepts (L3)', 'Taxonomic Hierarchy and Taxonomic Aids Class 11 Biology - The Living World Concepts (L3) | NEET 2024', v_channel_id, 4, (select id from public.chapters where slug = 'the-living-world'), 2, 4070, 'allowed', now())
+  values ('vYdT5v7REZ8', 'Taxonomic Hierarchy and Taxonomic Aids Class 11 Biology - The Living World Concepts (L3)', 'Taxonomic Hierarchy and Taxonomic Aids Class 11 Biology - The Living World Concepts (L3) | NEET 2024', v_channel_id, 4, (select id from public.chapters where slug = 'the-living-world' and subject_id = 4), 2, 4070, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -70,7 +70,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('hF0E5JNM64I', 'The Living World Class 11 Biology Complete Chapter', 'The Living World Class 11 Biology Complete Chapter | Living World - Key Take Away | NEET 2024', v_channel_id, 4, (select id from public.chapters where slug = 'the-living-world'), 2, 3594, 'allowed', now())
+  values ('hF0E5JNM64I', 'The Living World Class 11 Biology Complete Chapter', 'The Living World Class 11 Biology Complete Chapter | Living World - Key Take Away | NEET 2024', v_channel_id, 4, (select id from public.chapters where slug = 'the-living-world' and subject_id = 4), 2, 3594, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -101,7 +101,7 @@ begin
   select v_playlist_id, cl.id from public.class_levels cl where cl.slug = 'class-11';
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('Bd8O2PZ1ZnM', 'Biological Classification Class 11 Biology Concepts (Botany)', 'Biological Classification Class 11 Biology Concepts (Botany) | NEET 2024 Exam Prep | Pankhuri Ma''am', v_channel_id, 4, (select id from public.chapters where slug = 'biological-classification'), 2, 3817, 'allowed', now())
+  values ('Bd8O2PZ1ZnM', 'Biological Classification Class 11 Biology Concepts (Botany)', 'Biological Classification Class 11 Biology Concepts (Botany) | NEET 2024 Exam Prep | Pankhuri Ma''am', v_channel_id, 4, (select id from public.chapters where slug = 'biological-classification' and subject_id = 4), 2, 3817, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -111,7 +111,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('DBSuyTD-Kco', 'Biological Classification Class 11 Biology Concepts NEET (L 2) (Botany)', 'Biological Classification Class 11 Biology Concepts NEET (L 2) (Botany) | NEET 2024 Exam Prep', v_channel_id, 4, (select id from public.chapters where slug = 'biological-classification'), 2, 3474, 'allowed', now())
+  values ('DBSuyTD-Kco', 'Biological Classification Class 11 Biology Concepts NEET (L 2) (Botany)', 'Biological Classification Class 11 Biology Concepts NEET (L 2) (Botany) | NEET 2024 Exam Prep', v_channel_id, 4, (select id from public.chapters where slug = 'biological-classification' and subject_id = 4), 2, 3474, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -121,7 +121,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('bZ_oz7J0bnc', 'Kingdom Monera-II Class 11 Biology - Biological Classification Concepts (L 3)', 'Kingdom Monera-II Class 11 Biology - Biological Classification Concepts (L 3) | NEET 2024 Prep.', v_channel_id, 4, (select id from public.chapters where slug = 'biological-classification'), 2, 3397, 'allowed', now())
+  values ('bZ_oz7J0bnc', 'Kingdom Monera-II Class 11 Biology - Biological Classification Concepts (L 3)', 'Kingdom Monera-II Class 11 Biology - Biological Classification Concepts (L 3) | NEET 2024 Prep.', v_channel_id, 4, (select id from public.chapters where slug = 'biological-classification' and subject_id = 4), 2, 3397, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -131,7 +131,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('_x9NMFYyhyM', 'Kingdom Protista Class 11 Biology - Biological Classification Concepts (L4)', 'Kingdom Protista Class 11 Biology - Biological Classification Concepts (L4) | NEET 2024 Preparation', v_channel_id, 4, (select id from public.chapters where slug = 'biological-classification'), 2, 3409, 'allowed', now())
+  values ('_x9NMFYyhyM', 'Kingdom Protista Class 11 Biology - Biological Classification Concepts (L4)', 'Kingdom Protista Class 11 Biology - Biological Classification Concepts (L4) | NEET 2024 Preparation', v_channel_id, 4, (select id from public.chapters where slug = 'biological-classification' and subject_id = 4), 2, 3409, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -141,7 +141,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('AUllwKzcc9M', 'Kingdom Protista II Class 11 Biology - Biological Classification Concepts (L 5)', 'Kingdom Protista II Class 11 Biology - Biological Classification Concepts (L 5) | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'biological-classification'), 2, 3270, 'allowed', now())
+  values ('AUllwKzcc9M', 'Kingdom Protista II Class 11 Biology - Biological Classification Concepts (L 5)', 'Kingdom Protista II Class 11 Biology - Biological Classification Concepts (L 5) | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'biological-classification' and subject_id = 4), 2, 3270, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -151,7 +151,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('rKgA_C3S2cc', 'Kingdom Fungi Class 11 Biology - Biological Classification Concepts Explained (L 6)', 'Kingdom Fungi Class 11 Biology - Biological Classification Concepts Explained (L 6) | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'biological-classification'), 2, 3380, 'allowed', now())
+  values ('rKgA_C3S2cc', 'Kingdom Fungi Class 11 Biology - Biological Classification Concepts Explained (L 6)', 'Kingdom Fungi Class 11 Biology - Biological Classification Concepts Explained (L 6) | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'biological-classification' and subject_id = 4), 2, 3380, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -161,7 +161,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('cvVOoP7sTtE', 'Kingdom Fungi - II Class 11 Biology (Concepts) - Biological Classification (L7)', 'Kingdom Fungi - II Class 11 Biology (Concepts) - Biological Classification (L7) | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'biological-classification'), 2, 3160, 'allowed', now())
+  values ('cvVOoP7sTtE', 'Kingdom Fungi - II Class 11 Biology (Concepts) - Biological Classification (L7)', 'Kingdom Fungi - II Class 11 Biology (Concepts) - Biological Classification (L7) | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'biological-classification' and subject_id = 4), 2, 3160, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -171,7 +171,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('IXEc57JZqaA', 'Kingdom Plantae and Animalia - Biological Classification Class 11 Biology Concepts (L8)', 'Kingdom Plantae and Animalia - Biological Classification Class 11 Biology Concepts (L8) | NEET 2024', v_channel_id, 4, (select id from public.chapters where slug = 'biological-classification'), 2, 3271, 'allowed', now())
+  values ('IXEc57JZqaA', 'Kingdom Plantae and Animalia - Biological Classification Class 11 Biology Concepts (L8)', 'Kingdom Plantae and Animalia - Biological Classification Class 11 Biology Concepts (L8) | NEET 2024', v_channel_id, 4, (select id from public.chapters where slug = 'biological-classification' and subject_id = 4), 2, 3271, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -181,7 +181,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('Nflc5-ZfzMA', 'Viruses, Viroids and Prions - Biological Classification Class 11 Biology Concepts (L9)', 'Viruses, Viroids and Prions - Biological Classification Class 11 Biology Concepts (L9) | NEET 2024', v_channel_id, 4, (select id from public.chapters where slug = 'biological-classification'), 2, 2492, 'allowed', now())
+  values ('Nflc5-ZfzMA', 'Viruses, Viroids and Prions - Biological Classification Class 11 Biology Concepts (L9)', 'Viruses, Viroids and Prions - Biological Classification Class 11 Biology Concepts (L9) | NEET 2024', v_channel_id, 4, (select id from public.chapters where slug = 'biological-classification' and subject_id = 4), 2, 2492, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -191,7 +191,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('bd9hXJTdncw', 'Biological Classification Class 11 Biology Most Important Questions & Solutions (L10)', 'Biological Classification Class 11 Biology Most Important Questions & Solutions (L10) | NEET 2024', v_channel_id, 4, (select id from public.chapters where slug = 'biological-classification'), 2, 2585, 'allowed', now())
+  values ('bd9hXJTdncw', 'Biological Classification Class 11 Biology Most Important Questions & Solutions (L10)', 'Biological Classification Class 11 Biology Most Important Questions & Solutions (L10) | NEET 2024', v_channel_id, 4, (select id from public.chapters where slug = 'biological-classification' and subject_id = 4), 2, 2585, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -222,7 +222,7 @@ begin
   select v_playlist_id, cl.id from public.class_levels cl where cl.slug = 'class-11';
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('b2szozixtyc', 'General Characters of Algae - Introduction to Plant Kingdom Class 11 Biology Concepts', 'General Characters of Algae - Introduction to Plant Kingdom Class 11 Biology Concepts | NEET 2024', v_channel_id, 4, (select id from public.chapters where slug = 'plant-kingdom'), 2, 3221, 'allowed', now())
+  values ('b2szozixtyc', 'General Characters of Algae - Introduction to Plant Kingdom Class 11 Biology Concepts', 'General Characters of Algae - Introduction to Plant Kingdom Class 11 Biology Concepts | NEET 2024', v_channel_id, 4, (select id from public.chapters where slug = 'plant-kingdom' and subject_id = 4), 2, 3221, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -232,7 +232,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('4wHBMJwe6F4', 'Chlorophycae - Plant Kingdom Class 11 Biology Concept Explained', 'Chlorophycae - Plant Kingdom Class 11 Biology Concept Explained | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'plant-kingdom'), 2, 3633, 'allowed', now())
+  values ('4wHBMJwe6F4', 'Chlorophycae - Plant Kingdom Class 11 Biology Concept Explained', 'Chlorophycae - Plant Kingdom Class 11 Biology Concept Explained | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'plant-kingdom' and subject_id = 4), 2, 3633, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -242,7 +242,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('i0mdT0tDctc', 'Phaeophyceae - Plant Kingdom Class 11 Biology Concept Explained', 'Phaeophyceae - Plant Kingdom Class 11 Biology Concept Explained | Class 11 Botany | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'plant-kingdom'), 2, 3321, 'allowed', now())
+  values ('i0mdT0tDctc', 'Phaeophyceae - Plant Kingdom Class 11 Biology Concept Explained', 'Phaeophyceae - Plant Kingdom Class 11 Biology Concept Explained | Class 11 Botany | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'plant-kingdom' and subject_id = 4), 2, 3321, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -252,7 +252,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('PlfjUM4DU5w', 'Rhodophyceae - Plant Kingdom Class 11 Biology Concept Explained', 'Rhodophyceae - Plant Kingdom Class 11 Biology Concept Explained | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'plant-kingdom'), 2, 3321, 'allowed', now())
+  values ('PlfjUM4DU5w', 'Rhodophyceae - Plant Kingdom Class 11 Biology Concept Explained', 'Rhodophyceae - Plant Kingdom Class 11 Biology Concept Explained | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'plant-kingdom' and subject_id = 4), 2, 3321, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -262,7 +262,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('neFulpAXHko', 'Bryophytes - Plant Kingdom Class 11 Biology Concept Explained', 'Bryophytes - Plant Kingdom Class 11 Biology Concept Explained | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'plant-kingdom'), 2, 3616, 'allowed', now())
+  values ('neFulpAXHko', 'Bryophytes - Plant Kingdom Class 11 Biology Concept Explained', 'Bryophytes - Plant Kingdom Class 11 Biology Concept Explained | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'plant-kingdom' and subject_id = 4), 2, 3616, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -272,7 +272,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('abrRVp_ixRU', 'Pteridophytes - Plant Kingdom Class 11 Biology (Chapter 3) Concept Explained', 'Pteridophytes - Plant Kingdom Class 11 Biology (Chapter 3) Concept Explained | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'plant-kingdom'), 2, 3101, 'allowed', now())
+  values ('abrRVp_ixRU', 'Pteridophytes - Plant Kingdom Class 11 Biology (Chapter 3) Concept Explained', 'Pteridophytes - Plant Kingdom Class 11 Biology (Chapter 3) Concept Explained | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'plant-kingdom' and subject_id = 4), 2, 3101, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -282,7 +282,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('lpN4JPq1W6E', 'Gymnosperms and Angiosperms - Plant Kingdom Class 11 Biology Concept Explained', 'Gymnosperms and Angiosperms - Plant Kingdom Class 11 Biology Concept Explained | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'plant-kingdom'), 2, 3395, 'allowed', now())
+  values ('lpN4JPq1W6E', 'Gymnosperms and Angiosperms - Plant Kingdom Class 11 Biology Concept Explained', 'Gymnosperms and Angiosperms - Plant Kingdom Class 11 Biology Concept Explained | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'plant-kingdom' and subject_id = 4), 2, 3395, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -292,7 +292,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('nb407Ain7G8', 'Gymnosperms and Angiosperms - Plant Kingdom Class 11 Biology Concept Explained (Part 2)', 'Gymnosperms and Angiosperms - Plant Kingdom Class 11 Biology Concept Explained (Part 2) | NEET 2024', v_channel_id, 4, (select id from public.chapters where slug = 'plant-kingdom'), 2, 3301, 'allowed', now())
+  values ('nb407Ain7G8', 'Gymnosperms and Angiosperms - Plant Kingdom Class 11 Biology Concept Explained (Part 2)', 'Gymnosperms and Angiosperms - Plant Kingdom Class 11 Biology Concept Explained (Part 2) | NEET 2024', v_channel_id, 4, (select id from public.chapters where slug = 'plant-kingdom' and subject_id = 4), 2, 3301, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -302,7 +302,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('XRjZoP7OOgM', '10 Important Questions from Plant Kingdom Class 11 Biology (Botany)', '10 Important Questions from Plant Kingdom Class 11 Biology (Botany) | NEET 2023 Exam Prep', v_channel_id, 4, (select id from public.chapters where slug = 'plant-kingdom'), 2, 1837, 'allowed', now())
+  values ('XRjZoP7OOgM', '10 Important Questions from Plant Kingdom Class 11 Biology (Botany)', '10 Important Questions from Plant Kingdom Class 11 Biology (Botany) | NEET 2023 Exam Prep', v_channel_id, 4, (select id from public.chapters where slug = 'plant-kingdom' and subject_id = 4), 2, 1837, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -312,7 +312,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('WnplzGEb1Cg', 'Biological Classification: Kingdom Monera', 'Biological Classification | Kingdom Monera |NEET 2024 |Aakash Byju''s| Pankhuri Ma''am #neet #neet2023', v_channel_id, 4, (select id from public.chapters where slug = 'biological-classification'), 2, 4352, 'allowed', now())
+  values ('WnplzGEb1Cg', 'Biological Classification: Kingdom Monera', 'Biological Classification | Kingdom Monera |NEET 2024 |Aakash Byju''s| Pankhuri Ma''am #neet #neet2023', v_channel_id, 4, (select id from public.chapters where slug = 'biological-classification' and subject_id = 4), 2, 4352, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -343,7 +343,7 @@ begin
   select v_playlist_id, cl.id from public.class_levels cl where cl.slug = 'class-11';
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('unCgfAG5BTw', 'Basis of Classifications & Phylum Porifera - Animal Kingdom Class 11 Concepts (L1)', 'Basis of Classifications & Phylum Porifera - Animal Kingdom Class 11 Concepts (L1)  | NEET 2024', v_channel_id, 4, (select id from public.chapters where slug = 'animal-kingdom'), 2, 4210, 'allowed', now())
+  values ('unCgfAG5BTw', 'Basis of Classifications & Phylum Porifera - Animal Kingdom Class 11 Concepts (L1)', 'Basis of Classifications & Phylum Porifera - Animal Kingdom Class 11 Concepts (L1)  | NEET 2024', v_channel_id, 4, (select id from public.chapters where slug = 'animal-kingdom' and subject_id = 4), 2, 4210, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -353,7 +353,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('65MU6M1nV6A', 'Phylum Coelenterata, Ctenophora & Platyhelmenthes - Animal Kingdom Class 11 Biology (L2)', 'Phylum Coelenterata, Ctenophora & Platyhelmenthes - Animal Kingdom Class 11 Biology (L2) | NEET 2024', v_channel_id, 4, (select id from public.chapters where slug = 'animal-kingdom'), 2, 3799, 'allowed', now())
+  values ('65MU6M1nV6A', 'Phylum Coelenterata, Ctenophora & Platyhelmenthes - Animal Kingdom Class 11 Biology (L2)', 'Phylum Coelenterata, Ctenophora & Platyhelmenthes - Animal Kingdom Class 11 Biology (L2) | NEET 2024', v_channel_id, 4, (select id from public.chapters where slug = 'animal-kingdom' and subject_id = 4), 2, 3799, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -363,7 +363,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('96n7tDRl9O0', 'Phylum Platyhelminthes and Aschelminthes - Animal Kingdom Class 11 Biology (L3)', 'Phylum Platyhelminthes and Aschelminthes - Animal Kingdom Class 11 Biology (L3) | NEET 2024', v_channel_id, 4, (select id from public.chapters where slug = 'animal-kingdom'), 2, 3400, 'allowed', now())
+  values ('96n7tDRl9O0', 'Phylum Platyhelminthes and Aschelminthes - Animal Kingdom Class 11 Biology (L3)', 'Phylum Platyhelminthes and Aschelminthes - Animal Kingdom Class 11 Biology (L3) | NEET 2024', v_channel_id, 4, (select id from public.chapters where slug = 'animal-kingdom' and subject_id = 4), 2, 3400, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -373,7 +373,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('AKfIFHJ1N6o', 'Phylum Annelida and Arthropoda - Animal Kingdom Class 11 Biology (L4)', 'Phylum Annelida and Arthropoda - Animal Kingdom Class 11 Biology (L4) | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'animal-kingdom'), 2, 3633, 'allowed', now())
+  values ('AKfIFHJ1N6o', 'Phylum Annelida and Arthropoda - Animal Kingdom Class 11 Biology (L4)', 'Phylum Annelida and Arthropoda - Animal Kingdom Class 11 Biology (L4) | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'animal-kingdom' and subject_id = 4), 2, 3633, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -383,7 +383,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('LV1BExAQRjI', 'Phylum Mollusca and Echinodermata - Animal Kingdom Class 11 Biology (L5)', 'Phylum Mollusca and Echinodermata - Animal Kingdom Class 11 Biology (L5) | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'animal-kingdom'), 2, 3650, 'allowed', now())
+  values ('LV1BExAQRjI', 'Phylum Mollusca and Echinodermata - Animal Kingdom Class 11 Biology (L5)', 'Phylum Mollusca and Echinodermata - Animal Kingdom Class 11 Biology (L5) | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'animal-kingdom' and subject_id = 4), 2, 3650, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -393,7 +393,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('Ok4gyjwbSXY', 'Phylum Hemichordata and Chordata - Animal Kingdom Class 11 Biology Concept (L6)', 'Phylum Hemichordata and Chordata - Animal Kingdom Class 11 Biology Concept (L6) | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'animal-kingdom'), 2, 2398, 'allowed', now())
+  values ('Ok4gyjwbSXY', 'Phylum Hemichordata and Chordata - Animal Kingdom Class 11 Biology Concept (L6)', 'Phylum Hemichordata and Chordata - Animal Kingdom Class 11 Biology Concept (L6) | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'animal-kingdom' and subject_id = 4), 2, 2398, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -403,7 +403,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('R45yOsoBttg', 'Super Class Pisces - Animal Kingdom Class 11 Biology Concept (L7)', 'Super Class Pisces - Animal Kingdom Class 11 Biology Concept (L7) | NEET 2024 Preparation', v_channel_id, 4, (select id from public.chapters where slug = 'animal-kingdom'), 2, 2724, 'allowed', now())
+  values ('R45yOsoBttg', 'Super Class Pisces - Animal Kingdom Class 11 Biology Concept (L7)', 'Super Class Pisces - Animal Kingdom Class 11 Biology Concept (L7) | NEET 2024 Preparation', v_channel_id, 4, (select id from public.chapters where slug = 'animal-kingdom' and subject_id = 4), 2, 2724, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -413,7 +413,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('-JmO3PVgcLw', 'Difference between Amphibia and Reptilia - Animal Kingdom Class 11 Biology Concept (L8)', 'Difference between Amphibia and Reptilia - Animal Kingdom Class 11 Biology Concept (L8) | NEET 2024', v_channel_id, 4, (select id from public.chapters where slug = 'animal-kingdom'), 2, 2583, 'allowed', now())
+  values ('-JmO3PVgcLw', 'Difference between Amphibia and Reptilia - Animal Kingdom Class 11 Biology Concept (L8)', 'Difference between Amphibia and Reptilia - Animal Kingdom Class 11 Biology Concept (L8) | NEET 2024', v_channel_id, 4, (select id from public.chapters where slug = 'animal-kingdom' and subject_id = 4), 2, 2583, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -423,7 +423,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('_e1SQq2eY7I', 'Difference between Aves and Mammalia - Animal Kingdom Class 11 Biology Concept', 'Difference between Aves and Mammalia - Animal Kingdom Class 11 Biology Concept | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'animal-kingdom'), 2, 2149, 'allowed', now())
+  values ('_e1SQq2eY7I', 'Difference between Aves and Mammalia - Animal Kingdom Class 11 Biology Concept', 'Difference between Aves and Mammalia - Animal Kingdom Class 11 Biology Concept | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'animal-kingdom' and subject_id = 4), 2, 2149, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -433,7 +433,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('INOnuGEm1xs', 'Mammalia Characteristics and Examples - Animal Kingdom Class 11 Biology Concept', 'Mammalia Characteristics and Examples - Animal Kingdom Class 11 Biology Concept | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'animal-kingdom'), 2, 2342, 'allowed', now())
+  values ('INOnuGEm1xs', 'Mammalia Characteristics and Examples - Animal Kingdom Class 11 Biology Concept', 'Mammalia Characteristics and Examples - Animal Kingdom Class 11 Biology Concept | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'animal-kingdom' and subject_id = 4), 2, 2342, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -443,7 +443,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('Mtp9oZnv--k', 'Top 10 Important Questions from Animal Kingdom Class 11 Biology', 'Top 10 Important Questions from Animal Kingdom Class 11 Biology | NEET 2023 Exam Preparation', v_channel_id, 4, (select id from public.chapters where slug = 'animal-kingdom'), 2, 2039, 'allowed', now())
+  values ('Mtp9oZnv--k', 'Top 10 Important Questions from Animal Kingdom Class 11 Biology', 'Top 10 Important Questions from Animal Kingdom Class 11 Biology | NEET 2023 Exam Preparation', v_channel_id, 4, (select id from public.chapters where slug = 'animal-kingdom' and subject_id = 4), 2, 2039, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -474,7 +474,7 @@ begin
   select v_playlist_id, cl.id from public.class_levels cl where cl.slug = 'class-11';
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('GOMKLZiaJIo', 'Root Zones & Modification - Morphology of Flowering Plants Concept Explained', 'Root Zones & Modification - Morphology of Flowering Plants Class 11 Biology Concept Explained', v_channel_id, 4, (select id from public.chapters where slug = 'morphology-of-flowering-plants'), 2, 3352, 'allowed', now())
+  values ('GOMKLZiaJIo', 'Root Zones & Modification - Morphology of Flowering Plants Concept Explained', 'Root Zones & Modification - Morphology of Flowering Plants Class 11 Biology Concept Explained', v_channel_id, 4, (select id from public.chapters where slug = 'morphology-of-flowering-plants' and subject_id = 4), 2, 3352, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -484,7 +484,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('80r3BbCyv1U', 'Stem & its Modifications - Morphology of Flowering Plants Class 11 Biology Concept', 'Stem & its Modifications - Morphology of Flowering Plants Class 11 Biology Concept | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'morphology-of-flowering-plants'), 2, 3556, 'allowed', now())
+  values ('80r3BbCyv1U', 'Stem & its Modifications - Morphology of Flowering Plants Class 11 Biology Concept', 'Stem & its Modifications - Morphology of Flowering Plants Class 11 Biology Concept | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'morphology-of-flowering-plants' and subject_id = 4), 2, 3556, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -494,7 +494,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('9b4DyPQneec', 'Leaf Structure & Modifications - Morphology of Flowering Plants Class 11 Biology Concept', 'Leaf Structure & Modifications - Morphology of Flowering Plants Class 11 Biology Concept | NEET 2024', v_channel_id, 4, (select id from public.chapters where slug = 'morphology-of-flowering-plants'), 2, 2962, 'allowed', now())
+  values ('9b4DyPQneec', 'Leaf Structure & Modifications - Morphology of Flowering Plants Class 11 Biology Concept', 'Leaf Structure & Modifications - Morphology of Flowering Plants Class 11 Biology Concept | NEET 2024', v_channel_id, 4, (select id from public.chapters where slug = 'morphology-of-flowering-plants' and subject_id = 4), 2, 2962, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -504,7 +504,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('2DciF62BFfs', 'Inflorescence and its Types - Morphology of Flowering Plants Class 11 Biology Concept', 'Inflorescence and its Types - Morphology of Flowering Plants Class 11 Biology Concept | NEET 2024', v_channel_id, 4, (select id from public.chapters where slug = 'morphology-of-flowering-plants'), 2, 3546, 'allowed', now())
+  values ('2DciF62BFfs', 'Inflorescence and its Types - Morphology of Flowering Plants Class 11 Biology Concept', 'Inflorescence and its Types - Morphology of Flowering Plants Class 11 Biology Concept | NEET 2024', v_channel_id, 4, (select id from public.chapters where slug = 'morphology-of-flowering-plants' and subject_id = 4), 2, 3546, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -514,7 +514,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('BZyXVNxHQsM', 'Androecium and Gynoecium - Morphology of Flowering Plants Class 11 Biology Concept', 'Androecium and Gynoecium - Morphology of Flowering Plants Class 11 Biology (Botany) Concept | NEET', v_channel_id, 4, (select id from public.chapters where slug = 'morphology-of-flowering-plants'), 2, 3481, 'allowed', now())
+  values ('BZyXVNxHQsM', 'Androecium and Gynoecium - Morphology of Flowering Plants Class 11 Biology Concept', 'Androecium and Gynoecium - Morphology of Flowering Plants Class 11 Biology (Botany) Concept | NEET', v_channel_id, 4, (select id from public.chapters where slug = 'morphology-of-flowering-plants' and subject_id = 4), 2, 3481, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -524,7 +524,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('qX1NkOjBf1M', 'Dicot and Monocot Seeds - Morphology of Flowering Plants Class 11 Biology Concept', 'Dicot and Monocot Seeds - Morphology of Flowering Plants Class 11 Biology Concept | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'morphology-of-flowering-plants'), 2, 3646, 'allowed', now())
+  values ('qX1NkOjBf1M', 'Dicot and Monocot Seeds - Morphology of Flowering Plants Class 11 Biology Concept', 'Dicot and Monocot Seeds - Morphology of Flowering Plants Class 11 Biology Concept | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'morphology-of-flowering-plants' and subject_id = 4), 2, 3646, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -534,7 +534,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('1FcLTy3tw4E', 'Floral Diagram Symbols - Morphology of Flowering Plants Class 11 Biology Concept', 'Floral Diagram Symbols - Morphology of Flowering Plants Class 11 Biology Concept | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'morphology-of-flowering-plants'), 2, 1187, 'allowed', now())
+  values ('1FcLTy3tw4E', 'Floral Diagram Symbols - Morphology of Flowering Plants Class 11 Biology Concept', 'Floral Diagram Symbols - Morphology of Flowering Plants Class 11 Biology Concept | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'morphology-of-flowering-plants' and subject_id = 4), 2, 1187, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -544,7 +544,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('itAkM4t7oK0', 'Families of Flowering Plants - Morphology of Flowering Plants Class 11 Biology Concept', 'Families of Flowering Plants - Morphology of Flowering Plants Class 11 Biology Concept | NEET 2024', v_channel_id, 4, (select id from public.chapters where slug = 'morphology-of-flowering-plants'), 2, 2811, 'allowed', now())
+  values ('itAkM4t7oK0', 'Families of Flowering Plants - Morphology of Flowering Plants Class 11 Biology Concept', 'Families of Flowering Plants - Morphology of Flowering Plants Class 11 Biology Concept | NEET 2024', v_channel_id, 4, (select id from public.chapters where slug = 'morphology-of-flowering-plants' and subject_id = 4), 2, 2811, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -554,7 +554,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('oDfi9kb8Ys8', 'Most Important Previous Year Questions from Morphology of Flowering Plants', 'Most Important Previous Year Questions from Morphology of Flowering Plants Class 11 Biology (Botany)', v_channel_id, 4, (select id from public.chapters where slug = 'morphology-of-flowering-plants'), 2, 1784, 'allowed', now())
+  values ('oDfi9kb8Ys8', 'Most Important Previous Year Questions from Morphology of Flowering Plants', 'Most Important Previous Year Questions from Morphology of Flowering Plants Class 11 Biology (Botany)', v_channel_id, 4, (select id from public.chapters where slug = 'morphology-of-flowering-plants' and subject_id = 4), 2, 1784, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -585,7 +585,7 @@ begin
   select v_playlist_id, cl.id from public.class_levels cl where cl.slug = 'class-11';
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('Md2r7mHP60Q', 'Meristematic Tissue - Anatomy of Flowering Plants Class 11 Biology Concepts (Pt 1)', 'Meristematic Tissue - Anatomy of Flowering Plants Class 11 Biology Concepts (Pt 1) | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'anatomy-of-flowering-plants'), 2, 1992, 'allowed', now())
+  values ('Md2r7mHP60Q', 'Meristematic Tissue - Anatomy of Flowering Plants Class 11 Biology Concepts (Pt 1)', 'Meristematic Tissue - Anatomy of Flowering Plants Class 11 Biology Concepts (Pt 1) | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'anatomy-of-flowering-plants' and subject_id = 4), 2, 1992, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -595,7 +595,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('myLcOKf7SGM', 'Simple Permanent Tissues - Anatomy of Flowering Plants Class 11 Biology Concepts', 'Simple Permanent Tissues - Anatomy of Flowering Plants Class 11 Biology Concepts | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'anatomy-of-flowering-plants'), 2, 1815, 'allowed', now())
+  values ('myLcOKf7SGM', 'Simple Permanent Tissues - Anatomy of Flowering Plants Class 11 Biology Concepts', 'Simple Permanent Tissues - Anatomy of Flowering Plants Class 11 Biology Concepts | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'anatomy-of-flowering-plants' and subject_id = 4), 2, 1815, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -605,7 +605,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('wMyq4ZYmtH8', 'Complex Permanent Tissue - Anatomy of Flowering Plants Class 11 Biology Concepts', 'Complex Permanent Tissue - Anatomy of Flowering Plants Class 11 Biology Concepts | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'anatomy-of-flowering-plants'), 2, 3275, 'allowed', now())
+  values ('wMyq4ZYmtH8', 'Complex Permanent Tissue - Anatomy of Flowering Plants Class 11 Biology Concepts', 'Complex Permanent Tissue - Anatomy of Flowering Plants Class 11 Biology Concepts | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'anatomy-of-flowering-plants' and subject_id = 4), 2, 3275, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -615,7 +615,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('cir9yzNB6zo', 'Tissue System (Epidermal & Ground)- Anatomy of Flowering Plants Class 11 Biology Concept', 'Tissue System (Epidermal & Ground)- Anatomy of Flowering Plants Class 11 Biology Concept | NEET 2023', v_channel_id, 4, (select id from public.chapters where slug = 'anatomy-of-flowering-plants'), 2, 2591, 'allowed', now())
+  values ('cir9yzNB6zo', 'Tissue System (Epidermal & Ground)- Anatomy of Flowering Plants Class 11 Biology Concept', 'Tissue System (Epidermal & Ground)- Anatomy of Flowering Plants Class 11 Biology Concept | NEET 2023', v_channel_id, 4, (select id from public.chapters where slug = 'anatomy-of-flowering-plants' and subject_id = 4), 2, 2591, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -625,7 +625,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('QslRP0i301M', 'Anatomy of Dicot and Monocot Root - Anatomy of Flowering Plants Class 11 Biology Concept', 'Anatomy of Dicot and Monocot Root - Anatomy of Flowering Plants Class 11 Biology Concept | NEET 2024', v_channel_id, 4, (select id from public.chapters where slug = 'anatomy-of-flowering-plants'), 2, 2930, 'allowed', now())
+  values ('QslRP0i301M', 'Anatomy of Dicot and Monocot Root - Anatomy of Flowering Plants Class 11 Biology Concept', 'Anatomy of Dicot and Monocot Root - Anatomy of Flowering Plants Class 11 Biology Concept | NEET 2024', v_channel_id, 4, (select id from public.chapters where slug = 'anatomy-of-flowering-plants' and subject_id = 4), 2, 2930, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -635,7 +635,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('yz9-E7j3pms', 'Anatomy of Monocot & Dicot Stem - Anatomy of Flowering Plants Class 11 Biology Concept', 'Anatomy of Monocot & Dicot Stem  - Anatomy of Flowering Plants Class 11 Biology Concept | NEET 2024', v_channel_id, 4, (select id from public.chapters where slug = 'anatomy-of-flowering-plants'), 2, 2831, 'allowed', now())
+  values ('yz9-E7j3pms', 'Anatomy of Monocot & Dicot Stem - Anatomy of Flowering Plants Class 11 Biology Concept', 'Anatomy of Monocot & Dicot Stem  - Anatomy of Flowering Plants Class 11 Biology Concept | NEET 2024', v_channel_id, 4, (select id from public.chapters where slug = 'anatomy-of-flowering-plants' and subject_id = 4), 2, 2831, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -645,7 +645,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('39d0xmHLurw', 'Vascular Cambium : Secondary Growth - Anatomy of Flowering Plants Concept Explained', 'Vascular Cambium : Secondary Growth - Anatomy of Flowering Plants Class 11 Biology Concept Explained', v_channel_id, 4, (select id from public.chapters where slug = 'anatomy-of-flowering-plants'), 2, 3215, 'allowed', now())
+  values ('39d0xmHLurw', 'Vascular Cambium : Secondary Growth - Anatomy of Flowering Plants Concept Explained', 'Vascular Cambium : Secondary Growth - Anatomy of Flowering Plants Class 11 Biology Concept Explained', v_channel_id, 4, (select id from public.chapters where slug = 'anatomy-of-flowering-plants' and subject_id = 4), 2, 3215, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -655,7 +655,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('_mqaAYubSiI', 'Vascular Cambium : Secondary Growth in Roots - Anatomy of Flowering Plants Concept', 'Vascular Cambium : Secondary Growth in Roots - Anatomy of Flowering Plants Class 11 Biology Concept', v_channel_id, 4, (select id from public.chapters where slug = 'anatomy-of-flowering-plants'), 2, 3258, 'allowed', now())
+  values ('_mqaAYubSiI', 'Vascular Cambium : Secondary Growth in Roots - Anatomy of Flowering Plants Concept', 'Vascular Cambium : Secondary Growth in Roots - Anatomy of Flowering Plants Class 11 Biology Concept', v_channel_id, 4, (select id from public.chapters where slug = 'anatomy-of-flowering-plants' and subject_id = 4), 2, 3258, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -665,7 +665,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('mVJgF3O12qU', 'Cork Cambium: Secondary Growth in Roots - Anatomy of Flowering Plants Concept', 'Cork Cambium: Secondary Growth in Roots - Anatomy of Flowering Plants Class 11 Biology Concept', v_channel_id, 4, (select id from public.chapters where slug = 'anatomy-of-flowering-plants'), 2, 3043, 'allowed', now())
+  values ('mVJgF3O12qU', 'Cork Cambium: Secondary Growth in Roots - Anatomy of Flowering Plants Concept', 'Cork Cambium: Secondary Growth in Roots - Anatomy of Flowering Plants Class 11 Biology Concept', v_channel_id, 4, (select id from public.chapters where slug = 'anatomy-of-flowering-plants' and subject_id = 4), 2, 3043, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -696,7 +696,7 @@ begin
   select v_playlist_id, cl.id from public.class_levels cl where cl.slug = 'class-11';
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('vsjRpzhX-Rk', 'Levels of Organization in Organisms - Structural Organisation in Animals Concepts', 'Levels of Organization in Organisms - Structural Organisation in Animals Class 11 Biology Concepts', v_channel_id, 4, (select id from public.chapters where slug = 'structural-organisation-in-animals'), 2, 3676, 'allowed', now())
+  values ('vsjRpzhX-Rk', 'Levels of Organization in Organisms - Structural Organisation in Animals Concepts', 'Levels of Organization in Organisms - Structural Organisation in Animals Class 11 Biology Concepts', v_channel_id, 4, (select id from public.chapters where slug = 'structural-organisation-in-animals' and subject_id = 4), 2, 3676, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -706,7 +706,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('1kRuoXWpA7k', 'Compound Epithelium Tissue - Structural Organisation in Animals Concept Explained', 'Compound Epithelium Tissue - Structural Organisation in Animals Class 11 Biology Concept Explained', v_channel_id, 4, (select id from public.chapters where slug = 'structural-organisation-in-animals'), 2, 2695, 'allowed', now())
+  values ('1kRuoXWpA7k', 'Compound Epithelium Tissue - Structural Organisation in Animals Concept Explained', 'Compound Epithelium Tissue - Structural Organisation in Animals Class 11 Biology Concept Explained', v_channel_id, 4, (select id from public.chapters where slug = 'structural-organisation-in-animals' and subject_id = 4), 2, 2695, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -716,7 +716,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('c1p2ZHpKekE', 'Connective Tissue & its Types - Structural Organisation in Animals Concept', 'Connective Tissue & its Types - Structural Organisation in Animals Class 11 Biology Concept', v_channel_id, 4, (select id from public.chapters where slug = 'structural-organisation-in-animals'), 2, 2936, 'allowed', now())
+  values ('c1p2ZHpKekE', 'Connective Tissue & its Types - Structural Organisation in Animals Concept', 'Connective Tissue & its Types - Structural Organisation in Animals Class 11 Biology Concept', v_channel_id, 4, (select id from public.chapters where slug = 'structural-organisation-in-animals' and subject_id = 4), 2, 2936, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -726,7 +726,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('sLQQtond6E0', 'Earthworm - Structural Organisation in Animals Class 11 Biology Concepts', 'Earthworm - Structural Organisation in Animals Class 11 Biology Concepts', v_channel_id, 4, (select id from public.chapters where slug = 'structural-organisation-in-animals'), 2, 2961, 'allowed', now())
+  values ('sLQQtond6E0', 'Earthworm - Structural Organisation in Animals Class 11 Biology Concepts', 'Earthworm - Structural Organisation in Animals Class 11 Biology Concepts', v_channel_id, 4, (select id from public.chapters where slug = 'structural-organisation-in-animals' and subject_id = 4), 2, 2961, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -736,7 +736,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('biWZUuVCL68', 'Morphology and Anatomy of Cockroach - Structural Organisation in Animals Concepts', 'Morphology and Anatomy of Cockroach - Structural Organisation in Animals Class 11 Biology Concepts', v_channel_id, 4, (select id from public.chapters where slug = 'structural-organisation-in-animals'), 2, 2845, 'allowed', now())
+  values ('biWZUuVCL68', 'Morphology and Anatomy of Cockroach - Structural Organisation in Animals Concepts', 'Morphology and Anatomy of Cockroach - Structural Organisation in Animals Class 11 Biology Concepts', v_channel_id, 4, (select id from public.chapters where slug = 'structural-organisation-in-animals' and subject_id = 4), 2, 2845, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -746,7 +746,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('N3VPOGyt-Dw', 'Morphology and Anatomy of Frog - Structural Organisation in Animals (Part 2)', 'Morphology and Anatomy of Frog - Structural Organisation in Animals Class 11 Biology (Part 2)', v_channel_id, 4, (select id from public.chapters where slug = 'structural-organisation-in-animals'), 2, 3410, 'allowed', now())
+  values ('N3VPOGyt-Dw', 'Morphology and Anatomy of Frog - Structural Organisation in Animals (Part 2)', 'Morphology and Anatomy of Frog - Structural Organisation in Animals Class 11 Biology (Part 2)', v_channel_id, 4, (select id from public.chapters where slug = 'structural-organisation-in-animals' and subject_id = 4), 2, 3410, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then

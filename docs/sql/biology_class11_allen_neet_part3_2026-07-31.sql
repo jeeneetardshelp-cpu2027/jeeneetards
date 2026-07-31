@@ -36,7 +36,7 @@ begin
   select v_playlist_id, cl.id from public.class_levels cl where cl.slug = 'class-11';
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('toNwvae75s8', 'The Living World', 'The Living World | Bio-Fest for NEET 2024 Aspirants 🔥 Day 1/70 Days of NCERT Excursion | @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'the-living-world'), 2, 5835, 'allowed', now())
+  values ('toNwvae75s8', 'The Living World', 'The Living World | Bio-Fest for NEET 2024 Aspirants 🔥 Day 1/70 Days of NCERT Excursion | @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'the-living-world' and subject_id = 4), 2, 5835, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -46,7 +46,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('Ffl2QJIKdEQ', 'Biological Classification Part 1', 'Biological Classification | Bio-Fest for NEET 2024 | Day 2/70 Days of NCERT Excursion | @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'biological-classification'), 2, 5476, 'allowed', now())
+  values ('Ffl2QJIKdEQ', 'Biological Classification Part 1', 'Biological Classification | Bio-Fest for NEET 2024 | Day 2/70 Days of NCERT Excursion | @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'biological-classification' and subject_id = 4), 2, 5476, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -56,7 +56,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('ON9BOf2ePKE', 'Biological Classification Part 2', 'Biological Classification | Bio-Fest for NEET 2024 | Day 3/70 Days of NCERT Excursion | @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'biological-classification'), 2, 5305, 'allowed', now())
+  values ('ON9BOf2ePKE', 'Biological Classification Part 2', 'Biological Classification | Bio-Fest for NEET 2024 | Day 3/70 Days of NCERT Excursion | @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'biological-classification' and subject_id = 4), 2, 5305, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -66,7 +66,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('j9WAU_pAx6g', 'Biological Classification Part 3', 'Biological Classification | Bio-Fest for NEET 2024 | Day 4/70 Days of NCERT Excursion | @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'biological-classification'), 2, 5631, 'allowed', now())
+  values ('j9WAU_pAx6g', 'Biological Classification Part 3', 'Biological Classification | Bio-Fest for NEET 2024 | Day 4/70 Days of NCERT Excursion | @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'biological-classification' and subject_id = 4), 2, 5631, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -76,7 +76,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('qLbT_cN_9hc', 'Plant Kingdom Part 1', 'Plant Kingdom | Bio-Fest for NEET 2024 | Day 5/70 Days of NCERT Excursion | @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'plant-kingdom'), 2, 5391, 'allowed', now())
+  values ('qLbT_cN_9hc', 'Plant Kingdom Part 1', 'Plant Kingdom | Bio-Fest for NEET 2024 | Day 5/70 Days of NCERT Excursion | @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'plant-kingdom' and subject_id = 4), 2, 5391, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -86,7 +86,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('xjwMRxAfMdQ', 'Plant Kingdom Part 2', 'Plant Kingdom (Part-2) | Bio-Fest for NEET 2024 | Day 6/70 Days of NCERT Excursion | @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'plant-kingdom'), 2, 5676, 'allowed', now())
+  values ('xjwMRxAfMdQ', 'Plant Kingdom Part 2', 'Plant Kingdom (Part-2) | Bio-Fest for NEET 2024 | Day 6/70 Days of NCERT Excursion | @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'plant-kingdom' and subject_id = 4), 2, 5676, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -96,7 +96,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('hRgbd3dQ5QA', 'Cell: The Unit of Life Part 1', 'Cell - The Unit of Life | Bio-Fest for NEET 2024 | Day 7/70 Days of NCERT Excursion | @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'cell-the-unit-of-life'), 2, 5446, 'allowed', now())
+  values ('hRgbd3dQ5QA', 'Cell: The Unit of Life Part 1', 'Cell - The Unit of Life | Bio-Fest for NEET 2024 | Day 7/70 Days of NCERT Excursion | @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'cell-the-unit-of-life' and subject_id = 4), 2, 5446, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -106,7 +106,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('rtlxOs4ks14', 'Cell: The Unit of Life Part 2', 'Cell - The Unit of Life | Bio-Fest for NEET 2024 | Day 8/70 Days of NCERT Excursion | @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'cell-the-unit-of-life'), 2, 5425, 'allowed', now())
+  values ('rtlxOs4ks14', 'Cell: The Unit of Life Part 2', 'Cell - The Unit of Life | Bio-Fest for NEET 2024 | Day 8/70 Days of NCERT Excursion | @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'cell-the-unit-of-life' and subject_id = 4), 2, 5425, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -116,7 +116,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('dPXLXEKjp0A', 'Cell: The Unit of Life Part 3', 'Cell - The Unit of Life | Bio-Fest for NEET 2024 | Day 9/70 Days of NCERT Excursion | @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'cell-the-unit-of-life'), 2, 4940, 'allowed', now())
+  values ('dPXLXEKjp0A', 'Cell: The Unit of Life Part 3', 'Cell - The Unit of Life | Bio-Fest for NEET 2024 | Day 9/70 Days of NCERT Excursion | @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'cell-the-unit-of-life' and subject_id = 4), 2, 4940, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -126,7 +126,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('v3-mW-B8syU', 'Cell Cycle and Cell Division', 'Cell Cycle and Cell Division | Bio-Fest for NEET 2024 | Day 10/70 Days of NCERT | @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'cell-cycle-and-cell-division'), 2, 5490, 'allowed', now())
+  values ('v3-mW-B8syU', 'Cell Cycle and Cell Division', 'Cell Cycle and Cell Division | Bio-Fest for NEET 2024 | Day 10/70 Days of NCERT | @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'cell-cycle-and-cell-division' and subject_id = 4), 2, 5490, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -136,7 +136,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('ZmCobFULVuA', 'Biomolecules Part 1', 'Biomolecules (Part-1) | Bio-Fest for NEET 2024 | Day 11/70 Days of NCERT Excursion | @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'biomolecules'), 2, 5335, 'allowed', now())
+  values ('ZmCobFULVuA', 'Biomolecules Part 1', 'Biomolecules (Part-1) | Bio-Fest for NEET 2024 | Day 11/70 Days of NCERT Excursion | @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'biomolecules' and subject_id = 4), 2, 5335, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -146,7 +146,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('aPTHhiM80x4', 'Biomolecules Part 2', 'Biomolecules (Part-2) | Bio-Fest for NEET 2024 | Day 12/70 Days of NCERT Excursion | @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'biomolecules'), 2, 5426, 'allowed', now())
+  values ('aPTHhiM80x4', 'Biomolecules Part 2', 'Biomolecules (Part-2) | Bio-Fest for NEET 2024 | Day 12/70 Days of NCERT Excursion | @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'biomolecules' and subject_id = 4), 2, 5426, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -156,7 +156,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('nyZ_DeXJdb0', 'Biomolecules Part 3', 'Biomolecules (Part-3) | Bio-Fest for NEET 2024 | Day 13/70 Days of NCERT Excursion | @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'biomolecules'), 2, 5410, 'allowed', now())
+  values ('nyZ_DeXJdb0', 'Biomolecules Part 3', 'Biomolecules (Part-3) | Bio-Fest for NEET 2024 | Day 13/70 Days of NCERT Excursion | @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'biomolecules' and subject_id = 4), 2, 5410, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -166,7 +166,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('fFvb1fz0WCE', 'Microbes in Human Welfare', 'Microbes in Human Welfare | Bio-Fest for NEET 2024 | Day 14/70 Days of NCERT Excursion | @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'microbes-in-human-welfare'), 2, 5389, 'allowed', now())
+  values ('fFvb1fz0WCE', 'Microbes in Human Welfare', 'Microbes in Human Welfare | Bio-Fest for NEET 2024 | Day 14/70 Days of NCERT Excursion | @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'microbes-in-human-welfare' and subject_id = 4), 2, 5389, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -176,7 +176,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('Dw_4PYSXzwc', 'Animal Kingdom Part 1', 'Animal Kingdom | Bio-Fest for NEET 2024 | Day 15/70 Days of NCERT Excursion | @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'animal-kingdom'), 2, 4801, 'allowed', now())
+  values ('Dw_4PYSXzwc', 'Animal Kingdom Part 1', 'Animal Kingdom | Bio-Fest for NEET 2024 | Day 15/70 Days of NCERT Excursion | @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'animal-kingdom' and subject_id = 4), 2, 4801, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -186,7 +186,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('4xktDUw18cQ', 'Animal Kingdom Part 2', 'Animal Kingdom | Bio-Fest for NEET 2024 | Day 16/70 Days of NCERT Excursion | @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'animal-kingdom'), 2, 4115, 'allowed', now())
+  values ('4xktDUw18cQ', 'Animal Kingdom Part 2', 'Animal Kingdom | Bio-Fest for NEET 2024 | Day 16/70 Days of NCERT Excursion | @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'animal-kingdom' and subject_id = 4), 2, 4115, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -196,7 +196,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('7HaHmjtsDr8', 'Animal Kingdom Part 3', 'Animal Kingdom | Bio-Fest for NEET 2024 | Day 17/70 Days of NCERT Excursion | @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'animal-kingdom'), 2, 4666, 'allowed', now())
+  values ('7HaHmjtsDr8', 'Animal Kingdom Part 3', 'Animal Kingdom | Bio-Fest for NEET 2024 | Day 17/70 Days of NCERT Excursion | @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'animal-kingdom' and subject_id = 4), 2, 4666, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -206,7 +206,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('C5B-DunIHyc', 'Structural Organisation in Animals Part 1', 'Structural Organisation in Animals (Part-1) | Bio-Fest for NEET 2024 | Day 18/70 Days of NCERT', v_channel_id, 4, (select id from public.chapters where slug = 'structural-organisation-in-animals'), 2, 5441, 'allowed', now())
+  values ('C5B-DunIHyc', 'Structural Organisation in Animals Part 1', 'Structural Organisation in Animals (Part-1) | Bio-Fest for NEET 2024 | Day 18/70 Days of NCERT', v_channel_id, 4, (select id from public.chapters where slug = 'structural-organisation-in-animals' and subject_id = 4), 2, 5441, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -216,7 +216,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('djEH2lYFBUU', 'Structural Organisation in Animals Part 2', 'Structural Organisation in Animals (Part-2) | Bio-Fest for NEET 2024 | Day 19/70 Days of NCERT', v_channel_id, 4, (select id from public.chapters where slug = 'structural-organisation-in-animals'), 2, 5060, 'allowed', now())
+  values ('djEH2lYFBUU', 'Structural Organisation in Animals Part 2', 'Structural Organisation in Animals (Part-2) | Bio-Fest for NEET 2024 | Day 19/70 Days of NCERT', v_channel_id, 4, (select id from public.chapters where slug = 'structural-organisation-in-animals' and subject_id = 4), 2, 5060, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -226,7 +226,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('sANBJSNchko', 'Morphology of Flowering Plants Part 1', 'Morphology of Flowering Plants (Part-1) | Bio-Fest for NEET 2024 | Day 20/70 Days of NCERT', v_channel_id, 4, (select id from public.chapters where slug = 'morphology-of-flowering-plants'), 2, 5460, 'allowed', now())
+  values ('sANBJSNchko', 'Morphology of Flowering Plants Part 1', 'Morphology of Flowering Plants (Part-1) | Bio-Fest for NEET 2024 | Day 20/70 Days of NCERT', v_channel_id, 4, (select id from public.chapters where slug = 'morphology-of-flowering-plants' and subject_id = 4), 2, 5460, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -236,7 +236,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('DEIPZ3U2Ptw', 'Morphology of Flowering Plants Part 2', 'Morphology of Flowering Plants (Part-2) | Bio-Fest for NEET 2024 | Day 21/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'morphology-of-flowering-plants'), 2, 5452, 'allowed', now())
+  values ('DEIPZ3U2Ptw', 'Morphology of Flowering Plants Part 2', 'Morphology of Flowering Plants (Part-2) | Bio-Fest for NEET 2024 | Day 21/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'morphology-of-flowering-plants' and subject_id = 4), 2, 5452, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -246,7 +246,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('kXR__QeH5cE', 'Morphology of Flowering Plants Part 3', 'Morphology of Flowering Plants (Part-3) | Bio-Fest for NEET 2024 | Day 22/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'morphology-of-flowering-plants'), 2, 5075, 'allowed', now())
+  values ('kXR__QeH5cE', 'Morphology of Flowering Plants Part 3', 'Morphology of Flowering Plants (Part-3) | Bio-Fest for NEET 2024 | Day 22/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'morphology-of-flowering-plants' and subject_id = 4), 2, 5075, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -256,7 +256,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('vBQVPLMZGKE', 'Anatomy of Flowering Plants Part 1', 'Anatomy of Flowering Plants (Part-1) | Bio-Fest for NEET 2024 | Day 23/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'anatomy-of-flowering-plants'), 2, 4625, 'allowed', now())
+  values ('vBQVPLMZGKE', 'Anatomy of Flowering Plants Part 1', 'Anatomy of Flowering Plants (Part-1) | Bio-Fest for NEET 2024 | Day 23/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'anatomy-of-flowering-plants' and subject_id = 4), 2, 4625, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -266,7 +266,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('fRg08QmQlgs', 'Anatomy of Flowering Plants Part 2', 'Anatomy of Flowering Plants (Part-2) | Bio-Fest for NEET 2024 | Day 24/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'anatomy-of-flowering-plants'), 2, 5071, 'allowed', now())
+  values ('fRg08QmQlgs', 'Anatomy of Flowering Plants Part 2', 'Anatomy of Flowering Plants (Part-2) | Bio-Fest for NEET 2024 | Day 24/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'anatomy-of-flowering-plants' and subject_id = 4), 2, 5071, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -276,7 +276,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('Ol3BP1SLNQM', 'Evolution Part 1', 'Evolution (Part-1) | Bio-Fest for NEET 2024 | Day 25/70 Days of NCERT Excursion | @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'evolution'), 2, 5740, 'allowed', now())
+  values ('Ol3BP1SLNQM', 'Evolution Part 1', 'Evolution (Part-1) | Bio-Fest for NEET 2024 | Day 25/70 Days of NCERT Excursion | @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'evolution' and subject_id = 4), 2, 5740, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -286,7 +286,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('T4WnmZ-tFkE', 'Evolution Part 2', 'Evolution (Part-2) | Bio-Fest for NEET 2024 | Day 26/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'evolution'), 2, 5770, 'allowed', now())
+  values ('T4WnmZ-tFkE', 'Evolution Part 2', 'Evolution (Part-2) | Bio-Fest for NEET 2024 | Day 26/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'evolution' and subject_id = 4), 2, 5770, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -296,7 +296,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('dwlPceYAVio', 'Evolution Part 3', 'Evolution (Part-3) | Bio-Fest for NEET 2024 | Day 27/70 Days of NCERT Excursion | @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'evolution'), 2, 6044, 'allowed', now())
+  values ('dwlPceYAVio', 'Evolution Part 3', 'Evolution (Part-3) | Bio-Fest for NEET 2024 | Day 27/70 Days of NCERT Excursion | @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'evolution' and subject_id = 4), 2, 6044, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -306,7 +306,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('A6Ym6wyAhwM', 'Human Health and Disease Part 1', 'Human Health and Diseases (Part-1) | Bio-Fest for NEET 2024 | Day 28/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'human-health-and-disease'), 2, 5785, 'allowed', now())
+  values ('A6Ym6wyAhwM', 'Human Health and Disease Part 1', 'Human Health and Diseases (Part-1) | Bio-Fest for NEET 2024 | Day 28/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'human-health-and-disease' and subject_id = 4), 2, 5785, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -316,7 +316,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('qo59TTCDcyM', 'Human Health and Disease Part 2', 'Human Health and Diseases (Part-2) | Bio-Fest for NEET 2024 | Day 29/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'human-health-and-disease'), 2, 5151, 'allowed', now())
+  values ('qo59TTCDcyM', 'Human Health and Disease Part 2', 'Human Health and Diseases (Part-2) | Bio-Fest for NEET 2024 | Day 29/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'human-health-and-disease' and subject_id = 4), 2, 5151, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -326,7 +326,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('mPmtBlHMWQE', 'Human Health and Disease Part 3', 'Human Health and Diseases (Part-3) | Bio-Fest for NEET 2024 | Day 30/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'human-health-and-disease'), 2, 6061, 'allowed', now())
+  values ('mPmtBlHMWQE', 'Human Health and Disease Part 3', 'Human Health and Diseases (Part-3) | Bio-Fest for NEET 2024 | Day 30/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'human-health-and-disease' and subject_id = 4), 2, 6061, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -336,7 +336,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('8dt7Zy9fTn4', 'Human Reproduction Part 1', 'Human Reproduction (Part-1) | Bio-Fest for NEET 2024 | Day 31/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'human-reproduction'), 2, 5596, 'allowed', now())
+  values ('8dt7Zy9fTn4', 'Human Reproduction Part 1', 'Human Reproduction (Part-1) | Bio-Fest for NEET 2024 | Day 31/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'human-reproduction' and subject_id = 4), 2, 5596, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -346,7 +346,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('dIvgBpkt1gc', 'Human Reproduction Part 2', 'Human Reproduction (Part-2) | Bio-Fest for NEET 2024 | Day 32/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'human-reproduction'), 2, 5582, 'allowed', now())
+  values ('dIvgBpkt1gc', 'Human Reproduction Part 2', 'Human Reproduction (Part-2) | Bio-Fest for NEET 2024 | Day 32/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'human-reproduction' and subject_id = 4), 2, 5582, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -356,7 +356,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('O1mtwQybSJs', 'Human Reproduction Part 3', 'Human Reproduction (Part-3) | Bio-Fest for NEET 2024 | Day 33/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'human-reproduction'), 2, 4361, 'allowed', now())
+  values ('O1mtwQybSJs', 'Human Reproduction Part 3', 'Human Reproduction (Part-3) | Bio-Fest for NEET 2024 | Day 33/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'human-reproduction' and subject_id = 4), 2, 4361, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -366,7 +366,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('ZfDn0bjqAts', 'Reproductive Health', 'Reproductive Health | Bio-Fest for NEET 2024 | Day 34/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'reproductive-health'), 2, 5316, 'allowed', now())
+  values ('ZfDn0bjqAts', 'Reproductive Health', 'Reproductive Health | Bio-Fest for NEET 2024 | Day 34/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'reproductive-health' and subject_id = 4), 2, 5316, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -376,7 +376,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('z_VjDLYaLSw', 'Organisms and Populations Part 2', 'Organisms and Populations (Part-2) | Bio-Fest for NEET 2024 | Day 36/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'organisms-and-populations'), 2, 4331, 'allowed', now())
+  values ('z_VjDLYaLSw', 'Organisms and Populations Part 2', 'Organisms and Populations (Part-2) | Bio-Fest for NEET 2024 | Day 36/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'organisms-and-populations' and subject_id = 4), 2, 4331, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -386,7 +386,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('ccwMuCcPF9E', 'Organisms and Populations Part 1', 'Organisms and Populations (Part-1) | Bio-Fest for NEET 2024 | Day 35/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'organisms-and-populations'), 2, 4666, 'allowed', now())
+  values ('ccwMuCcPF9E', 'Organisms and Populations Part 1', 'Organisms and Populations (Part-1) | Bio-Fest for NEET 2024 | Day 35/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'organisms-and-populations' and subject_id = 4), 2, 4666, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -396,7 +396,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('wX1fmq-5DO4', 'Organisms and Populations Part 3', 'Organisms and Populations (Part-3) | Bio-Fest for NEET 2024 | Day 37/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'organisms-and-populations'), 2, 4500, 'allowed', now())
+  values ('wX1fmq-5DO4', 'Organisms and Populations Part 3', 'Organisms and Populations (Part-3) | Bio-Fest for NEET 2024 | Day 37/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'organisms-and-populations' and subject_id = 4), 2, 4500, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -406,7 +406,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('4IDrKqbtAL4', 'Ecosystem Part 1', 'Ecosystem (Part-1) | Bio-Fest for NEET 2024 | Day 38/70 Days of NCERT Excursion | @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'ecosystem'), 2, 5089, 'allowed', now())
+  values ('4IDrKqbtAL4', 'Ecosystem Part 1', 'Ecosystem (Part-1) | Bio-Fest for NEET 2024 | Day 38/70 Days of NCERT Excursion | @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'ecosystem' and subject_id = 4), 2, 5089, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -416,7 +416,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('9oc8Ul50qYs', 'Ecosystem Part 3', 'Ecosystem (Part-3) | Bio-Fest for NEET 2024 | Day 40/70 Days of NCERT Excursion | @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'ecosystem'), 2, 5946, 'allowed', now())
+  values ('9oc8Ul50qYs', 'Ecosystem Part 3', 'Ecosystem (Part-3) | Bio-Fest for NEET 2024 | Day 40/70 Days of NCERT Excursion | @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'ecosystem' and subject_id = 4), 2, 5946, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -426,7 +426,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('tjvx7VzLUZY', 'Biodiversity and Conservation', 'Biodiversity & Conservation | Bio-Fest for NEET 2024 | Day 41/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'biodiversity-and-conservation'), 2, 5395, 'allowed', now())
+  values ('tjvx7VzLUZY', 'Biodiversity and Conservation', 'Biodiversity & Conservation | Bio-Fest for NEET 2024 | Day 41/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'biodiversity-and-conservation' and subject_id = 4), 2, 5395, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -436,7 +436,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('BjLh3hR7utk', 'Breathing and Exchange of Gases', 'Breathing and Exchange of Gases | Bio-Fest for NEET 2024 | Day 42/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'breathing-and-exchange-of-gases'), 2, 4435, 'allowed', now())
+  values ('BjLh3hR7utk', 'Breathing and Exchange of Gases', 'Breathing and Exchange of Gases | Bio-Fest for NEET 2024 | Day 42/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'breathing-and-exchange-of-gases' and subject_id = 4), 2, 4435, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -446,7 +446,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('VhIBy4aqi70', 'Body Fluids and Circulation Part 1', 'Body Fluids and Circulation (Part -1) | Bio-Fest for NEET 2024 | Day 43/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'body-fluids-and-circulation'), 2, 4606, 'allowed', now())
+  values ('VhIBy4aqi70', 'Body Fluids and Circulation Part 1', 'Body Fluids and Circulation (Part -1) | Bio-Fest for NEET 2024 | Day 43/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'body-fluids-and-circulation' and subject_id = 4), 2, 4606, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -456,7 +456,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('5pwjMITnMa8', 'Body Fluids and Circulation Part 2', 'Body Fluids and Circulation (Part -2) | Bio-Fest for NEET 2024 | Day 44/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'body-fluids-and-circulation'), 2, 3411, 'allowed', now())
+  values ('5pwjMITnMa8', 'Body Fluids and Circulation Part 2', 'Body Fluids and Circulation (Part -2) | Bio-Fest for NEET 2024 | Day 44/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'body-fluids-and-circulation' and subject_id = 4), 2, 3411, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -466,7 +466,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('gctgpdsYwDc', 'Excretory Products and Their Elimination', 'Excretory Products & Their Elimination | Bio-Fest for NEET 2024 | Day 45/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'excretory-products-and-their-elimination'), 2, 5996, 'allowed', now())
+  values ('gctgpdsYwDc', 'Excretory Products and Their Elimination', 'Excretory Products & Their Elimination | Bio-Fest for NEET 2024 | Day 45/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'excretory-products-and-their-elimination' and subject_id = 4), 2, 5996, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -476,7 +476,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('_cOQZW4V6hk', 'Locomotion and Movement Part 1', 'Locomotion and Movement | Bio-Fest for NEET 2024 | Day 46/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'locomotion-and-movement'), 2, 4436, 'allowed', now())
+  values ('_cOQZW4V6hk', 'Locomotion and Movement Part 1', 'Locomotion and Movement | Bio-Fest for NEET 2024 | Day 46/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'locomotion-and-movement' and subject_id = 4), 2, 4436, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -486,7 +486,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('WSrf66n6-4w', 'Locomotion and Movement Part 2', 'Locomotion and Movement (Part-2) | Bio-Fest for NEET 2024 | Day 47/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'locomotion-and-movement'), 2, 5326, 'allowed', now())
+  values ('WSrf66n6-4w', 'Locomotion and Movement Part 2', 'Locomotion and Movement (Part-2) | Bio-Fest for NEET 2024 | Day 47/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'locomotion-and-movement' and subject_id = 4), 2, 5326, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -496,7 +496,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('DXbOTf_tGWs', 'Neural Control and Coordination', 'Neural Control & Coordination | Bio-Fest for NEET 2024 | Day 48/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'neural-control-and-coordination'), 2, 4821, 'allowed', now())
+  values ('DXbOTf_tGWs', 'Neural Control and Coordination', 'Neural Control & Coordination | Bio-Fest for NEET 2024 | Day 48/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'neural-control-and-coordination' and subject_id = 4), 2, 4821, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -506,7 +506,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('uyto16kCXtM', 'Chemical Coordination and Integration', 'Chemical Coordination and Integration | Bio-Fest for NEET 2024 | Day 49/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'chemical-coordination-and-integration'), 2, 6466, 'allowed', now())
+  values ('uyto16kCXtM', 'Chemical Coordination and Integration', 'Chemical Coordination and Integration | Bio-Fest for NEET 2024 | Day 49/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'chemical-coordination-and-integration' and subject_id = 4), 2, 6466, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -516,7 +516,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('XkqMBSmWDnI', 'Photosynthesis in Higher Plants Part 1', 'Photosynthesis in Higher Plants | Bio-Fest for NEET 2024 | Day 50/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'photosynthesis-in-higher-plants'), 2, 5406, 'allowed', now())
+  values ('XkqMBSmWDnI', 'Photosynthesis in Higher Plants Part 1', 'Photosynthesis in Higher Plants | Bio-Fest for NEET 2024 | Day 50/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'photosynthesis-in-higher-plants' and subject_id = 4), 2, 5406, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -526,7 +526,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('dln797UdzLU', 'Photosynthesis in Higher Plants Part 2', 'Photosynthesis in Higher Plants (Part-2)| Bio-Fest for NEET 2024 | Day 51/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'photosynthesis-in-higher-plants'), 2, 5695, 'allowed', now())
+  values ('dln797UdzLU', 'Photosynthesis in Higher Plants Part 2', 'Photosynthesis in Higher Plants (Part-2)| Bio-Fest for NEET 2024 | Day 51/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'photosynthesis-in-higher-plants' and subject_id = 4), 2, 5695, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -536,7 +536,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('wc-89je2Ju4', 'Photosynthesis in Higher Plants Part 3', 'Photosynthesis in Higher Plants (Part-3)| Bio-Fest for NEET 2024 | Day 52/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'photosynthesis-in-higher-plants'), 2, 6196, 'allowed', now())
+  values ('wc-89je2Ju4', 'Photosynthesis in Higher Plants Part 3', 'Photosynthesis in Higher Plants (Part-3)| Bio-Fest for NEET 2024 | Day 52/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'photosynthesis-in-higher-plants' and subject_id = 4), 2, 6196, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -546,7 +546,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('df8WOaihmtM', 'Respiration in Plants Part 1', 'Respiration in Plants (Part-1)| Bio-Fest for NEET 2024 | Day 53/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'respiration-in-plants'), 2, 6001, 'allowed', now())
+  values ('df8WOaihmtM', 'Respiration in Plants Part 1', 'Respiration in Plants (Part-1)| Bio-Fest for NEET 2024 | Day 53/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'respiration-in-plants' and subject_id = 4), 2, 6001, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -556,7 +556,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('jcuLtTLLWXo', 'Respiration in Plants Part 2', 'Respiration in Plants (Part-2) | Bio-Fest for NEET 2024 | Day 54/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'respiration-in-plants'), 2, 5731, 'allowed', now())
+  values ('jcuLtTLLWXo', 'Respiration in Plants Part 2', 'Respiration in Plants (Part-2) | Bio-Fest for NEET 2024 | Day 54/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'respiration-in-plants' and subject_id = 4), 2, 5731, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -566,7 +566,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('fGvZLJqnV0s', 'Plant Growth and Development', 'Plant Growth and Development | Bio-Fest for NEET 2024 | Day 55/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'plant-growth-and-development'), 2, 5320, 'allowed', now())
+  values ('fGvZLJqnV0s', 'Plant Growth and Development', 'Plant Growth and Development | Bio-Fest for NEET 2024 | Day 55/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'plant-growth-and-development' and subject_id = 4), 2, 5320, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -576,7 +576,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('swzWpL2Ujog', 'Sexual Reproduction in Flowering Plants Part 1', 'Sexual Reproduction in Flowering Plants (Part-1) | for NEET 2024 | Day 56/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'sexual-reproduction-in-flowering-plants'), 2, 4900, 'allowed', now())
+  values ('swzWpL2Ujog', 'Sexual Reproduction in Flowering Plants Part 1', 'Sexual Reproduction in Flowering Plants (Part-1) | for NEET 2024 | Day 56/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'sexual-reproduction-in-flowering-plants' and subject_id = 4), 2, 4900, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -586,7 +586,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('JSQggv9NH3Q', 'Sexual Reproduction in Flowering Plants Part 2', 'Sexual Reproduction in Flowering Plants (Part-2) | for NEET 2024 | Day 57/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'sexual-reproduction-in-flowering-plants'), 2, 5485, 'allowed', now())
+  values ('JSQggv9NH3Q', 'Sexual Reproduction in Flowering Plants Part 2', 'Sexual Reproduction in Flowering Plants (Part-2) | for NEET 2024 | Day 57/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'sexual-reproduction-in-flowering-plants' and subject_id = 4), 2, 5485, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -596,7 +596,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('TegBjmL4CLE', 'Principles of Inheritance and Variation Part 1', 'Principle of Inheritance and Variation (Part-1) | for NEET 2024 | Day 58/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'principles-of-inheritance-and-variation'), 2, 5376, 'allowed', now())
+  values ('TegBjmL4CLE', 'Principles of Inheritance and Variation Part 1', 'Principle of Inheritance and Variation (Part-1) | for NEET 2024 | Day 58/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'principles-of-inheritance-and-variation' and subject_id = 4), 2, 5376, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -606,7 +606,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('hg5Kc-Eo2Dg', 'Principles of Inheritance and Variation Part 2', 'Principle of Inheritance and Variation (Part-2) | for NEET 2024 | Day 59/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'principles-of-inheritance-and-variation'), 2, 5246, 'allowed', now())
+  values ('hg5Kc-Eo2Dg', 'Principles of Inheritance and Variation Part 2', 'Principle of Inheritance and Variation (Part-2) | for NEET 2024 | Day 59/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'principles-of-inheritance-and-variation' and subject_id = 4), 2, 5246, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -616,7 +616,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('RsD7wTSjBe8', 'Principles of Inheritance and Variation Part 3', 'Principle of Inheritance and Variation (Part-3) | for NEET 2024 | Day 60/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'principles-of-inheritance-and-variation'), 2, 5721, 'allowed', now())
+  values ('RsD7wTSjBe8', 'Principles of Inheritance and Variation Part 3', 'Principle of Inheritance and Variation (Part-3) | for NEET 2024 | Day 60/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'principles-of-inheritance-and-variation' and subject_id = 4), 2, 5721, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -626,7 +626,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('awYp1s8h5OU', 'Principles of Inheritance and Variation Part 4', 'Principle of Inheritance and Variation (Part-4) | for NEET 2024 | Day 61/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'principles-of-inheritance-and-variation'), 2, 5321, 'allowed', now())
+  values ('awYp1s8h5OU', 'Principles of Inheritance and Variation Part 4', 'Principle of Inheritance and Variation (Part-4) | for NEET 2024 | Day 61/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'principles-of-inheritance-and-variation' and subject_id = 4), 2, 5321, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -636,7 +636,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('UAlYJg80mVw', 'Principles of Inheritance and Variation Part 5', 'Principle of Inheritance and Variation (Part-5) | for NEET 2024 | Day 62/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'principles-of-inheritance-and-variation'), 2, 5595, 'allowed', now())
+  values ('UAlYJg80mVw', 'Principles of Inheritance and Variation Part 5', 'Principle of Inheritance and Variation (Part-5) | for NEET 2024 | Day 62/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'principles-of-inheritance-and-variation' and subject_id = 4), 2, 5595, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -646,7 +646,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('rwIQOusj2Pk', 'Molecular Basis of Inheritance Part 1', 'Molecular Basis of Inheritance (Part-1) | for NEET 2024 | Day 63/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'molecular-basis-of-inheritance'), 2, 4585, 'allowed', now())
+  values ('rwIQOusj2Pk', 'Molecular Basis of Inheritance Part 1', 'Molecular Basis of Inheritance (Part-1) | for NEET 2024 | Day 63/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'molecular-basis-of-inheritance' and subject_id = 4), 2, 4585, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -656,7 +656,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('AtmBru4g6rs', 'Molecular Basis of Inheritance Part 2', 'Molecular Basis of Inheritance (Part-2) | for NEET 2024 | Day 64/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'molecular-basis-of-inheritance'), 2, 5751, 'allowed', now())
+  values ('AtmBru4g6rs', 'Molecular Basis of Inheritance Part 2', 'Molecular Basis of Inheritance (Part-2) | for NEET 2024 | Day 64/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'molecular-basis-of-inheritance' and subject_id = 4), 2, 5751, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -666,7 +666,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('vq5U0FInbCI', 'Molecular Basis of Inheritance Part 3', 'Molecular Basis of Inheritance (Part-3) | for NEET 2024 | Day 65/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'molecular-basis-of-inheritance'), 2, 5560, 'allowed', now())
+  values ('vq5U0FInbCI', 'Molecular Basis of Inheritance Part 3', 'Molecular Basis of Inheritance (Part-3) | for NEET 2024 | Day 65/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'molecular-basis-of-inheritance' and subject_id = 4), 2, 5560, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -676,7 +676,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('4pwX-7d_PCE', 'Molecular Basis of Inheritance Part 4', 'Molecular Basis of Inheritance (Part-4) | for NEET 2024 | Day 66/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'molecular-basis-of-inheritance'), 2, 5781, 'allowed', now())
+  values ('4pwX-7d_PCE', 'Molecular Basis of Inheritance Part 4', 'Molecular Basis of Inheritance (Part-4) | for NEET 2024 | Day 66/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'molecular-basis-of-inheritance' and subject_id = 4), 2, 5781, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -686,7 +686,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('uVAXhtFd_dg', 'Molecular Basis of Inheritance Part 5', 'Molecular Basis of Inheritance (Part-5) | for NEET 2024 | Day 67/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'molecular-basis-of-inheritance'), 2, 5350, 'allowed', now())
+  values ('uVAXhtFd_dg', 'Molecular Basis of Inheritance Part 5', 'Molecular Basis of Inheritance (Part-5) | for NEET 2024 | Day 67/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'molecular-basis-of-inheritance' and subject_id = 4), 2, 5350, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -696,7 +696,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('46-ycMS_Y2g', 'Biotechnology: Principles and Processes Part 1', 'Biotechnology: Principles and Processes (Part-1) | NEET 2024 | Day 68/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'biotechnology-principles-and-processes'), 2, 4865, 'allowed', now())
+  values ('46-ycMS_Y2g', 'Biotechnology: Principles and Processes Part 1', 'Biotechnology: Principles and Processes (Part-1) | NEET 2024 | Day 68/70 Days of NCERT Excursion', v_channel_id, 4, (select id from public.chapters where slug = 'biotechnology-principles-and-processes' and subject_id = 4), 2, 4865, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -706,7 +706,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('e0mpNqAucqc', 'Biotechnology and Its Applications Part 2', 'Biotechnology and Its Application (Part-2) | NEET 2024 | Last Day of Bio Fest | @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'biotechnology-and-its-applications'), 2, 3963, 'allowed', now())
+  values ('e0mpNqAucqc', 'Biotechnology and Its Applications Part 2', 'Biotechnology and Its Application (Part-2) | NEET 2024 | Last Day of Bio Fest | @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'biotechnology-and-its-applications' and subject_id = 4), 2, 3963, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then

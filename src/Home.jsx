@@ -43,7 +43,6 @@ import { RELEASE_CAPABILITIES } from "./releaseCapabilities.js";
 import { useStructuredData } from "./PageMetadata.jsx";
 import { organizationSchema, websiteSchema } from "./structuredData.js";
 import { Button, EmptyState, Pill, Skeleton, Surface } from "./ui.jsx";
-import { Reveal } from "./motion.jsx";
 import {
   Benefits, ContinueWatching, ExamGrid, Faq, Features, FinalCta, Hero,
   Pricing, Process, SocialProof, Statistics, TopRated,
@@ -362,10 +361,17 @@ function SearchResults({ groups, loading, error, tooShort, retry, query }) {
 
   return (
     <div className="space-y-12">
-      {visible.map((g, groupIndex) => {
+      {visible.map((g) => {
         const group = groups[g.key];
+        // Deliberately NOT wrapped in <Reveal>: results answer a question the
+        // student just typed, so they must paint immediately and must never
+        // depend on an IntersectionObserver firing. A .reveal starts at
+        // opacity 0 and only becomes visible once a useReveal() root observes
+        // it — and <main> has no such root, which silently made every homepage
+        // search result invisible in production. Same reasoning as
+        // SearchPage.jsx, which has never animated its results.
         return (
-          <Reveal key={g.key} delay={groupIndex} className="space-y-4">
+          <div key={g.key} className="space-y-4">
             <div className="flex items-baseline justify-between gap-4">
               <h2 className="text-h3 flex items-center gap-2.5 text-ink">
                 <g.icon aria-hidden="true" className="h-5 w-5 text-accent" />
@@ -408,7 +414,7 @@ function SearchResults({ groups, loading, error, tooShort, retry, query }) {
                 </li>
               ))}
             </ul>
-          </Reveal>
+          </div>
         );
       })}
     </div>

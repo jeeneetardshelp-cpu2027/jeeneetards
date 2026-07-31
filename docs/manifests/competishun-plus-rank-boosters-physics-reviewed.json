@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "request_id": "c216e03f-9c85-4ffb-b35b-2e0f3912c939",
+  "youtube_playlist_id": "PLO1SoY_zaltU",
+  "assignments": [
+    {
+      "position": 3,
+      "youtube_video_id": "Hmbch7zot8c",
+      "chapter": "Work, Energy and Power",
+      "lesson_number": 1
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "Lf4PQl4ffr8",
+      "chapter": "Work, Energy and Power",
+      "lesson_number": 2
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "YPnPX59h89E",
+      "chapter": "Newton's Laws of Motion (NLM)",
+      "lesson_number": 3
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "XDJoI4apZw0",
+      "chapter": "Ray Optics and Optical Instruments",
+      "lesson_number": 4
+    }
+  ],
+  "exclusions": [
+    { "position": 1, "youtube_video_id": "5zTL_g5RmB0", "reason": "Mathematics lecture handled by the reviewed Mathematics split." },
+    { "position": 2, "youtube_video_id": "h2Xm0S2WQOU", "reason": "Chemistry lecture handled by the reviewed Chemistry split." },
+    { "position": 5, "youtube_video_id": "6u7ATY1pTL4", "reason": "Mathematics lecture handled by the reviewed Mathematics split." },
+    { "position": 6, "youtube_video_id": "Zj68NfCS-MM", "reason": "Chemistry lecture handled by the reviewed Chemistry split." },
+    { "position": 8, "youtube_video_id": "LMRb53fU0H8", "reason": "Mathematics lecture handled by the reviewed Mathematics split." },
+    { "position": 9, "youtube_video_id": "PaS0OpRkR6g", "reason": "Chemistry lecture handled by the reviewed Chemistry split." },
+    { "position": 10, "youtube_video_id": "zIJdg0KnHx8", "reason": "Chemistry lecture handled by the reviewed Chemistry split." },
+    { "position": 11, "youtube_video_id": "9PRMeoPIMXI", "reason": "Chemistry lecture handled by the reviewed Chemistry split." }
+  ]
+}

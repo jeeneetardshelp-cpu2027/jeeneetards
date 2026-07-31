@@ -36,7 +36,7 @@ begin
   select v_playlist_id, cl.id from public.class_levels cl where cl.slug = 'class-11';
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('nx263Rv0VVI', 'Sexual Reproduction in Flowering Plants Class 12 Biology Concepts (L1)', 'Sexual Reproduction in Flowering Plants Class 12 Biology Concepts (L1) | NEET 2023 Biology Exam', v_channel_id, 4, (select id from public.chapters where slug = 'sexual-reproduction-in-flowering-plants'), 2, 3303, 'allowed', now())
+  values ('nx263Rv0VVI', 'Sexual Reproduction in Flowering Plants Class 12 Biology Concepts (L1)', 'Sexual Reproduction in Flowering Plants Class 12 Biology Concepts (L1) | NEET 2023 Biology Exam', v_channel_id, 4, (select id from public.chapters where slug = 'sexual-reproduction-in-flowering-plants' and subject_id = 4), 2, 3303, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -46,7 +46,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('sb0Tsg4kRG8', 'Sexual Reproduction in Flowering Plants Class 12 Biology Chapter Explained (L 2)', 'Sexual Reproduction in Flowering Plants Class 12 Biology Chapter Explained (L 2) | NEET 2023 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'sexual-reproduction-in-flowering-plants'), 2, 4265, 'allowed', now())
+  values ('sb0Tsg4kRG8', 'Sexual Reproduction in Flowering Plants Class 12 Biology Chapter Explained (L 2)', 'Sexual Reproduction in Flowering Plants Class 12 Biology Chapter Explained (L 2) | NEET 2023 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'sexual-reproduction-in-flowering-plants' and subject_id = 4), 2, 4265, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -56,7 +56,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('WiCgPj3p4Oo', 'Sexual Reproduction in Flowering Plants Class 12 Biology NEET (L 3)', 'Sexual Reproduction in Flowering Plants Class 12 Biology NEET (L 3) | NEET 2023 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'sexual-reproduction-in-flowering-plants'), 2, 4226, 'allowed', now())
+  values ('WiCgPj3p4Oo', 'Sexual Reproduction in Flowering Plants Class 12 Biology NEET (L 3)', 'Sexual Reproduction in Flowering Plants Class 12 Biology NEET (L 3) | NEET 2023 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'sexual-reproduction-in-flowering-plants' and subject_id = 4), 2, 4226, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -66,7 +66,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('htfgPAIliEk', 'Pollination Class 12 Biology - Sexual Reproduction in Flowering Plants Concepts (L 4)', 'Pollination Class 12 Biology - Sexual Reproduction in Flowering Plants Concepts (L 4) | NEET 2022-23', v_channel_id, 4, (select id from public.chapters where slug = 'sexual-reproduction-in-flowering-plants'), 2, 3821, 'allowed', now())
+  values ('htfgPAIliEk', 'Pollination Class 12 Biology - Sexual Reproduction in Flowering Plants Concepts (L 4)', 'Pollination Class 12 Biology - Sexual Reproduction in Flowering Plants Concepts (L 4) | NEET 2022-23', v_channel_id, 4, (select id from public.chapters where slug = 'sexual-reproduction-in-flowering-plants' and subject_id = 4), 2, 3821, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -76,7 +76,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('IRvtg4CtFrg', 'Sexual Reproduction in Flowering Plants Class 12 Biology Concepts (L 5)', 'Sexual Reproduction in Flowering Plants Class 12 Biology Concepts (L 5) | NEET 2022-23 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'sexual-reproduction-in-flowering-plants'), 2, 3790, 'allowed', now())
+  values ('IRvtg4CtFrg', 'Sexual Reproduction in Flowering Plants Class 12 Biology Concepts (L 5)', 'Sexual Reproduction in Flowering Plants Class 12 Biology Concepts (L 5) | NEET 2022-23 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'sexual-reproduction-in-flowering-plants' and subject_id = 4), 2, 3790, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -86,7 +86,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('MyR56Znm1dU', 'Pollen Pistil Interaction Class 12 Biology - Sexual Reproduction in Flowering Plants (L6)', 'Pollen Pistil Interaction Class 12 Biology - Sexual Reproduction in Flowering Plants (L6)| NEET 2023', v_channel_id, 4, (select id from public.chapters where slug = 'sexual-reproduction-in-flowering-plants'), 2, 4186, 'allowed', now())
+  values ('MyR56Znm1dU', 'Pollen Pistil Interaction Class 12 Biology - Sexual Reproduction in Flowering Plants (L6)', 'Pollen Pistil Interaction Class 12 Biology - Sexual Reproduction in Flowering Plants (L6)| NEET 2023', v_channel_id, 4, (select id from public.chapters where slug = 'sexual-reproduction-in-flowering-plants' and subject_id = 4), 2, 4186, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -96,7 +96,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('KuB12bH2JDA', 'Double Fertilisation & Post Fertilisation Events- Reproduction in Flowering Plants', 'Double Fertilisation & Post Fertilisation Events Class 12 - Reproduction in Flowering Plants (L7)', v_channel_id, 4, (select id from public.chapters where slug = 'sexual-reproduction-in-flowering-plants'), 2, 4272, 'allowed', now())
+  values ('KuB12bH2JDA', 'Double Fertilisation & Post Fertilisation Events- Reproduction in Flowering Plants', 'Double Fertilisation & Post Fertilisation Events Class 12 - Reproduction in Flowering Plants (L7)', v_channel_id, 4, (select id from public.chapters where slug = 'sexual-reproduction-in-flowering-plants' and subject_id = 4), 2, 4272, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -106,7 +106,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('3jsD7sus88U', 'Seed - Post Fertilisation Events Class 12 Concepts', 'Seed - Post Fertilisation Events Class 12 Concepts | Reproduction in Flowering Plants | NEET 2023', v_channel_id, 4, (select id from public.chapters where slug = 'sexual-reproduction-in-flowering-plants'), 2, 4516, 'allowed', now())
+  values ('3jsD7sus88U', 'Seed - Post Fertilisation Events Class 12 Concepts', 'Seed - Post Fertilisation Events Class 12 Concepts | Reproduction in Flowering Plants | NEET 2023', v_channel_id, 4, (select id from public.chapters where slug = 'sexual-reproduction-in-flowering-plants' and subject_id = 4), 2, 4516, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -116,7 +116,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('UudiUX-IJiE', 'Sexual Reproduction in Flowering Plants Class 12 Biology Previous Year Questions', 'Sexual Reproduction in Flowering Plants Class 12 Biology Previous Year Questions | NEET 2023 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'sexual-reproduction-in-flowering-plants'), 2, 2554, 'allowed', now())
+  values ('UudiUX-IJiE', 'Sexual Reproduction in Flowering Plants Class 12 Biology Previous Year Questions', 'Sexual Reproduction in Flowering Plants Class 12 Biology Previous Year Questions | NEET 2023 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'sexual-reproduction-in-flowering-plants' and subject_id = 4), 2, 2554, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -147,7 +147,7 @@ begin
   select v_playlist_id, cl.id from public.class_levels cl where cl.slug = 'class-11';
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('quzGR_R_PKI', 'Introduction to Ecology Class 12 Biology - Organisms and Populations Concepts (L1)', 'Introduction to Ecology Class 12 Biology - Organisms and Populations Concepts (L1) | NEET 2023 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'organisms-and-populations'), 2, 3896, 'allowed', now())
+  values ('quzGR_R_PKI', 'Introduction to Ecology Class 12 Biology - Organisms and Populations Concepts (L1)', 'Introduction to Ecology Class 12 Biology - Organisms and Populations Concepts (L1) | NEET 2023 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'organisms-and-populations' and subject_id = 4), 2, 3896, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -157,7 +157,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('CYwCLcvjCKY', 'Abiotic Factors in Ecosystem Class 12 Biology Concepts (L2)', 'Abiotic Factors in Ecosystem Class 12 Biology Concepts (L2) | NEET 2022 Exam Preparation', v_channel_id, 4, (select id from public.chapters where slug = 'organisms-and-populations'), 2, 3296, 'allowed', now())
+  values ('CYwCLcvjCKY', 'Abiotic Factors in Ecosystem Class 12 Biology Concepts (L2)', 'Abiotic Factors in Ecosystem Class 12 Biology Concepts (L2) | NEET 2022 Exam Preparation', v_channel_id, 4, (select id from public.chapters where slug = 'organisms-and-populations' and subject_id = 4), 2, 3296, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -167,7 +167,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('CYb89Y9mBA4', 'Response to Abiotic Factors - Organisms and Population Class 12 Biology Concepts (L3)', 'Response to Abiotic Factors - Organisms and Population Class 12 Biology Concepts (L3) | NEET 2022', v_channel_id, 4, (select id from public.chapters where slug = 'organisms-and-populations'), 2, 3581, 'allowed', now())
+  values ('CYb89Y9mBA4', 'Response to Abiotic Factors - Organisms and Population Class 12 Biology Concepts (L3)', 'Response to Abiotic Factors - Organisms and Population Class 12 Biology Concepts (L3) | NEET 2022', v_channel_id, 4, (select id from public.chapters where slug = 'organisms-and-populations' and subject_id = 4), 2, 3581, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -177,7 +177,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('mCa-w3Kl69o', 'Response to Abiotic Factors - Organisms and Population Class 12 Biology Concepts (L4)', 'Response to Abiotic Factors - Organisms and Population Class 12 Biology Concepts (L4) | NEET 2022', v_channel_id, 4, (select id from public.chapters where slug = 'organisms-and-populations'), 2, 3139, 'allowed', now())
+  values ('mCa-w3Kl69o', 'Response to Abiotic Factors - Organisms and Population Class 12 Biology Concepts (L4)', 'Response to Abiotic Factors - Organisms and Population Class 12 Biology Concepts (L4) | NEET 2022', v_channel_id, 4, (select id from public.chapters where slug = 'organisms-and-populations' and subject_id = 4), 2, 3139, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -187,7 +187,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('RKuDWAKnZ_Y', 'Adaptation to Abiotic Factors - Organisms and Population Class 12 Biology Concepts (L5)', 'Adaptation to Abiotic Factors - Organisms and Population Class 12 Biology Concepts (L5) | NEET 2022', v_channel_id, 4, (select id from public.chapters where slug = 'organisms-and-populations'), 2, 2159, 'allowed', now())
+  values ('RKuDWAKnZ_Y', 'Adaptation to Abiotic Factors - Organisms and Population Class 12 Biology Concepts (L5)', 'Adaptation to Abiotic Factors - Organisms and Population Class 12 Biology Concepts (L5) | NEET 2022', v_channel_id, 4, (select id from public.chapters where slug = 'organisms-and-populations' and subject_id = 4), 2, 2159, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -197,7 +197,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('yboyPRoVIWI', 'Population Attributes - Organisms and Population Class 12 Biology Concepts (L6)', 'Population Attributes - Organisms and Population Class 12  Biology Concepts (L6) | NEET 2022 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'organisms-and-populations'), 2, 3486, 'allowed', now())
+  values ('yboyPRoVIWI', 'Population Attributes - Organisms and Population Class 12 Biology Concepts (L6)', 'Population Attributes - Organisms and Population Class 12  Biology Concepts (L6) | NEET 2022 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'organisms-and-populations' and subject_id = 4), 2, 3486, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -207,7 +207,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('EOUsl3flo1s', 'Population Growth - Organisms and Population Class 12 Biology Concepts (L7)', 'Population Growth -  Organisms and Population Class 12 Biology Concepts (L7) | NEET 2022 Biology', v_channel_id, 4, (select id from public.chapters where slug = 'organisms-and-populations'), 2, 3172, 'allowed', now())
+  values ('EOUsl3flo1s', 'Population Growth - Organisms and Population Class 12 Biology Concepts (L7)', 'Population Growth -  Organisms and Population Class 12 Biology Concepts (L7) | NEET 2022 Biology', v_channel_id, 4, (select id from public.chapters where slug = 'organisms-and-populations' and subject_id = 4), 2, 3172, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -217,7 +217,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('AuoV16g18bo', 'Population Interaction Class 12 Biology - Organisms and Population Concepts (L8)', 'NEET 2023 | Population Interaction Class 12 Biology -  Organisms and Population Concepts (L8)', v_channel_id, 4, (select id from public.chapters where slug = 'organisms-and-populations'), 2, 3052, 'allowed', now())
+  values ('AuoV16g18bo', 'Population Interaction Class 12 Biology - Organisms and Population Concepts (L8)', 'NEET 2023 | Population Interaction Class 12 Biology -  Organisms and Population Concepts (L8)', v_channel_id, 4, (select id from public.chapters where slug = 'organisms-and-populations' and subject_id = 4), 2, 3052, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -227,7 +227,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('Jy4GNf41bsY', 'Population Interaction-II Class 12 Biology - Organisms and Population Concepts (L9)', 'Population Interaction-II Class 12 Biology -  Organisms and Population Concepts (L9) | NEET 2023', v_channel_id, 4, (select id from public.chapters where slug = 'organisms-and-populations'), 2, 3685, 'allowed', now())
+  values ('Jy4GNf41bsY', 'Population Interaction-II Class 12 Biology - Organisms and Population Concepts (L9)', 'Population Interaction-II Class 12 Biology -  Organisms and Population Concepts (L9) | NEET 2023', v_channel_id, 4, (select id from public.chapters where slug = 'organisms-and-populations' and subject_id = 4), 2, 3685, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -237,7 +237,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('Pb6PYGLCEKM', 'Population Interaction-III Class 12 Biology - Organisms and Population Concepts (L10)', 'Population Interaction-III Class 12 Biology -  Organisms and Population Concepts (L10) | NEET 2023', v_channel_id, 4, (select id from public.chapters where slug = 'organisms-and-populations'), 2, 3818, 'allowed', now())
+  values ('Pb6PYGLCEKM', 'Population Interaction-III Class 12 Biology - Organisms and Population Concepts (L10)', 'Population Interaction-III Class 12 Biology -  Organisms and Population Concepts (L10) | NEET 2023', v_channel_id, 4, (select id from public.chapters where slug = 'organisms-and-populations' and subject_id = 4), 2, 3818, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -247,7 +247,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('29m1c85Rsc4', 'Population Interaction-IV Class 12 Biology - Organisms and Population Concepts (L11)', 'Population Interaction-IV Class 12 Biology -  Organisms and Population Concepts (L11) | NEET 2023', v_channel_id, 4, (select id from public.chapters where slug = 'organisms-and-populations'), 2, 3224, 'allowed', now())
+  values ('29m1c85Rsc4', 'Population Interaction-IV Class 12 Biology - Organisms and Population Concepts (L11)', 'Population Interaction-IV Class 12 Biology -  Organisms and Population Concepts (L11) | NEET 2023', v_channel_id, 4, (select id from public.chapters where slug = 'organisms-and-populations' and subject_id = 4), 2, 3224, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -257,7 +257,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('KLb8p1_oaZg', 'Organisms and Population Class 12 Previous Year Questions & Solutions (L12)', 'Organisms and Population Class 12 Previous Year Questions & Solutions (L12) | NEET 2023 Biology Exam', v_channel_id, 4, (select id from public.chapters where slug = 'organisms-and-populations'), 2, 3441, 'allowed', now())
+  values ('KLb8p1_oaZg', 'Organisms and Population Class 12 Previous Year Questions & Solutions (L12)', 'Organisms and Population Class 12 Previous Year Questions & Solutions (L12) | NEET 2023 Biology Exam', v_channel_id, 4, (select id from public.chapters where slug = 'organisms-and-populations' and subject_id = 4), 2, 3441, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -288,7 +288,7 @@ begin
   select v_playlist_id, cl.id from public.class_levels cl where cl.slug = 'class-11';
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('RXl8gWAM_MY', 'Structure and Function of Ecosystem Class 12 Biology Concepts (L1)', 'Structure and Function of Ecosystem Class 12 Biology Concepts (L1) | NEET 2023 Biology Exam', v_channel_id, 4, (select id from public.chapters where slug = 'ecosystem'), 2, 3214, 'allowed', now())
+  values ('RXl8gWAM_MY', 'Structure and Function of Ecosystem Class 12 Biology Concepts (L1)', 'Structure and Function of Ecosystem Class 12 Biology Concepts (L1) | NEET 2023 Biology Exam', v_channel_id, 4, (select id from public.chapters where slug = 'ecosystem' and subject_id = 4), 2, 3214, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -298,7 +298,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('25ApCOLCKcM', 'Ecosystem Structure and Function Class 12 Biology Concept Explained (L2)', 'Ecosystem Structure and Function Class 12 Biology Concept Explained (L2) | NEET 2023 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'ecosystem'), 2, 2682, 'allowed', now())
+  values ('25ApCOLCKcM', 'Ecosystem Structure and Function Class 12 Biology Concept Explained (L2)', 'Ecosystem Structure and Function Class 12 Biology Concept Explained (L2) | NEET 2023 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'ecosystem' and subject_id = 4), 2, 2682, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -308,7 +308,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('1K8hR09JEIY', 'Productivity and Decomposition - Ecosytem Class 12 Botany Concept Explained (L3)', 'Productivity and Decomposition - Ecosytem Class 12 Botany Concept Explained (L3) | NEET 2023 Biology', v_channel_id, 4, (select id from public.chapters where slug = 'ecosystem'), 2, 3426, 'allowed', now())
+  values ('1K8hR09JEIY', 'Productivity and Decomposition - Ecosytem Class 12 Botany Concept Explained (L3)', 'Productivity and Decomposition - Ecosytem Class 12 Botany Concept Explained (L3) | NEET 2023 Biology', v_channel_id, 4, (select id from public.chapters where slug = 'ecosystem' and subject_id = 4), 2, 3426, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -318,7 +318,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('-SSXWvxoAJw', 'Energy Flow and Trophic Levels -Ecosystem Class 12 Botany Concept Explained', 'Energy Flow and Trophic Levels -Ecosystem Class 12 Botany Concept Explained | NEET 2023 Biology Exam', v_channel_id, 4, (select id from public.chapters where slug = 'ecosystem'), 2, 3441, 'allowed', now())
+  values ('-SSXWvxoAJw', 'Energy Flow and Trophic Levels -Ecosystem Class 12 Botany Concept Explained', 'Energy Flow and Trophic Levels -Ecosystem Class 12 Botany Concept Explained | NEET 2023 Biology Exam', v_channel_id, 4, (select id from public.chapters where slug = 'ecosystem' and subject_id = 4), 2, 3441, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -328,7 +328,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('TWj0hHbgTwE', 'Limitations of Ecological Pyramid - Ecosystem Class 12 Botany Concept Explained', 'Limitations of Ecological Pyramid - Ecosystem Class 12 Botany Concept Explained | NEET 2023 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'ecosystem'), 2, 2561, 'allowed', now())
+  values ('TWj0hHbgTwE', 'Limitations of Ecological Pyramid - Ecosystem Class 12 Botany Concept Explained', 'Limitations of Ecological Pyramid - Ecosystem Class 12 Botany Concept Explained | NEET 2023 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'ecosystem' and subject_id = 4), 2, 2561, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -338,7 +338,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('EqqKxln8OzE', 'Define Ecological Succession - Ecosystem Class 12 Botany Concept Explained', 'Define Ecological Succession -  Ecosystem Class 12 Botany Concept Explained | NEET 2023 Botany Exam', v_channel_id, 4, (select id from public.chapters where slug = 'ecosystem'), 2, 2915, 'allowed', now())
+  values ('EqqKxln8OzE', 'Define Ecological Succession - Ecosystem Class 12 Botany Concept Explained', 'Define Ecological Succession -  Ecosystem Class 12 Botany Concept Explained | NEET 2023 Botany Exam', v_channel_id, 4, (select id from public.chapters where slug = 'ecosystem' and subject_id = 4), 2, 2915, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -348,7 +348,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('29Kr710jRNY', 'Nutrient Cycle - Ecosystem Class 12 Botany Concept Explained', 'Nutrient Cycle - Ecosystem Class 12 Botany Concept Explained | NEET 2023 Botany Exam', v_channel_id, 4, (select id from public.chapters where slug = 'ecosystem'), 2, 2986, 'allowed', now())
+  values ('29Kr710jRNY', 'Nutrient Cycle - Ecosystem Class 12 Botany Concept Explained', 'Nutrient Cycle - Ecosystem Class 12 Botany Concept Explained | NEET 2023 Botany Exam', v_channel_id, 4, (select id from public.chapters where slug = 'ecosystem' and subject_id = 4), 2, 2986, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -358,7 +358,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('nO1Fmwuq7fo', 'Ecosystem Class 12 Biology Previous Year Questions & Solutions', 'Ecosystem Class 12 Biology Previous Year Questions & Solutions | NEET 2023 Botany Exam', v_channel_id, 4, (select id from public.chapters where slug = 'ecosystem'), 2, 3721, 'allowed', now())
+  values ('nO1Fmwuq7fo', 'Ecosystem Class 12 Biology Previous Year Questions & Solutions', 'Ecosystem Class 12 Biology Previous Year Questions & Solutions | NEET 2023 Botany Exam', v_channel_id, 4, (select id from public.chapters where slug = 'ecosystem' and subject_id = 4), 2, 3721, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -389,7 +389,7 @@ begin
   select v_playlist_id, cl.id from public.class_levels cl where cl.slug = 'class-11';
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('wvTIiN42azI', 'Introduction to Biodiversity and Conservation Class 12 Biology Chapter Explained', 'Introduction to Biodiversity and Conservation Class 12 Biology Chapter Explained | NEET 2023 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'biodiversity-and-conservation'), 2, 3184, 'allowed', now())
+  values ('wvTIiN42azI', 'Introduction to Biodiversity and Conservation Class 12 Biology Chapter Explained', 'Introduction to Biodiversity and Conservation Class 12 Biology Chapter Explained | NEET 2023 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'biodiversity-and-conservation' and subject_id = 4), 2, 3184, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -399,7 +399,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('iHLj3WoIE7Y', 'Patterns of Biodiversity- Biodiversity & Conservation Class 12 Biology Concept Explained', 'Patterns of Biodiversity- Biodiversity & Conservation Class 12 Biology Concept Explained | NEET 2023', v_channel_id, 4, (select id from public.chapters where slug = 'biodiversity-and-conservation'), 2, 2812, 'allowed', now())
+  values ('iHLj3WoIE7Y', 'Patterns of Biodiversity- Biodiversity & Conservation Class 12 Biology Concept Explained', 'Patterns of Biodiversity- Biodiversity & Conservation Class 12 Biology Concept Explained | NEET 2023', v_channel_id, 4, (select id from public.chapters where slug = 'biodiversity-and-conservation' and subject_id = 4), 2, 2812, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -409,7 +409,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('cl5aLxiBhpE', 'Loss of Biodiversity - Biodiversity and Conservation Class 12 Biology Concept Explained', 'Loss of Biodiversity - Biodiversity and Conservation Class 12 Biology Concept Explained | NEET 2023', v_channel_id, 4, (select id from public.chapters where slug = 'biodiversity-and-conservation'), 2, 1748, 'allowed', now())
+  values ('cl5aLxiBhpE', 'Loss of Biodiversity - Biodiversity and Conservation Class 12 Biology Concept Explained', 'Loss of Biodiversity - Biodiversity and Conservation Class 12 Biology Concept Explained | NEET 2023', v_channel_id, 4, (select id from public.chapters where slug = 'biodiversity-and-conservation' and subject_id = 4), 2, 1748, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -419,7 +419,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('sQrzcP7vyuY', 'How do We Conserve Biodiversity - Biodiversity and Conservation Class 12 Biology Concept', 'How do We Conserve Biodiversity - Biodiversity and Conservation Class 12 Biology Concept | NEET 2023', v_channel_id, 4, (select id from public.chapters where slug = 'biodiversity-and-conservation'), 2, 3822, 'allowed', now())
+  values ('sQrzcP7vyuY', 'How do We Conserve Biodiversity - Biodiversity and Conservation Class 12 Biology Concept', 'How do We Conserve Biodiversity - Biodiversity and Conservation Class 12 Biology Concept | NEET 2023', v_channel_id, 4, (select id from public.chapters where slug = 'biodiversity-and-conservation' and subject_id = 4), 2, 3822, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -429,7 +429,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('Ci6rcX3DZVI', 'Most Important Previous Year Questions from Biodiversity & Conservation Class 12 Biology', 'Most Important Previous Year Questions from Biodiversity & Conservation Class 12 Biology | NEET 2023', v_channel_id, 4, (select id from public.chapters where slug = 'biodiversity-and-conservation'), 2, 2996, 'allowed', now())
+  values ('Ci6rcX3DZVI', 'Most Important Previous Year Questions from Biodiversity & Conservation Class 12 Biology', 'Most Important Previous Year Questions from Biodiversity & Conservation Class 12 Biology | NEET 2023', v_channel_id, 4, (select id from public.chapters where slug = 'biodiversity-and-conservation' and subject_id = 4), 2, 2996, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -460,7 +460,7 @@ begin
   select v_playlist_id, cl.id from public.class_levels cl where cl.slug = 'class-11';
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('TfvfzSYjB78', 'Microbes In Human Welfare Class 12 Biology - Microbes in Household Products', 'Microbes In Human Welfare Class 12 Biology - Microbes in Household Products | NEET | Pankhuri Ma''am', v_channel_id, 4, (select id from public.chapters where slug = 'microbes-in-human-welfare'), 2, 3656, 'allowed', now())
+  values ('TfvfzSYjB78', 'Microbes In Human Welfare Class 12 Biology - Microbes in Household Products', 'Microbes In Human Welfare Class 12 Biology - Microbes in Household Products | NEET | Pankhuri Ma''am', v_channel_id, 4, (select id from public.chapters where slug = 'microbes-in-human-welfare' and subject_id = 4), 2, 3656, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -470,7 +470,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('UZwlTW7ynQk', 'Microbes in Human Welfare Class 12 Biology - Microbes in Industrial Products', 'Microbes in Human Welfare Class 12 Biology - Microbes in Industrial Products | NEET | Pankhuri Ma''am', v_channel_id, 4, (select id from public.chapters where slug = 'microbes-in-human-welfare'), 2, 2927, 'allowed', now())
+  values ('UZwlTW7ynQk', 'Microbes in Human Welfare Class 12 Biology - Microbes in Industrial Products', 'Microbes in Human Welfare Class 12 Biology - Microbes in Industrial Products | NEET | Pankhuri Ma''am', v_channel_id, 4, (select id from public.chapters where slug = 'microbes-in-human-welfare' and subject_id = 4), 2, 2927, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -501,7 +501,7 @@ begin
   select v_playlist_id, cl.id from public.class_levels cl where cl.slug = 'class-11';
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('MQ-qJ-HiWi0', 'Photosynthesis in Higher Plants Class 11 Biology One Shot', 'Photosynthesis in Higher Plants Class 11 Biology One Shot | NEET 2023 Preparation | Pankhuri Ma''am', v_channel_id, 4, (select id from public.chapters where slug = 'photosynthesis-in-higher-plants'), 2, 6458, 'allowed', now())
+  values ('MQ-qJ-HiWi0', 'Photosynthesis in Higher Plants Class 11 Biology One Shot', 'Photosynthesis in Higher Plants Class 11 Biology One Shot | NEET 2023 Preparation | Pankhuri Ma''am', v_channel_id, 4, (select id from public.chapters where slug = 'photosynthesis-in-higher-plants' and subject_id = 4), 2, 6458, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -511,7 +511,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('7TCO8slG_hA', 'Respiration in Higher Plants Class 11 Biology - Glycolysis and TCA Cycle Explained', 'Respiration in Higher Plants Class 11 Biology - Glycolysis and TCA Cycle Explained | Pankhuri Ma''am', v_channel_id, 4, (select id from public.chapters where slug = 'respiration-in-plants'), 2, 3573, 'allowed', now())
+  values ('7TCO8slG_hA', 'Respiration in Higher Plants Class 11 Biology - Glycolysis and TCA Cycle Explained', 'Respiration in Higher Plants Class 11 Biology - Glycolysis and TCA Cycle Explained | Pankhuri Ma''am', v_channel_id, 4, (select id from public.chapters where slug = 'respiration-in-plants' and subject_id = 4), 2, 3573, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -521,7 +521,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('pBcFolWgcOU', 'Respiration in Higher Plants Class 11 Bio - Kreb Cycle & Electron Transport Chain', 'Respiration in Higher Plants Class 11 Bio - Kreb Cycle & Electron Transport Chain | Pankhuri Ma''am', v_channel_id, 4, (select id from public.chapters where slug = 'respiration-in-plants'), 2, 6346, 'allowed', now())
+  values ('pBcFolWgcOU', 'Respiration in Higher Plants Class 11 Bio - Kreb Cycle & Electron Transport Chain', 'Respiration in Higher Plants Class 11 Bio - Kreb Cycle & Electron Transport Chain | Pankhuri Ma''am', v_channel_id, 4, (select id from public.chapters where slug = 'respiration-in-plants' and subject_id = 4), 2, 6346, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -552,7 +552,7 @@ begin
   select v_playlist_id, cl.id from public.class_levels cl where cl.slug = 'class-11';
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('HMwDZM6cuko', 'Chemical Coordination and Integration Class 11 Biology One Shot', 'Chemical Coordination and Integration Class 11 Biology One Shot | NEET 2023 | Dr. Sachin Kapur', v_channel_id, 4, (select id from public.chapters where slug = 'chemical-coordination-and-integration'), 2, 7392, 'allowed', now())
+  values ('HMwDZM6cuko', 'Chemical Coordination and Integration Class 11 Biology One Shot', 'Chemical Coordination and Integration Class 11 Biology One Shot | NEET 2023 | Dr. Sachin Kapur', v_channel_id, 4, (select id from public.chapters where slug = 'chemical-coordination-and-integration' and subject_id = 4), 2, 7392, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -562,7 +562,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('8ED_Y2HpijU', 'Neural Control and Coordination Class 11 Biology (Chapter 21) One Shot', 'Neural Control and Coordination Class 11 Biology (Chapter 21) One Shot | NEET 2023 Exam | Sachin Sir', v_channel_id, 4, (select id from public.chapters where slug = 'neural-control-and-coordination'), 2, 7209, 'allowed', now())
+  values ('8ED_Y2HpijU', 'Neural Control and Coordination Class 11 Biology (Chapter 21) One Shot', 'Neural Control and Coordination Class 11 Biology (Chapter 21) One Shot | NEET 2023 Exam | Sachin Sir', v_channel_id, 4, (select id from public.chapters where slug = 'neural-control-and-coordination' and subject_id = 4), 2, 7209, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -593,7 +593,7 @@ begin
   select v_playlist_id, cl.id from public.class_levels cl where cl.slug = 'class-11';
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('bG3wwwJB_zA', 'Human Health and Disease Class 12 Biology One Shot (Chapter 8)', 'Human Health and Disease Class 12 Biology One Shot (Chapter 8) | NEET 2023 | Dr. Sachin Kapur', v_channel_id, 4, (select id from public.chapters where slug = 'human-health-and-disease'), 2, 7242, 'allowed', now())
+  values ('bG3wwwJB_zA', 'Human Health and Disease Class 12 Biology One Shot (Chapter 8)', 'Human Health and Disease Class 12 Biology One Shot (Chapter 8) | NEET 2023 | Dr. Sachin Kapur', v_channel_id, 4, (select id from public.chapters where slug = 'human-health-and-disease' and subject_id = 4), 2, 7242, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -603,7 +603,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('yUOcUtQaxZU', 'Human Health and Disease Class 12 Biology One Shot (Part 2)', 'Human Health and Disease Class 12 Biology One Shot (Part 2) | NEET 2023 Exam | Dr. Sachin Kapur', v_channel_id, 4, (select id from public.chapters where slug = 'human-health-and-disease'), 2, 6784, 'allowed', now())
+  values ('yUOcUtQaxZU', 'Human Health and Disease Class 12 Biology One Shot (Part 2)', 'Human Health and Disease Class 12 Biology One Shot (Part 2) | NEET 2023 Exam | Dr. Sachin Kapur', v_channel_id, 4, (select id from public.chapters where slug = 'human-health-and-disease' and subject_id = 4), 2, 6784, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -613,7 +613,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('JBPHH7qX7iY', 'Human Health and Disease Class 12 Biology One Shot (Part 3)', 'Human Health and Disease Class 12 Biology One Shot (Part 3) | NEET 2023 Exam | Dr. Sachin Kapur', v_channel_id, 4, (select id from public.chapters where slug = 'human-health-and-disease'), 2, 6134, 'allowed', now())
+  values ('JBPHH7qX7iY', 'Human Health and Disease Class 12 Biology One Shot (Part 3)', 'Human Health and Disease Class 12 Biology One Shot (Part 3) | NEET 2023 Exam | Dr. Sachin Kapur', v_channel_id, 4, (select id from public.chapters where slug = 'human-health-and-disease' and subject_id = 4), 2, 6134, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -623,7 +623,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('qSeuqV_lDwY', 'Biotechnology - Principles and Processes Class 12 Biology One Shot & Mind Maps (Ep 32)', 'Biotechnology - Principles and Processes Class 12 Biology One Shot & Mind Maps (Ep 32) | NEET 2023', v_channel_id, 4, (select id from public.chapters where slug = 'biotechnology-principles-and-processes'), 2, 3789, 'allowed', now())
+  values ('qSeuqV_lDwY', 'Biotechnology - Principles and Processes Class 12 Biology One Shot & Mind Maps (Ep 32)', 'Biotechnology - Principles and Processes Class 12 Biology One Shot & Mind Maps (Ep 32) | NEET 2023', v_channel_id, 4, (select id from public.chapters where slug = 'biotechnology-principles-and-processes' and subject_id = 4), 2, 3789, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -654,7 +654,7 @@ begin
   select v_playlist_id, cl.id from public.class_levels cl where cl.slug = 'class-11';
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('ckXRn8Ja3-o', 'Plant Growth & Development Class 11 Biology', 'Plant Growth & Development Class 11 Biology | 100 Days Crash Course | NEET 2023 | Pankhuri Ma''am', v_channel_id, 4, (select id from public.chapters where slug = 'plant-growth-and-development'), 2, 4789, 'allowed', now())
+  values ('ckXRn8Ja3-o', 'Plant Growth & Development Class 11 Biology', 'Plant Growth & Development Class 11 Biology | 100 Days Crash Course | NEET 2023 | Pankhuri Ma''am', v_channel_id, 4, (select id from public.chapters where slug = 'plant-growth-and-development' and subject_id = 4), 2, 4789, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -664,7 +664,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('0ZQ9mROP_IQ', 'Plant Growth & Development L2 Class 11 Biology', 'Plant Growth & Development L2 Class 11 Biology | 100 Days Crash Course | NEET 2023 | Pankhuri Ma''am', v_channel_id, 4, (select id from public.chapters where slug = 'plant-growth-and-development'), 2, 5088, 'allowed', now())
+  values ('0ZQ9mROP_IQ', 'Plant Growth & Development L2 Class 11 Biology', 'Plant Growth & Development L2 Class 11 Biology | 100 Days Crash Course | NEET 2023 | Pankhuri Ma''am', v_channel_id, 4, (select id from public.chapters where slug = 'plant-growth-and-development' and subject_id = 4), 2, 5088, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -674,7 +674,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('yVwIAoRkhEo', 'Neural Control and Coordination: L1 Class 11 Biology', 'Neural Control and Coordination: L1 Class 11 Biology| 100 Days Crash Course | NEET 2023 | Sachin Sir', v_channel_id, 4, (select id from public.chapters where slug = 'neural-control-and-coordination'), 2, 4177, 'allowed', now())
+  values ('yVwIAoRkhEo', 'Neural Control and Coordination: L1 Class 11 Biology', 'Neural Control and Coordination: L1 Class 11 Biology| 100 Days Crash Course | NEET 2023 | Sachin Sir', v_channel_id, 4, (select id from public.chapters where slug = 'neural-control-and-coordination' and subject_id = 4), 2, 4177, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -684,7 +684,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('7zpmWk0CzLI', 'Neural Control and Coordination: L2- Class 11 Biology', 'Neural Control and Coordination: L2- Class 11 Biology | 100 Days Crash Course| NEET 2023 |Sachin Sir', v_channel_id, 4, (select id from public.chapters where slug = 'neural-control-and-coordination'), 2, 3813, 'allowed', now())
+  values ('7zpmWk0CzLI', 'Neural Control and Coordination: L2- Class 11 Biology', 'Neural Control and Coordination: L2- Class 11 Biology | 100 Days Crash Course| NEET 2023 |Sachin Sir', v_channel_id, 4, (select id from public.chapters where slug = 'neural-control-and-coordination' and subject_id = 4), 2, 3813, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -694,7 +694,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('ND_-8RNoCnc', 'Electron Transport Chain - Respiration in Plants', 'Electron Transport Chain | NEET 2023 | Respiration in Plants - Class 11 Biology | Pankhuri Ma''am', v_channel_id, 4, (select id from public.chapters where slug = 'respiration-in-plants'), 2, 4298, 'allowed', now())
+  values ('ND_-8RNoCnc', 'Electron Transport Chain - Respiration in Plants', 'Electron Transport Chain | NEET 2023 | Respiration in Plants - Class 11 Biology | Pankhuri Ma''am', v_channel_id, 4, (select id from public.chapters where slug = 'respiration-in-plants' and subject_id = 4), 2, 4298, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -725,7 +725,7 @@ begin
   select v_playlist_id, cl.id from public.class_levels cl where cl.slug = 'class-11';
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('z0KMxxeG_Vw', 'Photosynthesis in Higher Plants Class 11 - Photosynthetic Pigments & Light Reaction', 'Photosynthesis in Higher Plants Class 11 - Photosynthetic Pigments & Light Reaction | Pankhuri Ma''am', v_channel_id, 4, (select id from public.chapters where slug = 'photosynthesis-in-higher-plants'), 2, 4648, 'allowed', now())
+  values ('z0KMxxeG_Vw', 'Photosynthesis in Higher Plants Class 11 - Photosynthetic Pigments & Light Reaction', 'Photosynthesis in Higher Plants Class 11 - Photosynthetic Pigments & Light Reaction | Pankhuri Ma''am', v_channel_id, 4, (select id from public.chapters where slug = 'photosynthesis-in-higher-plants' and subject_id = 4), 2, 4648, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -735,7 +735,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('0JCtNeNCia4', 'Photosynthesis in Higher Plants Class 11 - Light Reaction and Electron Transport', 'Photosynthesis in Higher Plants Class 11 - Light Reaction and Electron Transport | Pankhuri Ma''am', v_channel_id, 4, (select id from public.chapters where slug = 'photosynthesis-in-higher-plants'), 2, 4056, 'allowed', now())
+  values ('0JCtNeNCia4', 'Photosynthesis in Higher Plants Class 11 - Light Reaction and Electron Transport', 'Photosynthesis in Higher Plants Class 11 - Light Reaction and Electron Transport | Pankhuri Ma''am', v_channel_id, 4, (select id from public.chapters where slug = 'photosynthesis-in-higher-plants' and subject_id = 4), 2, 4056, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -745,7 +745,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('mVd4PSVBuRs', 'Photosynthesis in Higher Plants Class 11 - Dark Reactions Explained', 'Photosynthesis in Higher Plants Class 11 - Dark Reactions Explained | NEET 2023 | Pankhuri Ma''am', v_channel_id, 4, (select id from public.chapters where slug = 'photosynthesis-in-higher-plants'), 2, 4312, 'allowed', now())
+  values ('mVd4PSVBuRs', 'Photosynthesis in Higher Plants Class 11 - Dark Reactions Explained', 'Photosynthesis in Higher Plants Class 11 - Dark Reactions Explained | NEET 2023 | Pankhuri Ma''am', v_channel_id, 4, (select id from public.chapters where slug = 'photosynthesis-in-higher-plants' and subject_id = 4), 2, 4312, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -755,7 +755,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('59ms7RLrNAc', 'Photosynthesis in Higher Plants Class 11 - Chemiosmotic Hypothesis & Dark Reactions', 'Photosynthesis in Higher Plants Class 11 - Chemiosmotic Hypothesis & Dark Reactions | Pankhuri Ma''am', v_channel_id, 4, (select id from public.chapters where slug = 'photosynthesis-in-higher-plants'), 2, 4703, 'allowed', now())
+  values ('59ms7RLrNAc', 'Photosynthesis in Higher Plants Class 11 - Chemiosmotic Hypothesis & Dark Reactions', 'Photosynthesis in Higher Plants Class 11 - Chemiosmotic Hypothesis & Dark Reactions | Pankhuri Ma''am', v_channel_id, 4, (select id from public.chapters where slug = 'photosynthesis-in-higher-plants' and subject_id = 4), 2, 4703, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -765,7 +765,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('yiLRjZ9XBBA', 'Photosynthesis Class 11 - Photorespiration & Factors Affecting of Photosynthesis', 'Photosynthesis Class 11 - Photorespiration & Factors Affecting of Photosynthesis | Pankhuri Ma''am', v_channel_id, 4, (select id from public.chapters where slug = 'photosynthesis-in-higher-plants'), 2, 5030, 'allowed', now())
+  values ('yiLRjZ9XBBA', 'Photosynthesis Class 11 - Photorespiration & Factors Affecting of Photosynthesis', 'Photosynthesis Class 11 - Photorespiration & Factors Affecting of Photosynthesis | Pankhuri Ma''am', v_channel_id, 4, (select id from public.chapters where slug = 'photosynthesis-in-higher-plants' and subject_id = 4), 2, 5030, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -775,7 +775,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('p4QS2qbg4GA', 'Kreb''s Cycle - Respiration in Plants Class 11 Biology', 'Kreb''s Cycle - Respiration in Plants Class 11 Biology | Aakash BYJU''S NEET | Pankhuri Ma''am', v_channel_id, 4, (select id from public.chapters where slug = 'respiration-in-plants'), 2, 3855, 'allowed', now())
+  values ('p4QS2qbg4GA', 'Kreb''s Cycle - Respiration in Plants Class 11 Biology', 'Kreb''s Cycle - Respiration in Plants Class 11 Biology | Aakash BYJU''S NEET | Pankhuri Ma''am', v_channel_id, 4, (select id from public.chapters where slug = 'respiration-in-plants' and subject_id = 4), 2, 3855, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -785,7 +785,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('VGA5gTZtubU', 'Respiration in Plants Class 11 Biology L3 - Anerobic Respiration', 'Respiration in Plants Class 11 Biology L3 - Anerobic Respiration | NEET 2023 | Pankhuri Ma''am', v_channel_id, 4, (select id from public.chapters where slug = 'respiration-in-plants'), 2, 3664, 'allowed', now())
+  values ('VGA5gTZtubU', 'Respiration in Plants Class 11 Biology L3 - Anerobic Respiration', 'Respiration in Plants Class 11 Biology L3 - Anerobic Respiration | NEET 2023 | Pankhuri Ma''am', v_channel_id, 4, (select id from public.chapters where slug = 'respiration-in-plants' and subject_id = 4), 2, 3664, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then

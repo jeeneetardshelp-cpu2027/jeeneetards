@@ -1,0 +1,385 @@
+{
+  "version": 1,
+  "request_id": "f65721db-5287-469e-a816-dc29c751d257",
+  "youtube_playlist_id": "PLQsNiHo64JI-IvP2tSpRwOx518UTl71B0",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "EFvBf862VVU",
+      "chapter": "Kinematics",
+      "lesson_number": 1
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "r4FN5r-2n8g",
+      "chapter": "Kinematics",
+      "lesson_number": 3
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "La0Ccb0Rh3Q",
+      "chapter": "Kinematics",
+      "lesson_number": 4
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "tkjbRdKI2oU",
+      "chapter": "Kinematics",
+      "lesson_number": 5
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "3rLyBqiMPaA",
+      "chapter": "Kinematics",
+      "lesson_number": 2
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "-GQoPqEy57M",
+      "chapter": "Kinematics",
+      "lesson_number": 6
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "FLCMMMBHDZo",
+      "chapter": "Kinematics",
+      "lesson_number": 7
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "2HarPeO0hck",
+      "chapter": "Kinematics",
+      "lesson_number": 8
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "moYTnD7pjhU",
+      "chapter": "Kinematics",
+      "lesson_number": 9
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "Fyfc-WIDpMQ",
+      "chapter": "Kinematics",
+      "lesson_number": 10
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "sZKKPocJKGs",
+      "chapter": "Kinematics",
+      "lesson_number": 11
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "4UzTeqNWKbg",
+      "chapter": "Kinematics",
+      "lesson_number": 12
+    },
+    {
+      "position": 13,
+      "youtube_video_id": "4ZON8rVjUp8",
+      "chapter": "Kinematics",
+      "lesson_number": 13
+    },
+    {
+      "position": 14,
+      "youtube_video_id": "V8v2MeoxM_g",
+      "chapter": "Kinematics",
+      "lesson_number": 14
+    },
+    {
+      "position": 15,
+      "youtube_video_id": "mZQl0PTerNw",
+      "chapter": "Kinematics",
+      "lesson_number": 15
+    },
+    {
+      "position": 16,
+      "youtube_video_id": "NeaPS340T3s",
+      "chapter": "Kinematics",
+      "lesson_number": 16
+    },
+    {
+      "position": 17,
+      "youtube_video_id": "7QPZbb8UkgQ",
+      "chapter": "Kinematics",
+      "lesson_number": 17
+    },
+    {
+      "position": 18,
+      "youtube_video_id": "TwZxStnzd8s",
+      "chapter": "Kinematics",
+      "lesson_number": 18
+    },
+    {
+      "position": 19,
+      "youtube_video_id": "uIvzmNhWOSw",
+      "chapter": "Kinematics",
+      "lesson_number": 19
+    },
+    {
+      "position": 20,
+      "youtube_video_id": "15shn1Dc3e4",
+      "chapter": "Kinematics",
+      "lesson_number": 20
+    },
+    {
+      "position": 21,
+      "youtube_video_id": "lBbsuL0ogSg",
+      "chapter": "Kinematics",
+      "lesson_number": 21
+    },
+    {
+      "position": 22,
+      "youtube_video_id": "rZWNJ1Z3l-g",
+      "chapter": "Kinematics",
+      "lesson_number": 22
+    },
+    {
+      "position": 23,
+      "youtube_video_id": "lxdJyOUaSa0",
+      "chapter": "Kinematics",
+      "lesson_number": 23
+    },
+    {
+      "position": 24,
+      "youtube_video_id": "RySHCGKYT_8",
+      "chapter": "Kinematics",
+      "lesson_number": 24
+    },
+    {
+      "position": 25,
+      "youtube_video_id": "jDRly3VUY00",
+      "chapter": "Kinematics",
+      "lesson_number": 25
+    },
+    {
+      "position": 26,
+      "youtube_video_id": "YACz6TX8_Vs",
+      "chapter": "Kinematics",
+      "lesson_number": 26
+    }
+  ],
+  "exclusions": [
+    {
+      "position": 27,
+      "youtube_video_id": "2hkXa9BXtcY",
+      "reason": "Already present in the live catalogue; excluded to preserve zero reuse."
+    },
+    {
+      "position": 28,
+      "youtube_video_id": "KhtZF3P9wIo",
+      "reason": "Already present in the live catalogue; excluded to preserve zero reuse."
+    },
+    {
+      "position": 29,
+      "youtube_video_id": "QoNW4NVDXCM",
+      "reason": "Already present in the live catalogue; excluded to preserve zero reuse."
+    },
+    {
+      "position": 30,
+      "youtube_video_id": "kLex_R5HOM4",
+      "reason": "Already present in the live catalogue; excluded to preserve zero reuse."
+    },
+    {
+      "position": 31,
+      "youtube_video_id": "JctkPBWBHJc",
+      "reason": "Already present in the live catalogue; excluded to preserve zero reuse."
+    },
+    {
+      "position": 32,
+      "youtube_video_id": "Z32duMMJ-Js",
+      "reason": "Already present in the live catalogue; excluded to preserve zero reuse."
+    },
+    {
+      "position": 33,
+      "youtube_video_id": "XyUtlmSyVSM",
+      "reason": "Already present in the live catalogue; excluded to preserve zero reuse."
+    },
+    {
+      "position": 34,
+      "youtube_video_id": "9G7RxbYp1Vw",
+      "reason": "Already present in the live catalogue; excluded to preserve zero reuse."
+    },
+    {
+      "position": 35,
+      "youtube_video_id": "tFWiewSua-s",
+      "reason": "Already present in the live catalogue; excluded to preserve zero reuse."
+    },
+    {
+      "position": 36,
+      "youtube_video_id": "4bJLNVLNlD8",
+      "reason": "Already present in the live catalogue; excluded to preserve zero reuse."
+    },
+    {
+      "position": 37,
+      "youtube_video_id": "8YN3DHTkYX4",
+      "reason": "Already present in the live catalogue; excluded to preserve zero reuse."
+    },
+    {
+      "position": 38,
+      "youtube_video_id": "jhjQYRfZGEY",
+      "reason": "Already present in the live catalogue; excluded to preserve zero reuse."
+    },
+    {
+      "position": 39,
+      "youtube_video_id": "cr45xBA9MrA",
+      "reason": "Already present in the live catalogue; excluded to preserve zero reuse."
+    },
+    {
+      "position": 40,
+      "youtube_video_id": "NYY--H0pl2s",
+      "reason": "Already present in the live catalogue; excluded to preserve zero reuse."
+    },
+    {
+      "position": 41,
+      "youtube_video_id": "c58PMWMZZvc",
+      "reason": "Already present in the live catalogue; excluded to preserve zero reuse."
+    },
+    {
+      "position": 42,
+      "youtube_video_id": "abOU_4QWDFU",
+      "reason": "Already present in the live catalogue; excluded to preserve zero reuse."
+    },
+    {
+      "position": 43,
+      "youtube_video_id": "kA1FF4KIsiU",
+      "reason": "Already present in the live catalogue; excluded to preserve zero reuse."
+    },
+    {
+      "position": 44,
+      "youtube_video_id": "wGW3tFyL9Tg",
+      "reason": "Already present in the live catalogue; excluded to preserve zero reuse."
+    },
+    {
+      "position": 45,
+      "youtube_video_id": "QC7GRcId_HM",
+      "reason": "Already present in the live catalogue; excluded to preserve zero reuse."
+    },
+    {
+      "position": 46,
+      "youtube_video_id": "RkdJxS9habE",
+      "reason": "Already present in the live catalogue; excluded to preserve zero reuse."
+    },
+    {
+      "position": 47,
+      "youtube_video_id": "bQ1mUY86Hak",
+      "reason": "Already present in the live catalogue; excluded to preserve zero reuse."
+    },
+    {
+      "position": 48,
+      "youtube_video_id": "kjjJSLdTGAg",
+      "reason": "Already present in the live catalogue; excluded to preserve zero reuse."
+    },
+    {
+      "position": 49,
+      "youtube_video_id": "yYK-RE8Fw8A",
+      "reason": "Already present in the live catalogue; excluded to preserve zero reuse."
+    },
+    {
+      "position": 50,
+      "youtube_video_id": "aYDD7teQ9dE",
+      "reason": "Already present in the live catalogue; excluded to preserve zero reuse."
+    },
+    {
+      "position": 51,
+      "youtube_video_id": "HaWZgpVnGWc",
+      "reason": "Already present in the live catalogue; excluded to preserve zero reuse."
+    },
+    {
+      "position": 52,
+      "youtube_video_id": "HRQmvQ4IVx8",
+      "reason": "Already present in the live catalogue; excluded to preserve zero reuse."
+    },
+    {
+      "position": 53,
+      "youtube_video_id": "kcUMErkgyIo",
+      "reason": "Already present in the live catalogue; excluded to preserve zero reuse."
+    },
+    {
+      "position": 54,
+      "youtube_video_id": "qTs05vhcQmI",
+      "reason": "Already present in the live catalogue; excluded to preserve zero reuse."
+    },
+    {
+      "position": 55,
+      "youtube_video_id": "zcmw-sd3AuA",
+      "reason": "Duplicate upload for Irodov Problem 1.55; the same problem is already covered in the catalogue."
+    },
+    {
+      "position": 56,
+      "youtube_video_id": "O2n8wpeR_lU",
+      "reason": "Already present in the live catalogue; excluded to preserve zero reuse."
+    },
+    {
+      "position": 57,
+      "youtube_video_id": "IGDvBl1od6s",
+      "reason": "Already present in the live catalogue; excluded to preserve zero reuse."
+    },
+    {
+      "position": 58,
+      "youtube_video_id": "d7Yr1-gTquw",
+      "reason": "Already present in the live catalogue; excluded to preserve zero reuse."
+    },
+    {
+      "position": 59,
+      "youtube_video_id": "Pn2vYkjNRAA",
+      "reason": "Already present in the live catalogue; excluded to preserve zero reuse."
+    },
+    {
+      "position": 60,
+      "youtube_video_id": "KPkgZh6PU8Q",
+      "reason": "Already present in the live catalogue; excluded to preserve zero reuse."
+    },
+    {
+      "position": 61,
+      "youtube_video_id": "77g8R8S1ej8",
+      "reason": "Already present in the live catalogue; excluded to preserve zero reuse."
+    },
+    {
+      "position": 62,
+      "youtube_video_id": "unxPQhNta50",
+      "reason": "Already present in the live catalogue; excluded to preserve zero reuse."
+    },
+    {
+      "position": 63,
+      "youtube_video_id": "M47Z3YWZkFk",
+      "reason": "Already present in the live catalogue; excluded to preserve zero reuse."
+    },
+    {
+      "position": 64,
+      "youtube_video_id": "Zy3kHGXBgHI",
+      "reason": "Already present in the live catalogue; excluded to preserve zero reuse."
+    },
+    {
+      "position": 65,
+      "youtube_video_id": "7ldNS0Z_JRc",
+      "reason": "Already present in the live catalogue; excluded to preserve zero reuse."
+    },
+    {
+      "position": 66,
+      "youtube_video_id": "p0fT_4nHkq8",
+      "reason": "Already present in the live catalogue; excluded to preserve zero reuse."
+    },
+    {
+      "position": 68,
+      "youtube_video_id": "8kkqF7lTHZU",
+      "reason": "Already present in the live catalogue; excluded to preserve zero reuse."
+    },
+    {
+      "position": 69,
+      "youtube_video_id": "DOY8WWj9MDU",
+      "reason": "Already present in the live catalogue; excluded to preserve zero reuse."
+    },
+    {
+      "position": 70,
+      "youtube_video_id": "p6b1tJq6V18",
+      "reason": "Already present in the live catalogue; excluded to preserve zero reuse."
+    },
+    {
+      "position": 71,
+      "youtube_video_id": "B42N9wz5rRM",
+      "reason": "Already present in the live catalogue; excluded to preserve zero reuse."
+    }
+  ]
+}

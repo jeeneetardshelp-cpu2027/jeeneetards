@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "request_id": "c2ad3212-1d0c-4af3-9a4f-2ff44bd28264",
+  "youtube_playlist_id": "PLO1SoY_zaltU",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "5zTL_g5RmB0",
+      "chapter": "Applications of Derivatives",
+      "lesson_number": 1
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "6u7ATY1pTL4",
+      "chapter": "Trigonometry",
+      "lesson_number": 2
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "LMRb53fU0H8",
+      "chapter": "Sequences and Series",
+      "lesson_number": 3
+    }
+  ],
+  "exclusions": [
+    { "position": 2, "youtube_video_id": "h2Xm0S2WQOU", "reason": "Chemistry lecture handled by the reviewed Chemistry split." },
+    { "position": 3, "youtube_video_id": "Hmbch7zot8c", "reason": "Physics lecture handled by the reviewed Physics split." },
+    { "position": 4, "youtube_video_id": "Lf4PQl4ffr8", "reason": "Physics lecture handled by the reviewed Physics split." },
+    { "position": 6, "youtube_video_id": "Zj68NfCS-MM", "reason": "Chemistry lecture handled by the reviewed Chemistry split." },
+    { "position": 7, "youtube_video_id": "YPnPX59h89E", "reason": "Physics lecture handled by the reviewed Physics split." },
+    { "position": 9, "youtube_video_id": "PaS0OpRkR6g", "reason": "Chemistry lecture handled by the reviewed Chemistry split." },
+    { "position": 10, "youtube_video_id": "zIJdg0KnHx8", "reason": "Chemistry lecture handled by the reviewed Chemistry split." },
+    { "position": 11, "youtube_video_id": "9PRMeoPIMXI", "reason": "Chemistry lecture handled by the reviewed Chemistry split." },
+    { "position": 12, "youtube_video_id": "XDJoI4apZw0", "reason": "Physics lecture handled by the reviewed Physics split." }
+  ]
+}

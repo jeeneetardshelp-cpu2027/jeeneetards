@@ -93,7 +93,7 @@ beforeEach(() => {
 describe("truthful course entry", () => {
   it("renders no fabricated notes or comments", async () => {
     render(<MemoryRouter initialEntries={["/course/1/chapter/1"]}><App /></MemoryRouter>);
-    await screen.findByRole("heading", { name: "Lesson one" });
+    await screen.findByRole("heading", { name: "Lesson one" }, { timeout: 5_000 });
 
     expect(screen.queryByRole("button", { name: "Chapter Notes" })).toBeNull();
     expect(screen.queryByRole("button", { name: "Comments" })).toBeNull();

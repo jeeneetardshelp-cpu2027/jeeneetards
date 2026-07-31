@@ -36,7 +36,7 @@ begin
   select v_playlist_id, cl.id from public.class_levels cl where cl.slug = 'class-11';
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('61mP31_GECI', 'Eukaryotic Cell (Nucleus) Class 11 Biology - Cell The Unit Of Life Concepts (L1)', 'Eukaryotic Cell (Nucleus) Class 11 Biology - Cell The Unit Of Life Concepts (L1) | NEET 2024 Biology', v_channel_id, 4, (select id from public.chapters where slug = 'cell-the-unit-of-life'), 2, 3086, 'allowed', now())
+  values ('61mP31_GECI', 'Eukaryotic Cell (Nucleus) Class 11 Biology - Cell The Unit Of Life Concepts (L1)', 'Eukaryotic Cell (Nucleus) Class 11 Biology - Cell The Unit Of Life Concepts (L1) | NEET 2024 Biology', v_channel_id, 4, (select id from public.chapters where slug = 'cell-the-unit-of-life' and subject_id = 4), 2, 3086, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -46,7 +46,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('6YYqeCoJ70s', 'Endomembrane System Class 11 Biology - Cell The Unit of Life Concepts (L2)', 'Endomembrane System Class 11 Biology - Cell The Unit of Life Concepts (L2) | NEET 2024 Exam Prep', v_channel_id, 4, (select id from public.chapters where slug = 'cell-the-unit-of-life'), 2, 3069, 'allowed', now())
+  values ('6YYqeCoJ70s', 'Endomembrane System Class 11 Biology - Cell The Unit of Life Concepts (L2)', 'Endomembrane System Class 11 Biology - Cell The Unit of Life Concepts (L2) | NEET 2024 Exam Prep', v_channel_id, 4, (select id from public.chapters where slug = 'cell-the-unit-of-life' and subject_id = 4), 2, 3069, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -56,7 +56,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('BgMrH1j2STY', 'Endomembrane System - Cell The Unit of Life Concepts Explained (L3)', 'Endomembrane System -  Cell The Unit of Life Concepts Explained (L3) | NEET 2024 Biology Exam', v_channel_id, 4, (select id from public.chapters where slug = 'cell-the-unit-of-life'), 2, 3323, 'allowed', now())
+  values ('BgMrH1j2STY', 'Endomembrane System - Cell The Unit of Life Concepts Explained (L3)', 'Endomembrane System -  Cell The Unit of Life Concepts Explained (L3) | NEET 2024 Biology Exam', v_channel_id, 4, (select id from public.chapters where slug = 'cell-the-unit-of-life' and subject_id = 4), 2, 3323, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -66,7 +66,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('yxU2SSEbnkM', 'Lysosomes and Vacuoles - Cell The Unit of Life Concepts (L4)', 'Lysosomes and Vacuoles  -  Cell The Unit of Life Concepts (L4) | NEET 2024 Biology Exam', v_channel_id, 4, (select id from public.chapters where slug = 'cell-the-unit-of-life'), 2, 3211, 'allowed', now())
+  values ('yxU2SSEbnkM', 'Lysosomes and Vacuoles - Cell The Unit of Life Concepts (L4)', 'Lysosomes and Vacuoles  -  Cell The Unit of Life Concepts (L4) | NEET 2024 Biology Exam', v_channel_id, 4, (select id from public.chapters where slug = 'cell-the-unit-of-life' and subject_id = 4), 2, 3211, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -76,7 +76,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('lgQlZ9buYyM', 'Ribosomes, Plastids, Microbodies', 'Ribosomes, Plastids, Microbodies | L5 | Class 11 Biology Chapter Explained | NEET 2024 Biology Exam', v_channel_id, 4, (select id from public.chapters where slug = 'cell-the-unit-of-life'), 2, 3807, 'allowed', now())
+  values ('lgQlZ9buYyM', 'Ribosomes, Plastids, Microbodies', 'Ribosomes, Plastids, Microbodies | L5 | Class 11 Biology Chapter Explained | NEET 2024 Biology Exam', v_channel_id, 4, (select id from public.chapters where slug = 'cell-the-unit-of-life' and subject_id = 4), 2, 3807, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -86,7 +86,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('tdoS1Iglj38', 'Nucleus, Nucleolus & Centrioles - Cell The Unit of Life Class 11 Biology Concepts (L6)', 'Nucleus, Nucleolus & Centrioles - Cell The Unit of Life Class 11 Biology Concepts (L6) | NEET 2024', v_channel_id, 4, (select id from public.chapters where slug = 'cell-the-unit-of-life'), 2, 3551, 'allowed', now())
+  values ('tdoS1Iglj38', 'Nucleus, Nucleolus & Centrioles - Cell The Unit of Life Class 11 Biology Concepts (L6)', 'Nucleus, Nucleolus & Centrioles - Cell The Unit of Life Class 11 Biology Concepts (L6) | NEET 2024', v_channel_id, 4, (select id from public.chapters where slug = 'cell-the-unit-of-life' and subject_id = 4), 2, 3551, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -96,7 +96,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('jVy4co3LhWs', 'Differences between Plant and Animal Cells Class 11 Biology Concept Explained (L7)', 'Differences between Plant and Animal Cells Class 11 Biology Concept Explained (L7) | NEET 2024', v_channel_id, 4, (select id from public.chapters where slug = 'cell-the-unit-of-life'), 2, 3170, 'allowed', now())
+  values ('jVy4co3LhWs', 'Differences between Plant and Animal Cells Class 11 Biology Concept Explained (L7)', 'Differences between Plant and Animal Cells Class 11 Biology Concept Explained (L7) | NEET 2024', v_channel_id, 4, (select id from public.chapters where slug = 'cell-the-unit-of-life' and subject_id = 4), 2, 3170, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -106,7 +106,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('D8c3YrMxyQA', 'Cell The Unit of Life Class 11 Biology Previous Year Questions and Answers (L8)', 'Cell The Unit of Life Class 11 Biology Previous Year Questions and Answers (L8) | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'cell-the-unit-of-life'), 2, 2715, 'allowed', now())
+  values ('D8c3YrMxyQA', 'Cell The Unit of Life Class 11 Biology Previous Year Questions and Answers (L8)', 'Cell The Unit of Life Class 11 Biology Previous Year Questions and Answers (L8) | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'cell-the-unit-of-life' and subject_id = 4), 2, 2715, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -137,7 +137,7 @@ begin
   select v_playlist_id, cl.id from public.class_levels cl where cl.slug = 'class-11';
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('qmZ8HGNnq5w', 'Biomolecule Class 11 Biology Concepts Explained (L 1)', 'Biomolecule Class 11 Biology Concepts Explained (L 1) | Class 11 Zoology | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'biomolecules'), 2, 4681, 'allowed', now())
+  values ('qmZ8HGNnq5w', 'Biomolecule Class 11 Biology Concepts Explained (L 1)', 'Biomolecule Class 11 Biology Concepts Explained (L 1) | Class 11 Zoology | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'biomolecules' and subject_id = 4), 2, 4681, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -147,7 +147,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('ZcDIetuGKEk', 'Biomolecule Class 11 Biology Concepts Explained (L 2)', 'Biomolecule Class 11 Biology Concepts Explained (L 2) | Class 11 Zoology | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'biomolecules'), 2, 4469, 'allowed', now())
+  values ('ZcDIetuGKEk', 'Biomolecule Class 11 Biology Concepts Explained (L 2)', 'Biomolecule Class 11 Biology Concepts Explained (L 2) | Class 11 Zoology | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'biomolecules' and subject_id = 4), 2, 4469, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -157,7 +157,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('8VgJ_yKGjyY', 'Lipids Class 11 Biology - Biomolecules Concepts (L3)', 'Lipids Class 11 Biology - Biomolecules Concepts (L3) | NEET 2024 Biology Exam Preparation', v_channel_id, 4, (select id from public.chapters where slug = 'biomolecules'), 2, 3291, 'allowed', now())
+  values ('8VgJ_yKGjyY', 'Lipids Class 11 Biology - Biomolecules Concepts (L3)', 'Lipids Class 11 Biology - Biomolecules Concepts (L3) | NEET 2024 Biology Exam Preparation', v_channel_id, 4, (select id from public.chapters where slug = 'biomolecules' and subject_id = 4), 2, 3291, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -167,7 +167,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('mBKgumcqkBM', 'Nucleic Acids Biomolecule Class 11 Biology Concepts Explained (L4)', 'Nucleic Acids Biomolecule Class 11 Biology Concepts Explained (L4) | NEET 2024 Exam Preparation', v_channel_id, 4, (select id from public.chapters where slug = 'biomolecules'), 2, 4842, 'allowed', now())
+  values ('mBKgumcqkBM', 'Nucleic Acids Biomolecule Class 11 Biology Concepts Explained (L4)', 'Nucleic Acids Biomolecule Class 11 Biology Concepts Explained (L4) | NEET 2024 Exam Preparation', v_channel_id, 4, (select id from public.chapters where slug = 'biomolecules' and subject_id = 4), 2, 4842, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -177,7 +177,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('De_AXFOH7WI', 'Proteins Class 11 Biology - Biomolecules Concepts (L5)', 'Proteins Class 11 Biology - Biomolecules Concepts (L5) | NEET 2024 Biology Exam Preparation', v_channel_id, 4, (select id from public.chapters where slug = 'biomolecules'), 2, 3166, 'allowed', now())
+  values ('De_AXFOH7WI', 'Proteins Class 11 Biology - Biomolecules Concepts (L5)', 'Proteins Class 11 Biology - Biomolecules Concepts (L5) | NEET 2024 Biology Exam Preparation', v_channel_id, 4, (select id from public.chapters where slug = 'biomolecules' and subject_id = 4), 2, 3166, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -187,7 +187,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('970wn4_q-Oo', 'Enzymes Class 11 Biology (Zoology) Concepts - Biomolecules (L6)', 'Enzymes Class 11 Biology (Zoology) Concepts - Biomolecules (L6) | NEET 2024 Biology Preparation', v_channel_id, 4, (select id from public.chapters where slug = 'biomolecules'), 2, 2638, 'allowed', now())
+  values ('970wn4_q-Oo', 'Enzymes Class 11 Biology (Zoology) Concepts - Biomolecules (L6)', 'Enzymes Class 11 Biology (Zoology) Concepts - Biomolecules (L6) | NEET 2024 Biology Preparation', v_channel_id, 4, (select id from public.chapters where slug = 'biomolecules' and subject_id = 4), 2, 2638, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -197,7 +197,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('owzQje-exic', 'Enzymes II Class 11 Biology (Zoology) Concepts - Biomolecules (L7)', 'Enzymes II Class 11 Biology (Zoology) Concepts - Biomolecules (L7) | NEET 2024 Biology Preparation', v_channel_id, 4, (select id from public.chapters where slug = 'biomolecules'), 2, 2544, 'allowed', now())
+  values ('owzQje-exic', 'Enzymes II Class 11 Biology (Zoology) Concepts - Biomolecules (L7)', 'Enzymes II Class 11 Biology (Zoology) Concepts - Biomolecules (L7) | NEET 2024 Biology Preparation', v_channel_id, 4, (select id from public.chapters where slug = 'biomolecules' and subject_id = 4), 2, 2544, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -207,7 +207,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('_4VfjrGe9Jg', 'Biomolecules Class 11 Biology Complete Chapter in Nutshell - Key Takeaway', 'Biomolecules Class 11 Biology Complete Chapter in Nutshell - Key Takeaway | NEET 2024 Preparation', v_channel_id, 4, (select id from public.chapters where slug = 'biomolecules'), 2, 3956, 'allowed', now())
+  values ('_4VfjrGe9Jg', 'Biomolecules Class 11 Biology Complete Chapter in Nutshell - Key Takeaway', 'Biomolecules Class 11 Biology Complete Chapter in Nutshell - Key Takeaway | NEET 2024 Preparation', v_channel_id, 4, (select id from public.chapters where slug = 'biomolecules' and subject_id = 4), 2, 3956, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -238,7 +238,7 @@ begin
   select v_playlist_id, cl.id from public.class_levels cl where cl.slug = 'class-11';
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('1tJpqYfXMPU', 'Interphase and Prophase - Cell Cycle and Cell Division Class 11 Biology (L1)', 'Interphase and Prophase -  Cell Cycle and Cell Division Class 11 Biology (L1) | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'cell-cycle-and-cell-division'), 2, 3526, 'allowed', now())
+  values ('1tJpqYfXMPU', 'Interphase and Prophase - Cell Cycle and Cell Division Class 11 Biology (L1)', 'Interphase and Prophase -  Cell Cycle and Cell Division Class 11 Biology (L1) | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'cell-cycle-and-cell-division' and subject_id = 4), 2, 3526, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -248,7 +248,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('IEZKBC35U2M', 'Metaphase, Anaphase and Telophase - Cell Cycle and Cell Division Class 11 Biology (L2)', 'Metaphase, Anaphase and Telophase - Cell Cycle and Cell Division Class 11 Biology (L2) | NEET 2024', v_channel_id, 4, (select id from public.chapters where slug = 'cell-cycle-and-cell-division'), 2, 2831, 'allowed', now())
+  values ('IEZKBC35U2M', 'Metaphase, Anaphase and Telophase - Cell Cycle and Cell Division Class 11 Biology (L2)', 'Metaphase, Anaphase and Telophase - Cell Cycle and Cell Division Class 11 Biology (L2) | NEET 2024', v_channel_id, 4, (select id from public.chapters where slug = 'cell-cycle-and-cell-division' and subject_id = 4), 2, 2831, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -258,7 +258,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('nCM5dvUdX20', 'Meiosis: Prophase I - Cell Cycle and Cell Division Class 11 Biology (L3)', 'Meiosis: Prophase I - Cell Cycle and Cell Division Class 11 Biology (L3) | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'cell-cycle-and-cell-division'), 2, 2662, 'allowed', now())
+  values ('nCM5dvUdX20', 'Meiosis: Prophase I - Cell Cycle and Cell Division Class 11 Biology (L3)', 'Meiosis: Prophase I - Cell Cycle and Cell Division Class 11 Biology (L3) | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'cell-cycle-and-cell-division' and subject_id = 4), 2, 2662, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -268,7 +268,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('D79X5tfxOKQ', 'Meiosis 2, Metaphase 1, Anaphase 1 - Cell Cycle and Cell Division Class 11 Biology (L4)', 'Meiosis 2, Metaphase 1, Anaphase 1  - Cell Cycle and Cell Division Class 11 Biology (L4) | NEET 2024', v_channel_id, 4, (select id from public.chapters where slug = 'cell-cycle-and-cell-division'), 2, 1895, 'allowed', now())
+  values ('D79X5tfxOKQ', 'Meiosis 2, Metaphase 1, Anaphase 1 - Cell Cycle and Cell Division Class 11 Biology (L4)', 'Meiosis 2, Metaphase 1, Anaphase 1  - Cell Cycle and Cell Division Class 11 Biology (L4) | NEET 2024', v_channel_id, 4, (select id from public.chapters where slug = 'cell-cycle-and-cell-division' and subject_id = 4), 2, 1895, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -278,7 +278,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('l3gxKLfRkTY', 'Cell Cycle Arrest Significance - Cell Cycle and Cell Division Class 11 Biology Concept', 'Cell Cycle Arrest Significance - Cell Cycle and Cell Division Class 11 Biology Concept | NEET 2024', v_channel_id, 4, (select id from public.chapters where slug = 'cell-cycle-and-cell-division'), 2, 1134, 'allowed', now())
+  values ('l3gxKLfRkTY', 'Cell Cycle Arrest Significance - Cell Cycle and Cell Division Class 11 Biology Concept', 'Cell Cycle Arrest Significance - Cell Cycle and Cell Division Class 11 Biology Concept | NEET 2024', v_channel_id, 4, (select id from public.chapters where slug = 'cell-cycle-and-cell-division' and subject_id = 4), 2, 1134, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -288,7 +288,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('TE3KVk3_eLY', 'Cell Cycle and Cell division Class 11 Biology Previous Year Questions & Answers', 'Cell Cycle and Cell division Class 11 Biology Previous Year Questions & Answers | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'cell-cycle-and-cell-division'), 2, 3230, 'allowed', now())
+  values ('TE3KVk3_eLY', 'Cell Cycle and Cell division Class 11 Biology Previous Year Questions & Answers', 'Cell Cycle and Cell division Class 11 Biology Previous Year Questions & Answers | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'cell-cycle-and-cell-division' and subject_id = 4), 2, 3230, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -319,7 +319,7 @@ begin
   select v_playlist_id, cl.id from public.class_levels cl where cl.slug = 'class-11';
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('P-N0XIRSqX4', 'Respiratory System of Animals - Breathing and Exchange of Gases Class 11 Biology Concept', 'Respiratory System of Animals - Breathing and Exchange of Gases Class 11 Biology Concept | NEET 2024', v_channel_id, 4, (select id from public.chapters where slug = 'breathing-and-exchange-of-gases'), 2, 2998, 'allowed', now())
+  values ('P-N0XIRSqX4', 'Respiratory System of Animals - Breathing and Exchange of Gases Class 11 Biology Concept', 'Respiratory System of Animals - Breathing and Exchange of Gases Class 11 Biology Concept | NEET 2024', v_channel_id, 4, (select id from public.chapters where slug = 'breathing-and-exchange-of-gases' and subject_id = 4), 2, 2998, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -329,7 +329,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('FX1xzU9gB-E', 'Human Respiratory System - Breathing and Exchange of Gases Class 11 Biology Concept', 'Human Respiratory System - Breathing and Exchange of Gases Class 11 Biology Concept | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'breathing-and-exchange-of-gases'), 2, 2727, 'allowed', now())
+  values ('FX1xzU9gB-E', 'Human Respiratory System - Breathing and Exchange of Gases Class 11 Biology Concept', 'Human Respiratory System - Breathing and Exchange of Gases Class 11 Biology Concept | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'breathing-and-exchange-of-gases' and subject_id = 4), 2, 2727, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -339,7 +339,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('B6kdUqeAaEk', 'Mechanism of Breathing - Breathing and Exchange of Gases Class 11 Biology Concept', 'Mechanism of Breathing - Breathing and Exchange of Gases Class 11 Biology Concept | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'breathing-and-exchange-of-gases'), 2, 3379, 'allowed', now())
+  values ('B6kdUqeAaEk', 'Mechanism of Breathing - Breathing and Exchange of Gases Class 11 Biology Concept', 'Mechanism of Breathing - Breathing and Exchange of Gases Class 11 Biology Concept | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'breathing-and-exchange-of-gases' and subject_id = 4), 2, 3379, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -349,7 +349,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('KoxldOH8ARg', 'Transportation of Gases : Oxygen - Breathing & Exchange of Gases Concept Explained', 'Transportation of Gases : Oxygen - Breathing & Exchange of Gases Class 11 Biology Concept Explained', v_channel_id, 4, (select id from public.chapters where slug = 'breathing-and-exchange-of-gases'), 2, 3188, 'allowed', now())
+  values ('KoxldOH8ARg', 'Transportation of Gases : Oxygen - Breathing & Exchange of Gases Concept Explained', 'Transportation of Gases : Oxygen - Breathing & Exchange of Gases Class 11 Biology Concept Explained', v_channel_id, 4, (select id from public.chapters where slug = 'breathing-and-exchange-of-gases' and subject_id = 4), 2, 3188, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -359,7 +359,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('LTlmyRqWDuQ', 'Transportation of Gases: Carbon Dioxide - Breathing & Exchange of Gases Concept', 'Transportation of Gases: Carbon Dioxide - Breathing & Exchange of Gases Class 11 Biology Concept', v_channel_id, 4, (select id from public.chapters where slug = 'breathing-and-exchange-of-gases'), 2, 3351, 'allowed', now())
+  values ('LTlmyRqWDuQ', 'Transportation of Gases: Carbon Dioxide - Breathing & Exchange of Gases Concept', 'Transportation of Gases: Carbon Dioxide - Breathing & Exchange of Gases Class 11 Biology Concept', v_channel_id, 4, (select id from public.chapters where slug = 'breathing-and-exchange-of-gases' and subject_id = 4), 2, 3351, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -369,7 +369,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('sIPzqzVtyiA', 'Regulation of Respiration - Breathing & Exchange of Gases Class 11 Biology Concept', 'Regulation of Respiration - Breathing & Exchange of Gases Class 11 Biology Concept | Dr Sachin Kapur', v_channel_id, 4, (select id from public.chapters where slug = 'breathing-and-exchange-of-gases'), 2, 3046, 'allowed', now())
+  values ('sIPzqzVtyiA', 'Regulation of Respiration - Breathing & Exchange of Gases Class 11 Biology Concept', 'Regulation of Respiration - Breathing & Exchange of Gases Class 11 Biology Concept | Dr Sachin Kapur', v_channel_id, 4, (select id from public.chapters where slug = 'breathing-and-exchange-of-gases' and subject_id = 4), 2, 3046, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -379,7 +379,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('LPI6yzwOu1U', 'Respiratory Disorders- Breathing & Exchange of Gases Class 11 Biology', 'Respiratory Disorders- Breathing & Exchange of Gases Class 11 Biology | NEET 2024 | Dr. Sachin Kapur', v_channel_id, 4, (select id from public.chapters where slug = 'breathing-and-exchange-of-gases'), 2, 3456, 'allowed', now())
+  values ('LPI6yzwOu1U', 'Respiratory Disorders- Breathing & Exchange of Gases Class 11 Biology', 'Respiratory Disorders- Breathing & Exchange of Gases Class 11 Biology | NEET 2024 | Dr. Sachin Kapur', v_channel_id, 4, (select id from public.chapters where slug = 'breathing-and-exchange-of-gases' and subject_id = 4), 2, 3456, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -410,7 +410,7 @@ begin
   select v_playlist_id, cl.id from public.class_levels cl where cl.slug = 'class-11';
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('cEOiMyKWxEo', 'Introduction to Circulatory System - Body Fluids and Circulation Concept Explained', 'Introduction to Circulatory System - Body Fluids and Circulation Class 11 Biology Concept Explained', v_channel_id, 4, (select id from public.chapters where slug = 'body-fluids-and-circulation'), 2, 3829, 'allowed', now())
+  values ('cEOiMyKWxEo', 'Introduction to Circulatory System - Body Fluids and Circulation Concept Explained', 'Introduction to Circulatory System - Body Fluids and Circulation Class 11 Biology Concept Explained', v_channel_id, 4, (select id from public.chapters where slug = 'body-fluids-and-circulation' and subject_id = 4), 2, 3829, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -420,7 +420,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('LTqlIKVrJrc', 'Formation of Clot - Body Fluids and Circulation Class 11 Biology Concept Explained', 'Formation of Clot - Body Fluids and Circulation Class 11 Biology Concept Explained | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'body-fluids-and-circulation'), 2, 3759, 'allowed', now())
+  values ('LTqlIKVrJrc', 'Formation of Clot - Body Fluids and Circulation Class 11 Biology Concept Explained', 'Formation of Clot - Body Fluids and Circulation Class 11 Biology Concept Explained | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'body-fluids-and-circulation' and subject_id = 4), 2, 3759, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -430,7 +430,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('gie4tKVdIEU', 'Human Circulatory System & Structure of Heart - Body Fluids and Circulation Concept', 'Human Circulatory System & Structure of Heart - Body Fluids and Circulation Class 11 Biology Concept', v_channel_id, 4, (select id from public.chapters where slug = 'body-fluids-and-circulation'), 2, 2261, 'allowed', now())
+  values ('gie4tKVdIEU', 'Human Circulatory System & Structure of Heart - Body Fluids and Circulation Concept', 'Human Circulatory System & Structure of Heart - Body Fluids and Circulation Class 11 Biology Concept', v_channel_id, 4, (select id from public.chapters where slug = 'body-fluids-and-circulation' and subject_id = 4), 2, 2261, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -440,7 +440,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('yomLXf3dT7g', 'Double Circulation and Coronary Circulation - Body Fluids and Circulation Concept', 'Double Circulation and Coronary Circulation - Body Fluids and Circulation Class 11 Biology Concept', v_channel_id, 4, (select id from public.chapters where slug = 'body-fluids-and-circulation'), 2, 2752, 'allowed', now())
+  values ('yomLXf3dT7g', 'Double Circulation and Coronary Circulation - Body Fluids and Circulation Concept', 'Double Circulation and Coronary Circulation - Body Fluids and Circulation Class 11 Biology Concept', v_channel_id, 4, (select id from public.chapters where slug = 'body-fluids-and-circulation' and subject_id = 4), 2, 2752, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -450,7 +450,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('9FomjSeIkXA', 'Cardiac Disorders and Diseases - Body Fluids and Circulation Class 11 Biology Concept', 'Cardiac Disorders and Diseases - Body Fluids and Circulation Class 11 Biology Concept | NEET 2024', v_channel_id, 4, (select id from public.chapters where slug = 'body-fluids-and-circulation'), 2, 2830, 'allowed', now())
+  values ('9FomjSeIkXA', 'Cardiac Disorders and Diseases - Body Fluids and Circulation Class 11 Biology Concept', 'Cardiac Disorders and Diseases - Body Fluids and Circulation Class 11 Biology Concept | NEET 2024', v_channel_id, 4, (select id from public.chapters where slug = 'body-fluids-and-circulation' and subject_id = 4), 2, 2830, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -481,7 +481,7 @@ begin
   select v_playlist_id, cl.id from public.class_levels cl where cl.slug = 'class-11';
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('BmS2wpUp-Qc', 'Osmoregulation & Excretory Structure - Excretory Products and their Elimination', 'Osmoregulation & Excretory Structure - Excretory Products and their Elimination Class 11 Biology', v_channel_id, 4, (select id from public.chapters where slug = 'excretory-products-and-their-elimination'), 2, 2602, 'allowed', now())
+  values ('BmS2wpUp-Qc', 'Osmoregulation & Excretory Structure - Excretory Products and their Elimination', 'Osmoregulation & Excretory Structure - Excretory Products and their Elimination Class 11 Biology', v_channel_id, 4, (select id from public.chapters where slug = 'excretory-products-and-their-elimination' and subject_id = 4), 2, 2602, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -491,7 +491,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('P3Xsa7oUOso', 'Formation of Urine - Excretory Products and their Elimination Class 11 Biology Concept', 'Formation of Urine - Excretory Products and their Elimination Class 11 Biology Concept | NEET 2024', v_channel_id, 4, (select id from public.chapters where slug = 'excretory-products-and-their-elimination'), 2, 3041, 'allowed', now())
+  values ('P3Xsa7oUOso', 'Formation of Urine - Excretory Products and their Elimination Class 11 Biology Concept', 'Formation of Urine - Excretory Products and their Elimination Class 11 Biology Concept | NEET 2024', v_channel_id, 4, (select id from public.chapters where slug = 'excretory-products-and-their-elimination' and subject_id = 4), 2, 3041, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -501,7 +501,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('XWXBxEzc8RI', 'Human Excretory System - Excretory Products & their Elimination Class 11 Biology Concept', 'Human Excretory System - Excretory Products & their Elimination Class 11 Biology Concept | NEET 2024', v_channel_id, 4, (select id from public.chapters where slug = 'excretory-products-and-their-elimination'), 2, 4062, 'allowed', now())
+  values ('XWXBxEzc8RI', 'Human Excretory System - Excretory Products & their Elimination Class 11 Biology Concept', 'Human Excretory System - Excretory Products & their Elimination Class 11 Biology Concept | NEET 2024', v_channel_id, 4, (select id from public.chapters where slug = 'excretory-products-and-their-elimination' and subject_id = 4), 2, 4062, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -511,7 +511,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('_gBuOJUgNok', 'Kidney Functions and Role of other Organs in Excretion Class 11 Biology Concept', 'Kidney Functions and Role of other Organs in Excretion Class 11 Biology Concept | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'excretory-products-and-their-elimination'), 2, 3174, 'allowed', now())
+  values ('_gBuOJUgNok', 'Kidney Functions and Role of other Organs in Excretion Class 11 Biology Concept', 'Kidney Functions and Role of other Organs in Excretion Class 11 Biology Concept | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'excretory-products-and-their-elimination' and subject_id = 4), 2, 3174, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -521,7 +521,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('TVuQyRK0WH4', 'Disorders of the Excretory System - Excretory Products & their Elimination Concepts', 'Disorders of the Excretory System - Excretory Products & their Elimination Class 11 Biology Concepts', v_channel_id, 4, (select id from public.chapters where slug = 'excretory-products-and-their-elimination'), 2, 2323, 'allowed', now())
+  values ('TVuQyRK0WH4', 'Disorders of the Excretory System - Excretory Products & their Elimination Concepts', 'Disorders of the Excretory System - Excretory Products & their Elimination Class 11 Biology Concepts', v_channel_id, 4, (select id from public.chapters where slug = 'excretory-products-and-their-elimination' and subject_id = 4), 2, 2323, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -552,7 +552,7 @@ begin
   select v_playlist_id, cl.id from public.class_levels cl where cl.slug = 'class-11';
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('fHtiY3aVNYw', 'Types of Movement & Muscles - Locomotion and Movement Class 11 Biology Concepts', 'Types of Movement & Muscles - Locomotion and Movement Class 11 Biology Concepts | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'locomotion-and-movement'), 2, 3119, 'allowed', now())
+  values ('fHtiY3aVNYw', 'Types of Movement & Muscles - Locomotion and Movement Class 11 Biology Concepts', 'Types of Movement & Muscles - Locomotion and Movement Class 11 Biology Concepts | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'locomotion-and-movement' and subject_id = 4), 2, 3119, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -562,7 +562,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('4PB80Pzlkb0', 'Mechanism of Muscle Contraction - Locomotion and Movement Class 11 Biology Concept', 'Mechanism of Muscle Contraction - Locomotion and Movement Class 11 Biology Concept | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'locomotion-and-movement'), 2, 1736, 'allowed', now())
+  values ('4PB80Pzlkb0', 'Mechanism of Muscle Contraction - Locomotion and Movement Class 11 Biology Concept', 'Mechanism of Muscle Contraction - Locomotion and Movement Class 11 Biology Concept | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'locomotion-and-movement' and subject_id = 4), 2, 1736, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -572,7 +572,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('AbvwBsJmaCQ', 'Mechanism of Muscle Contraction (Pt 2)- Locomotion and Movement Class 11 Biology Concept', 'Mechanism of Muscle Contraction (Pt 2)- Locomotion and Movement Class 11 Biology Concept | NEET 2024', v_channel_id, 4, (select id from public.chapters where slug = 'locomotion-and-movement'), 2, 1489, 'allowed', now())
+  values ('AbvwBsJmaCQ', 'Mechanism of Muscle Contraction (Pt 2)- Locomotion and Movement Class 11 Biology Concept', 'Mechanism of Muscle Contraction (Pt 2)- Locomotion and Movement Class 11 Biology Concept | NEET 2024', v_channel_id, 4, (select id from public.chapters where slug = 'locomotion-and-movement' and subject_id = 4), 2, 1489, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -582,7 +582,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('XXxakueEvEw', 'Skeletal System (Pt 1) - Locomotion and Movement Class 11 Biology Concept Explained', 'Skeletal System (Pt 1) - Locomotion and Movement Class 11 Biology Concept Explained | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'locomotion-and-movement'), 2, 1378, 'allowed', now())
+  values ('XXxakueEvEw', 'Skeletal System (Pt 1) - Locomotion and Movement Class 11 Biology Concept Explained', 'Skeletal System (Pt 1) - Locomotion and Movement Class 11 Biology Concept Explained | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'locomotion-and-movement' and subject_id = 4), 2, 1378, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -592,7 +592,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('gTpqsCdZt4U', 'Skeletal System (Pt 1) - Locomotion and Movement Class 11 Biology Concept Explained', 'Skeletal System (Pt 1) - Locomotion and Movement Class 11 Biology Concept Explained | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'locomotion-and-movement'), 2, 3024, 'allowed', now())
+  values ('gTpqsCdZt4U', 'Skeletal System (Pt 1) - Locomotion and Movement Class 11 Biology Concept Explained', 'Skeletal System (Pt 1) - Locomotion and Movement Class 11 Biology Concept Explained | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'locomotion-and-movement' and subject_id = 4), 2, 3024, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -602,7 +602,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('udPhvVnXO74', 'Skeletal System (Pt 2) - Locomotion and Movement Class 11 Biology Concept Explained', 'Skeletal System (Pt 2) - Locomotion and Movement Class 11 Biology Concept Explained | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'locomotion-and-movement'), 2, 2555, 'allowed', now())
+  values ('udPhvVnXO74', 'Skeletal System (Pt 2) - Locomotion and Movement Class 11 Biology Concept Explained', 'Skeletal System (Pt 2) - Locomotion and Movement Class 11 Biology Concept Explained | NEET 2024 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'locomotion-and-movement' and subject_id = 4), 2, 2555, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then

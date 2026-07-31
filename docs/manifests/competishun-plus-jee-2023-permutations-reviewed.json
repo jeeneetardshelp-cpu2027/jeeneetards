@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "request_id": "077b8223-9c25-41f6-be6b-5c888cf1b13f",
+  "youtube_playlist_id": "PLQsNiHo64JI8Lc2MuxUNTAmzEBsL01_wl",
+  "assignments": [
+    {
+      "position": 3,
+      "youtube_video_id": "SzQML9dBVck",
+      "chapter": "Permutations and Combinations",
+      "lesson_number": 1
+    }
+  ],
+  "exclusions": [
+    {
+      "position": 1,
+      "youtube_video_id": "sNYVy-g-YGU",
+      "reason": "Open-test announcement, not a curriculum lecture."
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "MRlqf2COE_g",
+      "reason": "Batch promotion and preparation guidance, not a curriculum lecture."
+    }
+  ]
+}

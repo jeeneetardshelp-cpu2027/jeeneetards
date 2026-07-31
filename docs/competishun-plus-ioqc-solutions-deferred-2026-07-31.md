@@ -1,5 +1,10 @@
 # Competishun+ IOQC Solutions deferred — 2026-07-31
 
+> Resolved later on 2026-07-31. The reviewed-order quality check was corrected,
+> the dry-run passed, and course `297` was imported create-only with five new
+> videos and zero reuse. See
+> `docs/competishun-plus-ioqc-solutions-olympiad-imported-2026-07-31.md`.
+
 ## Scope
 
 - Channel: Competishun+ (`UC6ieIswHA9WInRsa2r88hRw`)
