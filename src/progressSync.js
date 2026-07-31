@@ -47,6 +47,11 @@ async function pushNow(userId, entry) {
 // videoDbId is the numeric videos.id (the FK target), NOT the YouTube id.
 export function queueProgressSync(userId, entry, { force = false } = {}) {
   if (!isSupabaseConfigured || !userId || !entry?.playlistId || !entry?.videoDbId) return;
+  // Refuse a position we cannot vouch for rather than coercing it to 0 in
+  // pushNow. A synthesised 0 is not harmless: it is written to the server with
+  // a fresh timestamp, and on the next device it looks like the newest known
+  // position for that lesson — i.e. an invented "start from the beginning".
+  if (!Number.isFinite(Number(entry.position))) return;
   const key = syncKey(entry.playlistId, entry.videoDbId);
   const now = Date.now();
   if (!force && now - (lastSyncedAt.get(key) ?? 0) < SYNC_INTERVAL_MS) return;

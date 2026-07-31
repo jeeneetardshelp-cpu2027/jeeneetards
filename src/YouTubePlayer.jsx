@@ -107,7 +107,14 @@ export default function YouTubePlayer({
     // not silently discard up to 5s of resume point).
     const reportProgress = () => {
       const player = playerRef.current;
-      if (!player) return;
+      // A position is only meaningful if this lesson ACTUALLY played. Without
+      // the playbackRecorded gate, the cleanup/pagehide flush below fires for a
+      // lesson the student merely opened and left — and the consumer records
+      // that as a real watch, which then syncs to the server and comes back as
+      // permanent fabricated watch history on every device. playbackRecorded
+      // flips only on a genuine YouTube PLAYING event and resets per lesson,
+      // so it is exactly the right signal.
+      if (!player || !playbackRecorded) return;
       try {
         onProgressRef.current?.({
           videoId,
