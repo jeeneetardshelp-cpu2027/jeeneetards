@@ -48,6 +48,20 @@ describe("findDuplicateLessonNumbers (Codex blocked Ray Optics: 'duplicates less
     ]).videos;
     expect(findDuplicateLessonNumbers(videos)).toEqual([]);
   });
+  it("prefers reviewed lesson numbers over ambiguous problem numbers in titles", () => {
+    const videos = [
+      { videoId: "a", title: "IOQC 2020 question 2", position: 0, lessonNumber: 1 },
+      { videoId: "b", title: "IOQC 2021 question 2", position: 1, lessonNumber: 2 },
+    ];
+    expect(findDuplicateLessonNumbers(videos)).toEqual([]);
+  });
+  it("still blocks a duplicate in the reviewed lesson-number sequence", () => {
+    const videos = [
+      { videoId: "a", title: "Problem A", position: 0, lessonNumber: 1 },
+      { videoId: "b", title: "Problem B", position: 1, lessonNumber: 1 },
+    ];
+    expect(findDuplicateLessonNumbers(videos)).toEqual([1]);
+  });
 });
 
 describe("findOrderInversions (Codex: 'first two reversed', 'lessons 6,7,8 out of order')", () => {
@@ -62,6 +76,14 @@ describe("findOrderInversions (Codex: 'first two reversed', 'lessons 6,7,8 out o
   });
   it("is not assessable when most titles lack numbers", () => {
     expect(findOrderInversions(pl(["Intro", "Basics", "#3 C"]).videos).assessable).toBe(false);
+  });
+  it("uses reviewed lesson order instead of conflicting title numbers", () => {
+    const videos = [
+      { videoId: "a", title: "Problem 9", position: 0, lessonNumber: 1 },
+      { videoId: "b", title: "Problem 2", position: 1, lessonNumber: 2 },
+      { videoId: "c", title: "Problem 7", position: 2, lessonNumber: 3 },
+    ];
+    expect(findOrderInversions(videos)).toEqual({ assessable: true, inversions: [] });
   });
 });
 
