@@ -25,14 +25,13 @@ import { ratingDisplay, RATING_CONFIDENCE_MIN } from "./ratingConfidence.js";
 import { useTheme } from "./theme.jsx";
 import { useStructuredData } from "./PageMetadata.jsx";
 import { itemListSchema } from "./structuredData.js";
-import { BRAND_NAVY, BRAND_TEAL, BRAND_SERIF, subjectColor } from "./brandColors.js";
+import { subjectColor } from "./brandColors.js";
 
 // Labels come from the canonical filter vocabulary — a second copy here would
 // drift, and the card would say "Advanced" while the filter said something else.
 const COURSE_TYPE_LABEL = Object.fromEntries(COURSE_TYPES.map((c) => [c.id, c.label]));
 const DIFFICULTY_LABEL = Object.fromEntries(DIFFICULTIES.map((d) => [d.id, d.label]));
 
-const BRAND = { navy: BRAND_NAVY, teal: BRAND_TEAL };
 // Two is the minimum that is a comparison at all; beyond four the columns stop
 // being readable on a phone, which is where the comparison matters most.
 // (MIN_COMPARE / MAX_COMPARE now come from filterModel.js — see the import
@@ -78,7 +77,7 @@ export function PlaylistCard({ course, onOpen, to, state, selected, onToggle, di
   const limited = missing >= 3;
 
   return (
-    <div className={`flex h-full min-h-[15rem] flex-col overflow-hidden rounded-2xl border ${t.border} ${t.card} shadow-sm transition hover:-translate-y-1 hover:shadow-lg`}>
+    <div className="edge-glow hover-lift flex h-full min-h-[15rem] flex-col overflow-hidden rounded-xl border border-hairline bg-surface shadow-e1">
       {/* subject colour spine */}
       <span className="h-1 w-full shrink-0" style={{ background: color }} />
       <div className="flex flex-1 flex-col p-4 sm:p-5">
@@ -89,8 +88,7 @@ export function PlaylistCard({ course, onOpen, to, state, selected, onToggle, di
         )}
 
         {/* curated title leads; clamped so every card is the same shape */}
-        <h3 className={`mt-1.5 line-clamp-2 text-base font-semibold leading-snug ${t.text}`}
-          style={{ fontFamily: BRAND_SERIF }}>
+        <h3 className="mt-2 line-clamp-2 text-base font-semibold leading-snug tracking-[-0.015em] text-ink">
           {course.title}
         </h3>
 
@@ -149,24 +147,24 @@ export function PlaylistCard({ course, onOpen, to, state, selected, onToggle, di
             <Link
               to={to}
               state={state}
-              className="flex min-h-11 w-full items-center justify-center rounded-xl px-4 text-sm font-semibold text-white transition hover:opacity-90"
-              style={{ backgroundColor: BRAND.teal }}
+              className="flex min-h-11 w-full items-center justify-center rounded-md bg-accent px-4 text-sm font-semibold text-accent-ink transition duration-300 [transition-timing-function:var(--ease-out-expo)] hover:brightness-110"
             >
               View course
             </Link>
           ) : (
             <button
               onClick={() => onOpen(course)}
-              className="flex min-h-11 w-full items-center justify-center rounded-xl px-4 text-sm font-semibold text-white transition hover:opacity-90"
-              style={{ backgroundColor: BRAND.teal }}
+              className="flex min-h-11 w-full items-center justify-center rounded-md bg-accent px-4 text-sm font-semibold text-accent-ink transition duration-300 [transition-timing-function:var(--ease-out-expo)] hover:brightness-110"
             >
               View course
             </button>
           )}
           {comparisonEnabled && (
             <label
-              className={`flex min-h-11 shrink-0 cursor-pointer items-center gap-1.5 rounded-xl border px-3 text-xs ${
-                selected ? "border-slate-700 bg-slate-800 text-white" : `${t.border} ${t.faint}`
+              className={`flex min-h-11 shrink-0 cursor-pointer items-center gap-1.5 rounded-md border px-3 text-xs transition-colors duration-200 ${
+                selected
+                  ? "border-accent-line bg-accent-soft font-medium text-accent"
+                  : `${t.border} ${t.faint} hover:border-hairline-strong`
               } ${disabled ? "cursor-not-allowed opacity-40" : ""}`}
             >
               <input type="checkbox" className="sr-only" checked={selected} disabled={disabled}
@@ -185,7 +183,7 @@ const cap = (s) => (s ? s[0].toUpperCase() + s.slice(1) : s);
 function SkeletonCard() {
   const { t } = useTheme();
   return (
-    <div className={`h-64 animate-pulse rounded-2xl border ${t.border} ${t.card} p-5`}>
+    <div className={`h-64 animate-pulse rounded-xl border ${t.border} ${t.card} p-5`}>
       <div className={`h-3 w-16 rounded ${t.input}`} />
       <div className={`mt-3 h-5 w-3/4 rounded ${t.input}`} />
       <div className={`mt-2 h-4 w-1/2 rounded ${t.input}`} />
@@ -202,7 +200,7 @@ export default function PlaylistBrowse({
 }) {
   const navigate = useNavigate();
   const [params, setParams] = useSearchParams();
-  const { t, dark } = useTheme();
+  const { t } = useTheme();
   // Router location, NOT window.location: under MemoryRouter (and during any
   // client-side navigation) window.location lags behind the router.
   const location = useLocation();
@@ -416,8 +414,7 @@ export default function PlaylistBrowse({
               <p className={`mt-1 text-sm ${t.muted}`}>{error}</p>
               <button
                 onClick={reload}
-                className="mt-4 min-h-11 rounded-xl px-4 text-sm font-semibold text-white"
-                style={{ backgroundColor: BRAND.teal }}
+                className="mt-4 min-h-11 rounded-md bg-accent px-4 text-sm font-semibold text-accent-ink transition hover:brightness-110"
               >
                 Retry
               </button>
@@ -453,8 +450,7 @@ export default function PlaylistBrowse({
                 )}
                 <button
                   onClick={() => setParams(clearAllChips(params))}
-                  className="min-h-11 rounded-xl px-4 text-sm font-medium text-white"
-                  style={{ backgroundColor: BRAND.teal }}
+                  className="min-h-11 rounded-md bg-accent px-4 text-sm font-semibold text-accent-ink transition hover:brightness-110"
                 >
                   Clear filters
                 </button>
@@ -502,7 +498,7 @@ export default function PlaylistBrowse({
 
       {/* ---- sticky comparison tray: desktop AND mobile ---- */}
       {comparisonEnabled && compareIds.length > 0 && (
-        <div className={`fixed inset-x-0 bottom-0 z-40 border-t ${t.border} ${dark ? "bg-neutral-950/95" : "bg-white/95"} p-3 backdrop-blur`}>
+        <div className="glass fixed inset-x-0 bottom-0 z-40 border-x-0 border-b-0 border-t border-hairline p-3 shadow-e3">
           <div className="mx-auto flex w-full max-w-[1280px] items-center gap-3 px-1">
             <span className={`text-sm ${t.text}`}>
               <span className="font-medium">{compareIds.length}</span> selected
@@ -536,8 +532,7 @@ export default function PlaylistBrowse({
                   state: makeReturnState(location.pathname, location.search),
                 });
               }}
-              className="ml-auto flex min-h-11 items-center gap-1 rounded-xl px-4 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40"
-              style={{ backgroundColor: BRAND.navy }}
+              className="ml-auto flex min-h-11 items-center gap-1 rounded-md bg-accent px-4 text-sm font-semibold text-accent-ink transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40"
             >
               Compare {compareIds.length}
             </button>
@@ -552,10 +547,10 @@ export default function PlaylistBrowse({
             type="button"
             aria-label="Dismiss filter dialog"
             tabIndex={-1}
-            className="absolute inset-0 bg-slate-900/60"
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
             onClick={() => setSheetOpen(false)}
           />
-          <div ref={sheetRef} className={`absolute inset-x-0 bottom-0 max-h-[80vh] overflow-y-auto rounded-t-2xl ${t.card} ${t.text} p-4`}>
+          <div ref={sheetRef} className="absolute inset-x-0 bottom-0 max-h-[80vh] overflow-y-auto rounded-t-2xl border-t border-hairline bg-surface p-4 text-ink shadow-e3">
             <div className="mb-3 flex items-center justify-between">
               <h2 id="mobile-filter-title" className={`text-sm font-semibold ${t.text}`}>Filters</h2>
               <button ref={closeButtonRef} onClick={() => setSheetOpen(false)} aria-label="Close filters" className={`flex h-11 w-11 items-center justify-center rounded-lg ${t.hover}`}>
@@ -587,8 +582,7 @@ export default function PlaylistBrowse({
               </button>
               <button
                 onClick={() => setSheetOpen(false)}
-                className="min-h-11 flex-1 rounded-xl px-4 text-sm font-semibold text-white"
-                style={{ backgroundColor: BRAND.teal }}
+                className="min-h-11 flex-1 rounded-md bg-accent px-4 text-sm font-semibold text-accent-ink transition hover:brightness-110"
               >
                 {tab === "lectures"
                   ? lectureLoading
