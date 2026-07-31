@@ -36,7 +36,7 @@ begin
   select v_playlist_id, cl.id from public.class_levels cl where cl.slug = 'class-11';
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('N7HPzKphgD8', 'Body Fluids and Circulation Part 2', 'NEET PowerPlus Online Course — zoology | Body Fluids & Circulation - Part 2 | ALLEN Online', v_channel_id, 4, (select id from public.chapters where slug = 'body-fluids-and-circulation'), 2, 3870, 'allowed', now())
+  values ('N7HPzKphgD8', 'Body Fluids and Circulation Part 2', 'NEET PowerPlus Online Course — zoology | Body Fluids & Circulation - Part 2 | ALLEN Online', v_channel_id, 4, (select id from public.chapters where slug = 'body-fluids-and-circulation' and subject_id = 4), 2, 3870, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -46,7 +46,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('XMmr5w_3Q6Y', 'Body Fluids and Circulation Part 3', 'NEET PowerPlus Online Course — zoology | Body Fluids & Circulation - Part 3 | ALLEN Online', v_channel_id, 4, (select id from public.chapters where slug = 'body-fluids-and-circulation'), 2, 3915, 'allowed', now())
+  values ('XMmr5w_3Q6Y', 'Body Fluids and Circulation Part 3', 'NEET PowerPlus Online Course — zoology | Body Fluids & Circulation - Part 3 | ALLEN Online', v_channel_id, 4, (select id from public.chapters where slug = 'body-fluids-and-circulation' and subject_id = 4), 2, 3915, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -56,7 +56,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('IUjyJNJQ6JE', 'Body Fluids and Circulation Part 4', 'NEET PowerPlus Online Course — Zoology | Body Fluids & Circulation - Part 4 | ALLEN Online', v_channel_id, 4, (select id from public.chapters where slug = 'body-fluids-and-circulation'), 2, 3626, 'allowed', now())
+  values ('IUjyJNJQ6JE', 'Body Fluids and Circulation Part 4', 'NEET PowerPlus Online Course — Zoology | Body Fluids & Circulation - Part 4 | ALLEN Online', v_channel_id, 4, (select id from public.chapters where slug = 'body-fluids-and-circulation' and subject_id = 4), 2, 3626, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -66,7 +66,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('RwcdGZXtJww', 'Body Fluids and Circulation Part 5', 'NEET PowerPlus Online Course — Zoology | Body Fluids & Circulation - Part 5 | ALLEN Online', v_channel_id, 4, (select id from public.chapters where slug = 'body-fluids-and-circulation'), 2, 4300, 'allowed', now())
+  values ('RwcdGZXtJww', 'Body Fluids and Circulation Part 5', 'NEET PowerPlus Online Course — Zoology | Body Fluids & Circulation - Part 5 | ALLEN Online', v_channel_id, 4, (select id from public.chapters where slug = 'body-fluids-and-circulation' and subject_id = 4), 2, 4300, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -76,7 +76,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('qisd0mByqyc', 'Body Fluids and Circulation Part 6', 'NEET PowerPlus Online Course — Zoology | Body Fluids & Circulation - Part 6 | ALLEN Online', v_channel_id, 4, (select id from public.chapters where slug = 'body-fluids-and-circulation'), 2, 3695, 'allowed', now())
+  values ('qisd0mByqyc', 'Body Fluids and Circulation Part 6', 'NEET PowerPlus Online Course — Zoology | Body Fluids & Circulation - Part 6 | ALLEN Online', v_channel_id, 4, (select id from public.chapters where slug = 'body-fluids-and-circulation' and subject_id = 4), 2, 3695, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -86,7 +86,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('yhaOyEh1awU', 'Body Fluids and Circulation Part 7', 'NEET PowerPlus Online Course — Zoology | Body Fluids & Circulation - Part 7 | ALLEN Online', v_channel_id, 4, (select id from public.chapters where slug = 'body-fluids-and-circulation'), 2, 4055, 'allowed', now())
+  values ('yhaOyEh1awU', 'Body Fluids and Circulation Part 7', 'NEET PowerPlus Online Course — Zoology | Body Fluids & Circulation - Part 7 | ALLEN Online', v_channel_id, 4, (select id from public.chapters where slug = 'body-fluids-and-circulation' and subject_id = 4), 2, 4055, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -96,7 +96,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('pfs0YWxLFek', 'Body Fluids and Circulation Part 8', 'NEET PowerPlus Online Course — Zoology | Body Fluids & Circulation - Part 8 | ALLEN Online', v_channel_id, 4, (select id from public.chapters where slug = 'body-fluids-and-circulation'), 2, 4201, 'allowed', now())
+  values ('pfs0YWxLFek', 'Body Fluids and Circulation Part 8', 'NEET PowerPlus Online Course — Zoology | Body Fluids & Circulation - Part 8 | ALLEN Online', v_channel_id, 4, (select id from public.chapters where slug = 'body-fluids-and-circulation' and subject_id = 4), 2, 4201, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -106,7 +106,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('LmYKivS7EEA', 'Excretory Products and Their Elimination Part 1', 'NEET PowerPlus Online Course — Zoology | Excretory Products & their Elimination - Part 1 | ALLEN', v_channel_id, 4, (select id from public.chapters where slug = 'excretory-products-and-their-elimination'), 2, 4190, 'allowed', now())
+  values ('LmYKivS7EEA', 'Excretory Products and Their Elimination Part 1', 'NEET PowerPlus Online Course — Zoology | Excretory Products & their Elimination - Part 1 | ALLEN', v_channel_id, 4, (select id from public.chapters where slug = 'excretory-products-and-their-elimination' and subject_id = 4), 2, 4190, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -137,7 +137,7 @@ begin
   select v_playlist_id, cl.id from public.class_levels cl where cl.slug = 'class-11';
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('xJ5RDBU64Dk', 'Photosynthesis in Higher Plants Part 2', 'PHOTOSYNTHESIS IN HIGHER PLANTS (PART-2) - BOTANY | Comeback Series for NEET 2026 Aspirants | ALLEN', v_channel_id, 4, (select id from public.chapters where slug = 'photosynthesis-in-higher-plants'), 2, 3761, 'allowed', now())
+  values ('xJ5RDBU64Dk', 'Photosynthesis in Higher Plants Part 2', 'PHOTOSYNTHESIS IN HIGHER PLANTS (PART-2) - BOTANY | Comeback Series for NEET 2026 Aspirants | ALLEN', v_channel_id, 4, (select id from public.chapters where slug = 'photosynthesis-in-higher-plants' and subject_id = 4), 2, 3761, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -147,7 +147,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('XhgysyAS76s', 'Locomotion and Movement: Muscles', 'LOCOMOTION & MOVEMENT- MUSCLES SCLES : ZOOLOGY | Comeback Series for NEET 2026 Aspirants | ALLEN', v_channel_id, 4, (select id from public.chapters where slug = 'locomotion-and-movement'), 2, 3515, 'allowed', now())
+  values ('XhgysyAS76s', 'Locomotion and Movement: Muscles', 'LOCOMOTION & MOVEMENT- MUSCLES SCLES : ZOOLOGY | Comeback Series for NEET 2026 Aspirants | ALLEN', v_channel_id, 4, (select id from public.chapters where slug = 'locomotion-and-movement' and subject_id = 4), 2, 3515, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -157,7 +157,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('IcbyN7rUF5M', 'Photosynthesis in Higher Plants Part 1', 'PHOTOSYNTHESIS IN HIGHER PLANTS (PART-1) - BOTANY | Comeback Series for NEET 2026 Aspirants | ALLEN', v_channel_id, 4, (select id from public.chapters where slug = 'photosynthesis-in-higher-plants'), 2, 3716, 'allowed', now())
+  values ('IcbyN7rUF5M', 'Photosynthesis in Higher Plants Part 1', 'PHOTOSYNTHESIS IN HIGHER PLANTS (PART-1) - BOTANY | Comeback Series for NEET 2026 Aspirants | ALLEN', v_channel_id, 4, (select id from public.chapters where slug = 'photosynthesis-in-higher-plants' and subject_id = 4), 2, 3716, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -167,7 +167,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('QvjCyt_ZESQ', 'Breathing and Exchange of Gases', 'Breathing and Exchange of Gases - Zoology | Come Back Series for NEET 2026 Aspirants | ALLEN Online', v_channel_id, 4, (select id from public.chapters where slug = 'breathing-and-exchange-of-gases'), 2, 3000, 'allowed', now())
+  values ('QvjCyt_ZESQ', 'Breathing and Exchange of Gases', 'Breathing and Exchange of Gases - Zoology | Come Back Series for NEET 2026 Aspirants | ALLEN Online', v_channel_id, 4, (select id from public.chapters where slug = 'breathing-and-exchange-of-gases' and subject_id = 4), 2, 3000, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -177,7 +177,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('hXvnUZP3j18', 'Locomotion and Movement: Skeletal System', 'LOCOMOTION & MOVEMENT- SKELETAL SYSTEM : ZOOLOGY | Comeback Series for NEET 2026 Aspirants | ALLEN', v_channel_id, 4, (select id from public.chapters where slug = 'locomotion-and-movement'), 2, 3416, 'allowed', now())
+  values ('hXvnUZP3j18', 'Locomotion and Movement: Skeletal System', 'LOCOMOTION & MOVEMENT- SKELETAL SYSTEM : ZOOLOGY | Comeback Series for NEET 2026 Aspirants | ALLEN', v_channel_id, 4, (select id from public.chapters where slug = 'locomotion-and-movement' and subject_id = 4), 2, 3416, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -187,7 +187,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('6ll9kxkTkSA', 'Photosynthesis in Higher Plants Part 3', 'PHOTOSYNTHESIS IN HIGHER PLANTS (PART-3) - BOTANY | Comeback Series for NEET 2026 Aspirants | ALLEN', v_channel_id, 4, (select id from public.chapters where slug = 'photosynthesis-in-higher-plants'), 2, 4786, 'allowed', now())
+  values ('6ll9kxkTkSA', 'Photosynthesis in Higher Plants Part 3', 'PHOTOSYNTHESIS IN HIGHER PLANTS (PART-3) - BOTANY | Comeback Series for NEET 2026 Aspirants | ALLEN', v_channel_id, 4, (select id from public.chapters where slug = 'photosynthesis-in-higher-plants' and subject_id = 4), 2, 4786, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -197,7 +197,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('xXWw65KWLaE', 'Neural Control and Coordination', 'NEURAL CONTROL AND COORDINATION: ZOOLOGY | Comeback Series for NEET 2026 Aspirants | ALLEN', v_channel_id, 4, (select id from public.chapters where slug = 'neural-control-and-coordination'), 2, 2921, 'allowed', now())
+  values ('xXWw65KWLaE', 'Neural Control and Coordination', 'NEURAL CONTROL AND COORDINATION: ZOOLOGY | Comeback Series for NEET 2026 Aspirants | ALLEN', v_channel_id, 4, (select id from public.chapters where slug = 'neural-control-and-coordination' and subject_id = 4), 2, 2921, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -207,7 +207,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('dU8hwQ1ZIsw', 'Photosynthesis in Higher Plants Part 4', 'PHOTOSYNTHESIS IN HIGHER PLANTS (PART-4) - BOTANY | Comeback Series for NEET 2026 Aspirants | ALLEN', v_channel_id, 4, (select id from public.chapters where slug = 'photosynthesis-in-higher-plants'), 2, 5440, 'allowed', now())
+  values ('dU8hwQ1ZIsw', 'Photosynthesis in Higher Plants Part 4', 'PHOTOSYNTHESIS IN HIGHER PLANTS (PART-4) - BOTANY | Comeback Series for NEET 2026 Aspirants | ALLEN', v_channel_id, 4, (select id from public.chapters where slug = 'photosynthesis-in-higher-plants' and subject_id = 4), 2, 5440, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then

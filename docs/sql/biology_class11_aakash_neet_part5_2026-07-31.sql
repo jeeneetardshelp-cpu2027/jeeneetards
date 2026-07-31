@@ -36,7 +36,7 @@ begin
   select v_playlist_id, cl.id from public.class_levels cl where cl.slug = 'class-11';
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('e0VBikbOTek', 'Chemical Coordination and Integration Class 11 Biology Chapter 22', 'Chemical Coordination and Integration Class 11 Biology Chapter 22 | NEET 2022 Exam Prep', v_channel_id, 4, (select id from public.chapters where slug = 'chemical-coordination-and-integration'), 2, 3084, 'allowed', now())
+  values ('e0VBikbOTek', 'Chemical Coordination and Integration Class 11 Biology Chapter 22', 'Chemical Coordination and Integration Class 11 Biology Chapter 22 | NEET 2022 Exam Prep', v_channel_id, 4, (select id from public.chapters where slug = 'chemical-coordination-and-integration' and subject_id = 4), 2, 3084, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -46,7 +46,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('gU22h1fl1gQ', 'Neural Control and Coordination Class 11 Biology', 'Neural Control and Coordination Class 11 Biology | NEET Biology Important Chapters | NEET 2022', v_channel_id, 4, (select id from public.chapters where slug = 'neural-control-and-coordination'), 2, 2872, 'allowed', now())
+  values ('gU22h1fl1gQ', 'Neural Control and Coordination Class 11 Biology', 'Neural Control and Coordination Class 11 Biology | NEET Biology Important Chapters | NEET 2022', v_channel_id, 4, (select id from public.chapters where slug = 'neural-control-and-coordination' and subject_id = 4), 2, 2872, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -56,7 +56,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('b3ZzNfmoz0g', 'Plant Growth and Development Class 11 Biology Important Questions (Ep 20)', 'Plant Growth and Development Class 11 Biology Important Questions (Ep 20) | NEET 2022 Exam Prep', v_channel_id, 4, (select id from public.chapters where slug = 'plant-growth-and-development'), 2, 3176, 'allowed', now())
+  values ('b3ZzNfmoz0g', 'Plant Growth and Development Class 11 Biology Important Questions (Ep 20)', 'Plant Growth and Development Class 11 Biology Important Questions (Ep 20) | NEET 2022 Exam Prep', v_channel_id, 4, (select id from public.chapters where slug = 'plant-growth-and-development' and subject_id = 4), 2, 3176, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -66,7 +66,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('Hm60vL7W53Q', 'Human Health and Disease Class 12 Biology Most Important Questions (Ep 29)', 'Human Health and Disease Class 12 Biology Most Important Questions (Ep 29) | NEET Zoology 2022', v_channel_id, 4, (select id from public.chapters where slug = 'human-health-and-disease'), 2, 3226, 'allowed', now())
+  values ('Hm60vL7W53Q', 'Human Health and Disease Class 12 Biology Most Important Questions (Ep 29)', 'Human Health and Disease Class 12 Biology Most Important Questions (Ep 29) | NEET Zoology 2022', v_channel_id, 4, (select id from public.chapters where slug = 'human-health-and-disease' and subject_id = 4), 2, 3226, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -76,7 +76,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('m9S8ufni-Vs', 'Biotechnology - Principles and Processes Class 12 Biology Important Question Ch 11 Ep 38', 'Biotechnology - Principles and Processes Class 12 Biology Important Question Ch 11 Ep 38 | NEET 2022', v_channel_id, 4, (select id from public.chapters where slug = 'biotechnology-principles-and-processes'), 2, 2704, 'allowed', now())
+  values ('m9S8ufni-Vs', 'Biotechnology - Principles and Processes Class 12 Biology Important Question Ch 11 Ep 38', 'Biotechnology - Principles and Processes Class 12 Biology Important Question Ch 11 Ep 38 | NEET 2022', v_channel_id, 4, (select id from public.chapters where slug = 'biotechnology-principles-and-processes' and subject_id = 4), 2, 2704, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -86,7 +86,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('2N6zobmYFIg', 'Biotechnology and it''s Application Class 12 Biology Important Questions (Ep 40)', 'Biotechnology and it''s Application Class 12 Biology Important Questions (Ep 40) | NEET 2022 Strategy', v_channel_id, 4, (select id from public.chapters where slug = 'biotechnology-and-its-applications'), 2, 2740, 'allowed', now())
+  values ('2N6zobmYFIg', 'Biotechnology and it''s Application Class 12 Biology Important Questions (Ep 40)', 'Biotechnology and it''s Application Class 12 Biology Important Questions (Ep 40) | NEET 2022 Strategy', v_channel_id, 4, (select id from public.chapters where slug = 'biotechnology-and-its-applications' and subject_id = 4), 2, 2740, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -117,7 +117,7 @@ begin
   select v_playlist_id, cl.id from public.class_levels cl where cl.slug = 'class-11';
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('KD_-WYK-oqo', 'Biotechnology & Its Applications', 'NEET 2025  Crash Course | Biotechnology & Its Applications | Zoology Class 3', v_channel_id, 4, (select id from public.chapters where slug = 'biotechnology-and-its-applications'), 2, 7125, 'allowed', now())
+  values ('KD_-WYK-oqo', 'Biotechnology & Its Applications', 'NEET 2025  Crash Course | Biotechnology & Its Applications | Zoology Class 3', v_channel_id, 4, (select id from public.chapters where slug = 'biotechnology-and-its-applications' and subject_id = 4), 2, 7125, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -127,7 +127,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('BIe-lU-XL0A', 'Biotechnology: Principles & Processes', 'NEET 2025 Crash Course | Biotechnology: Principles & Processes | NEET Preparation by Aakash', v_channel_id, 4, (select id from public.chapters where slug = 'biotechnology-principles-and-processes'), 2, 10785, 'allowed', now())
+  values ('BIe-lU-XL0A', 'Biotechnology: Principles & Processes', 'NEET 2025 Crash Course | Biotechnology: Principles & Processes | NEET Preparation by Aakash', v_channel_id, 4, (select id from public.chapters where slug = 'biotechnology-principles-and-processes' and subject_id = 4), 2, 10785, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -137,7 +137,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('a9VrBD1AErM', 'Photosynthesis in Higher Plants', 'NEET 2025 Crash Course | Photosynthesis in Higher Plants | Botany Class 03', v_channel_id, 4, (select id from public.chapters where slug = 'photosynthesis-in-higher-plants'), 2, 8585, 'allowed', now())
+  values ('a9VrBD1AErM', 'Photosynthesis in Higher Plants', 'NEET 2025 Crash Course | Photosynthesis in Higher Plants | Botany Class 03', v_channel_id, 4, (select id from public.chapters where slug = 'photosynthesis-in-higher-plants' and subject_id = 4), 2, 8585, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then

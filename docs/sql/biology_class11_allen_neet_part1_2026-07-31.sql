@@ -40,7 +40,7 @@ begin
   select v_playlist_id, cl.id from public.class_levels cl where cl.slug = 'class-11';
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('UrVcnGGO19k', 'Biological Classification Part 1', 'Botany: Biological Classification (Part-1) | NEET NCERT Diagrams Masterclass | ALLEN NEET', v_channel_id, 4, (select id from public.chapters where slug = 'biological-classification'), 2, 2705, 'allowed', now())
+  values ('UrVcnGGO19k', 'Biological Classification Part 1', 'Botany: Biological Classification (Part-1) | NEET NCERT Diagrams Masterclass | ALLEN NEET', v_channel_id, 4, (select id from public.chapters where slug = 'biological-classification' and subject_id = 4), 2, 2705, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -50,7 +50,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('OxBFK-NMnRk', 'Biological Classification Part 2', 'Botany: Biological Classification (Part-2) | NEET NCERT Diagrams Masterclass | ALLEN NEET', v_channel_id, 4, (select id from public.chapters where slug = 'biological-classification'), 2, 2545, 'allowed', now())
+  values ('OxBFK-NMnRk', 'Biological Classification Part 2', 'Botany: Biological Classification (Part-2) | NEET NCERT Diagrams Masterclass | ALLEN NEET', v_channel_id, 4, (select id from public.chapters where slug = 'biological-classification' and subject_id = 4), 2, 2545, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -60,7 +60,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('JQid3nSLGhY', 'Plant Kingdom Part 1', 'Botany: PLANT KINGDOM Part-1 | NEET 2026 | NCERT Diagrams Masterclass | ALLEN NEET', v_channel_id, 4, (select id from public.chapters where slug = 'plant-kingdom'), 2, 2796, 'allowed', now())
+  values ('JQid3nSLGhY', 'Plant Kingdom Part 1', 'Botany: PLANT KINGDOM Part-1 | NEET 2026 | NCERT Diagrams Masterclass | ALLEN NEET', v_channel_id, 4, (select id from public.chapters where slug = 'plant-kingdom' and subject_id = 4), 2, 2796, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -70,7 +70,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('tA_oP2BP3aI', 'Animal Kingdom Part 1', 'Zoology: ANIMAL KINGDOM Part-1 | NEET 2026 | NCERT Diagrams Masterclass', v_channel_id, 4, (select id from public.chapters where slug = 'animal-kingdom'), 2, 2756, 'allowed', now())
+  values ('tA_oP2BP3aI', 'Animal Kingdom Part 1', 'Zoology: ANIMAL KINGDOM Part-1 | NEET 2026 | NCERT Diagrams Masterclass', v_channel_id, 4, (select id from public.chapters where slug = 'animal-kingdom' and subject_id = 4), 2, 2756, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -80,7 +80,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('AHXWFMre32Q', 'Animal Kingdom Part 2', 'Zoology: ANIMAL KINGDOM Part-2 | NEET 2026 | NCERT Diagrams Masterclass', v_channel_id, 4, (select id from public.chapters where slug = 'animal-kingdom'), 2, 2981, 'allowed', now())
+  values ('AHXWFMre32Q', 'Animal Kingdom Part 2', 'Zoology: ANIMAL KINGDOM Part-2 | NEET 2026 | NCERT Diagrams Masterclass', v_channel_id, 4, (select id from public.chapters where slug = 'animal-kingdom' and subject_id = 4), 2, 2981, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -90,7 +90,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('wf8S_5zX9Ec', 'Morphology of Flowering Plants Part 1', 'Botany: MORPHOLOGY OF FLOWERING PLANTS Part-1 | NEET 2026 |  NCERT Diagrams Masterclass', v_channel_id, 4, (select id from public.chapters where slug = 'morphology-of-flowering-plants'), 2, 2781, 'allowed', now())
+  values ('wf8S_5zX9Ec', 'Morphology of Flowering Plants Part 1', 'Botany: MORPHOLOGY OF FLOWERING PLANTS Part-1 | NEET 2026 |  NCERT Diagrams Masterclass', v_channel_id, 4, (select id from public.chapters where slug = 'morphology-of-flowering-plants' and subject_id = 4), 2, 2781, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -100,7 +100,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('IFN7dSfUZAA', 'Morphology of Flowering Plants Part 2', 'Botany: MORPHOLOGY OF FLOWERING PLANTS Part-2 | NEET 2026 |  NCERT Diagrams Masterclass', v_channel_id, 4, (select id from public.chapters where slug = 'morphology-of-flowering-plants'), 2, 2657, 'allowed', now())
+  values ('IFN7dSfUZAA', 'Morphology of Flowering Plants Part 2', 'Botany: MORPHOLOGY OF FLOWERING PLANTS Part-2 | NEET 2026 |  NCERT Diagrams Masterclass', v_channel_id, 4, (select id from public.chapters where slug = 'morphology-of-flowering-plants' and subject_id = 4), 2, 2657, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -110,7 +110,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('dMu4EkMhAaM', 'Structural Organisation in Animals Part 1', 'Zoology: STRUCTURAL ORGANISATION IN ANIMALS Part-1 | NEET 2026 | NCERT Diagrams Masterclass', v_channel_id, 4, (select id from public.chapters where slug = 'structural-organisation-in-animals'), 2, 2375, 'allowed', now())
+  values ('dMu4EkMhAaM', 'Structural Organisation in Animals Part 1', 'Zoology: STRUCTURAL ORGANISATION IN ANIMALS Part-1 | NEET 2026 | NCERT Diagrams Masterclass', v_channel_id, 4, (select id from public.chapters where slug = 'structural-organisation-in-animals' and subject_id = 4), 2, 2375, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -120,7 +120,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('5UJApSPOjjw', 'Structural Organisation in Animals Part 2', 'Zoology: STRUCTURAL ORGANISATION IN ANIMALS Part-2 | NEET 2026 | NCERT Diagrams Masterclass', v_channel_id, 4, (select id from public.chapters where slug = 'structural-organisation-in-animals'), 2, 2185, 'allowed', now())
+  values ('5UJApSPOjjw', 'Structural Organisation in Animals Part 2', 'Zoology: STRUCTURAL ORGANISATION IN ANIMALS Part-2 | NEET 2026 | NCERT Diagrams Masterclass', v_channel_id, 4, (select id from public.chapters where slug = 'structural-organisation-in-animals' and subject_id = 4), 2, 2185, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -130,7 +130,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('lwlyuEPqD8c', 'Anatomy of Flowering Plants Part 1', 'Botany: ANATOMY OF FLOWERING PLANTS Part-1 | NEET 2026 |  NCERT Diagrams Masterclass', v_channel_id, 4, (select id from public.chapters where slug = 'anatomy-of-flowering-plants'), 2, 2691, 'allowed', now())
+  values ('lwlyuEPqD8c', 'Anatomy of Flowering Plants Part 1', 'Botany: ANATOMY OF FLOWERING PLANTS Part-1 | NEET 2026 |  NCERT Diagrams Masterclass', v_channel_id, 4, (select id from public.chapters where slug = 'anatomy-of-flowering-plants' and subject_id = 4), 2, 2691, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -140,7 +140,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('pKH29kV0yNo', 'Anatomy of Flowering Plants Part 2', 'Botany: ANATOMY OF FLOWERING PLANTS Part-2 | NEET 2026 |  NCERT Diagrams Masterclass', v_channel_id, 4, (select id from public.chapters where slug = 'anatomy-of-flowering-plants'), 2, 2650, 'allowed', now())
+  values ('pKH29kV0yNo', 'Anatomy of Flowering Plants Part 2', 'Botany: ANATOMY OF FLOWERING PLANTS Part-2 | NEET 2026 |  NCERT Diagrams Masterclass', v_channel_id, 4, (select id from public.chapters where slug = 'anatomy-of-flowering-plants' and subject_id = 4), 2, 2650, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -150,7 +150,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('Q-GpUlmiXaM', 'Biomolecules Part 1', 'Botany: BIOMOLECULES Part-1 | NEET 2026 |  NCERT Diagrams Masterclass', v_channel_id, 4, (select id from public.chapters where slug = 'biomolecules'), 2, 2585, 'allowed', now())
+  values ('Q-GpUlmiXaM', 'Biomolecules Part 1', 'Botany: BIOMOLECULES Part-1 | NEET 2026 |  NCERT Diagrams Masterclass', v_channel_id, 4, (select id from public.chapters where slug = 'biomolecules' and subject_id = 4), 2, 2585, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -160,7 +160,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('JerjJtXEjbQ', 'Biomolecules Part 2', 'Botany: BIOMOLECULES Part-2 | NEET 2026 |  NCERT Diagrams Masterclass', v_channel_id, 4, (select id from public.chapters where slug = 'biomolecules'), 2, 2581, 'allowed', now())
+  values ('JerjJtXEjbQ', 'Biomolecules Part 2', 'Botany: BIOMOLECULES Part-2 | NEET 2026 |  NCERT Diagrams Masterclass', v_channel_id, 4, (select id from public.chapters where slug = 'biomolecules' and subject_id = 4), 2, 2581, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -170,7 +170,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('OLsHO5iiswM', 'Cell: The Unit of Life Part 1', 'Botany | CELL: THE UNIT OF LIFE Part-1 | NEET 2026 |  NCERT Diagrams Masterclass', v_channel_id, 4, (select id from public.chapters where slug = 'cell-the-unit-of-life'), 2, 2550, 'allowed', now())
+  values ('OLsHO5iiswM', 'Cell: The Unit of Life Part 1', 'Botany | CELL: THE UNIT OF LIFE Part-1 | NEET 2026 |  NCERT Diagrams Masterclass', v_channel_id, 4, (select id from public.chapters where slug = 'cell-the-unit-of-life' and subject_id = 4), 2, 2550, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -180,7 +180,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('0C0HPf8Ip3Q', 'Cell: The Unit of Life Part 2', 'Botany | CELL: THE UNIT OF LIFE Part-2 | NEET 2026 |  NCERT Diagrams Masterclass', v_channel_id, 4, (select id from public.chapters where slug = 'cell-the-unit-of-life'), 2, 2670, 'allowed', now())
+  values ('0C0HPf8Ip3Q', 'Cell: The Unit of Life Part 2', 'Botany | CELL: THE UNIT OF LIFE Part-2 | NEET 2026 |  NCERT Diagrams Masterclass', v_channel_id, 4, (select id from public.chapters where slug = 'cell-the-unit-of-life' and subject_id = 4), 2, 2670, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -190,7 +190,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('KxXUvu7QCxY', 'Cell Cycle and Cell Division', 'Botany | CELL CYCLE & CELL DIVISION | NEET 2026 |  NCERT Diagrams Masterclass', v_channel_id, 4, (select id from public.chapters where slug = 'cell-cycle-and-cell-division'), 2, 2625, 'allowed', now())
+  values ('KxXUvu7QCxY', 'Cell Cycle and Cell Division', 'Botany | CELL CYCLE & CELL DIVISION | NEET 2026 |  NCERT Diagrams Masterclass', v_channel_id, 4, (select id from public.chapters where slug = 'cell-cycle-and-cell-division' and subject_id = 4), 2, 2625, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -200,7 +200,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('ZR0DgxDxAr0', 'Breathing and Exchange of Gases', 'Zoology: BREATHING & EXCHANGE OF GASES | NEET 2026 | NCERT Diagrams Masterclass', v_channel_id, 4, (select id from public.chapters where slug = 'breathing-and-exchange-of-gases'), 2, 2916, 'allowed', now())
+  values ('ZR0DgxDxAr0', 'Breathing and Exchange of Gases', 'Zoology: BREATHING & EXCHANGE OF GASES | NEET 2026 | NCERT Diagrams Masterclass', v_channel_id, 4, (select id from public.chapters where slug = 'breathing-and-exchange-of-gases' and subject_id = 4), 2, 2916, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -210,7 +210,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('8QB5hN7eQsM', 'Body Fluids and Circulation', 'Zoology: BODY FLUIDS & CIRCULATION | NEET 2026 | NCERT Diagrams Masterclass', v_channel_id, 4, (select id from public.chapters where slug = 'body-fluids-and-circulation'), 2, 2600, 'allowed', now())
+  values ('8QB5hN7eQsM', 'Body Fluids and Circulation', 'Zoology: BODY FLUIDS & CIRCULATION | NEET 2026 | NCERT Diagrams Masterclass', v_channel_id, 4, (select id from public.chapters where slug = 'body-fluids-and-circulation' and subject_id = 4), 2, 2600, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -220,7 +220,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('7yXVMS9unk8', 'Excretory Products and Their Elimination Part 1', 'Zoology: EXCRETORY PRODUCTS & THEIR ELIMINATION Part-1 | NEET 2026 | NCERT Diagrams Masterclass', v_channel_id, 4, (select id from public.chapters where slug = 'excretory-products-and-their-elimination'), 2, 2846, 'allowed', now())
+  values ('7yXVMS9unk8', 'Excretory Products and Their Elimination Part 1', 'Zoology: EXCRETORY PRODUCTS & THEIR ELIMINATION Part-1 | NEET 2026 | NCERT Diagrams Masterclass', v_channel_id, 4, (select id from public.chapters where slug = 'excretory-products-and-their-elimination' and subject_id = 4), 2, 2846, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -230,7 +230,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('wcA-6GLe2t8', 'Locomotion and Movement', 'Zoology: LOCOMOTION & MOVEMENT | NEET 2026 | NCERT Diagrams Masterclass', v_channel_id, 4, (select id from public.chapters where slug = 'locomotion-and-movement'), 2, 2775, 'allowed', now())
+  values ('wcA-6GLe2t8', 'Locomotion and Movement', 'Zoology: LOCOMOTION & MOVEMENT | NEET 2026 | NCERT Diagrams Masterclass', v_channel_id, 4, (select id from public.chapters where slug = 'locomotion-and-movement' and subject_id = 4), 2, 2775, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -240,7 +240,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('Yt1hKXF_PXQ', 'Chemical Coordination and Integration', 'Zoology: CHEMICAL COORDINATION & INTEGRATION | NEET 2026 | NCERT Diagrams Masterclass', v_channel_id, 4, (select id from public.chapters where slug = 'chemical-coordination-and-integration'), 2, 2821, 'allowed', now())
+  values ('Yt1hKXF_PXQ', 'Chemical Coordination and Integration', 'Zoology: CHEMICAL COORDINATION & INTEGRATION | NEET 2026 | NCERT Diagrams Masterclass', v_channel_id, 4, (select id from public.chapters where slug = 'chemical-coordination-and-integration' and subject_id = 4), 2, 2821, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -250,7 +250,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('l5-AZOPFGvA', 'Photosynthesis in Higher Plants Part 1', 'Botany | Photosynthesis in Higher Plants (Part-1) | NEET 2026 |  NCERT Diagrams Masterclass', v_channel_id, 4, (select id from public.chapters where slug = 'photosynthesis-in-higher-plants'), 2, 2685, 'allowed', now())
+  values ('l5-AZOPFGvA', 'Photosynthesis in Higher Plants Part 1', 'Botany | Photosynthesis in Higher Plants (Part-1) | NEET 2026 |  NCERT Diagrams Masterclass', v_channel_id, 4, (select id from public.chapters where slug = 'photosynthesis-in-higher-plants' and subject_id = 4), 2, 2685, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -260,7 +260,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('4HzIYfoaYt4', 'Photosynthesis in Higher Plants Part 2', 'Botany | Photosynthesis in Higher Plants (Part-2) | NEET 2026 |  NCERT Diagrams Masterclass', v_channel_id, 4, (select id from public.chapters where slug = 'photosynthesis-in-higher-plants'), 2, 2720, 'allowed', now())
+  values ('4HzIYfoaYt4', 'Photosynthesis in Higher Plants Part 2', 'Botany | Photosynthesis in Higher Plants (Part-2) | NEET 2026 |  NCERT Diagrams Masterclass', v_channel_id, 4, (select id from public.chapters where slug = 'photosynthesis-in-higher-plants' and subject_id = 4), 2, 2720, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -270,7 +270,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('GETeooFF6yg', 'Respiration in Plants Part 1', 'Botany | RESPIRATION IN PLANTS Part-1 | NEET 2026 |  NCERT Diagrams Masterclass', v_channel_id, 4, (select id from public.chapters where slug = 'respiration-in-plants'), 2, 2780, 'allowed', now())
+  values ('GETeooFF6yg', 'Respiration in Plants Part 1', 'Botany | RESPIRATION IN PLANTS Part-1 | NEET 2026 |  NCERT Diagrams Masterclass', v_channel_id, 4, (select id from public.chapters where slug = 'respiration-in-plants' and subject_id = 4), 2, 2780, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -280,7 +280,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('9Gt6HCbOmeM', 'Respiration in Plants Part 2', 'Botany | RESPIRATION IN PLANTS Part-2 | NEET 2026 | NCERT Diagrams Masterclass', v_channel_id, 4, (select id from public.chapters where slug = 'respiration-in-plants'), 2, 2716, 'allowed', now())
+  values ('9Gt6HCbOmeM', 'Respiration in Plants Part 2', 'Botany | RESPIRATION IN PLANTS Part-2 | NEET 2026 | NCERT Diagrams Masterclass', v_channel_id, 4, (select id from public.chapters where slug = 'respiration-in-plants' and subject_id = 4), 2, 2716, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -290,7 +290,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('8NdG9TRdgDA', 'Plant Growth and Development', 'Botany | PLANT GROWTH AND DEVELOPMENT | NEET 2026 | NCERT Diagrams Masterclass', v_channel_id, 4, (select id from public.chapters where slug = 'plant-growth-and-development'), 2, 2751, 'allowed', now())
+  values ('8NdG9TRdgDA', 'Plant Growth and Development', 'Botany | PLANT GROWTH AND DEVELOPMENT | NEET 2026 | NCERT Diagrams Masterclass', v_channel_id, 4, (select id from public.chapters where slug = 'plant-growth-and-development' and subject_id = 4), 2, 2751, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -321,7 +321,7 @@ begin
   select v_playlist_id, cl.id from public.class_levels cl where cl.slug = 'class-11';
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('ObA4c6i1lG0', 'Animal Kingdom Part 4', 'Animal Kingdom Part-4 | Free Bridge Course for NEET 2025 Aspirants | Biology 📚 ALLEN NEET', v_channel_id, 4, (select id from public.chapters where slug = 'animal-kingdom'), 2, 2645, 'allowed', now())
+  values ('ObA4c6i1lG0', 'Animal Kingdom Part 4', 'Animal Kingdom Part-4 | Free Bridge Course for NEET 2025 Aspirants | Biology 📚 ALLEN NEET', v_channel_id, 4, (select id from public.chapters where slug = 'animal-kingdom' and subject_id = 4), 2, 2645, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -331,7 +331,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('27OVvzKSIMI', 'Animal Kingdom Part 3', 'Animal Kingdom Part-3 | Free Bridge Course for NEET 2025 Aspirants | Biology 📚 ALLEN NEET', v_channel_id, 4, (select id from public.chapters where slug = 'animal-kingdom'), 2, 2716, 'allowed', now())
+  values ('27OVvzKSIMI', 'Animal Kingdom Part 3', 'Animal Kingdom Part-3 | Free Bridge Course for NEET 2025 Aspirants | Biology 📚 ALLEN NEET', v_channel_id, 4, (select id from public.chapters where slug = 'animal-kingdom' and subject_id = 4), 2, 2716, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -341,7 +341,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('JVNKI7I-WEE', 'Animal Kingdom Part 2', 'Animal Kingdom Part-2 | Free Bridge Course for NEET 2025 Aspirants | Biology 📚 ALLEN NEET', v_channel_id, 4, (select id from public.chapters where slug = 'animal-kingdom'), 2, 3090, 'allowed', now())
+  values ('JVNKI7I-WEE', 'Animal Kingdom Part 2', 'Animal Kingdom Part-2 | Free Bridge Course for NEET 2025 Aspirants | Biology 📚 ALLEN NEET', v_channel_id, 4, (select id from public.chapters where slug = 'animal-kingdom' and subject_id = 4), 2, 3090, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -351,7 +351,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('zyV6lPwW3Lc', 'Animal Kingdom Part 1', 'Animal Kingdom | Free Bridge Course for NEET 2025 Aspirants | Biology 📚 ALLEN NEET', v_channel_id, 4, (select id from public.chapters where slug = 'animal-kingdom'), 2, 2221, 'allowed', now())
+  values ('zyV6lPwW3Lc', 'Animal Kingdom Part 1', 'Animal Kingdom | Free Bridge Course for NEET 2025 Aspirants | Biology 📚 ALLEN NEET', v_channel_id, 4, (select id from public.chapters where slug = 'animal-kingdom' and subject_id = 4), 2, 2221, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -361,7 +361,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('IIBoY2ZFzUg', 'Chemical Coordination and Integration Part 3', 'Chemical Coordination and Integration Part-3 | Biology - Free Bridge Course for NEET 2025 Aspirants', v_channel_id, 4, (select id from public.chapters where slug = 'chemical-coordination-and-integration'), 2, 2301, 'allowed', now())
+  values ('IIBoY2ZFzUg', 'Chemical Coordination and Integration Part 3', 'Chemical Coordination and Integration Part-3 | Biology - Free Bridge Course for NEET 2025 Aspirants', v_channel_id, 4, (select id from public.chapters where slug = 'chemical-coordination-and-integration' and subject_id = 4), 2, 2301, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -371,7 +371,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('sCKqDnNFoFw', 'Chemical Coordination and Integration Part 2', 'Chemical Coordination and Integration Part-2 | Biology - Free Bridge Course for NEET 2025 Aspirants', v_channel_id, 4, (select id from public.chapters where slug = 'chemical-coordination-and-integration'), 2, 2575, 'allowed', now())
+  values ('sCKqDnNFoFw', 'Chemical Coordination and Integration Part 2', 'Chemical Coordination and Integration Part-2 | Biology - Free Bridge Course for NEET 2025 Aspirants', v_channel_id, 4, (select id from public.chapters where slug = 'chemical-coordination-and-integration' and subject_id = 4), 2, 2575, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -381,7 +381,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('nAuFPLeVNgU', 'Chemical Coordination and Integration Part 1', 'Chemical Coordination and Integration | Biology - Free Bridge Course for NEET 2025 Aspirants 📚 ALLEN', v_channel_id, 4, (select id from public.chapters where slug = 'chemical-coordination-and-integration'), 2, 2675, 'allowed', now())
+  values ('nAuFPLeVNgU', 'Chemical Coordination and Integration Part 1', 'Chemical Coordination and Integration | Biology - Free Bridge Course for NEET 2025 Aspirants 📚 ALLEN', v_channel_id, 4, (select id from public.chapters where slug = 'chemical-coordination-and-integration' and subject_id = 4), 2, 2675, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -391,7 +391,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('FBiHYtFUZBw', 'Neural Control and Coordination Part 2', 'Neural Control & Coordination Part-2 | Biology - Free Bridge Course for NEET 2025 Aspirants 📚 ALLEN', v_channel_id, 4, (select id from public.chapters where slug = 'neural-control-and-coordination'), 2, 2615, 'allowed', now())
+  values ('FBiHYtFUZBw', 'Neural Control and Coordination Part 2', 'Neural Control & Coordination Part-2 | Biology - Free Bridge Course for NEET 2025 Aspirants 📚 ALLEN', v_channel_id, 4, (select id from public.chapters where slug = 'neural-control-and-coordination' and subject_id = 4), 2, 2615, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -401,7 +401,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('wygf61n5tCU', 'Neural Control and Coordination Part 1', 'Neural Control And Coordination | Biology - Free Bridge Course for NEET 2025 Aspirants 📚 ALLEN NEET', v_channel_id, 4, (select id from public.chapters where slug = 'neural-control-and-coordination'), 2, 2125, 'allowed', now())
+  values ('wygf61n5tCU', 'Neural Control and Coordination Part 1', 'Neural Control And Coordination | Biology - Free Bridge Course for NEET 2025 Aspirants 📚 ALLEN NEET', v_channel_id, 4, (select id from public.chapters where slug = 'neural-control-and-coordination' and subject_id = 4), 2, 2125, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -411,7 +411,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('DkhDjLleUcM', 'Locomotion and Movement Part 2', 'Locomotion and Movement Part-2 | Biology - Free Bridge Course for NEET 2025 Aspirants 📚 ALLEN NEET', v_channel_id, 4, (select id from public.chapters where slug = 'locomotion-and-movement'), 2, 3600, 'allowed', now())
+  values ('DkhDjLleUcM', 'Locomotion and Movement Part 2', 'Locomotion and Movement Part-2 | Biology - Free Bridge Course for NEET 2025 Aspirants 📚 ALLEN NEET', v_channel_id, 4, (select id from public.chapters where slug = 'locomotion-and-movement' and subject_id = 4), 2, 3600, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -421,7 +421,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('2hU7Da3gyfk', 'Locomotion and Movement Part 1', 'Locomotion and Movement | Biology - Free Bridge Course for NEET 2025 Aspirants 📚 ALLEN NEET', v_channel_id, 4, (select id from public.chapters where slug = 'locomotion-and-movement'), 2, 3105, 'allowed', now())
+  values ('2hU7Da3gyfk', 'Locomotion and Movement Part 1', 'Locomotion and Movement | Biology - Free Bridge Course for NEET 2025 Aspirants 📚 ALLEN NEET', v_channel_id, 4, (select id from public.chapters where slug = 'locomotion-and-movement' and subject_id = 4), 2, 3105, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -431,7 +431,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('dXO5Woj3jSA', 'Excretory Products and Their Elimination Part 2', 'Excretory Products and their Elimination Part-2 | Biology - Free Bridge Course for NEET 2025', v_channel_id, 4, (select id from public.chapters where slug = 'excretory-products-and-their-elimination'), 2, 3620, 'allowed', now())
+  values ('dXO5Woj3jSA', 'Excretory Products and Their Elimination Part 2', 'Excretory Products and their Elimination Part-2 | Biology - Free Bridge Course for NEET 2025', v_channel_id, 4, (select id from public.chapters where slug = 'excretory-products-and-their-elimination' and subject_id = 4), 2, 3620, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -441,7 +441,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('wiEH5OKYHiM', 'Excretory Products and Their Elimination Part 1', 'Excretory Products and their Elimination | Biology - Free Bridge Course for NEET 2025 Aspirants 📚', v_channel_id, 4, (select id from public.chapters where slug = 'excretory-products-and-their-elimination'), 2, 3120, 'allowed', now())
+  values ('wiEH5OKYHiM', 'Excretory Products and Their Elimination Part 1', 'Excretory Products and their Elimination | Biology - Free Bridge Course for NEET 2025 Aspirants 📚', v_channel_id, 4, (select id from public.chapters where slug = 'excretory-products-and-their-elimination' and subject_id = 4), 2, 3120, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -451,7 +451,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('BdPv9wIJy_8', 'Body Fluids and Circulation Part 2', 'Body Fluids and Circulation (Part-2) | Biology - Free Bridge Course for NEET 2025 Aspirants 📚', v_channel_id, 4, (select id from public.chapters where slug = 'body-fluids-and-circulation'), 2, 3206, 'allowed', now())
+  values ('BdPv9wIJy_8', 'Body Fluids and Circulation Part 2', 'Body Fluids and Circulation (Part-2) | Biology - Free Bridge Course for NEET 2025 Aspirants 📚', v_channel_id, 4, (select id from public.chapters where slug = 'body-fluids-and-circulation' and subject_id = 4), 2, 3206, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -461,7 +461,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('A8OhDFpiPBI', 'Body Fluids and Circulation Part 1', 'Body Fluids and Circulation (Part-1) | Biology - Free Bridge Course for NEET 2025 Aspirants 📚', v_channel_id, 4, (select id from public.chapters where slug = 'body-fluids-and-circulation'), 2, 2810, 'allowed', now())
+  values ('A8OhDFpiPBI', 'Body Fluids and Circulation Part 1', 'Body Fluids and Circulation (Part-1) | Biology - Free Bridge Course for NEET 2025 Aspirants 📚', v_channel_id, 4, (select id from public.chapters where slug = 'body-fluids-and-circulation' and subject_id = 4), 2, 2810, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -471,7 +471,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('t_UQ5pp81tE', 'Breathing and Exchange of Gases Part 2', 'Breathing and Exchange of Gases (Part-2) | Biology - Free Bridge Course for NEET 2025 Aspirants 📚', v_channel_id, 4, (select id from public.chapters where slug = 'breathing-and-exchange-of-gases'), 2, 2831, 'allowed', now())
+  values ('t_UQ5pp81tE', 'Breathing and Exchange of Gases Part 2', 'Breathing and Exchange of Gases (Part-2) | Biology - Free Bridge Course for NEET 2025 Aspirants 📚', v_channel_id, 4, (select id from public.chapters where slug = 'breathing-and-exchange-of-gases' and subject_id = 4), 2, 2831, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -481,7 +481,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('xbaSWxAA4P8', 'Breathing and Exchange of Gases Part 1', 'Breathing and Exchange of Gases (Part-1) | Biology - Free Bridge Course for NEET 2025 Aspirants 📚', v_channel_id, 4, (select id from public.chapters where slug = 'breathing-and-exchange-of-gases'), 2, 3275, 'allowed', now())
+  values ('xbaSWxAA4P8', 'Breathing and Exchange of Gases Part 1', 'Breathing and Exchange of Gases (Part-1) | Biology - Free Bridge Course for NEET 2025 Aspirants 📚', v_channel_id, 4, (select id from public.chapters where slug = 'breathing-and-exchange-of-gases' and subject_id = 4), 2, 3275, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -491,7 +491,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('ctS8PgXDvBA', 'Photosynthesis in Higher Plants Part 3', 'Photosynthesis in Higher plants (Part-3) | Biology - Free Bridge Course for NEET 2025 Aspirants 📚', v_channel_id, 4, (select id from public.chapters where slug = 'photosynthesis-in-higher-plants'), 2, 2500, 'allowed', now())
+  values ('ctS8PgXDvBA', 'Photosynthesis in Higher Plants Part 3', 'Photosynthesis in Higher plants (Part-3) | Biology - Free Bridge Course for NEET 2025 Aspirants 📚', v_channel_id, 4, (select id from public.chapters where slug = 'photosynthesis-in-higher-plants' and subject_id = 4), 2, 2500, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -501,7 +501,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('wge64DhSCmU', 'Photosynthesis in Higher Plants Part 2', 'Photosynthesis in Higher plants (Part-2) | Biology - Free Bridge Course for NEET 2025 Aspirants 📚', v_channel_id, 4, (select id from public.chapters where slug = 'photosynthesis-in-higher-plants'), 2, 2381, 'allowed', now())
+  values ('wge64DhSCmU', 'Photosynthesis in Higher Plants Part 2', 'Photosynthesis in Higher plants (Part-2) | Biology - Free Bridge Course for NEET 2025 Aspirants 📚', v_channel_id, 4, (select id from public.chapters where slug = 'photosynthesis-in-higher-plants' and subject_id = 4), 2, 2381, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -511,7 +511,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('irVeizDloWE', 'Photosynthesis in Higher Plants Part 1', 'Photosynthesis in Higher plants (Part-1) | Biology - Free Bridge Course for NEET 2025 Aspirants 📚', v_channel_id, 4, (select id from public.chapters where slug = 'photosynthesis-in-higher-plants'), 2, 2671, 'allowed', now())
+  values ('irVeizDloWE', 'Photosynthesis in Higher Plants Part 1', 'Photosynthesis in Higher plants (Part-1) | Biology - Free Bridge Course for NEET 2025 Aspirants 📚', v_channel_id, 4, (select id from public.chapters where slug = 'photosynthesis-in-higher-plants' and subject_id = 4), 2, 2671, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -521,7 +521,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('FshxLcr0BT4', 'Cell Cycle and Cell Division Part 2', 'Cell Cycle and Cell Division (Part-2) | Biology - Free Bridge Course for NEET 2025 Aspirants 📚 ALLEN', v_channel_id, 4, (select id from public.chapters where slug = 'cell-cycle-and-cell-division'), 2, 2621, 'allowed', now())
+  values ('FshxLcr0BT4', 'Cell Cycle and Cell Division Part 2', 'Cell Cycle and Cell Division (Part-2) | Biology - Free Bridge Course for NEET 2025 Aspirants 📚 ALLEN', v_channel_id, 4, (select id from public.chapters where slug = 'cell-cycle-and-cell-division' and subject_id = 4), 2, 2621, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -531,7 +531,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('qHUeajS7aYY', 'Cell Cycle and Cell Division Part 1', 'Cell Cycle and Cell Division (Part-1) | Biology - Free Bridge Course for NEET 2025 Aspirants 📚 ALLEN', v_channel_id, 4, (select id from public.chapters where slug = 'cell-cycle-and-cell-division'), 2, 2730, 'allowed', now())
+  values ('qHUeajS7aYY', 'Cell Cycle and Cell Division Part 1', 'Cell Cycle and Cell Division (Part-1) | Biology - Free Bridge Course for NEET 2025 Aspirants 📚 ALLEN', v_channel_id, 4, (select id from public.chapters where slug = 'cell-cycle-and-cell-division' and subject_id = 4), 2, 2730, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -541,7 +541,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('6WbTu-uurnU', 'Biomolecules Part 3', 'Biomolecules (Part-3) | Biology - Free Bridge Course for NEET 2025 Aspirants 📚  @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'biomolecules'), 2, 2590, 'allowed', now())
+  values ('6WbTu-uurnU', 'Biomolecules Part 3', 'Biomolecules (Part-3) | Biology - Free Bridge Course for NEET 2025 Aspirants 📚  @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'biomolecules' and subject_id = 4), 2, 2590, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -551,7 +551,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('2MnwmvF90GY', 'Biomolecules Part 2', 'Biomolecules (Part-2) | Biology - Free Bridge Course for NEET 2025 Aspirants 📚  @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'biomolecules'), 2, 2730, 'allowed', now())
+  values ('2MnwmvF90GY', 'Biomolecules Part 2', 'Biomolecules (Part-2) | Biology - Free Bridge Course for NEET 2025 Aspirants 📚  @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'biomolecules' and subject_id = 4), 2, 2730, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -561,7 +561,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('VR1wo5BOyQA', 'Biomolecules Part 1', 'Biomolecules | Biology - Free Bridge Course for NEET 2025 Aspirants 📚  @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'biomolecules'), 2, 2736, 'allowed', now())
+  values ('VR1wo5BOyQA', 'Biomolecules Part 1', 'Biomolecules | Biology - Free Bridge Course for NEET 2025 Aspirants 📚  @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'biomolecules' and subject_id = 4), 2, 2736, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -571,7 +571,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('Po0n8VluSiM', 'Plant Kingdom Part 3', 'Plant Kingdom (Part-3) | Biology - Free Bridge Course for NEET 2025 Aspirants 📚  @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'plant-kingdom'), 2, 3030, 'allowed', now())
+  values ('Po0n8VluSiM', 'Plant Kingdom Part 3', 'Plant Kingdom (Part-3) | Biology - Free Bridge Course for NEET 2025 Aspirants 📚  @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'plant-kingdom' and subject_id = 4), 2, 3030, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -581,7 +581,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('fwxwjX65cgQ', 'Plant Kingdom Part 2', 'Plant Kingdom (Part-2) | Biology - Free Bridge Course for NEET Aspirants 📚  @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'plant-kingdom'), 2, 2631, 'allowed', now())
+  values ('fwxwjX65cgQ', 'Plant Kingdom Part 2', 'Plant Kingdom (Part-2) | Biology - Free Bridge Course for NEET Aspirants 📚  @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'plant-kingdom' and subject_id = 4), 2, 2631, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -591,7 +591,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('nV_pPbZXtRc', 'Plant Kingdom Part 1', 'Plant Kingdom | Biology - Free Bridge Course for NEET Aspirants 📚  @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'plant-kingdom'), 2, 3101, 'allowed', now())
+  values ('nV_pPbZXtRc', 'Plant Kingdom Part 1', 'Plant Kingdom | Biology - Free Bridge Course for NEET Aspirants 📚  @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'plant-kingdom' and subject_id = 4), 2, 3101, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -601,7 +601,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('elwZ-sO-2Ck', 'Biological Classification Part 4', 'Biological Classification Part-4 | Biology - Free Bridge Course for NEET Aspirants 📚  @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'biological-classification'), 2, 2536, 'allowed', now())
+  values ('elwZ-sO-2Ck', 'Biological Classification Part 4', 'Biological Classification Part-4 | Biology - Free Bridge Course for NEET Aspirants 📚  @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'biological-classification' and subject_id = 4), 2, 2536, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -611,7 +611,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('fzeKk6GSucI', 'Biological Classification Part 3', 'Biological Classification Part-3 | Biology - Free Bridge Course for NEET Aspirants 📚  @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'biological-classification'), 2, 2861, 'allowed', now())
+  values ('fzeKk6GSucI', 'Biological Classification Part 3', 'Biological Classification Part-3 | Biology - Free Bridge Course for NEET Aspirants 📚  @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'biological-classification' and subject_id = 4), 2, 2861, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -621,7 +621,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('9cOjbV4FBeg', 'Biological Classification Part 2', 'Biological Classification Part-2 | Biology - Free Bridge Course for NEET Aspirants 📚  @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'biological-classification'), 2, 2641, 'allowed', now())
+  values ('9cOjbV4FBeg', 'Biological Classification Part 2', 'Biological Classification Part-2 | Biology - Free Bridge Course for NEET Aspirants 📚  @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'biological-classification' and subject_id = 4), 2, 2641, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -631,7 +631,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('tOei9lXr7oo', 'Biological Classification Part 1', 'Biological Classification | Biology - Free Bridge Course for NEET Aspirants 📚 @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'biological-classification'), 2, 2771, 'allowed', now())
+  values ('tOei9lXr7oo', 'Biological Classification Part 1', 'Biological Classification | Biology - Free Bridge Course for NEET Aspirants 📚 @ALLENNEET', v_channel_id, 4, (select id from public.chapters where slug = 'biological-classification' and subject_id = 4), 2, 2771, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then

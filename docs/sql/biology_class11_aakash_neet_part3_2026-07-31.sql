@@ -36,7 +36,7 @@ begin
   select v_playlist_id, cl.id from public.class_levels cl where cl.slug = 'class-11';
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('NzGj3eEXzCQ', 'Male Reproductive System Class 12 Biology - Human Reproduction Concepts (L 1)', 'Male Reproductive System Class 12 Biology - Human Reproduction Concepts (L 1) | NEET 2023 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'human-reproduction'), 2, 3285, 'allowed', now())
+  values ('NzGj3eEXzCQ', 'Male Reproductive System Class 12 Biology - Human Reproduction Concepts (L 1)', 'Male Reproductive System Class 12 Biology - Human Reproduction Concepts (L 1) | NEET 2023 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'human-reproduction' and subject_id = 4), 2, 3285, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -46,7 +46,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('wdARwcQhEIQ', 'Human Reproduction Class 12 Biology Concepts (L 2)', 'Human Reproduction Class 12 Biology Concepts (L 2) | NEET Zoology 2023 Exam Preparation', v_channel_id, 4, (select id from public.chapters where slug = 'human-reproduction'), 2, 3252, 'allowed', now())
+  values ('wdARwcQhEIQ', 'Human Reproduction Class 12 Biology Concepts (L 2)', 'Human Reproduction Class 12 Biology Concepts (L 2) | NEET Zoology 2023 Exam Preparation', v_channel_id, 4, (select id from public.chapters where slug = 'human-reproduction' and subject_id = 4), 2, 3252, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -56,7 +56,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('pRv7Jq8CpA4', 'Accessory Ducts and Glands Class 12 Biology Concepts - Human Reproduction (L 3)', 'Accessory Ducts and Glands Class 12 Biology Concepts - Human Reproduction (L 3) | NEET 2023 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'human-reproduction'), 2, 3266, 'allowed', now())
+  values ('pRv7Jq8CpA4', 'Accessory Ducts and Glands Class 12 Biology Concepts - Human Reproduction (L 3)', 'Accessory Ducts and Glands Class 12 Biology Concepts - Human Reproduction (L 3) | NEET 2023 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'human-reproduction' and subject_id = 4), 2, 3266, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -66,7 +66,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('JZvj5IvqqUg', 'Female Reproductive System Class 12 Biology - Human Reproduction Concepts (L 4)', 'Female Reproductive System Class 12 Biology - Human Reproduction Concepts (L 4) | NEET 2023 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'human-reproduction'), 2, 3187, 'allowed', now())
+  values ('JZvj5IvqqUg', 'Female Reproductive System Class 12 Biology - Human Reproduction Concepts (L 4)', 'Female Reproductive System Class 12 Biology - Human Reproduction Concepts (L 4) | NEET 2023 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'human-reproduction' and subject_id = 4), 2, 3187, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -76,7 +76,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('QHgiVN4e8qQ', 'Oogenesis Class 12 Biology - Human Reproduction Concepts (L 5)', 'Oogenesis Class 12 Biology - Human Reproduction Concepts (L 5) | NEET Zoology 2023 Exam Prep', v_channel_id, 4, (select id from public.chapters where slug = 'human-reproduction'), 2, 3431, 'allowed', now())
+  values ('QHgiVN4e8qQ', 'Oogenesis Class 12 Biology - Human Reproduction Concepts (L 5)', 'Oogenesis Class 12 Biology - Human Reproduction Concepts (L 5) | NEET Zoology 2023 Exam Prep', v_channel_id, 4, (select id from public.chapters where slug = 'human-reproduction' and subject_id = 4), 2, 3431, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -86,7 +86,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('1yKj4npbjfA', 'Human Reproduction Class 12 Biology Concepts (L 6)', 'Human Reproduction Class 12 Biology Concepts (L 6) | NEET Zoology | NEET 2023 Exam Preparation', v_channel_id, 4, (select id from public.chapters where slug = 'human-reproduction'), 2, 3306, 'allowed', now())
+  values ('1yKj4npbjfA', 'Human Reproduction Class 12 Biology Concepts (L 6)', 'Human Reproduction Class 12 Biology Concepts (L 6) | NEET Zoology | NEET 2023 Exam Preparation', v_channel_id, 4, (select id from public.chapters where slug = 'human-reproduction' and subject_id = 4), 2, 3306, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -96,7 +96,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('oYbnKtx2vYc', 'Fertilisation Class 12 Biology NEET - Human Reproduction Concepts (L 7)', 'Fertilisation Class 12 Biology NEET - Human Reproduction Concepts (L 7) | NEET Zoology 2023 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'human-reproduction'), 2, 3384, 'allowed', now())
+  values ('oYbnKtx2vYc', 'Fertilisation Class 12 Biology NEET - Human Reproduction Concepts (L 7)', 'Fertilisation Class 12 Biology NEET - Human Reproduction Concepts (L 7) | NEET Zoology 2023 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'human-reproduction' and subject_id = 4), 2, 3384, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -106,7 +106,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('uWQI0X9NeW4', 'NEET 2023 - Human Reproduction Class 12 Biology Concepts (L 8)', 'NEET 2023 - Human Reproduction Class 12 Biology Concepts (L 8) | NEET Zoology 2023 Exam Prep', v_channel_id, 4, (select id from public.chapters where slug = 'human-reproduction'), 2, 3275, 'allowed', now())
+  values ('uWQI0X9NeW4', 'NEET 2023 - Human Reproduction Class 12 Biology Concepts (L 8)', 'NEET 2023 - Human Reproduction Class 12 Biology Concepts (L 8) | NEET Zoology 2023 Exam Prep', v_channel_id, 4, (select id from public.chapters where slug = 'human-reproduction' and subject_id = 4), 2, 3275, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -116,7 +116,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('dhWzA9JnbCo', 'Pregnancy and Embryonic Development Class 12 Biology Concepts - Human Reproduction (L9)', 'Pregnancy and Embryonic Development Class 12 Biology Concepts - Human Reproduction (L9) | NEET 2023', v_channel_id, 4, (select id from public.chapters where slug = 'human-reproduction'), 2, 2870, 'allowed', now())
+  values ('dhWzA9JnbCo', 'Pregnancy and Embryonic Development Class 12 Biology Concepts - Human Reproduction (L9)', 'Pregnancy and Embryonic Development Class 12 Biology Concepts - Human Reproduction (L9) | NEET 2023', v_channel_id, 4, (select id from public.chapters where slug = 'human-reproduction' and subject_id = 4), 2, 2870, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -126,7 +126,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('v_yR7xEcpqI', 'Parturition Class 12 Biology (Childbirth) - Human Reproduction Concepts (L10)', 'Parturition Class 12 Biology (Childbirth) - Human Reproduction Concepts (L10) | NEET 2023 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'human-reproduction'), 2, 3153, 'allowed', now())
+  values ('v_yR7xEcpqI', 'Parturition Class 12 Biology (Childbirth) - Human Reproduction Concepts (L10)', 'Parturition Class 12 Biology (Childbirth) - Human Reproduction Concepts (L10) | NEET 2023 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'human-reproduction' and subject_id = 4), 2, 3153, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -136,7 +136,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('OPkzhU6PsIk', 'How Twins are Formed - Human Reproduction Class 12 Biology Concepts (L 11)', 'How Twins are Formed - Human Reproduction Class 12 Biology Concepts (L 11) | NEET 2023 Biology Exam', v_channel_id, 4, (select id from public.chapters where slug = 'human-reproduction'), 2, 2804, 'allowed', now())
+  values ('OPkzhU6PsIk', 'How Twins are Formed - Human Reproduction Class 12 Biology Concepts (L 11)', 'How Twins are Formed - Human Reproduction Class 12 Biology Concepts (L 11) | NEET 2023 Biology Exam', v_channel_id, 4, (select id from public.chapters where slug = 'human-reproduction' and subject_id = 4), 2, 2804, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -146,7 +146,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('LQW-FzpKPMk', 'Fetal Circulation and Afterbirth Modifications - Human Reproduction Concepts', 'Fetal Circulation and Afterbirth Modifications - Human Reproduction Class 12 Biology Concepts (L12)', v_channel_id, 4, (select id from public.chapters where slug = 'human-reproduction'), 2, 3135, 'allowed', now())
+  values ('LQW-FzpKPMk', 'Fetal Circulation and Afterbirth Modifications - Human Reproduction Concepts', 'Fetal Circulation and Afterbirth Modifications - Human Reproduction Class 12 Biology Concepts (L12)', v_channel_id, 4, (select id from public.chapters where slug = 'human-reproduction' and subject_id = 4), 2, 3135, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -156,7 +156,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('tNckVc91A7c', 'Lactation - Human Reproduction Class 12 Biology Concepts (L13)', 'Lactation - Human Reproduction Class 12 Biology Concepts (L13) | NEET 2022 Zoology Exam', v_channel_id, 4, (select id from public.chapters where slug = 'human-reproduction'), 2, 3120, 'allowed', now())
+  values ('tNckVc91A7c', 'Lactation - Human Reproduction Class 12 Biology Concepts (L13)', 'Lactation - Human Reproduction Class 12 Biology Concepts (L13) | NEET 2022 Zoology Exam', v_channel_id, 4, (select id from public.chapters where slug = 'human-reproduction' and subject_id = 4), 2, 3120, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -166,7 +166,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('5UdseWXiqtk', 'Menstrual Cycle Class 12 Biology - Human Reproduction Concepts (L14)', 'Menstrual Cycle Class 12 Biology - Human Reproduction Concepts (L14) | NEET 2023 Biology Exam', v_channel_id, 4, (select id from public.chapters where slug = 'human-reproduction'), 2, 3574, 'allowed', now())
+  values ('5UdseWXiqtk', 'Menstrual Cycle Class 12 Biology - Human Reproduction Concepts (L14)', 'Menstrual Cycle Class 12 Biology - Human Reproduction Concepts (L14) | NEET 2023 Biology Exam', v_channel_id, 4, (select id from public.chapters where slug = 'human-reproduction' and subject_id = 4), 2, 3574, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -176,7 +176,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('Wic9jiEl8zk', 'Top 10 Important Questions from Human Reproduction Class 12 Biology (Botany)', 'Top 10 Important Questions from Human Reproduction Class 12 Biology (Botany) | NEET 2023 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'human-reproduction'), 2, 2746, 'allowed', now())
+  values ('Wic9jiEl8zk', 'Top 10 Important Questions from Human Reproduction Class 12 Biology (Botany)', 'Top 10 Important Questions from Human Reproduction Class 12 Biology (Botany) | NEET 2023 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'human-reproduction' and subject_id = 4), 2, 2746, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -186,7 +186,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('X8q9Z2G-Kfs', 'Top 10 Important Questions from Human Reproduction Class 12 Biology', 'Top 10 Important Questions from Human Reproduction Class 12 Biology | NEET 2023 Exam Preparation', v_channel_id, 4, (select id from public.chapters where slug = 'human-reproduction'), 2, 3298, 'allowed', now())
+  values ('X8q9Z2G-Kfs', 'Top 10 Important Questions from Human Reproduction Class 12 Biology', 'Top 10 Important Questions from Human Reproduction Class 12 Biology | NEET 2023 Exam Preparation', v_channel_id, 4, (select id from public.chapters where slug = 'human-reproduction' and subject_id = 4), 2, 3298, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -196,7 +196,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('4sRkjeV36gY', 'Human Reproduction Menstrual Cycle and Fertilization NEET 2024', 'Human Reproduction Menstrual Cycle and Fertilization NEET 2024 | Sachin Sir #neet #neet2023', v_channel_id, 4, (select id from public.chapters where slug = 'human-reproduction'), 2, 3952, 'allowed', now())
+  values ('4sRkjeV36gY', 'Human Reproduction Menstrual Cycle and Fertilization NEET 2024', 'Human Reproduction Menstrual Cycle and Fertilization NEET 2024 | Sachin Sir #neet #neet2023', v_channel_id, 4, (select id from public.chapters where slug = 'human-reproduction' and subject_id = 4), 2, 3952, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -227,7 +227,7 @@ begin
   select v_playlist_id, cl.id from public.class_levels cl where cl.slug = 'class-11';
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('rSdSidoUY2s', 'Introduction to Reproductive Health Class 12 Biology (Zoology) Chapter Explained', 'Introduction to Reproductive Health Class 12 Biology (Zoology) Chapter Explained | NEET 2023 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'reproductive-health'), 2, 3230, 'allowed', now())
+  values ('rSdSidoUY2s', 'Introduction to Reproductive Health Class 12 Biology (Zoology) Chapter Explained', 'Introduction to Reproductive Health Class 12 Biology (Zoology) Chapter Explained | NEET 2023 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'reproductive-health' and subject_id = 4), 2, 3230, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -237,7 +237,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('EsjNViQ4DIU', 'Contraceptive Methods - Reproductive Health Class 12 Biology (Zoology) Concepts', 'Contraceptive Methods - Reproductive Health Class 12 Biology (Zoology) Concepts | NEET 2023 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'reproductive-health'), 2, 3268, 'allowed', now())
+  values ('EsjNViQ4DIU', 'Contraceptive Methods - Reproductive Health Class 12 Biology (Zoology) Concepts', 'Contraceptive Methods - Reproductive Health Class 12 Biology (Zoology) Concepts | NEET 2023 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'reproductive-health' and subject_id = 4), 2, 3268, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -247,7 +247,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('H1d9HUHrZoQ', 'Hormonal Contraceptives - Reproductive Health Class 12 Biology Concepts (L3)', 'Hormonal Contraceptives - Reproductive Health Class 12 Biology Concepts (L3) | NEET 2023 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'reproductive-health'), 2, 3392, 'allowed', now())
+  values ('H1d9HUHrZoQ', 'Hormonal Contraceptives - Reproductive Health Class 12 Biology Concepts (L3)', 'Hormonal Contraceptives - Reproductive Health Class 12 Biology Concepts (L3) | NEET 2023 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'reproductive-health' and subject_id = 4), 2, 3392, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -257,7 +257,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('PnqrSl1Jkhk', 'MTP and STD''s - Reproductive Health Class 12 Biology Concept Explained (L4)', 'MTP and STD''s - Reproductive Health Class 12 Biology Concept Explained (L4) | NEET 2023 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'reproductive-health'), 2, 2944, 'allowed', now())
+  values ('PnqrSl1Jkhk', 'MTP and STD''s - Reproductive Health Class 12 Biology Concept Explained (L4)', 'MTP and STD''s - Reproductive Health Class 12 Biology Concept Explained (L4) | NEET 2023 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'reproductive-health' and subject_id = 4), 2, 2944, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -267,7 +267,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('-YCDaTW6LOM', 'Acquired Immune Deficiency Syndrome (AIDS) Class 12 Biology - Reproductive Health (L5)', 'Acquired Immune Deficiency Syndrome (AIDS) Class 12 Biology - Reproductive Health (L5) | NEET 2023', v_channel_id, 4, (select id from public.chapters where slug = 'reproductive-health'), 2, 3700, 'allowed', now())
+  values ('-YCDaTW6LOM', 'Acquired Immune Deficiency Syndrome (AIDS) Class 12 Biology - Reproductive Health (L5)', 'Acquired Immune Deficiency Syndrome (AIDS) Class 12 Biology - Reproductive Health (L5) | NEET 2023', v_channel_id, 4, (select id from public.chapters where slug = 'reproductive-health' and subject_id = 4), 2, 3700, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -277,7 +277,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('rjbXpM0QS30', 'Infertility & Assisted Reproductive Technologies (ART) Class 12 Biology Concepts (L6)', 'Infertility & Assisted Reproductive Technologies (ART) Class 12 Biology Concepts (L6) | NEET 2023', v_channel_id, 4, (select id from public.chapters where slug = 'reproductive-health'), 2, 2987, 'allowed', now())
+  values ('rjbXpM0QS30', 'Infertility & Assisted Reproductive Technologies (ART) Class 12 Biology Concepts (L6)', 'Infertility & Assisted Reproductive Technologies (ART) Class 12 Biology Concepts (L6) | NEET 2023', v_channel_id, 4, (select id from public.chapters where slug = 'reproductive-health' and subject_id = 4), 2, 2987, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -287,7 +287,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('ShsNGuFMGwo', 'Reproductive Health Class 12 Biology MCQs & Questions Solved L7 (Chapter 4)', 'Reproductive Health Class 12 Biology MCQs & Questions Solved L7 (Chapter 4) | NEET 2023 Biology', v_channel_id, 4, (select id from public.chapters where slug = 'reproductive-health'), 2, 2986, 'allowed', now())
+  values ('ShsNGuFMGwo', 'Reproductive Health Class 12 Biology MCQs & Questions Solved L7 (Chapter 4)', 'Reproductive Health Class 12 Biology MCQs & Questions Solved L7 (Chapter 4) | NEET 2023 Biology', v_channel_id, 4, (select id from public.chapters where slug = 'reproductive-health' and subject_id = 4), 2, 2986, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -297,7 +297,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('IjgtsM59f6M', '10 Most Important Questions from Reproductive Health Class 12 Biology', '10 Most Important Questions from Reproductive Health Class 12 Biology | NEET 2023 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'reproductive-health'), 2, 2863, 'allowed', now())
+  values ('IjgtsM59f6M', '10 Most Important Questions from Reproductive Health Class 12 Biology', '10 Most Important Questions from Reproductive Health Class 12 Biology | NEET 2023 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'reproductive-health' and subject_id = 4), 2, 2863, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -328,7 +328,7 @@ begin
   select v_playlist_id, cl.id from public.class_levels cl where cl.slug = 'class-11';
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('nw6DgUpFq7M', 'Introduction to Genetics - Principles of Inheritance & Variation Concept Explained', 'Introduction to Genetics Class 12 Biology - Principles of Inheritance & Variation Concept Explained', v_channel_id, 4, (select id from public.chapters where slug = 'principles-of-inheritance-and-variation'), 2, 2839, 'allowed', now())
+  values ('nw6DgUpFq7M', 'Introduction to Genetics - Principles of Inheritance & Variation Concept Explained', 'Introduction to Genetics Class 12 Biology - Principles of Inheritance & Variation Concept Explained', v_channel_id, 4, (select id from public.chapters where slug = 'principles-of-inheritance-and-variation' and subject_id = 4), 2, 2839, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -338,7 +338,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('XYCwzz_K_9k', 'Mendel''s Experiments - Principles of Inheritance and Variations Class 12 Biology', 'Mendel''s Experiments - Principles of Inheritance and Variations Class 12  Biology | NEET 2023 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'principles-of-inheritance-and-variation'), 2, 2887, 'allowed', now())
+  values ('XYCwzz_K_9k', 'Mendel''s Experiments - Principles of Inheritance and Variations Class 12 Biology', 'Mendel''s Experiments - Principles of Inheritance and Variations Class 12  Biology | NEET 2023 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'principles-of-inheritance-and-variation' and subject_id = 4), 2, 2887, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -348,7 +348,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('fi-ELUV_MF4', 'Monohybrid and Dihybrid Cross - Principles of Inheritance and Variations Class 12 Biology', 'Monohybrid and Dihybrid Cross - Principles of Inheritance and Variations Class 12 Biology (L3)', v_channel_id, 4, (select id from public.chapters where slug = 'principles-of-inheritance-and-variation'), 2, 2702, 'allowed', now())
+  values ('fi-ELUV_MF4', 'Monohybrid and Dihybrid Cross - Principles of Inheritance and Variations Class 12 Biology', 'Monohybrid and Dihybrid Cross - Principles of Inheritance and Variations Class 12 Biology (L3)', v_channel_id, 4, (select id from public.chapters where slug = 'principles-of-inheritance-and-variation' and subject_id = 4), 2, 2702, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -358,7 +358,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('1JlUfDovez8', 'Laws of Inheritance - Principles of Inheritance and Variation Class 12 Biology Concepts', 'Laws of Inheritance - Principles of Inheritance and Variation Class 12 Biology Concepts | NEET 2023', v_channel_id, 4, (select id from public.chapters where slug = 'principles-of-inheritance-and-variation'), 2, 3437, 'allowed', now())
+  values ('1JlUfDovez8', 'Laws of Inheritance - Principles of Inheritance and Variation Class 12 Biology Concepts', 'Laws of Inheritance - Principles of Inheritance and Variation Class 12 Biology Concepts | NEET 2023', v_channel_id, 4, (select id from public.chapters where slug = 'principles-of-inheritance-and-variation' and subject_id = 4), 2, 3437, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -368,7 +368,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('wmg-h2XTiyQ', 'Incomplete Dominance & Codominance - Principles of Inheritance & Variation Concept', 'Incomplete Dominance & Codominance - Principles of Inheritance & Variation Class 12 Biology Concept', v_channel_id, 4, (select id from public.chapters where slug = 'principles-of-inheritance-and-variation'), 2, 3195, 'allowed', now())
+  values ('wmg-h2XTiyQ', 'Incomplete Dominance & Codominance - Principles of Inheritance & Variation Concept', 'Incomplete Dominance & Codominance - Principles of Inheritance & Variation Class 12 Biology Concept', v_channel_id, 4, (select id from public.chapters where slug = 'principles-of-inheritance-and-variation' and subject_id = 4), 2, 3195, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -378,7 +378,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('XRGtE4YzwSc', 'Multiple Alleles & Lethal Genes - Principles of Inheritance and Variation Concept', 'Multiple Alleles & Lethal Genes - Principles of Inheritance and Variation Class 12 Biology Concept', v_channel_id, 4, (select id from public.chapters where slug = 'principles-of-inheritance-and-variation'), 2, 3539, 'allowed', now())
+  values ('XRGtE4YzwSc', 'Multiple Alleles & Lethal Genes - Principles of Inheritance and Variation Concept', 'Multiple Alleles & Lethal Genes - Principles of Inheritance and Variation Class 12 Biology Concept', v_channel_id, 4, (select id from public.chapters where slug = 'principles-of-inheritance-and-variation' and subject_id = 4), 2, 3539, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -388,7 +388,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('oqLamGHrdjw', 'Pleiotropy & Polygenic Inheritance - Principles of Inheritance & Variation Concept', 'Pleiotropy & Polygenic Inheritance - Principles of Inheritance & Variation Class 12 Biology Concept', v_channel_id, 4, (select id from public.chapters where slug = 'principles-of-inheritance-and-variation'), 2, 2775, 'allowed', now())
+  values ('oqLamGHrdjw', 'Pleiotropy & Polygenic Inheritance - Principles of Inheritance & Variation Concept', 'Pleiotropy & Polygenic Inheritance - Principles of Inheritance & Variation Class 12 Biology Concept', v_channel_id, 4, (select id from public.chapters where slug = 'principles-of-inheritance-and-variation' and subject_id = 4), 2, 2775, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -398,7 +398,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('pR_tDI1U64M', 'Sex Determination in Humans - Principles of Inheritance & Variation Concept', 'Sex Determination in Humans - Principles of Inheritance & Variation Class 12 Biology Concept', v_channel_id, 4, (select id from public.chapters where slug = 'principles-of-inheritance-and-variation'), 2, 3643, 'allowed', now())
+  values ('pR_tDI1U64M', 'Sex Determination in Humans - Principles of Inheritance & Variation Concept', 'Sex Determination in Humans - Principles of Inheritance & Variation Class 12 Biology Concept', v_channel_id, 4, (select id from public.chapters where slug = 'principles-of-inheritance-and-variation' and subject_id = 4), 2, 3643, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -408,7 +408,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('hN3vFaVrA2g', 'Sex Determination in Animals - Principles of Inheritance & Variation Concept', 'Sex Determination in Animals - Principles of Inheritance & Variation Class 12 Biology Concept', v_channel_id, 4, (select id from public.chapters where slug = 'principles-of-inheritance-and-variation'), 2, 2188, 'allowed', now())
+  values ('hN3vFaVrA2g', 'Sex Determination in Animals - Principles of Inheritance & Variation Concept', 'Sex Determination in Animals - Principles of Inheritance & Variation Class 12 Biology Concept', v_channel_id, 4, (select id from public.chapters where slug = 'principles-of-inheritance-and-variation' and subject_id = 4), 2, 2188, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -418,7 +418,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('vl5z8rHwAfM', 'Chromosomal Theory of Inheritance - Principles of Inheritance & Variation Concept', 'Chromosomal Theory of Inheritance - Principles of Inheritance & Variation Class 12 Biology Concept', v_channel_id, 4, (select id from public.chapters where slug = 'principles-of-inheritance-and-variation'), 2, 3059, 'allowed', now())
+  values ('vl5z8rHwAfM', 'Chromosomal Theory of Inheritance - Principles of Inheritance & Variation Concept', 'Chromosomal Theory of Inheritance - Principles of Inheritance & Variation Class 12 Biology Concept', v_channel_id, 4, (select id from public.chapters where slug = 'principles-of-inheritance-and-variation' and subject_id = 4), 2, 3059, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -428,7 +428,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('q6q1NcUUZCo', 'Human Genetic Disorders (Chromosomal Disorders) - Principles of Inheritance & Variation', 'Human Genetic Disorders (Chromosomal Disorders) - Principles of Inheritance & Variation Class 12', v_channel_id, 4, (select id from public.chapters where slug = 'principles-of-inheritance-and-variation'), 2, 2697, 'allowed', now())
+  values ('q6q1NcUUZCo', 'Human Genetic Disorders (Chromosomal Disorders) - Principles of Inheritance & Variation', 'Human Genetic Disorders (Chromosomal Disorders) - Principles of Inheritance & Variation Class 12', v_channel_id, 4, (select id from public.chapters where slug = 'principles-of-inheritance-and-variation' and subject_id = 4), 2, 2697, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -438,7 +438,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('c433WWv2haA', 'Human Genetic Disorders -I (Mendelian) - Principles of Inheritance & Variation Class 12', 'Human Genetic Disorders -I (Mendelian) - Principles of Inheritance & Variation Class 12 | NEET 2023', v_channel_id, 4, (select id from public.chapters where slug = 'principles-of-inheritance-and-variation'), 2, 3429, 'allowed', now())
+  values ('c433WWv2haA', 'Human Genetic Disorders -I (Mendelian) - Principles of Inheritance & Variation Class 12', 'Human Genetic Disorders -I (Mendelian) - Principles of Inheritance & Variation Class 12 | NEET 2023', v_channel_id, 4, (select id from public.chapters where slug = 'principles-of-inheritance-and-variation' and subject_id = 4), 2, 3429, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -448,7 +448,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('zNbUG_FH_t8', 'Human Genetic Disorders II (Mendelian) - Principles of Inheritance & Variation Class 12', 'Human Genetic Disorders II (Mendelian) - Principles of Inheritance & Variation Class 12 | NEET 2023', v_channel_id, 4, (select id from public.chapters where slug = 'principles-of-inheritance-and-variation'), 2, 2681, 'allowed', now())
+  values ('zNbUG_FH_t8', 'Human Genetic Disorders II (Mendelian) - Principles of Inheritance & Variation Class 12', 'Human Genetic Disorders II (Mendelian) - Principles of Inheritance & Variation Class 12 | NEET 2023', v_channel_id, 4, (select id from public.chapters where slug = 'principles-of-inheritance-and-variation' and subject_id = 4), 2, 2681, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -479,7 +479,7 @@ begin
   select v_playlist_id, cl.id from public.class_levels cl where cl.slug = 'class-11';
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('zIUvu7wlkPo', 'Introduction to Molecular Basis of Inheritance Class 12 Biology Chapter Explained', 'Introduction to Molecular Basis of Inheritance Class 12 Biology Chapter Explained | NEET 2023 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'molecular-basis-of-inheritance'), 2, 3388, 'allowed', now())
+  values ('zIUvu7wlkPo', 'Introduction to Molecular Basis of Inheritance Class 12 Biology Chapter Explained', 'Introduction to Molecular Basis of Inheritance Class 12 Biology Chapter Explained | NEET 2023 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'molecular-basis-of-inheritance' and subject_id = 4), 2, 3388, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -489,7 +489,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('jzy_3q6Pl0k', 'Search for Genetic Material - Molecular Basis of Inheritance Class 12 Biology Chapter', 'Search for Genetic Material - Molecular Basis of Inheritance Class 12 Biology Chapter | NEET 2023', v_channel_id, 4, (select id from public.chapters where slug = 'molecular-basis-of-inheritance'), 2, 2903, 'allowed', now())
+  values ('jzy_3q6Pl0k', 'Search for Genetic Material - Molecular Basis of Inheritance Class 12 Biology Chapter', 'Search for Genetic Material - Molecular Basis of Inheritance Class 12 Biology Chapter | NEET 2023', v_channel_id, 4, (select id from public.chapters where slug = 'molecular-basis-of-inheritance' and subject_id = 4), 2, 2903, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -499,7 +499,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('3934GfdSnEY', 'DNA Replication - Molecular Basis of Inheritance Class 12 Biology (P-1) (Zoology)', 'DNA Replication - Molecular Basis of Inheritance Class 12 Biology (P-1) (Zoology)  | NEET 2023 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'molecular-basis-of-inheritance'), 2, 2610, 'allowed', now())
+  values ('3934GfdSnEY', 'DNA Replication - Molecular Basis of Inheritance Class 12 Biology (P-1) (Zoology)', 'DNA Replication - Molecular Basis of Inheritance Class 12 Biology (P-1) (Zoology)  | NEET 2023 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'molecular-basis-of-inheritance' and subject_id = 4), 2, 2610, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -509,7 +509,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('3C_aXKLCnQE', 'DNA Replication - Molecular Basis of Inheritance Class 12 Biology (P-2) (Zoology)', 'DNA Replication - Molecular Basis of Inheritance Class 12 Biology (P-2) (Zoology) | NEET 2023 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'molecular-basis-of-inheritance'), 2, 2387, 'allowed', now())
+  values ('3C_aXKLCnQE', 'DNA Replication - Molecular Basis of Inheritance Class 12 Biology (P-2) (Zoology)', 'DNA Replication - Molecular Basis of Inheritance Class 12 Biology (P-2) (Zoology) | NEET 2023 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'molecular-basis-of-inheritance' and subject_id = 4), 2, 2387, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -519,7 +519,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('nGPjWzPHz_U', 'Transcription (mRNA Synthesis) - Molecular Basis of Inheritance Class 12 Biology Concept', 'Transcription (mRNA Synthesis) - Molecular Basis of Inheritance Class 12 Biology Concept | NEET 2023', v_channel_id, 4, (select id from public.chapters where slug = 'molecular-basis-of-inheritance'), 2, 3285, 'allowed', now())
+  values ('nGPjWzPHz_U', 'Transcription (mRNA Synthesis) - Molecular Basis of Inheritance Class 12 Biology Concept', 'Transcription (mRNA Synthesis) - Molecular Basis of Inheritance Class 12 Biology Concept | NEET 2023', v_channel_id, 4, (select id from public.chapters where slug = 'molecular-basis-of-inheritance' and subject_id = 4), 2, 3285, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -529,7 +529,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('cHJyP0jDTQc', 'Transcription (mRNA Synthesis-II) - Molecular Basis of Inheritance Concepts', 'Transcription (mRNA Synthesis-II) - Molecular Basis of Inheritance Class 12 Biology Concepts', v_channel_id, 4, (select id from public.chapters where slug = 'molecular-basis-of-inheritance'), 2, 2632, 'allowed', now())
+  values ('cHJyP0jDTQc', 'Transcription (mRNA Synthesis-II) - Molecular Basis of Inheritance Concepts', 'Transcription (mRNA Synthesis-II) - Molecular Basis of Inheritance Class 12 Biology Concepts', v_channel_id, 4, (select id from public.chapters where slug = 'molecular-basis-of-inheritance' and subject_id = 4), 2, 2632, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -539,7 +539,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('gXFIfDGfYB4', 'Translation (Pt 1) - Molecular Basis of Inheritance Class 12 Biology (Zoology) Concept', 'Translation (Pt 1) - Molecular Basis of Inheritance Class 12 Biology (Zoology) Concept | NEET 2023', v_channel_id, 4, (select id from public.chapters where slug = 'molecular-basis-of-inheritance'), 2, 2928, 'allowed', now())
+  values ('gXFIfDGfYB4', 'Translation (Pt 1) - Molecular Basis of Inheritance Class 12 Biology (Zoology) Concept', 'Translation (Pt 1) - Molecular Basis of Inheritance Class 12 Biology (Zoology) Concept | NEET 2023', v_channel_id, 4, (select id from public.chapters where slug = 'molecular-basis-of-inheritance' and subject_id = 4), 2, 2928, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -549,7 +549,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('RH6wwdkdy9s', 'Translation (Pt 2) - Molecular Basis of Inheritance Class 12 Biology (Zoology) Concept', 'Translation (Pt 2) - Molecular Basis of Inheritance Class 12 Biology (Zoology) Concept | NEET 2023', v_channel_id, 4, (select id from public.chapters where slug = 'molecular-basis-of-inheritance'), 2, 3164, 'allowed', now())
+  values ('RH6wwdkdy9s', 'Translation (Pt 2) - Molecular Basis of Inheritance Class 12 Biology (Zoology) Concept', 'Translation (Pt 2) - Molecular Basis of Inheritance Class 12 Biology (Zoology) Concept | NEET 2023', v_channel_id, 4, (select id from public.chapters where slug = 'molecular-basis-of-inheritance' and subject_id = 4), 2, 3164, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -559,7 +559,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('MpcpcNi-6QA', 'Lac Operon - Molecular Basis of Inheritance Class 12 Biology (Zoology) Concept', 'Lac Operon - Molecular Basis of Inheritance Class 12 Biology (Zoology) Concept | NEET 2023 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'molecular-basis-of-inheritance'), 2, 3269, 'allowed', now())
+  values ('MpcpcNi-6QA', 'Lac Operon - Molecular Basis of Inheritance Class 12 Biology (Zoology) Concept', 'Lac Operon - Molecular Basis of Inheritance Class 12 Biology (Zoology) Concept | NEET 2023 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'molecular-basis-of-inheritance' and subject_id = 4), 2, 3269, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -569,7 +569,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('VhaDC_qXMEs', 'Top MCQs from Molecular Basis of Inheritance Class 12 Biology (Zoology) Concept', 'Top MCQs from Molecular Basis of Inheritance Class 12 Biology (Zoology) Concept | NEET 2023 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'molecular-basis-of-inheritance'), 2, 3096, 'allowed', now())
+  values ('VhaDC_qXMEs', 'Top MCQs from Molecular Basis of Inheritance Class 12 Biology (Zoology) Concept', 'Top MCQs from Molecular Basis of Inheritance Class 12 Biology (Zoology) Concept | NEET 2023 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'molecular-basis-of-inheritance' and subject_id = 4), 2, 3096, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -600,7 +600,7 @@ begin
   select v_playlist_id, cl.id from public.class_levels cl where cl.slug = 'class-11';
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('baX3xvXore8', 'Origin of Life - Evolution Class 12 Biology (Zoology) Concept Explained', 'Origin of Life - Evolution Class 12 Biology (Zoology) Concept Explained | NEET 2023 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'evolution'), 2, 3027, 'allowed', now())
+  values ('baX3xvXore8', 'Origin of Life - Evolution Class 12 Biology (Zoology) Concept Explained', 'Origin of Life - Evolution Class 12 Biology (Zoology) Concept Explained | NEET 2023 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'evolution' and subject_id = 4), 2, 3027, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -610,7 +610,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('EnkTHBAdY5A', 'Evidences in Favour of Evolution - Evolution Class 12 Biology Concept Explained', 'Evidences in Favour of Evolution - Evolution Class 12 Biology Concept Explained | NEET 2023 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'evolution'), 2, 2787, 'allowed', now())
+  values ('EnkTHBAdY5A', 'Evidences in Favour of Evolution - Evolution Class 12 Biology Concept Explained', 'Evidences in Favour of Evolution - Evolution Class 12 Biology Concept Explained | NEET 2023 Exam', v_channel_id, 4, (select id from public.chapters where slug = 'evolution' and subject_id = 4), 2, 2787, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -620,7 +620,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('DXTVcW55VRY', 'Evolution Class 12 Biology: Evidences in Favour of Evolution (Pt 2) Concept', 'Evolution Class 12 Biology: Evidences in Favour of Evolution (Pt 2) Concept | NEET | Dr Sachin Kapur', v_channel_id, 4, (select id from public.chapters where slug = 'evolution'), 2, 3158, 'allowed', now())
+  values ('DXTVcW55VRY', 'Evolution Class 12 Biology: Evidences in Favour of Evolution (Pt 2) Concept', 'Evolution Class 12 Biology: Evidences in Favour of Evolution (Pt 2) Concept | NEET | Dr Sachin Kapur', v_channel_id, 4, (select id from public.chapters where slug = 'evolution' and subject_id = 4), 2, 3158, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
@@ -630,7 +630,7 @@ begin
   on conflict (playlist_id, video_id) do update set position = excluded.position;
 
   insert into public.videos (youtube_video_id, title, source_title, channel_id, subject_id, chapter_id, category_id, duration_seconds, embedding_status, last_verified_at)
-  values ('NQwLJnctVAk', 'Evolution Class 12 Biology Concept Explained - Lamarckism', 'Evolution Class 12 Biology Concept Explained - Lamarckism | NEET 2023 Exam | Dr. sachin Kapur', v_channel_id, 4, (select id from public.chapters where slug = 'evolution'), 2, 3392, 'allowed', now())
+  values ('NQwLJnctVAk', 'Evolution Class 12 Biology Concept Explained - Lamarckism', 'Evolution Class 12 Biology Concept Explained - Lamarckism | NEET 2023 Exam | Dr. sachin Kapur', v_channel_id, 4, (select id from public.chapters where slug = 'evolution' and subject_id = 4), 2, 3392, 'allowed', now())
   on conflict (youtube_video_id) do update set last_verified_at = now()
   returning id into v_video_id;
   if (select chapter_id from public.videos where id = v_video_id) is null then
