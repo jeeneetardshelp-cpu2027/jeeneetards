@@ -1,0 +1,64 @@
+{
+  "version": 1,
+  "request_id": "ec96a822-205a-46db-b71e-a49f89586201",
+  "youtube_playlist_id": "PLQsNiHo64JI92nFYMSfOhGrq7bct9haT3",
+  "assignments": [
+    {
+      "position": 6,
+      "youtube_video_id": "g-Fa0TIitRc",
+      "chapter": "Redox Reactions",
+      "lesson_number": 1
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "oWxR8SdYllY",
+      "chapter": "Organic Compounds Containing Oxygen",
+      "lesson_number": 2
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "L4dnuL2EAfY",
+      "chapter": "Organic Reaction Mechanisms",
+      "lesson_number": 3
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "25WiaWXrh_A",
+      "chapter": "Mole Concept",
+      "lesson_number": 4
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "1yIPYj0vEdk",
+      "chapter": "Electrochemistry",
+      "lesson_number": 5
+    }
+  ],
+  "exclusions": [
+    {
+      "position": 1,
+      "youtube_video_id": "bBilbxPk6xc",
+      "reason": "Mathematics lecture already imported in course 248."
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "JwOZdiIQYxU",
+      "reason": "Mathematics lecture already imported in course 248."
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "Ygtka3DN0dI",
+      "reason": "Mathematics lecture already imported in course 248."
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "eELR9jtUijE",
+      "reason": "Mathematics lecture already imported in course 248."
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "YTSVd8z5Muo",
+      "reason": "Mathematics lecture already imported in course 248."
+    }
+  ]
+}
