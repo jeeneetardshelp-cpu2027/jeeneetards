@@ -261,7 +261,13 @@ export default function CourseVideoPage() {
       chapterId: lesson.chapter?.id ?? null,
       position: seconds,
       duration,
-      watched: true,
+      // Report the REAL local watched state, never an assumed true. The player
+      // now only reports progress once playback has genuinely started, so this
+      // is normally true anyway — but a hard-coded true meant any future path
+      // that emitted a progress report would silently fabricate a watch.
+      // Deliberately not `false` either: this upsert overwrites the whole row,
+      // so a false here would erase a genuine watch recorded earlier.
+      watched: getWatchedVideoIds(playlistId).includes(videoId),
     });
   };
 

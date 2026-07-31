@@ -162,11 +162,23 @@ export function mergeRemoteEntry({
   const key = String(playlistId);
   const prev = all[key] ?? { playlistId: Number(playlistId), watched: [] };
 
+  // FORWARD-ONLY, and that means the POSITION, not just the timestamp. A
+  // newer timestamp carrying a smaller position (a stray 0 from another
+  // device, or a re-open that never played) must not wipe out a real resume
+  // point — the timestamp alone was the whole bug: a row 1ms newer saying
+  // "position 0" destroyed a genuine 12-minute resume point.
+  // A finished lesson is the one legitimate way position goes "backwards":
+  // getLessonPosition stores seconds=duration on completion and then reads it
+  // as restart-from-0, so a remote row at/near its duration still wins.
   const priorPos = prev.positions?.[videoId];
-  if (!priorPos || updatedAt > priorPos.at) {
+  const remoteT = Number(position) || 0;
+  const remoteD = Number(duration) > 0 ? Number(duration) : null;
+  const remoteIsFinished = remoteD !== null && remoteT >= 0.95 * remoteD;
+  const priorT = Number(priorPos?.t) || 0;
+  if (!priorPos || (updatedAt > priorPos.at && (remoteT >= priorT || remoteIsFinished))) {
     prev.positions = {
       ...(prev.positions ?? {}),
-      [videoId]: { t: Number(position) || 0, d: Number(duration) > 0 ? Number(duration) : null, at: updatedAt },
+      [videoId]: { t: remoteT, d: remoteD, at: updatedAt },
     };
   }
 
