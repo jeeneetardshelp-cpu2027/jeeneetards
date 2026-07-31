@@ -1,26 +1,35 @@
 // =====================================================================
 //  Home.jsx  —  the student landing page.
 //
-//  NOT an "all lessons" feed. It gets a student to a chapter (and thus to
-//  playlist comparison) in two or three taps:
-//    • a prominent search box with grouped live results
-//    • Browse by exam
-//    • why the directory is different
+//  Two jobs, in this order:
+//    1. Get a returning student into a lecture in as few taps as possible
+//       (continue-watching, search, exam grid).
+//    2. Convince a first-time visitor in the first few seconds that this is
+//       a serious, free, ad-free tool — not another link farm.
 //
-//  Sections that need engagement data we don't have yet (Popular, Recently
-//  viewed) are intentionally omitted rather than faked. Featured courses will
-//  return once the shared PlaylistBrowse card is reusable (one card, no drift).
+//  HONESTY RULE (inherited from the catalogue, applies to this page too):
+//  nothing on this page is invented. Course counts, ratings and channel
+//  names come from the live catalogue; a section with no data hides itself
+//  rather than rendering a placeholder. There is no pricing table because
+//  there is nothing to sell — the "Free forever" panel says so plainly.
+//
+//  There are no quoted testimonials either. Ratings ARE live (see
+//  releaseCapabilities.courseRatingSubmission), so the "rated by students"
+//  strip shows real scores with their real counts — which is the honest
+//  form of social proof here. Inventing quotes on top of that would be the
+//  one thing that undermines it.
+//
+//  This file owns the data and the search state. The sections live in
+//  HomeSections.jsx.
 // =====================================================================
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router";
 import {
-  Search, GraduationCap, BookOpen, PlayCircle, Users, ArrowRight, X, History,
-  ShieldCheck, ListFilter, Sparkles, Activity, Compass,
+  ArrowRight, BookOpen, Loader2, PlayCircle, Search, Users, X,
 } from "lucide-react";
 import { usePlaylistBrowse } from "./usePlaylistBrowse.js";
-import { GlobalHeader, Container } from "./AppShell.jsx";
-import { PlaylistCard } from "./PlaylistBrowse.jsx";
+import { Container, GlobalHeader } from "./AppShell.jsx";
 // ONE search system. The hero box used to run its own ilike queries against
 // raw columns — no index use, no typo tolerance, no Devanagari bridge, and a
 // separate ranking that disagreed with /search. It now calls the same
@@ -29,22 +38,23 @@ import { useUniversalSearch, MIN_QUERY } from "./useUniversalSearch.js";
 import { resultHref } from "./searchDestinations.js";
 import { getContinueWatching } from "./progress.js";
 import { EXAMS } from "./filterModel.js";
-import { useTheme } from "./theme.jsx";
 import { useLearningGoals } from "./useExplore.js";
 import { RELEASE_CAPABILITIES } from "./releaseCapabilities.js";
 import { useStructuredData } from "./PageMetadata.jsx";
 import { organizationSchema, websiteSchema } from "./structuredData.js";
-import { BRAND_NAVY, BRAND_TEAL, BRAND_SERIF } from "./brandColors.js";
+import { Button, EmptyState, Pill, Skeleton, Surface } from "./ui.jsx";
+import { Reveal } from "./motion.jsx";
+import {
+  Benefits, ContinueWatching, ExamGrid, Faq, Features, FinalCta, Hero,
+  Pricing, Process, SocialProof, Statistics, TopRated,
+  pickInstitutes, pickTopRated,
+} from "./HomeSections.jsx";
 
-const BRAND = { navy: BRAND_NAVY, teal: BRAND_TEAL };
-
-// Per-exam identity for the "Browse by exam" cards.
-const EXAM_META = {
-  jee: { icon: GraduationCap, tint: "#0F6F78" },
-  neet: { icon: Activity, tint: "#D85B84" },
-  school: { icon: BookOpen, tint: "#3B6FE0" },
-  olympiad: { icon: Compass, tint: "#7A5AF0" },
-};
+// The comparison table's attribute count, and the languages the catalogue
+// classifies. Both are real product facts, stated once here so the numbers
+// on the page cannot drift from the pages they describe.
+const COMPARED_ATTRIBUTES = 17;
+const LANGUAGES = 3;
 
 export function homeTagline(capabilities = RELEASE_CAPABILITIES) {
   return capabilities.comparison
@@ -80,262 +90,225 @@ export default function Home() {
   // minimum length the database does, so no local debounce is needed.
   const { groups, loading, error, tooShort, retry } = useUniversalSearch(input, { limit: 6 });
   const searching = input.trim().length > 0;
-  const { t, dark } = useTheme();
+
+  const [continueWatching] = useState(() => getContinueWatching(3));
+  const { goals, loading: goalsLoading, error: goalsError } = useLearningGoals();
+  // ONE catalogue request serves four things: the hero stat rail, the rated
+  // strip, the channel marquee and the library-wide course total.
+  const { items, total, loading: catalogueLoading } = usePlaylistBrowse({ page: 0 });
+
+  const exams = useMemo(
+    () =>
+      EXAMS.map((exam) => ({
+        ...exam,
+        ...examCardState(exam, goals, {
+          loading: goalsLoading,
+          error: goalsError,
+          boardClassification: RELEASE_CAPABILITIES.boardClassification,
+        }),
+      })),
+    [goals, goalsLoading, goalsError],
+  );
+
+  const liveTracks = exams.filter((exam) => exam.available).length;
+  // Prefer the catalogue's own total; fall back to summing the per-goal counts
+  // so the figure is never blank while the course query is in flight.
+  const courseCount =
+    total ?? (goals ?? []).reduce((sum, goal) => sum + Number(goal.count ?? 0), 0);
+
+  const topRated = useMemo(() => pickTopRated(items, 3), [items]);
+  const institutes = useMemo(() => pickInstitutes(items, 8), [items]);
+
   // Site identity, not search-state-dependent — written once, never removed
   // while Home stays mounted. organizationSchema describes the SITE itself,
   // never a course's provider (that's courseSchema's job, on the course page).
   useStructuredData([websiteSchema(), organizationSchema()], []);
 
+  // The rail is a teaser, not the statistics band: three figures, and only
+  // rendered once at least one of them is real, so it never animates to zero.
+  const heroStats = courseCount > 0
+    ? [
+        { value: courseCount, label: "Free courses", note: "Curriculum-tagged" },
+        { value: liveTracks, label: "Exam tracks", note: "JEE, NEET, Boards" },
+        { value: "₹0", numeric: false, label: "Forever", note: "No ads, no account" },
+      ]
+    : [];
+
   return (
-    <div className={`min-h-screen ${t.page} ${t.text}`}>
+    <div className="min-h-screen bg-canvas text-ink">
+      {/* The one header for every student route (AppShell is the only file
+          allowed to contain <header>). It is transparent over the hero and
+          fills in with glass once the page scrolls. */}
       <GlobalHeader />
 
-      {/* ---- Hero + search ---- */}
-      <section className={`relative overflow-hidden border-b ${t.border} ${t.card}`}>
-        {/* a whisper of accent, not a gradient hero */}
-        <div aria-hidden="true" className="pointer-events-none absolute inset-0"
-          style={{
-            background: dark
-              ? "radial-gradient(60% 120% at 85% -10%, rgba(55,192,160,.10), transparent 60%)"
-              : "radial-gradient(60% 120% at 85% -10%, rgba(15,111,120,.07), transparent 60%)",
-          }} />
-        <div className="relative mx-auto max-w-3xl px-4 py-14 text-center sm:py-16">
-          <p className="text-xs font-semibold uppercase tracking-[0.16em]"
-            style={{ color: dark ? "#5AD0B4" : BRAND.teal }}>
-            JEE &amp; NEET · lecture directory
-          </p>
-          <h1 className="mx-auto mt-4 max-w-2xl text-4xl font-semibold leading-[1.05] tracking-tight sm:text-5xl"
-            style={{ fontFamily: BRAND_SERIF, textWrap: "balance" }}>
-            Find the right lecture.{" "}
-            <span className="italic" style={{ color: dark ? "#5AD0B4" : BRAND.teal }}>
-              Skip the noise.
-            </span>
-          </h1>
-          <p className={`mx-auto mt-4 max-w-xl text-base ${t.faint}`}>
-            {homeTagline()} Ad-free, curriculum-organised, and rated so you can
-            choose before you commit.
-          </p>
+      <Hero
+        searchField={
+          <HeroSearch
+            value={input}
+            onChange={setInput}
+            onClear={() => setInput("")}
+            busy={loading}
+          />
+        }
+        chips={searching ? null : <TrustChips />}
+        stats={searching ? [] : heroStats}
+      />
 
-          <form
-            role="search"
-            className="relative mx-auto mt-8 max-w-xl"
-            // Results are already live below as you type; Enter (the "Go" key
-            // on phone keyboards) previously did nothing at all. Dismiss the
-            // keyboard so the results are actually visible.
-            onSubmit={(e) => {
-              e.preventDefault();
-              e.currentTarget.querySelector("input")?.blur();
-            }}
-          >
-            <Search className={`pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 ${t.muted}`} />
-            <input
-              autoFocus
-              aria-label="Search the library"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Search chapters, courses, teachers or lectures"
-              className={`w-full rounded-2xl border ${t.border} ${t.input} ${t.text} py-4 pl-12 pr-11 text-base shadow-sm outline-none transition focus:ring-2 focus:ring-teal-500`}
-            />
-            {input && (
-              <button
-                type="button"
-                onClick={() => setInput("")}
-                aria-label="Clear search"
-                className={`absolute right-1.5 top-1/2 flex min-h-11 min-w-11 -translate-y-1/2 items-center justify-center rounded-xl ${t.muted} ${t.hover}`}
-              >
-                <X className="h-4 w-4" />
-              </button>
-            )}
-          </form>
-
-          {!searching && (
-            <div className={`mt-5 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs ${t.muted}`}>
-              {["No ads, no rabbit holes", "Free forever", "Curated & rated"].map((chip) => (
-                <span key={chip} className="inline-flex items-center gap-1.5">
-                  <span className="h-1.5 w-1.5 rounded-full" style={{ background: BRAND.teal }} />
-                  {chip}
-                </span>
-              ))}
-            </div>
-          )}
-        </div>
-      </section>
-
-      <main className="py-8 sm:py-12">
-        <Container>
-          {searching ? (
+      <main>
+        {searching ? (
+          <Container className="py-12 sm:py-16">
             <SearchResults
-              groups={groups} loading={loading} error={error}
-              tooShort={tooShort} retry={retry} query={input.trim()}
+              groups={groups}
+              loading={loading}
+              error={error}
+              tooShort={tooShort}
+              retry={retry}
+              query={input.trim()}
             />
-          ) : (
-            <Landing />
-          )}
-        </Container>
+          </Container>
+        ) : (
+          <Landing
+            continueWatching={continueWatching}
+            exams={exams}
+            institutes={institutes}
+            topRated={topRated}
+            catalogueLoading={catalogueLoading}
+            courseCount={courseCount}
+            liveTracks={liveTracks}
+          />
+        )}
       </main>
     </div>
   );
 }
 
 // ---------------------------------------------------------------------
-//  Default landing (no query)
+//  Hero search — the page's primary control, so it is the only input on
+//  the site that gets display sizing and a focus glow.
 // ---------------------------------------------------------------------
-function Landing() {
-  const [continueWatching] = useState(() => getContinueWatching(3));
-  const { t } = useTheme();
-  const { goals, loading: goalsLoading, error: goalsError } = useLearningGoals();
-  const jee = (goals ?? []).find((g) => g.slug === "jee");
-
+function HeroSearch({ value, onChange, onClear, busy }) {
   return (
-    <div className="space-y-14">
-      {continueWatching.length > 0 && (
-        <Section title="Continue watching" icon={History}>
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-            {continueWatching.map((e) => (
-              <Link
-                key={e.playlistId}
-                to={`/course/${e.playlistId}/chapter/${e.chapterId}?v=${e.lastVideoId}`}
-                className={`block rounded-2xl border ${t.border} ${t.card} ${t.cardHover} p-4 text-left shadow-sm transition hover:-translate-y-0.5`}
-              >
-                <span className={`block truncate text-sm font-semibold ${t.text}`}>
-                  {e.lastVideoTitle || e.courseTitle}
-                </span>
-                <span className={`mt-0.5 block truncate text-xs ${t.muted}`}>
-                  {e.courseTitle}
-                  {e.totalLessons ? ` · lesson ${e.lastPosition ?? "?"} of ${e.totalLessons}` : ""}
-                </span>
-              </Link>
-            ))}
-          </div>
-        </Section>
+    <form
+      role="search"
+      className="group/search relative"
+      // Results are already live below as you type; Enter (the "Go" key on
+      // phone keyboards) previously did nothing at all. Dismiss the keyboard
+      // so the results are actually visible.
+      onSubmit={(event) => {
+        event.preventDefault();
+        event.currentTarget.querySelector("input")?.blur();
+      }}
+    >
+      {/* Focus halo. Sits behind the field, so it reads as the field glowing
+          rather than as a second border. */}
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute -inset-1 rounded-lg opacity-0 blur-md transition-opacity duration-500 [transition-timing-function:var(--ease-out-expo)] group-focus-within/search:opacity-100"
+        style={{ background: "var(--accent-glow)" }}
+      />
+      <Search
+        aria-hidden="true"
+        className="pointer-events-none absolute left-5 top-1/2 z-10 h-5 w-5 -translate-y-1/2 text-ink-3 transition-colors duration-300 group-focus-within/search:text-accent"
+      />
+      {/* No autoFocus. It made sense when Home WAS the search page; now that
+          there are ten sections below, focusing on load pops the phone
+          keyboard over the hero and pins the page at the top. ?q= still
+          seeds the field, so a hand-off from Explore behaves as before. */}
+      <input
+        aria-label="Search the library"
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        placeholder="Search chapters, courses, teachers or lectures"
+        className="relative min-h-16 w-full rounded-lg border border-hairline-strong bg-surface pl-14 pr-14 text-base text-ink shadow-e2 outline-none transition-colors duration-300 placeholder:text-ink-3 focus:border-accent-line"
+      />
+      {busy && (
+        <Loader2
+          aria-hidden="true"
+          className="anim-spin absolute right-14 top-1/2 z-10 h-4 w-4 -translate-y-1/2 text-ink-3"
+        />
       )}
-
-      {/* ---- Browse by exam ---- */}
-      <Section title="Browse by exam" eyebrow="Start here">
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
-          {EXAMS.map((exam) => {
-            const { available, hint, count } = examCardState(exam, goals, {
-              loading: goalsLoading, error: goalsError,
-              boardClassification: RELEASE_CAPABILITIES.boardClassification,
-            });
-            const meta = EXAM_META[exam.id] ?? { icon: GraduationCap, tint: BRAND.teal };
-            const Icon = meta.icon;
-            // One class string and one body for both branches, so the live
-            // Link and the "Soon" disabled button stay pixel-identical.
-            const cardClass = `group relative flex min-h-[9.5rem] flex-col rounded-2xl border ${t.border} ${t.card} p-5 text-left shadow-sm transition ${
-              available ? "hover:-translate-y-1 hover:shadow-lg" : "cursor-not-allowed opacity-60"
-            }`;
-            const cardBody = (
-              <>
-                <span className="absolute right-4 top-4 rounded-full px-2 py-0.5 text-[0.62rem] font-semibold uppercase tracking-wide"
-                  style={available
-                    ? { color: meta.tint, background: `${meta.tint}1a` }
-                    : { color: "#9aa3b2", border: "1px solid currentColor" }}>
-                  {available ? "Live" : "Soon"}
-                </span>
-                <span className="mb-4 grid h-11 w-11 place-items-center rounded-xl"
-                  style={{ background: `${meta.tint}17`, color: meta.tint }}>
-                  <Icon className="h-5 w-5" />
-                </span>
-                <span className="text-xl font-semibold" style={{ fontFamily: BRAND_SERIF }}>{exam.label}</span>
-                <span className={`mt-1 text-xs ${t.muted}`}>
-                  {available ? "Choose class, subject & chapter" : hint}
-                </span>
-                {available && (
-                  <span className={`mt-3 border-t ${t.divider} pt-3 text-xs ${t.faint}`}>
-                    <b className={t.text} style={{ fontWeight: 600 }}>{count}</b> courses
-                  </span>
-                )}
-              </>
-            );
-            return available ? (
-              <Link key={exam.id} to={`/explore/${exam.id}`} className={cardClass}>
-                {cardBody}
-              </Link>
-            ) : (
-              <button key={exam.id} type="button" disabled className={cardClass}>
-                {cardBody}
-              </button>
-            );
-          })}
-        </div>
-      </Section>
-
-      {/* ---- Why it's different ---- */}
-      <section className={`rounded-3xl border ${t.border} ${t.card} px-6 py-8 shadow-sm sm:px-10 sm:py-10`}>
-        <div className="grid gap-8 sm:grid-cols-3">
-          {[
-            { icon: ShieldCheck, title: "No ads, no rabbit holes",
-              body: "Lectures play in a clean, distraction-free player. No autoplay traps, no recommended spiral pulling you off task." },
-            { icon: ListFilter, title: "Organised by your syllabus",
-              body: "Filter by exam, class, subject, chapter, teacher and language — so you land on exactly the lesson you need." },
-            { icon: Sparkles, title: "Curated, not random",
-              body: "Every course is reviewed and curriculum-tagged, with ratings so you can judge quality before you spend hours in it." },
-          ].map((v) => (
-            <div key={v.title}>
-              <span className="mb-4 grid h-10 w-10 place-items-center rounded-xl"
-                style={{ background: `${BRAND.teal}17`, color: BRAND.teal }}>
-                <v.icon className="h-5 w-5" />
-              </span>
-              <h3 className="text-lg font-semibold" style={{ fontFamily: BRAND_SERIF }}>{v.title}</h3>
-              <p className={`mt-2 text-sm ${t.faint}`}>{v.body}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ---- Featured courses (real data via the shared PlaylistBrowse card) ---- */}
-      {jee?.id && <FeaturedCourses goalId={jee.id} />}
-
-      {/* ---- Browse the library CTA ---- */}
-      <Section title="Browse the library" eyebrow="The full catalogue">
-        <Link
-          to="/browse"
-          className={`flex w-full items-center justify-between gap-4 rounded-2xl border ${t.border} ${t.card} ${t.cardHover} p-6 text-left shadow-sm transition hover:-translate-y-0.5`}
+      {value && (
+        <button
+          type="button"
+          onClick={onClear}
+          aria-label="Clear search"
+          className="absolute right-2 top-1/2 z-10 flex min-h-11 min-w-11 -translate-y-1/2 items-center justify-center rounded-md text-ink-3 transition-colors duration-200 hover:bg-surface-2 hover:text-ink"
         >
-          <span>
-            <span className="block text-lg font-semibold" style={{ fontFamily: BRAND_SERIF }}>
-              Explore all courses
-            </span>
-            <span className={`mt-1 block text-sm ${t.faint}`}>
-              Filter by exam, class, subject, chapter, channel and language.
-            </span>
-          </span>
-          <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full"
-            style={{ background: `${BRAND.teal}17`, color: BRAND.teal }}>
-            <ArrowRight className="h-5 w-5" />
-          </span>
-        </Link>
-      </Section>
+          <X className="h-4 w-4" />
+        </button>
+      )}
+    </form>
+  );
+}
+
+function TrustChips() {
+  return (
+    <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-xs text-ink-3">
+      {["No ads, no rabbit holes", "No account needed", "Free forever"].map((chip) => (
+        <span key={chip} className="inline-flex items-center gap-2">
+          <span aria-hidden="true" className="h-1 w-1 rounded-full bg-accent" />
+          {chip}
+        </span>
+      ))}
     </div>
   );
 }
 
 // ---------------------------------------------------------------------
-//  Featured courses — reuses the ONE shared PlaylistBrowse card (no drift).
-//  Real data via the browse hook; hides itself on empty/error, never fakes.
+//  Default landing (no query). Order is deliberate: a returning student's
+//  own progress first, then the exam entry points, then the argument.
 // ---------------------------------------------------------------------
-function FeaturedCourses({ goalId }) {
-  const { t } = useTheme();
-  const { items, loading, error } = usePlaylistBrowse({ goalId, page: 0, enabled: !!goalId });
-  const courses = (items ?? []).slice(0, 3);
-
-  if (error || (!loading && courses.length === 0)) return null;
-
+function Landing({
+  continueWatching, exams, institutes, topRated, catalogueLoading,
+  courseCount, liveTracks,
+}) {
   return (
-    <Section title="Courses to start with" eyebrow="From the catalogue"
-      action={{ label: "Browse all", to: "/browse" }}>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        {loading
-          ? Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className={`h-60 animate-pulse rounded-2xl ${t.input}`} />
-            ))
-          : courses.map((c) => (
-              <PlaylistCard key={c.id} course={c} comparisonEnabled={false}
-                to={`/course/${c.id}`} />
-            ))}
-      </div>
-    </Section>
+    <>
+      <ContinueWatching entries={continueWatching} />
+
+      <SocialProof institutes={institutes} loading={catalogueLoading} />
+
+      <ExamGrid exams={exams} />
+
+      <Features />
+
+      <TopRated courses={topRated} loading={catalogueLoading} />
+
+      <Benefits />
+
+      <Process />
+
+      <Statistics
+        stats={[
+          {
+            value: courseCount,
+            label: "Courses in the library",
+            note: "Curriculum-tagged, chapter by chapter",
+          },
+          {
+            value: liveTracks,
+            label: "Exam tracks live",
+            note: "JEE, NEET and school boards",
+          },
+          {
+            value: COMPARED_ATTRIBUTES,
+            label: "Attributes compared",
+            note: "Coverage, pacing, prerequisites and more",
+          },
+          {
+            value: LANGUAGES,
+            label: "Languages classified",
+            note: "Hindi, English and Hinglish",
+          },
+        ]}
+      />
+
+      <Pricing />
+
+      <Faq />
+
+      <FinalCta />
+    </>
   );
 }
 
@@ -351,153 +324,115 @@ const HOME_GROUPS = [
 ];
 
 function SearchResults({ groups, loading, error, tooShort, retry, query }) {
-  const { t } = useTheme();
-  if (loading) return <SkeletonRow />;
+  if (loading) return <SkeletonRows />;
 
-  if (error)
+  if (error) {
     return (
-      <Empty>
-        <p>{error}</p>
-        <button type="button" onClick={retry}
-          className="mt-3 min-h-11 rounded-xl border px-4 font-medium">
-          Try again
-        </button>
-      </Empty>
+      <EmptyState
+        title="Search is unavailable"
+        detail={error}
+        action={<Button variant="secondary" onClick={retry}>Try again</Button>}
+      />
     );
+  }
 
-  if (tooShort)
-    return <Empty>Type at least {MIN_QUERY} characters to search.</Empty>;
+  if (tooShort) {
+    return (
+      <EmptyState
+        title={`Type at least ${MIN_QUERY} characters`}
+        detail="Search looks across chapters, courses, teachers and individual lectures."
+      />
+    );
+  }
 
   const visible = HOME_GROUPS.filter(
     (g) => (groups[g.key]?.rows?.length ?? 0) > 0 &&
            (!g.gated || RELEASE_CAPABILITIES[g.gated]),
   );
 
-  if (visible.length === 0)
+  if (visible.length === 0) {
     return (
-      <Empty>
-        No results for “{query}”. Try a chapter, course, channel or lecture.
-      </Empty>
+      <EmptyState
+        title={`No results for “${query}”`}
+        detail="Try a chapter name, a course, a channel or a teacher — spelling variations are handled."
+        action={<Button variant="secondary" to="/browse">Browse the catalogue instead</Button>}
+      />
     );
+  }
 
   return (
-    <div className="space-y-8">
-      {visible.map((g) => {
+    <div className="space-y-12">
+      {visible.map((g, groupIndex) => {
         const group = groups[g.key];
         return (
-          <Section key={g.key} title={g.label} icon={g.icon}>
-            <ResultList items={group.rows.map((row) => ({
-              key: `${g.key}-${row.id}`,
-              title: row.title,
-              subtitle: row.subtitle,
-              // Verified aliases, e.g. "also ABJ Sir" — only faculty has them.
-              badges: row.aka ? [row.aka] : undefined,
-              to: resultHref(g.key, row),
-            }))} />
-            {group.total > group.rows.length && (
-              <p className={`mt-2 text-xs ${t.faint}`}>
-                Showing {group.rows.length} of {group.total} —{" "}
-                <Link to={`/search?q=${encodeURIComponent(query)}`}
-                  className="font-semibold" style={{ color: BRAND.teal }}>
-                  see all
+          <Reveal key={g.key} delay={groupIndex} className="space-y-4">
+            <div className="flex items-baseline justify-between gap-4">
+              <h2 className="text-h3 flex items-center gap-2.5 text-ink">
+                <g.icon aria-hidden="true" className="h-5 w-5 text-accent" />
+                {g.label}
+              </h2>
+              {group.total > group.rows.length && (
+                <Link
+                  to={`/search?q=${encodeURIComponent(query)}`}
+                  className="inline-flex min-h-11 items-center gap-1.5 text-sm font-semibold text-accent transition-opacity hover:opacity-80"
+                >
+                  All {group.total}
+                  <ArrowRight aria-hidden="true" className="h-4 w-4" />
                 </Link>
-              </p>
-            )}
-          </Section>
-        );
-      })}
-    </div>
-  );
-}
-
-// ---------------------------------------------------------------------
-//  Small shared pieces
-// ---------------------------------------------------------------------
-function Section({ title, icon: Icon, eyebrow, action, children }) {
-  const { t } = useTheme();
-  return (
-    <section>
-      <div className="mb-4 flex items-end justify-between gap-4">
-        <div>
-          {eyebrow && (
-            <p className="text-[0.7rem] font-semibold uppercase tracking-[0.14em]" style={{ color: BRAND.teal }}>
-              {eyebrow}
-            </p>
-          )}
-          <h2 className={`flex items-center gap-2 text-xl font-semibold ${t.text}`} style={{ fontFamily: BRAND_SERIF }}>
-            {Icon && <Icon className="h-5 w-5" />}
-            {title}
-          </h2>
-        </div>
-        {action && (
-          <Link to={action.to}
-            className="inline-flex shrink-0 items-center gap-1.5 text-sm font-semibold"
-            style={{ color: BRAND.teal }}>
-            {action.label}
-            <ArrowRight className="h-4 w-4" />
-          </Link>
-        )}
-      </div>
-      {children}
-    </section>
-  );
-}
-
-function ResultList({ items }) {
-  const { t } = useTheme();
-  return (
-    <ul className={`divide-y overflow-hidden rounded-2xl border ${t.divider} ${t.border} ${t.card} shadow-sm`}>
-      {items.map((it) => {
-        const rowClass = `flex min-h-11 w-full items-center gap-3 px-4 py-3 text-left transition ${t.hover} disabled:opacity-50`;
-        const rowBody = (
-          <>
-            <span className="min-w-0 flex-1">
-              <span className={`block truncate text-sm font-medium ${t.text}`}>{it.title}</span>
-              {it.subtitle && (
-                <span className={`block truncate text-xs ${t.muted}`}>{it.subtitle}</span>
               )}
-            </span>
-            {it.badges?.length > 0 && (
-              <span className="flex shrink-0 gap-1">
-                {it.badges.map((b) => (
-                  <span key={b} className="rounded-full border px-2 py-0.5 text-xs font-semibold"
-                    style={{ borderColor: BRAND.teal, color: BRAND.teal }}>{b}</span>
-                ))}
-              </span>
-            )}
-            <ArrowRight className={`h-4 w-4 shrink-0 ${t.muted}`} />
-          </>
-        );
-        return (
-          <li key={it.key}>
-            {it.disabled ? (
-              <button disabled className={rowClass}>{rowBody}</button>
-            ) : (
-              <Link to={it.to} className={rowClass}>{rowBody}</Link>
-            )}
-          </li>
+            </div>
+            <ul className="divide-y divide-hairline overflow-hidden rounded-xl border border-hairline bg-surface">
+              {group.rows.map((row) => (
+                <li key={`${g.key}-${row.id}`}>
+                  <Link
+                    to={resultHref(g.key, row)}
+                    className="group/row flex min-h-14 w-full items-center gap-4 px-5 py-4 text-left transition-colors duration-200 hover:bg-surface-2"
+                  >
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate text-sm font-medium text-ink">
+                        {row.title}
+                      </span>
+                      {row.subtitle && (
+                        <span className="mt-0.5 block truncate text-xs text-ink-3">
+                          {row.subtitle}
+                        </span>
+                      )}
+                    </span>
+                    {/* Verified aliases, e.g. "also ABJ Sir" — faculty only. */}
+                    {row.aka && <Pill tone="accent" className="hidden sm:inline-flex">{row.aka}</Pill>}
+                    <ArrowRight
+                      aria-hidden="true"
+                      className="h-4 w-4 shrink-0 text-ink-3 transition-transform duration-300 [transition-timing-function:var(--ease-out-expo)] group-hover/row:translate-x-1 group-hover/row:text-accent"
+                    />
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </Reveal>
         );
       })}
-    </ul>
-  );
-}
-
-function SkeletonRow() {
-  const { t } = useTheme();
-  return (
-    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-      {Array.from({ length: 6 }).map((_, i) => (
-        <div key={i} className={`h-16 animate-pulse rounded-2xl ${t.input}`} />
-      ))}
     </div>
   );
 }
 
-function Empty({ children }) {
-  const { t } = useTheme();
+function SkeletonRows() {
   return (
-    <div className={`rounded-2xl border border-dashed ${t.border} ${t.card} p-8 text-center text-sm ${t.muted}`}>
-      {children}
+    <div className="space-y-12" aria-hidden="true">
+      {Array.from({ length: 2 }).map((_, group) => (
+        <div key={group} className="space-y-4">
+          <Skeleton className="h-6 w-40" />
+          <Surface padded={false} className="divide-y divide-hairline">
+            {Array.from({ length: 3 }).map((_, row) => (
+              <div key={row} className="flex items-center gap-4 px-5 py-4">
+                <div className="min-w-0 flex-1 space-y-2">
+                  <Skeleton className="h-4 w-2/3" />
+                  <Skeleton className="h-3 w-1/3" />
+                </div>
+              </div>
+            ))}
+          </Surface>
+        </div>
+      ))}
     </div>
   );
 }

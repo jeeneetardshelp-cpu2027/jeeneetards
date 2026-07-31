@@ -26,7 +26,7 @@ import { Analytics } from "@vercel/analytics/react";
 // page-load performance (Core Web Vitals) instead of page views.
 import { SpeedInsights } from "@vercel/speed-insights/react";
 
-import { ThemeProvider, useTheme } from "./theme.jsx";
+import { ThemeProvider } from "./theme.jsx";
 import Home from "./Home.jsx";
 import Footer from "./Footer.jsx";
 import LegalPage from "./LegalPage.jsx";
@@ -47,14 +47,21 @@ const AdminPanel = lazy(() => import("./AdminPanel.jsx"));
 const CourseVideoPage = lazy(() => import("./CourseVideoPage.jsx"));
 
 function RouteFallback() {
-  const { t } = useTheme();
   return (
-    <main role="status" aria-label="Loading page" className={`min-h-[60vh] ${t.page} p-6`}>
-      <div className="mx-auto w-full max-w-5xl animate-pulse">
-        <div className={`h-5 w-40 rounded ${t.input}`} />
-        <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <main
+      role="status"
+      aria-label="Loading page"
+      className="min-h-[60vh] bg-canvas px-4 py-10 sm:px-6"
+    >
+      <div className="mx-auto w-full max-w-[1280px]">
+        <div className="h-6 w-48 animate-pulse rounded-md bg-surface-2" />
+        <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 6 }).map((_, index) => (
-            <div key={index} className={`h-48 rounded-2xl border ${t.border} ${t.card}`} />
+            <div
+              key={index}
+              className="h-56 animate-pulse rounded-xl border border-hairline bg-surface"
+              style={{ animationDelay: `${index * 90}ms` }}
+            />
           ))}
         </div>
       </div>
@@ -154,11 +161,19 @@ function ScrollToTop() {
 }
 
 // The shared shell: page content, then the footer on EVERY page.
+//
+// The `key` on the content wrapper is what produces the page transition: a
+// route change remounts the wrapper, which restarts the short fade-up in
+// `.route-enter`. Keyed by pathname only — a query-string change (a filter,
+// a search term) must NOT re-animate the page under the student's hands.
 function Layout() {
-  const { t } = useTheme();
+  const { pathname } = useLocation();
   return (
-    <div data-student-surface="true" className={`flex min-h-screen flex-col ${t.page} ${t.text}`}>
-      <div className="flex-1">
+    <div
+      data-student-surface="true"
+      className="flex min-h-screen flex-col bg-canvas text-ink"
+    >
+      <div key={pathname} className="route-enter flex-1">
         <Suspense fallback={<RouteFallback />}>
           <Outlet />
         </Suspense>
