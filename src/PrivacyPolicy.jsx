@@ -39,7 +39,7 @@ export default function PrivacyPolicy() {
         <Container width="reading">
           <h1 className={`text-2xl font-bold ${t.text}`}>Privacy Policy</h1>
           <p className={`mt-1 text-xs ${t.muted}`}>
-            Effective date: 25 July 2026
+            Effective date: 31 July 2026
           </p>
 
           <Section title="1. Scope and operator details">
@@ -55,35 +55,47 @@ export default function PrivacyPolicy() {
               >
                 jeeneetardshelp@gmail.com
               </a>
-              . This version is effective 25 July 2026.
+              . This version is effective 31 July 2026.
             </p>
           </Section>
 
           <Section title="2. Browsing and account information">
             <p>
-              Courses and lessons can be browsed without an account. The code
-              also supports student accounts through Supabase Auth. When that
-              capability is enabled, authentication can handle an email address and Supabase user identifier,
-              session and recovery tokens, and
-              security events needed to create, access, recover, and protect an
-              account.
+              Courses and lessons can be browsed without an account, and
+              browsing is the main way this site is used. Student accounts are
+              available through Supabase Auth. Authentication handles an{" "}
+              {/* Kept on one source line: legalTruth.test.js matches this
+                  phrase against the raw file, so a line-wrap here silently
+                  breaks the guard rather than the copy. */}
+              email address and Supabase user identifier, session and recovery
+              tokens, and security events needed to create, access, recover,
+              and protect an account.
             </p>
             <p>
-              Public account, rating, review, and report controls are currently
-              hidden behind release controls. Records created during authorised
-              administration, testing, or an earlier enabled period may still
-              exist until they are removed under the approved retention policy.
+              Student accounts, course ratings, written reviews, and content
+              reporting are enabled. An account is only needed to rate a
+              course, write a review, report a problem, or sync watch progress
+              across devices — never to browse or watch.
             </p>
           </Section>
 
           <Section title="3. Ratings, reviews, and content reports">
             <p>
-              The implemented course-rating path can store a student account
+              The course-rating path stores a student account
               identifier; overall, clarity, and question ratings; difficulty
               and suitability selections; and an optional free-text review.
             </p>
             <p>
-              The implemented reporting path can store a report reason, optional free-text note, and reporter account identifier. Free
+              <strong>A written review is published publicly</strong> on that
+              course&apos;s page, where anyone can read it and search engines
+              may index it. No name, email address, or account identifier is
+              ever shown alongside a review. Because the text itself is public,
+              please do not include your name, school, batch, contact details,
+              or anything else you would not want a stranger to read. A review
+              can be replaced at any time by submitting the rating form again.
+            </p>
+            <p>
+              The reporting path stores a report reason, optional free-text note, and reporter account identifier. Free
               text may contain personal information if a person chooses to
               include it, so users should submit only what is necessary.
             </p>
@@ -98,15 +110,50 @@ export default function PrivacyPolicy() {
               device.
             </p>
             <p>
-              Session storage entries beginning with <code>returnTo:</code> can
-              remember the filtered course page to return to. Entries beginning
-              with <code>scroll:</code> can remember a page&apos;s scroll
-              position. This browser data is not attached to a Supabase account
-              by the current frontend and can be removed by clearing site data.
+              Local storage key <code>ll_player_prefs_v1</code> remembers a
+              chosen playback speed. Session storage entries beginning with{" "}
+              <code>returnTo:</code> can remember the filtered course page to
+              return to. Entries beginning with <code>scroll:</code> can
+              remember a page&apos;s scroll position.
+            </p>
+            <p>
+              While signed out, this browser data stays on the device and is
+              not attached to any account. It can be removed by clearing site
+              data for this site.
             </p>
           </Section>
 
-          <Section title="5. Providers, video playback, and logs">
+          <Section title="5. Watch progress saved to your account">
+            <p>
+              While signed in, watch progress is also saved to the server so it
+              follows a student between devices. The database table{" "}
+              <code>video_progress</code> stores the Supabase user identifier,
+              the course and lesson, the last playback position in seconds, the
+              lesson length, whether the lesson has been watched, and the time
+              the row was updated. It stores nothing else — no free text, no
+              device identifier, no browsing history beyond the lessons opened
+              on this site.
+            </p>
+            <p>
+              Database rules restrict every row to the account that created it:
+              one student cannot read or change another student&apos;s watch
+              progress, and signed-out visitors cannot read any of it.
+            </p>
+            <p>
+              Because this copy lives on the server rather than in the browser,
+              <strong> clearing site data does not delete it</strong>. To have
+              it removed, email{" "}
+              <a
+                className="underline"
+                href="mailto:jeeneetardshelp@gmail.com"
+              >
+                jeeneetardshelp@gmail.com
+              </a>{" "}
+              from the address on the account.
+            </p>
+          </Section>
+
+          <Section title="6. Providers, video playback, and logs">
             <p>
               Vercel and Supabase deliver the site, database, API, and
               authentication services. They may process standard request and security logs,
@@ -130,11 +177,11 @@ export default function PrivacyPolicy() {
             </p>
           </Section>
 
-          <Section title="6. Purposes and sharing">
+          <Section title="7. Purposes and sharing">
             <p>
               Information is used to deliver and secure the service, maintain
               sessions, recover accounts, remember on-device preferences and
-              progress, receive ratings or reports when enabled, diagnose
+              progress, receive ratings and reports, diagnose
               failures, respond to requests, and meet legal obligations.
             </p>
             <p>
@@ -154,28 +201,52 @@ export default function PrivacyPolicy() {
             </p>
           </Section>
 
-          <Section title="7. Retention and deletion">
+          <Section title="8. Retention and deletion">
             <p>
               Browser data remains until the user or browser removes it.
-              Provider logs and database records remain according to provider
-              settings and the operator&apos;s approved retention policy. Exact
-              retention periods and the public request process are owner inputs
-              that must be published before launch; the code does not establish
-              those legal periods.
+              Server-side records — an account, its ratings and reviews, its
+              content reports, and its <code>video_progress</code> rows —
+              remain until deletion is requested. Provider logs remain
+              according to provider settings.
+            </p>
+            <p>
+              To delete an account and everything attached to it, email{" "}
+              <a
+                href="mailto:jeeneetardshelp@gmail.com"
+                className="font-medium underline"
+                style={{ color: BRAND.teal }}
+              >
+                jeeneetardshelp@gmail.com
+              </a>{" "}
+              from the address on the account. Fixed retention periods have not
+              been set; this policy will be updated when they are, rather than
+              stating a period that is not yet being applied.
             </p>
           </Section>
 
-          <Section title="8. Students under 18">
+          <Section title="9. Students under 18">
             <p>
               The catalogue is likely to be used by students under 18. A parent
               or guardian should be involved when an under-18 student creates an
-              account, follows an external link, or submits information. The
-              owner must approve the applicable age, consent, and deletion
-              process before enabling public account or contribution controls.
+              account, follows an external link, or submits information —
+              particularly a written review, which is published publicly.
+            </p>
+            <p>
+              Browsing and watching never require an account. A parent or
+              guardian can request deletion of an under-18 student&apos;s
+              account and everything attached to it by emailing{" "}
+              <a
+                href="mailto:jeeneetardshelp@gmail.com"
+                className="font-medium underline"
+                style={{ color: BRAND.teal }}
+              >
+                jeeneetardshelp@gmail.com
+              </a>
+              .
             </p>
           </Section>
 
-          <Section title="9. Choices, security, and contact">
+          <Section title="10. Choices, security, and contact">
             <p>
               Users can clear local or session storage, avoid loading a video,
               sign out of an enabled account, and use the password-reset flow.
