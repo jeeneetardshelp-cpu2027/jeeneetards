@@ -104,3 +104,20 @@ Fresh pre-write baseline:
 
 Expected additive deltas are `+3/+3`, then `+4/+4`, then `+5/+5` for
 videos/memberships, with no chapter creation and no reuse.
+
+## Approved production artifacts
+
+Owner approval was recorded after review. The split is packaged as three
+separate guarded transactions, in the required order:
+
+1. `docs/sql/competishun_rank_boosters_mathematics_2026-07-31.sql`
+   — SHA-256 `afc28bd060d630daf817ff77d6fba4373d8ec41976d183ec22ee5114a4b740f5`
+2. `docs/sql/competishun_rank_boosters_physics_2026-07-31.sql`
+   — SHA-256 `ecabdd6b3cd413a2d084c6cafb14f13edd6aab3c24bc03b631bd0ca0e9494c9f`
+3. `docs/sql/competishun_rank_boosters_chemistry_2026-07-31.sql`
+   — SHA-256 `6e9426c5520ccd3c0fa33a4ed8058027e7389bb396b2d06c62b4b90192b90a81`
+
+Each artifact contains only `INSERT` operations inside a transaction, verifies
+the exact expected catalogue baseline before writing, rejects any source/course
+or video reuse, verifies its exact post-write delta, and aborts if the protected
+original-83 JEE fingerprint changes.
