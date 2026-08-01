@@ -86,6 +86,26 @@ describe("paged lecture discovery", () => {
     });
   });
 
+  it("uses reviewed chapter scope instead of playlist audience tags", async () => {
+    render(<Probe
+      stage="class-12" chapterId={20} chapterClassSlugs={["class-12"]}
+    />);
+    await waitFor(() => expect(calls).toHaveLength(1));
+    expect(calls[0].cols).not.toContain("playlist_class_levels!inner");
+    expect(calls[0].in["membership.playlists.pcl.class_levels.slug"]).toBeUndefined();
+    expect(calls[0].eq.chapter_id).toBe(20);
+  });
+
+  it("returns zero without querying for a reviewed cross-class mismatch", async () => {
+    render(<Probe
+      stage="class-11" chapterId={20} chapterClassSlugs={["class-12"]}
+    />);
+    await waitFor(() => expect(seen.loading).toBe(false));
+    expect(calls).toHaveLength(0);
+    expect(seen.total).toBe(0);
+    expect(seen.videos).toEqual([]);
+  });
+
   it("filters lectures through faculty-linked playlists before paging", async () => {
     render(<Probe teacherId="7" />);
     await waitFor(() => expect(calls).toHaveLength(1));

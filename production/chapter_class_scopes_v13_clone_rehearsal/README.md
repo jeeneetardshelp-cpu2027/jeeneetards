@@ -13,6 +13,17 @@ hashes are specific to this reviewed snapshot.
 4. If the SQL client stops after an error, issue `rollback;` or close the
    connection. The generated file contains no `commit`.
 
+After rollback evidence is accepted, the separately approved persistent-clone
+gate uses two additional files:
+
+1. Run `authorize_persistent_clone.sql` only on restore clone
+   `nusprumijjthmrthaitp` and confirm its marker row.
+2. Run `persistent_clone_apply.sql` as a whole and require
+   `persistent clone apply verified`.
+3. Re-run `read_only_preflight.sql`; catalogue/protected counts remain exact,
+   while `chapter_class_levels` now exists with five reviewed rows.
+4. Run browser QA against this clone. Production remains forbidden.
+
 The rehearsal temporarily creates the table/rows and replaces the two browse
 functions inside one transaction, checks counts and the protected fingerprint,
 then rolls everything back. Source definitions and grants are verified after

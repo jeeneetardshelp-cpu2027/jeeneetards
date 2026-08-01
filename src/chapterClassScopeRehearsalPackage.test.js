@@ -72,6 +72,26 @@ describe("chapter class scope clone rehearsal package", () => {
     expect(rehearsal).toContain("set local statement_timeout = '60s'");
   });
 
+  it("builds a separately guarded persistent-clone package", () => {
+    const authorization = read("authorize_persistent_clone.sql");
+    const persistent = read("persistent_clone_apply.sql");
+
+    expect(authorization).toContain("nusprumijjthmrthaitp");
+    expect(authorization).toContain("chapter_scope_v13_clone_authorization");
+    expect(persistent).toContain("approved restore-clone marker is absent");
+    expect(persistent).toContain("nusprumijjthmrthaitp");
+    expect(persistent).toContain(
+      "89e2de12ccfd3916403ca093a6f6af4a248aac1631ad0fef66c25d9becd5b2a9",
+    );
+    expect(persistent).toContain(
+      "c6961481247c74a36cb449aa6bfab45627ccc2fe2fb876f3701bc0c129ca7315",
+    );
+    expect(persistent.match(/^begin;$/gm)).toHaveLength(1);
+    expect(persistent.match(/^commit;$/gm)).toHaveLength(1);
+    expect(persistent.match(/^rollback;$/gm)).toBeNull();
+    expect(persistent).toContain("persistent clone apply verified");
+  });
+
   it("verifies restoration of data, function definitions, and grants", () => {
     const rehearsal = read("rollback_rehearsal.sql");
     const rollbackIndex = rehearsal.indexOf("\nrollback;\n");
@@ -93,7 +113,7 @@ describe("chapter class scope clone rehearsal package", () => {
     const manifest = read("chapter_class_scope_rehearsal.sha256.txt")
       .trim()
       .split("\n");
-    expect(manifest).toHaveLength(3);
+    expect(manifest).toHaveLength(5);
     for (const line of manifest) {
       const [digest, name] = line.split(/\s{2}/);
       expect(digest).toBe(sha256(read(name)));

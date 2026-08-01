@@ -39,6 +39,8 @@ const expected = {
   facetsAclHash: "37a7ab878ddb3c8de2877e90e7224b7e",
 };
 
+const approvedCloneRef = "nusprumijjthmrthaitp";
+
 const normalize = (value) => value.replace(/\r\n/g, "\n");
 const sha256 = (value) =>
   createHash("sha256").update(value, "utf8").digest("hex");
@@ -269,6 +271,119 @@ $rollback_guard$;
 select 'rollback verified; no persistent database change' as result;
 `;
 
+const persistentCloneAuthorization = `-- ============================================================
+-- CHAPTER CLASS SCOPES v13 - PERSISTENT CLONE AUTHORIZATION
+-- ISOLATED RESTORE CLONE ${approvedCloneRef} ONLY. NEVER RUN ON PRODUCTION.
+-- ============================================================
+
+begin;
+
+create table if not exists public.chapter_scope_v13_clone_authorization (
+  clone_ref text primary key,
+  authorized_at timestamptz not null default now(),
+  constraint chapter_scope_v13_approved_clone
+    check (clone_ref = '${approvedCloneRef}')
+);
+
+revoke all on table public.chapter_scope_v13_clone_authorization
+  from public, anon, authenticated;
+
+insert into public.chapter_scope_v13_clone_authorization (clone_ref)
+values ('${approvedCloneRef}')
+on conflict (clone_ref) do nothing;
+
+commit;
+
+select clone_ref, authorized_at
+  from public.chapter_scope_v13_clone_authorization
+ where clone_ref = '${approvedCloneRef}';
+`;
+
+const persistentCloneApply = `-- ============================================================
+-- CHAPTER CLASS SCOPES v13 - PERSISTENT CLONE APPLY
+-- ISOLATED RESTORE CLONE ${approvedCloneRef} ONLY. NEVER RUN ON PRODUCTION.
+-- ============================================================
+
+do $target_guard$
+begin
+  if to_regclass('public.chapter_scope_v13_clone_authorization') is null
+     or not exists (
+       select 1
+         from public.chapter_scope_v13_clone_authorization
+        where clone_ref = '${approvedCloneRef}'
+     ) then
+    raise exception 'REFUSING: approved restore-clone marker is absent';
+  end if;
+end
+$target_guard$;
+
+begin;
+set local lock_timeout = '5s';
+set local statement_timeout = '60s';
+
+do $baseline_guard$
+declare
+  v_protected record;
+begin
+  if to_regclass('public.chapter_class_levels') is not null then
+    raise exception 'REFUSING: chapter_class_levels already exists';
+  end if;
+  if to_regprocedure('${curriculumSignature}') is null
+     or to_regprocedure('${facetsSignature}') is null then
+    raise exception 'REFUSING: expected browse functions are missing';
+  end if;
+  if (select count(*) from public.playlists) <> ${expected.playlists}
+     or (select count(*) from public.videos) <> ${expected.videos}
+     or (select count(*) from public.playlist_videos) <> ${expected.memberships}
+     or (select count(*) from public.chapters) <> ${expected.chapters}
+     or (select count(*) from public.subjects) <> ${expected.subjects}
+     or (select count(*) from public.class_levels) <> ${expected.classLevels} then
+    raise exception 'REFUSING: clone catalogue differs from the reviewed snapshot';
+  end if;
+  select * into v_protected from (${protectedStats}) protected;
+  if v_protected.protected_courses <> ${expected.protectedCourses}
+     or v_protected.protected_memberships <> ${expected.protectedMemberships}
+     or v_protected.protected_fingerprint <> '${expected.protectedFingerprint}' then
+    raise exception 'REFUSING: protected original-83 JEE baseline differs';
+  end if;
+end
+$baseline_guard$;
+
+-- SOURCE 1: ${sources[0].path}
+-- SHA-256: ${sources[0].sha256}
+${loaded[0].body}
+
+-- SOURCE 2: ${sources[1].path}
+-- SHA-256: ${sources[1].sha256}
+${loaded[1].body}
+
+do $persistent_postflight$
+declare
+  v_protected record;
+begin
+  if (select count(*) from public.playlists) <> ${expected.playlists}
+     or (select count(*) from public.videos) <> ${expected.videos}
+     or (select count(*) from public.playlist_videos) <> ${expected.memberships}
+     or (select count(*) from public.chapters) <> ${expected.chapters} then
+    raise exception 'POSTFLIGHT: catalogue count drift';
+  end if;
+  if (select count(*) from public.chapter_class_levels) <> 5 then
+    raise exception 'POSTFLIGHT: expected exactly five canonical scope rows';
+  end if;
+  select * into v_protected from (${protectedStats}) protected;
+  if v_protected.protected_courses <> ${expected.protectedCourses}
+     or v_protected.protected_memberships <> ${expected.protectedMemberships}
+     or v_protected.protected_fingerprint <> '${expected.protectedFingerprint}' then
+    raise exception 'POSTFLIGHT: protected original-83 JEE baseline drift';
+  end if;
+end
+$persistent_postflight$;
+
+commit;
+
+select 'persistent clone apply verified' as result;
+`;
+
 const readme = `# Chapter class scopes v13 - clone rehearsal package
 
 Run this package only on an isolated restore clone of the reviewed production
@@ -284,6 +399,17 @@ hashes are specific to this reviewed snapshot.
 4. If the SQL client stops after an error, issue \`rollback;\` or close the
    connection. The generated file contains no \`commit\`.
 
+After rollback evidence is accepted, the separately approved persistent-clone
+gate uses two additional files:
+
+1. Run \`authorize_persistent_clone.sql\` only on restore clone
+   \`${approvedCloneRef}\` and confirm its marker row.
+2. Run \`persistent_clone_apply.sql\` as a whole and require
+   \`persistent clone apply verified\`.
+3. Re-run \`read_only_preflight.sql\`; catalogue/protected counts remain exact,
+   while \`chapter_class_levels\` now exists with five reviewed rows.
+4. Run browser QA against this clone. Production remains forbidden.
+
 The rehearsal temporarily creates the table/rows and replaces the two browse
 functions inside one transaction, checks counts and the protected fingerprint,
 then rolls everything back. Source definitions and grants are verified after
@@ -298,6 +424,8 @@ mkdirSync(outputDir, { recursive: true });
 const outputs = new Map([
   ["read_only_preflight.sql", preflight],
   ["rollback_rehearsal.sql", rehearsal],
+  ["authorize_persistent_clone.sql", persistentCloneAuthorization],
+  ["persistent_clone_apply.sql", persistentCloneApply],
   ["README.md", readme],
 ]);
 

@@ -155,3 +155,69 @@ protected-JEE baseline above. No SQL was run against production. The clone is
 being retained for owner review and remains billable until separately approved
 for deletion. Because rollback-only changes are never externally visible, a
 separately approved persistent clone gate is still required for browser QA.
+
+## Persistent-clone application and runtime evidence
+
+The owner approved the next clone-only gate. Production remained untouched.
+The retained restore clone was rechecked against the exact baseline above,
+then explicitly marked by the clone-only authorization artifact before the
+persistent transaction was allowed to run:
+
+- authorization SHA-256:
+  `c115b873f848125b63292b0aa29ce42823f98170fc89c6e81ec42289de4231ae`;
+- persistent apply SHA-256:
+  `3a36b1f0681ce8c2ba181a042e6d68086009c00bdcf1d7db5a7f80b00dc7f28f`;
+- target marker: restore clone `nusprumijjthmrthaitp` only;
+- result: `persistent clone apply verified`.
+
+The transaction retained the exact `292 / 3,088 / 3,094 / 241 / 9 / 4`
+catalogue snapshot and protected `83 / 1,350 /
+6829fcb6eae22479db7b82b7b3da654d` JEE baseline. Its postflight found exactly
+five canonical rows. Anonymous RPC calls then returned:
+
+- Class 11 Physics: Kinematics, Newton's Laws of Motion (NLM), and Work,
+  Energy and Power; neither Ray Optics nor Modern Physics;
+- Class 12 Physics: Ray Optics and Optical Instruments and Modern Physics;
+  none of the three reviewed Class 11 chapters;
+- the contextual class and chapter facets returned the same separation.
+
+Runtime QA exposed one frontend integration defect before this gate could pass.
+The guided chapter picker used the canonical RPC, but the course and individual
+lecture hooks still filtered a selected chapter through playlist audience tags.
+That made the Class 12 Ray Optics facet say three courses while the results list
+showed two. The frontend now resolves the selected chapter's reviewed canonical
+class rows before enabling results:
+
+- a reviewed matching chapter bypasses playlist-class audience filtering;
+- a reviewed cross-class mismatch returns zero without issuing a catalogue
+  request;
+- an unreviewed chapter, or a database where v13 is not installed, retains the
+  existing playlist-class fallback.
+
+Focused tests cover matching, mismatch, Dropper, unreviewed, course, lecture,
+and pre-v13 fallback behaviour. Browser QA against a local Vite process whose
+compiled Supabase target was explicitly confirmed as clone
+`nusprumijjthmrthaitp` then passed:
+
+- Class 11 Physics offered 15 chapters: Kinematics/NLM/Work-Energy were present;
+  Ray Optics/Modern Physics were absent;
+- Class 12 Physics offered 16 chapters: Ray Optics/Modern Physics were present;
+  Kinematics/NLM/Work-Energy were absent;
+- invalid guided deep links for Class 11 Ray Optics and Class 12 Kinematics
+  redirected to their nearest valid Physics chapter picker;
+- Kinematics course results and facet both reported 9; Ray Optics course
+  results and facet both reported 3, including the previously hidden third
+  source;
+- the Ray Optics individual-lecture tab returned 8 lessons, while the direct
+  Class 11 + Ray Optics catalogue URL failed closed at zero;
+- representative Class 11 course 5, Class 12 course 28, and the newly included
+  Ray Optics course 300 rendered the official YouTube player with no local-app
+  console errors.
+
+A separate read-only smoke run compiled against current production (where v13
+is still absent) confirmed the compatibility fallback: Class 11 Kinematics
+continued to return its 9 courses with no local-app console error.
+
+The persistent clone remains active and billable for owner review. This is not
+production approval: applying v13 to production, recording a fresh PITR restore
+point, and pushing any release remain separately gated actions.

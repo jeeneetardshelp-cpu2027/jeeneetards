@@ -284,6 +284,7 @@ export default function PlaylistBrowse({
     // goalId was the defect: accepted by the hook, never supplied by the page.
     goalId: filters.goal, subjectId: filters.subject,
     boardId: filters.board, stage: filters.stage,
+    chapterClassSlugs: filters.chapterClassSlugs,
     // Do not run the course query behind the Individual lectures tab. At
     // library scale both tabs querying at once doubles work for no user value.
     enabled: filters.enabled !== false && tab === "playlists",

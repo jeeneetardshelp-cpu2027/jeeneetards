@@ -23,7 +23,33 @@ import { useEffect, useState } from "react";
 import { supabase, isSupabaseConfigured } from "./supabaseClient";
 import { parseCanonical } from "./canonicalUrl.js";
 
-const EMPTY = { goalId: null, subjectId: null, chapterId: null, boardId: null, names: {} };
+const EMPTY = {
+  goalId: null, subjectId: null, chapterId: null, boardId: null,
+  chapterClassSlugs: null, names: {},
+};
+
+let chapterScopeTableAvailable;
+
+const isMissingChapterScopeTable = (error) =>
+  ["42P01", "PGRST205"].includes(error?.code) ||
+  /chapter_class_levels.*(?:not find|does not exist|schema cache)/i.test(error?.message ?? "");
+
+async function resolveChapterClassSlugs(chapterId) {
+  if (chapterId == null || chapterScopeTableAvailable === false) return null;
+  const { data, error } = await supabase
+    .from("chapter_class_levels")
+    .select("class_levels!inner(slug)")
+    .eq("chapter_id", chapterId);
+  if (error) {
+    if (isMissingChapterScopeTable(error)) {
+      chapterScopeTableAvailable = false;
+      return null;
+    }
+    throw error;
+  }
+  chapterScopeTableAvailable = true;
+  return [...new Set((data ?? []).map((row) => row.class_levels?.slug).filter(Boolean))];
+}
 
 export function useCanonicalFilters(params) {
   const parsed = parseCanonical(params);
@@ -47,12 +73,12 @@ export function useCanonicalFilters(params) {
 
     const base = {
       goalId: c.goal.id, subjectId: c.subject.id, chapterId: c.chapter.id, boardId: null,
-      stage: c.stage, board: c.board, names: {},
+      chapterClassSlugs: null, stage: c.stage, board: c.board, names: {},
     };
 
     // Nothing to look up: ids only, or no filters at all. Ready immediately,
     // so the common case costs no extra render and no extra request.
-    if (!need.length) {
+    if (!need.length && c.chapter.id == null) {
       setState({ ...base, loading: false, error: null, ready: true, unresolved: [] });
       return;
     }
@@ -136,6 +162,21 @@ export function useCanonicalFilters(params) {
           applyRow(chapterRow);
         }
       }
+
+      if (resolved.chapterId != null) {
+        try {
+          resolved.chapterClassSlugs = await resolveChapterClassSlugs(resolved.chapterId);
+        } catch (scopeError) {
+          if (!active) return;
+          console.error("canonical chapter scope:", scopeError);
+          setState({
+            ...base, loading: false, ready: false, unresolved: [],
+            error: "Couldn’t load this selection.",
+          });
+          return;
+        }
+      }
+      if (!active) return;
 
       // A slug that matched nothing leaves us NOT ready. Querying without its
       // predicate would answer a different question than the URL asked.
