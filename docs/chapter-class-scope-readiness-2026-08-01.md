@@ -90,3 +90,24 @@ them into clone-rehearsal scope only; it is not production-write approval.
 6. Roll the clone back or delete it after evidence is captured.
 7. Record a fresh PITR restore point before any independently approved
    production application.
+
+## Rollback-only clone package prepared
+
+`npm run build:chapter-class-rehearsal` now deterministically creates:
+
+- `production/chapter_class_scopes_v13_clone_rehearsal/read_only_preflight.sql`
+- `production/chapter_class_scopes_v13_clone_rehearsal/rollback_rehearsal.sql`
+- a local operator README and SHA-256 manifest.
+
+The builder pins the exact two reviewed source hashes, removes only their
+deliberate review guards in generated output, and never connects to a database.
+The generated rehearsal refuses a clone unless it matches the reviewed
+`292 / 3,088 / 3,094 / 241 / 9 / 4` catalogue snapshot and the protected
+original-83 JEE fingerprint
+`6829fcb6eae22479db7b82b7b3da654d`. It contains no `COMMIT`, verifies catalogue
+counts, function definitions, grants, and the protected fingerprint after
+`ROLLBACK`, and is explicitly forbidden on production.
+
+This package has been prepared locally only. It has not been run on a clone or
+production. Because its changes are never visible outside the transaction, a
+separately approved persistent clone gate is still required for browser QA.

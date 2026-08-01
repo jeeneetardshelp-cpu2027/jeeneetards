@@ -18,6 +18,7 @@
     "list:channel-playlists": "node src/scripts/listChannelPlaylists.js",
     "audit:production-catalog": "node src/scripts/reportProductionCatalog.js",
     "audit:chapter-classes": "node src/scripts/auditChapterClassScopes.js",
+    "build:chapter-class-rehearsal": "node src/scripts/buildChapterClassScopeRehearsal.js",
     "audit:manage-capabilities": "node src/scripts/inspectManageCapabilities.js",
     "verify:manage-ui-staging": "node src/scripts/verifyManageUiStaging.js",
     "build:bootstrap": "node src/scripts/buildStagingBootstrap.js",
