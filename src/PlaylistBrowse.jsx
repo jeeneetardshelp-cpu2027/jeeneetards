@@ -11,7 +11,7 @@
 //      assessed". A legacy free-text teacher is shown as a plain name and is
 //      NOT presented as a resolved faculty identity.
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useSearchParams, useNavigate, useLocation } from "react-router";
 import {
   Star, Clock, Layers, Building2, SlidersHorizontal, X, AlertTriangle,
@@ -26,6 +26,7 @@ import { useTheme } from "./theme.jsx";
 import { useStructuredData } from "./PageMetadata.jsx";
 import { itemListSchema } from "./structuredData.js";
 import { subjectColor } from "./brandColors.js";
+import { useRatingsAvailability } from "./useRatingsAvailability.js";
 
 // Labels come from the canonical filter vocabulary — a second copy here would
 // drift, and the card would say "Advanced" while the filter said something else.
@@ -205,6 +206,7 @@ export default function PlaylistBrowse({
   // client-side navigation) window.location lags behind the router.
   const location = useLocation();
   const [sheetOpen, setSheetOpen] = useState(false);
+  const ratingsAvailable = useRatingsAvailability();
   const filterButtonRef = useRef(null);
   const sheetRef = useRef(null);
   const closeButtonRef = useRef(null);
@@ -256,14 +258,27 @@ export default function PlaylistBrowse({
   // Sort is a view preference in the URL (?sort=). Validated against SORTS so a
   // junk value falls back to the default rather than producing an empty order.
   const sortRaw = params.get("sort");
-  const sort = SORTS.some((s) => s.id === sortRaw) ? sortRaw : DEFAULT_SORT;
-  const setSort = (value) =>
+  const ratingSortUnavailable = ratingsAvailable === false && sortRaw === "rating";
+  const sort = !ratingSortUnavailable && SORTS.some((s) => s.id === sortRaw)
+    ? sortRaw
+    : DEFAULT_SORT;
+  const sortOptions = ratingsAvailable === false
+    ? SORTS.filter((option) => option.id !== "rating")
+    : SORTS;
+  const setSort = useCallback((value) =>
     setParams((prev) => {
       const next = new URLSearchParams(prev);
       if (value && value !== DEFAULT_SORT) next.set("sort", value); else next.delete("sort");
       next.delete("page"); // reordering invalidates the current page offset
       return next;
-    });
+    }), [setParams]);
+
+  // A shared URL may still carry ?sort=rating from before ratings existed.
+  // Remove that now-meaningless preference once the catalogue confirms zero
+  // rated courses, keeping URL, control and database ordering in agreement.
+  useEffect(() => {
+    if (ratingSortUnavailable) setSort(DEFAULT_SORT);
+  }, [ratingSortUnavailable, setSort]);
 
   const { items, total, loading, error, hasMore, reload } = usePlaylistBrowse({
     // goalId was the defect: accepted by the hook, never supplied by the page.
@@ -382,7 +397,7 @@ export default function PlaylistBrowse({
                 aria-label="Sort courses"
                 className={`min-h-11 rounded-xl border ${t.border} ${t.card} ${t.text} px-3 text-sm`}
               >
-                {SORTS.map((s) => (
+                {sortOptions.map((s) => (
                   <option key={s.id} value={s.id}>{s.label}</option>
                 ))}
               </select>
