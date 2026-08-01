@@ -1,8 +1,8 @@
 # Chapter class scopes v13 - clone rehearsal package
 
-This package is **prepared only**. It has not been connected to or run against
-Supabase. Run it only on an isolated restore clone of the reviewed production
-snapshot. Never run either SQL file on production.
+Run this package only on an isolated restore clone of the reviewed production
+snapshot. Never run either SQL file on production. The pinned function and ACL
+hashes are specific to this reviewed snapshot.
 
 1. Run `read_only_preflight.sql` and require exactly
    `292 / 3088 / 3094 / 241 / 9 / 4`,

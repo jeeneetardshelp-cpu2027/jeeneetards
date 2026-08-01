@@ -33,6 +33,10 @@ const expected = {
   protectedCourses: 83,
   protectedMemberships: 1350,
   protectedFingerprint: "6829fcb6eae22479db7b82b7b3da654d",
+  curriculumDefHash: "b71d62cc849eec7a72d1607ce205186e",
+  facetsDefHash: "48f982ef788b570def824aa770ae892b",
+  curriculumAclHash: "37a7ab878ddb3c8de2877e90e7224b7e",
+  facetsAclHash: "37a7ab878ddb3c8de2877e90e7224b7e",
 };
 
 const normalize = (value) => value.replace(/\r\n/g, "\n");
@@ -154,41 +158,11 @@ select
 ${protectedStats};
 `;
 
-const baselineSetters = `select set_config('chapter_scope.baseline_playlists',
-  (select count(*)::text from public.playlists), false);
-select set_config('chapter_scope.baseline_videos',
-  (select count(*)::text from public.videos), false);
-select set_config('chapter_scope.baseline_memberships',
-  (select count(*)::text from public.playlist_videos), false);
-select set_config('chapter_scope.baseline_chapters',
-  (select count(*)::text from public.chapters), false);
-select set_config('chapter_scope.baseline_curriculum_def',
-  coalesce((select md5(pg_get_functiondef(to_regprocedure('${curriculumSignature}')::oid))), 'missing'), false);
-select set_config('chapter_scope.baseline_facets_def',
-  coalesce((select md5(pg_get_functiondef(to_regprocedure('${facetsSignature}')::oid))), 'missing'), false);
-select set_config('chapter_scope.baseline_curriculum_acl',
-  coalesce((select md5(coalesce(p.proacl::text, '')) from pg_proc p
-             where p.oid = to_regprocedure('${curriculumSignature}')), 'missing'), false);
-select set_config('chapter_scope.baseline_facets_acl',
-  coalesce((select md5(coalesce(p.proacl::text, '')) from pg_proc p
-             where p.oid = to_regprocedure('${facetsSignature}')), 'missing'), false);
-select set_config('chapter_scope.baseline_protected_fingerprint',
-  (${protectedStats}), false);`;
-
-// The scalar fingerprint setter needs only the final column from the shared
-// query, so make that transformation explicit and deterministic.
-const fingerprintSetter = baselineSetters.replace(
-  `(${protectedStats}), false);`,
-  `(select protected_fingerprint from (${protectedStats}) protected), false);`,
-);
-
 const rehearsal = `-- ============================================================
 -- CHAPTER CLASS SCOPES v13 - ROLLBACK-ONLY CLONE REHEARSAL
 -- ISOLATED RESTORE CLONE ONLY. NEVER RUN ON PRODUCTION.
 -- THIS FILE HAS NO COMMIT AND ENDS THE CHANGE TRANSACTION WITH ROLLBACK.
 -- ============================================================
-
-${fingerprintSetter}
 
 begin;
 set local lock_timeout = '5s';
@@ -234,18 +208,17 @@ do $post_apply_guard$
 declare
   v_protected record;
 begin
-  if (select count(*) from public.playlists) <> current_setting('chapter_scope.baseline_playlists')::bigint
-     or (select count(*) from public.videos) <> current_setting('chapter_scope.baseline_videos')::bigint
-     or (select count(*) from public.playlist_videos) <> current_setting('chapter_scope.baseline_memberships')::bigint
-     or (select count(*) from public.chapters) <> current_setting('chapter_scope.baseline_chapters')::bigint then
+  if (select count(*) from public.playlists) <> ${expected.playlists}
+     or (select count(*) from public.videos) <> ${expected.videos}
+     or (select count(*) from public.playlist_videos) <> ${expected.memberships}
+     or (select count(*) from public.chapters) <> ${expected.chapters} then
     raise exception 'POST-APPLY: catalogue count drift';
   end if;
   if (select count(*) from public.chapter_class_levels) <> 5 then
     raise exception 'POST-APPLY: expected exactly five canonical scope rows';
   end if;
   select * into v_protected from (${protectedStats}) protected;
-  if v_protected.protected_fingerprint <>
-       current_setting('chapter_scope.baseline_protected_fingerprint') then
+  if v_protected.protected_fingerprint <> '${expected.protectedFingerprint}' then
     raise exception 'POST-APPLY: protected original-83 JEE fingerprint drift';
   end if;
 end
@@ -266,52 +239,41 @@ begin
   if to_regclass('public.chapter_class_levels') is not null then
     raise exception 'ROLLBACK FAILED: chapter_class_levels still exists';
   end if;
-  if (select count(*) from public.playlists) <> current_setting('chapter_scope.baseline_playlists')::bigint
-     or (select count(*) from public.videos) <> current_setting('chapter_scope.baseline_videos')::bigint
-     or (select count(*) from public.playlist_videos) <> current_setting('chapter_scope.baseline_memberships')::bigint
-     or (select count(*) from public.chapters) <> current_setting('chapter_scope.baseline_chapters')::bigint then
+  if (select count(*) from public.playlists) <> ${expected.playlists}
+     or (select count(*) from public.videos) <> ${expected.videos}
+     or (select count(*) from public.playlist_videos) <> ${expected.memberships}
+     or (select count(*) from public.chapters) <> ${expected.chapters} then
     raise exception 'ROLLBACK FAILED: catalogue count drift';
   end if;
   if md5(pg_get_functiondef(to_regprocedure('${curriculumSignature}')::oid)) <>
-       current_setting('chapter_scope.baseline_curriculum_def')
+       '${expected.curriculumDefHash}'
      or md5(pg_get_functiondef(to_regprocedure('${facetsSignature}')::oid)) <>
-       current_setting('chapter_scope.baseline_facets_def') then
+       '${expected.facetsDefHash}' then
     raise exception 'ROLLBACK FAILED: browse function definition drift';
   end if;
   if (select md5(coalesce(p.proacl::text, '')) from pg_proc p
        where p.oid = to_regprocedure('${curriculumSignature}')) <>
-       current_setting('chapter_scope.baseline_curriculum_acl')
+       '${expected.curriculumAclHash}'
      or (select md5(coalesce(p.proacl::text, '')) from pg_proc p
        where p.oid = to_regprocedure('${facetsSignature}')) <>
-       current_setting('chapter_scope.baseline_facets_acl') then
+       '${expected.facetsAclHash}' then
     raise exception 'ROLLBACK FAILED: browse function grant drift';
   end if;
   select * into v_protected from (${protectedStats}) protected;
-  if v_protected.protected_fingerprint <>
-       current_setting('chapter_scope.baseline_protected_fingerprint') then
+  if v_protected.protected_fingerprint <> '${expected.protectedFingerprint}' then
     raise exception 'ROLLBACK FAILED: protected original-83 JEE fingerprint drift';
   end if;
 end
 $rollback_guard$;
 
 select 'rollback verified; no persistent database change' as result;
-
-reset chapter_scope.baseline_playlists;
-reset chapter_scope.baseline_videos;
-reset chapter_scope.baseline_memberships;
-reset chapter_scope.baseline_chapters;
-reset chapter_scope.baseline_curriculum_def;
-reset chapter_scope.baseline_facets_def;
-reset chapter_scope.baseline_curriculum_acl;
-reset chapter_scope.baseline_facets_acl;
-reset chapter_scope.baseline_protected_fingerprint;
 `;
 
 const readme = `# Chapter class scopes v13 - clone rehearsal package
 
-This package is **prepared only**. It has not been connected to or run against
-Supabase. Run it only on an isolated restore clone of the reviewed production
-snapshot. Never run either SQL file on production.
+Run this package only on an isolated restore clone of the reviewed production
+snapshot. Never run either SQL file on production. The pinned function and ACL
+hashes are specific to this reviewed snapshot.
 
 1. Run \`read_only_preflight.sql\` and require exactly
    \`${expected.playlists} / ${expected.videos} / ${expected.memberships} / ${expected.chapters} / ${expected.subjects} / ${expected.classLevels}\`,

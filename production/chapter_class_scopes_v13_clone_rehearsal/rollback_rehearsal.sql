@@ -4,70 +4,6 @@
 -- THIS FILE HAS NO COMMIT AND ENDS THE CHANGE TRANSACTION WITH ROLLBACK.
 -- ============================================================
 
-select set_config('chapter_scope.baseline_playlists',
-  (select count(*)::text from public.playlists), false);
-select set_config('chapter_scope.baseline_videos',
-  (select count(*)::text from public.videos), false);
-select set_config('chapter_scope.baseline_memberships',
-  (select count(*)::text from public.playlist_videos), false);
-select set_config('chapter_scope.baseline_chapters',
-  (select count(*)::text from public.chapters), false);
-select set_config('chapter_scope.baseline_curriculum_def',
-  coalesce((select md5(pg_get_functiondef(to_regprocedure('public.get_browse_curriculum(text,text,text)')::oid))), 'missing'), false);
-select set_config('chapter_scope.baseline_facets_def',
-  coalesce((select md5(pg_get_functiondef(to_regprocedure('public.browse_facet_counts(text,text,text,text,bigint,text[],text[],text[],text)')::oid))), 'missing'), false);
-select set_config('chapter_scope.baseline_curriculum_acl',
-  coalesce((select md5(coalesce(p.proacl::text, '')) from pg_proc p
-             where p.oid = to_regprocedure('public.get_browse_curriculum(text,text,text)')), 'missing'), false);
-select set_config('chapter_scope.baseline_facets_acl',
-  coalesce((select md5(coalesce(p.proacl::text, '')) from pg_proc p
-             where p.oid = to_regprocedure('public.browse_facet_counts(text,text,text,text,bigint,text[],text[],text[],text)')), 'missing'), false);
-select set_config('chapter_scope.baseline_protected_fingerprint',
-  (select protected_fingerprint from (
-select
-  (select count(*)
-     from public.playlists p
-    where p.id < 167
-      and exists (
-        select 1
-          from public.playlist_learning_goals plg
-          join public.learning_goals lg on lg.id = plg.learning_goal_id
-         where plg.playlist_id = p.id and lg.slug = 'jee'
-      )) as protected_courses,
-  (select count(*)
-     from public.playlist_videos pv
-     join public.playlists p on p.id = pv.playlist_id
-    where p.id < 167
-      and exists (
-        select 1
-          from public.playlist_learning_goals plg
-          join public.learning_goals lg on lg.id = plg.learning_goal_id
-         where plg.playlist_id = p.id and lg.slug = 'jee'
-      )) as protected_memberships,
-  md5(
-    coalesce((select string_agg(row_to_json(x)::text, '|' order by x.id) from (
-      select p.id, p.title, p.teacher, p.youtube_playlist_id, p.category_id,
-             p.subject_id, p.class_levels, p.audience_focus, p.content_type,
-             p.language, p.difficulty
-        from public.playlists p
-        join public.playlist_learning_goals plg on plg.playlist_id = p.id
-        join public.learning_goals lg on lg.id = plg.learning_goal_id
-       where lg.slug = 'jee' and p.id < 167
-    ) x), '') || '|' ||
-    coalesce((select string_agg(row_to_json(y)::text, '|'
-                                order by y.playlist_id, y.position, y.id) from (
-      select pv.id, pv.playlist_id, pv.video_id, pv.position
-        from public.playlist_videos pv
-        join public.playlists p on p.id = pv.playlist_id
-       where p.id < 167 and exists (
-         select 1
-           from public.playlist_learning_goals plg
-           join public.learning_goals lg on lg.id = plg.learning_goal_id
-          where plg.playlist_id = p.id and lg.slug = 'jee'
-       )
-    ) y), '')
-  ) as protected_fingerprint) protected), false);
-
 begin;
 set local lock_timeout = '5s';
 set local statement_timeout = '60s';
@@ -642,10 +578,10 @@ do $post_apply_guard$
 declare
   v_protected record;
 begin
-  if (select count(*) from public.playlists) <> current_setting('chapter_scope.baseline_playlists')::bigint
-     or (select count(*) from public.videos) <> current_setting('chapter_scope.baseline_videos')::bigint
-     or (select count(*) from public.playlist_videos) <> current_setting('chapter_scope.baseline_memberships')::bigint
-     or (select count(*) from public.chapters) <> current_setting('chapter_scope.baseline_chapters')::bigint then
+  if (select count(*) from public.playlists) <> 292
+     or (select count(*) from public.videos) <> 3088
+     or (select count(*) from public.playlist_videos) <> 3094
+     or (select count(*) from public.chapters) <> 241 then
     raise exception 'POST-APPLY: catalogue count drift';
   end if;
   if (select count(*) from public.chapter_class_levels) <> 5 then
@@ -695,8 +631,7 @@ select
        )
     ) y), '')
   ) as protected_fingerprint) protected;
-  if v_protected.protected_fingerprint <>
-       current_setting('chapter_scope.baseline_protected_fingerprint') then
+  if v_protected.protected_fingerprint <> '6829fcb6eae22479db7b82b7b3da654d' then
     raise exception 'POST-APPLY: protected original-83 JEE fingerprint drift';
   end if;
 end
@@ -717,24 +652,24 @@ begin
   if to_regclass('public.chapter_class_levels') is not null then
     raise exception 'ROLLBACK FAILED: chapter_class_levels still exists';
   end if;
-  if (select count(*) from public.playlists) <> current_setting('chapter_scope.baseline_playlists')::bigint
-     or (select count(*) from public.videos) <> current_setting('chapter_scope.baseline_videos')::bigint
-     or (select count(*) from public.playlist_videos) <> current_setting('chapter_scope.baseline_memberships')::bigint
-     or (select count(*) from public.chapters) <> current_setting('chapter_scope.baseline_chapters')::bigint then
+  if (select count(*) from public.playlists) <> 292
+     or (select count(*) from public.videos) <> 3088
+     or (select count(*) from public.playlist_videos) <> 3094
+     or (select count(*) from public.chapters) <> 241 then
     raise exception 'ROLLBACK FAILED: catalogue count drift';
   end if;
   if md5(pg_get_functiondef(to_regprocedure('public.get_browse_curriculum(text,text,text)')::oid)) <>
-       current_setting('chapter_scope.baseline_curriculum_def')
+       'b71d62cc849eec7a72d1607ce205186e'
      or md5(pg_get_functiondef(to_regprocedure('public.browse_facet_counts(text,text,text,text,bigint,text[],text[],text[],text)')::oid)) <>
-       current_setting('chapter_scope.baseline_facets_def') then
+       '48f982ef788b570def824aa770ae892b' then
     raise exception 'ROLLBACK FAILED: browse function definition drift';
   end if;
   if (select md5(coalesce(p.proacl::text, '')) from pg_proc p
        where p.oid = to_regprocedure('public.get_browse_curriculum(text,text,text)')) <>
-       current_setting('chapter_scope.baseline_curriculum_acl')
+       '37a7ab878ddb3c8de2877e90e7224b7e'
      or (select md5(coalesce(p.proacl::text, '')) from pg_proc p
        where p.oid = to_regprocedure('public.browse_facet_counts(text,text,text,text,bigint,text[],text[],text[],text)')) <>
-       current_setting('chapter_scope.baseline_facets_acl') then
+       '37a7ab878ddb3c8de2877e90e7224b7e' then
     raise exception 'ROLLBACK FAILED: browse function grant drift';
   end if;
   select * into v_protected from (
@@ -781,21 +716,10 @@ select
        )
     ) y), '')
   ) as protected_fingerprint) protected;
-  if v_protected.protected_fingerprint <>
-       current_setting('chapter_scope.baseline_protected_fingerprint') then
+  if v_protected.protected_fingerprint <> '6829fcb6eae22479db7b82b7b3da654d' then
     raise exception 'ROLLBACK FAILED: protected original-83 JEE fingerprint drift';
   end if;
 end
 $rollback_guard$;
 
 select 'rollback verified; no persistent database change' as result;
-
-reset chapter_scope.baseline_playlists;
-reset chapter_scope.baseline_videos;
-reset chapter_scope.baseline_memberships;
-reset chapter_scope.baseline_chapters;
-reset chapter_scope.baseline_curriculum_def;
-reset chapter_scope.baseline_facets_def;
-reset chapter_scope.baseline_curriculum_acl;
-reset chapter_scope.baseline_facets_acl;
-reset chapter_scope.baseline_protected_fingerprint;

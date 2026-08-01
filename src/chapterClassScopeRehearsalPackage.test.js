@@ -66,6 +66,8 @@ describe("chapter class scope clone rehearsal package", () => {
     expect(rehearsal.match(/^commit;$/gm)).toBeNull();
     expect(rehearsal).not.toContain("$not_approved$");
     expect(rehearsal).not.toContain("Fail closed even if this file");
+    expect(rehearsal).not.toContain("set_config(");
+    expect(rehearsal).not.toContain("current_setting(");
     expect(rehearsal).toContain("set local lock_timeout = '5s'");
     expect(rehearsal).toContain("set local statement_timeout = '60s'");
   });
@@ -79,6 +81,9 @@ describe("chapter class scope clone rehearsal package", () => {
     expect(afterRollback).toContain("browse function definition drift");
     expect(afterRollback).toContain("browse function grant drift");
     expect(afterRollback).toContain("protected original-83 JEE fingerprint drift");
+    expect(afterRollback).toContain("b71d62cc849eec7a72d1607ce205186e");
+    expect(afterRollback).toContain("48f982ef788b570def824aa770ae892b");
+    expect(afterRollback).toContain("37a7ab878ddb3c8de2877e90e7224b7e");
     expect(afterRollback).toContain(
       "rollback verified; no persistent database change",
     );
@@ -96,7 +101,7 @@ describe("chapter class scope clone rehearsal package", () => {
 
     const readme = read("README.md");
     expect(readme).toContain("Never run either SQL file on production");
-    expect(readme).toMatch(/has not been connected to or run against\s+Supabase/);
+    expect(readme).toContain("pinned function and ACL");
     expect(readme).toMatch(/browser QA\s+cannot be evidence/);
   });
 

@@ -1,7 +1,7 @@
 # Chapter/class scope readiness — 2026-08-01
 
-Status: **mapping review complete; clone package preparation only; no Supabase
-write and no release deployment**.
+Status: **rollback-only restore-clone rehearsal passed; production remains
+untouched and no release deployment was made**.
 
 ## Reproduced production defect
 
@@ -108,6 +108,50 @@ original-83 JEE fingerprint
 counts, function definitions, grants, and the protected fingerprint after
 `ROLLBACK`, and is explicitly forbidden on production.
 
-This package has been prepared locally only. It has not been run on a clone or
-production. Because its changes are never visible outside the transaction, a
+## Restore-clone rehearsal evidence
+
+The owner approved a fresh isolated restore clone and the Supabase dashboard
+confirmed the following boundary before any SQL ran:
+
+- production source: `youtube` (`kezelafqhgqrprpadmlf`), read-only for this gate;
+- clone: `youtube-chapter-scope-v13-20260801`
+  (`nusprumijjthmrthaitp`), AWS Tokyo, Small compute;
+- PITR restore point: `01 Aug 2026, 15:53:01 IST`, within the active seven-day
+  retention window;
+- dashboard estimate: `$14.83/month` while the clone remains active.
+
+The clone became Healthy before the SQL editor was used. The packaged read-only
+preflight returned exactly:
+
+- `292` playlists, `3,088` videos, `3,094` memberships, `241` chapters,
+  `9` subjects, and `4` class levels;
+- no preexisting `chapter_class_levels` table;
+- both expected browse RPCs present;
+- protected original JEE baseline: `83` courses, `1,350` memberships, and
+  fingerprint `6829fcb6eae22479db7b82b7b3da654d`.
+
+The first rollback-harness run exposed a verification-only defect: PostgreSQL
+cleared custom session settings when the transaction rolled back, so the
+post-rollback guard received empty baseline strings. The change transaction
+still rolled back and a read-only check confirmed the scope table was absent.
+The builder was corrected to pin the reviewed snapshot's function-definition
+and ACL hashes directly, avoiding rollback-sensitive session settings:
+
+- curriculum definition: `b71d62cc849eec7a72d1607ce205186e`;
+- facet definition: `48f982ef788b570def824aa770ae892b`;
+- both ACLs: `37a7ab878ddb3c8de2877e90e7224b7e`.
+
+The rebuilt package passed its focused seven-test suite. The exact corrected
+rehearsal artifact, SHA-256
+`5eeca8cc9a5aafe9c0ab9c7dad411a38a66fe54b279150e182d225e2fe23b926`, then
+completed with `rollback verified; no persistent database change`. Its guarded
+postflight verified all five reviewed mappings, class-specific navigation and
+facets, unchanged catalogue counts, and the protected fingerprint. Its
+post-rollback guard verified that the new table was absent and both browse
+function definitions and grants were restored exactly.
+
+An independent read-only post-check again returned the exact catalogue and
+protected-JEE baseline above. No SQL was run against production. The clone is
+being retained for owner review and remains billable until separately approved
+for deletion. Because rollback-only changes are never externally visible, a
 separately approved persistent clone gate is still required for browser QA.
