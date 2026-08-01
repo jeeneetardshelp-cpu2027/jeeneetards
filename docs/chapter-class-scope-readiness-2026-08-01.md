@@ -1,6 +1,7 @@
 # Chapter/class scope readiness — 2026-08-01
 
-Status: **preparation only; no Supabase write and no release deployment**.
+Status: **mapping review complete; clone package preparation only; no Supabase
+write and no release deployment**.
 
 ## Reproduced production defect
 
@@ -53,17 +54,39 @@ XII. NCERT Physics Part II for Class XII contains the modern-physics units.
 
 - `src/migrations/chapter_class_scopes_v13_draft.sql` — additive table and five
   provenance-bearing rows. It contains a deliberate abort before all DDL.
+- `src/migrations/chapter_class_scopes_v13_browse_draft.sql` — replaces the two
+  existing browse RPCs only after a deliberate abort is removed in a separately
+  approved clone package. Reviewed chapter rows override playlist class tags;
+  unreviewed chapters retain the current fallback.
 - `npm run audit:chapter-classes` — anonymous, read-only repeatable evidence.
+
+The user instructed continuation after reviewing the five mappings. That moves
+them into clone-rehearsal scope only; it is not production-write approval.
+
+## Browse-delta boundary
+
+- Academic Class 10/11/12 chapter navigation and chapter facets use canonical
+  rows when available.
+- A selected reviewed chapter is counted from its academic scope, not from the
+  broad class labels on a multi-class playlist.
+- Chapters without a reviewed row keep today's playlist-class behaviour so a
+  five-row pilot cannot hide the rest of the catalogue.
+- Dropper retains today's `dropper OR class-11 OR class-12` course-audience
+  behaviour. Correctly separating target cohort is intentionally outside this
+  narrow defect fix.
 
 ## Required gates before any production change
 
-1. Owner reviews the five canonical mappings and the model.
-2. Remove the deliberate abort only in a separate approved artifact.
-3. Rehearse table creation and row insertion on an isolated current-data clone.
-4. Build a second, separately reviewed query delta that makes curriculum and
-   facet RPCs prefer canonical rows and fall back only for unreviewed chapters.
-5. Verify Class 11 no longer exposes Ray Optics/Modern Physics, Class 12 no
+1. Build a hash-verified clone package that removes both deliberate aborts but
+   changes no source artifact.
+2. Record a current read-only clone baseline: catalogue counts, protected JEE
+   fingerprint, curriculum/facet output, function definitions and grants.
+3. Rehearse the additive table/rows and browse delta in one clone transaction.
+4. Verify Class 11 no longer exposes Ray Optics/Modern Physics, Class 12 no
    longer exposes Kinematics/NLM/Work-Energy, counts remain internally
    consistent, and JEE/NEET/School remain isolated.
-6. Record a fresh PITR restore point before any independently approved
+5. Verify direct `/browse` results and lecture results agree with the canonical
+   chapter scope before preparing any frontend query adjustment.
+6. Roll the clone back or delete it after evidence is captured.
+7. Record a fresh PITR restore point before any independently approved
    production application.

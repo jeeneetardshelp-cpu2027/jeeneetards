@@ -1,5 +1,21 @@
 export const ACADEMIC_CLASS_SLUGS = ["class-10", "class-11", "class-12"];
 
+export function chapterMatchesClassScope({
+  selectedClass,
+  canonicalClasses = [],
+  playlistClasses = [],
+}) {
+  if (!selectedClass) return true;
+  if (selectedClass === "dropper") {
+    return playlistClasses.some((slug) =>
+      ["dropper", "class-11", "class-12"].includes(slug),
+    );
+  }
+  return canonicalClasses.length > 0
+    ? canonicalClasses.includes(selectedClass)
+    : playlistClasses.includes(selectedClass);
+}
+
 export function buildChapterClassScopeReport(unfilteredRows, rowsByClass) {
   const classesByChapter = new Map();
 
