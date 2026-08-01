@@ -5,7 +5,7 @@
 //    1. Get a returning student into a lecture in as few taps as possible
 //       (continue-watching, search, exam grid).
 //    2. Convince a first-time visitor in the first few seconds that this is
-//       a serious, free, ad-free tool — not another link farm.
+//       a serious, free, independent tool — not another link farm.
 //
 //  HONESTY RULE (inherited from the catalogue, applies to this page too):
 //  nothing on this page is invented. Course counts, ratings and channel
@@ -129,7 +129,7 @@ export default function Home() {
     ? [
         { value: courseCount, label: "Free courses", note: "Curriculum-tagged" },
         { value: liveTracks, label: "Exam tracks", note: "JEE, NEET, Boards" },
-        { value: "₹0", numeric: false, label: "Forever", note: "No ads, no account" },
+        { value: "₹0", numeric: false, label: "Forever", note: "No account needed" },
       ]
     : [];
 
@@ -243,7 +243,11 @@ function HeroSearch({ value, onChange, onClear, busy }) {
 function TrustChips() {
   return (
     <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-xs text-ink-3">
-      {["No ads, no rabbit holes", "No account needed", "Free forever"].map((chip) => (
+      {[
+        "No advertisements or sponsored rankings from JEENEETARD.",
+        "No account needed",
+        "Free forever",
+      ].map((chip) => (
         <span key={chip} className="inline-flex items-center gap-2">
           <span aria-hidden="true" className="h-1 w-1 rounded-full bg-accent" />
           {chip}

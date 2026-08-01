@@ -101,7 +101,7 @@ export function Hero({ searchField, chips, stats }) {
                 aria-hidden="true"
                 className="anim-glow h-1.5 w-1.5 rounded-full bg-accent"
               />
-              Free forever · No ads · JEE, NEET &amp; Boards
+              Free forever · Independent rankings · JEE, NEET &amp; Boards
             </Pill>
           </Reveal>
 
@@ -237,7 +237,7 @@ const FEATURES = [
   {
     icon: MonitorPlay,
     title: "A player that stays out of the way",
-    body: "YouTube's privacy-enhanced embed with no recommendation wall at the end. The next lesson in your course plays, not whatever the algorithm wants.",
+    body: "YouTube's privacy-enhanced official embed. YouTube may show advertisements and same-channel recommendations; JEENEETARD keeps your course navigation in view.",
     span: "lg:col-span-2",
   },
   {
@@ -278,7 +278,7 @@ export function Features() {
 const BENEFITS = [
   {
     icon: Ban,
-    title: "No ads. No rabbit holes.",
+    title: "Independent rankings. No rabbit holes.",
     before: "Twenty minutes of Shorts before the lesson starts",
     after: "The lesson starts",
   },
@@ -588,13 +588,13 @@ const INCLUDED = [
   "Every course, chapter and lecture in the library",
   "Side-by-side comparison on 17 attributes",
   "Full-library search across chapters, teachers and lectures",
-  "Distraction-free player with no recommendation wall",
+  "Official YouTube player; YouTube may show advertisements and same-channel recommendations",
   "Watch progress and resume — on this device, or across devices if you sign in",
   "Light and dark themes, and it works on a slow connection",
 ];
 
 const NEVER = [
-  "No ads, ever — not even 'sponsored' courses",
+  "No advertisements or sponsored rankings from JEENEETARD.",
   "No account required to browse, search, compare or watch",
   "No selling or sharing of personal data",
   "No cross-site tracking cookies",
@@ -767,7 +767,8 @@ export function FinalCta() {
               </h2>
               <p className="text-lead mx-auto mt-6 max-w-xl text-ink-2">
                 Pick a chapter, see who teaches it best, and start. No sign-up, no
-                card, no ads — just the lesson.
+                card — just the lesson. YouTube may show advertisements and
+                same-channel recommendations inside its official player.
               </p>
               <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
                 <Button size="lg" to="/explore">
@@ -780,7 +781,7 @@ export function FinalCta() {
               </div>
               <ul className="mt-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-xs text-ink-3">
                 {[
-                  [ShieldCheck, "No ads or trackers"],
+                  [ShieldCheck, "No sponsored rankings or trackers"],
                   [Smartphone, "Works on any phone"],
                   [IndianRupee, "Free forever"],
                 ].map(([Icon, label]) => (

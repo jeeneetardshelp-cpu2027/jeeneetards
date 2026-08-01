@@ -26,7 +26,7 @@ export function courseMeta(course, id) {
     subject,
     course.teacher ? `by ${course.teacher}` : null,
   ].filter(Boolean);
-  const description = `${parts.join(" · ")}. Watch ad-free on JEENEETARD.`;
+  const description = `${parts.join(" · ")}. No JEENEETARD advertisements or sponsored rankings; YouTube may show ads or same-channel recommendations.`;
   return { title, description, url: `${SITE}/course/${id}` };
 }
 

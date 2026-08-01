@@ -97,8 +97,12 @@ export default function Footer() {
               educational lectures, organised by the syllabus they are actually
               studying. We link to videos — we don&apos;t host them.
             </p>
+            <p className="mt-3 max-w-sm text-xs leading-relaxed text-ink-3">
+              YouTube may show advertisements and same-channel recommendations
+              inside its official player.
+            </p>
             <div className="mt-8 flex flex-wrap gap-2">
-              {["No ads", "No account", "₹0 forever"].map((tag) => (
+              {["No sponsored rankings", "No account", "₹0 forever"].map((tag) => (
                 <span
                   key={tag}
                   className="inline-flex items-center rounded-sm border border-hairline px-3 py-1 text-xs font-medium text-ink-3"

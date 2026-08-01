@@ -15,6 +15,7 @@ import {
   savePlayerPrefs,
   getWatchedVideoIds,
   getCourseProgress,
+  getContinueWatching,
   mergeRemoteEntry,
 } from "./progress.js";
 
@@ -123,6 +124,51 @@ describe("recordLessonPosition stays in its lane", () => {
   it("rejects calls without a playlist or video id", () => {
     expect(recordLessonPosition({ playlistId: null, videoId: "x", seconds: 60 })).toBeNull();
     expect(recordLessonPosition({ playlistId: 1, videoId: "", seconds: 60 })).toBeNull();
+    expect(localStorage.getItem(KEY)).toBeNull();
+  });
+});
+
+describe("Continue Watching record validation", () => {
+  it("returns only complete course records and applies the limit afterwards", () => {
+    localStorage.setItem(KEY, JSON.stringify({
+      1: {
+        playlistId: 1, chapterId: 7, lastVideoId: "valid-old", courseTitle: "Optics",
+        watched: ["valid-old"], updatedAt: 100,
+      },
+      2: {
+        playlistId: 2, courseTitle: "Broken", watched: [], updatedAt: 300,
+      },
+      3: {
+        playlistId: 3, chapterId: 8, lastVideoId: "valid-new", courseTitle: "Waves",
+        watched: ["valid-new"], updatedAt: 200,
+      },
+    }));
+
+    expect(getContinueWatching(2).map((entry) => entry.playlistId)).toEqual([3, 1]);
+    expect(JSON.parse(localStorage.getItem(KEY))).not.toHaveProperty("2");
+  });
+
+  it("removes a historical partial record that would create an undefined route", () => {
+    localStorage.setItem(KEY, JSON.stringify({
+      193: { playlistId: 193, courseTitle: "Broken course", watched: [], updatedAt: 100 },
+    }));
+
+    expect(getContinueWatching()).toEqual([]);
+    expect(localStorage.getItem(KEY)).toBeNull();
+  });
+
+  it("keeps a valid position-only record private without rendering it as a course card", () => {
+    recordLessonPosition({ playlistId: 5, videoId: "xyz", seconds: 45, duration: 300 });
+
+    expect(getContinueWatching()).toEqual([]);
+    expect(getLessonPosition(5, "xyz")).toBe(45);
+    expect(getCourseProgress(5)).not.toBeNull();
+  });
+
+  it("rejects a lesson view without a valid course, chapter, or video identifier", () => {
+    expect(recordLessonView({ playlistId: 1, chapterId: null, videoId: "abc" })).toBeNull();
+    expect(recordLessonView({ playlistId: 1, chapterId: 7, videoId: "" })).toBeNull();
+    expect(recordLessonView({ playlistId: "not-an-id", chapterId: 7, videoId: "abc" })).toBeNull();
     expect(localStorage.getItem(KEY)).toBeNull();
   });
 });
@@ -238,8 +284,9 @@ describe("mergeRemoteEntry (server → localStorage, sign-in pull)", () => {
     expect(getWatchedVideoIds(1)).toEqual(["vidA"]);
   });
 
-  it("rejects calls without a playlist, video id, or a valid updatedAt", () => {
+  it("rejects calls without a playlist, chapter, video id, or a valid updatedAt", () => {
     expect(mergeRemoteEntry({ playlistId: null, videoId: "x", updatedAt: 1 })).toBeNull();
+    expect(mergeRemoteEntry({ playlistId: 1, chapterId: null, videoId: "x", updatedAt: 1 })).toBeNull();
     expect(mergeRemoteEntry({ playlistId: 1, videoId: "", updatedAt: 1 })).toBeNull();
     expect(mergeRemoteEntry({ playlistId: 1, videoId: "x", updatedAt: NaN })).toBeNull();
     expect(localStorage.getItem(KEY)).toBeNull();
@@ -250,6 +297,7 @@ describe("corrupted storage never breaks playback", () => {
   it("corrupted progress JSON reads as no resume point and is recoverable", () => {
     localStorage.setItem(KEY, "{not valid json");
     expect(getLessonPosition(1, "abc")).toBe(0);
+    expect(localStorage.getItem(KEY)).toBeNull();
     expect(() =>
       recordLessonPosition({ playlistId: 1, videoId: "abc", seconds: 60, duration: 600 })
     ).not.toThrow();
