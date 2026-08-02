@@ -17,6 +17,7 @@ import {
   getCourseProgress,
   getContinueWatching,
   mergeRemoteEntry,
+  clearProgress,
 } from "./progress.js";
 
 const KEY = "ll_progress_v1";
@@ -290,6 +291,34 @@ describe("mergeRemoteEntry (server → localStorage, sign-in pull)", () => {
     expect(mergeRemoteEntry({ playlistId: 1, videoId: "", updatedAt: 1 })).toBeNull();
     expect(mergeRemoteEntry({ playlistId: 1, videoId: "x", updatedAt: NaN })).toBeNull();
     expect(localStorage.getItem(KEY)).toBeNull();
+  });
+});
+
+describe("clearProgress (called on sign-out)", () => {
+  it("wipes the shared store so the next student on the device starts clean", () => {
+    recordLessonView({
+      playlistId: 12, chapterId: 3, courseTitle: "Optics", videoId: "vidA",
+      videoTitle: "Lesson A", position: 1, totalLessons: 8,
+    });
+    recordLessonPosition({ playlistId: 12, videoId: "vidA", seconds: 400, duration: 1800 });
+    expect(getContinueWatching(3)).toHaveLength(1);
+
+    clearProgress();
+
+    expect(getContinueWatching(3)).toHaveLength(0);
+    expect(getWatchedVideoIds(12)).toEqual([]);
+    expect(getLessonPosition(12, "vidA")).toBe(0);
+    expect(localStorage.getItem(KEY)).toBeNull();
+  });
+
+  it("leaves player preferences alone — they are device settings, not history", () => {
+    savePlayerPrefs({ rate: 1.5 });
+    clearProgress();
+    expect(getPlayerPrefs()).toEqual({ rate: 1.5 });
+  });
+
+  it("is safe when nothing was ever stored", () => {
+    expect(() => clearProgress()).not.toThrow();
   });
 });
 

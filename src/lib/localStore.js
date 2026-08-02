@@ -1,18 +1,29 @@
-// localStore.js — every piece of state this product keeps about a student.
+// localStore.js — a device-local key registry and reset helper.
 //
-// Everything in this module is device-local and never leaves the browser.
-// That is a product promise, and this module is where it is kept: one
-// registry of keys, one read/write path, one "delete everything" action that
-// the privacy page and the footer can both call.
+// ⚠️ NOT WIRED UP. Nothing in the app imports this module, no test covers it,
+// and none of the keys in REGISTRY below has ever been written by the product.
+// Treat it as a proposal, not as a description of the running system.
 //
-// Scope note: watch progress is the ONE thing that can also exist server-side
-// — a signed-in student's progress is pulled back down on a course visit (see
-// CourseVideoPage + progress.mergeRemoteEntry). That lives in progress.js, not
-// here. Nothing in THIS file syncs; clearing it clears the local copy only.
+// This warning exists because the header previously claimed to be "every piece
+// of state this product keeps about a student", with "one registry of keys,
+// one read/write path". Both claims were false and dangerously so: someone
+// answering a data access or deletion request would have read REGISTRY as the
+// authoritative on-device inventory and got it wrong in both directions.
 //
-// Anything stored must be listed in REGISTRY. That is what makes the reset
-// complete — a key written directly through localStorage elsewhere would
-// survive a reset and quietly break the promise.
+// What the product ACTUALLY writes today, none of it through this module:
+//   • lecture-library-theme  — src/theme.jsx
+//   • ll_progress_v1         — src/progress.js  (also synced server-side for
+//                              signed-in students, see progressSync.js)
+//   • ll_player_prefs_v1     — src/progress.js
+//   • returnTo:*             — src/returnTo.js   (sessionStorage)
+//   • scroll:*               — src/App.jsx       (sessionStorage)
+//
+// Before wiring this up: make REGISTRY match that list, and make
+// clearAllLocalData() actually clear those keys — as written it would miss
+// every one of them, and would also promise to clear three `jn:` keys that do
+// not exist. The authoritative student-facing inventory is the Privacy Policy
+// (src/PrivacyPolicy.jsx sections 4 and 5), which is kept honest by
+// src/legalTruth.test.js.
 
 const PREFIX = "jn:";
 

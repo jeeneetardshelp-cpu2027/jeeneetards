@@ -468,7 +468,23 @@ export default function CourseVideoPage() {
           initialCount={course.ratingsCount ?? 0}
         />
       }
-      reportSlot={<VideoReport videoId={activeLesson.id} videoTitle={activeLesson.title} />}
+      reportSlot={
+        // Keyed on the lesson: without this, VideoReport sits at an invariant
+        // tree position and React preserves its hooks state across a lesson
+        // change (switching lessons only rewrites ?v=, so App.jsx's route key
+        // never changes). The consequences were real: after one successful
+        // report the terminal "Thanks" state stuck, so every OTHER lesson in
+        // the course showed a confirmation it never earned and offered no
+        // "Report an issue" button at all — losing the ability to flag
+        // inappropriate content for the rest of the session. A half-typed note
+        // also carried over and would have been submitted against the wrong
+        // lesson.
+        <VideoReport
+          key={activeLesson.id}
+          videoId={activeLesson.id}
+          videoTitle={activeLesson.title}
+        />
+      }
     />
   );
 }

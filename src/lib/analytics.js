@@ -19,6 +19,17 @@
 //
 // There is no sink wired up by default: `setAnalyticsSink` is the integration
 // point. Until a sink is set this is a no-op with a dev-only console trace.
+//
+// ⚠️ STATUS: NOT WIRED UP. No module imports this file, no test covers it, and
+// no sink is set anywhere — so today it emits nothing at all. Before wiring it
+// up, note that rule 3 above ("never sends raw search text") is aspirational:
+// scrub() is a key DENY-list, not the value allow-list the header describes,
+// so any free-text value under 64 characters that isn't an email or phone
+// number is forwarded verbatim. Rule 4's key filter was also broken until
+// 31 July 2026 (see scrub below) — it matched only snake_case while this
+// codebase names everything in camelCase. If this is ever switched on, the
+// Privacy Policy must be updated in the same change; src/legalTruth.test.js
+// derives its checks from the code and should be extended to cover it.
 
 /** Canonical event names. Anything not in here is rejected in development. */
 export const EVENTS = Object.freeze({
@@ -71,7 +82,14 @@ function scrub(props) {
   if (!props || typeof props !== "object") return safe;
 
   for (const [key, value] of Object.entries(props)) {
-    if (/(^|_)(email|phone|mobile|name|user|session|token|ip|address)(_|$)/i.test(key)) continue;
+    // Normalise camelCase to snake_case BEFORE matching. The deny-list is
+    // anchored on `_` or string edge, so against this codebase's actual naming
+    // (userId, sessionId, ipAddress, userEmail, authToken) it matched nothing
+    // at all — the module header's "No identifiers" rule was enforced by
+    // literally zero code. Verified: all five of those keys used to pass
+    // straight through to the sink.
+    const normalisedKey = String(key).replace(/([a-z0-9])([A-Z])/g, "$1_$2");
+    if (/(^|_)(email|phone|mobile|name|user|session|token|ip|address)(_|$)/i.test(normalisedKey)) continue;
     if (value == null) continue;
 
     const type = typeof value;

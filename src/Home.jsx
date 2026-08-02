@@ -281,14 +281,21 @@ function Landing({
 
       <Process />
 
+      {/* Counts that come from a live query are dropped when that query hasn't
+          produced a real number, rather than rendered as a confident "0". With
+          a literal array here, a failed catalogue request made the homepage
+          state "0 — Courses in the library" and "0 — Exam tracks live" as
+          statistics, while the hero rail above (already guarded on
+          courseCount > 0) correctly hid itself. The last two are constants
+          describing the product, not measurements, so they always hold. */}
       <Statistics
         stats={[
-          {
+          courseCount > 0 && {
             value: courseCount,
             label: "Courses in the library",
             note: "Curriculum-tagged, chapter by chapter",
           },
-          {
+          liveTracks > 0 && {
             value: liveTracks,
             label: "Exam tracks live",
             note: "JEE, NEET and school boards",
@@ -303,7 +310,7 @@ function Landing({
             label: "Languages classified",
             note: "Hindi, English and Hinglish",
           },
-        ]}
+        ].filter(Boolean)}
       />
 
       <Pricing />
