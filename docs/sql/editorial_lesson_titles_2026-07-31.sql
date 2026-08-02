@@ -48,6 +48,27 @@
 
 begin;
 
+-- Fail fast and clearly if this file's assumptions about the schema are wrong,
+-- rather than dying partway through a 578-row loop. (An earlier version of this
+-- file assumed videos.title_review_status existed; it does not -- that column is
+-- on public.playlists.)
+do $schema$
+begin
+  if to_regclass('public.videos') is null then
+    raise exception 'public.videos does not exist';
+  end if;
+  perform 1 from information_schema.columns
+   where table_schema = 'public' and table_name = 'videos' and column_name = 'title';
+  if not found then raise exception 'public.videos.title does not exist'; end if;
+  perform 1 from information_schema.columns
+   where table_schema = 'public' and table_name = 'videos' and column_name = 'source_title';
+  if not found then raise exception 'public.videos.source_title does not exist -- the revert path depends on it'; end if;
+  perform 1 from information_schema.columns
+   where table_schema = 'public' and table_name = 'videos' and column_name = 'updated_at';
+  if not found then raise exception 'public.videos.updated_at does not exist'; end if;
+end
+$schema$;
+
 create temp table _title_rewrite (video_id bigint primary key, before_title text, after_title text) on commit drop;
 
 insert into _title_rewrite (video_id, before_title, after_title) values
@@ -657,8 +678,12 @@ begin
         'video % no longer has the expected title. expected %, found % -- someone edited it, refusing to overwrite',
         r.video_id, r.before_title, v_current;
     else
+      -- Only columns that actually exist on public.videos. An earlier draft
+      -- also set title_review_status here; that column lives on
+      -- public.playlists, NOT on videos, so the whole file failed at runtime
+      -- with 42703. The guard block above now checks the schema up front.
       update public.videos
-         set title = r.after_title, title_review_status = 'approved', updated_at = now()
+         set title = r.after_title, updated_at = now()
        where id = r.video_id;
       v_applied := v_applied + 1;
     end if;
