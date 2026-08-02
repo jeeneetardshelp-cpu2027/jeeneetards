@@ -692,19 +692,25 @@ function ReportsPanel() {
 }
 
 // ---------------------------------------------------------------------
-//  REVIEWS  —  every written review, hide/un-hide. No public display
-//  surface exists yet for review text, so this is proactive moderation
-//  (spot-checking) rather than a response to student reports.
+//  REVIEWS  —  every written review, hide/un-hide. Reviews ARE displayed
+//  publicly on the course page (RELEASE_FEATURES.reviewDisplay), so hiding
+//  one is a real, student-visible moderation action, not just spot-checking.
 // ---------------------------------------------------------------------
 function ReviewModerationPanel() {
   const { t } = useTheme();
   const { reviews, loading, error, setHidden } = useReviewModeration();
   const [busyId, setBusyId] = useState(null);
+  const [actionError, setActionError] = useState(null);
 
   const toggle = async (review) => {
     setBusyId(review.id);
-    await setHidden(review.id, !review.review_hidden);
+    setActionError(null);
+    // setHidden RETURNS the error rather than throwing; ignoring it meant a
+    // failed hide looked identical to a successful one, on the one control
+    // whose whole purpose is removing abusive content.
+    const err = await setHidden(review.id, !review.review_hidden);
     setBusyId(null);
+    if (err) setActionError(err.message ?? String(err));
   };
 
   if (loading) return <p className={`text-sm ${t.muted}`}>Loading reviews…</p>;
@@ -724,6 +730,11 @@ function ReviewModerationPanel() {
 
   return (
     <div className="space-y-3">
+      {actionError && (
+        <p role="alert" className="text-sm" style={{ color: ACCENT.red }}>
+          Couldn&apos;t update that review: {actionError}
+        </p>
+      )}
       {reviews.map((r) => (
         <div key={r.id} className={`rounded-2xl border ${t.card} ${t.border} p-5 ${r.review_hidden ? "opacity-60" : ""}`}>
           <div className="flex items-start justify-between gap-4">

@@ -29,6 +29,32 @@ import { BRAND_TEAL } from "./brandColors.js";
 
 const ACCENT = { teal: BRAND_TEAL, star: "#f59e0b", red: "#dc2626" };
 
+// Matches the `plr_review_length` CHECK constraint added in
+// docs/sql/reviews_hardening_2026-07-31.sql, and the cap a content-report note
+// has always had. The server is the real enforcement; this is so a student
+// finds out while typing rather than after pressing submit.
+const MAX_REVIEW = 1000;
+
+// Students must never see a raw Postgres or fetch error. Mapped against the
+// text the database ACTUALLY produces -- this project already shipped a set of
+// mappings written against invented error strings that therefore never matched
+// (see VideoReport.jsx), so these are keyed to the real constraint/trigger
+// names in community_schema.sql and reviews_hardening_2026-07-31.sql.
+export function ratingErrorMessage(error) {
+  const text = String(error?.message ?? "").toLowerCase();
+  if (/plr_review_length|too long|value too long/.test(text))
+    return `Please keep your review under ${MAX_REVIEW} characters.`;
+  if (/plr_clarity_range|plr_question_range|rating between|violates check/.test(text))
+    return "Those ratings look out of range. Please pick 1 to 5 stars.";
+  if (/jwt|not authorized|permission denied|row-level security/.test(text))
+    return "Your session expired. Sign in again, then resubmit.";
+  if (/duplicate key|already exists/.test(text))
+    return "You've already rated this course — submitting again updates it.";
+  if (/failed to fetch|network|timeout/.test(text))
+    return "Couldn't reach the server. Check your connection and try again.";
+  return "Couldn't save your rating. Please try again.";
+}
+
 // A 1–5 star input.
 function StarInput({ value, onChange, label }) {
   const { t } = useTheme();
@@ -86,7 +112,9 @@ function ChipRow({ label, options, value, onChange }) {
   );
 }
 
-function CourseRatingInteractive({ playlistId, initialAverage = 0, initialCount = 0 }) {
+function CourseRatingInteractive({
+  playlistId, initialAverage = 0, initialCount = 0, reloadReviews = null,
+}) {
   const { t } = useTheme();
   const { session, loading: authLoading } = useSession();
   const user = session?.user;
@@ -171,12 +199,16 @@ function CourseRatingInteractive({ playlistId, initialAverage = 0, initialCount 
     );
     setBusy(false);
     if (error) {
-      setStatus({ ok: false, message: error.message });
+      setStatus({ ok: false, message: ratingErrorMessage(error) });
       return;
     }
     setStatus({ ok: true, message: existing ? "Rating updated." : "Thanks for rating!" });
     setExisting(true);
     refreshAverage();
+    // Pull the public list again so the student sees their own review appear
+    // (or their edit take effect) immediately. Without this it only showed up
+    // after a manual page reload, which reads as "my review didn't save".
+    reloadReviews?.();
   };
 
   return (
@@ -246,14 +278,31 @@ function CourseRatingInteractive({ playlistId, initialAverage = 0, initialCount 
             onChange={setBestFor}
           />
           <label className="block">
-            <span className={`block text-xs font-medium ${t.muted}`}>Review (optional)</span>
+            <span className={`block text-xs font-medium ${t.muted}`}>
+              Review (optional) — shown publicly
+            </span>
             <textarea
               value={review}
               onChange={(e) => setReview(e.target.value)}
               rows={3}
+              maxLength={MAX_REVIEW}
+              aria-describedby="review-visibility-note"
               placeholder="What worked, what didn't…"
               className={`mt-1 w-full resize-none rounded-lg border ${t.border} ${t.input} ${t.text} p-3 text-sm outline-none focus:ring-2 focus:ring-teal-500`}
             />
+            {/* Students were never told this text is public — not here, not on
+                submit, not in the policy. For an audience of minors that is the
+                notice that actually matters, because it is the one shown at the
+                moment they decide what to type. */}
+            <span id="review-visibility-note" className={`mt-1 block text-xs ${t.faint}`}>
+              Anyone can read this on the course page, signed in or not. Your
+              name and email are never shown. Please don&apos;t include your
+              name, school, coaching batch, or contact details. To remove it
+              later, clear this box and submit again.
+            </span>
+            <span className={`mt-1 block text-right text-xs ${t.faint}`}>
+              {review.length}/{MAX_REVIEW}
+            </span>
           </label>
           <div className="flex items-center gap-3">
             <button
@@ -313,9 +362,8 @@ export function CourseRatingSummary({ initialAverage = 0, initialCount = 0 }) {
 // only collects an email and password, so there is no real display name to
 // attach, and inventing one would violate this project's own "nothing is
 // invented" rule (see the file header of PlaylistBrowse.jsx).
-function ReviewsList({ playlistId, released = RELEASE_FEATURES.reviewDisplay }) {
+function ReviewsList({ reviews, loading, released = RELEASE_FEATURES.reviewDisplay }) {
   const { t } = useTheme();
-  const { reviews, loading } = useVisibleReviews(released ? playlistId : null);
 
   if (!released || loading || reviews.length === 0) return null;
 
@@ -358,7 +406,16 @@ export default function CourseRating({
   initialAverage = 0,
   initialCount = 0,
   released = RELEASE_FEATURES.courseRatingSubmission,
+  displayReleased = RELEASE_FEATURES.reviewDisplay,
 }) {
+  // The reviews query lives HERE, not inside ReviewsList, so that submitting
+  // the form can refresh the list beside it. As siblings they had no shared
+  // handle, which is why a student's own review only appeared after a manual
+  // page reload.
+  const { reviews, loading, reload } = useVisibleReviews(
+    displayReleased ? playlistId : null,
+  );
+
   return (
     <>
       {released ? (
@@ -366,6 +423,7 @@ export default function CourseRating({
           playlistId={playlistId}
           initialAverage={initialAverage}
           initialCount={initialCount}
+          reloadReviews={reload}
         />
       ) : (
         <CourseRatingSummary
@@ -373,7 +431,7 @@ export default function CourseRating({
           initialCount={initialCount}
         />
       )}
-      <ReviewsList playlistId={playlistId} />
+      <ReviewsList reviews={reviews} loading={loading} released={displayReleased} />
     </>
   );
 }
