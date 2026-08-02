@@ -54,9 +54,11 @@ $preflight$;
 
 with reviewed(subject_slug, chapter_slug, class_slug) as (
   values
-    -- Physics / Class XI (10)
+    -- Physics / Class XI (13)
+    ('physics', 'units-and-measurements', 'class-11'),
     ('physics', 'basic-mathematics-for-physics', 'class-11'),
     ('physics', 'laws-of-motion', 'class-11'),
+    ('physics', 'friction', 'class-11'),
     ('physics', 'system-of-particles-and-centre-of-mass', 'class-11'),
     ('physics', 'rotational-motion', 'class-11'),
     ('physics', 'gravitation', 'class-11'),
@@ -64,6 +66,7 @@ with reviewed(subject_slug, chapter_slug, class_slug) as (
     ('physics', 'mechanical-properties-of-fluids', 'class-11'),
     ('physics', 'thermal-properties-of-matter', 'class-11'),
     ('physics', 'thermodynamics', 'class-11'),
+    ('physics', 'kinetic-theory-of-gases', 'class-11'),
     ('physics', 'oscillations-and-waves', 'class-11'),
 
     -- Physics / Class XII (9)
@@ -188,9 +191,9 @@ begin
   from public.chapter_class_levels
   where reviewed_on = date '2026-08-02';
 
-  if v_total_count <> 87 or v_v14_count <> 82 then
+  if v_total_count <> 90 or v_v14_count <> 85 then
     raise exception
-      'POSTFLIGHT: expected 87 total rows and 82 v14 rows, got % and %',
+      'POSTFLIGHT: expected 90 total rows and 85 v14 rows, got % and %',
       v_total_count, v_v14_count;
   end if;
 

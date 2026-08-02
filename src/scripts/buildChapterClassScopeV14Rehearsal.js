@@ -14,7 +14,7 @@ const outputDir = resolve(
 
 const source = {
   path: "src/migrations/chapter_class_scopes_v14_draft.sql",
-  sha256: "95492b1abd8de69e700b3a7a1f55454a2cf08aa2cf15dd33e1502836cf250f0a",
+  sha256: "6334faeae27575df323a0e8b4561fb4fd471985a5e9978cf1f26bd6d0b4f1459",
 };
 
 const expected = {
@@ -25,10 +25,10 @@ const expected = {
   subjects: 9,
   classLevels: 4,
   existingScopeRows: 5,
-  rehearsedScopeRows: 87,
+  rehearsedScopeRows: 90,
   protectedCourses: 83,
-  protectedMemberships: 1350,
-  protectedFingerprint: "6829fcb6eae22479db7b82b7b3da654d",
+  protectedMemberships: 1307,
+  protectedFingerprint: "c742fabf93ff8dd33d6ecd5eb4793db0",
 };
 
 const normalize = (value) => value.replace(/\r\n/g, "\n");
@@ -191,9 +191,9 @@ begin
      or (${chapterCount("jee", "class-11", "mathematics")}) <> 20
      or (${chapterCount("jee", "class-12", "mathematics")}) <> 19
      or (${overlapCount("jee", "mathematics")}) <> 8
-     or (${chapterCount("neet", "class-11", "physics")}) <> 21
-     or (${chapterCount("neet", "class-12", "physics")}) <> 22
-     or (${overlapCount("neet", "physics")}) <> 19
+     or (${chapterCount("neet", "class-11", "physics")}) <> 24
+     or (${chapterCount("neet", "class-12", "physics")}) <> 25
+     or (${overlapCount("neet", "physics")}) <> 22
      or (${chapterCount("neet", "class-11", "chemistry")}) <> 24
      or (${chapterCount("neet", "class-12", "chemistry")}) <> 25
      or (${overlapCount("neet", "chemistry")}) <> 24
@@ -259,7 +259,7 @@ begin
      or (${chapterCount("jee", "class-12", "chemistry")}) <> 21
      or (${chapterCount("jee", "class-11", "mathematics")}) <> 17
      or (${chapterCount("jee", "class-12", "mathematics")}) <> 15
-     or (${chapterCount("neet", "class-11", "physics")}) <> 12
+     or (${chapterCount("neet", "class-11", "physics")}) <> 15
      or (${chapterCount("neet", "class-12", "physics")}) <> 12
      or (${chapterCount("neet", "class-11", "chemistry")}) <> 15
      or (${chapterCount("neet", "class-12", "chemistry")}) <> 13
@@ -365,7 +365,7 @@ Required order:
    connection. Do not continue or fix forward.
 
 Inside one transaction the rehearsal removes only the source review guard,
-inserts the 82 reviewed rows, verifies 87 total canonical rows, validates the
+inserts the 85 reviewed rows, verifies 90 total canonical rows, validates the
 projected JEE/NEET/School browse outputs and protected original-83 fingerprint,
 then rolls back. Post-rollback checks require the five-row v13 state and the
 original browse outputs.

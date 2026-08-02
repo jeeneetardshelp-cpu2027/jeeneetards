@@ -20,6 +20,7 @@
     "audit:chapter-classes": "node src/scripts/auditChapterClassScopes.js",
     "build:chapter-class-rehearsal": "node src/scripts/buildChapterClassScopeRehearsal.js",
     "build:chapter-class-v14-rehearsal": "node src/scripts/buildChapterClassScopeV14Rehearsal.js",
+    "rehearse:chapter-class-v14-local": "node src/scripts/rehearseChapterClassScopeV14Local.js",
     "audit:manage-capabilities": "node src/scripts/inspectManageCapabilities.js",
     "verify:manage-ui-staging": "node src/scripts/verifyManageUiStaging.js",
     "build:bootstrap": "node src/scripts/buildStagingBootstrap.js",
@@ -74,6 +75,7 @@
   },
   "devDependencies": {
     "@anthropic-ai/sdk": "^0.115.0",
+    "@electric-sql/pglite": "0.5.4",
     "@eslint/js": "^9.39.5",
     "@tailwindcss/vite": "^4.3.3",
     "@testing-library/react": "^16.3.2",

@@ -28,12 +28,12 @@ describe("chapter class scopes v14 review draft", () => {
     expect(sql).toContain("PREPARED FOR REVIEW. NOT APPROVED OR APPLIED ANYWHERE.");
   });
 
-  it("contains exactly 82 unique, single-class reviewed mappings", () => {
-    expect(mappings).toHaveLength(82);
+  it("contains exactly 85 unique, single-class reviewed mappings", () => {
+    expect(mappings).toHaveLength(85);
     expect(new Set(mappings.map(({ subject, chapter }) => `${subject}:${chapter}`)).size)
-      .toBe(82);
+      .toBe(85);
 
-    expect(count("physics", "class-11")).toBe(10);
+    expect(count("physics", "class-11")).toBe(13);
     expect(count("physics", "class-12")).toBe(9);
     expect(count("chemistry", "class-11")).toBe(15);
     expect(count("chemistry", "class-12")).toBe(9);
@@ -64,7 +64,7 @@ describe("chapter class scopes v14 review draft", () => {
 
   it("pins the v13 baseline and the expected additive postflight", () => {
     expect(sql).toContain("expected exactly five v13 rows");
-    expect(sql).toContain("expected 87 total rows and 82 v14 rows");
+    expect(sql).toContain("expected 90 total rows and 85 v14 rows");
     expect(sql).toContain("a deliberately deferred chapter was mapped");
   });
 

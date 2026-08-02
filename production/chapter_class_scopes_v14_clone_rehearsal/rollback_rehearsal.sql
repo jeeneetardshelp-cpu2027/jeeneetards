@@ -88,8 +88,8 @@ select
     ) y), '')
   ) as protected_fingerprint) protected;
   if v_protected.protected_courses <> 83
-     or v_protected.protected_memberships <> 1350
-     or v_protected.protected_fingerprint <> '6829fcb6eae22479db7b82b7b3da654d' then
+     or v_protected.protected_memberships <> 1307
+     or v_protected.protected_fingerprint <> 'c742fabf93ff8dd33d6ecd5eb4793db0' then
     raise exception 'REFUSING: protected original-83 JEE baseline differs';
   end if;
 end
@@ -128,10 +128,10 @@ select count(*) from (
 ) overlapping_chapters) <> 8
      or (
 select count(*) from public.get_browse_curriculum('neet', 'class-11', 'physics')
- where level = 'chapter') <> 21
+ where level = 'chapter') <> 24
      or (
 select count(*) from public.get_browse_curriculum('neet', 'class-12', 'physics')
- where level = 'chapter') <> 22
+ where level = 'chapter') <> 25
      or (
 select count(*) from (
   select slug from public.get_browse_curriculum('neet', 'class-11', 'physics')
@@ -139,7 +139,7 @@ select count(*) from (
   intersect
   select slug from public.get_browse_curriculum('neet', 'class-12', 'physics')
    where level = 'chapter'
-) overlapping_chapters) <> 19
+) overlapping_chapters) <> 22
      or (
 select count(*) from public.get_browse_curriculum('neet', 'class-11', 'chemistry')
  where level = 'chapter') <> 24
@@ -177,7 +177,7 @@ end
 $current_browse_guard$;
 
 -- REVIEWED SOURCE: src/migrations/chapter_class_scopes_v14_draft.sql
--- SHA-256: 95492b1abd8de69e700b3a7a1f55454a2cf08aa2cf15dd33e1502836cf250f0a
+-- SHA-256: 6334faeae27575df323a0e8b4561fb4fd471985a5e9978cf1f26bd6d0b4f1459
 -- =====================================================================
 -- chapter_class_scopes_v14_draft.sql
 -- PREPARED FOR REVIEW. NOT APPROVED OR APPLIED ANYWHERE.
@@ -228,9 +228,11 @@ $preflight$;
 
 with reviewed(subject_slug, chapter_slug, class_slug) as (
   values
-    -- Physics / Class XI (10)
+    -- Physics / Class XI (13)
+    ('physics', 'units-and-measurements', 'class-11'),
     ('physics', 'basic-mathematics-for-physics', 'class-11'),
     ('physics', 'laws-of-motion', 'class-11'),
+    ('physics', 'friction', 'class-11'),
     ('physics', 'system-of-particles-and-centre-of-mass', 'class-11'),
     ('physics', 'rotational-motion', 'class-11'),
     ('physics', 'gravitation', 'class-11'),
@@ -238,6 +240,7 @@ with reviewed(subject_slug, chapter_slug, class_slug) as (
     ('physics', 'mechanical-properties-of-fluids', 'class-11'),
     ('physics', 'thermal-properties-of-matter', 'class-11'),
     ('physics', 'thermodynamics', 'class-11'),
+    ('physics', 'kinetic-theory-of-gases', 'class-11'),
     ('physics', 'oscillations-and-waves', 'class-11'),
 
     -- Physics / Class XII (9)
@@ -362,9 +365,9 @@ begin
   from public.chapter_class_levels
   where reviewed_on = date '2026-08-02';
 
-  if v_total_count <> 87 or v_v14_count <> 82 then
+  if v_total_count <> 90 or v_v14_count <> 85 then
     raise exception
-      'POSTFLIGHT: expected 87 total rows and 82 v14 rows, got % and %',
+      'POSTFLIGHT: expected 90 total rows and 85 v14 rows, got % and %',
       v_total_count, v_v14_count;
   end if;
 
@@ -399,7 +402,7 @@ begin
      or (select count(*) from public.videos) <> 3088
      or (select count(*) from public.playlist_videos) <> 3094
      or (select count(*) from public.chapters) <> 241
-     or (select count(*) from public.chapter_class_levels) <> 87 then
+     or (select count(*) from public.chapter_class_levels) <> 90 then
     raise exception 'POST-APPLY: catalogue or canonical-scope count drift';
   end if;
   select * into v_protected from (
@@ -447,8 +450,8 @@ select
     ) y), '')
   ) as protected_fingerprint) protected;
   if v_protected.protected_courses <> 83
-     or v_protected.protected_memberships <> 1350
-     or v_protected.protected_fingerprint <> '6829fcb6eae22479db7b82b7b3da654d' then
+     or v_protected.protected_memberships <> 1307
+     or v_protected.protected_fingerprint <> 'c742fabf93ff8dd33d6ecd5eb4793db0' then
     raise exception 'POST-APPLY: protected original-83 JEE baseline drift';
   end if;
   if (
@@ -507,7 +510,7 @@ select count(*) from public.get_browse_curriculum('jee', 'class-12', 'mathematic
  where level = 'chapter') <> 15
      or (
 select count(*) from public.get_browse_curriculum('neet', 'class-11', 'physics')
- where level = 'chapter') <> 12
+ where level = 'chapter') <> 15
      or (
 select count(*) from public.get_browse_curriculum('neet', 'class-12', 'physics')
  where level = 'chapter') <> 12
@@ -645,7 +648,7 @@ select
        )
     ) y), '')
   ) as protected_fingerprint) protected;
-  if v_protected.protected_fingerprint <> '6829fcb6eae22479db7b82b7b3da654d' then
+  if v_protected.protected_fingerprint <> 'c742fabf93ff8dd33d6ecd5eb4793db0' then
     raise exception 'ROLLBACK FAILED: protected original-83 JEE fingerprint drift';
   end if;
 end
@@ -684,10 +687,10 @@ select count(*) from (
 ) overlapping_chapters) <> 8
      or (
 select count(*) from public.get_browse_curriculum('neet', 'class-11', 'physics')
- where level = 'chapter') <> 21
+ where level = 'chapter') <> 24
      or (
 select count(*) from public.get_browse_curriculum('neet', 'class-12', 'physics')
- where level = 'chapter') <> 22
+ where level = 'chapter') <> 25
      or (
 select count(*) from (
   select slug from public.get_browse_curriculum('neet', 'class-11', 'physics')
@@ -695,7 +698,7 @@ select count(*) from (
   intersect
   select slug from public.get_browse_curriculum('neet', 'class-12', 'physics')
    where level = 'chapter'
-) overlapping_chapters) <> 19
+) overlapping_chapters) <> 22
      or (
 select count(*) from public.get_browse_curriculum('neet', 'class-11', 'chemistry')
  where level = 'chapter') <> 24

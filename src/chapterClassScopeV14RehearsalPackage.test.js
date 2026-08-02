@@ -27,9 +27,9 @@ describe("chapter class scope v14 clone rehearsal package", () => {
   it("builds from the exact approved review hash", () => {
     const rehearsal = read("rollback_rehearsal.sql");
     expect(rehearsal).toContain(
-      "95492b1abd8de69e700b3a7a1f55454a2cf08aa2cf15dd33e1502836cf250f0a",
+      "6334faeae27575df323a0e8b4561fb4fd471985a5e9978cf1f26bd6d0b4f1459",
     );
-    expect(rehearsal).toContain("expected 87 total rows and 82 v14 rows");
+    expect(rehearsal).toContain("expected 90 total rows and 85 v14 rows");
     expect(rehearsal).not.toContain("$not_approved$");
   });
 
@@ -50,8 +50,8 @@ describe("chapter class scope v14 clone rehearsal package", () => {
     }
     expect(rehearsal).toContain("chapter_class_levels) <> 5");
     expect(rehearsal).toContain("protected_courses <> 83");
-    expect(rehearsal).toContain("protected_memberships <> 1350");
-    expect(rehearsal).toContain("6829fcb6eae22479db7b82b7b3da654d");
+    expect(rehearsal).toContain("protected_memberships <> 1307");
+    expect(rehearsal).toContain("c742fabf93ff8dd33d6ecd5eb4793db0");
     expect(rehearsal.indexOf("$baseline_guard$;")).toBeLessThan(
       rehearsal.indexOf("insert into public.chapter_class_levels"),
     );
