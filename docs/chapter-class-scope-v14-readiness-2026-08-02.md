@@ -1,7 +1,48 @@
 # Chapter/class scope v14 readiness — 2026-08-02
 
-Status: **review-only draft and rollback package prepared; no database
-application or release deployment**.
+Status: **applied to production with owner approval; independent postflight
+passed; no release deployment**.
+
+## Production application — 2026-08-02
+
+The owner approved the reviewed v14 source at SHA-256
+`6334faeae27575df323a0e8b4561fb4fd471985a5e9978cf1f26bd6d0b4f1459`.
+Immediately before the write, the signed-in Supabase production dashboard
+confirmed seven-day PITR with latest restore availability at **02 Aug 2026,
+13:31:42 UTC+05:30**. No restore or isolated clone was created.
+
+The deterministic production package was rebuilt and checksum-verified before
+execution:
+
+- persistent production apply SHA-256:
+  `9d96f0df981e0b8eea51ca55d58242a4e29427bb6683b109ad5262bbe8f2c30a`;
+- independent read-only postflight SHA-256:
+  `296b08c65904104f864ce30c89d1b92fe5226ed351b9ea2ee3d012f320bf8e55`.
+
+The production artifact ran once in a fresh SQL Editor connection. Its exact
+baseline guards passed, the single additive transaction inserted the 85 reviewed
+rows, and the SQL returned `v14 persistent production apply verified`.
+
+The separately executed read-only postflight then confirmed:
+
+- catalogue unchanged at 292 playlists, 3,088 videos, 3,094 memberships,
+  241 chapters, 9 subjects, and 4 class levels;
+- 90 chapter/class scope rows in total: 85 reviewed v14 rows, 54 Class 11,
+  36 Class 12, and 0 Dropper;
+- protected original JEE slice unchanged at 83 courses / 1,307 memberships /
+  fingerprint `c742fabf93ff8dd33d6ecd5eb4793db0`;
+- JEE Chemistry 19 Class 11 / 21 Class 12 / 0 overlap;
+- JEE Mathematics 17 Class 11 / 15 Class 12 / 1 overlap;
+- NEET Physics 15 Class 11 / 12 Class 12 / 0 overlap;
+- NEET Chemistry 15 Class 11 / 13 Class 12 / 3 overlaps;
+- NEET Biology 19 Class 11 / 13 Class 12 / 0 overlap;
+- School Class 10 Mathematics still exposes all 14 chapters, including
+  Probability;
+- anonymous and authenticated roles retain the required table-select and browse
+  RPC execute privileges.
+
+No catalogue content was imported, no migration was rerun, and no `release`
+push was made.
 
 ## Evidence boundary
 

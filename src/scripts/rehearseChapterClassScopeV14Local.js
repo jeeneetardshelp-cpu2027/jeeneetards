@@ -8,7 +8,9 @@ const expectedProductionHost = "kezelafqhgqrprpadmlf.supabase.co";
 const expectedHashes = {
   browseDraft: "c6961481247c74a36cb449aa6bfab45627ccc2fe2fb876f3701bc0c129ca7315",
   rollbackRehearsal: "dd46b3456c49c31d1d235e2e9ba3919cb1188a211c4eeb6821aa7a0966ce5dd0",
+  productionApply: "9d96f0df981e0b8eea51ca55d58242a4e29427bb6683b109ad5262bbe8f2c30a",
 };
+const persistentApply = process.argv.includes("--persistent");
 
 function parseEnv(text) {
   return Object.fromEntries(
@@ -230,6 +232,8 @@ try {
     create role authenticated nologin;
     create role service_role nologin;
 
+    create table public.app_environment (id bigint primary key);
+
     create table public.learning_goals (
       id bigint primary key,
       slug text not null unique,
@@ -419,14 +423,22 @@ try {
   console.log(JSON.stringify(browseBaseline));
 
   const rehearsalSql = await readPinned(
-    "production/chapter_class_scopes_v14_clone_rehearsal/rollback_rehearsal.sql",
-    expectedHashes.rollbackRehearsal,
+    persistentApply
+      ? "production/chapter_class_scopes_v14_production/production_apply.sql"
+      : "production/chapter_class_scopes_v14_clone_rehearsal/rollback_rehearsal.sql",
+    persistentApply
+      ? expectedHashes.productionApply
+      : expectedHashes.rollbackRehearsal,
   );
   const results = await pg.exec(rehearsalSql);
   const rows = results.flatMap((result) => result.rows ?? []);
   const projection = rows.find((row) => row.rehearsed_scope_rows !== undefined);
   const verified = rows.find(
-    (row) => row.result === "v14 rollback verified; no persistent database change",
+    (row) =>
+      row.result ===
+      (persistentApply
+        ? "v14 persistent production apply verified"
+        : "v14 rollback verified; no persistent database change"),
   );
 
   if (!projection || !verified) {
@@ -436,13 +448,20 @@ try {
   const finalScopeCount = await pg.query(
     "select count(*)::integer as n from public.chapter_class_levels",
   );
-  if (finalScopeCount.rows[0].n !== 5) {
-    throw new Error(`Local rollback failed: ${finalScopeCount.rows[0].n} scope rows remain`);
+  const expectedFinalScopeCount = persistentApply ? 90 : 5;
+  if (finalScopeCount.rows[0].n !== expectedFinalScopeCount) {
+    throw new Error(
+      `Local ${persistentApply ? "apply" : "rollback"} failed: expected ` +
+        `${expectedFinalScopeCount} scope rows, got ${finalScopeCount.rows[0].n}`,
+    );
   }
 
   console.log(JSON.stringify(projection));
   console.log(verified.result);
-  console.log("Production requests were GET-only; all SQL ran in ephemeral PGlite memory.");
+  console.log(
+    `Production requests were GET-only; the ${persistentApply ? "persistent apply" : "rollback"} ` +
+      "SQL ran only in ephemeral PGlite memory.",
+  );
 } catch (error) {
   localFailure = error;
 }

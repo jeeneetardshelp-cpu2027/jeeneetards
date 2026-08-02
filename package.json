@@ -20,6 +20,7 @@
     "audit:chapter-classes": "node src/scripts/auditChapterClassScopes.js",
     "build:chapter-class-rehearsal": "node src/scripts/buildChapterClassScopeRehearsal.js",
     "build:chapter-class-v14-rehearsal": "node src/scripts/buildChapterClassScopeV14Rehearsal.js",
+    "build:chapter-class-v14-production": "node src/scripts/buildChapterClassScopeV14ProductionApply.js",
     "rehearse:chapter-class-v14-local": "node src/scripts/rehearseChapterClassScopeV14Local.js",
     "audit:manage-capabilities": "node src/scripts/inspectManageCapabilities.js",
     "verify:manage-ui-staging": "node src/scripts/verifyManageUiStaging.js",

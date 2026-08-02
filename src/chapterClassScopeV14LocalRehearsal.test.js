@@ -16,8 +16,12 @@ describe("chapter class scope v14 local rehearsal", () => {
     expect(script).toContain(
       "dd46b3456c49c31d1d235e2e9ba3919cb1188a211c4eeb6821aa7a0966ce5dd0",
     );
+    expect(script).toContain(
+      "9d96f0df981e0b8eea51ca55d58242a4e29427bb6683b109ad5262bbe8f2c30a",
+    );
     expect(script).toContain("chapter_class_scopes_v13_browse_draft.sql");
     expect(script).toContain("rollback_rehearsal.sql");
+    expect(script).toContain("production_apply.sql");
   });
 
   it("uses anonymous GET-only production access", () => {
@@ -42,7 +46,8 @@ describe("chapter class scope v14 local rehearsal", () => {
     expect(script).toContain("const pg = new PGlite();");
     expect(script).not.toMatch(/new PGlite\((?:'|")/);
     expect(script).toContain("v14 rollback verified; no persistent database change");
-    expect(script).toContain("finalScopeCount.rows[0].n !== 5");
     expect(script).toContain("await pg.close()");
+    expect(script).toContain('process.argv.includes("--persistent")');
+    expect(script).toContain("expectedFinalScopeCount = persistentApply ? 90 : 5");
   });
 });
