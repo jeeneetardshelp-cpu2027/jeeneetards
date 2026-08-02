@@ -231,6 +231,22 @@ export function getCourseProgress(playlistId) {
   return readAll()[String(playlistId)] ?? null;
 }
 
+// Wipe this device's watch history. Called on sign-out: ll_progress_v1 is a
+// single un-namespaced store shared by whoever is using the browser, and
+// mergeRemoteEntry only ever ADDS rows, so without this a shared machine (a
+// school lab, a family laptop) accumulates a union of every student who has
+// signed in — each one seeing the others' courses under "Continue watching"
+// and their watched ticks on the lesson lists, with no way to tell whose is
+// whose. Safe to lose: a signed-in student's progress is on the server and
+// comes back on next sign-in.
+export function clearProgress() {
+  try {
+    localStorage.removeItem(KEY);
+  } catch {
+    /* storage blocked — nothing to clear */
+  }
+}
+
 // Fold one server-side video_progress row into this device's localStorage,
 // called once per row after a sign-in pull (see progressSync.js). Only ever
 // moves data FORWARD: a row is applied only where it is more advanced than

@@ -114,8 +114,16 @@ function ScrollToTop() {
       typeof performance !== 'undefined' &&
       performance.getEntriesByType?.('navigation')?.[0]?.type === 'reload';
 
+    // behavior:"instant" is REQUIRED on every scroll in this file, not
+    // cosmetic. index.css sets `html { scroll-behavior: smooth }`, which an
+    // un-optioned window.scrollTo() obeys — so a route change animated the
+    // whole page instead of jumping, and the student watched the new page fly
+    // past. Worse on Back: the restore below also animated while `done` was
+    // set synchronously, tearing down the ResizeObserver mid-flight so a
+    // still-growing grid never got re-corrected. Smooth stays on for real
+    // user-initiated anchor scrolls, which is what the CSS rule is for.
     if (!hasSaved || !(navType === 'POP' || isReloadEntry)) {
-      window.scrollTo(0, 0);
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
       return;
     }
 
@@ -132,7 +140,7 @@ function ScrollToTop() {
     const tryRestore = () => {
       if (done) return false;
       if (!tall()) return false;
-      window.scrollTo(0, target);
+      window.scrollTo({ top: target, left: 0, behavior: "instant" });
       done = true;
       return true;
     };
@@ -149,7 +157,7 @@ function ScrollToTop() {
     // does not observe forever. This bounds the WAIT, it does not schedule the
     // restore — the restore still happens the moment the height allows.
     const giveUp = setTimeout(() => {
-      if (!done) { window.scrollTo(0, Math.min(target, document.documentElement.scrollHeight)); }
+      if (!done) { window.scrollTo({ top: Math.min(target, document.documentElement.scrollHeight), left: 0, behavior: "instant" }); }
       cleanup();
     }, 3000);
 
