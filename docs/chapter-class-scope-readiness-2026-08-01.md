@@ -221,3 +221,39 @@ continued to return its 9 courses with no local-app console error.
 The persistent clone remains active and billable for owner review. This is not
 production approval: applying v13 to production, recording a fresh PITR restore
 point, and pushing any release remain separately gated actions.
+
+## Production application and postflight evidence
+
+The owner approved the hash-verified v13 production application on 02 Aug 2026.
+Before the write, the Supabase dashboard confirmed active seven-day PITR for
+production `kezelafqhgqrprpadmlf`, with the exact rollback point
+`02 Aug 2026, 00:07:09 UTC+05:30` inside the available window
+`27 Jul 2026, 00:01:46` through `02 Aug 2026, 00:07:09`.
+
+The production package retained the exact rehearsed migration body:
+
+- persistent-clone source SHA-256:
+  `3a36b1f0681ce8c2ba181a042e6d68086009c00bdcf1d7db5a7f80b00dc7f28f`;
+- guarded production wrapper SHA-256:
+  `f677b2badbaf21675094a39d70e8d9960ef1da51779645b9d8b79226986dd773`;
+- transaction result: `persistent production apply verified`.
+
+The transaction refused clone markers, function/ACL drift, catalogue drift,
+and protected-JEE drift before changing production. Its internal postflight
+passed before commit. A separate read-only postflight then confirmed:
+
+- catalogue unchanged at `292` playlists, `3,088` videos, `3,094`
+  memberships, `241` chapters, `9` subjects, and `4` class levels;
+- exactly `5` canonical scope rows: `3` Class 11, `2` Class 12, and `0`
+  Dropper rows, matching the five reviewed Physics mappings;
+- protected original JEE unchanged at `83` courses, `1,350` memberships, and
+  fingerprint `6829fcb6eae22479db7b82b7b3da654d`;
+- Class 11 returned all three reviewed Class 11 chapters and none of the two
+  reviewed Class 12 chapters; Class 12 returned both reviewed Class 12
+  chapters and none of the three reviewed Class 11 chapters;
+- chapter facet cross-class mismatch counts were both zero;
+- `anon` and `authenticated` retained `SELECT` on the scope table and
+  `EXECUTE` on both browse RPCs.
+
+No content import was run, no frontend release was deployed, and no `release`
+branch push was made as part of this gate.
