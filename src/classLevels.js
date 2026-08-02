@@ -30,6 +30,21 @@ export function classSlugsForStage(stageId) {
   return ["class-10", "class-11", "class-12"].includes(stageId) ? [stageId] : null;
 }
 
+// A reviewed chapter's academic class is authoritative. Course-level class
+// tags describe the intended audience of a playlist; they must not hide a
+// Class 12 chapter merely because one useful source was tagged Dropper-only.
+// Empty/null scope means v13 is unavailable or the chapter is not reviewed,
+// so callers retain the existing playlist-class fallback.
+export function chapterScopeStageDecision(reviewedClassSlugs, stageId) {
+  if (!stageId || !Array.isArray(reviewedClassSlugs) || reviewedClassSlugs.length === 0)
+    return "fallback";
+  if (stageId === "dropper")
+    return reviewedClassSlugs.some((slug) => ["class-11", "class-12"].includes(slug))
+      ? "match"
+      : "mismatch";
+  return reviewedClassSlugs.includes(stageId) ? "match" : "mismatch";
+}
+
 // Does a playlist (its class_levels label array) apply to the chosen class?
 // STRICT: an untagged playlist matches NOTHING — a class filter that lets
 // unclassified content through isn't a filter. "Dropper" additionally

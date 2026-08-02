@@ -93,6 +93,9 @@ describe("Dashboard route → playlist query", () => {
   it("carries subject and chapter from the URL too", async () => {
     renderAt("/browse?goal=1&sub=3&ch=7");
     await screen.findByText("Playlists");
+    // A chapter URL waits for the optional v13 canonical-scope lookup before
+    // enabling results, including legacy id-based links.
+    await waitFor(() => expect(playlistQuery()).toBeTruthy());
     const q = playlistQuery();
     expect(q.eq["subject_id"]).toBe("3");
     expect(q.eq["pv.videos.chapter_id"]).toBe("7");

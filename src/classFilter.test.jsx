@@ -49,7 +49,7 @@ vi.mock("./supabaseClient", () => ({
 }));
 
 import { usePlaylistBrowse, classSlugsForStage, PAGE_SIZE } from "./usePlaylistBrowse.js";
-import { playlistMatchesClass } from "./classLevels.js";
+import { chapterScopeStageDecision, playlistMatchesClass } from "./classLevels.js";
 import { useCanonicalFilters } from "./useCanonicalFilters.js";
 
 // Non-vacuous fixtures: every class has content, so an empty result is a
@@ -119,8 +119,46 @@ describe("the slug set each stage filters on", () => {
   });
 });
 
+describe("reviewed chapter class scope", () => {
+  it("matches the reviewed academic class and Dropper superset", () => {
+    expect(chapterScopeStageDecision(["class-12"], "class-12")).toBe("match");
+    expect(chapterScopeStageDecision(["class-12"], "dropper")).toBe("match");
+    expect(chapterScopeStageDecision(["class-12"], "class-11")).toBe("mismatch");
+  });
+
+  it("falls back for an unreviewed chapter or a pre-v13 database", () => {
+    expect(chapterScopeStageDecision([], "class-12")).toBe("fallback");
+    expect(chapterScopeStageDecision(null, "class-12")).toBe("fallback");
+  });
+});
+
 // ---------------------------------------------------------------- the query
 describe("class filtering happens in the database", () => {
+  it("uses canonical chapter scope instead of playlist audience tags", async () => {
+    const { query, state } = await run({
+      stage: "class-12", chapterId: 20, chapterClassSlugs: ["class-12"],
+    });
+    expect(query.cols).not.toContain("playlist_class_levels");
+    expect(query.in).toBeNull();
+    expect(state.total).toBe(CATALOGUE.length);
+  });
+
+  it("returns zero without querying when the reviewed chapter is outside the stage", async () => {
+    const state = await run({
+      stage: "class-11", chapterId: 20, chapterClassSlugs: ["class-12"],
+    });
+    expect(calls.filter((call) => call.table === "playlists")).toHaveLength(0);
+    expect(state.state.total).toBe(0);
+    expect(state.state.items).toEqual([]);
+  });
+
+  it("retains playlist-class filtering for an unreviewed chapter", async () => {
+    const { query } = await run({
+      stage: "class-12", chapterId: 21, chapterClassSlugs: [],
+    });
+    expect(query.in).toEqual(["pcl.class_levels.slug", ["class-12"]]);
+  });
+
   it("changes the database predicate when only the URL class changes", async () => {
     const class11 = new URLSearchParams("goal=1&subject=1&class=11");
     const class12 = new URLSearchParams("goal=1&subject=1&class=12");

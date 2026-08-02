@@ -1,23 +1,38 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
-const { reviewRows } = vi.hoisted(() => ({ reviewRows: { current: [] } }));
+const { reviewRows, calls } = vi.hoisted(() => ({
+  reviewRows: { current: [] },
+  calls: { current: [] },
+}));
 
 vi.mock("./useSession.js", () => ({
   useSession: () => ({ session: null, loading: false }),
 }));
 
+// This mock RECORDS its filter arguments instead of discarding them. The
+// previous version returned `this` from eq()/not() without looking at the
+// arguments, so the test named after the review_hidden filter could only prove
+// that a row handed to the component renders -- deleting the filter from
+// useVisibleReviews.js left the suite green while every admin-hidden review
+// rendered publicly. Same tautology class this project already shipped once in
+// VideoReport.test.jsx.
 vi.mock("./supabaseClient", () => ({
   isSupabaseConfigured: true,
   supabase: {
-    from: () => ({
-      select() { return this; },
-      eq() { return this; },
-      not() { return this; },
-      order() { return this; },
-      limit() { return Promise.resolve({ data: reviewRows.current, error: null }); },
-      maybeSingle() { return Promise.resolve({ data: null, error: null }); },
-    }),
+    from(table) {
+      const rec = { table, eq: {}, not: null };
+      calls.current.push(rec);
+      const b = {
+        select() { return b; },
+        eq(k, v) { rec.eq[k] = v; return b; },
+        not(k, op, v) { rec.not = [k, op, v]; return b; },
+        order() { return b; },
+        limit() { return Promise.resolve({ data: reviewRows.current, error: null }); },
+        maybeSingle() { return Promise.resolve({ data: null, error: null }); },
+      };
+      return b;
+    },
   },
 }));
 
@@ -55,14 +70,21 @@ describe("public review display", () => {
   });
 
   it("only ever queries for non-hidden reviews with real text", async () => {
-    // The query itself excludes review_hidden=true and null review server-side
-    // (see useVisibleReviews.js) -- this test documents that admin-hidden
-    // reviews never reach the client in the first place, rather than being
-    // filtered client-side where a bug could leak them.
+    // Asserts on the QUERY, not just on what rendered. Admin-hidden reviews
+    // must never reach the client in the first place: the server filter is the
+    // real guard, because CourseRating renders whatever rows it is given with
+    // no client-side backstop.
     reviewRows.current = [
       { id: 1, rating: 5, review: "Great course.", difficulty: null, best_for: null, created_at: "2026-07-01T00:00:00Z" },
     ];
+    calls.current = [];
     show();
-    expect(await screen.findByText("Great course.")).toBeTruthy();
+    await screen.findByText("Great course.");
+
+    const ratingsQuery = calls.current.find((c) => c.table === "playlist_ratings");
+    expect(ratingsQuery).toBeTruthy();
+    expect(ratingsQuery.eq.review_hidden).toBe(false);
+    expect(ratingsQuery.eq.playlist_id).toBe(1);
+    expect(ratingsQuery.not).toEqual(["review", "is", null]);
   });
 });

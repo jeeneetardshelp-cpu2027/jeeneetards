@@ -32,6 +32,8 @@
 //     (organizationSchema) is a separate, honest node describing the SITE,
 //     not any course, and belongs on the homepage only.
 
+import { ratingDisplay } from "./ratingConfidence.js";
+
 const SITE = "https://www.jeeneetard.com";
 
 /** Absolute-ize a path against SITE. Already-absolute URLs pass through untouched. */
@@ -104,11 +106,18 @@ export function courseSchema({
 
   if (url) schema.url = toAbsoluteUrl(url);
 
-  if (Number(ratingsCount) > 0) {
+  // Gated on the SAME confidence rule the on-page UI uses (ratingConfidence.js),
+  // not merely on count > 0. Otherwise a single 5-star vote is published to
+  // Google as a 5.0 average while the page itself deliberately refuses to show
+  // that score — telling search results something the site won't tell the
+  // student in front of it. `ratingDisplay` returns kind "scored" only once the
+  // count clears RATING_CONFIDENCE_MIN.
+  const confident = ratingDisplay(averageRating, ratingsCount);
+  if (confident?.kind === "scored") {
     schema.aggregateRating = {
       "@type": "AggregateRating",
-      ratingValue: averageRating,
-      ratingCount: ratingsCount,
+      ratingValue: confident.score,
+      ratingCount: confident.count,
       bestRating: 5,
       worstRating: 1,
     };

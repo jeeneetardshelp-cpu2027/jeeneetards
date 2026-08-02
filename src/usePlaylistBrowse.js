@@ -10,7 +10,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { supabase, isSupabaseConfigured } from "./supabaseClient";
-import { classSlugsForStage } from "./classLevels.js";
+import { chapterScopeStageDecision, classSlugsForStage } from "./classLevels.js";
 export { classSlugsForStage } from "./classLevels.js";
 
 export const PAGE_SIZE = 12;
@@ -87,6 +87,7 @@ export const isMissingBrowseStatsColumn = (error) =>
 
 export function usePlaylistBrowse({
   goalId, boardId, subjectId, chapterId, stage, channelId, teacherId,
+  chapterClassSlugs = null,
   language, contentType, difficulty, search, sort, page = 0,
   // GATE. When false, no request is issued at all and the hook reports
   // loading. The caller sets this from useCanonicalFilters().ready, so a URL
@@ -104,6 +105,7 @@ export function usePlaylistBrowse({
   const languageKey = JSON.stringify(language ?? []);
   const contentTypeKey = JSON.stringify(contentType ?? []);
   const difficultyKey = JSON.stringify(difficulty ?? []);
+  const chapterClassKey = JSON.stringify(chapterClassSlugs);
 
   // Discards obsolete responses. Filters resolve asynchronously (a slug has to
   // become an id), so this hook runs once with no chapter and again with one.
@@ -116,7 +118,15 @@ export function usePlaylistBrowse({
   const load = useCallback(async () => {
     const gen = ++generation.current;
     const current = () => gen === generation.current;
-    const classSlugs = classSlugsForStage(stage);
+    const reviewedChapterClasses = JSON.parse(chapterClassKey);
+    const chapterStage = chapterId
+      ? chapterScopeStageDecision(reviewedChapterClasses, stage)
+      : "fallback";
+    if (chapterStage === "mismatch") {
+      setState({ items: [], total: 0, loading: false, error: null, hasMore: false });
+      return;
+    }
+    const classSlugs = chapterStage === "match" ? null : classSlugsForStage(stage);
     const languageValues = JSON.parse(languageKey);
     const contentTypeValues = JSON.parse(contentTypeKey);
     const difficultyValues = JSON.parse(difficultyKey);
@@ -225,6 +235,7 @@ export function usePlaylistBrowse({
       hasMore: count != null ? (page + 1) * PAGE_SIZE < count : items.length === PAGE_SIZE,
     });
   }, [enabled, goalId, boardId, subjectId, chapterId, stage, channelId, teacherId,
+      chapterClassKey,
       languageKey, contentTypeKey, difficultyKey,
       search, sort, page]);
 

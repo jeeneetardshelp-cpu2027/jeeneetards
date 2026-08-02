@@ -37,9 +37,13 @@ function makeBuilder(rows, count) {
 }
 let ROWS = [];
 let COUNT = 0;
+const ratingsMock = vi.hoisted(() => ({ available: null }));
 vi.mock("./supabaseClient", () => ({
   isSupabaseConfigured: true,
   supabase: { from: (t) => { const b = makeBuilder(ROWS, COUNT); calls[calls.length - 1].table = t; return b; } },
+}));
+vi.mock("./useRatingsAvailability.js", () => ({
+  useRatingsAvailability: () => ratingsMock.available,
 }));
 
 import {
@@ -64,7 +68,13 @@ const row = (id, title, over = {}) => ({
   institutes_channels: null, subjects: null, playlist_videos: [{ count: 3 }], ...over,
 });
 
-beforeEach(() => { calls.length = 0; NEXT_RESULTS = []; ROWS = []; COUNT = 0; });
+beforeEach(() => {
+  calls.length = 0;
+  NEXT_RESULTS = [];
+  ROWS = [];
+  COUNT = 0;
+  ratingsMock.available = null;
+});
 
 describe("goal isolation", () => {
   it("filters by learning goal in the DATABASE when a goal is selected", async () => {
@@ -251,6 +261,35 @@ const renderBrowse = (filters, url = "/browse", props = {}) =>
       </Routes>
     </MemoryRouter>
   );
+
+describe("rating sort truthfulness", () => {
+  it("hides Highest rated when the catalogue confirms zero rated courses", async () => {
+    ratingsMock.available = false;
+    renderBrowse({ subject: null, chapter: null, search: "" });
+
+    const sort = await screen.findByRole("combobox", { name: "Sort courses" });
+    expect([...sort.options].map((option) => option.text)).not.toContain("Highest rated");
+  });
+
+  it("removes a stale rating sort URL when no rated courses exist", async () => {
+    ratingsMock.available = false;
+    renderBrowse(
+      { subject: null, chapter: null, search: "" },
+      "/browse?sort=rating&page=2",
+    );
+
+    await waitFor(() => expect(screen.getByTestId("loc").textContent).toBe("/browse"));
+    expect(screen.getByRole("combobox", { name: "Sort courses" }).value).toBe("recommended");
+  });
+
+  it("shows Highest rated once genuine ratings exist", async () => {
+    ratingsMock.available = true;
+    renderBrowse({ subject: null, chapter: null, search: "" });
+
+    const sort = await screen.findByRole("combobox", { name: "Sort courses" });
+    expect([...sort.options].map((option) => option.text)).toContain("Highest rated");
+  });
+});
 
 describe("opening a course", () => {
   beforeEach(() => {

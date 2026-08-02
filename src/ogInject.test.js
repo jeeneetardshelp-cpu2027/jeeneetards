@@ -24,6 +24,9 @@ describe("courseMeta", () => {
     const meta = courseMeta(course, 5);
     expect(meta.title).toBe("Rectilinear Motion (Kinematics) | JEENEETARD");
     expect(meta.description).toContain("10 lectures");
+    expect(meta.description).toContain("No JEENEETARD advertisements or sponsored rankings");
+    expect(meta.description).toContain("YouTube may show ads or same-channel recommendations");
+    expect(meta.description).not.toContain("ad-free");
     expect(meta.url).toBe("https://www.jeeneetard.com/course/5");
   });
 });

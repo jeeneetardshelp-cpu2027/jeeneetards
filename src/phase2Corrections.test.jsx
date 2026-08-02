@@ -165,6 +165,7 @@ let ROWS = [];
 let FAIL = false;
 let RESOLVE_SLUG = true;
 let REQUIRE_CHAPTER_SUBJECT_SCOPE = false;
+let SCOPE_ROWS = [];
 
 function makeBuilder(table) {
   const rec = { table, cols: null, eq: {}, in: {}, range: null };
@@ -186,6 +187,8 @@ function makeBuilder(table) {
     },
     then(resolve) {
       if (FAIL) return Promise.resolve({ data: null, error: { message: "boom", code: "500" } }).then(resolve);
+      if (table === "chapter_class_levels")
+        return Promise.resolve({ data: SCOPE_ROWS, error: null }).then(resolve);
       return Promise.resolve({ data: ROWS, error: null, count: ROWS.length }).then(resolve);
     },
   };
@@ -218,6 +221,7 @@ function Wired({ qs }) {
 beforeEach(() => {
   calls.length = 0; ROWS = [{ id: 1, title: "A", playlist_videos: [{ count: 1 }] }];
   FAIL = false; RESOLVE_SLUG = true; REQUIRE_CHAPTER_SUBJECT_SCOPE = false; seen = undefined;
+  SCOPE_ROWS = [];
 });
 
 describe("no catalogue request before slugs resolve", () => {
@@ -235,6 +239,14 @@ describe("no catalogue request before slugs resolve", () => {
     // and it stays at one
     await new Promise((r) => setTimeout(r, 30));
     expect(catalogueCalls()).toHaveLength(1);
+  });
+
+  it("resolves reviewed canonical chapter classes before enabling results", async () => {
+    SCOPE_ROWS = [{ class_levels: { slug: "class-12" } }];
+    render(<MemoryRouter><Wired qs="class=12&chapter=kinematics" /></MemoryRouter>);
+    await waitFor(() => expect(seen.canonical.ready).toBe(true));
+    expect(seen.canonical.chapterClassSlugs).toEqual(["class-12"]);
+    expect(calls.filter((call) => call.table === "chapter_class_levels")).toHaveLength(1);
   });
 
   it.each([

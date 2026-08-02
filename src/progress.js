@@ -7,10 +7,89 @@
 
 const KEY = "ll_progress_v1";
 
+function isObject(value) {
+  return value !== null && typeof value === "object" && !Array.isArray(value);
+}
+
+function isPositiveInteger(value) {
+  const number = Number(value);
+  return Number.isInteger(number) && number > 0;
+}
+
+function isVideoId(value) {
+  return typeof value === "string" && value.trim().length > 0;
+}
+
+function hasCompleteContinueIdentity(entry) {
+  return isPositiveInteger(entry?.playlistId)
+    && isPositiveInteger(entry?.chapterId)
+    && isVideoId(entry?.lastVideoId)
+    && Number.isFinite(entry?.updatedAt)
+    && entry.updatedAt > 0;
+}
+
+function isValidPosition(position) {
+  if (!isObject(position)) return false;
+  const time = Number(position.t);
+  const duration = position.d == null ? null : Number(position.d);
+  return Number.isFinite(time)
+    && time >= 0
+    && (duration === null || (Number.isFinite(duration) && duration > 0))
+    && Number.isFinite(position.at)
+    && position.at > 0;
+}
+
+function hasValidPositions(entry) {
+  return isObject(entry?.positions)
+    && Object.entries(entry.positions).some(([videoId, position]) => (
+      isVideoId(videoId) && isValidPosition(position)
+    ));
+}
+
+function isValidStoredEntry(key, entry) {
+  if (!isObject(entry) || !isPositiveInteger(key) || Number(entry.playlistId) !== Number(key)) {
+    return false;
+  }
+
+  const hasContinueFields = ["chapterId", "lastVideoId", "courseTitle", "lastVideoTitle"]
+    .some((field) => Object.prototype.hasOwnProperty.call(entry, field));
+
+  // A position-only entry is intentional: playback can save a resume point
+  // just before the PLAYING event records the course-level history. It is
+  // valid local data, but it must never become a Continue Watching card.
+  if (!hasContinueFields) {
+    return hasValidPositions(entry)
+      && Number.isFinite(entry.updatedAt)
+      && entry.updatedAt > 0;
+  }
+
+  return hasCompleteContinueIdentity(entry);
+}
+
 function readAll() {
   try {
-    return JSON.parse(localStorage.getItem(KEY) || "{}");
+    const raw = localStorage.getItem(KEY);
+    if (!raw) return {};
+    const parsed = JSON.parse(raw);
+    if (!isObject(parsed)) {
+      localStorage.removeItem(KEY);
+      return {};
+    }
+
+    const validEntries = Object.fromEntries(
+      Object.entries(parsed).filter(([key, entry]) => isValidStoredEntry(key, entry)),
+    );
+    if (Object.keys(validEntries).length !== Object.keys(parsed).length) {
+      if (Object.keys(validEntries).length) writeAll(validEntries);
+      else localStorage.removeItem(KEY);
+    }
+    return validEntries;
   } catch {
+    try {
+      localStorage.removeItem(KEY);
+    } catch {
+      /* storage is blocked */
+    }
     return {};
   }
 }
@@ -29,13 +108,16 @@ function writeAll(obj) {
 export function recordLessonView({
   playlistId, chapterId, courseTitle, videoId, videoTitle, position, totalLessons,
 }) {
-  if (!playlistId || !videoId) return null;
+  if (!isPositiveInteger(playlistId) || !isPositiveInteger(chapterId) || !isVideoId(videoId)) {
+    return null;
+  }
   const all = readAll();
   const key = String(playlistId);
   const prev = all[key] ?? { watched: [] };
-  const watched = prev.watched.includes(videoId)
-    ? prev.watched
-    : [...prev.watched, videoId];
+  const previousWatched = Array.isArray(prev.watched) ? prev.watched : [];
+  const watched = previousWatched.includes(videoId)
+    ? previousWatched
+    : [...previousWatched, videoId];
 
   const entry = {
     playlistId: Number(playlistId),
@@ -62,7 +144,7 @@ export function recordLessonView({
 // always follow a recordLessonView, but the store tolerates a missing entry
 // by creating a minimal one rather than throwing.
 export function recordLessonPosition({ playlistId, videoId, seconds, duration }) {
-  if (!playlistId || !videoId) return null;
+  if (!isPositiveInteger(playlistId) || !isVideoId(videoId)) return null;
   const t = Number(seconds);
   if (!Number.isFinite(t) || t < 0) return null;
   const d = Number(duration);
@@ -120,6 +202,7 @@ export function savePlayerPrefs({ rate }) {
 // Most recently watched courses, newest first.
 export function getContinueWatching(limit = 4) {
   return Object.values(readAll())
+    .filter(hasCompleteContinueIdentity)
     .sort((a, b) => b.updatedAt - a.updatedAt)
     .slice(0, limit);
 }
@@ -157,7 +240,11 @@ export function getCourseProgress(playlistId) {
 export function mergeRemoteEntry({
   playlistId, chapterId, courseTitle, videoId, videoTitle, position, duration, watched, updatedAt,
 }) {
-  if (!playlistId || !videoId || !Number.isFinite(updatedAt)) return null;
+  if (!isPositiveInteger(playlistId)
+    || !isPositiveInteger(chapterId)
+    || !isVideoId(videoId)
+    || !Number.isFinite(updatedAt)
+    || updatedAt <= 0) return null;
   const all = readAll();
   const key = String(playlistId);
   const prev = all[key] ?? { playlistId: Number(playlistId), watched: [] };

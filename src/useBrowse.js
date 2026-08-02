@@ -9,7 +9,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { supabase, isSupabaseConfigured } from "./supabaseClient";
-import { classSlugsForStage } from "./classLevels.js";
+import { chapterScopeStageDecision, classSlugsForStage } from "./classLevels.js";
 
 const NOT_CONFIGURED = "Supabase isn't configured. Add your keys to .env and restart.";
 
@@ -30,6 +30,7 @@ export function useDebouncedValue(value, delay = 300) {
 // unresolved slug—or the inactive Playlists tab—from issuing a broad query.
 export function useVideos({
   goalId, subjectId, chapterId, stage, channelId, teacherId,
+  chapterClassSlugs = null,
   language, contentType, difficulty, search, page = 0, enabled = true,
 }) {
   const [state, setState] = useState({
@@ -39,6 +40,7 @@ export function useVideos({
   const languageKey = JSON.stringify(language ?? []);
   const contentTypeKey = JSON.stringify(contentType ?? []);
   const difficultyKey = JSON.stringify(difficulty ?? []);
+  const chapterClassKey = JSON.stringify(chapterClassSlugs);
 
   const load = useCallback(async () => {
     const gen = ++generation.current;
@@ -56,7 +58,15 @@ export function useVideos({
     }
 
     setState((s) => ({ ...s, loading: true, error: null }));
-    const classSlugs = classSlugsForStage(stage);
+    const reviewedChapterClasses = JSON.parse(chapterClassKey);
+    const chapterStage = chapterId
+      ? chapterScopeStageDecision(reviewedChapterClasses, stage)
+      : "fallback";
+    if (chapterStage === "mismatch") {
+      setState({ videos: [], total: 0, loading: false, error: null, hasMore: false });
+      return;
+    }
+    const classSlugs = chapterStage === "match" ? null : classSlugsForStage(stage);
     // These are COURSE attributes. Individual lectures inherit them only
     // through membership in a matching playlist; old production videos are
     // not reliably backfilled in video_class_levels even though their courses
@@ -126,6 +136,7 @@ export function useVideos({
       setState({ videos: [], total: null, loading: false, error: "Couldn't reach the database.", hasMore: false });
     }
   }, [enabled, goalId, subjectId, chapterId, stage, channelId, teacherId,
+      chapterClassKey,
       languageKey, contentTypeKey, difficultyKey, search, page]);
 
   useEffect(() => { load(); }, [load]);

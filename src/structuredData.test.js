@@ -3,6 +3,7 @@
 // script-breakout escaping every DOM caller depends on.
 
 import { describe, expect, it } from "vitest";
+import { RATING_CONFIDENCE_MIN, ratingDisplay } from "./ratingConfidence.js";
 import {
   breadcrumbListSchema,
   courseSchema,
@@ -84,15 +85,39 @@ describe("courseSchema", () => {
     expect(schema).not.toHaveProperty("aggregateRating");
   });
 
-  it("emits aggregateRating once ratingsCount is at least 1", () => {
-    const schema = courseSchema({ ...REAL_COURSE, averageRating: 4.5, ratingsCount: 1 });
+  // Was previously "emits aggregateRating once ratingsCount is at least 1",
+  // which pinned a real defect: a single 5-star vote was published to Google as
+  // a 5.0 average while the page itself refused to show that score, because the
+  // on-page rule (ratingConfidence.js) needs RATING_CONFIDENCE_MIN ratings
+  // first. Search results must not claim more confidence than the site will.
+  it("withholds aggregateRating below the confidence minimum the UI itself uses", () => {
+    for (let count = 1; count < RATING_CONFIDENCE_MIN; count += 1) {
+      const schema = courseSchema({ ...REAL_COURSE, averageRating: 5, ratingsCount: count });
+      expect(schema).not.toHaveProperty("aggregateRating");
+    }
+  });
+
+  it("emits aggregateRating once the confidence minimum is reached", () => {
+    const schema = courseSchema({
+      ...REAL_COURSE, averageRating: 4.5, ratingsCount: RATING_CONFIDENCE_MIN,
+    });
     expect(schema.aggregateRating).toEqual({
       "@type": "AggregateRating",
       ratingValue: 4.5,
-      ratingCount: 1,
+      ratingCount: RATING_CONFIDENCE_MIN,
       bestRating: 5,
       worstRating: 1,
     });
+  });
+
+  it("agrees with what the page shows the student, at every count", () => {
+    // The invariant that matters: structured data may only carry a score when
+    // ratingDisplay would render one.
+    for (const count of [0, 1, 4, 5, 12]) {
+      const schema = courseSchema({ ...REAL_COURSE, averageRating: 4.2, ratingsCount: count });
+      const onPage = ratingDisplay(4.2, count);
+      expect(Boolean(schema.aggregateRating)).toBe(onPage?.kind === "scored");
+    }
   });
 
   it("omits description as a missing key, never as description: null", () => {

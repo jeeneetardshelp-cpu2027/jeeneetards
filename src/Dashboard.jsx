@@ -340,6 +340,7 @@ export default function Dashboard() {
     goalId: category,
     subjectId: subject,
     chapterId: chapter,
+    chapterClassSlugs: canonical.chapterClassSlugs,
     stage: canonical.stage,
     channelId: validated.channelId,
     language: validated.language,
@@ -583,7 +584,8 @@ export default function Dashboard() {
             }
             onResetFilters={clearAll}
             filters={{ goal: category, board: canonical.boardId, stage: canonical.stage,
-                       subject, chapter, search: urlQuery, sheetContent: filterPanel("sheet"),
+                       subject, chapter, chapterClassSlugs: canonical.chapterClassSlugs,
+                       search: urlQuery, sheetContent: filterPanel("sheet"),
                        // Validated, de-duplicated, bounded. Never the raw URL.
                        channelId: validated.channelId,
                        language: validated.language,
