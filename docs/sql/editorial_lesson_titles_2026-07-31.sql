@@ -40,8 +40,31 @@
 --
 -- REVERSIBLE: videos.source_title holds the original YouTube title. This file
 -- BACKFILLS source_title from the current title wherever it is NULL *before*
--- overwriting, so the revert path stays complete:
+-- overwriting, so every row it touched can be put back.
+--
+-- ⚠️ DO **NOT** REVERT WITH:
 --     update public.videos set title = source_title where source_title is not null;
+-- That predicate is NOT scoped to this migration. Measured against production on
+-- 2 August 2026 it matches 3,087 of 3,088 videos -- it would also undo the
+-- 29 July editorial pass (1,703 titles) and republish raw YouTube keyword soup
+-- across the whole catalogue, taking it from 0 titleQuality violations to ~2,961.
+--
+-- The correct, scoped revert. This migration stamped updated_at on exactly the
+-- 578 rows it changed, and that timestamp matches 578 videos catalogue-wide --
+-- verified, not assumed:
+--     update public.videos
+--        set title = source_title
+--      where updated_at = '2026-08-02T05:53:50.356437+00:00'
+--        and source_title is not null;
+--     -- expect: UPDATE 578
+--
+-- Check the count first if you want to be certain before running it:
+--     select count(*) from public.videos
+--      where updated_at = '2026-08-02T05:53:50.356437+00:00';  -- expect 578
+--
+-- (The _title_rewrite temp table below is declared `on commit drop`, so after
+-- this file commits nothing else in the database records which rows it touched.
+-- The timestamp above is the only scoping handle that survives.)
 --
 -- Idempotent: each row applies only if the title still matches its recorded
 -- "before" (or is already the "after"), and raises rather than guessing otherwise.

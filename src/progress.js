@@ -46,24 +46,33 @@ function hasValidPositions(entry) {
     ));
 }
 
+function hasWatchedVideos(entry) {
+  return Array.isArray(entry?.watched) && entry.watched.some(isVideoId);
+}
+
 function isValidStoredEntry(key, entry) {
   if (!isObject(entry) || !isPositiveInteger(key) || Number(entry.playlistId) !== Number(key)) {
     return false;
   }
 
-  const hasContinueFields = ["chapterId", "lastVideoId", "courseTitle", "lastVideoTitle"]
-    .some((field) => Object.prototype.hasOwnProperty.call(entry, field));
-
-  // A position-only entry is intentional: playback can save a resume point
-  // just before the PLAYING event records the course-level history. It is
-  // valid local data, but it must never become a Continue Watching card.
-  if (!hasContinueFields) {
-    return hasValidPositions(entry)
-      && Number.isFinite(entry.updatedAt)
-      && entry.updatedAt > 0;
-  }
-
-  return hasCompleteContinueIdentity(entry);
+  // KEEP anything carrying provably-real data, even if the course-level
+  // "continue" fields are incomplete.
+  //
+  // This used to be all-or-nothing: an entry that had any continue field but
+  // failed hasCompleteContinueIdentity (e.g. chapterId null, which is exactly
+  // what a lesson whose video spans several chapters produces) was dropped
+  // WHOLESALE by readAll -- taking the student's watched ticks and every
+  // resume point with it, and persisting the deletion. That is silent data
+  // loss, and it was unnecessary: the guards that stop a broken record
+  // rendering already live at the consumers -- getContinueWatching filters on
+  // hasCompleteContinueIdentity, and getRecentChapters skips a falsy
+  // chapterId. Rejection here only ever destroyed salvageable data.
+  //
+  // Genuine garbage (wrong shape, key/playlistId mismatch, no real positions
+  // and no real watched ids) is still rejected.
+  return hasCompleteContinueIdentity(entry)
+    || hasValidPositions(entry)
+    || hasWatchedVideos(entry);
 }
 
 function readAll() {

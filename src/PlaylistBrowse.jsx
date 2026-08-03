@@ -265,19 +265,24 @@ export default function PlaylistBrowse({
   const sortOptions = ratingsAvailable === false
     ? SORTS.filter((option) => option.id !== "rating")
     : SORTS;
-  const setSort = useCallback((value) =>
+  const setSort = useCallback((value, { replace = false } = {}) =>
     setParams((prev) => {
       const next = new URLSearchParams(prev);
       if (value && value !== DEFAULT_SORT) next.set("sort", value); else next.delete("sort");
       next.delete("page"); // reordering invalidates the current page offset
       return next;
-    }), [setParams]);
+    }, { replace }), [setParams]);
 
   // A shared URL may still carry ?sort=rating from before ratings existed.
   // Remove that now-meaningless preference once the catalogue confirms zero
   // rated courses, keeping URL, control and database ordering in agreement.
+  //
+  // REPLACE, not push: this is automatic cleanup the student never asked for.
+  // Pushing trapped the Back button -- going back to a ?sort=rating URL re-ran
+  // this effect and immediately pushed /browse again, so they could never get
+  // past it. A sort the student picks themselves still pushes, so they can undo it.
   useEffect(() => {
-    if (ratingSortUnavailable) setSort(DEFAULT_SORT);
+    if (ratingSortUnavailable) setSort(DEFAULT_SORT, { replace: true });
   }, [ratingSortUnavailable, setSort]);
 
   const { items, total, loading, error, hasMore, reload } = usePlaylistBrowse({
