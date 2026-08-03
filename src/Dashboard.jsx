@@ -389,10 +389,14 @@ export default function Dashboard() {
   });
   const shouldScopeChapters = Boolean(canonical.ready && goalValue && subjectValue);
   const scopedSubject = chapterCatalog.subjects.find((row) => row.slug === subjectValue);
-  const chapterScopeValues = shouldScopeChapters
-    ? (chapterCatalog.ready && scopedSubject
-        ? (chapterCatalog.chaptersBySubject[scopedSubject.id] ?? []).map((row) => row.slug)
-        : [])
+  // null means "no scope known -- do not filter" (FilterPanel's documented
+  // contract); [] means "scope known, and it is empty". Emitting [] while the
+  // curriculum RPC is still loading -- or after it ERRORED -- made FilterPanel
+  // strip every chapter option and drop the whole Chapter section, so a slow or
+  // failed lookup was indistinguishable from "this subject has no chapters",
+  // with no error and no retry. Only claim an empty scope once we actually know.
+  const chapterScopeValues = shouldScopeChapters && chapterCatalog.ready && scopedSubject
+    ? (chapterCatalog.chaptersBySubject[scopedSubject.id] ?? []).map((row) => row.slug)
     : null;
   const goalName = optionName("goal", goalRaw);
   const subjectName = optionName("subject", subjectRaw);
