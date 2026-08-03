@@ -178,3 +178,16 @@ If the two-course candidate batch is approved later:
 5. verify the exact course/video/membership delta and protected original-83
    fingerprint after the first course, then stop and report before the second;
 6. repeat independently for the second course.
+
+## Post-import coverage refresh
+
+The two candidates above were subsequently approved and imported as courses
+303 and 304. A new read-only scan at `2026-08-03T09:58:39.836Z` confirmed all
+five video IDs are now covered and the protected original-83 JEE fingerprint
+remains exact.
+
+The next review-only candidate is the four-video PRMO/IOQM Mathematics
+Olympiad qualifier set documented in
+`docs/competishun-math-olympiad-qualifier-review-2026-08-03.md`. It requires a
+new additive chapter and explicit owner approval; no production artifact or
+write was prepared during the refresh.
