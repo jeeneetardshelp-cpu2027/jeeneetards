@@ -1,0 +1,76 @@
+{
+  "version": 1,
+  "request_id": "550526ff-74cc-4577-b336-60600449609e",
+  "youtube_playlist_id": "PLQsNiHo64JI-1jdrY3Zpyo9YvjIVxXaW7",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "4AxE7x_XhDs",
+      "chapter": "Circles",
+      "lesson_number": 8
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "wSHi3POb62o",
+      "chapter": "Circles",
+      "lesson_number": 7
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "lhKyn7YEJ1Y",
+      "chapter": "Circles",
+      "lesson_number": 6
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "thGaWM1TmnQ",
+      "chapter": "Circles",
+      "lesson_number": 5
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "kJsJKZVHkAM",
+      "chapter": "Circles",
+      "lesson_number": 4
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "otqXSXWhIQk",
+      "chapter": "Circles",
+      "lesson_number": 3
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "CD_z4LClY6E",
+      "chapter": "Circles",
+      "lesson_number": 2
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "nkQMHGnprcA",
+      "chapter": "Circles",
+      "lesson_number": 1
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "1c06eb34-fbdc-4d3b-a239-39f256f889e8",
+    "youtube_playlist_id": "PLQsNiHo64JI-1jdrY3Zpyo9YvjIVxXaW7",
+    "teacher": "Competishun+",
+    "reviewed_on": "2026-07-30",
+    "reviewed_by": "Owner",
+    "source_url": "https://www.youtube.com/@competishun",
+    "source_label": "Official Competishun+ channel",
+    "youtube_video_ids": [
+      "4AxE7x_XhDs",
+      "wSHi3POb62o",
+      "lhKyn7YEJ1Y",
+      "thGaWM1TmnQ",
+      "kJsJKZVHkAM",
+      "otqXSXWhIQk",
+      "CD_z4LClY6E",
+      "nkQMHGnprcA"
+    ]
+  }
+}

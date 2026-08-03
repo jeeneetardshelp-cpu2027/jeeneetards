@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "request_id": "f852013d-b844-4b0c-892d-09af9e4f1900",
+  "youtube_playlist_id": "PLQsNiHo64JI8Qi5y0raZAUYNT8mkc78Gj",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "BDcHxJJMKAU",
+      "chapter": "Indefinite Integration",
+      "lesson_number": 6
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "s7C4gjK7kFk",
+      "chapter": "Indefinite Integration",
+      "lesson_number": 5
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "xYboPFo5Dyw",
+      "chapter": "Indefinite Integration",
+      "lesson_number": 4
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "yMQkPhQZtd8",
+      "chapter": "Indefinite Integration",
+      "lesson_number": 3
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "zBxP4_R8PoA",
+      "chapter": "Indefinite Integration",
+      "lesson_number": 2
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "KHxF6Z-83Q8",
+      "chapter": "Indefinite Integration",
+      "lesson_number": 1
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "1c06eb34-fbdc-4d3b-a239-39f256f889e8",
+    "youtube_playlist_id": "PLQsNiHo64JI8Qi5y0raZAUYNT8mkc78Gj",
+    "teacher": "Competishun+",
+    "reviewed_on": "2026-07-30",
+    "reviewed_by": "Owner",
+    "source_url": "https://www.youtube.com/@competishun",
+    "source_label": "Official Competishun+ channel",
+    "youtube_video_ids": [
+      "BDcHxJJMKAU",
+      "s7C4gjK7kFk",
+      "xYboPFo5Dyw",
+      "yMQkPhQZtd8",
+      "zBxP4_R8PoA",
+      "KHxF6Z-83Q8"
+    ]
+  }
+}

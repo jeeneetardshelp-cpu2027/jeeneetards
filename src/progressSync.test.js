@@ -9,7 +9,10 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
 const upsertMock = vi.hoisted(() => vi.fn(() => Promise.resolve({ error: null })));
-const eqMock = vi.hoisted(() => vi.fn(() => Promise.resolve({ data: [], error: null })));
+// The pull chains .eq().order().range(); tests stub the RESULT via rangeMock.
+// rangeCalls records each page request so pagination itself can be asserted.
+const rangeMock = vi.hoisted(() => vi.fn(() => Promise.resolve({ data: [], error: null })));
+const rangeCalls = vi.hoisted(() => ({ current: [] }));
 
 vi.mock("./supabaseClient", () => ({
   isSupabaseConfigured: true,
@@ -17,7 +20,9 @@ vi.mock("./supabaseClient", () => ({
     from: () => ({
       upsert: upsertMock,
       select() { return this; },
-      eq: eqMock,
+      eq() { return this; },
+      order() { return this; },
+      range(from, to) { rangeCalls.current.push([from, to]); return rangeMock(from, to); },
     }),
   },
 }));
@@ -34,7 +39,8 @@ function freshEntry(overrides = {}) {
 
 beforeEach(() => {
   upsertMock.mockClear();
-  eqMock.mockClear();
+  rangeCalls.current = [];
+  rangeMock.mockClear();
 });
 
 describe("queueProgressSync throttling", () => {
@@ -88,7 +94,7 @@ describe("queueProgressSync throttling", () => {
 
 describe("pullServerProgress", () => {
   it("maps rows into mergeRemoteEntry-shaped objects", async () => {
-    eqMock.mockResolvedValueOnce({
+    rangeMock.mockResolvedValueOnce({
       data: [
         {
           playlist_id: 5, chapter_id: 12, position_seconds: 300, duration_seconds: 900,
@@ -108,7 +114,7 @@ describe("pullServerProgress", () => {
   });
 
   it("drops a row whose embedded video is missing (deleted video, broken FK)", async () => {
-    eqMock.mockResolvedValueOnce({
+    rangeMock.mockResolvedValueOnce({
       data: [{ playlist_id: 5, videos: null, playlists: null, updated_at: "2026-07-01T00:00:00.000Z" }],
       error: null,
     });
@@ -116,12 +122,53 @@ describe("pullServerProgress", () => {
   });
 
   it("returns [] on a query error instead of throwing", async () => {
-    eqMock.mockResolvedValueOnce({ data: null, error: { message: "boom" } });
+    rangeMock.mockResolvedValueOnce({ data: null, error: { message: "boom" } });
     expect(await pullServerProgress("user-1")).toEqual([]);
   });
 
   it("does nothing without a signed-in user", async () => {
     expect(await pullServerProgress(null)).toEqual([]);
-    expect(eqMock).not.toHaveBeenCalled();
+    expect(rangeMock).not.toHaveBeenCalled();
+  });
+});
+
+describe("pullServerProgress pagination", () => {
+  const row = (i) => ({
+    playlist_id: 5, chapter_id: 12, position_seconds: 100 + i, duration_seconds: 900,
+    watched: true, updated_at: "2026-07-01T00:00:00.000Z",
+    videos: { youtube_video_id: `vid${i}`, title: `Lesson ${i}` },
+    playlists: { title: "Mechanics" },
+  });
+
+  it("keeps fetching past PostgREST's 1000-row cap instead of silently truncating", async () => {
+    // A student with more than one page of saved positions. An unpaged select
+    // would hand back only the first 1000 and report that as the whole history.
+    const page1 = Array.from({ length: 1000 }, (_, i) => row(i));
+    const page2 = Array.from({ length: 37 }, (_, i) => row(1000 + i));
+    rangeMock
+      .mockResolvedValueOnce({ data: page1, error: null })
+      .mockResolvedValueOnce({ data: page2, error: null });
+
+    const rows = await pullServerProgress("user-1");
+
+    expect(rows).toHaveLength(1037);
+    expect(rangeCalls.current).toEqual([[0, 999], [1000, 1999]]);
+  });
+
+  it("stops after a short page rather than looping forever", async () => {
+    rangeMock.mockResolvedValueOnce({ data: [row(1)], error: null });
+    const rows = await pullServerProgress("user-1");
+    expect(rows).toHaveLength(1);
+    expect(rangeCalls.current).toEqual([[0, 999]]);
+  });
+
+  it("keeps the pages it already has when a later page errors", async () => {
+    const page1 = Array.from({ length: 1000 }, (_, i) => row(i));
+    rangeMock
+      .mockResolvedValueOnce({ data: page1, error: null })
+      .mockResolvedValueOnce({ data: null, error: { message: "boom" } });
+
+    const rows = await pullServerProgress("user-1");
+    expect(rows).toHaveLength(1000); // partial history beats none
   });
 });

@@ -166,11 +166,31 @@ describe("Continue Watching record validation", () => {
     expect(getCourseProgress(5)).not.toBeNull();
   });
 
-  it("rejects a lesson view without a valid course, chapter, or video identifier", () => {
-    expect(recordLessonView({ playlistId: 1, chapterId: null, videoId: "abc" })).toBeNull();
+  it("rejects a lesson view without a valid course or video identifier", () => {
     expect(recordLessonView({ playlistId: 1, chapterId: 7, videoId: "" })).toBeNull();
     expect(recordLessonView({ playlistId: "not-an-id", chapterId: 7, videoId: "abc" })).toBeNull();
     expect(localStorage.getItem(KEY)).toBeNull();
+  });
+
+  // chapterId is deliberately NOT required. A lesson that legitimately spans
+  // several chapters carries chapter_id NULL — the catalogue's own convention
+  // for "no single correct chapter" — and video 2122 is exactly that, live in
+  // three courses. Refusing to record it meant the student watched two hours
+  // and the site recorded nothing, while the server sync still wrote
+  // watched:true and then overwrote it with watched:false.
+  it("records a watch for a lesson that has no single chapter", () => {
+    const entry = recordLessonView({
+      playlistId: 182, chapterId: null, courseTitle: "Circular Motion",
+      videoId: "Z2J5R5k6WyE", videoTitle: "Live Practice Session",
+      position: 6, totalLessons: 11,
+    });
+
+    expect(entry).not.toBeNull();
+    expect(getWatchedVideoIds(182)).toEqual(["Z2J5R5k6WyE"]);
+    expect(entry.chapterId).toBeNull();          // null, never NaN
+    // ...but it still must not render a Continue card, because that card builds
+    // a /course/:id/chapter/:chapterId URL it cannot construct.
+    expect(getContinueWatching()).toEqual([]);
   });
 });
 

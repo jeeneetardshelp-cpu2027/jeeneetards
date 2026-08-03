@@ -1,0 +1,76 @@
+{
+  "version": 1,
+  "request_id": "84449313-c9ae-4ba0-9cf1-65acfe4e6c07",
+  "youtube_playlist_id": "PLQsNiHo64JI-_Wi0QqLb-P19h2DJwKtiW",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "cquZqkBQCNs",
+      "chapter": "Sequences and Series",
+      "lesson_number": 8
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "WCOsPCrDfYU",
+      "chapter": "Sequences and Series",
+      "lesson_number": 7
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "H3tySliinfk",
+      "chapter": "Sequences and Series",
+      "lesson_number": 6
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "-K1nYetdnyk",
+      "chapter": "Sequences and Series",
+      "lesson_number": 5
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "JFt7YzaAsLU",
+      "chapter": "Sequences and Series",
+      "lesson_number": 4
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "u4IDgz-9aa0",
+      "chapter": "Sequences and Series",
+      "lesson_number": 3
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "0kVYUZqqOus",
+      "chapter": "Sequences and Series",
+      "lesson_number": 2
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "2MprLfkAzSU",
+      "chapter": "Sequences and Series",
+      "lesson_number": 1
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "1c06eb34-fbdc-4d3b-a239-39f256f889e8",
+    "youtube_playlist_id": "PLQsNiHo64JI-_Wi0QqLb-P19h2DJwKtiW",
+    "teacher": "Competishun+",
+    "reviewed_on": "2026-07-30",
+    "reviewed_by": "Owner",
+    "source_url": "https://www.youtube.com/@competishun",
+    "source_label": "Official Competishun+ channel",
+    "youtube_video_ids": [
+      "cquZqkBQCNs",
+      "WCOsPCrDfYU",
+      "H3tySliinfk",
+      "-K1nYetdnyk",
+      "JFt7YzaAsLU",
+      "u4IDgz-9aa0",
+      "0kVYUZqqOus",
+      "2MprLfkAzSU"
+    ]
+  }
+}

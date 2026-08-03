@@ -63,13 +63,28 @@ export function queueProgressSync(userId, entry, { force = false } = {}) {
 // enough to reconstruct a localStorage entry without a second round trip.
 export async function pullServerProgress(userId) {
   if (!isSupabaseConfigured || !userId) return [];
-  const { data, error } = await supabase
-    .from(TABLE)
-    .select("playlist_id, chapter_id, position_seconds, duration_seconds, watched, updated_at, " +
-      "videos(youtube_video_id, title), playlists(title)")
-    .eq("user_id", userId);
-  if (error || !data) return [];
-  return data
+
+  // PAGINATE. PostgREST caps a response at 1000 rows and says nothing about it,
+  // so an unpaged select would silently hand a long-standing student an
+  // arbitrary subset of their own history — and mergeRemoteEntry would then
+  // treat the missing rows as "nothing on the server", which is exactly the
+  // kind of quiet wrong answer this project has been bitten by before.
+  const PAGE = 1000;
+  const rows = [];
+  for (let from = 0; ; from += PAGE) {
+    const { data, error } = await supabase
+      .from(TABLE)
+      .select("playlist_id, chapter_id, position_seconds, duration_seconds, watched, updated_at, " +
+        "videos(youtube_video_id, title), playlists(title)")
+      .eq("user_id", userId)
+      .order("updated_at", { ascending: false })
+      .range(from, from + PAGE - 1);
+    if (error || !data) break;          // partial data still beats none
+    rows.push(...data);
+    if (data.length < PAGE) break;
+  }
+  if (!rows.length) return [];
+  return rows
     .filter((row) => row.videos?.youtube_video_id)
     .map((row) => ({
       playlistId: row.playlist_id,

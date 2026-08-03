@@ -1,0 +1,83 @@
+{
+  "version": 1,
+  "request_id": "aa0c28f5-e93c-49e3-8226-db1e17f30c07",
+  "youtube_playlist_id": "PLQsNiHo64JI9lmuGDwieeBWM_UYHZ3TyC",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "hJ-3u6kpIio",
+      "chapter": "Fundamentals of Mathematics",
+      "lesson_number": 9
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "heOIJ86aDV8",
+      "chapter": "Fundamentals of Mathematics",
+      "lesson_number": 8
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "85a23TPS5xs",
+      "chapter": "Fundamentals of Mathematics",
+      "lesson_number": 7
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "x2Nf899fvdI",
+      "chapter": "Fundamentals of Mathematics",
+      "lesson_number": 6
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "3BVW8xmXw34",
+      "chapter": "Fundamentals of Mathematics",
+      "lesson_number": 5
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "NW7l_rjFt6M",
+      "chapter": "Fundamentals of Mathematics",
+      "lesson_number": 4
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "kf3pYqTeMuA",
+      "chapter": "Fundamentals of Mathematics",
+      "lesson_number": 3
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "ilx8vCDqIk4",
+      "chapter": "Fundamentals of Mathematics",
+      "lesson_number": 2
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "OkvzQWkH1-o",
+      "chapter": "Fundamentals of Mathematics",
+      "lesson_number": 1
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "1c06eb34-fbdc-4d3b-a239-39f256f889e8",
+    "youtube_playlist_id": "PLQsNiHo64JI9lmuGDwieeBWM_UYHZ3TyC",
+    "teacher": "Competishun+",
+    "reviewed_on": "2026-07-30",
+    "reviewed_by": "Owner",
+    "source_url": "https://www.youtube.com/@competishun",
+    "source_label": "Official Competishun+ channel",
+    "youtube_video_ids": [
+      "hJ-3u6kpIio",
+      "heOIJ86aDV8",
+      "85a23TPS5xs",
+      "x2Nf899fvdI",
+      "3BVW8xmXw34",
+      "NW7l_rjFt6M",
+      "kf3pYqTeMuA",
+      "ilx8vCDqIk4",
+      "OkvzQWkH1-o"
+    ]
+  }
+}

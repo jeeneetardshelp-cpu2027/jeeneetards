@@ -1,0 +1,83 @@
+{
+  "version": 1,
+  "request_id": "869403da-f7e0-487e-8198-f368455b1681",
+  "youtube_playlist_id": "PLQsNiHo64JI__cx6N4lWSDqX9RJQh8nOg",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "8lf9E1uVsQs",
+      "chapter": "Quadratic Equations",
+      "lesson_number": 9
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "8gCdscLQDWQ",
+      "chapter": "Quadratic Equations",
+      "lesson_number": 8
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "XwtHT6sw4d0",
+      "chapter": "Quadratic Equations",
+      "lesson_number": 7
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "RI0owbstQlU",
+      "chapter": "Quadratic Equations",
+      "lesson_number": 6
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "5maYh-KTJgk",
+      "chapter": "Quadratic Equations",
+      "lesson_number": 5
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "HyBZ9N4oBiA",
+      "chapter": "Quadratic Equations",
+      "lesson_number": 4
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "VvG5qBpseAE",
+      "chapter": "Quadratic Equations",
+      "lesson_number": 3
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "w_OyQrjHMXk",
+      "chapter": "Quadratic Equations",
+      "lesson_number": 2
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "655bTLOsphg",
+      "chapter": "Quadratic Equations",
+      "lesson_number": 1
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "1c06eb34-fbdc-4d3b-a239-39f256f889e8",
+    "youtube_playlist_id": "PLQsNiHo64JI__cx6N4lWSDqX9RJQh8nOg",
+    "teacher": "Competishun+",
+    "reviewed_on": "2026-07-30",
+    "reviewed_by": "Owner",
+    "source_url": "https://www.youtube.com/@competishun",
+    "source_label": "Official Competishun+ channel",
+    "youtube_video_ids": [
+      "8lf9E1uVsQs",
+      "8gCdscLQDWQ",
+      "XwtHT6sw4d0",
+      "RI0owbstQlU",
+      "5maYh-KTJgk",
+      "HyBZ9N4oBiA",
+      "VvG5qBpseAE",
+      "w_OyQrjHMXk",
+      "655bTLOsphg"
+    ]
+  }
+}

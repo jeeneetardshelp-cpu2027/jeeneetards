@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "request_id": "6af33257-0d3c-45d0-8f49-5aab187dd76b",
+  "youtube_playlist_id": "PLQsNiHo64JI-kvadwPoA2fGhhk0ZbtDX5",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "4kvD44K2oVE",
+      "chapter": null
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "6hYhj-BoKfE",
+      "chapter": null
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "gIUnbGHuAHQ",
+      "chapter": null
+    }
+  ]
+}

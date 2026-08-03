@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "request_id": "72045a97-777b-407e-977b-bb14645d139d",
+  "youtube_playlist_id": "PLQsNiHo64JI_a_iT6pmNcLMZhhxBSPnVv",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "IpTGVTnZlIY",
+      "chapter": "Qualitative Analysis: Cations",
+      "lesson_number": 3
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "_wI-h4fJ3kY",
+      "chapter": "Qualitative Analysis: Cations",
+      "lesson_number": 2
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "yg6QitqR-CQ",
+      "chapter": "Qualitative Analysis: Cations",
+      "lesson_number": 1
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "1c06eb34-fbdc-4d3b-a239-39f256f889e8",
+    "youtube_playlist_id": "PLQsNiHo64JI_a_iT6pmNcLMZhhxBSPnVv",
+    "teacher": "Competishun+",
+    "reviewed_on": "2026-07-30",
+    "reviewed_by": "Owner",
+    "source_url": "https://www.youtube.com/@competishun",
+    "source_label": "Official Competishun+ channel",
+    "youtube_video_ids": [
+      "IpTGVTnZlIY",
+      "_wI-h4fJ3kY",
+      "yg6QitqR-CQ"
+    ]
+  }
+}

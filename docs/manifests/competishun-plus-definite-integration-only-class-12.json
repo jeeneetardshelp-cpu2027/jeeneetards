@@ -1,0 +1,79 @@
+{
+  "version": 1,
+  "request_id": "43b08d9d-2b9c-4e56-be40-41a153c957de",
+  "youtube_playlist_id": "PLQsNiHo64JI_ZgwuPziK1FPxw3T-EC1CA",
+  "assignments": [
+    {
+      "position": 4,
+      "youtube_video_id": "5FvzNb3F3-4",
+      "chapter": "Definite Integration",
+      "lesson_number": 6
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "mITYi2UrFH8",
+      "chapter": "Definite Integration",
+      "lesson_number": 5
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "twKtoHEMQWs",
+      "chapter": "Definite Integration",
+      "lesson_number": 4
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "qgKI0-b5FPs",
+      "chapter": "Definite Integration",
+      "lesson_number": 3
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "S3v3dW1aeiE",
+      "chapter": "Definite Integration",
+      "lesson_number": 2
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "2bUAVKLcXDU",
+      "chapter": "Definite Integration",
+      "lesson_number": 1
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "1c06eb34-fbdc-4d3b-a239-39f256f889e8",
+    "youtube_playlist_id": "PLQsNiHo64JI_ZgwuPziK1FPxw3T-EC1CA",
+    "teacher": "Competishun+",
+    "reviewed_on": "2026-07-30",
+    "reviewed_by": "Owner",
+    "source_url": "https://www.youtube.com/@competishun",
+    "source_label": "Official Competishun+ channel",
+    "youtube_video_ids": [
+      "5FvzNb3F3-4",
+      "mITYi2UrFH8",
+      "twKtoHEMQWs",
+      "qgKI0-b5FPs",
+      "S3v3dW1aeiE",
+      "2bUAVKLcXDU"
+    ]
+  },
+  "exclusions": [
+    {
+      "position": 1,
+      "youtube_video_id": "Ey3Li5J7bFY",
+      "reason": "Reserved for the separate Application of Integrals course."
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "-6Y2pbohtrw",
+      "reason": "Reserved for the separate Application of Integrals course."
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "lPlGqMl0dks",
+      "reason": "Reserved for the separate Application of Integrals course."
+    }
+  ]
+}

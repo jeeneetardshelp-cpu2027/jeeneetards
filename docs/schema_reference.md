@@ -559,18 +559,45 @@ Origin: base table + `rating`/`review` from `community_schema.sql` (`unique(play
 
 **Foreign keys**: `playlist_id → playlists.id` (`on delete cascade`), `user_id → profiles.id` (`on delete cascade`), `review_hidden_by → profiles.id` (`on delete set null`).
 
-**RLS**:
-- SELECT: `"ratings are public"` — `using (true)`. **Note**: this policy does not exclude hidden reviews — a client that queries the table directly without filtering can still read `review` text on rows where `review_hidden = true`. The frontend (`src/useVisibleReviews.js`) enforces the `review_hidden = false` filter itself; there is no RLS-level enforcement of hidden-review invisibility.
+**RLS** (rewritten by `docs/sql/reviews_hardening_2026-07-31.sql`, applied 2026-08-02):
+- SELECT: **TWO permissive policies**, deliberately not one combined policy.
+  - `"visible ratings are public"` — `using (review_hidden = false)`, applies to every role.
+  - `"owner and admin read all ratings"` — `to authenticated`, `using (auth.uid() = user_id or public.is_admin())`.
+  - Postgres ORs permissive policies, so `anon` is only ever evaluated against the first. This split is load-bearing: `anon` holds no EXECUTE on `public.is_admin()` (`admin_policies.sql`), so a single policy mentioning it would raise `permission denied for function is_admin` for every logged-out visitor and break public browsing.
+  - The old blanket `"ratings are public" using (true)` policy is **dropped**. Hidden reviews are now genuinely unreadable via the anon key, not merely filtered client-side.
 - INSERT: `"user inserts own rating"` — `with check (auth.uid() = user_id)`.
 - UPDATE: `"user updates own rating"` — `using (auth.uid() = user_id) with check (auth.uid() = user_id)`.
 - DELETE: `"user deletes own rating"` — `using (auth.uid() = user_id)`.
 
-**Column-level grants**: `rating_review_moderation.sql` — `revoke update (review_hidden, review_hidden_at, review_hidden_by) on table public.playlist_ratings from anon, authenticated` (defense-in-depth; real enforcement is the trigger below, since table-level UPDATE is already granted for the student's own-row policy).
+**Column-level grants**:
+- `rating_review_moderation.sql` — `revoke update (review_hidden, review_hidden_at, review_hidden_by) … from anon, authenticated` (defense-in-depth; real enforcement is the trigger below, since table-level UPDATE is already granted for the student's own-row policy).
+- `reviews_hardening_2026-07-31.sql` — `anon`'s **table-level SELECT is revoked entirely** and re-granted on exactly 8 columns: `id, playlist_id, rating, review, difficulty, best_for, created_at, review_hidden`. `user_id` is therefore not readable by a logged-out visitor, so published reviews cannot be grouped back to an author. A column-level revoke alone would not have worked against a standing table-level grant — this project hit that exact trap twice (`profiles.is_admin`, and nearly `playlist_ratings.review_hidden`). `authenticated` deliberately keeps table-level SELECT, because `src/CourseRating.jsx` loads a student's own rating with `select("*")`; RLS still limits which ROWS it sees.
+
+**Constraints added by `reviews_hardening_2026-07-31.sql`**: `plr_review_length` — `check (review is null or char_length(review) <= 1000)`, matching the cap a content-report note has always had.
 
 **Triggers**:
 - `trg_refresh_playlist_rating` (`community_schema.sql`, redefined by `src/migrations/fix_rating_trigger.sql`) — `after insert or update or delete`, calls `public.refresh_playlist_rating()`. Recomputes `playlists.average_rating` (rounded avg of `rating`) and `playlists.ratings_count` for the affected `playlist_id`. Originally ran with caller's own privileges and silently updated 0 rows against admin-only-write `playlists`; `fix_rating_trigger.sql` made it `security definer set search_path = public` so it can actually write `playlists`, and one-time backfilled existing averages.
 - `trg_plratings_updated_at` (`community_schema.sql`) — `before update`, calls `public.set_updated_at()`, sets `updated_at = now()`.
+- `trg_enforce_rating_submission` (`docs/sql/reviews_hardening_2026-07-31.sql`) — `before insert or update`, calls `public.enforce_rating_submission()` (`security definer`, pinned `search_path`). Server-owns the fields a client must not control: on INSERT it forces `created_at`/`updated_at` to `now()` and, for a non-admin, resets `review_hidden`/`review_hidden_at`/`review_hidden_by`; on UPDATE it preserves the original `created_at` and refreshes `updated_at`. `service_role` is exempt. Without this, `created_at` was client-supplied and the public review list orders by it DESC — a student could pin their own review to the top of a course permanently with a year-3000 timestamp.
 - `trg_protect_review_moderation_columns` (`rating_review_moderation.sql`) — `before update`, calls `public.protect_review_moderation_columns()` (SECURITY DEFINER): raises `42501` if any of `review_hidden`/`review_hidden_at`/`review_hidden_by` change and `public.is_admin()` is false.
+
+---
+
+### `video_progress`
+
+Added by `src/migrations/video_progress_sync.sql` (applied 2026-07-31). Server-side mirror of the device-local watch history in `src/progress.js`, so a signed-in student's progress follows them between devices. **Deliberately private, unlike `playlist_ratings`** — a student's watch history has no public-display purpose, so there is no public-read policy at all.
+
+**Columns**: `id` (identity pk), `user_id` (→ `profiles.id`, `on delete cascade`), `playlist_id` (→ `playlists.id`, `on delete cascade`), `video_id` (→ `videos.id`, `on delete cascade`), `chapter_id` (→ `chapters.id`, `on delete set null`, **nullable** — a lesson spanning several chapters legitimately has none), `position_seconds` (numeric, `check >= 0`, default 0), `duration_seconds` (numeric, nullable, `check >= 0`), `watched` (boolean, default false), `updated_at` (timestamptz, default `now()`).
+
+**Unique**: `(user_id, playlist_id, video_id)` — the conflict target the client upserts on.
+
+**RLS**: four owner-only policies, no public arm.
+- SELECT / INSERT / UPDATE / DELETE — all `using` / `with check (auth.uid() = user_id)`.
+- Consequence worth knowing when auditing: this table cannot be introspected with the anon key at all (an anonymous select returns `[]`, not an error), so its contents can only be checked from an authenticated session or `service_role`.
+
+**Written by**: `src/progressSync.js` — a throttled (~25s) upsert during playback plus an immediate one on lesson-start and lesson-finish, and a paginated read-back on sign-in that folds rows into localStorage via `progress.mergeRemoteEntry` (forward-only: a server row is applied only where it is genuinely further ahead).
+
+**Disclosed to students** in `src/PrivacyPolicy.jsx` §5 by name, including that clearing site data does *not* delete it. `src/legalTruth.test.js` derives that requirement from the code, so shipping the sync without the disclosure fails the build.
 
 ---
 
@@ -671,7 +698,7 @@ Note: `target_id` has **no foreign key** — it's a polymorphic reference resolv
 
 ### Discrepancies
 
-None found for this cluster. For all four tables and three RPCs, every column/parameter/type in the ground-truth OpenAPI file is fully accounted for by a specific migration file, and no migration file claims a column/function that isn't present live (e.g. the `fix_profile_privilege_escalation_rollback.sql` and `content_reports_v10_production_rollback.sql` rollback scripts exist but the ground truth confirms neither has been run — `is_admin` write-protection and the `content_reports` hardened INSERT policy are both live). One behavioral note worth flagging even though it isn't a file-vs-ground-truth mismatch: `playlist_ratings`' `"ratings are public"` SELECT policy has no awareness of `review_hidden` — hiding a review only removes it from the app's own query pattern (`useVisibleReviews.js` filters client-side), not from what the anon key can technically read via a direct, unfiltered table query.
+None found for this cluster. For all four tables and three RPCs, every column/parameter/type in the ground-truth OpenAPI file is fully accounted for by a specific migration file, and no migration file claims a column/function that isn't present live (e.g. the `fix_profile_privilege_escalation_rollback.sql` and `content_reports_v10_production_rollback.sql` rollback scripts exist but the ground truth confirms neither has been run — `is_admin` write-protection and the `content_reports` hardened INSERT policy are both live). **RESOLVED 2 August 2026** — a behavioural note previously flagged here said `playlist_ratings`' `"ratings are public"` SELECT policy had no awareness of `review_hidden`, so hiding a review only removed it from the app's own query and not from what the anon key could read directly. That is **no longer true**: `docs/sql/reviews_hardening_2026-07-31.sql` dropped that policy and replaced it with a public arm scoped to `review_hidden = false` plus an authenticated owner/admin arm, and additionally removed `anon`'s ability to read `user_id`. Verified against live production with the anon key: a request for `user_id` is denied (`42501`), the 8 allow-listed display columns return normally, and logged-out review display still works. See the `playlist_ratings` **RLS** section above for the current policy set.
 ## Teacher / Faculty Core Data
 
 ### Source files found

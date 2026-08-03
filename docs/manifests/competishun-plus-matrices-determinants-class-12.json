@@ -1,0 +1,76 @@
+{
+  "version": 1,
+  "request_id": "a5fc8a23-40f2-4f04-86da-f7ad9bf91a06",
+  "youtube_playlist_id": "PLQsNiHo64JI-JMoyQnawepxJZRbif_3I0",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "r0Y0aRDYjHI",
+      "chapter": "Determinants",
+      "lesson_number": 8
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "MMMSeG-1dAg",
+      "chapter": "Determinants",
+      "lesson_number": 7
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "fMDLOPNHVs4",
+      "chapter": "Determinants",
+      "lesson_number": 6
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "AhUixJ20Xc0",
+      "chapter": "Matrices",
+      "lesson_number": 5
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "hGVtE3CNMU8",
+      "chapter": "Matrices",
+      "lesson_number": 4
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "Lp38n-FdnYg",
+      "chapter": "Matrices",
+      "lesson_number": 3
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "xYsoYgiOhmI",
+      "chapter": "Matrices",
+      "lesson_number": 2
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "veOjPlDl_M0",
+      "chapter": "Matrices",
+      "lesson_number": 1
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "1c06eb34-fbdc-4d3b-a239-39f256f889e8",
+    "youtube_playlist_id": "PLQsNiHo64JI-JMoyQnawepxJZRbif_3I0",
+    "teacher": "Competishun+",
+    "reviewed_on": "2026-07-30",
+    "reviewed_by": "Owner",
+    "source_url": "https://www.youtube.com/@competishun",
+    "source_label": "Official Competishun+ channel",
+    "youtube_video_ids": [
+      "r0Y0aRDYjHI",
+      "MMMSeG-1dAg",
+      "fMDLOPNHVs4",
+      "AhUixJ20Xc0",
+      "hGVtE3CNMU8",
+      "Lp38n-FdnYg",
+      "xYsoYgiOhmI",
+      "veOjPlDl_M0"
+    ]
+  }
+}

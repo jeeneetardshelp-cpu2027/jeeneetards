@@ -1,0 +1,39 @@
+{
+  "subject": "Chemistry",
+  "summary": {
+    "total": 2,
+    "auto": 1,
+    "review": 1,
+    "unmatched": 0
+  },
+  "rows": [
+    {
+      "position": 1,
+      "youtube_video_id": "cqYMetpd7ng",
+      "title": "INTERNATIONAL CHEMISTRY OLYMPIAD(ICHO) LECTURE SERIES|ORGANIC SPECTROSCOPY|INCHO|INTRODUCTION TO NMR",
+      "chapter": "Introduction to Chemistry",
+      "confidence": 1,
+      "review": true,
+      "reason": "ambiguous (close runner-up)",
+      "alternatives": [
+        "Introduction to Chemistry",
+        "NMR Spectroscopy",
+        "Organic Reaction Mechanisms"
+      ]
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "P7xP7e6YFbg",
+      "title": "INTERNATIONAL CHEMISTRY OLYMPIAD(ICHO) LECTURE SERIES|ORGANIC SPECTROSCOPY|INCHO| NMR lecture -2",
+      "chapter": "NMR Spectroscopy",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "NMR Spectroscopy",
+        "Organic Reaction Mechanisms",
+        "Purification and Characterisation of Organic Compounds"
+      ]
+    }
+  ]
+}

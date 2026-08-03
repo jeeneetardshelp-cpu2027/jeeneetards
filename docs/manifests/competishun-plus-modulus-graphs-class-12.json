@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "request_id": "206d6a14-98ee-47cd-b1b3-5291a13dcb3b",
+  "youtube_playlist_id": "PLQsNiHo64JI9o0Z37To7-xKUa9HLdKEd_",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "a1CxZhxt6hQ",
+      "chapter": "Modulus and Graphs",
+      "lesson_number": 3
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "5dvXX5NFyMw",
+      "chapter": "Modulus and Graphs",
+      "lesson_number": 2
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "ixOJLM6tok8",
+      "chapter": "Modulus and Graphs",
+      "lesson_number": 1
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "1c06eb34-fbdc-4d3b-a239-39f256f889e8",
+    "youtube_playlist_id": "PLQsNiHo64JI9o0Z37To7-xKUa9HLdKEd_",
+    "teacher": "Competishun+",
+    "reviewed_on": "2026-07-30",
+    "reviewed_by": "Owner",
+    "source_url": "https://www.youtube.com/@competishun",
+    "source_label": "Official Competishun+ channel",
+    "youtube_video_ids": [
+      "a1CxZhxt6hQ",
+      "5dvXX5NFyMw",
+      "ixOJLM6tok8"
+    ]
+  }
+}

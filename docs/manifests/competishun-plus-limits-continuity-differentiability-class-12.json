@@ -1,0 +1,52 @@
+{
+  "version": 1,
+  "request_id": "e06d7f5a-6422-4df0-9358-312b8fb31dfd",
+  "youtube_playlist_id": "PLQsNiHo64JI-fFQJTzKvLrGGnXa79WT4i",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "bmZ66VDIOtU",
+      "chapter": null
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "qgZAWeRQbZ4",
+      "chapter": null
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "2T2Vt1qE8Kw",
+      "chapter": null
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "MdoA_E07cXc",
+      "chapter": null
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "zu9L2jDxKes",
+      "chapter": null
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "QYbXU4ntaL8",
+      "chapter": null
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "EHjGV5ZWJmA",
+      "chapter": null
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "NXTDCmADbmw",
+      "chapter": null
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "Yl9pDlMnBj8",
+      "chapter": null
+    }
+  ]
+}

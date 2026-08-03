@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "request_id": "41071193-c012-45f2-8249-b449c2ca16a0",
+  "youtube_playlist_id": "PLQsNiHo64JI_UgRcdU_c-hSleNe_BNnM-",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "t1zMMD0lG2o",
+      "chapter": "p-Block Elements: Groups 15 and 16",
+      "lesson_number": 5
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "2FJ7g4Hxsl0",
+      "chapter": "p-Block Elements: Groups 15 and 16",
+      "lesson_number": 4
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "00gdZ0CNDj4",
+      "chapter": "p-Block Elements: Groups 15 and 16",
+      "lesson_number": 3
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "E-_3djnhx0Q",
+      "chapter": "p-Block Elements: Groups 15 and 16",
+      "lesson_number": 2
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "2cfeXYq1bzw",
+      "chapter": "p-Block Elements: Groups 15 and 16",
+      "lesson_number": 1
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "1c06eb34-fbdc-4d3b-a239-39f256f889e8",
+    "youtube_playlist_id": "PLQsNiHo64JI_UgRcdU_c-hSleNe_BNnM-",
+    "teacher": "Competishun+",
+    "reviewed_on": "2026-07-30",
+    "reviewed_by": "Owner",
+    "source_url": "https://www.youtube.com/@competishun",
+    "source_label": "Official Competishun+ channel",
+    "youtube_video_ids": [
+      "t1zMMD0lG2o",
+      "2FJ7g4Hxsl0",
+      "00gdZ0CNDj4",
+      "E-_3djnhx0Q",
+      "2cfeXYq1bzw"
+    ]
+  }
+}

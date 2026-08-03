@@ -1,0 +1,61 @@
+{
+  "version": 1,
+  "request_id": "d4ccceeb-e78d-4cdb-9c50-d7f8beb758b2",
+  "youtube_playlist_id": "PLQsNiHo64JI-fFQJTzKvLrGGnXa79WT4i",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "bmZ66VDIOtU",
+      "chapter": "Limits, Continuity and Differentiability",
+      "lesson_number": 9
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "qgZAWeRQbZ4",
+      "chapter": "Limits, Continuity and Differentiability",
+      "lesson_number": 8
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "2T2Vt1qE8Kw",
+      "chapter": "Limits, Continuity and Differentiability",
+      "lesson_number": 7
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "MdoA_E07cXc",
+      "chapter": "Limits, Continuity and Differentiability",
+      "lesson_number": 6
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "zu9L2jDxKes",
+      "chapter": "Limits, Continuity and Differentiability",
+      "lesson_number": 5
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "QYbXU4ntaL8",
+      "chapter": "Limits, Continuity and Differentiability",
+      "lesson_number": 4
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "EHjGV5ZWJmA",
+      "chapter": "Limits, Continuity and Differentiability",
+      "lesson_number": 3
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "NXTDCmADbmw",
+      "chapter": "Limits, Continuity and Differentiability",
+      "lesson_number": 2
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "Yl9pDlMnBj8",
+      "chapter": "Limits, Continuity and Differentiability",
+      "lesson_number": 1
+    }
+  ]
+}
