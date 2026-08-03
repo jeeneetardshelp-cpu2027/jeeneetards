@@ -24,7 +24,7 @@ const BASE = "https://www.jeeneetard.com";
 // (robots.txt disallows /admin). /search is deliberately absent: the page is
 // noindex (a tool, not content) and a sitemap must not advertise noindexed
 // URLs — crawlers reach it through the header/footer links instead.
-const STATIC_ROUTES = ["/", "/browse", "/explore", "/terms", "/privacy"];
+const STATIC_ROUTES = ["/", "/browse", "/explore", "/tests", "/terms", "/privacy"];
 
 const here = dirname(fileURLToPath(import.meta.url));
 const OUT = resolve(here, "../../public/sitemap.xml");

@@ -22,6 +22,7 @@ const EXPLORE = [
   { label: "Home", to: "/" },
   { label: "Find a course", to: "/explore" },
   { label: "Browse courses", to: "/browse" },
+  { label: "Practice tests", to: "/tests" },
   ...(RELEASE_CAPABILITIES.universalSearch
     ? [{ label: "Search the library", to: "/search" }]
     : []),
