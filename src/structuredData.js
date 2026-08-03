@@ -43,6 +43,36 @@ function toAbsoluteUrl(path) {
   return `${SITE}${path.startsWith("/") ? "" : "/"}${path}`;
 }
 
+/** Public faculty identity. Optional fields are emitted only from reviewed data. */
+export function personSchema({
+  name,
+  url,
+  description,
+  image,
+  aliases,
+  institutes,
+} = {}) {
+  if (!name) return null;
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name,
+  };
+  if (url) schema.url = toAbsoluteUrl(url);
+  if (description) schema.description = description;
+  if (image) schema.image = image;
+  const alternateName = [...new Set((aliases ?? []).filter(Boolean))];
+  if (alternateName.length) schema.alternateName = alternateName;
+  const affiliations = [...new Set((institutes ?? []).filter(Boolean))];
+  if (affiliations.length) {
+    schema.affiliation = affiliations.map((institute) => ({
+      "@type": "Organization",
+      name: institute,
+    }));
+  }
+  return schema;
+}
+
 /**
  * Seconds -> an ISO 8601 duration string ("PT1H5M30S"), the format
  * schema.org expects for VideoObject.duration. Fractional seconds are

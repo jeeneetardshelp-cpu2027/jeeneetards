@@ -11,6 +11,8 @@ import { useFacultyProfile } from "./useFaculty.js";
 import { GlobalHeader, Container } from "./AppShell.jsx";
 import { ratingDisplay } from "./ratingConfidence.js";
 import { useTheme } from "./theme.jsx";
+import { useStructuredData } from "./PageMetadata.jsx";
+import { breadcrumbListSchema, personSchema } from "./structuredData.js";
 
 export default function FacultyProfile() {
   const { slug } = useParams();
@@ -28,6 +30,30 @@ export default function FacultyProfile() {
     { label: "Browse courses", to: "/browse" },
     { label: profile?.display_name ?? "Faculty" },
   ];
+  const schemaUrl = `/faculty/${profile?.slug ?? slug}`;
+  useStructuredData(profile ? [
+    personSchema({
+      name: profile.display_name,
+      url: schemaUrl,
+      description: profile.bio,
+      image: profile.photo_url,
+      aliases: verifiedAliases,
+      institutes: profile.institutes,
+    }),
+    breadcrumbListSchema([
+      { label: "Home", url: "/" },
+      { label: "Browse courses", url: "/browse" },
+      { label: profile.display_name, url: schemaUrl },
+    ]),
+  ] : [], [
+    profile?.id,
+    profile?.display_name,
+    profile?.slug,
+    profile?.bio,
+    profile?.photo_url,
+    verifiedAliases.join("|"),
+    (profile?.institutes ?? []).join("|"),
+  ]);
 
   return (
     <div className={`min-h-screen ${t.page} ${t.text}`}>

@@ -8,6 +8,8 @@
 import {
   courseSchema,
   breadcrumbListSchema,
+  itemListSchema,
+  personSchema,
   websiteSchema,
   organizationSchema,
   safeStructuredDataJson,
@@ -140,7 +142,14 @@ export function renderLandingBody(pathname, meta) {
       heading: "What are you preparing for?",
       description:
         "Choose an exam or school curriculum, then narrow the free course library by class, subject and chapter.",
-      links: [["Home", "/"], ["Browse all courses", "/browse"]],
+      links: [
+        ["JEE", "/explore/jee"],
+        ["NEET", "/explore/neet"],
+        ["Olympiad", "/explore/olympiad"],
+        ["School Boards", "/explore/school"],
+        ["Home", "/"],
+        ["Browse all courses", "/browse"],
+      ],
     },
   };
   // /tests is a list, not a blurb: the useful facts for an extractive
@@ -314,6 +323,45 @@ export function courseSchemas(course, meta) {
   return out;
 }
 
+const verifiedAliases = (profile) => (profile?.aliases ?? [])
+  .map((item) => typeof item === "string" ? { alias: item, status: "verified" } : item)
+  .filter((item) => item?.status === "verified")
+  .map((item) => item.alias)
+  .filter((alias) => alias && alias !== profile?.display_name);
+
+export function facultySchemas(profile, meta) {
+  const person = personSchema({
+    name: profile?.display_name,
+    url: meta?.canonicalPath,
+    description: profile?.bio,
+    image: profile?.photo_url,
+    aliases: verifiedAliases(profile),
+    institutes: profile?.institutes,
+  });
+  const crumbs = breadcrumbListSchema([
+    { label: "Home", url: "/" },
+    { label: "Browse courses", url: "/browse" },
+    { label: profile?.display_name, url: meta?.canonicalPath },
+  ]);
+  return [
+    person && { key: "Person", schema: person },
+    crumbs && { key: "BreadcrumbList", schema: crumbs },
+  ].filter(Boolean);
+}
+
+export function exploreSchemas(crumbs, options) {
+  const breadcrumb = breadcrumbListSchema(crumbs);
+  const list = itemListSchema((options ?? []).map((option, index) => ({
+    title: option.name,
+    url: option.url,
+    position: index + 1,
+  })));
+  return [
+    breadcrumb && { key: "BreadcrumbList", schema: breadcrumb },
+    list && { key: "ItemList", schema: list },
+  ].filter(Boolean);
+}
+
 /**
  * Insert JSON-LD before </head>. Each script carries the same
  * `data-schema-key` the client upserts on (PageMetadata.jsx keys by @type), so
@@ -359,6 +407,60 @@ export function renderCourseBody(course, meta, lessons = []) {
     lessonItems ? `<h2>Lessons in this course</h2><ol>${lessonItems}</ol>` : "",
     `<p><a href="${escapeHtml(meta.url)}">Open this free course on JEENEETARD</a></p>`,
     `</main>`,
+  ].join("");
+}
+
+export function renderFacultyBody(profile, meta) {
+  const name = escapeHtml(profile.display_name);
+  const aliases = verifiedAliases(profile);
+  const institutes = (profile.institutes ?? []).filter(Boolean);
+  const courses = (profile.courses ?? []).filter((course) => course?.playlist_id && course?.title);
+  const courseItems = courses.map((course) => {
+    const details = [course.subject, course.role && course.role !== "instructor" ? course.role : null]
+      .filter(Boolean)
+      .map(escapeHtml)
+      .join(" - ");
+    return `<li><a href="/course/${encodeURIComponent(course.playlist_id)}">` +
+      `${escapeHtml(course.title)}</a>${details ? ` (${details})` : ""}</li>`;
+  }).join("");
+
+  return [
+    "<main>",
+    `<nav aria-label="Breadcrumb"><a href="/">Home</a> - ` +
+      `<a href="/browse">Browse courses</a> - <span>${name}</span></nav>`,
+    `<h1>${name}</h1>`,
+    profile.verified ? "<p>Verified faculty profile.</p>" : "",
+    aliases.length ? `<p>Also known as ${aliases.map(escapeHtml).join(", ")}</p>` : "",
+    institutes.length ? `<p>Institutes: ${institutes.map(escapeHtml).join(", ")}</p>` : "",
+    profile.bio ? `<p>${escapeHtml(profile.bio)}</p>` : `<p>${escapeHtml(meta.description)}</p>`,
+    `<h2>Courses taught by ${name}</h2>`,
+    courseItems ? `<ul>${courseItems}</ul>` : "<p>No linked courses are currently listed.</p>",
+    '<p><a href="/browse">Browse all free courses</a></p>',
+    "</main>",
+  ].join("");
+}
+
+export function renderExploreBody({ heading, meta, crumbs, options, emptyMessage }) {
+  const breadcrumb = crumbs.map((crumb, index) => {
+    const label = escapeHtml(crumb.label);
+    return index === crumbs.length - 1
+      ? `<span>${label}</span>`
+      : `<a href="${escapeHtml(crumb.url)}">${label}</a>`;
+  }).join(" - ");
+  const items = options.map((option) => {
+    const count = Number(option.count ?? 0);
+    return `<li><a href="${escapeHtml(option.url)}">${escapeHtml(option.name)}</a>` +
+      `${count > 0 ? ` (${count} course${count === 1 ? "" : "s"})` : ""}</li>`;
+  }).join("");
+
+  return [
+    "<main>",
+    `<nav aria-label="Breadcrumb">${breadcrumb}</nav>`,
+    `<h1>${escapeHtml(heading)}</h1>`,
+    `<p>${escapeHtml(meta.description)}</p>`,
+    items ? `<ul>${items}</ul>` : `<p>${escapeHtml(emptyMessage ?? "No courses are available for this selection yet.")}</p>`,
+    '<p><a href="/browse">Browse all courses</a></p>',
+    "</main>",
   ].join("");
 }
 

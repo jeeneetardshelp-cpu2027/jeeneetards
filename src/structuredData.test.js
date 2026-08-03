@@ -10,10 +10,43 @@ import {
   durationToIso8601,
   itemListSchema,
   organizationSchema,
+  personSchema,
   safeStructuredDataJson,
   videoObjectSchema,
   websiteSchema,
 } from "./structuredData.js";
+
+describe("personSchema", () => {
+  it("describes only verified public faculty facts", () => {
+    expect(personSchema({
+      name: "Amit Bijarnia",
+      url: "/faculty/amit-bijarnia",
+      description: "Physics faculty profile.",
+      image: "https://example.com/amit.jpg",
+      aliases: ["ABJ Sir"],
+      institutes: ["Competishun"],
+    })).toEqual({
+      "@context": "https://schema.org",
+      "@type": "Person",
+      name: "Amit Bijarnia",
+      url: "https://www.jeeneetard.com/faculty/amit-bijarnia",
+      description: "Physics faculty profile.",
+      image: "https://example.com/amit.jpg",
+      alternateName: ["ABJ Sir"],
+      affiliation: [{ "@type": "Organization", name: "Competishun" }],
+    });
+  });
+
+  it("omits unavailable optional profile fields instead of inventing them", () => {
+    const schema = personSchema({ name: "Amit Bijarnia" });
+    expect(schema).toEqual({
+      "@context": "https://schema.org",
+      "@type": "Person",
+      name: "Amit Bijarnia",
+    });
+    expect(personSchema({})).toBeNull();
+  });
+});
 
 describe("durationToIso8601", () => {
   it("omits the hours component when it's zero", () => {
