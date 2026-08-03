@@ -23,13 +23,16 @@ import {
   injectStructuredData,
   renderCourseBody,
   injectRootContent,
+  landingSchemas,
+  renderLandingBody,
 } from "./ogInject.js";
 
-// /course/:id gets full server-rendered content + JSON-LD. /browse and
-// /explore only get correct <head> tags: without this they inherit the
-// homepage title and carry no canonical, so every catalogue landing page looks
-// like a duplicate of "/" to a crawler.
-export const config = { matcher: ["/course/:id*", "/browse", "/explore/:path*"] };
+// /course/:id gets full server-rendered content + JSON-LD. Stable discovery
+// landings also get crawler-readable body content; deeper /explore paths keep
+// the route-specific head tags added by the existing metadata middleware.
+export const config = {
+  matcher: ["/course/:id*", "/", "/browse", "/explore/:path*"],
+};
 
 /** One place for the HTML response shape (CDN caches the rendered variant). */
 function htmlResponse(html) {
@@ -41,7 +44,6 @@ function htmlResponse(html) {
     },
   });
 }
-
 const SUPA_URL = process.env.VITE_SUPABASE_URL;
 const SUPA_KEY = process.env.VITE_SUPABASE_ANON_KEY;
 const LOOKUP_TIMEOUT_MS = 1500;
@@ -51,14 +53,17 @@ export default async function middleware(request) {
     const url = new URL(request.url);
     const match = url.pathname.match(/^\/course\/(\d+)/);
 
-    // Non-course routes: head tags only, no DB lookup. metadataForLocation is
-    // the SAME function the client uses, so server and client never disagree.
+    // Non-course routes need no DB lookup. metadataForLocation is the SAME
+    // function the client uses, so server and client never disagree.
     if (!match) {
       const routeMeta = metadataForLocation(url.pathname, url.search);
       if (!routeMeta) return next();
       const shell = await fetch(new URL("/index.html", url.origin));
       if (!shell.ok) return next();
-      return htmlResponse(injectRouteMeta(await shell.text(), routeMeta));
+      let html = injectRouteMeta(await shell.text(), routeMeta);
+      html = injectStructuredData(html, landingSchemas(url.pathname));
+      html = injectRootContent(html, renderLandingBody(url.pathname, routeMeta));
+      return htmlResponse(html);
     }
 
     if (!SUPA_URL || !SUPA_KEY) return next();
