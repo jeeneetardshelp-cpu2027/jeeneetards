@@ -75,6 +75,18 @@ export const TEST_SECTIONS = [
           "Full-length 75-question, 300-mark papers on a 180-minute timer, with the paper openable straight from the page.",
       },
       {
+        name: "Competishun previous year papers",
+        url: "https://i.competishun.com/home/explore",
+        provider: "Competishun",
+        // Labelled `account`, not `free`, on purpose: this is the student
+        // app's explore route, which asks you to sign in before the papers
+        // open. The tests themselves cost nothing. Understating openness is
+        // the safe error here — overstating it strands a student at a wall.
+        access: "account",
+        description:
+          "Previous-year JEE Main papers and topic-wise tests inside Competishun's student app, free to attempt once you have signed in.",
+      },
+      {
         name: "Quizrr test series",
         url: "https://quizrr.in",
         provider: "Quizrr, by MathonGo",
