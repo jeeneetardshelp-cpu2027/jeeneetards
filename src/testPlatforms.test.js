@@ -7,6 +7,7 @@
 
 import { describe, it, expect } from "vitest";
 import { TEST_SECTIONS, totalTestResources, linkHost } from "./testPlatforms.js";
+import { renderTestsBody } from "../ogInject.js";
 import { metadataForLocation } from "./pageMetadata.js";
 
 const allResources = TEST_SECTIONS.flatMap((s) =>
@@ -113,5 +114,45 @@ describe("/tests page metadata", () => {
 
   it("does not turn the trailing-slash form into a 404", () => {
     expect(metadataForLocation("/tests/", "").canonicalPath).toBe("/tests");
+  });
+});
+
+// The site server-renders body content for every public landing so the AI
+// crawlers (GPTBot, ClaudeBot, PerplexityBot) — which do not run JavaScript —
+// can read it. /tests shipped without that and served them a blank page.
+describe("crawler-readable /tests body", () => {
+  it("names every section, so coverage is readable without JavaScript", () => {
+    const html = renderTestsBody({ description: "d" });
+    for (const s of TEST_SECTIONS) expect(html).toContain(s.label);
+  });
+
+  it("includes the real outbound link for sections that have one", () => {
+    const html = renderTestsBody({ description: "d" });
+    for (const r of TEST_SECTIONS.flatMap((s) => s.resources)) {
+      expect(html).toContain(r.url);
+      expect(html).toContain(r.provider);
+    }
+  });
+
+  it("says an empty section is empty rather than omitting it", () => {
+    const html = renderTestsBody({ description: "d" });
+    const empty = TEST_SECTIONS.filter((s) => !s.resources.length);
+    expect(empty.length).toBeGreaterThan(0);
+    for (const s of empty) {
+      expect(html).toMatch(new RegExp(`${s.label}: no test source listed yet`));
+    }
+  });
+
+  it("states we do not conduct the tests, in the served HTML", () => {
+    expect(renderTestsBody({ description: "d" })).toMatch(
+      /does not conduct these tests/i,
+    );
+  });
+
+  it("escapes data rather than interpolating it raw", () => {
+    // A future entry with an ampersand or quote must not break the markup.
+    const html = renderTestsBody({ description: 'a & "b"' });
+    expect(html).toContain("a &amp; &quot;b&quot;");
+    expect(html).not.toContain('a & "b"');
   });
 });

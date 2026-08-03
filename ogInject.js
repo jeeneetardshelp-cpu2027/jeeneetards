@@ -12,6 +12,8 @@ import {
   organizationSchema,
   safeStructuredDataJson,
 } from "./src/structuredData.js";
+// Pure data, no React — safe to pull into the edge runtime.
+import { TEST_SECTIONS } from "./src/testPlatforms.js";
 
 const SITE = "https://www.jeeneetard.com";
 
@@ -141,6 +143,12 @@ export function renderLandingBody(pathname, meta) {
       links: [["Home", "/"], ["Browse all courses", "/browse"]],
     },
   };
+  // /tests is a list, not a blurb: the useful facts for an extractive
+  // crawler are which exams are covered and where each test actually lives.
+  // Built from the same TEST_SECTIONS the React page renders, so the served
+  // HTML can never claim a source the page does not show.
+  if (pathname === "/tests") return renderTestsBody(meta);
+
   const page = pages[pathname];
   if (!page) return "";
 
@@ -152,6 +160,49 @@ export function renderLandingBody(pathname, meta) {
     `<h1>${escapeHtml(page.heading)}</h1>`,
     `<p>${escapeHtml(page.description)}</p>`,
     `<nav aria-label="Course discovery">${links}</nav>`,
+    "</main>",
+  ].join("");
+}
+
+/**
+ * Crawler-readable body for /tests. Names every exam section, and for the
+ * ones that have a source, the real outbound link — so an AI crawler can
+ * answer "where can I take a free JEE Main mock test" from this HTML alone.
+ *
+ * Empty sections are stated as empty rather than omitted. A crawler that
+ * inferred "this site covers NEET tests" from a heading with nothing under
+ * it would be repeating a claim the page does not make.
+ */
+export function renderTestsBody(meta) {
+  const items = TEST_SECTIONS.map((s) => {
+    const label = escapeHtml(s.label);
+    if (!s.resources.length) {
+      return `<li>${label}: no test source listed yet.</li>`;
+    }
+    const links = s.resources
+      .map(
+        (r) =>
+          `<a href="${escapeHtml(r.url)}" rel="nofollow noopener">${escapeHtml(r.name)}</a>` +
+          ` (${escapeHtml(r.provider)})`,
+      )
+      .join(", ");
+    return `<li>${label}: ${links}</li>`;
+  }).join("");
+
+  return [
+    "<main>",
+    "<h1>Mock tests</h1>",
+    `<p>${escapeHtml(meta.description)}</p>`,
+    // Stated in the served HTML, not only after React runs: a model
+    // summarising this page must not tell a student the tests are taken here.
+    "<p>JEENEETARD does not conduct these tests or store marks, and is not" +
+      " affiliated with the organisations listed. Each link opens the platform" +
+      " that runs the test.</p>",
+    `<ul>${items}</ul>`,
+    '<nav aria-label="Course discovery">',
+    '<a href="/">Home</a> <a href="/explore">Find a course</a> ',
+    '<a href="/browse">Browse courses</a>',
+    "</nav>",
     "</main>",
   ].join("");
 }
