@@ -123,3 +123,19 @@ The production batch was create-only and added one chapter, one course, four
 videos, and four memberships across its two gates. Final catalogue totals were
 318 courses, 3,732 videos, 3,738 memberships, and 242 chapters. Protected JEE
 remained unchanged at fingerprint `c742fabf93ff8dd33d6ecd5eb4793db0`.
+
+## Unacademy NEET first batch
+
+The catalogue now includes three reviewed Unacademy NEET deep-dive courses:
+
+- Chemical Bonding — 15 lectures, attributed to Ashwani Tyagi;
+- Evolution — 15 lectures, attributed to Pradeep Singh;
+- Principles of Inheritance and Variation — 14 lectures, attributed to
+  Pradeep Singh.
+
+Recap, quiz, DPP, and Menti rows were deliberately excluded. The create-only
+batch added three courses, 44 videos, and 44 memberships with zero reuse and no
+new chapters. Final catalogue totals were 332 courses, 3,908 videos, 3,914
+memberships, and 245 chapters. Protected JEE remained unchanged at fingerprint
+`c742fabf93ff8dd33d6ecd5eb4793db0`.
+All three public course pages and their first embedded lessons were verified.

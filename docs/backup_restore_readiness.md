@@ -995,3 +995,23 @@ chapters / 92 chapter-class rows`. Protected original JEE remained `83 courses
 / 1,307 memberships / c742fabf93ff8dd33d6ecd5eb4793db0`; rolling JEE remained
 `178 courses / 2,391 memberships / 0ed8376c5c5cea7d06b3beafbc59c45f`.
 No restore or clone was created and no schema migration was run.
+
+## Unacademy NEET first production batch — 3 August 2026
+
+Before the owner-approved three-course create-only batch, the signed-in
+production PITR dashboard showed active seven-day retention and latest restore
+availability at `03 Aug 2026, 18:18:37 UTC+05:30`. The quiet-window preflight
+was `329 playlists / 3,864 videos / 3,870 memberships / 245 chapters / 92
+chapter-class rows`, with no source-course or retained-video collision.
+
+Fresh anonymous dry-runs passed immediately before each write. Courses `341`,
+`342`, and `343` were then created one at a time for Chemical Bonding,
+Evolution, and Principles of Inheritance and Variation. The batch added 44
+videos and 44 memberships, reused zero videos, and created no chapters. Final
+counts were `332 / 3,908 / 3,914 / 245 / 92` in the same order as the preflight.
+
+The protected original JEE slice remained exactly `83 courses / 1,307
+memberships / c742fabf93ff8dd33d6ecd5eb4793db0` after every write. No restore,
+clone, migration, update, delete, or `release` push was performed. Attribution
+evidence for Ashwani Tyagi and Pradeep Singh is bound to owner decision
+`6579f542-da9b-499f-bd46-3aa796ea4f27` in the exact manifests and review record.

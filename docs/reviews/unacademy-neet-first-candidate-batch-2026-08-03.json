@@ -1,0 +1,298 @@
+{
+  "version": 1,
+  "status": "imported-production",
+  "generated_at": "2026-08-03T12:27:40Z",
+  "completed_at": "2026-08-03T12:59:02Z",
+  "read_only": false,
+  "source": {
+    "channel_id": "UCdQwYksctqqiRwqp3PiJMWA",
+    "channel_handle": "@UnacademyNEET",
+    "channel_title": "Unacademy NEET",
+    "uploads_playlist_id": "UUdQwYksctqqiRwqp3PiJMWA",
+    "reported_upload_count": 12491,
+    "public_playlists_scanned": 736,
+    "public_playlist_memberships_scanned": 9079,
+    "production_source_playlist_overlap": 0
+  },
+  "attribution": {
+    "proposed_channel_display_name": "Unacademy NEET",
+    "named_teacher_records_required": true,
+    "requires_owner_decision_for_this_batch": false,
+    "decision_id": "6579f542-da9b-499f-bd46-3aa796ea4f27",
+    "approved_on": "2026-08-03",
+    "note": "The owner approved the official channel-owned playlist titles and retained video titles as evidence for Ashwani Tyagi and Pradeep Singh. The same durable batch decision ID is bound independently in all three exact manifests."
+  },
+  "selection_policy": {
+    "lecture_catalogue_only": true,
+    "practice_and_revision_kept_separate": true,
+    "production_video_reuse": 0,
+    "cross_candidate_video_reuse": 0,
+    "all_retained_videos_embeddable": true,
+    "all_retained_durations_known": true,
+    "proposed_titles_have_no_exact_production_collision": true
+  },
+  "baseline": {
+    "playlists": 318,
+    "videos": 3732,
+    "memberships": 3738,
+    "chapters": 242,
+    "protected_jee_courses": 83,
+    "protected_jee_memberships": 1307,
+    "protected_jee_fingerprint": "c742fabf93ff8dd33d6ecd5eb4793db0",
+    "rolling_jee_courses": 178,
+    "rolling_jee_memberships": 2391,
+    "rolling_jee_fingerprint": "0ed8376c5c5cea7d06b3beafbc59c45f"
+  },
+  "write_gate": {
+    "pitr_latest_restore_available_at": "2026-08-03T18:18:37+05:30",
+    "pitr_retention_days": 7,
+    "playlists": 329,
+    "videos": 3864,
+    "memberships": 3870,
+    "chapters": 245,
+    "chapter_class_levels": 92,
+    "source_playlist_collisions": 0,
+    "retained_video_collisions": 0,
+    "protected_jee_courses": 83,
+    "protected_jee_memberships": 1307,
+    "protected_jee_fingerprint": "c742fabf93ff8dd33d6ecd5eb4793db0",
+    "rolling_jee_courses": 186,
+    "rolling_jee_memberships": 2490,
+    "rolling_jee_fingerprint": "5ddd338d726ba28d3afad543b57e0e85"
+  },
+  "courses": [
+    {
+      "key": "unacademy-neet-chemical-bonding-class-11",
+      "proposed_title": "Chemical Bonding - Playlist | Class 11 | Unacademy NEET | LIVE DAILY | NEET Chemistry | Ashwani Tyagi",
+      "youtube_playlist_id": "PLsgHooHkqhhOpvf0vvBRLS91fUm9T_eE1",
+      "source_playlist_title": "Chemical Bonding - Playlist | Class 11 | Unacademy NEET | LIVE DAILY | NEET Chemistry | Ashwani Tyagi",
+      "goal": "neet",
+      "subject": "Chemistry",
+      "chapter": {
+        "id": 86,
+        "name": "Chemical Bonding and Molecular Structure"
+      },
+      "class_levels": ["class-11"],
+      "teacher_evidence": {
+        "proposed_display_name": "Ashwani Tyagi",
+        "basis": "Official playlist title names Ashwani Tyagi; every retained source title names Ashwani Sir."
+      },
+      "content_type": "full-course",
+      "language": "hinglish",
+      "difficulty": "intermediate",
+      "videos": [
+        { "position": 1, "source_position": 1, "youtube_video_id": "N1k3LoYa4bE", "duration_seconds": 3560, "source_title": "Chemical Bonding - Lecture 1 | Class 11 | Unacademy NEET | LIVE DAILY | NEET Chemistry | Ashwani Sir" },
+        { "position": 2, "source_position": 2, "youtube_video_id": "UNzwGiPpteU", "duration_seconds": 3952, "source_title": "Chemical Bonding - Lecture 2 | Class 11 | Unacademy NEET | LIVE DAILY | NEET Chemistry | Ashwani Sir" },
+        { "position": 3, "source_position": 3, "youtube_video_id": "3LwjZsrfOho", "duration_seconds": 3791, "source_title": "Chemical Bonding - Lecture 3 | Class 11 | Unacademy NEET | LIVE DAILY | NEET Chemistry | Ashwani Sir" },
+        { "position": 4, "source_position": 4, "youtube_video_id": "dFTeu7KYHOc", "duration_seconds": 3784, "source_title": "Chemical Bonding - Lecture 4 | Class 11 | Unacademy NEET | LIVE DAILY | NEET Chemistry | Ashwani Sir" },
+        { "position": 5, "source_position": 5, "youtube_video_id": "F81MaW4RqhA", "duration_seconds": 3539, "source_title": "Chemical Bonding - Lecture 5 | Class 11 | Unacademy NEET | LIVE DAILY | NEET Chemistry | Ashwani Sir" },
+        { "position": 6, "source_position": 6, "youtube_video_id": "4Cr6aXYk8Zs", "duration_seconds": 3521, "source_title": "Chemical Bonding - Lecture 6 | Class 11 | Unacademy NEET | LIVE DAILY | NEET Chemistry | Ashwani Sir" },
+        { "position": 7, "source_position": 7, "youtube_video_id": "n0qgNURS19A", "duration_seconds": 3896, "source_title": "Chemical Bonding - Lecture 7 | Class 11 | Unacademy NEET | LIVE DAILY | NEET Chemistry | Ashwani Sir" },
+        { "position": 8, "source_position": 8, "youtube_video_id": "bj9wWyjyZyM", "duration_seconds": 3674, "source_title": "Chemical Bonding - Lecture 8 | Class 11 | Unacademy NEET | LIVE DAILY | NEET Chemistry | Ashwani Sir" },
+        { "position": 9, "source_position": 9, "youtube_video_id": "tUUkbs5JQjY", "duration_seconds": 3986, "source_title": "Chemical Bonding - Lecture 9 | Class 11 | Unacademy NEET | LIVE DAILY | NEET Chemistry | Ashwani Sir" },
+        { "position": 10, "source_position": 10, "youtube_video_id": "LIYSWqHPx34", "duration_seconds": 3937, "source_title": "Chemical Bonding - Lecture 10 | Unacademy NEET | LIVE DAILY | NEET Chemistry | Ashwani Sir" },
+        { "position": 11, "source_position": 11, "youtube_video_id": "9wM-gBUPIvc", "duration_seconds": 3883, "source_title": "Chemical Bonding - Lecture 11 | Unacademy NEET | LIVE DAILY | NEET Chemistry | Ashwani Sir" },
+        { "position": 12, "source_position": 12, "youtube_video_id": "XiOFrKEv-xY", "duration_seconds": 4149, "source_title": "Chemical Bonding - Lecture 12 | Unacademy NEET | LIVE DAILY | NEET Chemistry | Ashwani Sir" },
+        { "position": 13, "source_position": 13, "youtube_video_id": "FLZtwhXRw2Q", "duration_seconds": 3743, "source_title": "Chemical Bonding - Lecture 13 | Unacademy NEET | LIVE DAILY | NEET Chemistry | Ashwani Sir" },
+        { "position": 14, "source_position": 14, "youtube_video_id": "EFsI3htgU9U", "duration_seconds": 3915, "source_title": "Chemical Bonding - L14 | Special Bonds | Unacademy NEET | LIVE DAILY | NEET Chemistry | Ashwani Sir" },
+        { "position": 15, "source_position": 15, "youtube_video_id": "pwi2MXNC1ZU", "duration_seconds": 3527, "source_title": "Chemical Bonding - L15 | Hydrogen | Unacademy NEET | LIVE DAILY | NEET Chemistry | Ashwani Sir" }
+      ],
+      "dropped_source_videos": [
+        { "source_position": 16, "youtube_video_id": "KWk1DYOqPHM", "reason": "recap/revision" },
+        { "source_position": 17, "youtube_video_id": "Ts0htT-sFvQ", "reason": "recap/revision" },
+        { "source_position": 18, "youtube_video_id": "WRv6-y1CnIA", "reason": "recap/revision" },
+        { "source_position": 19, "youtube_video_id": "P1cxrzJ785M", "reason": "recap/revision" },
+        { "source_position": 20, "youtube_video_id": "67cHi3TTWyo", "reason": "practice/quiz" },
+        { "source_position": 21, "youtube_video_id": "Y-fs5E9Xj_0", "reason": "practice/quiz" },
+        { "source_position": 22, "youtube_video_id": "S13aSamu7Yo", "reason": "practice/quiz" },
+        { "source_position": 23, "youtube_video_id": "vB-zuVV3nWQ", "reason": "practice/quiz" }
+      ],
+      "projected_delta": { "playlists": 1, "videos": 15, "memberships": 15, "chapters": 0 },
+      "anonymous_production_dry_run": {
+        "performed_at": null,
+        "timing": "Fresh anonymous dry-run completed immediately before the guarded production write.",
+        "status": "ok",
+        "effective_status": "ok",
+        "quality_findings": 0,
+        "readiness_findings": 0,
+        "mapped_capability_version": 12,
+        "assignment_count": 15,
+        "excluded_count": 8,
+        "manifest_sha256": "cc51fd7a83beb8c130bbd183e320dbd5b83cf8c1778f15b4fe923ab8486906fb",
+        "source_snapshot_sha256": "ab3997438303bec66316cff751c43ad7be70ef4f38f2d76e10ceb9bd278d23ac"
+      },
+      "production_import": {
+        "course_id": 341,
+        "imported_at": "2026-08-03T12:53:46.805583Z",
+        "videos_added": 15,
+        "memberships_added": 15,
+        "videos_reused": 0,
+        "chapters_created": 0,
+        "chapter_id": 86,
+        "protected_jee_fingerprint_after": "c742fabf93ff8dd33d6ecd5eb4793db0"
+      }
+    },
+    {
+      "key": "unacademy-neet-evolution-class-12",
+      "proposed_title": "NEET: Evolution - Playlist | Class 12 | Unacademy NEET | Live Daily 2.0 | NEET Biology | Pradeep Singh",
+      "youtube_playlist_id": "PLsgHooHkqhhOQCrgTeH7u28Es6agZtG_x",
+      "source_playlist_title": "NEET: Evolution - Playlist | Class 12 | Unacademy NEET | Live Daily 2.0 | NEET Biology | Pradeep Singh",
+      "goal": "neet",
+      "subject": "Biology",
+      "chapter": { "id": 110, "name": "Evolution" },
+      "class_levels": ["class-12"],
+      "teacher_evidence": {
+        "proposed_display_name": "Pradeep Singh",
+        "basis": "Official playlist title names Pradeep Singh; every retained source title names Pradeep Singh or Pradeep Sir."
+      },
+      "content_type": "full-course",
+      "language": "hinglish",
+      "difficulty": "intermediate",
+      "videos": [
+        { "position": 1, "source_position": 1, "youtube_video_id": "YRIQZAArqNw", "duration_seconds": 3516, "source_title": "NEET: Evolution - L1 | Class 12 | Live Daily 2.0 | Unacademy NEET | Pradeep Sir" },
+        { "position": 2, "source_position": 2, "youtube_video_id": "C3T0gwYyR8Y", "duration_seconds": 3285, "source_title": "NEET: Evolution - L2 | Class 12 | Live Daily 2.0 | Unacademy NEET | Pradeep Singh" },
+        { "position": 3, "source_position": 3, "youtube_video_id": "cDRzDoGlSUk", "duration_seconds": 2695, "source_title": "NEET: Evolution - L3 | Class 12 | Live Daily 2.0 | Unacademy NEET | Pradeep Singh" },
+        { "position": 4, "source_position": 4, "youtube_video_id": "VcP8AZ_w0Mc", "duration_seconds": 2866, "source_title": "NEET: Evolution - L4 | Class 12 | Live Daily 2.0 | Unacademy NEET | Pradeep Singh" },
+        { "position": 5, "source_position": 5, "youtube_video_id": "_t1VS3AcNRg", "duration_seconds": 3285, "source_title": "NEET: Evolution - L5 | Class 12 | Live Daily 2.0 | Unacademy NEET | Pradeep Singh" },
+        { "position": 6, "source_position": 6, "youtube_video_id": "DiUgnTRMRxc", "duration_seconds": 3510, "source_title": "NEET: Evolution - L6 | Class 12 | Live Daily 2.0 | Unacademy NEET | Pradeep Singh" },
+        { "position": 7, "source_position": 7, "youtube_video_id": "6DotiqOkQ0E", "duration_seconds": 3146, "source_title": "NEET: Evolution - L7 | Class 12 | Live Daily 2.0 | Unacademy NEET | Pradeep Singh" },
+        { "position": 8, "source_position": 8, "youtube_video_id": "SAKAIOIfWMA", "duration_seconds": 3076, "source_title": "NEET: Theories of Evolution - L1 | Class 12 | Live Daily 2.0 | Unacademy NEET | Pradeep Singh" },
+        { "position": 9, "source_position": 9, "youtube_video_id": "ylJUm4Xbcew", "duration_seconds": 3066, "source_title": "NEET: Theories of Evolution - L2 | Class 12 | Live Daily 2.0 | Unacademy NEET | Pradeep Singh" },
+        { "position": 10, "source_position": 10, "youtube_video_id": "spKfp0oZXHg", "duration_seconds": 2570, "source_title": "NEET: Theories of Evolution - L3 | Class 12 | Live Daily 2.0 | Unacademy NEET | Pradeep Singh" },
+        { "position": 11, "source_position": 11, "youtube_video_id": "lBezOgzEZVs", "duration_seconds": 3370, "source_title": "NEET: Theories of Evolution - L4 | Class 12 | Live Daily 2.0 | Unacademy NEET | Pradeep Singh" },
+        { "position": 12, "source_position": 12, "youtube_video_id": "izPB4pL7auI", "duration_seconds": 3165, "source_title": "NEET: Theories of Evolution - L5 | Class 12 | Live Daily 2.0 | Unacademy NEET | Pradeep Singh" },
+        { "position": 13, "source_position": 13, "youtube_video_id": "oCZ1eGdSbxw", "duration_seconds": 3215, "source_title": "NEET: Theories of Evolution - L6 | Class 12 | Live Daily 2.0 | Unacademy NEET | Pradeep Singh" },
+        { "position": 14, "source_position": 14, "youtube_video_id": "O_c0m7QLH8Y", "duration_seconds": 3030, "source_title": "NEET: Theories of Evolution - L7 | Class 12 | Live Daily 2.0 | Unacademy NEET | Pradeep Singh" },
+        { "position": 15, "source_position": 15, "youtube_video_id": "xeVNLm7b2aM", "duration_seconds": 2945, "source_title": "NEET: Theories of Evolution - L8 | Class 12 | Live Daily 2.0 | Unacademy NEET | Pradeep Singh" }
+      ],
+      "dropped_source_videos": [
+        { "source_position": 16, "youtube_video_id": "o66WHynsx7w", "reason": "practice/DPP" }
+      ],
+      "projected_delta": { "playlists": 1, "videos": 15, "memberships": 15, "chapters": 0 },
+      "anonymous_production_dry_run": {
+        "performed_at": null,
+        "timing": "Fresh anonymous dry-run completed immediately before the guarded production write.",
+        "status": "ok",
+        "effective_status": "ok",
+        "quality_findings": 0,
+        "readiness_findings": 0,
+        "mapped_capability_version": 12,
+        "assignment_count": 15,
+        "excluded_count": 1,
+        "manifest_sha256": "30931b666c8ba57be592ef362975f281c3caf27b63a8445d0d513981908fd1d5",
+        "source_snapshot_sha256": "e23d9741b10027516e76d0426cd6d5f7911376b966ff9f88e3e80f81aec91cd5"
+      },
+      "production_import": {
+        "course_id": 342,
+        "imported_at": "2026-08-03T12:55:47.205726Z",
+        "videos_added": 15,
+        "memberships_added": 15,
+        "videos_reused": 0,
+        "chapters_created": 0,
+        "chapter_id": 110,
+        "protected_jee_fingerprint_after": "c742fabf93ff8dd33d6ecd5eb4793db0"
+      }
+    },
+    {
+      "key": "unacademy-neet-principles-inheritance-class-12",
+      "proposed_title": "NEET: Principles of Inheritance and Variation - Playlist | Class 12 | Unacademy NEET | Live Daily 2.0 | NEET Biology | Pradeep Singh",
+      "youtube_playlist_id": "PLsgHooHkqhhNoUZC_HaAwe9k_5crRH-Ig",
+      "source_playlist_title": "NEET: Principles of Inheritance and Variation - Playlist | Class 12 | Unacademy NEET | Live Daily 2.0 | NEET Biology | Pradeep Singh",
+      "goal": "neet",
+      "subject": "Biology",
+      "chapter": { "id": 122, "name": "Principles of Inheritance and Variation" },
+      "class_levels": ["class-12"],
+      "teacher_evidence": {
+        "proposed_display_name": "Pradeep Singh",
+        "basis": "Official playlist title names Pradeep Singh; every retained source title names Pradeep Singh or Pradeep Sir."
+      },
+      "content_type": "full-course",
+      "language": "hinglish",
+      "difficulty": "intermediate",
+      "videos": [
+        { "position": 1, "source_position": 1, "youtube_video_id": "Go6jMEqMUKY", "duration_seconds": 3015, "source_title": "NEET: Principles of Inheritance & Variation - L1 | Live Daily 2.0 | Unacademy NEET | Pradeep Sir" },
+        { "position": 2, "source_position": 2, "youtube_video_id": "7RRiCUJUFS8", "duration_seconds": 3701, "source_title": "NEET: Principles of Inheritance & Variation - L2 | Live Daily 2.0 | Unacademy NEET | Pradeep Sir" },
+        { "position": 3, "source_position": 3, "youtube_video_id": "rRwGQyAe_8Q", "duration_seconds": 2610, "source_title": "NEET: Principles of Inheritance & Variation - L3 | Live Daily 2.0 | Unacademy NEET | Pradeep Sir" },
+        { "position": 4, "source_position": 4, "youtube_video_id": "sfSChTetSiA", "duration_seconds": 3146, "source_title": "NEET: Principles of Inheritance & Variation - L4 | Live Daily 2.0 | Unacademy NEET | Pradeep Sir" },
+        { "position": 5, "source_position": 5, "youtube_video_id": "eotNUWiAzxk", "duration_seconds": 3030, "source_title": "NEET: Principles of Inheritance & Variation - L5 | Live Daily 2.0 | Unacademy NEET | Pradeep Sir" },
+        { "position": 6, "source_position": 6, "youtube_video_id": "SO9qH6dHb1I", "duration_seconds": 2986, "source_title": "NEET: Principles of Inheritance & Variation - L6 | Live Daily 2.0 | Unacademy NEET | Pradeep Sir" },
+        { "position": 7, "source_position": 7, "youtube_video_id": "c7aOm8kEuMA", "duration_seconds": 2461, "source_title": "NEET: Principles of Inheritance & Variation - L7 | Live Daily 2.0 | Unacademy NEET | Pradeep Sir" },
+        { "position": 8, "source_position": 8, "youtube_video_id": "th_OHhxsXN0", "duration_seconds": 2575, "source_title": "NEET: Principles of Inheritance & Variation - L8 | Live Daily 2.0 | Unacademy NEET | Pradeep Sir" },
+        { "position": 9, "source_position": 9, "youtube_video_id": "Euu7UyRCeGk", "duration_seconds": 3221, "source_title": "NEET: Principles of Inheritance & Variation - L9 | Live Daily 2.0 | Unacademy NEET | Pradeep Sir" },
+        { "position": 10, "source_position": 11, "youtube_video_id": "6ueROgcbDMo", "duration_seconds": 2595, "source_title": "NEET: Principles of Inheritance & Variation - L10 | Live Daily 2.0 | Unacademy NEET | Pradeep Sir" },
+        { "position": 11, "source_position": 12, "youtube_video_id": "8sXyW4K_yjM", "duration_seconds": 2556, "source_title": "NEET: Principles of Inheritance & Variation - L11 | Live Daily 2.0 | Unacademy NEET | Pradeep Sir" },
+        { "position": 12, "source_position": 13, "youtube_video_id": "Y6iEaOp2m0Q", "duration_seconds": 2925, "source_title": "NEET: Principles of Inheritance & Variation - L12 | Live Daily 2.0 | Unacademy NEET | Pradeep Sir" },
+        { "position": 13, "source_position": 14, "youtube_video_id": "N_BpUG1i5a8", "duration_seconds": 3456, "source_title": "NEET: Principles of Inheritance & Variation - L13 | Live Daily 2.0 | Unacademy NEET | Pradeep Sir" },
+        { "position": 14, "source_position": 15, "youtube_video_id": "CjEWtpwcjN0", "duration_seconds": 3510, "source_title": "NEET: Principles of Inheritance & Variation - L14 | Live Daily 2.0 | Unacademy NEET | Pradeep Singh" }
+      ],
+      "dropped_source_videos": [
+        { "source_position": 10, "youtube_video_id": "0q3NaT4HYUo", "reason": "practice/quiz" }
+      ],
+      "projected_delta": { "playlists": 1, "videos": 14, "memberships": 14, "chapters": 0 },
+      "anonymous_production_dry_run": {
+        "performed_at": null,
+        "timing": "Fresh anonymous dry-run completed immediately before the guarded production write.",
+        "status": "ok",
+        "effective_status": "ok",
+        "quality_findings": 0,
+        "readiness_findings": 0,
+        "mapped_capability_version": 12,
+        "assignment_count": 14,
+        "excluded_count": 1,
+        "manifest_sha256": "170f378cb2d2fa1658e1bfda975afde863e532e12629370d975eee46279ab3c7",
+        "source_snapshot_sha256": "bc0f70fb63bdff11468a44533734333d362d7158d22ea873ed18aae76ed24f5e"
+      },
+      "production_import": {
+        "course_id": 343,
+        "imported_at": "2026-08-03T12:56:53.861857Z",
+        "videos_added": 14,
+        "memberships_added": 14,
+        "videos_reused": 0,
+        "chapters_created": 0,
+        "chapter_id": 122,
+        "protected_jee_fingerprint_after": "c742fabf93ff8dd33d6ecd5eb4793db0"
+      }
+    }
+  ],
+  "projected_final_counts": {
+    "playlists": 332,
+    "videos": 3908,
+    "memberships": 3914,
+    "chapters": 245
+  },
+  "approval": {
+    "status": "approved-for-create-only-sequential-import",
+    "decision_id": "6579f542-da9b-499f-bd46-3aa796ea4f27",
+    "conditions": [
+      "Run a fresh anonymous dry-run immediately before each write.",
+      "Import create-only, one course at a time.",
+      "Verify the protected JEE fingerprint after each write.",
+      "Stop on reuse, drift, or any blocker."
+    ]
+  },
+  "final_verification": {
+    "playlists": 332,
+    "videos": 3908,
+    "memberships": 3914,
+    "chapters": 245,
+    "chapter_class_levels": 92,
+    "courses_added": 3,
+    "videos_added": 44,
+    "memberships_added": 44,
+    "videos_reused": 0,
+    "chapters_created": 0,
+    "neet_courses": 117,
+    "neet_memberships": 1197,
+    "protected_jee_courses": 83,
+    "protected_jee_memberships": 1307,
+    "protected_jee_fingerprint": "c742fabf93ff8dd33d6ecd5eb4793db0",
+    "rolling_jee_courses": 186,
+    "rolling_jee_memberships": 2490,
+    "rolling_jee_fingerprint": "5ddd338d726ba28d3afad543b57e0e85",
+    "exact_lesson_order": true,
+    "metadata_verified": true,
+    "live_course_pages_verified": true,
+    "first_lesson_embeds_verified": 3,
+    "unexpected_video_reuse": 0
+  }
+}
