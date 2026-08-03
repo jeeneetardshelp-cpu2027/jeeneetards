@@ -111,3 +111,15 @@ verification. See
 Their immediate post-batch snapshot was 294 courses, 3,093 videos, and 3,099
 memberships; later independently executed catalogue batches are not included in
 that snapshot.
+
+## PRMO and IOQM qualifier solutions
+
+Mathematics now includes chapter `PRMO and IOQM Solutions` and source-ID-null
+Olympiad course `329`, `PRMO & IOQM Solutions (2018–2022)`. The course contains
+four reviewed Competishun+ solution lectures in natural exam order, spanning
+PRMO 2018 and 2019 plus IOQM 2020 and 2021–22.
+
+The production batch was create-only and added one chapter, one course, four
+videos, and four memberships across its two gates. Final catalogue totals were
+318 courses, 3,732 videos, 3,738 memberships, and 242 chapters. Protected JEE
+remained unchanged at fingerprint `c742fabf93ff8dd33d6ecd5eb4793db0`.

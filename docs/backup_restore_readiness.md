@@ -968,3 +968,30 @@ original-83 JEE fingerprint remained
 memberships / `583e60e33ec1ed25f3f237a94e98f185`. Full evidence and artifact hashes
 are recorded in
 [competishun-upload-only-imports-2026-08-03.md](competishun-upload-only-imports-2026-08-03.md).
+
+## PRMO and IOQM Solutions production gate — 3 August 2026
+
+Before this create-only chapter and course batch, the signed-in production PITR
+dashboard showed active 7-day retention and latest restore availability at
+`03 Aug 2026, 17:02:35 UTC+05:30`. The quiet-window course baseline was `317
+playlists / 3,728 videos / 3,734 memberships / 242 chapters / 92 chapter-class
+rows`; all four target video IDs were absent.
+
+The batch created Mathematics chapter `298`, `PRMO and IOQM Solutions`, then
+created source-ID-null Olympiad course `329`, `PRMO & IOQM Solutions
+(2018–2022)`, with four new videos and four memberships. The chapter and course
+artifact SHA-256 values are respectively
+`9eac1540f7b5c580ae548d812b96f05009b84e5b466d1bc3ef17d3becccef91a` and
+`c017a5dcc6e68c5cd5b45fe45180bfb9f565dfa34cf7a82821e4d6df9caa6874`.
+
+One initial course transaction failed on the identity-backed
+`playlist_videos.id` column and rolled back atomically. The corrected artifact
+names the writable membership columns explicitly. A separate dashboard
+client-side empty-query error also performed no database write. Exact read-only
+rollback checks preceded the successful retry.
+
+Final totals were `318 playlists / 3,732 videos / 3,738 memberships / 242
+chapters / 92 chapter-class rows`. Protected original JEE remained `83 courses
+/ 1,307 memberships / c742fabf93ff8dd33d6ecd5eb4793db0`; rolling JEE remained
+`178 courses / 2,391 memberships / 0ed8376c5c5cea7d06b3beafbc59c45f`.
+No restore or clone was created and no schema migration was run.
