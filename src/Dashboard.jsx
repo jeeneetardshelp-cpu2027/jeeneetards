@@ -19,6 +19,7 @@ import { buildChips, removeChip, clearAllChips } from "./filterChips.js";
 import FilterPanel from "./FilterPanel.jsx";
 import { useFilterOptions } from "./useFilterOptions.js";
 import { useBrowseFacets } from "./useBrowseFacets.js";
+import { useGoalCatalog } from "./useExplore.js";
 import { parseFilterParams, normalizeFilterParams } from "./filterParams.js";
 import {
   Search, X, Play, BookOpen, Building2, AlertTriangle,
@@ -375,13 +376,31 @@ export default function Dashboard() {
   const goalRaw = params.get("goal");
   const subjectRaw = params.get("subject") ?? params.get("sub");
   const chapterRaw = params.get("chapter") ?? params.get("ch");
+  const goalValue = optionValue("goal", goalRaw);
+  const subjectValue = optionValue("subject", subjectRaw);
+  // Facet counts intentionally stop when a board or teacher is active because
+  // the v9 count RPC has no such argument. Keep the chapter picker honest in
+  // that state by reusing the bounded curriculum RPC that powers Explore. It
+  // applies the selected exam/class scope and never downloads the catalogue.
+  const chapterCatalog = useGoalCatalog({
+    goal: canonical.ready ? goalValue : null,
+    stage: canonical.stage,
+    subject: canonical.ready ? subjectValue : null,
+  });
+  const shouldScopeChapters = Boolean(canonical.ready && goalValue && subjectValue);
+  const scopedSubject = chapterCatalog.subjects.find((row) => row.slug === subjectValue);
+  const chapterScopeValues = shouldScopeChapters
+    ? (chapterCatalog.ready && scopedSubject
+        ? (chapterCatalog.chaptersBySubject[scopedSubject.id] ?? []).map((row) => row.slug)
+        : [])
+    : null;
   const goalName = optionName("goal", goalRaw);
   const subjectName = optionName("subject", subjectRaw);
   const chapterName = optionName("chapter", chapterRaw);
   const facetCounts = useBrowseFacets({
-    goal: optionValue("goal", goalRaw),
+    goal: goalValue,
     stage: canonical.stage,
-    subject: optionValue("subject", subjectRaw),
+    subject: subjectValue,
     chapter: optionValue("chapter", chapterRaw),
     channelId: validated.channelId,
     language: validated.language,
@@ -426,7 +445,8 @@ export default function Dashboard() {
       error={filterOptions.error}
       onRetry={filterOptions.retry}
       counts={facetCounts.counts}
-      countsLoading={facetCounts.loading}
+      countsLoading={facetCounts.loading || (shouldScopeChapters && chapterCatalog.loading)}
+      chapterScopeValues={chapterScopeValues}
       params={params}
       onChange={(next) => setParams(next)}
     />
