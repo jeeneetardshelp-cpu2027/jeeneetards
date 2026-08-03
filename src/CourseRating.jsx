@@ -142,9 +142,13 @@ function CourseRatingInteractive({
     if (data) setAvg({ average: Number(data.average_rating), count: data.ratings_count });
   }, [playlistId]);
 
+  // The course-detail request just returned these trigger-maintained totals,
+  // so fetching the same playlist row again on mount only duplicates work.
+  // Keep state aligned when client-side navigation swaps to another course;
+  // refreshAverage remains the post-submit path for genuinely newer totals.
   useEffect(() => {
-    refreshAverage();
-  }, [refreshAverage]);
+    setAvg({ average: initialAverage, count: initialCount });
+  }, [playlistId, initialAverage, initialCount]);
 
   // Load this student's existing rating so they can edit it.
   const userId = user?.id;
