@@ -50,14 +50,16 @@ describe("homepage statistics band", () => {
     goalsState.current = { goals: [], loading: false, error: "network down" };
 
     show();
-    await screen.findByRole("heading", { name: /Find the right lecture/i });
+    // Wait for the statistics band itself, not the page heading. The heading is
+    // queryable before the band has rendered, which would let the two negative
+    // assertions below pass for the wrong reason — nothing is on screen yet.
+    // These two labels are product constants, not measurements, so they are
+    // present whether or not the catalogue query succeeded.
+    expect(await screen.findByText("Attributes compared")).toBeTruthy();
+    expect(screen.getByText("Languages classified")).toBeTruthy();
 
     expect(screen.queryByText("Courses in the library")).toBeNull();
     expect(screen.queryByText("Exam tracks live")).toBeNull();
-
-    // These two are product constants, not measurements — they always hold.
-    expect(screen.getByText("Attributes compared")).toBeTruthy();
-    expect(screen.getByText("Languages classified")).toBeTruthy();
   });
 
   it("shows the measured counts once they are real", async () => {
@@ -69,9 +71,7 @@ describe("homepage statistics band", () => {
     };
 
     show();
-    await screen.findByRole("heading", { name: /Find the right lecture/i });
-
-    expect(screen.getByText("Courses in the library")).toBeTruthy();
+    expect(await screen.findByText("Courses in the library")).toBeTruthy();
     expect(screen.getByText("Exam tracks live")).toBeTruthy();
   });
 });

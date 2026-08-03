@@ -27,6 +27,9 @@ export default defineConfig({
   test: {
     environment: "jsdom",
     globals: true,
+    // Raises Testing Library's own async timeout, which testTimeout below does
+    // not govern. See the comment in src/setupTests.js.
+    setupFiles: ["./src/setupTests.js"],
     // Vitest defaults to a 5s per-test timeout (verified by probe, not assumed).
     // The heaviest component tests — CourseSequence's full-course paging,
     // Dashboard.goal's mobile search, shellSafety's statistics band — normally
