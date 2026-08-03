@@ -138,6 +138,7 @@ for (const asset of [
   "dist/favicon.svg",
   "dist/social-preview.png",
   "dist/robots.txt",
+  "dist/llms.txt",
 ]) {
   if (!exists(asset)) fail(`production build is missing ${asset}`);
   else pass(`production build includes ${asset}`);
