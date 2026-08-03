@@ -11,12 +11,12 @@
 -- These chapters were Competishun-only, so Physics Wallah content genuinely is
 -- a second institute for them.
 --
--- Lessons    : 143 across 18 courses, one course per source playlist
+-- Lessons    : 141 across 18 courses, one course per source playlist
 -- Effect     : JEE-view Chemistry 24 -> 32 of 42 chapters with 2+ institutes,
 --              closing Redox Reactions, Hydrogen, The s-Block Elements, P-Block
 --              Groups 13 and 14, Chemical Kinetics, p-Block Groups 17 and 18,
 --              Qualitative Analysis, and Qualitative Analysis: Cations.
--- Verified   : all 143 youtube_video_ids returned HTTP 200 from YouTube's oEmbed
+-- Verified   : all 141 youtube_video_ids returned HTTP 200 from YouTube's oEmbed
 --              API with author_name "JEE Wallah", and none was already present.
 --              Every playlist matched its declared video count exactly.
 --
@@ -52,27 +52,27 @@ begin
       'knUw9TB7ZHM', 'yH-GgZHBdYg', 'lQbTKaMRLg4', 'm4DFYiubH_w', 'FjQnvi7VAlQ', 'aTN5-arJo3Y',
       '6cFmz2UaT9M', 'sThyAya6XK4', 's0bI8tEaJD8', 'SNMSq7jg8Jc', 'HrPSQQAfFKQ', 'arJ8Q8tSQGc',
       'o-ypQvZxQoc', 'AajhdnNrJR8', 'xtFGCe6hALY', 'DdRxmPasqJA', 'zZp21zmicpo', 'Rk2hDM9sXmQ',
-      '7iSHPUO5Mf0', '8N2CHjx59Hs', 'GXHsqvSyWj4', 'Y0d5WhJr2fw', 'r38agJ_cTNw', 'k3cox6rpRQA',
-      '53dOXGWKn00', 'veMYiuzGO1w', 'oNF72WTOKv4', 'EBAaxRdlL-0', 'MAm6VTUOIvE', '8N2CHjx59Hs',
-      '8owJbGvpPL4', 'xNEBv6Yb4a0', 'wK3vis3c8mI', '0m_lf6nlKvk', 'twM-YQP_XHM', 'ZLBGGY70hAI',
-      'nBCrdDNdXfY', 'JNv0rvMwp0A', '3s1HMuIzGzk', 'sAgjJ5LaG5g', 'Y3e9bKf5hso', '5aQpsBpvs4E',
-      'T3dQFP2a-vM', 'k7oBNKVsQ94', 'hLvk_BFJzKQ', 'efUUUuaMH6c', 'jRMw0aL8kRo', 'nDacyB1EpI8',
-      'fL1xBK5g9p4', 'RQQWoj485JA', 'IE4-kJZvx1s', 'QsCO3of_qjg', '9RbELJ3vE0s', 'v7En1kjQKfA',
-      'ePPg4ORwOUQ', 'ggACAxVsvi4', 'i8apXvt5rg8', '-1JsSKaBI1k', 'DrHA6kAiWcE', 'O9rFKIsjKHk',
-      'mcRHBwJ_3lg', '-vuYvvqFQc4', '6UEhLCK5yeg', 'YxRDcTt23uI', 'nKAFyaQpIeQ', 'G-rKguGyDpE',
-      'u2qjBKAVY5w', 'C9BvoF5Kb0I', 'sIJlEM-f76A', 'pNgsztLEQ6o', 'zmREjF-O180', 'c7HsefGP-hE',
-      'dt9q6lchkPw', '-uvkWchGKxs', 'v9YNXMCG-4g', 'VswqF0V41Js', 'UWSrSyeoin0', 'uxBYyjD-uEI',
-      'FJOJ9_fByF8', 'RY73hvZjil0', 'mBQfj-V9apY', 'vt5hTmNsHXU', 'ZqAIEcCWcr8', 'UqZw1r2bx3s',
-      'yYNYXpDjg1Y', 'geyFx3mCttE', 'z2qdgonzeI0', 'tvN3ijLMeL8', 'P0Sxq0zU2bs', '7v7e_2UTlrE',
-      'C_MWwoyzkgQ', 'dtnULI4HRYg', 'vKA9QjLM0zQ', 'CP41Ml4HRGQ', 'cEXNoC8rBrc', 'LLi0f87F65M',
-      'uxrBdOWd6u0', 'sJtDCEQsKUg', 'PgLwNB3kU1I', '11wN6tqi_Ho', 'efoIolvCJYk', 'AFnwa-gF8l4',
-      'gBci6oYeXlI', '9TEGxXBdkfY', 'fr6Ru3ENEiM', 'RE8hX9wV7NU', 'kaSVE8O09aE', 'dWZ65Bjs2wM',
-      'T-vPL5ojXc0', 'VSz9ZGXi6L4', '3Uwl3rxv6rQ', 'zVXGzkOxTXU', 'pDuB9DsaFmw', 'V3Tz-z5WZqo',
-      'lgE6OHNiF80', '9h-Ag7haN7g', 'uRhA4FRDejU', 'B18wP-VMFHg', 'oYvQ2OPkifU', 'jZCDZf69Ccg',
-      'DGL1SSJBo3s', 'UpNN_3zXtPY', '844lQ-f7MXg', 'Hkp9Ovs0n6o', 'y7LHjd_l8nY'
+      '7iSHPUO5Mf0', 'GXHsqvSyWj4', 'Y0d5WhJr2fw', 'r38agJ_cTNw', 'k3cox6rpRQA', '53dOXGWKn00',
+      'veMYiuzGO1w', 'oNF72WTOKv4', 'EBAaxRdlL-0', 'MAm6VTUOIvE', '8owJbGvpPL4', 'xNEBv6Yb4a0',
+      'wK3vis3c8mI', '0m_lf6nlKvk', 'twM-YQP_XHM', 'ZLBGGY70hAI', 'nBCrdDNdXfY', 'JNv0rvMwp0A',
+      '3s1HMuIzGzk', 'sAgjJ5LaG5g', 'Y3e9bKf5hso', '5aQpsBpvs4E', 'T3dQFP2a-vM', 'k7oBNKVsQ94',
+      'hLvk_BFJzKQ', 'efUUUuaMH6c', 'jRMw0aL8kRo', 'nDacyB1EpI8', 'fL1xBK5g9p4', 'RQQWoj485JA',
+      'IE4-kJZvx1s', 'QsCO3of_qjg', '9RbELJ3vE0s', 'v7En1kjQKfA', 'ePPg4ORwOUQ', 'ggACAxVsvi4',
+      'i8apXvt5rg8', '-1JsSKaBI1k', 'DrHA6kAiWcE', 'O9rFKIsjKHk', 'mcRHBwJ_3lg', '-vuYvvqFQc4',
+      '6UEhLCK5yeg', 'YxRDcTt23uI', 'nKAFyaQpIeQ', 'G-rKguGyDpE', 'u2qjBKAVY5w', 'C9BvoF5Kb0I',
+      'sIJlEM-f76A', 'pNgsztLEQ6o', 'zmREjF-O180', 'c7HsefGP-hE', 'dt9q6lchkPw', '-uvkWchGKxs',
+      'v9YNXMCG-4g', 'VswqF0V41Js', 'UWSrSyeoin0', 'uxBYyjD-uEI', 'FJOJ9_fByF8', 'RY73hvZjil0',
+      'mBQfj-V9apY', 'vt5hTmNsHXU', 'ZqAIEcCWcr8', 'UqZw1r2bx3s', 'yYNYXpDjg1Y', 'geyFx3mCttE',
+      'z2qdgonzeI0', 'tvN3ijLMeL8', 'P0Sxq0zU2bs', '7v7e_2UTlrE', 'C_MWwoyzkgQ', 'dtnULI4HRYg',
+      'vKA9QjLM0zQ', 'CP41Ml4HRGQ', 'cEXNoC8rBrc', 'LLi0f87F65M', 'uxrBdOWd6u0', 'sJtDCEQsKUg',
+      'PgLwNB3kU1I', '11wN6tqi_Ho', 'efoIolvCJYk', 'AFnwa-gF8l4', 'gBci6oYeXlI', '9TEGxXBdkfY',
+      'fr6Ru3ENEiM', 'RE8hX9wV7NU', 'kaSVE8O09aE', 'dWZ65Bjs2wM', 'T-vPL5ojXc0', 'VSz9ZGXi6L4',
+      '3Uwl3rxv6rQ', 'zVXGzkOxTXU', 'pDuB9DsaFmw', 'V3Tz-z5WZqo', 'lgE6OHNiF80', '9h-Ag7haN7g',
+      'uRhA4FRDejU', 'B18wP-VMFHg', 'oYvQ2OPkifU', 'jZCDZf69Ccg', 'DGL1SSJBo3s', 'UpNN_3zXtPY',
+      '844lQ-f7MXg', 'Hkp9Ovs0n6o', 'y7LHjd_l8nY'
     ])
   ) then
-    raise exception 'at least one of these 143 lessons is already in the catalogue';
+    raise exception 'at least one of these 141 lessons is already in the catalogue';
   end if;
 
   for c_row in
@@ -156,7 +156,6 @@ begin
       ('bonding', 14, 'zZp21zmicpo', 'Chemical Bonding — Solubility', 'Chemical Bonding 14 | Solubility | MOT | Class11/JEE | RAFTAAR', 5326, 86),
       ('bonding', 15, 'Rk2hDM9sXmQ', 'Chemical Bonding — Molecular Orbital Theory', 'Chemical Bonding 15 | Molecular Orbital Theory | Class11/JEE | RAFTAAR', 7384, 86),
       ('bonding', 16, '7iSHPUO5Mf0', 'Chemical Bonding — Hydrogen Bonding MOT', 'Chemical Bonding 16 | Hydrogen Bonding MOT | Class11/JEE | RAFTAAR', 7489, 86),
-      ('bonding', 17, '8N2CHjx59Hs', 'Live Practice Session - Periodic Table — Lecture 17', 'Live Practice Session - Periodic Table || Chemical Bonding || Class 11/JEE || RAFTAAR', 6076, 86),
       ('periodicity', 1, 'GXHsqvSyWj4', 'Classification of Elements & Periodicity — Genesis of Periodic Classification', 'Classification of Elements & Periodicity 01 | Genesis of Periodic Classification | Class11/JEE', 7222, 41),
       ('periodicity', 2, 'Y0d5WhJr2fw', 'Classification of Elements & Periodicity — Modern Periodic Table', 'Classification of Elements & Periodicity 02 | Modern Periodic Table | Class11/JEE', 6322, 41),
       ('periodicity', 3, 'r38agJ_cTNw', 'Classification of Elements & Periodicity — Modern Periodic Table — Lecture 3', 'Classification of Elements & Periodicity 03 | Modern Periodic Table | Class11/JEE', 7116, 41),
@@ -166,7 +165,6 @@ begin
       ('periodicity', 7, 'oNF72WTOKv4', 'Classification of Elements & Periodicity — Ionisation Energy', 'Classification of Elements & Periodicity 07 | Ionisation Energy | Electron Affinity | Class11/JEE', 6612, 41),
       ('periodicity', 8, 'EBAaxRdlL-0', 'Classification of Elements & Periodicity — Ionisation Energy — Lecture 8', 'Classification of Elements & Periodicity 08 | Ionisation Energy | Electron Affinity | Class11/JEE', 6457, 41),
       ('periodicity', 9, 'MAm6VTUOIvE', 'Classification of Elements & Periodicity — Electron Affinity', 'Classification of Elements & Periodicity 09 | Electron Affinity | Electronegativity | Class11/JEE', 9324, 41),
-      ('periodicity', 10, '8N2CHjx59Hs', 'Live Practice Session - Periodic Table — Lecture 10', 'Live Practice Session - Periodic Table || Chemical Bonding || Class 11/JEE || RAFTAAR', 6076, 41),
       ('atom', 1, '8owJbGvpPL4', 'Structure Of Atom — Sub Atomic Particles', 'Structure Of Atom 01 | Sub Atomic Particles | Cathode Rays & Anode Rays | Class11/JEE | RAFTAAR', 4568, 37),
       ('atom', 2, 'xNEBv6Yb4a0', 'Structure Of Atom — Thomson''s Atomic Model', 'Structure Of Atom 02 | Thomson''s Atomic Model | Rutherford''s Experiment | Class11/JEE | RAFTAAR', 5394, 37),
       ('atom', 3, 'wK3vis3c8mI', 'Structure Of Atom — Planck''s Quantum Theory', 'Structure Of Atom 03 | Planck''s Quantum Theory | Photoelectric Effect | Class11/JEE | RAFTAAR', 4985, 37),
@@ -295,8 +293,8 @@ begin
     end loop;
   end loop;
 
-  if v_inserted <> 143 then
-    raise exception 'expected 143 lessons, inserted %', v_inserted;
+  if v_inserted <> 141 then
+    raise exception 'expected 141 lessons, inserted %', v_inserted;
   end if;
 
   -- Every lesson must sit on its course's channel and be filed under a goal and
