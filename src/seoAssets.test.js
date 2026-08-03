@@ -26,6 +26,15 @@ describe("production metadata assets", () => {
     expect(robots).toMatch(/Disallow:\s*\/admin/i);
   });
 
+  it("ships an AI-readable site summary for crawlers", () => {
+    const llms = readFileSync(resolve(root, "public/llms.txt"), "utf8");
+    expect(llms).toContain("JEENEETARD");
+    expect(llms).toContain("free, browse-first educational library");
+    expect(llms).toContain("/sitemap.xml");
+    expect(llms).toContain("/admin");
+    expect(llms).toContain("All videos stay on YouTube");
+  });
+
   it("ships a correctly sized social preview image", () => {
     const png = readFileSync(resolve(root, "public/social-preview.png"));
     expect(png.subarray(0, 8).toString("hex")).toBe("89504e470d0a1a0a");

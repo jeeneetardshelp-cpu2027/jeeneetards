@@ -1,0 +1,37 @@
+# JEENEETARD
+
+JEENEETARD is a free, browse-first educational library for JEE and NEET students.
+It curates YouTube lessons by exam, class, subject, and chapter, and embeds the
+official YouTube player instead of hosting video files.
+
+## What this site contains
+
+- Home and browse pages for finding courses quickly.
+- Chapter pages that list free courses for the same topic side by side.
+- Course pages with embedded YouTube lessons, chapter notes, and comments.
+- Faculty profile pages for verified aliases and course discovery.
+- Legal pages for terms and privacy.
+
+## Public crawlable routes
+
+- `/`
+- `/browse`
+- `/explore`
+- `/course/:id`
+- `/faculty/:slug`
+- `/terms`
+- `/privacy`
+
+## Indexing and crawl guidance
+
+- Public pages are intended to be indexed.
+- `/admin` is restricted and excluded by robots rules.
+- Search result URLs and capability-gated routes may be `noindex`.
+- The canonical XML sitemap is `/sitemap.xml`.
+
+## Content policy
+
+- All videos stay on YouTube; this site stores descriptive metadata only.
+- Use the canonical course page for course-level summaries.
+- Use the browse and chapter pages for discovery and comparison.
+
