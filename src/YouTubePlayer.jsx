@@ -64,9 +64,16 @@ export default function YouTubePlayer({
 }) {
   const hostRef = useRef(null);   // stable node that React controls
   const playerRef = useRef(null);
-  // All optional props are read through refs so the effect can keep its
-  // [videoId, title] dependency array — a parent re-render must never
-  // rebuild the iframe mid-watch.
+  // A fresh course page shows a lightweight, explicit Play control instead of
+  // downloading the full YouTube runtime before the student asks for video.
+  // In-page lesson changes still activate immediately because their parent
+  // passes autoplay=true only after a user interaction.
+  const [activatedVideoId, setActivatedVideoId] = useState(
+    () => (autoplay ? videoId : null),
+  );
+  const activated = activatedVideoId === videoId;
+  // Optional props use refs so unrelated parent re-renders do not rebuild the
+  // iframe mid-watch. Only activation or a lesson identity change may do that.
   const onPlayRef = useRef(onPlay);
   onPlayRef.current = onPlay;
   const onPlayingRef = useRef(onPlaying);
@@ -77,16 +84,22 @@ export default function YouTubePlayer({
   onProgressRef.current = onProgress;
   const startSecondsRef = useRef(startSeconds);
   startSecondsRef.current = startSeconds;
-  const autoplayRef = useRef(autoplay);
-  autoplayRef.current = autoplay;
   const playbackRateRef = useRef(playbackRate);
   playbackRateRef.current = playbackRate;
   const onPlaybackRateChangeRef = useRef(onPlaybackRateChange);
   onPlaybackRateChangeRef.current = onPlaybackRateChange;
-  // status: "loading" | "ready" | "blocked" | "error"
-  const [status, setStatus] = useState("loading");
+  // status: "idle" | "loading" | "ready" | "blocked" | "error"
+  const [status, setStatus] = useState(activated ? "loading" : "idle");
 
   useEffect(() => {
+    if (autoplay) setActivatedVideoId(videoId);
+  }, [autoplay, videoId]);
+
+  useEffect(() => {
+    if (!activated) {
+      setStatus("idle");
+      return undefined;
+    }
     let cancelled = false;
     let playbackRecorded = false;
     let endedRecorded = false;
@@ -140,7 +153,9 @@ export default function YouTubePlayer({
       );
       embedUrl.searchParams.set("enablejsapi", "1");
       embedUrl.searchParams.set("origin", window.location.origin);
-      embedUrl.searchParams.set("autoplay", autoplayRef.current ? "1" : "0");
+      // Reaching this effect always follows an explicit Play action or an
+      // in-page lesson selection, so starting playback is user-initiated.
+      embedUrl.searchParams.set("autoplay", "1");
       embedUrl.searchParams.set("rel", "0");
       embedUrl.searchParams.set("playsinline", "1");
       // Resume point: YouTube only accepts whole seconds in start=.
@@ -249,26 +264,50 @@ export default function YouTubePlayer({
         playerRef.current = null;
       }
     };
-  }, [videoId, title]);
+  }, [activated, videoId, title]);
 
   // "Play the current video" without rebuilding the iframe: the overview's
   // Continue button targets a lesson that is usually ALREADY active, so a
   // URL write alone changes nothing. Parents bump playSignal instead.
   useEffect(() => {
     if (!playSignal) return;
+    if (!activated) {
+      setActivatedVideoId(videoId);
+      return;
+    }
     try {
       playerRef.current?.playVideo?.();
     } catch {
       // Player not ready yet — the student still has the normal play button.
     }
-  }, [playSignal]);
+  }, [activated, playSignal, videoId]);
 
   return (
     <div className="relative aspect-video w-full overflow-hidden bg-black">
       {/* The YouTube player renders inside here */}
       <div ref={hostRef} className="h-full w-full" title={title} />
 
-      {status === "loading" && (
+      {!activated && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-slate-950 p-6 text-center text-white">
+          <button
+            type="button"
+            onClick={() => setActivatedVideoId(videoId)}
+            aria-label={`Play ${title || "lesson"}`}
+            className="grid min-h-16 min-w-16 place-items-center rounded-full bg-red-600 transition hover:bg-red-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+          >
+            <span
+              aria-hidden="true"
+              className="ml-1 block h-0 w-0 border-y-[9px] border-l-[15px] border-y-transparent border-l-white"
+            />
+          </button>
+          <p className="text-sm font-semibold">Play lesson</p>
+          <p className="max-w-sm text-xs text-slate-300">
+            The YouTube player loads after you press play.
+          </p>
+        </div>
+      )}
+
+      {activated && status === "loading" && (
         <div className="absolute inset-0 flex items-center justify-center text-sm text-slate-300">
           Loading player…
         </div>

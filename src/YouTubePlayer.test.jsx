@@ -1,4 +1,4 @@
-import { act, cleanup, render, waitFor } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import YouTubePlayer from "./YouTubePlayer.jsx";
 
@@ -41,15 +41,20 @@ afterEach(() => {
 });
 
 describe("YouTube course player", () => {
-  it("never autoplays and reports only the first real PLAYING state", async () => {
+  const activatePlayer = () => fireEvent.click(screen.getByRole("button", { name: /play lesson/i }));
+
+  it("loads YouTube only after Play and reports only the first real PLAYING state", async () => {
     const onPlay = vi.fn();
     render(<YouTubePlayer videoId="dQw4w9WgXcQ" title="Lesson" onPlay={onPlay} />);
 
+    expect(latestOptions).toBeNull();
+    expect(screen.getByText("The YouTube player loads after you press play.")).toBeTruthy();
+    activatePlayer();
     await waitFor(() => expect(latestOptions).toBeTruthy());
     const src = new URL(latestMount.src);
     expect(src.origin).toBe("https://www.youtube-nocookie.com");
     expect(src.pathname).toBe("/embed/dQw4w9WgXcQ");
-    expect(src.searchParams.get("autoplay")).toBe("0");
+    expect(src.searchParams.get("autoplay")).toBe("1");
     expect(src.searchParams.get("playsinline")).toBe("1");
     expect(src.searchParams.get("enablejsapi")).toBe("1");
     expect(src.searchParams.get("origin")).toBe(window.location.origin);
@@ -67,6 +72,7 @@ describe("YouTube course player", () => {
   it("reports onEnded once per watch, re-arming when playback resumes", async () => {
     const onEnded = vi.fn();
     render(<YouTubePlayer videoId="dQw4w9WgXcQ" title="Lesson" onEnded={onEnded} />);
+    activatePlayer();
     await waitFor(() => expect(latestOptions).toBeTruthy());
 
     act(() => latestOptions.events.onStateChange({ data: 1 }));
@@ -90,6 +96,7 @@ describe("YouTube course player", () => {
     render(
       <YouTubePlayer videoId="dQw4w9WgXcQ" title="Lesson" onPlay={onPlay} onPlaying={onPlaying} />,
     );
+    activatePlayer();
     await waitFor(() => expect(latestOptions).toBeTruthy());
 
     act(() => latestOptions.events.onStateChange({ data: 1 }));
@@ -100,14 +107,17 @@ describe("YouTube course player", () => {
     expect(onPlaying).toHaveBeenLastCalledWith({ videoId: "dQw4w9WgXcQ" });
   });
 
-  it("plays the current video when playSignal bumps, without rebuilding the iframe", async () => {
+  it("activates on playSignal and plays later signals without rebuilding the iframe", async () => {
     const { rerender } = render(
       <YouTubePlayer videoId="dQw4w9WgXcQ" title="Lesson" playSignal={0} />,
     );
+    expect(latestOptions).toBeNull();
+    rerender(<YouTubePlayer videoId="dQw4w9WgXcQ" title="Lesson" playSignal={1} />);
     await waitFor(() => expect(latestOptions).toBeTruthy());
+    expect(new URL(latestMount.src).searchParams.get("autoplay")).toBe("1");
     const buildCount = window.YT.Player.mock.calls.length;
 
-    rerender(<YouTubePlayer videoId="dQw4w9WgXcQ" title="Lesson" playSignal={1} />);
+    rerender(<YouTubePlayer videoId="dQw4w9WgXcQ" title="Lesson" playSignal={2} />);
     await waitFor(() => expect(playVideo).toHaveBeenCalledTimes(1));
     expect(window.YT.Player.mock.calls.length).toBe(buildCount);
   });
@@ -119,6 +129,7 @@ describe("YouTube course player", () => {
     const { unmount } = render(
       <YouTubePlayer videoId="dQw4w9WgXcQ" title="Lesson" onProgress={onProgress} />,
     );
+    activatePlayer();
     await waitFor(() => expect(latestOptions).toBeTruthy());
     act(() => latestOptions.events.onStateChange({ data: 1 }));
     expect(onProgress).not.toHaveBeenCalled();
@@ -135,6 +146,7 @@ describe("YouTube course player", () => {
     getCurrentTime.mockReturnValue(42);
     getDuration.mockReturnValue(600);
     render(<YouTubePlayer videoId="dQw4w9WgXcQ" title="Lesson" onProgress={onProgress} />);
+    activatePlayer();
     // Fake timers stall waitFor, so flush the API promise + ready microtask directly.
     await act(async () => {});
     expect(latestOptions).toBeTruthy();
@@ -169,12 +181,13 @@ describe("YouTube course player", () => {
 
   it("puts a floored startSeconds into the embed URL", async () => {
     render(<YouTubePlayer videoId="dQw4w9WgXcQ" title="Lesson" startSeconds={95.7} />);
+    activatePlayer();
     await waitFor(() => expect(latestMount).toBeTruthy());
     const src = new URL(latestMount.src);
     expect(src.searchParams.get("start")).toBe("95");
   });
 
-  it("requests autoplay only when the parent asks for it", async () => {
+  it("activates immediately when the parent requests autoplay", async () => {
     render(<YouTubePlayer videoId="dQw4w9WgXcQ" title="Lesson" autoplay />);
     await waitFor(() => expect(latestMount).toBeTruthy());
     expect(new URL(latestMount.src).searchParams.get("autoplay")).toBe("1");
@@ -182,6 +195,7 @@ describe("YouTube course player", () => {
 
   it("applies the saved playback rate once the player is ready", async () => {
     render(<YouTubePlayer videoId="dQw4w9WgXcQ" title="Lesson" playbackRate={1.5} />);
+    activatePlayer();
     await waitFor(() => expect(setPlaybackRate).toHaveBeenCalledWith(1.5));
     expect(setPlaybackRate).toHaveBeenCalledTimes(1);
   });
@@ -195,6 +209,7 @@ describe("YouTube course player", () => {
         onPlaybackRateChange={onPlaybackRateChange}
       />,
     );
+    activatePlayer();
     await waitFor(() => expect(latestOptions).toBeTruthy());
     act(() => latestOptions.events.onPlaybackRateChange({ data: 2 }));
     expect(onPlaybackRateChange).toHaveBeenCalledWith(2);
