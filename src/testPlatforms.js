@@ -161,6 +161,22 @@ export const TEST_SECTIONS = [
   },
 ];
 
+/** The section behind /tests/:examId, or null so the caller can 404 it. */
+export const findTestSection = (id) =>
+  TEST_SECTIONS.find((s) => s.id === id) ?? null;
+
+/** Free to take = the student reaches the questions without paying. */
+export const isFreeToTake = (resource) => resource.access !== "paid";
+
+/**
+ * True only when EVERY listed source is free to take. Gates the word "Free"
+ * in a page title: an exam whose only option is a paid series must not be
+ * advertised as free, and one where everything is free should say so, since
+ * that is exactly what students search for.
+ */
+export const sectionIsAllFree = (section) =>
+  section.resources.length > 0 && section.resources.every(isFreeToTake);
+
 /** Total number of listed test sources — used for honest page copy. */
 export const totalTestResources = () =>
   TEST_SECTIONS.reduce((sum, s) => sum + s.resources.length, 0);

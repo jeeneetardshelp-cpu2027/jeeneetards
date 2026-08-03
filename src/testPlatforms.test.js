@@ -11,6 +11,7 @@ import {
   ACCESS,
   totalTestResources,
   freeTestResources,
+  sectionIsAllFree,
   linkHost,
 } from "./testPlatforms.js";
 import { renderTestsBody } from "../ogInject.js";
@@ -174,7 +175,16 @@ describe("crawler-readable /tests body", () => {
     const empty = TEST_SECTIONS.filter((s) => !s.resources.length);
     expect(empty.length).toBeGreaterThan(0);
     for (const s of empty) {
-      expect(html).toMatch(new RegExp(`${s.label}: no test source listed yet`));
+      // The label is now a link to the exam's own page, so match on the
+      // statement rather than on "Label: ..." being adjacent text.
+      expect(html).toContain(`>${s.label}</a>: no test source listed yet`);
+    }
+  });
+
+  it("links every exam to its own page, for crawlers that cannot run JS", () => {
+    const html = renderTestsBody({ description: "d" });
+    for (const s of TEST_SECTIONS) {
+      expect(html).toContain(`href="/tests/${s.id}"`);
     }
   });
 
@@ -216,5 +226,51 @@ describe("cost is visible to non-JS crawlers too", () => {
       expect(entry, `${r.provider} not marked Paid`).toContain("Paid");
       expect(entry).not.toMatch(/\bFree\b/);
     }
+  });
+});
+
+// Each exam is its own page so it can own a title, description and canonical.
+// That is the entire point of the split — assert it actually happened.
+describe("/tests/:examId metadata", () => {
+  it("gives every exam a self-canonical URL", () => {
+    for (const s of TEST_SECTIONS) {
+      expect(metadataForLocation(`/tests/${s.id}`, "").canonicalPath).toBe(
+        `/tests/${s.id}`,
+      );
+    }
+  });
+
+  it("gives every exam a distinct title naming that exam", () => {
+    const titles = TEST_SECTIONS.map(
+      (s) => metadataForLocation(`/tests/${s.id}`, "").title,
+    );
+    expect(new Set(titles).size).toBe(titles.length);
+    for (const s of TEST_SECTIONS) {
+      expect(metadataForLocation(`/tests/${s.id}`, "").title).toContain(s.label);
+    }
+  });
+
+  it("only says 'Free' when nothing on that page costs money", () => {
+    for (const s of TEST_SECTIONS) {
+      const { title } = metadataForLocation(`/tests/${s.id}`, "");
+      const hasPaid = s.resources.some((r) => r.access === "paid");
+      if (hasPaid) expect(title, `${s.id}`).not.toMatch(/^Free/);
+      if (sectionIsAllFree(s)) expect(title, `${s.id}`).toMatch(/^Free/);
+    }
+  });
+
+  it("does not ask Google to index an exam with nothing on it", () => {
+    for (const s of TEST_SECTIONS) {
+      const { robots } = metadataForLocation(`/tests/${s.id}`, "");
+      expect(robots, `${s.id}`).toBe(
+        s.resources.length ? "index, follow" : "noindex, follow",
+      );
+    }
+  });
+
+  it("treats an unknown exam as a real 404, not a page", () => {
+    const meta = metadataForLocation("/tests/not-an-exam", "");
+    expect(meta.title).toMatch(/not found/i);
+    expect(meta.robots).toBe("noindex, nofollow");
   });
 });

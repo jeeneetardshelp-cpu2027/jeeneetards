@@ -46,6 +46,7 @@ const Dashboard = lazy(() => import("./Dashboard.jsx"));
 const AdminPanel = lazy(() => import("./AdminPanel.jsx"));
 const CourseVideoPage = lazy(() => import("./CourseVideoPage.jsx"));
 const TestsPage = lazy(() => import("./TestsPage.jsx"));
+const ExamTestsPage = lazy(() => import("./ExamTestsPage.jsx"));
 
 function RouteFallback() {
   return (
@@ -312,6 +313,10 @@ export default function App() {
           {/* A directory of outbound links to free test platforms — no DB
               call, so it needs no release-capability gate. */}
           <Route path="/tests" element={<TestsPage />} />
+          {/* One page per exam, so each can own its title, description and
+              canonical. An unknown :examId renders NotFound, and the edge
+              middleware gives that URL a real HTTP 404 to match. */}
+          <Route path="/tests/:examId" element={<ExamTestsPage />} />
           <Route path="/terms" element={<TermsPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
           <Route path="/reset" element={<PasswordReset />} />
