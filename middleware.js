@@ -14,7 +14,14 @@
 // falls back to next() — the normal shell — so a course page can never break.
 
 import { next } from "@vercel/edge";
-import { courseMeta, injectCourseMeta } from "./ogInject.js";
+import {
+  courseMeta,
+  injectCourseMeta,
+  courseSchemas,
+  injectStructuredData,
+  renderCourseBody,
+  injectRootContent,
+} from "./ogInject.js";
 
 export const config = { matcher: "/course/:id*" };
 
@@ -37,7 +44,9 @@ export default async function middleware(request) {
     try {
       const res = await fetch(
         `${SUPA_URL}/rest/v1/playlists?id=eq.${encodeURIComponent(id)}` +
-          `&select=title,teacher,subjects(name),playlist_videos(count)`,
+          `&select=title,teacher,average_rating,ratings_count,subjects(name)` +
+          `,institutes_channels(name),playlist_videos(count),lessons:playlist_videos(position,videos(title))` +
+          `&lessons.order=position.asc&lessons.limit=60`,
         {
           headers: { apikey: SUPA_KEY, Authorization: `Bearer ${SUPA_KEY}` },
           signal: controller.signal,
@@ -56,7 +65,18 @@ export default async function middleware(request) {
     //    and swap its head tags.
     const shellRes = await fetch(new URL("/index.html", url.origin));
     if (!shellRes.ok) return next();
-    const html = injectCourseMeta(await shellRes.text(), courseMeta(course, id));
+
+    const meta = courseMeta(course, id);
+    const lessons = (course.lessons ?? [])
+      .map((l) => l?.videos?.title)
+      .filter((t) => typeof t === "string" && t.trim());
+
+    // Meta first, then JSON-LD, then the crawler-readable body. Each step is
+    // independent: if one pattern does not match the shell it leaves the HTML
+    // unchanged rather than corrupting it.
+    let html = injectCourseMeta(await shellRes.text(), meta);
+    html = injectStructuredData(html, courseSchemas(course, meta));
+    html = injectRootContent(html, renderCourseBody(course, meta, lessons));
 
     return new Response(html, {
       status: 200,
