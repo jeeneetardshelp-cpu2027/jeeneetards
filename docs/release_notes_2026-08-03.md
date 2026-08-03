@@ -98,3 +98,16 @@ Further mass content work should begin as a new, named import batch. For every
 manifest: confirm it is not already present, run a fresh anonymous dry-run,
 write create-only and one course at a time, verify the approved protected
 fingerprint and exact delta, then stop on reuse, drift, or any new blocker.
+
+## Competishun+ upload-only batch
+
+After this hardening checkpoint, the owner separately approved two reviewed
+source-ID-null imports. `Jahn–Teller Distortion` became JEE course `303` with
+two new videos; `IOQC 2021–2022 Solutions` became Olympiad course `304` with
+three new videos. Both passed fresh source and production dry-runs, guarded
+create-only transactions, exact delta checks, and protected-fingerprint
+verification. See
+[competishun-upload-only-imports-2026-08-03.md](competishun-upload-only-imports-2026-08-03.md).
+Their immediate post-batch snapshot was 294 courses, 3,093 videos, and 3,099
+memberships; later independently executed catalogue batches are not included in
+that snapshot.

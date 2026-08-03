@@ -950,3 +950,21 @@ the exact hash-verified artifact or manifest.
 
 This 3 August release-hardening update performed no database write, migration,
 content import, restore, clone operation, or manual CI dispatch.
+
+## Competishun+ upload-only imports — 3 August 2026
+
+Before the separately approved two-course create-only batch, the signed-in
+production PITR dashboard showed active 7-day retention and latest restore
+availability at `03 Aug 2026, 14:08:32 UTC+05:30`. Both source-ID-null
+transactions passed fresh anonymous dry-runs, exact baseline/reuse guards, and
+post-import verification. They created courses `303` and `304`, five videos,
+and five memberships without reusing or modifying existing catalogue rows.
+
+The immediate post-batch totals were 294 playlists, 3,093 videos, 3,099
+memberships, and 241 chapters. Separate catalogue writers subsequently
+advanced live totals; those later changes are outside this batch. The protected
+original-83 JEE fingerprint remained
+`c742fabf93ff8dd33d6ecd5eb4793db0`; rolling JEE was 168 courses / 1,896
+memberships / `583e60e33ec1ed25f3f237a94e98f185`. Full evidence and artifact hashes
+are recorded in
+[competishun-upload-only-imports-2026-08-03.md](competishun-upload-only-imports-2026-08-03.md).
