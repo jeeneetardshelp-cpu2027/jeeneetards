@@ -13,7 +13,7 @@
 //
 // Both are "nothing is invented" violations — the project's core content rule
 // applied to the student's own data.
-import { act, cleanup, render } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import YouTubePlayer from "./YouTubePlayer.jsx";
 import { mergeRemoteEntry, recordLessonPosition, getLessonPosition } from "./progress.js";
@@ -78,6 +78,7 @@ describe("a lesson that never played is never recorded as progress", () => {
     const { unmount } = render(
       <YouTubePlayer videoId="abc12345678" title="Lesson" onProgress={onProgress} />,
     );
+    fireEvent.click(screen.getByRole("button", { name: /play lesson/i }));
     await flush();
 
     // A genuine playback event.
