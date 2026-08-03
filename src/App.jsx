@@ -45,6 +45,7 @@ const SearchPage = lazy(() => import("./SearchPage.jsx"));
 const Dashboard = lazy(() => import("./Dashboard.jsx"));
 const AdminPanel = lazy(() => import("./AdminPanel.jsx"));
 const CourseVideoPage = lazy(() => import("./CourseVideoPage.jsx"));
+const TestsPage = lazy(() => import("./TestsPage.jsx"));
 
 function RouteFallback() {
   return (
@@ -308,6 +309,9 @@ export default function App() {
             path="/course/:playlistId/chapter/:chapterId"
             element={<CourseVideoPage />}
           />
+          {/* A directory of outbound links to free test platforms — no DB
+              call, so it needs no release-capability gate. */}
+          <Route path="/tests" element={<TestsPage />} />
           <Route path="/terms" element={<TermsPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
           <Route path="/reset" element={<PasswordReset />} />
