@@ -14,7 +14,7 @@
 // falls back to next() — the normal shell — so a course page can never break.
 
 import { next } from "@vercel/edge";
-import { metadataForLocation } from "./src/pageMetadata.js";
+import { metadataForLocation, SITE_NAME } from "./src/pageMetadata.js";
 import {
   courseMeta,
   injectCourseMeta,
@@ -70,7 +70,14 @@ export function isSupportedAppPath(pathname) {
 async function notFoundResponse(url, heading = "Page not found") {
   const shell = await fetch(new URL("/index.html", url.origin));
   if (!shell.ok) return next();
-  const meta = metadataForLocation(url.pathname, url.search);
+  const meta = {
+    ...metadataForLocation(url.pathname, url.search),
+    title: `${heading} | ${SITE_NAME}`,
+    description:
+      "This page does not exist. Browse free courses by exam, class, subject and chapter instead.",
+    robots: "noindex, nofollow",
+    type: "website",
+  };
   let html = injectRouteMeta(await shell.text(), meta);
   html = injectRootContent(html, renderNotFoundBody(url.pathname, heading));
   return htmlResponse(html, 404);
