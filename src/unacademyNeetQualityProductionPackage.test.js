@@ -7,7 +7,7 @@ const sqlPath = "docs/sql/unacademy_neet_first_batch_quality_review_2026-08-03.s
 const readinessPath = "docs/unacademy-neet-quality-first-batch-readiness-2026-08-03.md";
 const sql = readFileSync(sqlPath, "utf8");
 const readiness = readFileSync(readinessPath, "utf8");
-const expectedHash = "768c880f029a30ede6e7013a148ad904677a43b84ed6f54b1d8da145560ff4ca";
+const expectedHash = "6191c696f6ba7e62055390c48d48230417d69410bb2c06f76034e518b19ecc5e";
 
 const seedProductionShape = async () => {
   const pg = new PGlite();
@@ -253,6 +253,11 @@ const seedProductionShape = async () => {
            'full-course', 'hinglish', 'intermediate', 'Teacher ' || n,
            'source-' || n, 1, 1, 1, array['11th'], '11th'
       from generate_series(1, 332) n;
+    insert into public.playlists
+    select n, 'Course ' || n, 'Source ' || n, false, 'pending', 'pending',
+           'full-course', 'hinglish', 'intermediate', 'Teacher ' || n,
+           null, 1, 1, 1, array['11th'], '11th'
+      from generate_series(344, 361) n;
     insert into public.playlists values
       (341,
        'Chemical Bonding',
@@ -273,7 +278,7 @@ const seedProductionShape = async () => {
        'Pradeep Singh', 'PLsgHooHkqhhNoUZC_HaAwe9k_5crRH-Ig', 147, 2, 4,
        array['12th'], '12th');
 
-    insert into public.videos select n, 1 from generate_series(1, 4018) n;
+    insert into public.videos select n, 1 from generate_series(1, 4159) n;
     insert into public.chapters select n from generate_series(1, 245) n;
     insert into public.chapter_class_levels select n from generate_series(1, 92) n;
     insert into public.playlist_learning_goals select n, 1 from generate_series(1, 83) n;
@@ -291,8 +296,8 @@ const seedProductionShape = async () => {
     insert into public.playlist_videos
     select n, 343, n, n - 1337 from generate_series(1338, 1351) n;
     insert into public.playlist_videos
-    select n, 200, 1 + ((n - 1) % 4018), n - 1351
-      from generate_series(1352, 4024) n;
+    select n, 200, 1 + ((n - 1) % 4159), n - 1351
+      from generate_series(1352, 4165) n;
 
     insert into public.teachers
     select n, 'Existing ' || n, 'existing ' || n, 'existing-' || n, true
@@ -364,9 +369,9 @@ describe("Unacademy NEET first-batch quality-review production package", () => {
     const executable = sql.replace(/^\s*--.*$/gm, "");
     expect(executable).not.toMatch(/\b(?:insert|update|delete|alter|drop|truncate)\b\s+(?:into\s+|from\s+)?public\./i);
     for (const fragment of [
-      "count(*) from public.playlists) <> 335",
-      "count(*) from public.videos) <> 4018",
-      "count(*) from public.playlist_videos) <> 4024",
+      "count(*) from public.playlists) <> 353",
+      "count(*) from public.videos) <> 4159",
+      "count(*) from public.playlist_videos) <> 4165",
       "count(*) from public.chapters) <> 245",
       "count(*) from public.chapter_class_levels) <> 92",
       "count(*) from public.teachers) <> 29",
@@ -382,7 +387,7 @@ describe("Unacademy NEET first-batch quality-review production package", () => {
     expect(createHash("sha256").update(sql, "utf8").digest("hex")).toBe(expectedHash);
     expect(readiness).toContain(`SHA-256: \`${expectedHash}\``);
     expect(readiness).toContain("Prepared, not applied");
-    expect(readiness).toContain("separate exact-hash approval");
+    expect(readiness).toMatch(/separate\s+exact-hash approval/);
     expect(readiness).toContain("c742fabf93ff8dd33d6ecd5eb4793db0");
   });
 
@@ -406,9 +411,9 @@ describe("Unacademy NEET first-batch quality-review production package", () => {
            from public.playlists where id in (341,342,343)) as missing
     `);
     expect(result.rows[0]).toEqual({
-      playlists: 335,
-      videos: 4018,
-      memberships: 4024,
+      playlists: 353,
+      videos: 4159,
+      memberships: 4165,
       teacher_links: 133,
       reviews: 3,
       title_statuses: ["approved", "approved", "approved"],

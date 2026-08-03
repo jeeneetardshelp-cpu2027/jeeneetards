@@ -1,10 +1,13 @@
-# Unacademy NEET first-batch quality-review readiness — 3 August 2026
+# Unacademy NEET first-batch quality-review readiness — 4 August 2026
 
 ## Status
 
-Prepared, not applied. Production remains unchanged by this package. Applying
-it requires a fresh signed-in PITR check, a fresh read-only preflight matching
-every pinned guard, and a separate exact-hash approval from the owner.
+Prepared, not applied, with refreshed guards. The previously approved artifact
+correctly stopped after production advanced during its gate; independent
+verification proved that it committed no quality reviews and left all three
+target courses pending. This replacement requires a fresh signed-in PITR check,
+a fresh read-only preflight matching every pinned guard, and a separate
+exact-hash approval from the owner.
 
 ## Reviewed scope
 
@@ -33,7 +36,7 @@ teacher link through the v7 contract, changes the two review statuses to
 Observed while preparing the artifact:
 
 - production marker rows: 0;
-- catalogue: 335 courses / 4,018 videos / 4,024 memberships / 245 chapters;
+- catalogue: 353 courses / 4,159 videos / 4,165 memberships / 245 chapters;
 - chapter-class scopes: 92;
 - faculty registry: 29 teachers / 45 aliases / 30 institute links / 30 subject
   links / 29 learning-goal links / 133 course-teacher links;
@@ -48,14 +51,18 @@ Observed while preparing the artifact:
 - protected original JEE: 83 courses / 1,307 memberships / fingerprint
   `c742fabf93ff8dd33d6ecd5eb4793db0`.
 
-The catalogue advanced by one course and 63 videos/memberships after the prior
-faculty-registry gate. This artifact pins the refreshed values and aborts
-before any review if the live database moves again.
+The stale package gate began from 335 courses / 4,018 videos / 4,024
+memberships, but a separate create-only JEE Wallah batch completed before the
+quality review could be proven. The stop condition fired at 353 / 4,159 / 4,165.
+Two subsequent read-only snapshots matched those refreshed totals; the target
+courses, faculty links, empty review table, and protected original JEE
+fingerprint remained unchanged. This artifact pins the refreshed values and
+aborts before any review if the live database moves again.
 
 ## Artifact
 
 - SQL: `docs/sql/unacademy_neet_first_batch_quality_review_2026-08-03.sql`
-- SHA-256: `768c880f029a30ede6e7013a148ad904677a43b84ed6f54b1d8da145560ff4ca`
+- SHA-256: `6191c696f6ba7e62055390c48d48230417d69410bb2c06f76034e518b19ecc5e`
 - target if separately approved: production project `kezelafqhgqrprpadmlf`;
 - expected catalogue/faculty delta: zero;
 - expected review delta: three playlists change from pending/pending to
@@ -79,10 +86,10 @@ without changing either course status or creating an audit row.
 Final prepared-package checks:
 
 - targeted package rehearsal: 5/5 tests passed;
-- full regression suite: 138 files / 1,371 tests passed;
-- ESLint: passed with zero warnings;
-- production build: passed (335 courses plus six static sitemap routes); the
-  generated live-only sitemap delta was excluded from this package;
+- full regression suite: 139 files / 1,399 tests passed;
+- ESLint: full repository passed with zero warnings;
+- production build: passed (353 courses plus 29 faculty and nine static routes);
+  the generated live-only sitemap delta was excluded from this package;
 - production dependency audit: zero vulnerabilities;
 - high-severity audit gate: passed; one pre-existing moderate PostCSS
   development advisory remains outside this SQL-only package.
@@ -92,4 +99,4 @@ No production SQL, content import, schema migration, clone, restore, or
 
 ## Required approval phrase
 
-`Approve applying Unacademy NEET first-batch quality-review artifact SHA-256 768c880f029a30ede6e7013a148ad904677a43b84ed6f54b1d8da145560ff4ca to production, after a fresh PITR and exact-baseline check; stop on any mismatch; no release push.`
+`Approve applying refreshed Unacademy NEET first-batch quality-review artifact SHA-256 6191c696f6ba7e62055390c48d48230417d69410bb2c06f76034e518b19ecc5e to production, after a fresh PITR and exact-baseline check; stop on any mismatch; no release push.`
