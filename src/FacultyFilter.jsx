@@ -52,7 +52,18 @@ export function FacultyFilter({ params, setParams, scope = {}, onAvailabilityCha
     return <p className={`mt-3 text-sm ${t.muted}`}>{error}</p>;
   }
   if (loading) {
-    return <div className={`mt-3 h-8 w-56 animate-pulse rounded-lg ${t.input}`} />;
+    // The resolved unscoped filter can wrap to several chip rows on a phone.
+    // Reserving only one 32px bar moved the entire course grid by ~210px when
+    // the facets arrived (CLS 0.132 in the mobile Lighthouse trace). A
+    // mid-height placeholder bounds the shift in both directions: a large
+    // filter grows far less, while a sparse/empty scope never collapses from a
+    // full multi-row skeleton.
+    return (
+      <div
+        aria-label="Loading faculty filters"
+        className={`mt-3 h-32 w-full max-w-xl animate-pulse rounded-lg ${t.input}`}
+      />
+    );
   }
   if (facets.length === 0 && !selected) return null;
 

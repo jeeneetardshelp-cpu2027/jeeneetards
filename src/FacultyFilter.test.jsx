@@ -99,6 +99,7 @@ describe("FacultyFilter", () => {
     renderAt();
     expect(screen.queryByText("Taught by")).toBeNull();
     expect(screen.queryByText(/no faculty/i)).toBeNull();
+    expect(screen.getByLabelText("Loading faculty filters").className).toContain("h-32");
   });
 });
 
