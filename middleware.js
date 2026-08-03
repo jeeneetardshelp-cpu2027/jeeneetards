@@ -16,6 +16,8 @@
 import { next } from "@vercel/edge";
 import { metadataForLocation, SITE_NAME } from "./src/pageMetadata.js";
 import { findTestSection } from "./src/testPlatforms.js";
+import { CLASS_LEVELS_BY_GOAL } from "./src/classLevels.js";
+import { canonicalBrowseUrl } from "./src/canonicalUrl.js";
 import {
   courseMeta,
   injectCourseMeta,
@@ -23,6 +25,10 @@ import {
   courseSchemas,
   injectStructuredData,
   renderCourseBody,
+  facultySchemas,
+  renderFacultyBody,
+  exploreSchemas,
+  renderExploreBody,
   injectRootContent,
   landingSchemas,
   renderLandingBody,
@@ -68,10 +74,200 @@ export function isSupportedAppPath(pathname) {
   if (path.startsWith("/tests/")) {
     return Boolean(findTestSection(path.slice("/tests/".length)));
   }
-  if (/^\/explore(?:\/[^/]+){1,5}$/.test(path)) return true;
+  if (path.startsWith("/explore/")) return Boolean(parseExplorePath(path));
   if (/^\/faculty\/[^/]+$/.test(path)) return true;
   if (/^\/chapter\/\d+$/.test(path)) return true;
   return /^\/course\/\d+(?:\/chapter\/\d+)?$/.test(path);
+}
+
+export function parseExplorePath(pathname) {
+  const path = pathname.length > 1 ? pathname.replace(/\/+$/, "") : pathname;
+  const raw = path.split("/").filter(Boolean);
+  if (raw[0] !== "explore" || raw.length < 2) return null;
+  let parts;
+  try {
+    parts = raw.slice(1).map((part) => decodeURIComponent(part));
+  } catch {
+    return null;
+  }
+  if (parts.some((part) => !part || /[\\/]/.test(part))) return null;
+  const [goal, s1, s2, s3, s4] = parts;
+  const isSchool = goal === "school";
+  if ((!isSchool && parts.length > 4) || (isSchool && parts.length > 5)) return null;
+  return {
+    goal,
+    isSchool,
+    board: isSchool ? s1 : null,
+    cls: isSchool ? s2 : s1,
+    subject: isSchool ? s3 : s2,
+    chapter: isSchool ? s4 : s3,
+  };
+}
+
+const explorePath = (...parts) => `/explore/${parts.filter(Boolean).join("/")}`;
+
+function redirectResponse(url, path) {
+  return new Response(null, {
+    status: 308,
+    headers: {
+      location: new URL(path, url.origin).href,
+      "cache-control": "public, max-age=0, s-maxage=3600",
+    },
+  });
+}
+
+async function edgeJson(url, options = {}) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), LOOKUP_TIMEOUT_MS);
+  try {
+    const response = await fetch(url, { ...options, signal: controller.signal });
+    if (!response.ok) return { confirmed: false, data: null };
+    return { confirmed: true, data: await response.json() };
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+function className(slug) {
+  if (slug === "dropper") return "Dropper";
+  const number = slug?.match(/^class-(\d+)$/)?.[1];
+  return number ? `Class ${number}` : slug;
+}
+
+const GOAL_NAMES = Object.freeze({
+  jee: "JEE",
+  neet: "NEET",
+  olympiad: "Olympiad",
+  school: "School Boards",
+});
+
+async function deepExploreResponse(url, route, supaUrl, supaKey) {
+  const headers = {
+    apikey: supaKey,
+    Authorization: `Bearer ${supaKey}`,
+    "content-type": "application/json",
+  };
+  const curriculum = (args) => edgeJson(
+    `${supaUrl}/rest/v1/rpc/get_browse_curriculum`,
+    { method: "POST", headers, body: JSON.stringify(args) },
+  );
+  const goalName = GOAL_NAMES[route.goal];
+  if (!goalName) return redirectResponse(url, "/explore");
+  const validClasses = CLASS_LEVELS_BY_GOAL[route.goal] ?? [];
+  if (!route.isSchool && route.cls && !validClasses.includes(route.cls)) {
+    return redirectResponse(url, explorePath(route.goal));
+  }
+
+  const boardsPromise = route.isSchool
+    ? edgeJson(
+      `${supaUrl}/rest/v1/boards?select=id,name,slug,display_order,playlist_boards(count)` +
+        "&order=display_order.asc",
+      { headers },
+    )
+    : Promise.resolve({ confirmed: true, data: [] });
+  const classIsValid = !route.cls || validClasses.includes(route.cls);
+  const subjectsPromise = route.cls && classIsValid
+    ? curriculum({ p_goal: route.goal, p_class: route.cls, p_subject: null })
+    : Promise.resolve({ confirmed: true, data: [] });
+  const chaptersPromise = route.subject && classIsValid
+    ? curriculum({ p_goal: route.goal, p_class: route.cls, p_subject: route.subject })
+    : Promise.resolve({ confirmed: true, data: [] });
+
+  const [boardsResult, subjectsResult, chaptersResult] = await Promise.all([
+    boardsPromise,
+    subjectsPromise,
+    chaptersPromise,
+  ]);
+  if (![boardsResult, subjectsResult, chaptersResult]
+    .every((result) => result.confirmed)) return next();
+
+  const boards = Array.isArray(boardsResult.data) ? boardsResult.data : [];
+  const subjects = Array.isArray(subjectsResult.data) ? subjectsResult.data : [];
+  const chapters = Array.isArray(chaptersResult.data) ? chaptersResult.data : [];
+  const goal = { name: goalName, slug: route.goal };
+
+  const goalUrl = explorePath(route.goal);
+  let board = null;
+  if (route.isSchool) {
+    board = route.board ? boards.find((item) => item.slug === route.board) : null;
+    if (route.board && !board) return redirectResponse(url, goalUrl);
+  }
+
+  const scopeUrl = route.isSchool && board
+    ? explorePath(route.goal, board.slug)
+    : goalUrl;
+  if (route.cls && !validClasses.includes(route.cls)) {
+    return redirectResponse(url, scopeUrl);
+  }
+
+  const classUrl = route.cls ? `${scopeUrl}/${route.cls}` : null;
+  const subject = route.subject
+    ? subjects.find((item) => item.slug === route.subject)
+    : null;
+  if (route.subject && !subject) return redirectResponse(url, classUrl ?? scopeUrl);
+
+  const subjectUrl = subject ? `${classUrl}/${subject.slug}` : null;
+  const chapter = route.chapter
+    ? chapters.find((item) => item.slug === route.chapter)
+    : null;
+  if (route.chapter && !chapter) {
+    return redirectResponse(url, subjectUrl ?? classUrl ?? scopeUrl);
+  }
+  if (chapter) {
+    return redirectResponse(url, canonicalBrowseUrl({
+      goal: route.goal,
+      cls: route.cls,
+      board: board?.slug,
+      subject: subject.slug,
+      chapter: chapter.slug,
+    }));
+  }
+
+  const crumbs = [
+    { label: "Explore", url: "/explore" },
+    { label: goal.name, url: goalUrl },
+    board && { label: board.name, url: scopeUrl },
+    route.cls && { label: className(route.cls), url: classUrl },
+    subject && { label: subject.name, url: subjectUrl },
+  ].filter(Boolean);
+  let heading;
+  let options;
+  if (route.isSchool && !board) {
+    heading = "Which board are you on?";
+    options = boards.map((item) => ({
+      name: item.name,
+      url: explorePath(route.goal, item.slug),
+      count: Number(item.playlist_boards?.[0]?.count ?? 0),
+    }));
+  } else if (!route.cls) {
+    heading = "Which stage are you in?";
+    options = validClasses.map((slug) => ({
+      name: className(slug),
+      url: `${scopeUrl}/${slug}`,
+    }));
+  } else if (!subject) {
+    heading = "Choose a subject";
+    options = subjects.map((item) => ({
+      name: item.name,
+      url: `${classUrl}/${item.slug}`,
+      count: Number(item.course_count ?? 0),
+    }));
+  } else {
+    heading = "Choose a chapter";
+    options = chapters.map((item) => ({
+      name: item.name,
+      url: `${subjectUrl}/${item.slug}`,
+      count: Number(item.course_count ?? 0),
+    }));
+  }
+
+  const meta = metadataForLocation(url.pathname, url.search);
+  const shell = await fetch(new URL("/index.html", url.origin));
+  if (!shell.ok) return next();
+  let html = injectRouteMeta(await shell.text(), meta);
+  html = injectStructuredData(html, exploreSchemas(crumbs, options));
+  html = injectRootContent(html, renderExploreBody({ heading, meta, crumbs, options }));
+  return htmlResponse(html);
 }
 
 async function notFoundResponse(url, heading = "Page not found") {
@@ -95,8 +291,17 @@ export default async function middleware(request) {
     const url = new URL(request.url);
     const courseMatch = url.pathname.match(/^\/course\/(\d+)(?:\/chapter\/(\d+))?\/?$/);
     const facultyMatch = url.pathname.match(/^\/faculty\/([^/]+)\/?$/);
+    const exploreRoute = parseExplorePath(url.pathname);
 
     if (!isSupportedAppPath(url.pathname)) return notFoundResponse(url);
+
+    const supaUrl = process.env.VITE_SUPABASE_URL;
+    const supaKey = process.env.VITE_SUPABASE_ANON_KEY;
+
+    if (exploreRoute) {
+      if (!supaUrl || !supaKey) return next();
+      return deepExploreResponse(url, exploreRoute, supaUrl, supaKey);
+    }
 
     // Non-course routes need no DB lookup. metadataForLocation is the SAME
     // function the client uses, so server and client never disagree.
@@ -111,8 +316,6 @@ export default async function middleware(request) {
       return htmlResponse(html);
     }
 
-    const supaUrl = process.env.VITE_SUPABASE_URL;
-    const supaKey = process.env.VITE_SUPABASE_ANON_KEY;
     if (!supaUrl || !supaKey) return next();
 
     if (facultyMatch) {
@@ -151,10 +354,16 @@ export default async function middleware(request) {
 
       const shell = await fetch(new URL("/index.html", url.origin));
       if (!shell.ok) return next();
-      return htmlResponse(injectRouteMeta(
-        await shell.text(),
-        metadataForLocation(url.pathname, url.search),
-      ));
+      const meta = {
+        ...metadataForLocation(url.pathname, url.search),
+        title: `${profile.display_name} faculty profile | ${SITE_NAME}`,
+        description: `Browse verified aliases and free courses taught by ${profile.display_name}.`,
+        canonicalPath: `/faculty/${profile.slug}`,
+      };
+      let html = injectRouteMeta(await shell.text(), meta);
+      html = injectStructuredData(html, facultySchemas(profile, meta));
+      html = injectRootContent(html, renderFacultyBody(profile, meta));
+      return htmlResponse(html);
     }
 
     const id = courseMatch[1];

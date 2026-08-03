@@ -38,6 +38,8 @@ describe("FacultyProfile", () => {
     expect(screen.getByText(/Also known as ABJ Sir/)).toBeDefined();
     expect(screen.queryByText(/A\. Bijarnia/)).toBeNull();
     expect(document.body.textContent).not.toContain("[object Object]");
+    expect(document.head.querySelector('[data-schema-key="Person"]')?.textContent)
+      .toContain('"alternateName":["ABJ Sir"]');
   });
 
   it("links every course to its real course page", () => {

@@ -1,7 +1,11 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import middleware, { config, isSupportedAppPath } from "../middleware.js";
+import middleware, {
+  config,
+  isSupportedAppPath,
+  parseExplorePath,
+} from "../middleware.js";
 
 const shell = readFileSync(resolve(import.meta.dirname, "../index.html"), "utf8");
 
@@ -28,12 +32,36 @@ describe("edge-rendered discovery landings", () => {
 
   it.each([
     "/not-real", "/course/nope", "/course/13/extra", "/faculty/a/b",
-    "/explore/a/b/c/d/e/f", "/chapter/nope",
+    "/explore/a/b/c/d/e/f", "/explore/jee/class-11/physics/kinematics/extra",
+    "/chapter/nope",
     // An invented exam must 404 rather than render an empty exam page —
     // otherwise every typo becomes an indexable soft-404.
     "/tests/not-an-exam", "/tests/jee", "/tests/neet/extra",
   ])("rejects unsupported application path %s", (pathname) => {
     expect(isSupportedAppPath(pathname)).toBe(false);
+  });
+
+  it("parses School board paths without shifting class, subject or chapter", () => {
+    expect(parseExplorePath(
+      "/explore/school/cbse/class-10/science/motion",
+    )).toEqual({
+      goal: "school",
+      isSchool: true,
+      board: "cbse",
+      cls: "class-10",
+      subject: "science",
+      chapter: "motion",
+    });
+    expect(parseExplorePath(
+      "/explore/jee/class-11/physics/kinematics",
+    )).toEqual({
+      goal: "jee",
+      isSchool: false,
+      board: null,
+      cls: "class-11",
+      subject: "physics",
+      chapter: "kinematics",
+    });
   });
 
   // The matcher now inspects EVERY application path, so a route that React
@@ -76,6 +104,10 @@ describe("edge-rendered discovery landings", () => {
       `<link rel="canonical" href="https://www.jeeneetard.com${pathname}" />`,
     );
     expect(html).not.toContain('class="boot"');
+    if (pathname === "/explore") {
+      expect(html).toContain('href="/explore/jee"');
+      expect(html).toContain('href="/explore/neet"');
+    }
   });
 
   it("marks a browse search noindex before JavaScript runs", async () => {
@@ -102,8 +134,26 @@ describe("edge-rendered discovery landings", () => {
     expect(html).toContain('data-schema-key="Organization"');
   });
 
-  it("keeps deep Explore routes head-only until their taxonomy is validated", async () => {
-    vi.stubGlobal("fetch", vi.fn(async () => new Response(shell, { status: 200 })));
+  it("serves validated deep Explore navigation as HTML and structured data", async () => {
+    vi.stubEnv("VITE_SUPABASE_URL", "https://catalog.example");
+    vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
+    vi.stubGlobal("fetch", vi.fn(async (input, init) => {
+      const url = String(input);
+      if (url.includes("/rest/v1/rpc/get_browse_curriculum")) {
+        const args = JSON.parse(init.body);
+        if (args.p_goal == null) {
+          return Response.json([{ entity_id: 1, slug: "jee", name: "JEE", course_count: 80 }]);
+        }
+        if (args.p_subject == null) {
+          return Response.json([{ entity_id: 2, slug: "physics", name: "Physics", course_count: 30 }]);
+        }
+        return Response.json([
+          { entity_id: 3, slug: "kinematics", name: "Kinematics", course_count: 4 },
+          { entity_id: 4, slug: "laws-of-motion", name: "Laws of Motion", course_count: 2 },
+        ]);
+      }
+      return new Response(shell, { status: 200 });
+    }));
 
     const response = await middleware(
       new Request("https://www.jeeneetard.com/explore/jee/class-11/physics"),
@@ -114,8 +164,132 @@ describe("edge-rendered discovery landings", () => {
     expect(html).toContain(
       '<link rel="canonical" href="https://www.jeeneetard.com/explore/jee/class-11/physics" />',
     );
-    expect(html).toContain('class="boot"');
-    expect(html).not.toContain("<h1>");
+    expect(html).toContain("<h1>Choose a chapter</h1>");
+    expect(html).toContain('href="/explore/jee/class-11/physics/kinematics"');
+    expect(html).toContain('data-schema-key="BreadcrumbList"');
+    expect(html).toContain('data-schema-key="ItemList"');
+    expect(html).not.toContain('class="boot"');
+  });
+
+  it("redirects an invalid Explore class to the nearest valid step", async () => {
+    vi.stubEnv("VITE_SUPABASE_URL", "https://catalog.example");
+    vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
+    vi.stubGlobal("fetch", vi.fn(async (input, init) => {
+      if (String(input).includes("/rest/v1/rpc/get_browse_curriculum")) {
+        const args = JSON.parse(init.body);
+        if (args.p_goal == null) {
+          return Response.json([{ entity_id: 1, slug: "jee", name: "JEE", course_count: 80 }]);
+        }
+        return Response.json([]);
+      }
+      return new Response(shell, { status: 200 });
+    }));
+
+    const response = await middleware(
+      new Request("https://www.jeeneetard.com/explore/jee/11/physics"),
+    );
+
+    expect(response.status).toBe(308);
+    expect(response.headers.get("location")).toBe(
+      "https://www.jeeneetard.com/explore/jee",
+    );
+  });
+
+  it("redirects a validated final Explore chapter to canonical browse results", async () => {
+    vi.stubEnv("VITE_SUPABASE_URL", "https://catalog.example");
+    vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
+    vi.stubGlobal("fetch", vi.fn(async (input, init) => {
+      const url = String(input);
+      if (url.includes("/rest/v1/rpc/get_browse_curriculum")) {
+        const args = JSON.parse(init.body);
+        if (args.p_goal == null) {
+          return Response.json([{ entity_id: 1, slug: "jee", name: "JEE", course_count: 80 }]);
+        }
+        if (args.p_subject == null) {
+          return Response.json([{ entity_id: 2, slug: "physics", name: "Physics", course_count: 30 }]);
+        }
+        return Response.json([{ entity_id: 3, slug: "kinematics", name: "Kinematics", course_count: 4 }]);
+      }
+      return new Response(shell, { status: 200 });
+    }));
+
+    const response = await middleware(
+      new Request("https://www.jeeneetard.com/explore/jee/class-11/physics/kinematics"),
+    );
+
+    expect(response.status).toBe(308);
+    expect(response.headers.get("location")).toBe(
+      "https://www.jeeneetard.com/browse?goal=jee&class=11&subject=physics&chapter=kinematics",
+    );
+  });
+
+  it.each([
+    [
+      "/explore/jee/class-11/chemistry",
+      "https://www.jeeneetard.com/explore/jee/class-11",
+    ],
+    [
+      "/explore/jee/class-11/physics/not-a-chapter",
+      "https://www.jeeneetard.com/explore/jee/class-11/physics",
+    ],
+  ])("redirects an unknown Explore selection %s to its real parent", async (path, target) => {
+    vi.stubEnv("VITE_SUPABASE_URL", "https://catalog.example");
+    vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
+    vi.stubGlobal("fetch", vi.fn(async (input, init) => {
+      if (String(input).includes("/rest/v1/rpc/get_browse_curriculum")) {
+        const args = JSON.parse(init.body);
+        return args.p_subject == null
+          ? Response.json([{ entity_id: 2, slug: "physics", name: "Physics", course_count: 30 }])
+          : Response.json([{ entity_id: 3, slug: "kinematics", name: "Kinematics", course_count: 4 }]);
+      }
+      return new Response(shell, { status: 200 });
+    }));
+
+    const response = await middleware(
+      new Request(`https://www.jeeneetard.com${path}`),
+    );
+
+    expect(response.status).toBe(308);
+    expect(response.headers.get("location")).toBe(target);
+  });
+
+  it("serves faculty facts, course links and Person schema before JavaScript", async () => {
+    vi.stubEnv("VITE_SUPABASE_URL", "https://catalog.example");
+    vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
+    vi.stubGlobal("fetch", vi.fn(async (input) => {
+      if (String(input).includes("/rest/v1/rpc/get_faculty_profile")) {
+        return Response.json({
+          id: 1,
+          display_name: "Amit Bijarnia",
+          slug: "amit-bijarnia",
+          verified: true,
+          bio: "Physics educator.",
+          photo_url: "https://example.com/amit.jpg",
+          aliases: [
+            { alias: "ABJ Sir", status: "verified" },
+            { alias: "A. Bijarnia", status: "proposed" },
+          ],
+          institutes: ["Competishun"],
+          course_count: 1,
+          courses: [{ playlist_id: 5, title: "Kinematics", subject: "Physics", role: "instructor" }],
+        });
+      }
+      return new Response(shell, { status: 200 });
+    }));
+
+    const response = await middleware(
+      new Request("https://www.jeeneetard.com/faculty/amit-bijarnia"),
+    );
+    const html = await response.text();
+
+    expect(response.status).toBe(200);
+    expect(html).toContain("<h1>Amit Bijarnia</h1>");
+    expect(html).toContain("Also known as ABJ Sir");
+    expect(html).not.toContain("A. Bijarnia");
+    expect(html).toContain('href="/course/5"');
+    expect(html).toContain('data-schema-key="Person"');
+    expect(html).toContain('data-schema-key="BreadcrumbList"');
+    expect(html).not.toContain('class="boot"');
   });
 
   it("returns an honest HTTP 404 for an unknown SPA route", async () => {
