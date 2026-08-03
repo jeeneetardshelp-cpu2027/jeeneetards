@@ -249,4 +249,54 @@ describe("one contextual facet call", () => {
       name: "Basic Mathematics for Physics, 0 courses",
     }).getAttribute("aria-pressed")).toBe("true");
   });
+
+  it("keeps the School chapter picker inside its exam and class curriculum", () => {
+    render(
+      <MemoryRouter>
+        <FilterPanel
+          options={{
+            goal: [{ id: 3, value: "school", label: "School Boards" }],
+            subject: [{ id: 3, value: "mathematics", label: "Mathematics" }],
+            chapter: [
+              { id: 66, value: "probability", label: "Probability" },
+              { id: 131, value: "complex-numbers", label: "Complex Numbers" },
+            ],
+          }}
+          params={new URLSearchParams(
+            "goal=school&class=10&board=cbse&subject=mathematics&chapter=probability",
+          )}
+          onChange={vi.fn()}
+          counts={null}
+          chapterScopeValues={["probability"]}
+        />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByRole("button", { name: "Probability" })).toBeTruthy();
+    expect(screen.queryByText("Complex Numbers")).toBeNull();
+  });
+
+  it("keeps a selected out-of-scope chapter removable while curriculum loads", () => {
+    render(
+      <MemoryRouter>
+        <FilterPanel
+          options={{
+            goal: [{ id: 3, value: "school", label: "School Boards" }],
+            subject: [{ id: 3, value: "mathematics", label: "Mathematics" }],
+            chapter: [
+              { id: 131, value: "complex-numbers", label: "Complex Numbers" },
+            ],
+          }}
+          params={new URLSearchParams(
+            "goal=school&class=10&board=cbse&subject=mathematics&chapter=complex-numbers",
+          )}
+          onChange={vi.fn()}
+          chapterScopeValues={[]}
+        />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByRole("button", { name: "Complex Numbers" })
+      .getAttribute("aria-pressed")).toBe("true");
+  });
 });

@@ -135,11 +135,14 @@ function OptionList({ filter, options, selected, onToggle, counts }) {
  *                 already loaded by the caller. Enum filters supply their own.
  * @param params   URLSearchParams (the single source of truth)
  * @param onChange (nextParams) => void
+ * @param chapterScopeValues null for no extra scope, otherwise the chapter
+ *                           slugs allowed by the current exam/class curriculum
  */
 export default function FilterPanel({
   variant = "sidebar", options = {}, params, onChange,
   loading = false, error = null, onRetry = null,
   counts = null, countsLoading = false,
+  chapterScopeValues = null,
 }) {
   const { t } = useTheme();
   const selectedFor = (f) => {
@@ -159,9 +162,21 @@ export default function FilterPanel({
     : null;
 
   const optionsFor = (filter) => {
-    const raw = filter.kind === "enum"
+    let raw = filter.kind === "enum"
       ? filter.options.map((o) => ({ value: o.id, label: o.label }))
       : options[filter.key] ?? [];
+    // When board/teacher filters suppress the older facet-count RPC, the
+    // dimension table alone is too broad (for example it mixes JEE Maths
+    // chapters into CBSE Class 10 Maths). The guided curriculum RPC supplies
+    // an exam/class-bounded allow-list. Preserve a selected out-of-scope value
+    // so a legacy/shared URL is never trapped and can still be cleared.
+    if (filter.key === "chapter" && chapterScopeValues != null) {
+      const allowed = new Set(chapterScopeValues.map(String));
+      const selected = params.get(filter.param);
+      raw = raw.filter((option) =>
+        String(option.value) === String(selected) || allowed.has(String(option.value))
+      );
+    }
     // Chapters are reference data, so the dimension table can legitimately
     // contain reviewed chapters before any public course uses them. Once the
     // contextual count RPC has settled, omit those dead-end choices. Preserve
