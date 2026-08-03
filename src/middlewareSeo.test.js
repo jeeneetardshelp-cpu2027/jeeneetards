@@ -20,7 +20,7 @@ describe("edge-rendered discovery landings", () => {
   it.each([
     "/", "/browse", "/explore/jee/class-11/physics",
     "/faculty/amit-bijarnia", "/chapter/79", "/course/13",
-    "/course/13/chapter/8", "/terms", "/privacy", "/search",
+    "/course/13/chapter/8", "/terms", "/privacy", "/search", "/tests",
   ])("recognises supported application path %s", (pathname) => {
     expect(isSupportedAppPath(pathname)).toBe(true);
   });
@@ -30,6 +30,26 @@ describe("edge-rendered discovery landings", () => {
     "/explore/a/b/c/d/e/f", "/chapter/nope",
   ])("rejects unsupported application path %s", (pathname) => {
     expect(isSupportedAppPath(pathname)).toBe(false);
+  });
+
+  // The matcher now inspects EVERY application path, so a route that React
+  // knows about but this middleware does not is served a hard 404 and never
+  // reaches React at all. That is invisible in component tests — the route
+  // renders fine in jsdom — and it already shipped once, when /tests was
+  // added to App.jsx but not to STATIC_APP_ROUTES. Read the real router so
+  // adding a route without teaching the edge about it fails here instead.
+  it("supports every static route the router declares", () => {
+    const app = readFileSync(resolve(import.meta.dirname, "./App.jsx"), "utf8");
+    const declared = [...app.matchAll(/<Route\s+path="([^"]+)"/g)]
+      .map((m) => m[1])
+      .filter((p) => !p.includes(":") && p !== "*");
+
+    expect(declared.length).toBeGreaterThan(5); // the parse actually worked
+    for (const pathname of declared) {
+      expect(isSupportedAppPath(pathname), `${pathname} 404s at the edge`).toBe(
+        true,
+      );
+    }
   });
 
   it.each([
