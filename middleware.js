@@ -54,7 +54,7 @@ const LOOKUP_TIMEOUT_MS = 1500;
 
 const STATIC_APP_ROUTES = new Set([
   "/", "/admin", "/browse", "/compare", "/explore", "/privacy",
-  "/reset", "/search", "/terms",
+  "/reset", "/search", "/terms", "/tests",
 ]);
 
 /** Mirrors the route shapes in App.jsx. Resource existence is checked later. */
