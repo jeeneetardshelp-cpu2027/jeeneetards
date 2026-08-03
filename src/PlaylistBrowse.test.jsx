@@ -417,10 +417,21 @@ describe("structured data (course ItemList)", () => {
     return el ? JSON.parse(el.textContent) : null;
   }
 
+  // The schema script is written by an effect that does not necessarily flush
+  // by the time the course cards are queryable, so waiting on the cards is not
+  // enough — wait on the script itself.
+  async function findItemList() {
+    let list = null;
+    await waitFor(() => {
+      list = itemList();
+      expect(list).not.toBeNull();
+    });
+    return list;
+  }
+
   it("numbers the visible course cards from 1 and links to the same href the card uses", async () => {
     renderBrowse({ subject: null, chapter: null, search: "" });
-    await screen.findAllByText("View course");
-    const list = itemList();
+    const list = await findItemList();
     expect(list.itemListElement.map((i) => i.position)).toEqual([1, 2, 3]);
     expect(list.itemListElement[0]).toMatchObject({
       name: "Complete Kinematics",
@@ -430,8 +441,7 @@ describe("structured data (course ItemList)", () => {
 
   it("folds in the real pagination offset — page 3 is numbered 25-27, not 1-3", async () => {
     renderBrowse({ subject: null, chapter: null, search: "" }, "/browse?page=2");
-    await screen.findAllByText("View course");
-    const list = itemList();
+    const list = await findItemList();
     expect(list.itemListElement.map((i) => i.position)).toEqual([
       2 * PAGE_SIZE + 1, 2 * PAGE_SIZE + 2, 2 * PAGE_SIZE + 3,
     ]);

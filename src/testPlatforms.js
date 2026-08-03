@@ -1,5 +1,5 @@
 // =====================================================================
-//  testPlatforms.js — the practice-test directory.
+//  testPlatforms.js — the mock-test directory.
 //
 //  JEENEETARD does not run tests. This is a curated set of OUTBOUND links
 //  to the places that do, grouped by exam so a student can find the right
