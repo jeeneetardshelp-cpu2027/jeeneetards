@@ -145,6 +145,19 @@ describe("renderCourseBody + injectRootContent", () => {
     expect(body).toContain("<li>Lesson one</li>");
     expect(body).toContain("Physics");
     expect(body).toContain("ABJ Sir");
+    expect(body).toContain("<dt>Lessons</dt><dd>10</dd>");
+  });
+
+  it("reports the true course total when the lesson-title preview is capped", () => {
+    const preview = Array.from({ length: 60 }, (_, index) => `Lesson ${index + 1}`);
+    const out = renderCourseBody(
+      { ...course, playlist_videos: [{ count: 75 }] },
+      meta,
+      preview,
+    );
+
+    expect(out).toContain("<dt>Lessons</dt><dd>75</dd>");
+    expect((out.match(/<li>/g) || []).length).toBe(60);
   });
 
   it("escapes lesson titles and course titles", () => {

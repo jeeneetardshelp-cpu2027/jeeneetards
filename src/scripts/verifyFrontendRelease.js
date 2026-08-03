@@ -139,6 +139,7 @@ for (const asset of [
   "dist/social-preview.png",
   "dist/robots.txt",
   "dist/llms.txt",
+  "dist/sitemap.xml",
 ]) {
   if (!exists(asset)) fail(`production build is missing ${asset}`);
   else pass(`production build includes ${asset}`);

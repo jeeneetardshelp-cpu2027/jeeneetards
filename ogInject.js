@@ -122,11 +122,16 @@ export function injectStructuredData(html, schemas = []) {
 /** Plain, factual HTML for a course — what an extractive crawler should read. */
 export function renderCourseBody(course, meta, lessons = []) {
   const t = escapeHtml(course.title);
+  // The edge query intentionally caps the rendered lesson-title preview at
+  // 60 rows, but playlist_videos(count) still carries the true course total.
+  // Report that total instead of making a 75-lesson course look like it has
+  // only the 60 titles included in the crawler-readable preview.
+  const totalLessons = Number(course.playlist_videos?.[0]?.count ?? lessons.length);
   const rows = [
     course.subjects?.name ? ["Subject", course.subjects.name] : null,
     course.teacher ? ["Teacher", course.teacher] : null,
     course.institutes_channels?.name ? ["Channel", course.institutes_channels.name] : null,
-    lessons.length ? ["Lessons", String(lessons.length)] : null,
+    totalLessons > 0 ? ["Lessons", String(totalLessons)] : null,
   ].filter(Boolean);
 
   const lessonItems = lessons
