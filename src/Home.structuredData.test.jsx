@@ -3,7 +3,7 @@
 // depend on search state, so a static empty deps array is correct and this
 // is the one real thing worth pinning at the wiring layer (the nodes
 // themselves are already covered by structuredData.test.js).
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
 import { describe, expect, it, vi } from "vitest";
 
