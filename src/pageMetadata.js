@@ -131,9 +131,12 @@ export function metadataForLocation(pathname = "/", search = "") {
   if (path === "/tests") {
     return {
       ...base,
-      title: `Free mock tests and previous year papers | ${SITE_NAME}`,
+      // Not "Free mock tests …": the directory now lists a paid series too,
+      // and a title that promises free throughout would be a claim the page
+      // does not keep. The free options are named in the description instead.
+      title: `Mock tests and previous year papers | ${SITE_NAME}`,
       description:
-        "Free mock tests and previous-year papers for JEE Main, JEE Advanced, NEET, Olympiads and the Class 10 and 12 boards, linked to the platforms that run them.",
+        "Free mock tests and previous-year papers for JEE Main, JEE Advanced, NEET, Olympiads and the Class 10 and 12 boards, plus paid test series — each labelled with what it costs, linked to the platform that runs it.",
     };
   }
 

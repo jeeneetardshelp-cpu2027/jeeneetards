@@ -6,7 +6,13 @@
 // it is given. These assertions are the check.
 
 import { describe, it, expect } from "vitest";
-import { TEST_SECTIONS, totalTestResources, linkHost } from "./testPlatforms.js";
+import {
+  TEST_SECTIONS,
+  ACCESS,
+  totalTestResources,
+  freeTestResources,
+  linkHost,
+} from "./testPlatforms.js";
 import { renderTestsBody } from "../ogInject.js";
 import { metadataForLocation } from "./pageMetadata.js";
 
@@ -67,9 +73,38 @@ describe("test resources", () => {
     }
   });
 
-  it("never lists the same URL twice", () => {
-    const urls = allResources.map((r) => r.url);
-    expect(new Set(urls).size, `duplicates in ${urls.join(", ")}`).toBe(urls.length);
+  // Per SECTION, not globally: one platform can legitimately run tests for
+  // several exams (Quizrr covers both JEE Main and JEE Advanced), and listing
+  // it under each is correct. Twice inside one section is the real bug.
+  it("never lists the same URL twice within a section", () => {
+    for (const s of TEST_SECTIONS) {
+      const urls = s.resources.map((r) => r.url);
+      expect(new Set(urls).size, `duplicate in ${s.id}: ${urls.join(", ")}`).toBe(
+        urls.length,
+      );
+    }
+  });
+
+  // The directory lists paid products alongside free ones. The whole safety
+  // of that rests on the badge, so an entry without a valid `access` must
+  // fail here rather than render as an unlabelled card a student reads as free.
+  it("labels every resource with a valid access level", () => {
+    for (const r of allResources) {
+      expect(Object.keys(ACCESS), `${r.url} access`).toContain(r.access);
+    }
+  });
+
+  it("never lets a paid source be described as free", () => {
+    for (const r of allResources.filter((x) => x.access === "paid")) {
+      expect(r.description, `${r.url}`).not.toMatch(/\bfree\b/i);
+      expect(r.name, `${r.url}`).not.toMatch(/\bfree\b/i);
+    }
+  });
+
+  it("counts free sources without counting the paid ones", () => {
+    const paid = allResources.filter((r) => r.access === "paid").length;
+    expect(freeTestResources()).toBe(allResources.length - paid);
+    expect(paid).toBeGreaterThan(0); // the distinction is actually exercised
   });
 
   it("keeps `official` a real boolean claim, not a marketing flag", () => {
@@ -154,5 +189,32 @@ describe("crawler-readable /tests body", () => {
     const html = renderTestsBody({ description: 'a & "b"' });
     expect(html).toContain("a &amp; &quot;b&quot;");
     expect(html).not.toContain('a & "b"');
+  });
+});
+
+describe("cost is visible to non-JS crawlers too", () => {
+  it("puts the access label next to every link in the served HTML", () => {
+    const html = renderTestsBody({ description: "d" });
+    for (const r of TEST_SECTIONS.flatMap((s) => s.resources)) {
+      expect(html).toContain(ACCESS[r.access].label);
+    }
+  });
+
+  it("does not let a model read the paid series as free", () => {
+    const html = renderTestsBody({ description: "d" });
+    const paid = TEST_SECTIONS.flatMap((s) => s.resources).filter(
+      (r) => r.access === "paid",
+    );
+    expect(paid.length).toBeGreaterThan(0);
+    for (const r of paid) {
+      // Locate the paid entry's own list item and assert the label rides
+      // along inside it — string slicing rather than a built regex, so a
+      // provider name containing regex metacharacters cannot break the test.
+      const at = html.indexOf(r.url);
+      expect(at, `${r.url} missing from served HTML`).toBeGreaterThan(-1);
+      const entry = html.slice(at, html.indexOf("</li>", at));
+      expect(entry, `${r.provider} not marked Paid`).toContain("Paid");
+      expect(entry).not.toMatch(/\bFree\b/);
+    }
   });
 });

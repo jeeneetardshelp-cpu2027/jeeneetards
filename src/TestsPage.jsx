@@ -9,18 +9,66 @@
 //
 //  All content comes from testPlatforms.js — add sources there, not here.
 //
+//  Every card carries a cost badge. The directory lists paid products as
+//  well as free ones, and a student must be able to see which is which
+//  before clicking, not after arriving. See the ON COST note in
+//  testPlatforms.js.
+//
 //  Sections with nothing in them still render, with an honest empty
-//  state. Showing "JEE Advanced" with no link is better than hiding the
-//  section: it tells the student we know it is missing, and it is the
-//  same promise-nothing-you-cannot-deliver rule the release flags follow.
+//  state. Showing "NEET" with no link is better than hiding the section:
+//  it tells the student we know it is missing, and it is the same
+//  promise-nothing-you-cannot-deliver rule the release flags follow.
 // =====================================================================
 
 import { ArrowUpRight } from "lucide-react";
 import { GlobalHeader, Container } from "./AppShell.jsx";
 import { useTheme } from "./theme.jsx";
-import { TEST_SECTIONS, totalTestResources, linkHost } from "./testPlatforms.js";
+import {
+  TEST_SECTIONS,
+  ACCESS,
+  totalTestResources,
+  freeTestResources,
+  linkHost,
+} from "./testPlatforms.js";
 
-/** One external test source. The whole card is the link target. */
+/**
+ * The cost badge. Deliberately quiet: a dot plus a word, in the same
+ * hairline-pill language as the rest of the site. "Paid" gets a stronger
+ * border rather than a loud colour — it must be unmissable without looking
+ * like a warning, because a paid series is a legitimate choice, not a trap.
+ */
+function AccessBadge({ access }) {
+  const meta = ACCESS[access];
+  if (!meta) return null;
+  const isPaid = access === "paid";
+  const isFree = access === "free";
+  return (
+    <span
+      title={meta.detail}
+      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[11px] font-medium tracking-wide ${
+        isPaid
+          ? "border-hairline-strong text-ink"
+          : "border-hairline text-ink-2"
+      }`}
+    >
+      <span
+        aria-hidden="true"
+        className={`h-1.5 w-1.5 rounded-full ${
+          isFree ? "bg-accent" : isPaid ? "bg-ink-3" : "bg-ink-3/60"
+        }`}
+      />
+      {meta.label}
+    </span>
+  );
+}
+
+/**
+ * One external test source. The whole card is the link target.
+ *
+ * `hover:shadow-e1` is written out in full rather than built from the theme
+ * token: Tailwind scans source text for class names, so a class assembled at
+ * runtime is never generated and the hover lift would silently do nothing.
+ */
 function ResourceCard({ resource }) {
   const { t } = useTheme();
   const host = linkHost(resource.url);
@@ -30,40 +78,47 @@ function ResourceCard({ resource }) {
         href={resource.url}
         target="_blank"
         rel="noopener noreferrer"
-        className={`group flex h-full flex-col rounded-xl border ${t.border} ${t.card} ${t.cardHover} p-5 transition`}
+        className={`group flex h-full flex-col rounded-xl border ${t.border} ${t.card} ${t.cardHover} p-5 transition hover:shadow-e1`}
       >
         <div className="flex items-start justify-between gap-3">
-          <h3 className={`text-sm font-semibold ${t.text}`}>{resource.name}</h3>
+          <h3 className={`text-sm font-semibold leading-snug ${t.text}`}>
+            {resource.name}
+          </h3>
           <ArrowUpRight
             className={`mt-0.5 h-4 w-4 shrink-0 ${t.faint} transition group-hover:-translate-y-0.5`}
             aria-hidden="true"
           />
         </div>
 
-        <p className={`mt-2 text-sm leading-relaxed ${t.faint}`}>
+        {/* Who runs it, directly under the name — the source is the point. */}
+        <p className={`mt-1 text-xs ${t.muted}`}>{resource.provider}</p>
+
+        <p className={`mt-3 flex-1 text-sm leading-relaxed ${t.faint}`}>
           {resource.description}
         </p>
 
         <div className="mt-4 flex flex-wrap items-center gap-2">
+          <AccessBadge access={resource.access} />
           {resource.official && (
             // Factual, not promotional: this is the body that conducts the
             // exam. testPlatforms.js restricts the flag to exactly that.
-            <span className="inline-flex items-center rounded-sm border border-hairline px-2 py-0.5 text-xs font-medium text-ink-2">
+            <span
+              title="Run by the organisation that conducts the exam"
+              className="inline-flex items-center rounded-full border border-hairline px-2.5 py-0.5 text-[11px] font-medium tracking-wide text-ink-2"
+            >
               Official
             </span>
           )}
-          <span className={`text-xs ${t.muted}`}>{resource.provider}</span>
           {/* Show the destination before the click, not after. */}
-          <span className={`ml-auto text-xs ${t.faint}`}>{host}</span>
+          <span className={`ml-auto text-[11px] ${t.faint}`}>{host}</span>
         </div>
       </a>
     </li>
   );
 }
 
-// Deliberately terse: with five empty sections at launch, a paragraph-long
-// explanation repeated five times reads as filler. The reason we leave them
-// empty is stated once, under the page heading.
+// Deliberately terse: with four empty sections, a paragraph-long explanation
+// repeated four times reads as filler. The reason is stated once, up top.
 function EmptySection({ label }) {
   const { t } = useTheme();
   return (
@@ -97,7 +152,7 @@ function Section({ section }) {
       ) : (
         <ul className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
           {section.resources.map((r) => (
-            <ResourceCard key={r.url} resource={r} />
+            <ResourceCard key={`${section.id}-${r.url}`} resource={r} />
           ))}
         </ul>
       )}
@@ -108,6 +163,7 @@ function Section({ section }) {
 export default function TestsPage() {
   const { t } = useTheme();
   const total = totalTestResources();
+  const free = freeTestResources();
 
   return (
     <div className={`min-h-screen ${t.page} ${t.text}`}>
@@ -116,14 +172,14 @@ export default function TestsPage() {
         <Container>
           <h1 className={`text-2xl font-bold ${t.text}`}>Mock tests</h1>
           <p className={`mt-2 max-w-2xl text-sm leading-relaxed ${t.faint}`}>
-            Free mock tests and previous-year papers, grouped by exam. Every
-            link opens the platform that actually runs the test —{" "}
+            Mock tests and previous-year papers, grouped by exam. Every link
+            opens the platform that actually runs the test —{" "}
             <span className={t.muted}>
               JEENEETARD does not conduct tests or store your marks
             </span>
-            , and is not affiliated with any of these organisations. Sections
-            are listed even when empty, so you can see what is and is not
-            covered yet; a source appears only once its link has been checked.
+            , and is not affiliated with any of these organisations. Each card
+            shows what it costs before you click; sections are listed even when
+            empty, so you can see what is not covered yet.
           </p>
 
           {/* Jump links: six sections is more than fits comfortably above the
@@ -150,10 +206,11 @@ export default function TestsPage() {
           <p className={`mt-12 max-w-2xl text-xs leading-relaxed ${t.faint}`}>
             {total === 0
               ? "No test sources are listed yet."
-              : `${total} test ${total === 1 ? "source" : "sources"} listed.`}{" "}
-            These are third-party websites: their questions, scoring, accounts
-            and privacy practices are their own, and they may change or remove
-            a test at any time. Nothing here is sponsored or paid for.
+              : `${total} test ${total === 1 ? "source" : "sources"} listed, ${free} of them free to take.`}{" "}
+            These are third-party websites: their questions, scoring, pricing,
+            accounts and privacy practices are their own, and they may change or
+            remove a test at any time. Nothing here is sponsored, affiliated or
+            paid for — a paid product is listed on the same terms as a free one.
           </p>
         </Container>
       </main>
