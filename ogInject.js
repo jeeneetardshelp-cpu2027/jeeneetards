@@ -13,7 +13,7 @@ import {
   safeStructuredDataJson,
 } from "./src/structuredData.js";
 // Pure data, no React — safe to pull into the edge runtime.
-import { TEST_SECTIONS } from "./src/testPlatforms.js";
+import { TEST_SECTIONS, ACCESS } from "./src/testPlatforms.js";
 
 const SITE = "https://www.jeeneetard.com";
 
@@ -183,7 +183,10 @@ export function renderTestsBody(meta) {
       .map(
         (r) =>
           `<a href="${escapeHtml(r.url)}" rel="nofollow noopener">${escapeHtml(r.name)}</a>` +
-          ` (${escapeHtml(r.provider)})`,
+          ` (${escapeHtml(r.provider)}` +
+          // The cost travels with the link. A model answering "free JEE mock
+          // test?" from this HTML must not recommend the paid series as free.
+          `${ACCESS[r.access] ? ` — ${escapeHtml(ACCESS[r.access].label)}` : ""})`,
       )
       .join(", ");
     return `<li>${label}: ${links}</li>`;

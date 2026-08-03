@@ -4,28 +4,47 @@
 //  JEENEETARD does not run tests. This is a curated set of OUTBOUND links
 //  to the places that do, grouped by exam so a student can find the right
 //  one without hunting. Same principle as the course library: point at
-//  good free material, host none of it, rank nobody for money.
+//  good material, host none of it, rank nobody for money.
 //
 //  TO ADD A PLATFORM: put an entry in the matching section's `resources`
-//  array. Nothing else needs changing — the page, the section counts and
-//  the empty states are all derived from this file.
+//  array. Nothing else needs changing — the page, the section counts, the
+//  crawler-readable HTML and the empty states all derive from this file.
 //
 //  Every entry must be:
-//    - free to actually take (no paywall between the student and the
-//      questions; "free trial then pay" does not qualify)
 //    - a URL that has been opened and checked, not guessed
 //    - honestly attributed to whoever really runs it
+//    - labelled with what it actually costs (see `access` below)
 //
-//  `official: true` is reserved for the body that conducts the exam
-//  itself (NTA for JEE/NEET, a board, an olympiad organiser). It is a
-//  factual claim shown as a badge — never apply it to a coaching site.
+//  ON COST: the course library is free-only, and this directory started
+//  that way. It no longer is — a paid series can be the better preparation
+//  and students deserve to know it exists. The rule is therefore NOT
+//  "free only", it is "never let a student discover the price after they
+//  arrive". `access` is mandatory and is rendered as a visible badge, so a
+//  paid entry cannot pass as free by omission.
+//
+//  `official: true` is reserved for the body that conducts the exam itself
+//  (NTA for JEE/NEET, a board, an olympiad organiser). It is a factual
+//  claim shown as a badge — never apply it to a coaching or private site.
 // =====================================================================
+
+/**
+ * How much a student has to give up to reach the questions.
+ *   free    — open it and start; no payment, no account
+ *   account — free to take, but a sign-up is required first
+ *   paid    — costs money
+ */
+export const ACCESS = Object.freeze({
+  free: { label: "Free", detail: "No payment or account needed" },
+  account: { label: "Free · sign-up", detail: "Free, but requires an account" },
+  paid: { label: "Paid", detail: "This is a paid product" },
+});
 
 /**
  * @typedef {Object} TestResource
  * @property {string} name        What the student is clicking through to.
  * @property {string} url         Absolute https URL, verified working.
  * @property {string} provider    Who runs it, spelled out.
+ * @property {keyof ACCESS} access What it costs. Mandatory.
  * @property {boolean} [official] True only for the exam-conducting body.
  * @property {string} description One plain sentence: what they'll get.
  */
@@ -36,15 +55,32 @@ export const TEST_SECTIONS = [
     id: "jee-main",
     label: "JEE Main",
     blurb:
-      "Previous-year papers and mock tests in the same computer-based format as the real exam.",
+      "Previous-year papers and full-length mocks in the same computer-based format as the real exam.",
     resources: [
       {
         name: "NTA official quiz and previous year papers",
         url: "https://www.nta.ac.in/Quiz",
         provider: "National Testing Agency (NTA)",
         official: true,
+        access: "free",
         description:
           "The exam conductor's own practice portal, with past JEE Main papers in the actual test interface students will face on exam day.",
+      },
+      {
+        name: "Mockers JEE Main 2027 mock test",
+        url: "https://www.mockers.in/online/jee-main-2027-mock-test",
+        provider: "Mockers",
+        access: "free",
+        description:
+          "Full-length 75-question, 300-mark papers on a 180-minute timer, with the paper openable straight from the page.",
+      },
+      {
+        name: "Quizrr test series",
+        url: "https://quizrr.in",
+        provider: "Quizrr, by MathonGo",
+        access: "paid",
+        description:
+          "A paid JEE test series built on a real-exam interface, with a detailed per-test analysis report and mistake tracking.",
       },
     ],
   },
@@ -53,7 +89,16 @@ export const TEST_SECTIONS = [
     label: "JEE Advanced",
     blurb:
       "Full-length papers for the IIT entrance, where the question style differs sharply from JEE Main.",
-    resources: [],
+    resources: [
+      {
+        name: "Quizrr test series",
+        url: "https://quizrr.in",
+        provider: "Quizrr, by MathonGo",
+        access: "paid",
+        description:
+          "A paid JEE Advanced test series on the same platform, covering the two-paper format the exam actually uses.",
+      },
+    ],
   },
   {
     id: "neet",
@@ -85,6 +130,13 @@ export const TEST_SECTIONS = [
 /** Total number of listed test sources — used for honest page copy. */
 export const totalTestResources = () =>
   TEST_SECTIONS.reduce((sum, s) => sum + s.resources.length, 0);
+
+/** How many listed sources cost nothing to take. Drives the page's summary. */
+export const freeTestResources = () =>
+  TEST_SECTIONS.reduce(
+    (sum, s) => sum + s.resources.filter((r) => r.access !== "paid").length,
+    0,
+  );
 
 /**
  * The bare host shown on a link chip ("nta.ac.in"), so a student can see
