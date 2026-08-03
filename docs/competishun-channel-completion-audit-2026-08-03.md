@@ -117,6 +117,36 @@ or executing production SQL, the owner should approve the exact grouping,
 course titles, goal/class tags, and reuse of attribution decision
 `1c06eb34-fbdc-4d3b-a239-39f256f889e8` for these upload-only sources.
 
+## Video-level review follow-up
+
+The review-ready, non-authorizing evidence is pinned in
+`docs/reviews/competishun-upload-only-candidate-batch-2026-08-03.json` with
+SHA-256
+`62277b6f2378d448f87b1ea7578682b426cfa2c9b4b0f87712b67d8cef1cd850`.
+
+The official YouTube API reconfirmed all five videos as public, embeddable, HD,
+and owned by channel `UC6ieIswHA9WInRsa2r88hRw`. None has captions. A visual
+playback check of `NW0wDF6acgQ` showed a real Competishun classroom lesson with
+`Jahn Teller Distortion` visibly displayed, corroborating the title-based
+chapter assignment.
+
+The source titles credit Riya Ma'am, but the production teacher registry has no
+exact Riya record. The candidate file therefore does not invent or create a
+named teacher: it retains Competishun+ channel attribution and requires the
+owner to reaffirm the recorded channel-attribution decision for this exact
+batch.
+
+If later approved and imported sequentially, the projected catalogue counts are:
+
+- after Jahn–Teller Distortion: 293 courses / 3,090 videos / 3,096 memberships /
+  241 chapters;
+- after IOQC 2021–2022 Solutions: 294 courses / 3,093 videos / 3,099
+  memberships / 241 chapters.
+
+Those are projections only. A future writer must reject the transaction unless
+its fresh preflight still starts at the exact current baseline and must record
+the new rolling JEE fingerprint after the JEE course is created.
+
 ## Explicit deferrals
 
 - `BS7D7WAPwVg`, NMR Lecture 3, is a clear continuation of live course 239,
