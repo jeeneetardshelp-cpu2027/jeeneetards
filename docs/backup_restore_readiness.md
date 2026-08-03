@@ -1015,3 +1015,14 @@ memberships / c742fabf93ff8dd33d6ecd5eb4793db0` after every write. No restore,
 clone, migration, update, delete, or `release` push was performed. Attribution
 evidence for Ashwani Tyagi and Pradeep Singh is bound to owner decision
 `6579f542-da9b-499f-bd46-3aa796ea4f27` in the exact manifests and review record.
+
+The later faculty-registry link gate used final artifact SHA-256
+`ad02e44f160000889d1836dd8e26f234337d3eef60d4febf44d59238bd4f5796`.
+Immediately before that additive-only write, production PITR again showed
+active seven-day retention and latest restore availability at `03 Aug 2026,
+22:58:47 UTC+05:30`. Exact preflight and postflight probes passed. The package
+added two verified teachers, four aliases, two institute links, two subject
+links, two goal links, and three course-teacher links; catalogue totals stayed
+`334 / 3,955 / 3,961 / 245 / 92`, and protected JEE stayed `83 / 1,307 /
+c742fabf93ff8dd33d6ecd5eb4793db0`. No restore, migration, content write, or
+`release` push occurred.

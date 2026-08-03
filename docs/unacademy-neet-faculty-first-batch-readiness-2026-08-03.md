@@ -2,9 +2,9 @@
 
 ## Status
 
-Prepared and locally validated only. The production package has **not** been
-applied. A separate owner approval of the exact SHA-256 is required before any
-database write.
+Applied successfully to production on 3 August 2026. The final approved
+artifact and its complete transaction passed every preflight and postflight
+guard. No further write is authorized by this record.
 
 ## Reviewed evidence
 
@@ -86,6 +86,32 @@ checks exact postconditions, rechecks the protected JEE fingerprint, and
 commits only after every guard passes. It contains no catalogue content import,
 schema migration, release push, or faculty-credit quality-review transition.
 
-## Separate approval phrase
+## Production outcome
+
+Immediately before execution, the signed-in PITR dashboard showed active
+seven-day retention and latest restore availability at 3 August 2026,
+22:58:47 IST. A fresh service-role read-only preflight matched every exact
+artifact guard.
+
+The transaction then committed with the expected additive-only delta:
+
+- teachers: 27 -> 29 (Ashwani Tyagi id 32; Pradeep Singh id 33);
+- aliases: 41 -> 45, including the production-normalized short aliases
+  `ashwani` and `pradeep`;
+- institute links: 28 -> 30, both primary links to Unacademy NEET id 147;
+- subject links: 28 -> 30 (Chemistry for Ashwani Tyagi; Biology for Pradeep
+  Singh);
+- learning-goal links: 27 -> 29, both linked to NEET id 2;
+- course-teacher links: 130 -> 133 for courses 341, 342, and 343.
+
+Catalogue totals remained exactly 334 courses / 3,955 videos / 3,961
+memberships / 245 chapters / 92 chapter-class rows. Protected original JEE
+remained 83 courses / 1,307 memberships with fingerprint
+`c742fabf93ff8dd33d6ecd5eb4793db0`. All three courses remain
+`faculty_credit_status = 'pending'`; moving them to `identified` remains a
+separate in-place quality-review gate. No schema migration, content import,
+restore, clone, or `release` push occurred during the production gate.
+
+## Applied approval phrase
 
 `Approve applying revised Unacademy NEET first-batch faculty registry artifact SHA-256 ad02e44f160000889d1836dd8e26f234337d3eef60d4febf44d59238bd4f5796 to production, after a fresh PITR and exact-baseline check; stop on any mismatch; no release push.`

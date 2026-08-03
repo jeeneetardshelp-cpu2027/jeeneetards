@@ -139,3 +139,10 @@ new chapters. Final catalogue totals were 332 courses, 3,908 videos, 3,914
 memberships, and 245 chapters. Protected JEE remained unchanged at fingerprint
 `c742fabf93ff8dd33d6ecd5eb4793db0`.
 All three public course pages and their first embedded lessons were verified.
+
+The reviewed faculty registry is now linked: Ashwani Tyagi is the instructor
+for Chemical Bonding, and Pradeep Singh is the instructor for Evolution and
+Principles of Inheritance and Variation. The additive registry gate added two
+verified identities, four aliases, and three course links without changing any
+course, video, membership, chapter, or protected JEE row. The courses remain in
+the separate `pending` content-quality state.
