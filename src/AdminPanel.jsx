@@ -18,7 +18,7 @@ import { useTheme } from "./theme.jsx";
 import {
   ACCENT, Labeled, Input, Select, SubmitButton, FormCard, useSubmit,
   throwIfError, ChapterField, resolveChapterId, ClassLevelPicker,
-  CourseMetaFields,
+  CourseMetaFields, slugify,
 } from "./adminUI.jsx";
 import ImportPlaylistForm from "./ImportPlaylistForm.jsx";
 import TeacherPicker from "./TeacherPicker.jsx";
@@ -29,6 +29,8 @@ import FacultyReviewPanel from "./FacultyReviewPanel.jsx";
 import ContentQualityPanel from "./ContentQualityPanel.jsx";
 import { hasAdminAccess } from "./adminAccess.js";
 import ManageCatalogPanel from "./ManageCatalogPanel.jsx";
+
+export { slugify } from "./adminUI.jsx";
 
 // ---------------------------------------------------------------------
 //  Small helpers
@@ -45,15 +47,6 @@ export function extractVideoId(input) {
   if (fromUrl) return fromUrl[1];
   const bare = s.match(/^([A-Za-z0-9_-]{11})(?![A-Za-z0-9_-])/);
   return bare ? bare[1] : "";
-}
-
-// "Laws of Motion" -> "laws-of-motion"   (chapters.slug is NOT NULL)
-export function slugify(name) {
-  return (name ?? "")
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
 }
 
 // YouTube's oEmbed endpoint is free and needs no API key.

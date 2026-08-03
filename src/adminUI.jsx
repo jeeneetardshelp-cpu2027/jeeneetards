@@ -230,12 +230,15 @@ export function buildCourseTitle({ teacher, subject, chapter }) {
   return parts.length ? parts.join(" · ") : "Course";
 }
 
-// "Laws of Motion" -> "laws-of-motion"   (chapters.slug is NOT NULL)
+// Chapter names are not English-only. Preserve letters, numbers, and their
+// combining marks from every script so Hindi and other Unicode titles produce
+// valid, stable slugs instead of collapsing to an empty string.
 export function slugify(name) {
   return (name ?? "")
+    .normalize("NFKC")
     .toLowerCase()
     .trim()
-    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/[^\p{L}\p{N}\p{M}]+/gu, "-")
     .replace(/^-+|-+$/g, "");
 }
 

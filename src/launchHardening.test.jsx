@@ -3,6 +3,7 @@ import { render, screen } from "@testing-library/react";
 import AppErrorBoundary from "./AppErrorBoundary.jsx";
 import { ThemeProvider } from "./theme.jsx";
 import { hasAdminAccess } from "./adminAccess.js";
+import { slugify } from "./adminUI.jsx";
 
 describe("launch hardening", () => {
   afterEach(() => vi.restoreAllMocks());
@@ -12,6 +13,16 @@ describe("launch hardening", () => {
     expect(hasAdminAccess({ is_admin: false })).toBe(false);
     expect(hasAdminAccess({})).toBe(false);
     expect(hasAdminAccess(null)).toBe(false);
+  });
+
+  it("creates stable chapter slugs for ASCII and Unicode names", () => {
+    expect(slugify("Laws of Motion")).toBe("laws-of-motion");
+    expect(slugify("कबीर की साखी")).toBe("कबीर-की-साखी");
+    expect(slugify("मीरा के पद")).toBe("मीरा-के-पद");
+  });
+
+  it("normalizes compatibility variants before generating a chapter slug", () => {
+    expect(slugify("Ｆｕｌｌ Ｗｉｄｔｈ")).toBe("full-width");
   });
 
   it("contains an unexpected render failure and offers recovery", () => {
