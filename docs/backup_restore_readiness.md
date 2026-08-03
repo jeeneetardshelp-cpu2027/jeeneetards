@@ -915,3 +915,38 @@ reference the v11 files (see that file's own header and
 `src/scripts/buildFacultyQualityProductionPackage.js`). The two fixes are
 independent — this addendum covers the restore-lineage document specifically,
 since a restore does not go through that bundle file at all.
+
+## Operational checkpoint — 3 August 2026
+
+The current database and recovery boundary is:
+
+- production remains `youtube` / `kezelafqhgqrprpadmlf`;
+- chapter/class scopes v14 was applied once on 2 August 2026 and its independent
+  postflight passed;
+- the reviewed v14 source SHA-256 is
+  `6334faeae27575df323a0e8b4561fb4fd471985a5e9978cf1f26bd6d0b4f1459`;
+- the pre-write PITR point recorded for that completed operation was
+  `02 Aug 2026 13:31:42 UTC+05:30`;
+- the verified postflight catalogue was 292 playlists, 3,088 videos, 3,094
+  memberships, 241 chapters, 9 subjects, and 90 chapter/class scope rows;
+- the protected original 83-course JEE slice remained at 1,307 memberships with
+  fingerprint `c742fabf93ff8dd33d6ecd5eb4793db0` under the v14 postflight's
+  defined fingerprint query;
+- both historical NEET restore-rehearsal projects were permanently deleted
+  after their evidence was accepted; no restore clone remains active.
+
+See
+[chapter-class-scope-v14-readiness-2026-08-02.md](chapter-class-scope-v14-readiness-2026-08-02.md)
+for the hash-verified apply and postflight evidence. The older fingerprints and
+restore points elsewhere in this document are historical gate records. They
+must not be substituted for the exact query, baseline, and fresh restore point
+required by a future change.
+
+Do not rerun v13 or v14, start a restore, create a clone, or execute a checked-in
+migration merely because it is present in the repository. Before any future
+production write, re-open the Supabase PITR page, record the then-current latest
+restore point, snapshot the live numerical baseline, and obtain approval for
+the exact hash-verified artifact or manifest.
+
+This 3 August release-hardening update performed no database write, migration,
+content import, restore, clone operation, or manual CI dispatch.
