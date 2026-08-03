@@ -17,10 +17,10 @@ import { dirname, resolve } from "node:path";
 const here = dirname(fileURLToPath(import.meta.url));
 const C = { red: "\x1b[31m", green: "\x1b[32m", yellow: "\x1b[33m", dim: "\x1b[2m", reset: "\x1b[0m" };
 
-// The protected JEE catalogue size. Any import that moves this has touched data
-// it must not have. (The full JEE fingerprint is checked by the import tooling;
-// this is the cheap independent guard.)
-const JEE_COURSES = 83;
+// The JEE catalogue size is NOT hard-coded: it grows as JEE content is added
+// (83 at the NEET launch, 178 by 3 Aug 2026), so a fixed number becomes a false
+// alarm. Pass --jee-baseline <n> (the count from immediately BEFORE this import)
+// to assert it was untouched; otherwise the count is reported, not asserted.
 
 function loadEnv() {
   const env = { ...process.env };
@@ -43,6 +43,7 @@ function parseArgs(argv) {
     else if (k === "--board") a.board = argv[++i];
     else if (k === "--class") a.klass = argv[++i];
     else if (k === "--min-avg-minutes") a.minAvg = Number(argv[++i]);
+    else if (k === "--jee-baseline") a.jeeBaseline = Number(argv[++i]);
   }
   return a;
 }
@@ -139,7 +140,12 @@ async function main() {
   // --- protected JEE catalogue -----------------------------------------
   const jee = await q("playlists?select=id,playlist_learning_goals!inner(learning_goals!inner(slug))" +
     "&playlist_learning_goals.learning_goals.slug=eq.jee&limit=2000");
-  check(jee.length === JEE_COURSES, `JEE still ${JEE_COURSES} courses`, `got ${jee.length}`);
+  if (args.jeeBaseline != null) {
+    check(jee.length === args.jeeBaseline,
+      `JEE still ${args.jeeBaseline} courses (untouched by this import)`, `got ${jee.length}`);
+  } else {
+    console.log(`  ${C.dim}JEE courses: ${jee.length} (not asserted — pass --jee-baseline <n> to check)${C.reset}`);
+  }
 
   const failed = results.filter((r) => !r).length;
   console.log(`\n${failed ? C.red : C.green}${results.length - failed}/${results.length} checks passed${C.reset}\n`);
