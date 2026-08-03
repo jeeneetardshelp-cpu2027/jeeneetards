@@ -248,9 +248,11 @@ export function renderExamTestsBody(section, meta) {
     `<nav aria-label="Breadcrumb"><a href="/">Home</a> › <a href="/tests">Mock tests</a> › <span>${label}</span></nav>`,
     `<h1>${label} mock tests</h1>`,
     `<p>${escapeHtml(meta.description)}</p>`,
+    // No "each link opens the platform…" here: the description already ends
+    // with that sentence, and repeating it verbatim two lines apart is the
+    // kind of duplication a model will quote back as padding.
     "<p>JEENEETARD does not conduct these tests or store marks, and is not" +
-      " affiliated with the organisations listed. Each link opens the platform" +
-      " that runs the test.</p>",
+      " affiliated with the organisations listed.</p>",
     items
       ? `<ul>${items}</ul>`
       : `<p>No ${label} test source is listed yet.</p>`,
