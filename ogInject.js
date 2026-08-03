@@ -66,6 +66,36 @@ export function injectCourseMeta(html, meta) {
     : out.replace(/<title>/, () => `${canonicalTag}\n    <title>`);
 }
 
+/**
+ * Head tags for a NON-course route (/browse, /explore/...). Takes the result of
+ * pageMetadata.metadataForLocation() so the server emits exactly what the
+ * client would compute — one source of truth, no drift.
+ *
+ * Separate from injectCourseMeta on purpose: this one also writes `robots`
+ * (the client marks search views noindex) and takes an already-resolved
+ * canonical path rather than building a course URL.
+ */
+export function injectRouteMeta(html, meta) {
+  if (!meta) return html;
+  const t = escapeHtml(meta.title);
+  const d = escapeHtml(meta.description);
+  const u = escapeHtml(`${SITE}${meta.canonicalPath || "/"}`);
+  const r = escapeHtml(meta.robots || "index, follow");
+  const out = html
+    .replace(/<title>[\s\S]*?<\/title>/, () => `<title>${t}</title>`)
+    .replace(/(<meta name="description" content=")[^"]*(")/, (m, a, z) => `${a}${d}${z}`)
+    .replace(/(<meta name="robots" content=")[^"]*(")/, (m, a, z) => `${a}${r}${z}`)
+    .replace(/(<meta property="og:title" content=")[^"]*(")/, (m, a, z) => `${a}${t}${z}`)
+    .replace(/(<meta property="og:description" content=")[^"]*(")/, (m, a, z) => `${a}${d}${z}`)
+    .replace(/(<meta property="og:url" content=")[^"]*(")/, (m, a, z) => `${a}${u}${z}`)
+    .replace(/(<meta name="twitter:title" content=")[^"]*(")/, (m, a, z) => `${a}${t}${z}`)
+    .replace(/(<meta name="twitter:description" content=")[^"]*(")/, (m, a, z) => `${a}${d}${z}`);
+  const canonicalTag = `<link rel="canonical" href="${u}" />`;
+  return /<link rel="canonical"[^>]*>/.test(out)
+    ? out.replace(/<link rel="canonical"[^>]*>/, () => canonicalTag)
+    : out.replace(/<title>/, () => `${canonicalTag}\n    <title>`);
+}
+
 // ---------------------------------------------------------------------------
 // Structured data + server-rendered content.
 //

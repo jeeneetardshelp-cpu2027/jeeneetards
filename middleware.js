@@ -14,16 +14,33 @@
 // falls back to next() — the normal shell — so a course page can never break.
 
 import { next } from "@vercel/edge";
+import { metadataForLocation } from "./src/pageMetadata.js";
 import {
   courseMeta,
   injectCourseMeta,
+  injectRouteMeta,
   courseSchemas,
   injectStructuredData,
   renderCourseBody,
   injectRootContent,
 } from "./ogInject.js";
 
-export const config = { matcher: "/course/:id*" };
+// /course/:id gets full server-rendered content + JSON-LD. /browse and
+// /explore only get correct <head> tags: without this they inherit the
+// homepage title and carry no canonical, so every catalogue landing page looks
+// like a duplicate of "/" to a crawler.
+export const config = { matcher: ["/course/:id*", "/browse", "/explore/:path*"] };
+
+/** One place for the HTML response shape (CDN caches the rendered variant). */
+function htmlResponse(html) {
+  return new Response(html, {
+    status: 200,
+    headers: {
+      "content-type": "text/html; charset=utf-8",
+      "cache-control": "public, max-age=0, s-maxage=3600, stale-while-revalidate=86400",
+    },
+  });
+}
 
 const SUPA_URL = process.env.VITE_SUPABASE_URL;
 const SUPA_KEY = process.env.VITE_SUPABASE_ANON_KEY;
@@ -33,7 +50,18 @@ export default async function middleware(request) {
   try {
     const url = new URL(request.url);
     const match = url.pathname.match(/^\/course\/(\d+)/);
-    if (!match || !SUPA_URL || !SUPA_KEY) return next();
+
+    // Non-course routes: head tags only, no DB lookup. metadataForLocation is
+    // the SAME function the client uses, so server and client never disagree.
+    if (!match) {
+      const routeMeta = metadataForLocation(url.pathname, url.search);
+      if (!routeMeta) return next();
+      const shell = await fetch(new URL("/index.html", url.origin));
+      if (!shell.ok) return next();
+      return htmlResponse(injectRouteMeta(await shell.text(), routeMeta));
+    }
+
+    if (!SUPA_URL || !SUPA_KEY) return next();
     const id = match[1];
 
     // 1. Look up the course (anon key, public catalogue data) with a hard
@@ -78,14 +106,7 @@ export default async function middleware(request) {
     html = injectStructuredData(html, courseSchemas(course, meta));
     html = injectRootContent(html, renderCourseBody(course, meta, lessons));
 
-    return new Response(html, {
-      status: 200,
-      headers: {
-        "content-type": "text/html; charset=utf-8",
-        // CDN caches the rendered variant; course meta changes rarely.
-        "cache-control": "public, max-age=0, s-maxage=3600, stale-while-revalidate=86400",
-      },
-    });
+    return htmlResponse(html);
   } catch {
     return next(); // never break a course page
   }
