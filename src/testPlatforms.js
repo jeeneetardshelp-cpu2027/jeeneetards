@@ -115,8 +115,30 @@ export const TEST_SECTIONS = [
   {
     id: "neet",
     label: "NEET",
-    blurb: "Practice papers for the medical entrance test.",
-    resources: [],
+    blurb:
+      "Previous-year papers and chapter-wise practice for the medical entrance test.",
+    resources: [
+      {
+        // NTA conducts NEET as well as JEE, so the same portal is correctly
+        // listed under both exams. The per-section dedup rule allows this;
+        // only a repeat inside ONE section is a bug.
+        name: "NTA official quiz and previous year papers",
+        url: "https://www.nta.ac.in/Quiz",
+        provider: "National Testing Agency (NTA)",
+        official: true,
+        access: "free",
+        description:
+          "The exam conductor's own practice portal, with past NEET papers in the actual test interface students will face on exam day.",
+      },
+      {
+        name: "ScienceLesson chapter-wise NEET mock tests",
+        url: "https://sciencelesson.in/NEET-Mock-Test/",
+        provider: "ScienceLesson.in",
+        access: "free",
+        description:
+          "Over 1,500 chapter-wise tests across Biology, Physics and Chemistry, with unlimited attempts and no sign-up asked for.",
+      },
+    ],
   },
   {
     id: "olympiad",
