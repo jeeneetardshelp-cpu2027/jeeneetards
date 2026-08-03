@@ -16,7 +16,9 @@ import {
   injectStructuredData,
   renderCourseBody,
   injectRootContent,
+  injectRouteMeta,
 } from "../ogInject.js";
+import { metadataForLocation } from "./pageMetadata.js";
 
 const shell = readFileSync(resolve(import.meta.dirname, "../index.html"), "utf8");
 
@@ -179,5 +181,46 @@ describe("renderCourseBody + injectRootContent", () => {
     expect(injectRootContent("<html><body></body></html>", body))
       .toBe("<html><body></body></html>");
     expect(injectRootContent(shell, "")).toBe(shell);
+  });
+});
+
+describe("injectRouteMeta (non-course routes)", () => {
+  const forPath = (p, s = "") => injectRouteMeta(shell, metadataForLocation(p, s));
+  const titleOf = (h) => h.match(/<title>([^<]*)</)?.[1];
+  const canonOf = (h) => h.match(/rel="canonical" href="([^"]*)"/)?.[1];
+  const robotsOf = (h) => h.match(/name="robots" content="([^"]*)"/)?.[1];
+
+  it("gives /browse its own title and canonical instead of the homepage's", () => {
+    const html = forPath("/browse");
+    expect(titleOf(html)).toBe("Browse free courses | JEENEETARD");
+    expect(canonOf(html)).toBe("https://www.jeeneetard.com/browse");
+    expect(titleOf(html)).not.toBe("JEENEETARD - Free course finder");
+  });
+
+  it("marks a search view noindex so query URLs are not crawl targets", () => {
+    expect(robotsOf(forPath("/browse", "?q=motion"))).toBe("noindex, follow");
+    expect(robotsOf(forPath("/browse"))).toBe("index, follow");
+  });
+
+  it("builds a descriptive title for a deep explore path", () => {
+    const html = forPath("/explore/school/cbse/class-10/science");
+    expect(titleOf(html)).toContain("Science");
+    expect(canonOf(html)).toBe("https://www.jeeneetard.com/explore/school/cbse/class-10/science");
+  });
+
+  it("writes exactly one canonical", () => {
+    expect((forPath("/explore/jee").match(/rel="canonical"/g) || []).length).toBe(1);
+  });
+
+  it("escapes HTML in generated titles", () => {
+    const html = injectRouteMeta(shell, {
+      title: '<img src=x> | JEENEETARD', description: "d", canonicalPath: "/browse", robots: "index, follow",
+    });
+    expect(html).not.toContain("<img src=x>");
+    expect(html).toContain("&lt;img");
+  });
+
+  it("is a no-op without metadata", () => {
+    expect(injectRouteMeta(shell, null)).toBe(shell);
   });
 });
