@@ -1,0 +1,90 @@
+{
+  "version": 1,
+  "request_id": "3abd8594-c6e0-4cb2-8a37-8561fd613990",
+  "youtube_playlist_id": "PLQsNiHo64JI8iVL4u3H_uf4md4p39Dxi8",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "llhOxKHEguo",
+      "chapter": "Gaseous State",
+      "lesson_number": 10
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "_-npI2p6Zaw",
+      "chapter": "Gaseous State",
+      "lesson_number": 9
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "SEpkn14zoJk",
+      "chapter": "Gaseous State",
+      "lesson_number": 8
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "rp0E74AL_ZQ",
+      "chapter": "Gaseous State",
+      "lesson_number": 7
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "APOzpFDlcGM",
+      "chapter": "Gaseous State",
+      "lesson_number": 6
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "73haDE2fmAo",
+      "chapter": "Gaseous State",
+      "lesson_number": 5
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "r2uRWEifoAE",
+      "chapter": "Gaseous State",
+      "lesson_number": 4
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "GnI-_-H3c1k",
+      "chapter": "Gaseous State",
+      "lesson_number": 3
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "jN9f5RuN1B0",
+      "chapter": "Gaseous State",
+      "lesson_number": 2
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "WKBUizR-hg8",
+      "chapter": "Gaseous State",
+      "lesson_number": 1
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "1c06eb34-fbdc-4d3b-a239-39f256f889e8",
+    "youtube_playlist_id": "PLQsNiHo64JI8iVL4u3H_uf4md4p39Dxi8",
+    "teacher": "Competishun+",
+    "reviewed_on": "2026-07-30",
+    "reviewed_by": "Owner",
+    "source_url": "https://www.youtube.com/@competishun",
+    "source_label": "Official Competishun+ channel",
+    "youtube_video_ids": [
+      "llhOxKHEguo",
+      "_-npI2p6Zaw",
+      "SEpkn14zoJk",
+      "rp0E74AL_ZQ",
+      "APOzpFDlcGM",
+      "73haDE2fmAo",
+      "r2uRWEifoAE",
+      "GnI-_-H3c1k",
+      "jN9f5RuN1B0",
+      "WKBUizR-hg8"
+    ]
+  }
+}

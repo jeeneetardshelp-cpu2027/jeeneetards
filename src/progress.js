@@ -117,7 +117,16 @@ function writeAll(obj) {
 export function recordLessonView({
   playlistId, chapterId, courseTitle, videoId, videoTitle, position, totalLessons,
 }) {
-  if (!isPositiveInteger(playlistId) || !isPositiveInteger(chapterId) || !isVideoId(videoId)) {
+  // chapterId is NOT required to record a watch. A lesson that legitimately
+  // spans several chapters carries chapter_id NULL (the catalogue's own
+  // convention for "no single correct chapter"), and demanding one here meant
+  // such a lesson recorded NOTHING locally — no watched tick, no course entry —
+  // while the sync still pushed watched:true and then overwrote it with
+  // watched:false read back from the local state that was never written.
+  // Only the Continue-watching CARD needs a chapterId, because it builds a
+  // /course/:id/chapter/:id URL — and getContinueWatching already enforces that
+  // via hasCompleteContinueIdentity.
+  if (!isPositiveInteger(playlistId) || !isVideoId(videoId)) {
     return null;
   }
   const all = readAll();
@@ -130,7 +139,12 @@ export function recordLessonView({
 
   const entry = {
     playlistId: Number(playlistId),
-    chapterId: Number(chapterId),
+    // null, never NaN, when this lesson has no single chapter. The
+    // Continue-watching card builds /course/:id/chapter/:chapterId, so it
+    // cannot be rendered for such a lesson — getContinueWatching filters it out
+    // on exactly this field. The watched tick and resume point below are still
+    // recorded, which is the part that actually matters to the student.
+    chapterId: isPositiveInteger(chapterId) ? Number(chapterId) : null,
     courseTitle: courseTitle ?? prev.courseTitle ?? "Course",
     lastVideoId: videoId,
     lastVideoTitle: videoTitle ?? "",

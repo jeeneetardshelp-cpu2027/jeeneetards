@@ -1,0 +1,104 @@
+{
+  "version": 1,
+  "request_id": "3855c22a-3d12-4ac7-bf81-7d650426d256",
+  "youtube_playlist_id": "PLQsNiHo64JI-JuKsH0SfhjK9r01339sAl",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "Jvz6RcR9lpI",
+      "chapter": "Hyperbola",
+      "lesson_number": 12
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "RYEh_cLTF0k",
+      "chapter": "Hyperbola",
+      "lesson_number": 11
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "Bj_MqzhcUlo",
+      "chapter": "Hyperbola",
+      "lesson_number": 10
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "8pwni5LDFA8",
+      "chapter": "Hyperbola",
+      "lesson_number": 9
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "RxEVQWF6LII",
+      "chapter": "Ellipse",
+      "lesson_number": 8
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "5wMGKPSmrHY",
+      "chapter": "Ellipse",
+      "lesson_number": 7
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "uc3GTPalZbY",
+      "chapter": "Ellipse",
+      "lesson_number": 6
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "PCE3VDwe2EE",
+      "chapter": "Ellipse",
+      "lesson_number": 5
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "u4QcWvxmrLM",
+      "chapter": "Parabola",
+      "lesson_number": 4
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "wSoVyCKUkLs",
+      "chapter": "Parabola",
+      "lesson_number": 3
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "0dG3-YVGJ74",
+      "chapter": "Parabola",
+      "lesson_number": 2
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "dcGYeTM_8m0",
+      "chapter": "Parabola",
+      "lesson_number": 1
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "1c06eb34-fbdc-4d3b-a239-39f256f889e8",
+    "youtube_playlist_id": "PLQsNiHo64JI-JuKsH0SfhjK9r01339sAl",
+    "teacher": "Competishun+",
+    "reviewed_on": "2026-07-30",
+    "reviewed_by": "Owner",
+    "source_url": "https://www.youtube.com/@competishun",
+    "source_label": "Official Competishun+ channel",
+    "youtube_video_ids": [
+      "Jvz6RcR9lpI",
+      "RYEh_cLTF0k",
+      "Bj_MqzhcUlo",
+      "8pwni5LDFA8",
+      "RxEVQWF6LII",
+      "5wMGKPSmrHY",
+      "uc3GTPalZbY",
+      "PCE3VDwe2EE",
+      "u4QcWvxmrLM",
+      "wSoVyCKUkLs",
+      "0dG3-YVGJ74",
+      "dcGYeTM_8m0"
+    ]
+  }
+}

@@ -1,0 +1,83 @@
+{
+  "version": 1,
+  "request_id": "2533356e-e73f-4964-8e60-d2fc803ebd68",
+  "youtube_playlist_id": "PLQsNiHo64JI9ZBTlSMajII2RonlswTJfZ",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "S0NL7nUkj_M",
+      "chapter": "Permutations and Combinations",
+      "lesson_number": 9
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "83oKcd7PC70",
+      "chapter": "Permutations and Combinations",
+      "lesson_number": 8
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "wCk6jICir_Q",
+      "chapter": "Permutations and Combinations",
+      "lesson_number": 7
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "RxbB1YFFOpY",
+      "chapter": "Permutations and Combinations",
+      "lesson_number": 6
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "_71DI3MF49Y",
+      "chapter": "Permutations and Combinations",
+      "lesson_number": 5
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "GmPUIGfO9vA",
+      "chapter": "Permutations and Combinations",
+      "lesson_number": 4
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "di1JChaYwYM",
+      "chapter": "Permutations and Combinations",
+      "lesson_number": 3
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "8lFQGhsuYRU",
+      "chapter": "Permutations and Combinations",
+      "lesson_number": 2
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "alNWL8I70HA",
+      "chapter": "Permutations and Combinations",
+      "lesson_number": 1
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "1c06eb34-fbdc-4d3b-a239-39f256f889e8",
+    "youtube_playlist_id": "PLQsNiHo64JI9ZBTlSMajII2RonlswTJfZ",
+    "teacher": "Competishun+",
+    "reviewed_on": "2026-07-30",
+    "reviewed_by": "Owner",
+    "source_url": "https://www.youtube.com/@competishun",
+    "source_label": "Official Competishun+ channel",
+    "youtube_video_ids": [
+      "S0NL7nUkj_M",
+      "83oKcd7PC70",
+      "wCk6jICir_Q",
+      "RxbB1YFFOpY",
+      "_71DI3MF49Y",
+      "GmPUIGfO9vA",
+      "di1JChaYwYM",
+      "8lFQGhsuYRU",
+      "alNWL8I70HA"
+    ]
+  }
+}

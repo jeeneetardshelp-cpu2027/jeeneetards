@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "request_id": "f4cc3d85-41f4-483c-995c-03e565f037ec",
+  "youtube_playlist_id": "PLQsNiHo64JI-q_azLzpsU0UwhW8YJb4_x",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "_vxkdJPeTNI",
+      "chapter": "P-Block Elements: Groups 13 and 14",
+      "lesson_number": 3
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "nLMsUSiEbYY",
+      "chapter": "P-Block Elements: Groups 13 and 14",
+      "lesson_number": 2
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "Uw5vnLvl6Pw",
+      "chapter": "P-Block Elements: Groups 13 and 14",
+      "lesson_number": 1
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "1c06eb34-fbdc-4d3b-a239-39f256f889e8",
+    "youtube_playlist_id": "PLQsNiHo64JI-q_azLzpsU0UwhW8YJb4_x",
+    "teacher": "Competishun+",
+    "reviewed_on": "2026-07-30",
+    "reviewed_by": "Owner",
+    "source_url": "https://www.youtube.com/@competishun",
+    "source_label": "Official Competishun+ channel",
+    "youtube_video_ids": [
+      "_vxkdJPeTNI",
+      "nLMsUSiEbYY",
+      "Uw5vnLvl6Pw"
+    ]
+  }
+}

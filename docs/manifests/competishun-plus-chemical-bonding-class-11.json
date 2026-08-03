@@ -1,0 +1,118 @@
+{
+  "version": 1,
+  "request_id": "0d9375d7-d3f7-4c7f-8511-dccbc60bcc14",
+  "youtube_playlist_id": "PLQsNiHo64JI-gfM-x_HNEWK384F7QQSb2",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "MqA9xkI_6W0",
+      "chapter": "Chemical Bonding and Molecular Structure",
+      "lesson_number": 14
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "0abgU_7hJUg",
+      "chapter": "Chemical Bonding and Molecular Structure",
+      "lesson_number": 13
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "FEGjpYmvjtA",
+      "chapter": "Chemical Bonding and Molecular Structure",
+      "lesson_number": 12
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "c6zCbmf7Ebk",
+      "chapter": "Chemical Bonding and Molecular Structure",
+      "lesson_number": 11
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "y8xKvKHJh6Y",
+      "chapter": "Chemical Bonding and Molecular Structure",
+      "lesson_number": 10
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "iGAYjBimesw",
+      "chapter": "Chemical Bonding and Molecular Structure",
+      "lesson_number": 9
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "8byJqldNEec",
+      "chapter": "Chemical Bonding and Molecular Structure",
+      "lesson_number": 8
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "7AmMY6xWFi4",
+      "chapter": "Chemical Bonding and Molecular Structure",
+      "lesson_number": 7
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "vhkMIgKS9xQ",
+      "chapter": "Chemical Bonding and Molecular Structure",
+      "lesson_number": 6
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "kuq5JCsxwhI",
+      "chapter": "Chemical Bonding and Molecular Structure",
+      "lesson_number": 5
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "ZCrRrhWZwUY",
+      "chapter": "Chemical Bonding and Molecular Structure",
+      "lesson_number": 4
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "Z7o7pYOk524",
+      "chapter": "Chemical Bonding and Molecular Structure",
+      "lesson_number": 3
+    },
+    {
+      "position": 13,
+      "youtube_video_id": "1BNE7x2tX0U",
+      "chapter": "Chemical Bonding and Molecular Structure",
+      "lesson_number": 2
+    },
+    {
+      "position": 14,
+      "youtube_video_id": "A2o4cF7Semc",
+      "chapter": "Chemical Bonding and Molecular Structure",
+      "lesson_number": 1
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "1c06eb34-fbdc-4d3b-a239-39f256f889e8",
+    "youtube_playlist_id": "PLQsNiHo64JI-gfM-x_HNEWK384F7QQSb2",
+    "teacher": "Competishun+",
+    "reviewed_on": "2026-07-30",
+    "reviewed_by": "Owner",
+    "source_url": "https://www.youtube.com/@competishun",
+    "source_label": "Official Competishun+ channel",
+    "youtube_video_ids": [
+      "MqA9xkI_6W0",
+      "0abgU_7hJUg",
+      "FEGjpYmvjtA",
+      "c6zCbmf7Ebk",
+      "y8xKvKHJh6Y",
+      "iGAYjBimesw",
+      "8byJqldNEec",
+      "7AmMY6xWFi4",
+      "vhkMIgKS9xQ",
+      "kuq5JCsxwhI",
+      "ZCrRrhWZwUY",
+      "Z7o7pYOk524",
+      "1BNE7x2tX0U",
+      "A2o4cF7Semc"
+    ]
+  }
+}

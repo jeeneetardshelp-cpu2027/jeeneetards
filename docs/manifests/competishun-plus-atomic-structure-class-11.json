@@ -1,0 +1,125 @@
+{
+  "version": 1,
+  "request_id": "e3f03f22-f346-4e78-8dca-47a47a8ff72d",
+  "youtube_playlist_id": "PLQsNiHo64JI-JiJ8TqyBKFKDkTCki9HKJ",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "9hb_R6SHodQ",
+      "chapter": "Atomic Structure",
+      "lesson_number": 15
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "1IPFiylW8n0",
+      "chapter": "Atomic Structure",
+      "lesson_number": 14
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "0Gn83ItDJsM",
+      "chapter": "Atomic Structure",
+      "lesson_number": 13
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "L5EcKxRgNT4",
+      "chapter": "Atomic Structure",
+      "lesson_number": 12
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "4Mu8fmbkV5M",
+      "chapter": "Atomic Structure",
+      "lesson_number": 11
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "zGrCKFTFKbw",
+      "chapter": "Atomic Structure",
+      "lesson_number": 10
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "vftUMKNC5y0",
+      "chapter": "Atomic Structure",
+      "lesson_number": 9
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "69mZ07rAIFs",
+      "chapter": "Atomic Structure",
+      "lesson_number": 8
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "KIHyatnPOhQ",
+      "chapter": "Atomic Structure",
+      "lesson_number": 7
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "otPdJS1wLdo",
+      "chapter": "Atomic Structure",
+      "lesson_number": 6
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "a_zixa-4EEM",
+      "chapter": "Atomic Structure",
+      "lesson_number": 5
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "oiO1cMtgcqA",
+      "chapter": "Atomic Structure",
+      "lesson_number": 4
+    },
+    {
+      "position": 13,
+      "youtube_video_id": "BQ20Aijqg7Q",
+      "chapter": "Atomic Structure",
+      "lesson_number": 3
+    },
+    {
+      "position": 14,
+      "youtube_video_id": "b9m0QQ8s8cg",
+      "chapter": "Atomic Structure",
+      "lesson_number": 2
+    },
+    {
+      "position": 15,
+      "youtube_video_id": "DprbgFqOeZ0",
+      "chapter": "Atomic Structure",
+      "lesson_number": 1
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "1c06eb34-fbdc-4d3b-a239-39f256f889e8",
+    "youtube_playlist_id": "PLQsNiHo64JI-JiJ8TqyBKFKDkTCki9HKJ",
+    "teacher": "Competishun+",
+    "reviewed_on": "2026-07-30",
+    "reviewed_by": "Owner",
+    "source_url": "https://www.youtube.com/@competishun",
+    "source_label": "Official Competishun+ channel",
+    "youtube_video_ids": [
+      "9hb_R6SHodQ",
+      "1IPFiylW8n0",
+      "0Gn83ItDJsM",
+      "L5EcKxRgNT4",
+      "4Mu8fmbkV5M",
+      "zGrCKFTFKbw",
+      "vftUMKNC5y0",
+      "69mZ07rAIFs",
+      "KIHyatnPOhQ",
+      "otPdJS1wLdo",
+      "a_zixa-4EEM",
+      "oiO1cMtgcqA",
+      "BQ20Aijqg7Q",
+      "b9m0QQ8s8cg",
+      "DprbgFqOeZ0"
+    ]
+  }
+}

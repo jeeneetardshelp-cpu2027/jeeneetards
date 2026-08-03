@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "request_id": "709ce656-fdac-4d57-98e3-666f24aa2c12",
+  "youtube_playlist_id": "PLQsNiHo64JI-3vFxovw22XxNa0lKwkr12",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "sdh6tTQteCI",
+      "chapter": "Differential Equations",
+      "lesson_number": 4
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "rVDpXcrfnjk",
+      "chapter": "Differential Equations",
+      "lesson_number": 3
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "haHKfoK-2U0",
+      "chapter": "Differential Equations",
+      "lesson_number": 2
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "XWcMoRBzgio",
+      "chapter": "Differential Equations",
+      "lesson_number": 1
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "1c06eb34-fbdc-4d3b-a239-39f256f889e8",
+    "youtube_playlist_id": "PLQsNiHo64JI-3vFxovw22XxNa0lKwkr12",
+    "teacher": "Competishun+",
+    "reviewed_on": "2026-07-30",
+    "reviewed_by": "Owner",
+    "source_url": "https://www.youtube.com/@competishun",
+    "source_label": "Official Competishun+ channel",
+    "youtube_video_ids": [
+      "sdh6tTQteCI",
+      "rVDpXcrfnjk",
+      "haHKfoK-2U0",
+      "XWcMoRBzgio"
+    ]
+  }
+}

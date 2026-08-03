@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "request_id": "0f0f6f72-8ee8-4194-b1dd-73b1536fc591",
+  "youtube_playlist_id": "PLQsNiHo64JI-bdxwW2nWPWsVn8QfpRV8c",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "ZFB79g3kM04",
+      "chapter": "Metallurgy",
+      "lesson_number": 5
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "84VlnPE_1LY",
+      "chapter": "Metallurgy",
+      "lesson_number": 4
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "QgRR09HQ2Ok",
+      "chapter": "Metallurgy",
+      "lesson_number": 3
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "fL0-H-AaIUk",
+      "chapter": "Metallurgy",
+      "lesson_number": 2
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "nVkuzeqgylo",
+      "chapter": "Metallurgy",
+      "lesson_number": 1
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "1c06eb34-fbdc-4d3b-a239-39f256f889e8",
+    "youtube_playlist_id": "PLQsNiHo64JI-bdxwW2nWPWsVn8QfpRV8c",
+    "teacher": "Competishun+",
+    "reviewed_on": "2026-07-30",
+    "reviewed_by": "Owner",
+    "source_url": "https://www.youtube.com/@competishun",
+    "source_label": "Official Competishun+ channel",
+    "youtube_video_ids": [
+      "ZFB79g3kM04",
+      "84VlnPE_1LY",
+      "QgRR09HQ2Ok",
+      "fL0-H-AaIUk",
+      "nVkuzeqgylo"
+    ]
+  }
+}

@@ -1,0 +1,125 @@
+{
+  "version": 1,
+  "request_id": "e27bc56c-8af4-43f0-9941-62e33a5dcf72",
+  "youtube_playlist_id": "PLQsNiHo64JI9-4rd-0v40BhnSIaYcGQCt",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "91IrQDxpA8M",
+      "chapter": "Relations and Functions",
+      "lesson_number": 15
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "cEDbvLHOl6M",
+      "chapter": "Relations and Functions",
+      "lesson_number": 14
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "EyDuCzk44rA",
+      "chapter": "Relations and Functions",
+      "lesson_number": 13
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "t5YfR81xmuw",
+      "chapter": "Relations and Functions",
+      "lesson_number": 12
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "z7rf9OgxV1E",
+      "chapter": "Relations and Functions",
+      "lesson_number": 11
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "kpcXN6apwas",
+      "chapter": "Relations and Functions",
+      "lesson_number": 10
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "AqqlEYPuosI",
+      "chapter": "Relations and Functions",
+      "lesson_number": 9
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "gPI36L2QKso",
+      "chapter": "Relations and Functions",
+      "lesson_number": 8
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "RlFPGoPbcj4",
+      "chapter": "Relations and Functions",
+      "lesson_number": 7
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "TYLikn54TUw",
+      "chapter": "Relations and Functions",
+      "lesson_number": 6
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "tPdCxWnqo9M",
+      "chapter": "Relations and Functions",
+      "lesson_number": 5
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "8yXQeSIQ_Kk",
+      "chapter": "Relations and Functions",
+      "lesson_number": 4
+    },
+    {
+      "position": 13,
+      "youtube_video_id": "f6dFQWXVUEI",
+      "chapter": "Relations and Functions",
+      "lesson_number": 3
+    },
+    {
+      "position": 14,
+      "youtube_video_id": "ukCJnvDvTNI",
+      "chapter": "Relations and Functions",
+      "lesson_number": 2
+    },
+    {
+      "position": 15,
+      "youtube_video_id": "aJlqEkeRhtk",
+      "chapter": "Relations and Functions",
+      "lesson_number": 1
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "1c06eb34-fbdc-4d3b-a239-39f256f889e8",
+    "youtube_playlist_id": "PLQsNiHo64JI9-4rd-0v40BhnSIaYcGQCt",
+    "teacher": "Competishun+",
+    "reviewed_on": "2026-07-30",
+    "reviewed_by": "Owner",
+    "source_url": "https://www.youtube.com/@competishun",
+    "source_label": "Official Competishun+ channel",
+    "youtube_video_ids": [
+      "91IrQDxpA8M",
+      "cEDbvLHOl6M",
+      "EyDuCzk44rA",
+      "t5YfR81xmuw",
+      "z7rf9OgxV1E",
+      "kpcXN6apwas",
+      "AqqlEYPuosI",
+      "gPI36L2QKso",
+      "RlFPGoPbcj4",
+      "TYLikn54TUw",
+      "tPdCxWnqo9M",
+      "8yXQeSIQ_Kk",
+      "f6dFQWXVUEI",
+      "ukCJnvDvTNI",
+      "aJlqEkeRhtk"
+    ]
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "version": 1,
+  "request_id": "f29563a5-e30a-4654-bdb1-9e29cdd9d93f",
+  "youtube_playlist_id": "PLQsNiHo64JI9DGhB0uN7FMjJ9eUbNKzhI",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "g0h0E3sa20Q",
+      "chapter": "Solid State",
+      "lesson_number": 7
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "l6cihQkP5Ug",
+      "chapter": "Solid State",
+      "lesson_number": 6
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "lIyfFNjoVrM",
+      "chapter": "Solid State",
+      "lesson_number": 5
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "JkbDKChlwt0",
+      "chapter": "Solid State",
+      "lesson_number": 4
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "QRFcHX6sf40",
+      "chapter": "Solid State",
+      "lesson_number": 3
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "x3rgdDzr9WM",
+      "chapter": "Solid State",
+      "lesson_number": 2
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "oZ7p0jA-mzc",
+      "chapter": "Solid State",
+      "lesson_number": 1
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "1c06eb34-fbdc-4d3b-a239-39f256f889e8",
+    "youtube_playlist_id": "PLQsNiHo64JI9DGhB0uN7FMjJ9eUbNKzhI",
+    "teacher": "Competishun+",
+    "reviewed_on": "2026-07-30",
+    "reviewed_by": "Owner",
+    "source_url": "https://www.youtube.com/@competishun",
+    "source_label": "Official Competishun+ channel",
+    "youtube_video_ids": [
+      "g0h0E3sa20Q",
+      "l6cihQkP5Ug",
+      "lIyfFNjoVrM",
+      "JkbDKChlwt0",
+      "QRFcHX6sf40",
+      "x3rgdDzr9WM",
+      "oZ7p0jA-mzc"
+    ]
+  }
+}

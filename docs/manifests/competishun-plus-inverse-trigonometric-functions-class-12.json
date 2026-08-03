@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "request_id": "d6e22415-695c-426e-b720-4270cdffebaa",
+  "youtube_playlist_id": "PLQsNiHo64JI_a5RjHkkJhno-mSfsglT2S",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "_xz4JGoouQw",
+      "chapter": "Inverse Trigonometric Functions",
+      "lesson_number": 1
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "364kZIQ7gWo",
+      "chapter": "Inverse Trigonometric Functions",
+      "lesson_number": 3
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "JkqluHVaQd4",
+      "chapter": "Inverse Trigonometric Functions",
+      "lesson_number": 2
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "1c06eb34-fbdc-4d3b-a239-39f256f889e8",
+    "youtube_playlist_id": "PLQsNiHo64JI_a5RjHkkJhno-mSfsglT2S",
+    "teacher": "Competishun+",
+    "reviewed_on": "2026-07-30",
+    "reviewed_by": "Owner",
+    "source_url": "https://www.youtube.com/@competishun",
+    "source_label": "Official Competishun+ channel",
+    "youtube_video_ids": [
+      "_xz4JGoouQw",
+      "364kZIQ7gWo",
+      "JkqluHVaQd4"
+    ]
+  }
+}

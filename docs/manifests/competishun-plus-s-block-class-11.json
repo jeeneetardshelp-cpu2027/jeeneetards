@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "request_id": "dc9809b0-f453-480e-941e-81887bcd3bf8",
+  "youtube_playlist_id": "PLQsNiHo64JI9khVrUQ5IWaEU7ExwYnq4F",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "u4y-FIUWNhI",
+      "chapter": "The s-Block Elements",
+      "lesson_number": 3
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "pCubJpzHloA",
+      "chapter": "The s-Block Elements",
+      "lesson_number": 2
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "3WEXIjtJH8w",
+      "chapter": "The s-Block Elements",
+      "lesson_number": 1
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "1c06eb34-fbdc-4d3b-a239-39f256f889e8",
+    "youtube_playlist_id": "PLQsNiHo64JI9khVrUQ5IWaEU7ExwYnq4F",
+    "teacher": "Competishun+",
+    "reviewed_on": "2026-07-30",
+    "reviewed_by": "Owner",
+    "source_url": "https://www.youtube.com/@competishun",
+    "source_label": "Official Competishun+ channel",
+    "youtube_video_ids": [
+      "u4y-FIUWNhI",
+      "pCubJpzHloA",
+      "3WEXIjtJH8w"
+    ]
+  }
+}

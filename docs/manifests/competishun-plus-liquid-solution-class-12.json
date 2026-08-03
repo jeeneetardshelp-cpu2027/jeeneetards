@@ -1,0 +1,76 @@
+{
+  "version": 1,
+  "request_id": "ef11dfe7-493b-42e6-b3df-b5f1247d7885",
+  "youtube_playlist_id": "PLQsNiHo64JI96dRMrOpG7Yrx1JKR9qO5-",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "nFLF3ughA5Q",
+      "chapter": "Solutions",
+      "lesson_number": 8
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "Hxm0ZnWvmck",
+      "chapter": "Solutions",
+      "lesson_number": 7
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "FgPLcF4z1Pg",
+      "chapter": "Solutions",
+      "lesson_number": 6
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "OuTjz5smXqg",
+      "chapter": "Solutions",
+      "lesson_number": 5
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "zuN5RAthfVg",
+      "chapter": "Solutions",
+      "lesson_number": 4
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "do7CgRFaHYQ",
+      "chapter": "Solutions",
+      "lesson_number": 3
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "Hk9KEzt6xZ4",
+      "chapter": "Solutions",
+      "lesson_number": 2
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "p7_44xvbbPg",
+      "chapter": "Solutions",
+      "lesson_number": 1
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "1c06eb34-fbdc-4d3b-a239-39f256f889e8",
+    "youtube_playlist_id": "PLQsNiHo64JI96dRMrOpG7Yrx1JKR9qO5-",
+    "teacher": "Competishun+",
+    "reviewed_on": "2026-07-30",
+    "reviewed_by": "Owner",
+    "source_url": "https://www.youtube.com/@competishun",
+    "source_label": "Official Competishun+ channel",
+    "youtube_video_ids": [
+      "nFLF3ughA5Q",
+      "Hxm0ZnWvmck",
+      "FgPLcF4z1Pg",
+      "OuTjz5smXqg",
+      "zuN5RAthfVg",
+      "do7CgRFaHYQ",
+      "Hk9KEzt6xZ4",
+      "p7_44xvbbPg"
+    ]
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "version": 1,
+  "request_id": "4a8cf146-00d7-4097-a1eb-39a1a7286ef3",
+  "youtube_playlist_id": "PLQsNiHo64JI8YZudF_1BoFqFU8IBxFM3Y",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "yNvUw5wS0Mk",
+      "chapter": "Thermodynamics",
+      "lesson_number": 7
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "_DSgd29WJNY",
+      "chapter": "Thermodynamics",
+      "lesson_number": 6
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "6A0ESj0qdnw",
+      "chapter": "Thermodynamics",
+      "lesson_number": 5
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "g9qSpv14uFo",
+      "chapter": "Thermodynamics",
+      "lesson_number": 4
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "lBYGrFZCXv8",
+      "chapter": "Thermodynamics",
+      "lesson_number": 3
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "IkH10eS8l0Y",
+      "chapter": "Thermodynamics",
+      "lesson_number": 2
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "kvjI1j2neFc",
+      "chapter": "Thermodynamics",
+      "lesson_number": 1
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "1c06eb34-fbdc-4d3b-a239-39f256f889e8",
+    "youtube_playlist_id": "PLQsNiHo64JI8YZudF_1BoFqFU8IBxFM3Y",
+    "teacher": "Competishun+",
+    "reviewed_on": "2026-07-30",
+    "reviewed_by": "Owner",
+    "source_url": "https://www.youtube.com/@competishun",
+    "source_label": "Official Competishun+ channel",
+    "youtube_video_ids": [
+      "yNvUw5wS0Mk",
+      "_DSgd29WJNY",
+      "6A0ESj0qdnw",
+      "g9qSpv14uFo",
+      "lBYGrFZCXv8",
+      "IkH10eS8l0Y",
+      "kvjI1j2neFc"
+    ]
+  }
+}

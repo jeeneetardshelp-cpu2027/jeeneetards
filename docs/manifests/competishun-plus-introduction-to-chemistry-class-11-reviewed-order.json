@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "request_id": "ea1ca4ee-cb57-4dd9-8d5d-68fb86ef0aa5",
+  "youtube_playlist_id": "PLQsNiHo64JI-kvadwPoA2fGhhk0ZbtDX5",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "4kvD44K2oVE",
+      "chapter": "Introduction to Chemistry",
+      "lesson_number": 3
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "6hYhj-BoKfE",
+      "chapter": "Introduction to Chemistry",
+      "lesson_number": 2
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "gIUnbGHuAHQ",
+      "chapter": "Introduction to Chemistry",
+      "lesson_number": 1
+    }
+  ]
+}

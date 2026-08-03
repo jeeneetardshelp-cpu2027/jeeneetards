@@ -1,0 +1,76 @@
+{
+  "version": 1,
+  "request_id": "359a10bb-072a-4496-80fd-332718095c9a",
+  "youtube_playlist_id": "PLQsNiHo64JI9sIwIANwymkcK4Rs-3JYPA",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "xHRgHSZp11k",
+      "chapter": "Applications of Derivatives",
+      "lesson_number": 8
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "FWulBbqyZqc",
+      "chapter": "Applications of Derivatives",
+      "lesson_number": 7
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "9jbbX2Znnys",
+      "chapter": "Applications of Derivatives",
+      "lesson_number": 6
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "Yw4p7sDcsFY",
+      "chapter": "Applications of Derivatives",
+      "lesson_number": 5
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "32X1BY1qezg",
+      "chapter": "Applications of Derivatives",
+      "lesson_number": 4
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "_HKqHTFqWxQ",
+      "chapter": "Applications of Derivatives",
+      "lesson_number": 3
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "UosC7fRF5Ro",
+      "chapter": "Applications of Derivatives",
+      "lesson_number": 2
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "ZVE9yfPrwtU",
+      "chapter": "Applications of Derivatives",
+      "lesson_number": 1
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "1c06eb34-fbdc-4d3b-a239-39f256f889e8",
+    "youtube_playlist_id": "PLQsNiHo64JI9sIwIANwymkcK4Rs-3JYPA",
+    "teacher": "Competishun+",
+    "reviewed_on": "2026-07-30",
+    "reviewed_by": "Owner",
+    "source_url": "https://www.youtube.com/@competishun",
+    "source_label": "Official Competishun+ channel",
+    "youtube_video_ids": [
+      "xHRgHSZp11k",
+      "FWulBbqyZqc",
+      "9jbbX2Znnys",
+      "Yw4p7sDcsFY",
+      "32X1BY1qezg",
+      "_HKqHTFqWxQ",
+      "UosC7fRF5Ro",
+      "ZVE9yfPrwtU"
+    ]
+  }
+}

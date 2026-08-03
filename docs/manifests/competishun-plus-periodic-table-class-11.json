@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "request_id": "1f0ec533-ba00-4f35-bcd7-89aaf5bce093",
+  "youtube_playlist_id": "PLQsNiHo64JI-qrn72WqdYQvmMPViq0EhQ",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "iTlhISahQTA",
+      "chapter": "Periodic Table",
+      "lesson_number": 4
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "Usb6AdI50vE",
+      "chapter": "Periodic Table",
+      "lesson_number": 3
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "Dce-KguQJt0",
+      "chapter": "Periodic Table",
+      "lesson_number": 2
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "vMIw4cxb5Lk",
+      "chapter": "Periodic Table",
+      "lesson_number": 1
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "1c06eb34-fbdc-4d3b-a239-39f256f889e8",
+    "youtube_playlist_id": "PLQsNiHo64JI-qrn72WqdYQvmMPViq0EhQ",
+    "teacher": "Competishun+",
+    "reviewed_on": "2026-07-30",
+    "reviewed_by": "Owner",
+    "source_url": "https://www.youtube.com/@competishun",
+    "source_label": "Official Competishun+ channel",
+    "youtube_video_ids": [
+      "iTlhISahQTA",
+      "Usb6AdI50vE",
+      "Dce-KguQJt0",
+      "vMIw4cxb5Lk"
+    ]
+  }
+}

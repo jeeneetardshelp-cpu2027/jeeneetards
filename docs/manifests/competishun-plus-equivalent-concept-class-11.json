@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "request_id": "b4c07e63-e658-4b2d-a721-f1c6f0f8f36f",
+  "youtube_playlist_id": "PLQsNiHo64JI8lIXadZrlvn7-fLqzZbTcK",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "rJAo7ACv2AI",
+      "chapter": "Mole Concept"
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "MQqFT_GQWv8",
+      "chapter": "Mole Concept"
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "UOTJ9xPvszc",
+      "chapter": "Mole Concept"
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "HP8_prjZZ0k",
+      "chapter": "Mole Concept"
+    }
+  ]
+}

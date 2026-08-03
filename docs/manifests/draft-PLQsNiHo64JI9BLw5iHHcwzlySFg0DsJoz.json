@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "request_id": "4d03eac4-8ee1-481a-88d9-6bab01644e6d",
+  "youtube_playlist_id": "PLQsNiHo64JI9BLw5iHHcwzlySFg0DsJoz",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "e_wfK-d31mM",
+      "chapter": "Hydrogen"
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "KW-ZEGJngQo",
+      "chapter": "Hydrogen"
+    }
+  ]
+}

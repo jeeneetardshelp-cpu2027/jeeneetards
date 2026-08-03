@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "request_id": "def47063-1119-4759-a568-b417d15cc987",
+  "youtube_playlist_id": "PLQsNiHo64JI92nFYMSfOhGrq7bct9haT3",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "bBilbxPk6xc",
+      "chapter": null
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "JwOZdiIQYxU",
+      "chapter": null
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "Ygtka3DN0dI",
+      "chapter": null
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "eELR9jtUijE",
+      "chapter": null
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "YTSVd8z5Muo",
+      "chapter": null
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "g-Fa0TIitRc",
+      "chapter": "Redox Reactions"
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "oWxR8SdYllY",
+      "chapter": "Purification and Characterisation of Organic Compounds"
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "L4dnuL2EAfY",
+      "chapter": null
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "25WiaWXrh_A",
+      "chapter": "Mole Concept"
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "1yIPYj0vEdk",
+      "chapter": null
+    }
+  ]
+}

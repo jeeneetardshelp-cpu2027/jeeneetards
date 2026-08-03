@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "request_id": "e197f9fe-a2c3-448e-aef5-3782da008aa0",
+  "youtube_playlist_id": "PLQsNiHo64JI-duOOZLLSyU5dozByJtBSd",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "RLd4WYzdqSE",
+      "chapter": "Solutions of Triangles",
+      "lesson_number": 6
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "UfA2KYESQtY",
+      "chapter": "Solutions of Triangles",
+      "lesson_number": 5
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "IbOlG9vcVNo",
+      "chapter": "Solutions of Triangles",
+      "lesson_number": 4
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "AHOqe84MY7E",
+      "chapter": "Solutions of Triangles",
+      "lesson_number": 3
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "BTQeJl4ZW3A",
+      "chapter": "Solutions of Triangles",
+      "lesson_number": 2
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "bwXvwjKkogk",
+      "chapter": "Solutions of Triangles",
+      "lesson_number": 1
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "1c06eb34-fbdc-4d3b-a239-39f256f889e8",
+    "youtube_playlist_id": "PLQsNiHo64JI-duOOZLLSyU5dozByJtBSd",
+    "teacher": "Competishun+",
+    "reviewed_on": "2026-07-30",
+    "reviewed_by": "Owner",
+    "source_url": "https://www.youtube.com/@competishun",
+    "source_label": "Official Competishun+ channel",
+    "youtube_video_ids": [
+      "RLd4WYzdqSE",
+      "UfA2KYESQtY",
+      "IbOlG9vcVNo",
+      "AHOqe84MY7E",
+      "BTQeJl4ZW3A",
+      "bwXvwjKkogk"
+    ]
+  }
+}

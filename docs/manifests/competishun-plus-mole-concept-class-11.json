@@ -1,0 +1,76 @@
+{
+  "version": 1,
+  "request_id": "a8fb9bc1-4090-4884-8ad7-f28137cc2653",
+  "youtube_playlist_id": "PLQsNiHo64JI-pDIxJ4qqClroszJ68k0mk",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "aFNe7-Ti6TU",
+      "chapter": "Mole Concept",
+      "lesson_number": 8
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "ssM-qIPHelM",
+      "chapter": "Mole Concept",
+      "lesson_number": 7
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "5HDRgdEwZaI",
+      "chapter": "Mole Concept",
+      "lesson_number": 6
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "W7qZ8aO6Em4",
+      "chapter": "Mole Concept",
+      "lesson_number": 5
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "uoU2c3Oujx0",
+      "chapter": "Mole Concept",
+      "lesson_number": 4
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "IEQPvBhgIRk",
+      "chapter": "Mole Concept",
+      "lesson_number": 3
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "bPcwEnYvqHQ",
+      "chapter": "Mole Concept",
+      "lesson_number": 2
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "m5c6WofUqus",
+      "chapter": "Mole Concept",
+      "lesson_number": 1
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "1c06eb34-fbdc-4d3b-a239-39f256f889e8",
+    "youtube_playlist_id": "PLQsNiHo64JI-pDIxJ4qqClroszJ68k0mk",
+    "teacher": "Competishun+",
+    "reviewed_on": "2026-07-30",
+    "reviewed_by": "Owner",
+    "source_url": "https://www.youtube.com/@competishun",
+    "source_label": "Official Competishun+ channel",
+    "youtube_video_ids": [
+      "aFNe7-Ti6TU",
+      "ssM-qIPHelM",
+      "5HDRgdEwZaI",
+      "W7qZ8aO6Em4",
+      "uoU2c3Oujx0",
+      "IEQPvBhgIRk",
+      "bPcwEnYvqHQ",
+      "m5c6WofUqus"
+    ]
+  }
+}

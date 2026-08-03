@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "request_id": "bce8b7fb-dcbb-4876-b8f0-9ff8bd882e7e",
+  "youtube_playlist_id": "PLQsNiHo64JI-YBVsHM4Mc0XyBhzjzd24u",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "O3YxFatbCfI",
+      "chapter": "General Inorganic Chemistry",
+      "lesson_number": 3
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "tNMJPXp0CSg",
+      "chapter": "General Inorganic Chemistry",
+      "lesson_number": 2
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "4w0RFKQzjBU",
+      "chapter": "General Inorganic Chemistry",
+      "lesson_number": 1
+    }
+  ]
+}

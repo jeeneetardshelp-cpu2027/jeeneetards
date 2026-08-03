@@ -1,0 +1,76 @@
+{
+  "version": 1,
+  "request_id": "8b99dd3b-4212-45e1-971e-305b5ad3a024",
+  "youtube_playlist_id": "PLQsNiHo64JI9CEuNx0XmbhCPE8pvoyP9k",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "G0tc-cGTvPY",
+      "chapter": "Straight Lines",
+      "lesson_number": 8
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "VrgxzY1qrDI",
+      "chapter": "Straight Lines",
+      "lesson_number": 7
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "BfZXDq_nNA8",
+      "chapter": "Straight Lines",
+      "lesson_number": 6
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "edf3x0DJfNA",
+      "chapter": "Straight Lines",
+      "lesson_number": 5
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "-3murSt0Rwc",
+      "chapter": "Straight Lines",
+      "lesson_number": 4
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "wTitfr3LXvU",
+      "chapter": "Straight Lines",
+      "lesson_number": 3
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "YYSxD7iAqGE",
+      "chapter": "Straight Lines",
+      "lesson_number": 2
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "4XYIqCNv1jA",
+      "chapter": "Straight Lines",
+      "lesson_number": 1
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "1c06eb34-fbdc-4d3b-a239-39f256f889e8",
+    "youtube_playlist_id": "PLQsNiHo64JI9CEuNx0XmbhCPE8pvoyP9k",
+    "teacher": "Competishun+",
+    "reviewed_on": "2026-07-30",
+    "reviewed_by": "Owner",
+    "source_url": "https://www.youtube.com/@competishun",
+    "source_label": "Official Competishun+ channel",
+    "youtube_video_ids": [
+      "G0tc-cGTvPY",
+      "VrgxzY1qrDI",
+      "BfZXDq_nNA8",
+      "edf3x0DJfNA",
+      "-3murSt0Rwc",
+      "wTitfr3LXvU",
+      "YYSxD7iAqGE",
+      "4XYIqCNv1jA"
+    ]
+  }
+}

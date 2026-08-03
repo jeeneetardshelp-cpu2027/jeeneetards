@@ -5,12 +5,19 @@
 
 import { useEffect, useState } from "react";
 import { isSupabaseConfigured, supabase } from "./supabaseClient";
+import { RATING_CONFIDENCE_MIN } from "./ratingConfidence.js";
 
 export async function fetchRatingsAvailability(client = supabase) {
+  // Gate on the SAME confidence minimum every other rating surface uses, not on
+  // "> 0". A course with a single vote has no displayable score — ratingDisplay
+  // deliberately returns kind "low" below RATING_CONFIDENCE_MIN, and
+  // structuredData withholds aggregateRating on the same rule — so arming the
+  // "Highest rated" sort at one vote would let a single rating reorder the whole
+  // catalogue by a raw average the site refuses to show anywhere else.
   const { count, error } = await client
     .from("playlists")
     .select("id", { count: "exact", head: true })
-    .gt("ratings_count", 0);
+    .gte("ratings_count", RATING_CONFIDENCE_MIN);
 
   if (error) throw error;
   return Number(count ?? 0) > 0;
