@@ -1,13 +1,15 @@
 // ogInject.js — pure helpers for per-course <head> metadata.
 //
 // Shared by the Vercel Edge middleware (middleware.js) and its local test
-// (src/scripts/testCourseMeta.js). No imports, no side effects, no runtime
-// assumptions — just string in, string out — so the exact logic that ships
-// can be exercised under plain Node before it ever reaches the edge.
+// (src/scripts/testCourseMeta.js). The helpers have no side effects or
+// browser-only assumptions — just data and strings in, strings out — so the
+// exact logic that ships can be exercised under plain Node first.
 
 import {
   courseSchema,
   breadcrumbListSchema,
+  websiteSchema,
+  organizationSchema,
   safeStructuredDataJson,
 } from "./src/structuredData.js";
 
@@ -33,7 +35,13 @@ export function courseMeta(course, id) {
     course.teacher ? `by ${course.teacher}` : null,
   ].filter(Boolean);
   const description = `${parts.join(" · ")}. No JEENEETARD advertisements or sponsored rankings; YouTube may show ads or same-channel recommendations.`;
-  return { title, description, url: `${SITE}/course/${id}` };
+  return {
+    title,
+    description,
+    url: `${SITE}/course/${id}`,
+    robots: "index, follow",
+    type: "article",
+  };
 }
 
 /**
@@ -46,15 +54,19 @@ export function injectCourseMeta(html, meta) {
   const t = escapeHtml(meta.title);
   const d = escapeHtml(meta.description);
   const u = escapeHtml(meta.url);
+  const robots = escapeHtml(meta.robots || "index, follow");
+  const type = escapeHtml(meta.type || "website");
   // Function replacements throughout: a string replacement would expand `$`
   // sequences ($&, $', $1, …) in course titles as replace() patterns and
   // corrupt the page — a title like `worth $199` must stay literal text.
   const out = html
     .replace(/<title>[\s\S]*?<\/title>/, () => `<title>${t}</title>`)
     .replace(/(<meta name="description" content=")[^"]*(")/, (m, a, z) => `${a}${d}${z}`)
+    .replace(/(<meta name="robots" content=")[^"]*(")/, (m, a, z) => `${a}${robots}${z}`)
     .replace(/(<meta property="og:title" content=")[^"]*(")/, (m, a, z) => `${a}${t}${z}`)
     .replace(/(<meta property="og:description" content=")[^"]*(")/, (m, a, z) => `${a}${d}${z}`)
     .replace(/(<meta property="og:url" content=")[^"]*(")/, (m, a, z) => `${a}${u}${z}`)
+    .replace(/(<meta property="og:type" content=")[^"]*(")/, (m, a, z) => `${a}${type}${z}`)
     .replace(/(<meta name="twitter:title" content=")[^"]*(")/, (m, a, z) => `${a}${t}${z}`)
     .replace(/(<meta name="twitter:description" content=")[^"]*(")/, (m, a, z) => `${a}${d}${z}`);
   // Canonical: the shell deliberately ships WITHOUT one (a static canonical
@@ -94,6 +106,54 @@ export function injectRouteMeta(html, meta) {
   return /<link rel="canonical"[^>]*>/.test(out)
     ? out.replace(/<link rel="canonical"[^>]*>/, () => canonicalTag)
     : out.replace(/<title>/, () => `${canonicalTag}\n    <title>`);
+}
+
+/** Homepage schemas use the same pure builders as Home.jsx. */
+export function landingSchemas(pathname) {
+  if (pathname !== "/") return [];
+  return [
+    { key: "WebSite", schema: websiteSchema() },
+    { key: "Organization", schema: organizationSchema() },
+  ];
+}
+
+/**
+ * Small, truthful fallbacks for public discovery landings. React replaces
+ * this content during hydration; the wording and H1 mirror the visible page.
+ */
+export function renderLandingBody(pathname, meta) {
+  const pages = {
+    "/": {
+      heading: "Find the right lecture. Skip the noise.",
+      description:
+        "Thousands of free lectures from India's best teachers, organised by syllabus so students can compare before choosing a course.",
+      links: [["Find a course", "/explore"], ["Browse courses", "/browse"]],
+    },
+    "/browse": {
+      heading: "All courses",
+      description: meta.description,
+      links: [["Home", "/"], ["Find a course", "/explore"]],
+    },
+    "/explore": {
+      heading: "What are you preparing for?",
+      description:
+        "Choose an exam or school curriculum, then narrow the free course library by class, subject and chapter.",
+      links: [["Home", "/"], ["Browse all courses", "/browse"]],
+    },
+  };
+  const page = pages[pathname];
+  if (!page) return "";
+
+  const links = page.links
+    .map(([label, href]) => `<a href="${escapeHtml(href)}">${escapeHtml(label)}</a>`)
+    .join(" ");
+  return [
+    "<main>",
+    `<h1>${escapeHtml(page.heading)}</h1>`,
+    `<p>${escapeHtml(page.description)}</p>`,
+    `<nav aria-label="Course discovery">${links}</nav>`,
+    "</main>",
+  ].join("");
 }
 
 // ---------------------------------------------------------------------------

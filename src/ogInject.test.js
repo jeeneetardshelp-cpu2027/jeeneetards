@@ -17,6 +17,8 @@ import {
   renderCourseBody,
   injectRootContent,
   injectRouteMeta,
+  landingSchemas,
+  renderLandingBody,
 } from "../ogInject.js";
 import { metadataForLocation } from "./pageMetadata.js";
 
@@ -49,6 +51,8 @@ describe("injectCourseMeta", () => {
     expect(html).toContain('property="og:title" content="Rectilinear Motion (Kinematics) | JEENEETARD"');
     expect(html).toContain('property="og:url" content="https://www.jeeneetard.com/course/5"');
     expect(html).not.toContain("Free course finder");
+    expect(html).toContain('name="robots" content="index, follow"');
+    expect(html).toContain('property="og:type" content="article"');
   });
 
   it("adds the course canonical exactly once", () => {
@@ -91,6 +95,46 @@ describe("injectCourseMeta", () => {
     expect(html).toContain(
       'property="og:image" content="https://www.jeeneetard.com/social-preview.png"',
     );
+  });
+});
+
+describe("server-rendered discovery landings", () => {
+  it("uses the same canonical route metadata as the hydrated app", () => {
+    const browse = metadataForLocation("/browse", "?q=kinematics");
+    expect(browse.title).toBe("Browse free courses | JEENEETARD");
+    expect(browse.canonicalPath).toBe("/browse");
+    expect(browse.robots).toBe("noindex, follow");
+  });
+
+  it("emits the homepage WebSite and Organization schemas", () => {
+    expect(landingSchemas("/").map(({ key }) => key))
+      .toEqual(["WebSite", "Organization"]);
+    expect(landingSchemas("/browse")).toEqual([]);
+  });
+
+  it.each([
+    ["/", "Find the right lecture. Skip the noise.", "/explore"],
+    ["/browse", "All courses", "/explore"],
+    ["/explore", "What are you preparing for?", "/browse"],
+  ])("renders a truthful %s fallback", (pathname, heading, destination) => {
+    const meta = metadataForLocation(pathname);
+    const body = renderLandingBody(pathname, meta);
+    const html = injectRootContent(
+      injectStructuredData(injectRouteMeta(shell, meta), landingSchemas(pathname)),
+      body,
+    );
+
+    expect(body).toContain(`<h1>${heading}</h1>`);
+    expect(body).toContain(`href="${destination}"`);
+    expect(html).not.toContain('class="boot"');
+    expect(html).toContain(
+      `<link rel="canonical" href="https://www.jeeneetard.com${meta.canonicalPath}" />`,
+    );
+  });
+
+  it("declines unknown and deep routes instead of inventing fallback content", () => {
+    expect(renderLandingBody("/explore/jee", metadataForLocation("/explore/jee")))
+      .toBe("");
   });
 });
 
