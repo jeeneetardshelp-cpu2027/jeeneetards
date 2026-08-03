@@ -154,46 +154,38 @@ export default async function middleware(request) {
     const chapterId = courseMatch[2] ?? null;
 
     // 1. Look up the course (anon key, public catalogue data) with a hard
-    //    timeout so a slow DB never delays the page.
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), LOOKUP_TIMEOUT_MS);
-    let course = null;
-    let lookupConfirmed = false;
-    try {
-      const res = await fetch(
-        `${supaUrl}/rest/v1/playlists?id=eq.${encodeURIComponent(id)}` +
-          `&select=title,teacher,average_rating,ratings_count,subjects(name)` +
-          `,institutes_channels(name),playlist_videos(count),lessons:playlist_videos(position,videos(title))` +
-          `&lessons.order=position.asc&lessons.limit=60`,
-        {
-          headers: { apikey: supaKey, Authorization: `Bearer ${supaKey}` },
-          signal: controller.signal,
-        },
-      );
-      if (res.ok) {
+    //    timeout so a slow DB never delays the page. Chapter membership is an
+    //    independent read, so start it at the same time instead of adding a
+    //    second network round-trip to every chapter-scoped course response.
+    const lookupCourse = async () => {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), LOOKUP_TIMEOUT_MS);
+      try {
+        const res = await fetch(
+          `${supaUrl}/rest/v1/playlists?id=eq.${encodeURIComponent(id)}` +
+            `&select=title,teacher,average_rating,ratings_count,subjects(name)` +
+            `,institutes_channels(name),playlist_videos(count),lessons:playlist_videos(position,videos(title))` +
+            `&lessons.order=position.asc&lessons.limit=60`,
+          {
+            headers: { apikey: supaKey, Authorization: `Bearer ${supaKey}` },
+            signal: controller.signal,
+          },
+        );
+        if (!res.ok) return { course: null, confirmed: false };
         const rows = await res.json();
-        course = Array.isArray(rows) ? rows[0] : null;
-        lookupConfirmed = true;
+        return {
+          course: Array.isArray(rows) ? rows[0] : null,
+          confirmed: true,
+        };
+      } finally {
+        clearTimeout(timer);
       }
-    } finally {
-      clearTimeout(timer);
-    }
-    if (lookupConfirmed && (!course || !course.title)) {
-      return notFoundResponse(url, "Course not found");
-    }
-    if (!lookupConfirmed) return next();
+    };
 
-    // A real course can still be paired with a nonexistent or unrelated
-    // chapter id. Confirm membership through the same playlist -> video
-    // relationship the catalogue uses, without scanning or returning rows.
-    if (chapterId) {
-      const chapterController = new AbortController();
-      const chapterTimer = setTimeout(
-        () => chapterController.abort(),
-        LOOKUP_TIMEOUT_MS,
-      );
-      let chapterConfirmed = false;
-      let chapterExists = false;
+    const lookupChapter = async () => {
+      if (!chapterId) return null;
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), LOOKUP_TIMEOUT_MS);
       try {
         const res = await fetch(
           `${supaUrl}/rest/v1/playlist_videos` +
@@ -203,21 +195,38 @@ export default async function middleware(request) {
             `&limit=1`,
           {
             headers: { apikey: supaKey, Authorization: `Bearer ${supaKey}` },
-            signal: chapterController.signal,
+            signal: controller.signal,
           },
         );
-        if (res.ok) {
-          const rows = await res.json();
-          chapterExists = Array.isArray(rows) && rows.length > 0;
-          chapterConfirmed = true;
-        }
+        if (!res.ok) return { exists: false, confirmed: false };
+        const rows = await res.json();
+        return {
+          exists: Array.isArray(rows) && rows.length > 0,
+          confirmed: true,
+        };
       } finally {
-        clearTimeout(chapterTimer);
+        clearTimeout(timer);
       }
-      if (chapterConfirmed && !chapterExists) {
+    };
+
+    const [courseLookup, chapterLookup] = await Promise.all([
+      lookupCourse(),
+      lookupChapter(),
+    ]);
+    const { course, confirmed: lookupConfirmed } = courseLookup;
+    if (lookupConfirmed && (!course || !course.title)) {
+      return notFoundResponse(url, "Course not found");
+    }
+    if (!lookupConfirmed) return next();
+
+    // A real course can still be paired with a nonexistent or unrelated
+    // chapter id. Confirm membership through the same playlist -> video
+    // relationship the catalogue uses, without scanning or returning rows.
+    if (chapterLookup) {
+      if (chapterLookup.confirmed && !chapterLookup.exists) {
         return notFoundResponse(url, "Chapter not found in this course");
       }
-      if (!chapterConfirmed) return next();
+      if (!chapterLookup.confirmed) return next();
     }
 
     // 2. Fetch the built shell (not matched by this middleware, so no loop)
