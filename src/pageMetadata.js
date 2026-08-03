@@ -1,4 +1,7 @@
 import { RELEASE_CAPABILITIES } from "./releaseCapabilities.js";
+// Pure data (no React), so this stays safe for the edge middleware, which
+// imports this module to compute the same metadata the client will.
+import { findTestSection, sectionIsAllFree } from "./testPlatforms.js";
 
 export const SITE_NAME = "JEENEETARD";
 export const DEFAULT_TITLE = "JEENEETARD - Free course finder";
@@ -126,6 +129,28 @@ export function metadataForLocation(pathname = "/", search = "") {
       // sitemap and the edge middleware emit for this course.
       canonicalPath: path.match(/^\/course\/\d+/)?.[0] ?? path,
     };
+  }
+
+  if (path.startsWith("/tests/")) {
+    const section = findTestSection(path.slice("/tests/".length));
+    // An unknown exam id is a real 404, not a soft one — fall through to the
+    // not-found branch at the bottom rather than inventing a page for it.
+    if (section) {
+      const allFree = sectionIsAllFree(section);
+      const free = allFree ? "Free " : "";
+      return {
+        ...base,
+        title: `${free}${section.label} mock tests and previous year papers | ${SITE_NAME}`,
+        description: section.resources.length
+          ? `${section.resources.length === 1 ? "A" : section.resources.length} ${allFree ? "free " : ""}${section.label} mock test ${section.resources.length === 1 ? "source" : "sources"}: ${section.resources
+              .map((r) => r.provider)
+              .join(", ")}. Each link opens the platform that runs the test.`
+          : `${section.label} mock tests and previous-year papers. No source is listed yet — nothing is added here until its link has been checked.`,
+        // A page with nothing on it is thin content. Keep the URL stable and
+        // followable, but do not ask Google to index an empty list.
+        robots: section.resources.length ? "index, follow" : "noindex, follow",
+      };
+    }
   }
 
   if (path === "/tests") {

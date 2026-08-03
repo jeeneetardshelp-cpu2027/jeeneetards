@@ -15,6 +15,7 @@
 
 import { next } from "@vercel/edge";
 import { metadataForLocation, SITE_NAME } from "./src/pageMetadata.js";
+import { findTestSection } from "./src/testPlatforms.js";
 import {
   courseMeta,
   injectCourseMeta,
@@ -61,6 +62,12 @@ const STATIC_APP_ROUTES = new Set([
 export function isSupportedAppPath(pathname) {
   const path = pathname.length > 1 ? pathname.replace(/\/+$/, "") : pathname;
   if (STATIC_APP_ROUTES.has(path)) return true;
+  // Only REAL exam ids are supported. /tests/anything-else must carry a hard
+  // 404 rather than render an empty page — TEST_SECTIONS is the same list the
+  // router resolves against, so the two can never disagree.
+  if (path.startsWith("/tests/")) {
+    return Boolean(findTestSection(path.slice("/tests/".length)));
+  }
   if (/^\/explore(?:\/[^/]+){1,5}$/.test(path)) return true;
   if (/^\/faculty\/[^/]+$/.test(path)) return true;
   if (/^\/chapter\/\d+$/.test(path)) return true;

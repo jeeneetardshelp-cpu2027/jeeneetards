@@ -13,7 +13,7 @@ import {
   safeStructuredDataJson,
 } from "./src/structuredData.js";
 // Pure data, no React — safe to pull into the edge runtime.
-import { TEST_SECTIONS, ACCESS } from "./src/testPlatforms.js";
+import { TEST_SECTIONS, ACCESS, findTestSection } from "./src/testPlatforms.js";
 
 const SITE = "https://www.jeeneetard.com";
 
@@ -148,6 +148,11 @@ export function renderLandingBody(pathname, meta) {
   // Built from the same TEST_SECTIONS the React page renders, so the served
   // HTML can never claim a source the page does not show.
   if (pathname === "/tests") return renderTestsBody(meta);
+  if (pathname.startsWith("/tests/")) {
+    const section = findTestSection(pathname.slice("/tests/".length));
+    if (section) return renderExamTestsBody(section, meta);
+    return "";
+  }
 
   const page = pages[pathname];
   if (!page) return "";
@@ -175,7 +180,10 @@ export function renderLandingBody(pathname, meta) {
  */
 export function renderTestsBody(meta) {
   const items = TEST_SECTIONS.map((s) => {
-    const label = escapeHtml(s.label);
+    // The exam name is a real link to its own page: this is the hub, and a
+    // crawler that cannot run JavaScript still needs a path to all six.
+    const label =
+      `<a href="/tests/${escapeHtml(s.id)}">${escapeHtml(s.label)}</a>`;
     if (!s.resources.length) {
       return `<li>${label}: no test source listed yet.</li>`;
     }
@@ -206,6 +214,47 @@ export function renderTestsBody(meta) {
     '<a href="/">Home</a> <a href="/explore">Find a course</a> ',
     '<a href="/browse">Browse courses</a>',
     "</nav>",
+    "</main>",
+  ].join("");
+}
+
+/**
+ * Crawler-readable body for ONE exam's page (/tests/:examId). Names the
+ * exam, then every source with its provider, cost and real outbound link,
+ * so a model can answer "where can I take a free NEET mock test" from this
+ * HTML alone — the whole reason these pages were split per exam.
+ */
+export function renderExamTestsBody(section, meta) {
+  const label = escapeHtml(section.label);
+  const items = section.resources
+    .map(
+      (r) =>
+        `<li><a href="${escapeHtml(r.url)}" rel="nofollow noopener">${escapeHtml(r.name)}</a>` +
+        ` — ${escapeHtml(r.provider)}` +
+        `${ACCESS[r.access] ? ` (${escapeHtml(ACCESS[r.access].label)})` : ""}` +
+        `${r.official ? " (official)" : ""}. ${escapeHtml(r.description)}</li>`,
+    )
+    .join("");
+
+  const others = TEST_SECTIONS.filter((s) => s.id !== section.id)
+    .map(
+      (s) =>
+        `<a href="/tests/${escapeHtml(s.id)}">${escapeHtml(s.label)}</a>`,
+    )
+    .join(" ");
+
+  return [
+    "<main>",
+    `<nav aria-label="Breadcrumb"><a href="/">Home</a> › <a href="/tests">Mock tests</a> › <span>${label}</span></nav>`,
+    `<h1>${label} mock tests</h1>`,
+    `<p>${escapeHtml(meta.description)}</p>`,
+    "<p>JEENEETARD does not conduct these tests or store marks, and is not" +
+      " affiliated with the organisations listed. Each link opens the platform" +
+      " that runs the test.</p>",
+    items
+      ? `<ul>${items}</ul>`
+      : `<p>No ${label} test source is listed yet.</p>`,
+    `<nav aria-label="Other exams">${others}</nav>`,
     "</main>",
   ].join("");
 }

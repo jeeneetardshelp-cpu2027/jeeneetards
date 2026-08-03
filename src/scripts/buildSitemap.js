@@ -12,9 +12,16 @@ import { createClient } from "@supabase/supabase-js";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
+import { TEST_SECTIONS } from "../testPlatforms.js";
 
 export const BASE = "https://www.jeeneetard.com";
-export const STATIC_ROUTES = ["/", "/browse", "/explore", "/tests", "/terms", "/privacy"];
+export const STATIC_ROUTES = [
+  "/", "/browse", "/explore", "/tests", "/terms", "/privacy",
+  // One entry per exam that actually has sources. An exam with an empty list
+  // is deliberately absent: pageMetadata marks it noindex, and a sitemap must
+  // never advertise a URL that tells Google not to index it.
+  ...TEST_SECTIONS.filter((s) => s.resources.length).map((s) => `/tests/${s.id}`),
+];
 
 const here = dirname(fileURLToPath(import.meta.url));
 export const DEFAULT_OUT = resolve(here, "../../public/sitemap.xml");

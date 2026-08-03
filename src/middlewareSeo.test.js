@@ -21,6 +21,7 @@ describe("edge-rendered discovery landings", () => {
     "/", "/browse", "/explore/jee/class-11/physics",
     "/faculty/amit-bijarnia", "/chapter/79", "/course/13",
     "/course/13/chapter/8", "/terms", "/privacy", "/search", "/tests",
+    "/tests/jee-main", "/tests/neet", "/tests/class-12",
   ])("recognises supported application path %s", (pathname) => {
     expect(isSupportedAppPath(pathname)).toBe(true);
   });
@@ -28,6 +29,9 @@ describe("edge-rendered discovery landings", () => {
   it.each([
     "/not-real", "/course/nope", "/course/13/extra", "/faculty/a/b",
     "/explore/a/b/c/d/e/f", "/chapter/nope",
+    // An invented exam must 404 rather than render an empty exam page —
+    // otherwise every typo becomes an indexable soft-404.
+    "/tests/not-an-exam", "/tests/jee", "/tests/neet/extra",
   ])("rejects unsupported application path %s", (pathname) => {
     expect(isSupportedAppPath(pathname)).toBe(false);
   });
