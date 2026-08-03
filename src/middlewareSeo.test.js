@@ -120,7 +120,10 @@ describe("edge-rendered discovery landings", () => {
     );
 
     expect(response.status).toBe(404);
-    expect(await response.text()).toContain("<h1>Course not found</h1>");
+    const html = await response.text();
+    expect(html).toContain("<h1>Course not found</h1>");
+    expect(html).toContain('name="robots" content="noindex, nofollow"');
+    expect(html).toContain("<title>Course not found | JEENEETARD</title>");
   });
 
   it("returns HTTP 404 when a chapter is not part of an existing course", async () => {
@@ -140,9 +143,11 @@ describe("edge-rendered discovery landings", () => {
     );
 
     expect(response.status).toBe(404);
-    expect(await response.text()).toContain(
+    const html = await response.text();
+    expect(html).toContain(
       "<h1>Chapter not found in this course</h1>",
     );
+    expect(html).toContain('name="robots" content="noindex, nofollow"');
   });
 
   it("returns HTTP 404 only after a faculty lookup confirms it is missing", async () => {
@@ -158,6 +163,9 @@ describe("edge-rendered discovery landings", () => {
     );
 
     expect(response.status).toBe(404);
-    expect(await response.text()).toContain("<h1>Faculty page not found</h1>");
+    const html = await response.text();
+    expect(html).toContain("<h1>Faculty page not found</h1>");
+    expect(html).toContain('name="robots" content="noindex, nofollow"');
+    expect(html).toContain("<title>Faculty page not found | JEENEETARD</title>");
   });
 });
