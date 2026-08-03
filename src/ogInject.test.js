@@ -15,6 +15,7 @@ import {
   courseSchemas,
   injectStructuredData,
   renderCourseBody,
+  renderNotFoundBody,
   injectRootContent,
   injectRouteMeta,
   landingSchemas,
@@ -225,6 +226,16 @@ describe("renderCourseBody + injectRootContent", () => {
     expect(injectRootContent("<html><body></body></html>", body))
       .toBe("<html><body></body></html>");
     expect(injectRootContent(shell, "")).toBe(shell);
+  });
+});
+
+describe("renderNotFoundBody", () => {
+  it("renders recovery links and escapes the requested path", () => {
+    const body = renderNotFoundBody('/bad/<script>', "Course not found");
+    expect(body).toContain("<h1>Course not found</h1>");
+    expect(body).toContain('href="/explore"');
+    expect(body).not.toContain("<script>");
+    expect(body).toContain("&lt;script&gt;");
   });
 });
 

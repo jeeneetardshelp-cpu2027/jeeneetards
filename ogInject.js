@@ -156,6 +156,21 @@ export function renderLandingBody(pathname, meta) {
   ].join("");
 }
 
+/** Honest crawler-readable content for responses that carry HTTP 404. */
+export function renderNotFoundBody(pathname, heading = "Page not found") {
+  return [
+    "<main>",
+    `<h1>${escapeHtml(heading)}</h1>`,
+    `<p>${escapeHtml(`No page exists at ${pathname}. The link may be out of date or contain a typo.`)}</p>`,
+    '<nav aria-label="Course discovery">',
+    '<a href="/explore">Find a course</a> ',
+    '<a href="/browse">Browse courses</a> ',
+    '<a href="/search">Search the library</a>',
+    "</nav>",
+    "</main>",
+  ].join("");
+}
+
 // ---------------------------------------------------------------------------
 // Structured data + server-rendered content.
 //
