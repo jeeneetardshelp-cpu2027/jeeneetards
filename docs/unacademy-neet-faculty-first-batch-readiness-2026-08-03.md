@@ -54,10 +54,26 @@ only the titles are now `Chemical Bonding`, `Evolution`, and `Principles of
 Inheritance and Variation`. The revised artifact below pins those current
 titles. The earlier hash is superseded and must not be run.
 
+The next approved artifact, SHA-256
+`63ae41e5bd6774a36169931dfa50e2867745b6b7a670a5dd81d053c90ca421ee`, also
+made no persistent production change. PITR was freshly confirmed with 7-day
+retention and a latest restore point of 3 August 2026, 19:38:41 IST; every
+baseline guard matched. Its postflight then detected an alias expectation
+mismatch and raised before commit, rolling the complete transaction back. A
+read-only post-check reconfirmed all catalogue/faculty totals and the protected
+JEE fingerprint unchanged.
+
+The cause was isolated to the rehearsal normalizer: production's
+`normalize_person_name` removes Latin honorifics, so `Ashwani Sir` normalizes to
+`ashwani` and `Pradeep Sir` to `pradeep`, while that rehearsal had modeled only
+lowercase/trim. This revision pins those actual normalized values and makes the
+atomic rehearsal use the production normalization rule. The two earlier hashes
+are superseded and must not be run.
+
 ## Artifact
 
 - SQL: `docs/sql/unacademy_neet_first_batch_faculty_2026-08-03.sql`
-- SHA-256: `63ae41e5bd6774a36169931dfa50e2867745b6b7a670a5dd81d053c90ca421ee`
+- SHA-256: `ad02e44f160000889d1836dd8e26f234337d3eef60d4febf44d59238bd4f5796`
 - target: production project `kezelafqhgqrprpadmlf`
 - expected additive delta: +2 teachers, +4 aliases, +2 institute links,
   +2 subject links, +2 goal links, +3 course links;
@@ -72,4 +88,4 @@ schema migration, release push, or faculty-credit quality-review transition.
 
 ## Separate approval phrase
 
-`Approve applying revised Unacademy NEET first-batch faculty registry artifact SHA-256 63ae41e5bd6774a36169931dfa50e2867745b6b7a670a5dd81d053c90ca421ee to production, after a fresh PITR and exact-baseline check; stop on any mismatch; no release push.`
+`Approve applying revised Unacademy NEET first-batch faculty registry artifact SHA-256 ad02e44f160000889d1836dd8e26f234337d3eef60d4febf44d59238bd4f5796 to production, after a fresh PITR and exact-baseline check; stop on any mismatch; no release push.`

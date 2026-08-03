@@ -7,7 +7,7 @@ const sqlPath = "docs/sql/unacademy_neet_first_batch_faculty_2026-08-03.sql";
 const readinessPath = "docs/unacademy-neet-faculty-first-batch-readiness-2026-08-03.md";
 const sql = readFileSync(sqlPath, "utf8");
 const readiness = readFileSync(readinessPath, "utf8");
-const expectedHash = "63ae41e5bd6774a36169931dfa50e2867745b6b7a670a5dd81d053c90ca421ee";
+const expectedHash = "ad02e44f160000889d1836dd8e26f234337d3eef60d4febf44d59238bd4f5796";
 
 describe("Unacademy NEET first-batch faculty production package", () => {
   it("pins the exact owner-reviewed identities, courses, and decision", () => {
@@ -51,6 +51,12 @@ describe("Unacademy NEET first-batch faculty production package", () => {
     }
     expect(sql).toContain("15::bigint");
     expect(sql).toContain("14::bigint");
+    expect(sql).toContain("'ashwani-tyagi:ashwani'");
+    expect(sql).toContain("'ashwani-tyagi:ashwani tyagi'");
+    expect(sql).toContain("'pradeep-singh:pradeep'");
+    expect(sql).toContain("'pradeep-singh:pradeep singh'");
+    expect(sql).not.toContain("'ashwani-tyagi:ashwani sir'");
+    expect(sql).not.toContain("'pradeep-singh:pradeep sir'");
   });
 
   it("uses the v14 protected original-JEE definition at both gates", () => {
@@ -132,10 +138,25 @@ describe("Unacademy NEET first-batch faculty production package", () => {
         verified_at timestamptz,
         unique (teacher_id, normalized_alias)
       );
+      create function public.test_normalize_person_name(p_name text)
+      returns text language sql immutable as $$
+        select nullif(
+          trim(
+            regexp_replace(
+              regexp_replace(
+                regexp_replace(
+                  lower(coalesce(p_name, '')),
+                  '[[:punct:][:space:]]+', ' ', 'g'),
+                '\\y(sir|maam|mam|madam|mister|mr|mrs|ms|miss|dr|doctor|prof|professor|ji|bhaiya|bhaiyya|guruji)\\y',
+                ' ', 'g'),
+              '\\s+', ' ', 'g')
+          ), ''
+        );
+      $$;
       create function public.test_normalize_teacher_alias()
       returns trigger language plpgsql as $$
       begin
-        new.normalized_alias := lower(trim(new.alias));
+        new.normalized_alias := public.test_normalize_person_name(new.alias);
         return new;
       end $$;
       create trigger test_normalize_teacher_alias
@@ -276,7 +297,12 @@ describe("Unacademy NEET first-batch faculty production package", () => {
         (select array_agg(t.slug order by pt.playlist_id)
            from public.playlist_teachers pt
            join public.teachers t on t.id = pt.teacher_id
-          where pt.playlist_id in (341, 342, 343)) as linked_slugs
+          where pt.playlist_id in (341, 342, 343)) as linked_slugs,
+        (select array_agg(t.slug || ':' || ta.normalized_alias
+                          order by t.slug, ta.normalized_alias)
+           from public.teacher_aliases ta
+           join public.teachers t on t.id = ta.teacher_id
+          where t.slug in ('ashwani-tyagi', 'pradeep-singh')) as normalized_aliases
     `);
     expect(result.rows[0]).toEqual({
       teachers: 29,
@@ -286,6 +312,12 @@ describe("Unacademy NEET first-batch faculty production package", () => {
       goals: 29,
       course_links: 133,
       linked_slugs: ["ashwani-tyagi", "pradeep-singh", "pradeep-singh"],
+      normalized_aliases: [
+        "ashwani-tyagi:ashwani",
+        "ashwani-tyagi:ashwani tyagi",
+        "pradeep-singh:pradeep",
+        "pradeep-singh:pradeep singh",
+      ],
     });
     await pg.close();
   }, 30_000);

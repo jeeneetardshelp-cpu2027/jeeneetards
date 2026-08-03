@@ -105,7 +105,7 @@ begin
   or exists (
     select 1 from public.teacher_aliases
      where normalized_alias in (
-       'ashwani tyagi', 'ashwani sir', 'pradeep singh', 'pradeep sir'
+       'ashwani tyagi', 'ashwani', 'pradeep singh', 'pradeep'
      )
   )
   or exists (
@@ -278,10 +278,10 @@ begin
     join public.teachers t on t.id = ta.teacher_id
     where t.slug in ('ashwani-tyagi', 'pradeep-singh')
   ) <> array[
-    'ashwani-tyagi:ashwani sir',
+    'ashwani-tyagi:ashwani',
     'ashwani-tyagi:ashwani tyagi',
-    'pradeep-singh:pradeep singh',
-    'pradeep-singh:pradeep sir'
+    'pradeep-singh:pradeep',
+    'pradeep-singh:pradeep singh'
   ]::text[] then
     raise exception 'Unacademy faculty package alias mismatch';
   end if;
