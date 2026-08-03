@@ -171,6 +171,39 @@ describe("edge-rendered discovery landings", () => {
     expect(html).toContain('name="robots" content="noindex, nofollow"');
   });
 
+  it("starts independent course and chapter lookups together", async () => {
+    vi.stubEnv("VITE_SUPABASE_URL", "https://catalog.example");
+    vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
+    let resolveCourse;
+    let chapterStarted = false;
+    vi.stubGlobal("fetch", vi.fn(async (input) => {
+      const url = String(input);
+      if (url.includes("/rest/v1/playlists?")) {
+        return new Promise((resolve) => {
+          resolveCourse = resolve;
+        });
+      }
+      if (url.includes("/rest/v1/playlist_videos")) {
+        chapterStarted = true;
+        return Response.json([{ playlist_id: 13, videos: { chapter_id: 8 } }]);
+      }
+      return new Response(shell, { status: 200 });
+    }));
+
+    const pending = middleware(
+      new Request("https://www.jeeneetard.com/course/13/chapter/8"),
+    );
+    await Promise.resolve();
+    await Promise.resolve();
+    const chapterStartedBeforeCourseResolved = chapterStarted;
+
+    resolveCourse(Response.json([{ title: "Kinematics", lessons: [] }]));
+    const response = await pending;
+
+    expect(response.status).toBe(200);
+    expect(chapterStartedBeforeCourseResolved).toBe(true);
+  });
+
   it("returns HTTP 404 only after a faculty lookup confirms it is missing", async () => {
     vi.stubEnv("VITE_SUPABASE_URL", "https://catalog.example");
     vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
