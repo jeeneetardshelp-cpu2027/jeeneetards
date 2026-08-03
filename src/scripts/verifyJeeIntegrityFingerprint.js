@@ -1,4 +1,4 @@
-// Anonymous, read-only verification of the production JEE catalogue fingerprint.
+// Anonymous, read-only verification of the protected original JEE catalogue.
 //
 // The field order and concatenation below intentionally reproduce the SQL
 // fingerprint used at the production migration gates. This script performs
@@ -8,7 +8,8 @@ import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { allExact, client, rows } from "./dbProbe.js";
 
-export const EXPECTED_JEE_FINGERPRINT = "d7aae3ce7635401ebeffe97e627048bc";
+export const PROTECTED_JEE_PLAYLIST_ID_MAX_EXCLUSIVE = 167;
+export const EXPECTED_JEE_FINGERPRINT = "c742fabf93ff8dd33d6ecd5eb4793db0";
 
 const playlistFields = [
   "id",
@@ -57,7 +58,16 @@ export function buildJeeFingerprint(playlists, memberships) {
   return createHash("md5").update(payload, "utf8").digest("hex");
 }
 
-export async function readJeeIntegrity(db) {
+export function selectJeePlaylistIds(links, maxPlaylistIdExclusive = null) {
+  return links
+    .map((row) => row.playlist_id)
+    .filter(
+      (playlistId) =>
+        maxPlaylistIdExclusive === null || playlistId < maxPlaylistIdExclusive,
+    );
+}
+
+export async function readJeeIntegrity(db, { maxPlaylistIdExclusive = null } = {}) {
   const goals = rows(
     "JEE learning goal",
     await db.from("learning_goals").select("id").eq("slug", "jee"),
@@ -75,7 +85,7 @@ export async function readJeeIntegrity(db) {
         .order("playlist_id"),
     { key: (row) => row.playlist_id },
   );
-  const playlistIds = links.map((row) => row.playlist_id);
+  const playlistIds = selectJeePlaylistIds(links, maxPlaylistIdExclusive);
 
   const playlists = await allExact(
     "JEE playlists",
@@ -112,11 +122,23 @@ export async function readJeeIntegrity(db) {
 
 async function main() {
   const expectedArgument = process.argv.find((argument) => argument.startsWith("--expected="));
-  const expected = expectedArgument?.slice("--expected=".length) || EXPECTED_JEE_FINGERPRINT;
-  const result = await readJeeIntegrity(client({ env: undefined }));
+  const allJee = process.argv.includes("--all");
+  const expected = expectedArgument?.slice("--expected=".length)
+    || (allJee ? null : EXPECTED_JEE_FINGERPRINT);
+  const result = await readJeeIntegrity(client({ env: undefined }), {
+    maxPlaylistIdExclusive: allJee
+      ? null
+      : PROTECTED_JEE_PLAYLIST_ID_MAX_EXCLUSIVE,
+  });
+  const matches = expected === null ? null : result.fingerprint === expected;
 
-  console.log(JSON.stringify({ ...result, expected, matches: result.fingerprint === expected }, null, 2));
-  if (result.fingerprint !== expected) process.exitCode = 1;
+  console.log(JSON.stringify({
+    scope: allJee ? "all-jee" : "protected-original-83",
+    ...result,
+    expected,
+    matches,
+  }, null, 2));
+  if (expected !== null && !matches) process.exitCode = 1;
 }
 
 const invokedPath = process.argv[1] ? pathToFileURL(resolve(process.argv[1])).href : "";

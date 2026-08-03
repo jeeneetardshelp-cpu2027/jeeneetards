@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { buildJeeFingerprint } from "./verifyJeeIntegrityFingerprint.js";
+import {
+  buildJeeFingerprint,
+  EXPECTED_JEE_FINGERPRINT,
+  PROTECTED_JEE_PLAYLIST_ID_MAX_EXCLUSIVE,
+  selectJeePlaylistIds,
+} from "./verifyJeeIntegrityFingerprint.js";
 
 describe("buildJeeFingerprint", () => {
   it("uses the historical field order and deterministic row ordering", () => {
@@ -44,5 +49,22 @@ describe("buildJeeFingerprint", () => {
     expect(buildJeeFingerprint([...playlists].reverse(), [...memberships].reverse())).toBe(
       "662372675369ef53d01f50f0e5c4ac82",
     );
+  });
+
+  it("defaults to the current protected original-83 boundary and fingerprint", () => {
+    expect(PROTECTED_JEE_PLAYLIST_ID_MAX_EXCLUSIVE).toBe(167);
+    expect(EXPECTED_JEE_FINGERPRINT).toBe("c742fabf93ff8dd33d6ecd5eb4793db0");
+    expect(
+      selectJeePlaylistIds(
+        [{ playlist_id: 166 }, { playlist_id: 13 }, { playlist_id: 167 }, { playlist_id: 298 }],
+        PROTECTED_JEE_PLAYLIST_ID_MAX_EXCLUSIVE,
+      ),
+    ).toEqual([166, 13]);
+  });
+
+  it("can retain the complete rolling JEE set for an unpinned audit", () => {
+    expect(
+      selectJeePlaylistIds([{ playlist_id: 13 }, { playlist_id: 167 }, { playlist_id: 298 }]),
+    ).toEqual([13, 167, 298]);
   });
 });
