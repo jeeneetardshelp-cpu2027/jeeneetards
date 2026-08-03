@@ -55,6 +55,45 @@ const SECTION_ART = {
   "class-12": { icon: GraduationCap, tint: "#0F6F78" },
 };
 
+// The institute's own colour, used for the kicker above each card's title —
+// the same coloured-kicker idiom the catalogue uses for subjects.
+//
+// Assigned by order of first appearance, NOT by hashing the name. A hash
+// collides — the first attempt gave NTA and Quizrr the identical blue inside
+// the same JEE Main section, which defeats the whole point of colouring them.
+// Walking the data in order guarantees distinct colours until the palette is
+// exhausted, and still gives one institute ONE colour everywhere it appears
+// (Quizrr reads identically under JEE Main and JEE Advanced).
+//
+// Every entry is a mid-tone that survives being pulled toward either theme's
+// ink; see tintedInk below.
+const PROVIDER_PALETTE = [
+  "#3B6FE0", "#CF8526", "#2E9E6B", "#7A5AF0", "#D85B84", "#0F9DA8",
+];
+
+const PROVIDER_TINTS = (() => {
+  const map = new Map();
+  for (const section of TEST_SECTIONS) {
+    for (const r of section.resources) {
+      if (!map.has(r.provider)) {
+        map.set(r.provider, PROVIDER_PALETTE[map.size % PROVIDER_PALETTE.length]);
+      }
+    }
+  }
+  return map;
+})();
+
+const providerTint = (name) => PROVIDER_TINTS.get(name) ?? PROVIDER_PALETTE[0];
+
+/**
+ * Blend a brand tint toward the CURRENT theme's ink. A single fixed hex
+ * cannot clear 4.5:1 on both a white and a near-black card — the same blue
+ * that reads well on dark is too light on light. Mixing toward `--ink`,
+ * which flips with the theme, darkens the tint in light mode and lightens
+ * it in dark mode while keeping the hue recognisable.
+ */
+const tintedInk = (tint) => `color-mix(in oklab, ${tint} 72%, var(--ink))`;
+
 const ACCESS_ART = {
   free: { tone: "accent", icon: null },
   account: { tone: "neutral", icon: LogIn },
@@ -90,15 +129,33 @@ function AccessBadge({ access }) {
  */
 function ResourceCard({ resource }) {
   const host = linkHost(resource.url);
+  const tint = providerTint(resource.provider);
   return (
     <Surface as="li" lift glow padded={false} className="overflow-hidden">
+      {/* A thin spine in the institute's colour — the catalogue's course
+          cards carry the same marker, so a source card reads as a sibling
+          of a course card rather than a different species. */}
+      <span
+        aria-hidden="true"
+        className="block h-1 w-full"
+        style={{ background: tint }}
+      />
       <a
         href={resource.url}
         target="_blank"
         rel="noopener noreferrer"
         className="group flex h-full flex-col p-6"
       >
-        <div className="flex items-start justify-between gap-3">
+        {/* Who runs it, ABOVE the title and in its own colour: the institute
+            is what a student recognises and scans for first. */}
+        <p
+          className="text-[0.7rem] font-semibold uppercase tracking-[0.09em]"
+          style={{ color: tintedInk(tint) }}
+        >
+          {resource.provider}
+        </p>
+
+        <div className="mt-2 flex items-start justify-between gap-3">
           <h3 className="text-base font-semibold leading-snug text-ink">
             {resource.name}
           </h3>
@@ -107,11 +164,6 @@ function ResourceCard({ resource }) {
             className="mt-0.5 h-4 w-4 shrink-0 text-ink-3 transition group-hover:-translate-y-0.5 group-hover:text-accent"
           />
         </div>
-
-        {/* Who runs it, directly under the name — the source is the point. */}
-        <p className="mt-1.5 text-xs font-medium text-ink-2">
-          {resource.provider}
-        </p>
 
         <p className="mt-4 flex-1 text-sm leading-relaxed text-ink-3">
           {resource.description}
