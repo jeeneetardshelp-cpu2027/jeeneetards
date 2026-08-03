@@ -45,10 +45,19 @@ artifact pins this refreshed baseline. It will abort before inserting anything
 if any pinned count, identity, course fact, reference row, or protected JEE
 value differs at execution time.
 
+The first approved artifact, SHA-256
+`386a0af11d1526aba43d83ccba84e7b409901b21ff3ebb0f6241bae5bede683f`, was not
+applied: its exact guard correctly stopped when the three course titles were
+later normalized. A fresh read-only check found every count, source playlist,
+teacher value, taxonomy link, lesson count, and protected JEE value unchanged;
+only the titles are now `Chemical Bonding`, `Evolution`, and `Principles of
+Inheritance and Variation`. The revised artifact below pins those current
+titles. The earlier hash is superseded and must not be run.
+
 ## Artifact
 
 - SQL: `docs/sql/unacademy_neet_first_batch_faculty_2026-08-03.sql`
-- SHA-256: `386a0af11d1526aba43d83ccba84e7b409901b21ff3ebb0f6241bae5bede683f`
+- SHA-256: `63ae41e5bd6774a36169931dfa50e2867745b6b7a670a5dd81d053c90ca421ee`
 - target: production project `kezelafqhgqrprpadmlf`
 - expected additive delta: +2 teachers, +4 aliases, +2 institute links,
   +2 subject links, +2 goal links, +3 course links;
@@ -63,4 +72,4 @@ schema migration, release push, or faculty-credit quality-review transition.
 
 ## Separate approval phrase
 
-`Approve applying Unacademy NEET first-batch faculty registry artifact SHA-256 386a0af11d1526aba43d83ccba84e7b409901b21ff3ebb0f6241bae5bede683f to production, after a fresh PITR and exact-baseline check; stop on any mismatch; no release push.`
+`Approve applying revised Unacademy NEET first-batch faculty registry artifact SHA-256 63ae41e5bd6774a36169931dfa50e2867745b6b7a670a5dd81d053c90ca421ee to production, after a fresh PITR and exact-baseline check; stop on any mismatch; no release push.`

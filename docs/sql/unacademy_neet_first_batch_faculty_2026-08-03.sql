@@ -31,7 +31,7 @@ begin
     from (values
       (
         341::bigint,
-        'Chemical Bonding - Playlist | Class 11 | Unacademy NEET | LIVE DAILY | NEET Chemistry | Ashwani Tyagi'::text,
+        'Chemical Bonding'::text,
         'Ashwani Tyagi'::text,
         'PLsgHooHkqhhOpvf0vvBRLS91fUm9T_eE1'::text,
         147::bigint,
@@ -41,7 +41,7 @@ begin
       ),
       (
         342::bigint,
-        'NEET: Evolution - Playlist | Class 12 | Unacademy NEET | Live Daily 2.0 | NEET Biology | Pradeep Singh'::text,
+        'Evolution'::text,
         'Pradeep Singh'::text,
         'PLsgHooHkqhhOQCrgTeH7u28Es6agZtG_x'::text,
         147::bigint,
@@ -51,7 +51,7 @@ begin
       ),
       (
         343::bigint,
-        'NEET: Principles of Inheritance and Variation - Playlist | Class 12 | Unacademy NEET | Live Daily 2.0 | NEET Biology | Pradeep Singh'::text,
+        'Principles of Inheritance and Variation'::text,
         'Pradeep Singh'::text,
         'PLsgHooHkqhhNoUZC_HaAwe9k_5crRH-Ig'::text,
         147::bigint,

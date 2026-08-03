@@ -7,7 +7,7 @@ const sqlPath = "docs/sql/unacademy_neet_first_batch_faculty_2026-08-03.sql";
 const readinessPath = "docs/unacademy-neet-faculty-first-batch-readiness-2026-08-03.md";
 const sql = readFileSync(sqlPath, "utf8");
 const readiness = readFileSync(readinessPath, "utf8");
-const expectedHash = "386a0af11d1526aba43d83ccba84e7b409901b21ff3ebb0f6241bae5bede683f";
+const expectedHash = "63ae41e5bd6774a36169931dfa50e2867745b6b7a670a5dd81d053c90ca421ee";
 
 describe("Unacademy NEET first-batch faculty production package", () => {
   it("pins the exact owner-reviewed identities, courses, and decision", () => {
@@ -18,6 +18,10 @@ describe("Unacademy NEET first-batch faculty production package", () => {
     expect(sql).toContain("(342::bigint, 'pradeep-singh')");
     expect(sql).toContain("(343::bigint, 'pradeep-singh')");
     expect(sql).toContain("UCdQwYksctqqiRwqp3PiJMWA");
+    expect(sql).toContain("'Chemical Bonding'::text");
+    expect(sql).toContain("'Evolution'::text");
+    expect(sql).toContain("'Principles of Inheritance and Variation'::text");
+    expect(sql).not.toContain("Chemical Bonding - Playlist | Class 11");
   });
 
   it("is additive-only and leaves quality-review status pending", () => {
@@ -177,15 +181,15 @@ describe("Unacademy NEET first-batch faculty production package", () => {
       from generate_series(1, 331) n;
       insert into public.playlists values
         (341,
-         'Chemical Bonding - Playlist | Class 11 | Unacademy NEET | LIVE DAILY | NEET Chemistry | Ashwani Tyagi',
+         'Chemical Bonding',
          'Ashwani Tyagi', 'PLsgHooHkqhhOpvf0vvBRLS91fUm9T_eE1', 2, 2,
          array['class-11'], 'Class 11', 'lectures', 'Hindi', 'all-levels', 147, 'pending'),
         (342,
-         'NEET: Evolution - Playlist | Class 12 | Unacademy NEET | Live Daily 2.0 | NEET Biology | Pradeep Singh',
+         'Evolution',
          'Pradeep Singh', 'PLsgHooHkqhhOQCrgTeH7u28Es6agZtG_x', 2, 4,
          array['class-12'], 'Class 12', 'lectures', 'Hindi', 'all-levels', 147, 'pending'),
         (343,
-         'NEET: Principles of Inheritance and Variation - Playlist | Class 12 | Unacademy NEET | Live Daily 2.0 | NEET Biology | Pradeep Singh',
+         'Principles of Inheritance and Variation',
          'Pradeep Singh', 'PLsgHooHkqhhNoUZC_HaAwe9k_5crRH-Ig', 2, 4,
          array['class-12'], 'Class 12', 'lectures', 'Hindi', 'all-levels', 147, 'pending');
       insert into public.videos select n from generate_series(1, 3955) n;
