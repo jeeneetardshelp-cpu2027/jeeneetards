@@ -1,5 +1,5 @@
 // =====================================================================
-//  TestsPage.jsx — the practice-test directory (/tests).
+//  TestsPage.jsx — the mock-test directory (/tests).
 //
 //  A directory of OUTBOUND links, not a test engine. JEENEETARD does not
 //  set questions, score attempts or store results; every link opens the
@@ -111,10 +111,10 @@ export default function TestsPage() {
 
   return (
     <div className={`min-h-screen ${t.page} ${t.text}`}>
-      <GlobalHeader crumbs={[{ label: "Practice tests" }]} />
+      <GlobalHeader crumbs={[{ label: "Mock tests" }]} />
       <main className="py-10">
         <Container>
-          <h1 className={`text-2xl font-bold ${t.text}`}>Practice tests</h1>
+          <h1 className={`text-2xl font-bold ${t.text}`}>Mock tests</h1>
           <p className={`mt-2 max-w-2xl text-sm leading-relaxed ${t.faint}`}>
             Free mock tests and previous-year papers, grouped by exam. Every
             link opens the platform that actually runs the test —{" "}

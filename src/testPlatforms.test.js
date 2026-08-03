@@ -1,4 +1,4 @@
-// Guards the practice-test directory's data invariants.
+// Guards the mock-test directory's data invariants.
 //
 // This file exists because testPlatforms.js is edited BY HAND every time a
 // new test source is added. A typo there ships a dead or unsafe link to

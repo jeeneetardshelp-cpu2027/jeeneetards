@@ -133,7 +133,7 @@ export function metadataForLocation(pathname = "/", search = "") {
       ...base,
       title: `Free mock tests and previous year papers | ${SITE_NAME}`,
       description:
-        "Free practice tests and previous-year papers for JEE Main, JEE Advanced, NEET, Olympiads and the Class 10 and 12 boards, linked to the platforms that run them.",
+        "Free mock tests and previous-year papers for JEE Main, JEE Advanced, NEET, Olympiads and the Class 10 and 12 boards, linked to the platforms that run them.",
     };
   }
 
