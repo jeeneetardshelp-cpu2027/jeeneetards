@@ -35,6 +35,22 @@ describe("production metadata assets", () => {
     expect(llms).toContain("All videos stay on YouTube");
   });
 
+  it("advertises the public Explore landing page in the generated sitemap", () => {
+    const sitemap = readFileSync(resolve(root, "public/sitemap.xml"), "utf8");
+    expect(sitemap).toContain(
+      "<loc>https://www.jeeneetard.com/explore</loc>",
+    );
+  });
+
+  it("noindexes the search tool before JavaScript runs", () => {
+    const config = JSON.parse(readFileSync(resolve(root, "vercel.json"), "utf8"));
+    const searchHeaders = config.headers.find((entry) => entry.source === "/search")?.headers;
+    expect(searchHeaders).toContainEqual({
+      key: "X-Robots-Tag",
+      value: "noindex, follow",
+    });
+  });
+
   it("ships a correctly sized social preview image", () => {
     const png = readFileSync(resolve(root, "public/social-preview.png"));
     expect(png.subarray(0, 8).toString("hex")).toBe("89504e470d0a1a0a");
