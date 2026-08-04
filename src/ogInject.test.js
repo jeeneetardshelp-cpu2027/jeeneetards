@@ -117,6 +117,8 @@ describe("server-rendered discovery landings", () => {
     ["/", "Find the right lecture. Skip the noise.", "/explore"],
     ["/browse", "All courses", "/explore"],
     ["/explore", "What are you preparing for?", "/browse"],
+    ["/terms", "Terms of Service &amp; Disclaimer", "/privacy"],
+    ["/privacy", "Privacy Policy", "/terms"],
   ])("renders a truthful %s fallback", (pathname, heading, destination) => {
     const meta = metadataForLocation(pathname);
     const body = renderLandingBody(pathname, meta);
