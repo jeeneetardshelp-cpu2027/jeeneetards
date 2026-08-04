@@ -178,6 +178,44 @@ export function renderLandingBody(pathname, meta) {
 }
 
 /**
+ * Canonical Browse fallback with real catalogue links. This is intentionally
+ * plain HTML: React replaces it during hydration, while crawlers and students
+ * without JavaScript still get a complete path to every public course and
+ * faculty profile instead of a generic two-link shell.
+ */
+export function renderBrowseDirectoryBody(meta, { courses = [], faculty = [] } = {}) {
+  const courseItems = courses
+    .filter((course) => course?.id && course?.title)
+    .map((course) =>
+      `<li><a href="/course/${encodeURIComponent(course.id)}">` +
+      `${escapeHtml(course.title)}</a></li>`,
+    )
+    .join("");
+  const facultyItems = faculty
+    .filter((person) => person?.slug && person?.display_name)
+    .map((person) =>
+      `<li><a href="/faculty/${encodeURIComponent(person.slug)}">` +
+      `${escapeHtml(person.display_name)}</a></li>`,
+    )
+    .join("");
+
+  return [
+    "<main>",
+    "<h1>All courses</h1>",
+    `<p>${escapeHtml(meta.description)}</p>`,
+    courseItems ? "<h2>Course directory</h2>" : "",
+    courseItems ? `<ul>${courseItems}</ul>` : "",
+    facultyItems ? "<h2>Faculty directory</h2>" : "",
+    facultyItems ? `<ul>${facultyItems}</ul>` : "",
+    '<nav aria-label="Course discovery"><a href="/">Home</a> ' +
+      '<a href="/explore">Find a course</a> ' +
+      '<a href="/tests">Practice tests</a> ' +
+      '<a href="/terms">Terms</a> <a href="/privacy">Privacy</a></nav>',
+    "</main>",
+  ].join("");
+}
+
+/**
  * Crawler-readable body for /tests. Names every exam section, and for the
  * ones that have a source, the real outbound link — so an AI crawler can
  * answer "where can I take a free JEE Main mock test" from this HTML alone.
