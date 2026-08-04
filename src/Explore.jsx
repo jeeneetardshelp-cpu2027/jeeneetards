@@ -39,7 +39,7 @@ import { exploreStepHeading } from "./exploreHeading.js";
 import { GlobalHeader, HeaderSearch, Container } from "./AppShell.jsx";
 import { useTheme } from "./theme.jsx";
 import { useStructuredData } from "./PageMetadata.jsx";
-import { breadcrumbListSchema } from "./structuredData.js";
+import { breadcrumbListSchema, itemListSchema } from "./structuredData.js";
 import { BRAND_NAVY, BRAND_TEAL } from "./brandColors.js";
 
 const BRAND = { navy: BRAND_NAVY, teal: BRAND_TEAL };
@@ -162,6 +162,58 @@ export default function Explore() {
             : chapter && subjectNode && catalogReady && !chapterNode
               ? p(cls, subject)
               : null;
+
+  // One source for both the visible Step and its ItemList. Previously the
+  // edge response described these options, but hydration registered only the
+  // breadcrumb and removed the server ItemList from the document head.
+  const stepOptions = !goalNode
+    ? goals.map((g) => ({
+        key: g.id,
+        label: g.name,
+        hint: g.slug === "school" && boardsUnavailable ? "Coming soon"
+          : g.count > 0 ? countHint(g) : "Coming soon",
+        disabled: g.count === 0 || (g.slug === "school" && boardsUnavailable),
+        to: path(g.slug),
+      }))
+    : isSchool && !boardNode
+      ? boards.map((b) => ({
+          key: b.id,
+          label: b.name,
+          hint: b.courseCount > 0 ? `${b.courseCount} courses` : "Coming soon",
+          disabled: b.courseCount === 0,
+          to: path(goal, b.slug),
+        }))
+      : !classNode
+        ? classLevels
+            .filter((c) => populatedClassSlugs.includes(c.slug))
+            .map((c) => ({ key: c.id, label: c.name, to: p(c.slug) }))
+        : !subjectNode
+          ? subjects.map((s) => ({
+              key: s.id,
+              label: s.name,
+              hint: countHint(s),
+              to: p(cls, s.slug),
+            }))
+          : !chapterNode
+            ? (chaptersBySubject[subjectNode.id] ?? []).map((ch) => ({
+                key: ch.id,
+                label: ch.name,
+                hint: countHint(ch),
+                // The final choice links directly to the canonical result page.
+                to: canonicalBrowseUrl({
+                  goal: goalNode.slug,
+                  cls: classNode.slug,
+                  board: boardNode?.slug,
+                  subject: subjectNode.slug,
+                  chapter: ch.slug,
+                }),
+              }))
+            : [];
+  const navigableStepOptions = stepOptions.filter((option) =>
+    !option.disabled && option.to);
+  const stepOptionsKey = navigableStepOptions
+    .map((option) => `${option.key}:${option.label}:${option.to}`)
+    .join("|");
   // The SAME `crumbs` this component already builds for its own header — no
   // second derivation to drift from what students see. Skipped while
   // searching (a live query isn't a stable page identity worth marking up)
@@ -170,13 +222,20 @@ export default function Explore() {
   // BreadcrumbList that names a URL the app itself has just decided is not
   // real would put invalid markup in the DOM for the render this component
   // never actually settles on.
-  // `to` -> `url`: breadcrumbListSchema returns null outright for the <2-item
-  // trail on the bare /explore step, so nothing is written there either.
+  // `to` -> `url`: the breadcrumb builder returns null for the one-item root
+  // trail, while its navigable goal choices still produce a useful ItemList.
   useStructuredData(
     searching || unknownSlugTarget
       ? []
-      : [breadcrumbListSchema(crumbs.map((c) => ({ label: c.label, url: c.to ?? null })))],
-    [searching, unknownSlugTarget, goalNode?.slug, boardNode?.slug, classNode?.slug, subjectNode?.slug, chapterNode?.slug],
+      : [
+          breadcrumbListSchema(crumbs.map((c) => ({ label: c.label, url: c.to ?? null }))),
+          itemListSchema(navigableStepOptions.map((option, index) => ({
+            title: option.label,
+            url: option.to,
+            position: index + 1,
+          }))),
+        ],
+    [searching, unknownSlugTarget, goalNode?.slug, boardNode?.slug, classNode?.slug, subjectNode?.slug, chapterNode?.slug, stepOptionsKey],
   );
 
   if (unknownSlugTarget) return <Navigate to={unknownSlugTarget} replace />;
@@ -217,17 +276,7 @@ export default function Explore() {
             loading={goalsLoading}
             error={goalsError}
             onRetry={retryGoals}
-            options={goals.map((g) => ({
-              key: g.id,
-              label: g.name,
-              // School Boards needs public.boards, which is not deployed. Offer
-              // it as "Coming soon" rather than letting a student walk into a
-              // journey that dead-ends in a database error.
-              hint: g.slug === "school" && boardsUnavailable ? "Coming soon"
-                    : g.count > 0 ? countHint(g) : "Coming soon",
-              disabled: g.count === 0 || (g.slug === "school" && boardsUnavailable),
-              to: path(g.slug),
-            }))}
+            options={stepOptions}
           />
         ) : isSchool && boardsUnavailable ? (
           <div className={`mt-6 rounded-2xl border border-dashed ${t.border} ${t.card} p-8 text-center`}>
@@ -242,13 +291,7 @@ export default function Explore() {
           <Step
             title={exploreStepHeading("board", stepScope)}
             loading={boardsLoading}
-            options={boards.map((b) => ({
-              key: b.id,
-              label: b.name,
-              hint: b.courseCount > 0 ? `${b.courseCount} courses` : "Coming soon",
-              disabled: b.courseCount === 0,
-              to: path(goal, b.slug),
-            }))}
+            options={stepOptions}
           />
         ) : !classNode ? (
           <Step
@@ -256,15 +299,7 @@ export default function Explore() {
             loading={classesLoading || !classesReady}
             error={classesError}
             onRetry={retryClasses}
-            options={classLevels
-              .filter((c) =>
-                populatedClassSlugs.includes(c.slug)
-              )
-              .map((c) => ({
-                key: c.id,
-                label: c.name,
-                to: p(c.slug),
-              }))}
+            options={stepOptions}
           />
         ) : !subjectNode ? (
           <Step
@@ -277,12 +312,7 @@ export default function Explore() {
               label: "Choose another stage",
               to: p(),
             }}
-            options={subjects.map((s) => ({
-              key: s.id,
-              label: s.name,
-              hint: countHint(s),
-              to: p(cls, s.slug),
-            }))}
+            options={stepOptions}
           />
         ) : !chapterNode ? (
           <Step
@@ -290,21 +320,7 @@ export default function Explore() {
             loading={catLoading}
             error={catalogError}
             onRetry={retryCatalog}
-            options={(chaptersBySubject[subjectNode.id] ?? []).map((ch) => ({
-              key: ch.id,
-              label: ch.name,
-              hint: countHint(ch),
-              // This is the final choice, so link straight to the one results
-              // surface. The legacy deep path still redirects for old shares,
-              // but new navigation should not manufacture a 308 hop.
-              to: canonicalBrowseUrl({
-                goal: goalNode.slug,
-                cls: classNode.slug,
-                board: boardNode?.slug,
-                subject: subjectNode.slug,
-                chapter: ch.slug,
-              }),
-            }))}
+            options={stepOptions}
           />
         ) : (
           // The guided journey does not render its own results. The last step

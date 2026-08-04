@@ -275,6 +275,33 @@ describe("edge-rendered discovery landings", () => {
     expect(html).toContain('data-schema-key="Organization"');
   });
 
+  it("serves the populated root Explore choices as HTML and an ItemList", async () => {
+    vi.stubEnv("VITE_SUPABASE_URL", "https://catalog.example");
+    vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
+    vi.stubGlobal("fetch", vi.fn(async (input) => {
+      if (String(input).includes("/rest/v1/rpc/get_browse_curriculum")) {
+        return Response.json([
+          { entity_id: 1, slug: "jee", name: "JEE", course_count: 80 },
+          { entity_id: 2, slug: "neet", name: "NEET", course_count: 40 },
+          { entity_id: 3, slug: "olympiad", name: "Olympiad", course_count: 0 },
+        ]);
+      }
+      return new Response(shell, { status: 200 });
+    }));
+
+    const response = await middleware(
+      new Request("https://www.jeeneetard.com/explore"),
+    );
+    const html = await response.text();
+
+    expect(html).toContain("<h1>What are you preparing for?</h1>");
+    expect(html).toContain('<a href="/explore/jee">JEE</a> (80 courses)');
+    expect(html).toContain('<a href="/explore/neet">NEET</a> (40 courses)');
+    expect(html).not.toContain("/explore/olympiad");
+    expect(html).toContain('data-schema-key="ItemList"');
+    expect(html).toContain('"url":"https://www.jeeneetard.com/explore/jee"');
+  });
+
   it("serves validated deep Explore navigation as HTML and structured data", async () => {
     vi.stubEnv("VITE_SUPABASE_URL", "https://catalog.example");
     vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
