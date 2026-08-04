@@ -56,7 +56,7 @@ describe("Unacademy NEET second-batch faculty production package", () => {
   it("pins the immutable artifact hash and prepared-only handoff", () => {
     expect(createHash("sha256").update(sql, "utf8").digest("hex")).toBe(expectedHash);
     expect(readiness).toContain(`SHA-256: \`${expectedHash}\``);
-    expect(readiness).toContain("Reprepared and locally rehearsed only");
+    expect(readiness).toContain("Applied successfully to production");
     expect(readiness).toContain("+3 teachers, +5 normalized aliases");
     expect(readiness).toContain("32 teachers / 50 aliases");
     expect(readiness).toContain("c742fabf93ff8dd33d6ecd5eb4793db0");

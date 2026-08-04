@@ -2,12 +2,12 @@
 
 ## Status
 
-Reprepared and locally rehearsed only. The first approved artifact stopped at
-its exact-baseline guard after an unrelated English lesson was added
-concurrently; its transaction rolled back and created no faculty rows. No
-quality-review transition, schema migration, clone, restore, or `release` push
-was performed. This replacement artifact must not be run without separate
-owner approval of its exact hash.
+Applied successfully to production on 4 August 2026 using the separately
+approved replacement artifact. The first approved artifact had stopped at its
+exact-baseline guard after an unrelated English lesson was added concurrently;
+that attempt rolled back and created no faculty rows. The replacement ran once
+after a fresh exact preflight and committed cleanly. No quality-review
+transition, schema migration, clone, restore, or `release` push was performed.
 
 ## Reviewed scope
 
@@ -65,6 +65,25 @@ The transaction contains inserts only, uses conflict-safe junction inserts,
 checks exact identities and postconditions, and re-verifies the protected JEE
 fingerprint before committing.
 
+## Production result
+
+- PITR: active with seven-day retention; latest restore point immediately
+  before the write was `04 Aug 2026, 12:42:14` IST;
+- catalogue remained 358 playlists / 4,223 videos / 4,229 memberships / 250
+  chapters / 92 chapter-class scopes;
+- faculty registry became 32 teachers / 50 aliases / 33 institute links / 33
+  subject links / 32 learning-goal links / 136 course links;
+- created verified teachers Mahendra Singh (`id 34`), Anu Gupta (`id 35`), and
+  Anoop Vashishtha (`id 36`);
+- linked courses 374 / 375 / 376 to teacher IDs 34 / 35 / 36 respectively as
+  primary instructors at position 1;
+- recorded exactly five normalized aliases and the reviewed Unacademy NEET,
+  subject, and NEET-goal links;
+- all three courses remain `pending` / `pending`, leaving canonical quality
+  review for its separate gate;
+- protected original JEE remained 83 courses / 1,307 memberships / fingerprint
+  `c742fabf93ff8dd33d6ecd5eb4793db0`.
+
 ## Local validation
 
 - targeted production-shaped PGlite rehearsal: 5/5 tests passed;
@@ -76,6 +95,5 @@ fingerprint before committing.
 
 No automatic `npm audit fix` was run in this SQL-only gate.
 
-## Required approval phrase
-
-`Approve applying revised Unacademy NEET second-batch faculty registry artifact SHA-256 970b515f9092717fd0c03feccd426b5ecd2925c0874048cd2b0c9bfaef16c7c7 to production, after a fresh PITR and exact-baseline check; stop on any mismatch; no release push.`
+The approved artifact hash remains immutable at
+`970b515f9092717fd0c03feccd426b5ecd2925c0874048cd2b0c9bfaef16c7c7`.
