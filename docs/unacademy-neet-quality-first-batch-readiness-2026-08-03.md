@@ -2,12 +2,10 @@
 
 ## Status
 
-Prepared, not applied, with refreshed guards. The previously approved artifact
-correctly stopped after production advanced during its gate; independent
-verification proved that it committed no quality reviews and left all three
-target courses pending. This replacement requires a fresh signed-in PITR check,
-a fresh read-only preflight matching every pinned guard, and a separate
-exact-hash approval from the owner.
+Applied to production on 4 August 2026 after exact-hash owner approval, a fresh
+signed-in PITR check, and a fresh read-only preflight matching every pinned
+guard. The transaction committed the three reviewed quality transitions and no
+catalogue, faculty-registry, chapter, video, or membership delta.
 
 ## Reviewed scope
 
@@ -97,6 +95,33 @@ Final prepared-package checks:
 No production SQL, content import, schema migration, clone, restore, or
 `release` push was performed while preparing or validating this gate.
 
-## Required approval phrase
+## Production application — 4 August 2026
+
+- Target: production project `kezelafqhgqrprpadmlf`.
+- Fresh signed-in PITR evidence: Pro production, 7-day retention, restore window
+  `28 Jul 2026, 01:01:50` through `04 Aug 2026, 01:01:50` in the dashboard's
+  `UTC+05:30` timezone. The exact pre-write rollback target was
+  `04 Aug 2026, 01:01:50 IST`.
+- The SQL editor contained 449 lines. Copying the actual editor contents back
+  out and normalising the editor's CRLF line endings reproduced SHA-256
+  `6191c696f6ba7e62055390c48d48230417d69410bb2c06f76034e518b19ecc5e`
+  exactly before execution.
+- The independent preflight matched the pinned baseline: 353 playlists, 4,159
+  videos, 4,165 memberships, 245 chapters, 92 chapter-class scopes, 29
+  teachers, 45 aliases, 30 institute links, 30 subject links, 29 learning-goal
+  links, 133 course-teacher links, and zero quality-review audits. Courses
+  341–343 were still `pending` / `pending` with teacher links 32 / 33 / 33.
+- The guarded transaction completed successfully. Its result returned all
+  three courses as `approved` / `identified`, quality-ready with empty missing
+  fields, and exactly one audit row each.
+- Independent postflight confirmed the only delta was three quality-review
+  audits. Catalogue and faculty totals were unchanged; all three immutable
+  before/after audit states and the owner-evidence note matched exactly.
+- Protected original JEE remained 83 courses / 1,307 memberships / fingerprint
+  `c742fabf93ff8dd33d6ecd5eb4793db0`.
+- Application gate completed at `2026-08-04T11:03:01+05:30`. No restore,
+  content import, schema migration, or `release` push was performed.
+
+## Approval record
 
 `Approve applying refreshed Unacademy NEET first-batch quality-review artifact SHA-256 6191c696f6ba7e62055390c48d48230417d69410bb2c06f76034e518b19ecc5e to production, after a fresh PITR and exact-baseline check; stop on any mismatch; no release push.`

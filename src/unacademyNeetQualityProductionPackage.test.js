@@ -383,11 +383,14 @@ describe("Unacademy NEET first-batch quality-review production package", () => {
     expect(sql.match(/c742fabf93ff8dd33d6ecd5eb4793db0/g)).toHaveLength(2);
   });
 
-  it("pins the immutable hash and prepared-only readiness state", () => {
+  it("pins the immutable hash and recorded production application state", () => {
     expect(createHash("sha256").update(sql, "utf8").digest("hex")).toBe(expectedHash);
     expect(readiness).toContain(`SHA-256: \`${expectedHash}\``);
-    expect(readiness).toContain("Prepared, not applied");
-    expect(readiness).toMatch(/separate\s+exact-hash approval/);
+    expect(readiness).toContain("Applied to production on 4 August 2026");
+    expect(readiness).toContain("04 Aug 2026, 01:01:50 IST");
+    expect(readiness).toContain("Independent postflight confirmed");
+    expect(readiness).toContain("No restore,");
+    expect(readiness).toContain("`release` push was performed");
     expect(readiness).toContain("c742fabf93ff8dd33d6ecd5eb4793db0");
   });
 
