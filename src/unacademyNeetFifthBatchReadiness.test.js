@@ -19,7 +19,7 @@ const manifestPaths = [
 const manifestSources = manifestPaths.map((path) => readFileSync(path, "utf8"));
 const manifests = manifestSources.map((source) => JSON.parse(source));
 
-describe("Unacademy NEET fifth-batch read-only readiness", () => {
+describe("Unacademy NEET fifth-batch production evidence", () => {
   it("pins the three official playlists in the proposed order", () => {
     expect(manifests.map((manifest) => manifest.youtube_playlist_id)).toEqual([
       "PLsgHooHkqhhNu-Uw9RzbSyF1wsdL0Q25z",
@@ -75,19 +75,29 @@ describe("Unacademy NEET fifth-batch read-only readiness", () => {
     expect(manifestSources.map((source) => (
       createHash("sha256").update(source, "utf8").digest("hex")
     ))).toEqual([
-      "3e0204ebf14d4e343496c5d4613631d4413f97c825138a4bf701b177b057432c",
-      "77fa2ca22bcf5367cfcf31e39fb7b2e2f8e4e23eaa5fe1246b60c14cdf370a83",
-      "f312b0c2d2e31b50273ce9e7d3555738d0592d1f054baadd9a5445b29b60098d",
+      "84a1eb1ad9775b08ac05051dba64b6f9afadae068b949f975a0e7c6d12df3389",
+      "10bf003796e3d15a806fbf71b1b5e24622785153be17e59f62b5337d36a81cec",
+      "88e09b7d35f6cabcf98661ea8bd253b5aa00409ff20786fa793f558e1b72585c",
     ]);
   });
 
-  it("keeps teacher binding and every production write behind approval", () => {
-    expect(manifests.every((manifest) => manifest.teacher_evidence == null)).toBe(true);
-    expect(readiness).toContain("Read-only preparation is complete");
+  it("pins the approved teacher evidence and completed production gate", () => {
+    expect(manifests.every((manifest) => (
+      manifest.teacher_evidence?.decision_id
+        === "461233dd-54d1-413f-9625-2ffe5f164226"
+      && manifest.teacher_evidence.youtube_playlist_id
+        === manifest.youtube_playlist_id
+      && manifest.teacher_evidence.youtube_video_ids.length
+        === manifest.assignments.length
+    ))).toBe(true);
+    expect(manifests[1].teacher_evidence.teacher).toBe("Mahendra Singh");
+    expect(manifests[1].teacher_evidence.source_label).toContain("Mahendra S.");
+    expect(readiness).toContain("Production execution is complete");
     expect(readiness).toContain("461233dd-54d1-413f-9625-2ffe5f164226");
     expect(readiness).toContain("Mahendra S.");
     expect(readiness).toContain("30eee4a4a6842e5beeb7c97083d7f812");
     expect(readiness).toContain("No `release` push");
+    expect(readiness).toContain("380 playlists / 4,481 videos / 4,487 memberships");
   });
 
   it("documents incomplete and mixed-source deferrals", () => {
