@@ -23,7 +23,9 @@ import { ArrowRight } from "lucide-react";
 import { GlobalHeader, Container } from "./AppShell.jsx";
 import { Eyebrow, Pill, Surface, IconTile } from "./ui.jsx";
 import { Reveal, useReveal } from "./motion.jsx";
+import { useStructuredData } from "./PageMetadata.jsx";
 import { SECTION_ART, providerTint, tintedInk } from "./testCards.jsx";
+import { testPageSchemas } from "./testPageStructuredData.js";
 import {
   TEST_SECTIONS,
   totalTestResources,
@@ -93,6 +95,7 @@ export default function TestsPage() {
   // REQUIRED: `.reveal` ships at opacity 0 and is only shown once a
   // useReveal() root observes it. See TestsPage.reveal.test.jsx.
   const revealRoot = useReveal();
+  useStructuredData(testPageSchemas("/tests"), []);
 
   return (
     <div className="min-h-screen bg-canvas text-ink">

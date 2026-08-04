@@ -17,6 +17,7 @@ import {
 // Pure data, no React — safe to pull into the edge runtime.
 import { TEST_SECTIONS, ACCESS, findTestSection } from "./src/testPlatforms.js";
 import { buildCourseMetadata } from "./src/courseMetadata.js";
+import { testPageSchemas } from "./src/testPageStructuredData.js";
 
 const SITE = "https://www.jeeneetard.com";
 
@@ -103,11 +104,16 @@ export function injectRouteMeta(html, meta) {
 
 /** Homepage schemas use the same pure builders as Home.jsx. */
 export function landingSchemas(pathname) {
-  if (pathname !== "/") return [];
-  return [
-    { key: "WebSite", schema: websiteSchema() },
-    { key: "Organization", schema: organizationSchema() },
-  ];
+  if (pathname === "/") {
+    return [
+      { key: "WebSite", schema: websiteSchema() },
+      { key: "Organization", schema: organizationSchema() },
+    ];
+  }
+  return testPageSchemas(pathname).map((schema) => ({
+    key: schema["@type"],
+    schema,
+  }));
 }
 
 /** The canonical Browse response already renders every course link as HTML.

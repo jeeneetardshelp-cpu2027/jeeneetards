@@ -112,6 +112,22 @@ describe("edge-rendered discovery landings", () => {
     }
   });
 
+  it.each([
+    ["/tests", ["BreadcrumbList", "ItemList"]],
+    ["/tests/neet", ["BreadcrumbList"]],
+  ])("server-renders test-page schemas for %s", async (pathname, keys) => {
+    vi.stubGlobal("fetch", vi.fn(async () => new Response(shell, { status: 200 })));
+
+    const response = await middleware(
+      new Request(`https://www.jeeneetard.com${pathname}`),
+    );
+    const html = await response.text();
+
+    for (const key of keys) {
+      expect(html).toContain(`data-schema-key="${key}"`);
+    }
+  });
+
   it("serves canonical Browse as a linked course and faculty directory", async () => {
     vi.stubEnv("VITE_SUPABASE_URL", "https://catalog.example");
     vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");

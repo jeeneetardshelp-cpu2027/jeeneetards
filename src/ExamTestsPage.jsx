@@ -19,8 +19,10 @@ import { ArrowLeft } from "lucide-react";
 import { GlobalHeader, Container } from "./AppShell.jsx";
 import { Eyebrow, Pill, Surface } from "./ui.jsx";
 import { Reveal, useReveal } from "./motion.jsx";
+import { useStructuredData } from "./PageMetadata.jsx";
 import NotFound from "./NotFound.jsx";
 import { ResourceCard, SECTION_ART } from "./testCards.jsx";
+import { testPageSchemas } from "./testPageStructuredData.js";
 import {
   TEST_SECTIONS,
   findTestSection,
@@ -34,6 +36,7 @@ export default function ExamTestsPage() {
   // REQUIRED: `.reveal` ships at opacity 0 and is only shown once a
   // useReveal() root observes it. See TestsPage.reveal.test.jsx.
   const revealRoot = useReveal();
+  useStructuredData(testPageSchemas(`/tests/${examId ?? ""}`), [examId]);
 
   // Hooks run before this branch on purpose — bailing out earlier would
   // change the hook order between a known and an unknown exam.
