@@ -32,6 +32,13 @@ function renderPage() {
   );
 }
 
+function schemaFor(key) {
+  const element = document.head.querySelector(
+    `script[type="application/ld+json"][data-schema-key="${key}"]`,
+  );
+  return element ? JSON.parse(element.textContent) : null;
+}
+
 describe("/tests visibility", () => {
   it("reveals every animated block, so the page is not blank", () => {
     const { container } = renderPage();
@@ -66,6 +73,20 @@ describe("/tests visibility", () => {
         node = node.parentElement;
       }
     }
+  });
+
+  it("describes the visible exam directory and breadcrumb", () => {
+    renderPage();
+    expect(schemaFor("BreadcrumbList").itemListElement.map((item) => item.name))
+      .toEqual(["Home", "Mock tests"]);
+    const list = schemaFor("ItemList").itemListElement;
+    expect(list.map((item) => item.name)).toEqual(
+      TEST_SECTIONS.map((section) => `${section.label} mock tests`),
+    );
+    expect(list.map((item) => item.url)).toEqual(
+      TEST_SECTIONS.map((section) =>
+        `https://www.jeeneetard.com/tests/${section.id}`),
+    );
   });
 });
 
@@ -104,6 +125,13 @@ describe("/tests/:examId visibility", () => {
     expect(cards.map((a) => a.getAttribute("href")).sort()).toEqual(
       neet.resources.map((r) => r.url).sort(),
     );
+  });
+
+  it("describes the visible exam breadcrumb without inventing a resource list", () => {
+    renderExam("neet");
+    expect(schemaFor("BreadcrumbList").itemListElement.map((item) => item.name))
+      .toEqual(["Home", "Mock tests", "NEET"]);
+    expect(schemaFor("ItemList")).toBeNull();
   });
 
   it("404s an exam that does not exist instead of showing an empty page", () => {
