@@ -2,10 +2,10 @@
 
 ## Status
 
-Replacement prepared and rehearsed only. The separately approved original hash
-`3393f13716d9263b08818248f7fe77410248f3a4cc5e0552ad2c1205b81f0366`
+Replacement prepared and rehearsed only. The separately approved prior hash
+`957e06a2425bdad078ac2685f349fc3038393993acf6a766b9cd3982a1c98ebf`
 was submitted once on 4 August 2026 after a fresh PITR check, but its exact-
-baseline guard detected four concurrent course imports and raised before any
+baseline guard detected seven additional course imports and raised before any
 write. Courses 374–376 and the quality audit remained unchanged. The revised
 SQL must not be applied until the owner separately approves its exact SHA-256
 and a fresh PITR plus exact-baseline preflight succeeds. No `release` push is
@@ -29,7 +29,7 @@ imports currently have a null `source_title`.
 
 ## Fresh read-only production snapshot
 
-- catalogue: 362 playlists / 4,257 videos / 4,263 memberships / 250 chapters;
+- catalogue: 369 playlists / 4,348 videos / 4,354 memberships / 250 chapters;
 - chapter-class scopes: 92;
 - faculty registry: 32 teachers / 50 aliases / 33 institute links / 33 subject
   links / 32 learning-goal links / 136 course links;
@@ -44,14 +44,14 @@ imports currently have a null `source_title`.
 
 The transaction pins all these counts and identities. Any concurrent catalogue,
 faculty, quality-audit, course, or protected-JEE change aborts before writing.
-The four-count increase is fully explained by independently imported Class 10
-Social Science courses 377–380, which added 34 videos and memberships without
-touching the reviewed Unacademy targets or protected JEE catalogue.
+The growth since the prior artifact is limited to seven additive courses and 91
+videos/memberships. It did not touch the reviewed Unacademy targets, faculty
+registry, quality audit, or protected JEE catalogue.
 
 ## Prepared artifact
 
 - SQL: `docs/sql/unacademy_neet_second_batch_quality_review_2026-08-04.sql`
-- SHA-256: `957e06a2425bdad078ac2685f349fc3038393993acf6a766b9cd3982a1c98ebf`
+- SHA-256: `9b504e35ad22f6326fe9ed9f3c01ec23ba201e8f1df16524eb51e02e8376c175`
 - target if separately approved: production project `kezelafqhgqrprpadmlf`;
 - expected row effect: three guarded `source_title` captures, three canonical
   quality-review transitions, and three appended audit rows;
@@ -74,9 +74,9 @@ Local validation of the replacement completed on the latest checked-out `main`:
 
 - targeted production-shaped PGlite package rehearsal: 5/5 tests passed,
   including atomic success and rollback on baseline drift;
-- full regression suite: 147 files / 1,484 tests passed;
+- full regression suite: 147 files / 1,492 tests passed;
 - full ESLint: passed with zero warnings;
-- production build: passed (367 courses, 32 faculty, 48 deep Explore routes,
+- production build: passed (369 courses, 32 faculty, 48 deep Explore routes,
   and 12 static routes);
 - production dependency audit: zero vulnerabilities.
 

@@ -29,9 +29,9 @@ begin
     raise exception 'refusing Unacademy quality review: capability differs';
   end if;
 
-  if (select count(*) from public.playlists) <> 362
-     or (select count(*) from public.videos) <> 4257
-     or (select count(*) from public.playlist_videos) <> 4263
+  if (select count(*) from public.playlists) <> 369
+     or (select count(*) from public.videos) <> 4348
+     or (select count(*) from public.playlist_videos) <> 4354
      or (select count(*) from public.chapters) <> 250
      or (select count(*) from public.chapter_class_levels) <> 92
      or (select count(*) from public.teachers) <> 32
@@ -329,9 +329,9 @@ declare
   v_note constant text :=
     'Owner-reviewed official-channel attribution decision 4555712a-b4ea-446c-8f57-04d2257562f9; Unacademy NEET second-batch quality transition prepared 2026-08-04.';
 begin
-  if (select count(*) from public.playlists) <> 362
-     or (select count(*) from public.videos) <> 4257
-     or (select count(*) from public.playlist_videos) <> 4263
+  if (select count(*) from public.playlists) <> 369
+     or (select count(*) from public.videos) <> 4348
+     or (select count(*) from public.playlist_videos) <> 4354
      or (select count(*) from public.chapters) <> 250
      or (select count(*) from public.chapter_class_levels) <> 92
      or (select count(*) from public.teachers) <> 32
