@@ -18,12 +18,19 @@
 --   Competishun+  Chemistry  38 courses,  218 lessons, 270 hours
 --   -> 1017 lessons across 104 courses, of which 0 carry NEET today.
 --
--- EXPECTED EFFECT, counted by INSTITUTE rather than channel:
---   Physics    NEET chapters 30 -> 33;  with 2+ institutes 25/30 -> 29/33
---   Chemistry  NEET chapters 37 -> 49;  with 2+ institutes 25/37 -> 35/49
--- Twelve Chemistry chapters that no NEET student can currently reach at all --
--- among them The s-Block Elements, Hydrogen, both p-Block groups and Nuclear
--- Chemistry, all genuinely NEET topics -- become reachable.
+-- MEASURED EFFECT after running, counted by INSTITUTE rather than channel:
+--   Physics    NEET chapters 30 -> 31;  with 2+ institutes 25/30 -> 29/31
+--   Chemistry  NEET chapters 37 -> 45;  with 2+ institutes 25/37 -> 35/45
+-- Eight Chemistry chapters that no NEET student could reach at all -- among them
+-- The s-Block Elements, Hydrogen, both p-Block groups and Nuclear Chemistry, all
+-- genuinely NEET topics -- become reachable.
+--
+-- (An earlier draft of this header projected 33 and 49. That projection was
+-- computed BEFORE the exclusion rule below was written, and counted the six
+-- olympiad and JEE-Advanced-paper chapters that the rule then held back: four
+-- Chemistry -- IOQC, NMR Spectroscopy, INChO, IChO -- and two Physics -- INPhO
+-- and JEE Advanced 2024 Paper Solutions. 49-4 = 45 and 33-2 = 31. The figures
+-- above are measured against production after the run, not projected.)
 --
 -- WHAT IS DELIBERATELY EXCLUDED, and why it is not me overruling the request.
 -- Two categories are not "Physics and Chemistry lectures" in any useful sense;
