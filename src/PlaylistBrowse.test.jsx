@@ -61,7 +61,8 @@ vi.mock("./useRatingsAvailability.js", () => ({
 import {
   usePlaylistBrowse, PAGE_SIZE, formatDuration, isMissingBrowseStatsColumn,
 } from "./usePlaylistBrowse.js";
-import PlaylistBrowse from "./PlaylistBrowse.jsx";
+import PlaylistBrowse, { PlaylistCard } from "./PlaylistBrowse.jsx";
+import { ThemeProvider } from "./theme.jsx";
 
 // Drives the hook and reports nothing — we assert on the recorded query.
 function Probe(props) {
@@ -94,6 +95,35 @@ beforeEach(() => {
   ROWS = [];
   COUNT = 0;
   ratingsMock.available = null;
+});
+
+describe("playlist card channel navigation", () => {
+  it("links the channel credit to all courses from that channel", () => {
+    render(
+      <MemoryRouter>
+        <ThemeProvider>
+          <PlaylistCard
+            course={{
+              id: 11,
+              title: "Indefinite Integration",
+              subject: "Mathematics",
+              instituteId: 5,
+              institute: "Mohit Tyagi",
+              instituteLogoUrl: "https://yt3.ggpht.com/mohit-tyagi=s88",
+              classLevels: [],
+            }}
+            to="/course/11"
+            comparisonEnabled={false}
+          />
+        </ThemeProvider>
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByRole("link", { name: "View all courses from Mohit Tyagi" })
+      .getAttribute("href")).toBe("/browse?channel=5");
+    expect(screen.getByRole("link", { name: "View course" })
+      .getAttribute("href")).toBe("/course/11");
+  });
 });
 
 describe("goal isolation", () => {

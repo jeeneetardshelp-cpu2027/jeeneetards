@@ -15,7 +15,7 @@ import {
 import { PlaylistCard, ratingDisplay } from "./PlaylistBrowse.jsx";
 import { Container } from "./AppShell.jsx";
 import {
-  Accordion, Button, Eyebrow, IconTile, Marquee, Pill, SectionHead, Skeleton,
+  Accordion, Button, Eyebrow, IconTile, Pill, SectionHead, Skeleton,
   Stat, Surface,
 } from "./ui.jsx";
 import { Reveal, useParallax, useReveal } from "./motion.jsx";
@@ -187,23 +187,25 @@ export function SocialProof({ institutes, loading }) {
             </div>
           </Container>
         ) : (
-          <Marquee>
-            {institutes.map((institute) => (
-              <Link
-                key={institute.id}
-                to={`/browse?channel=${institute.id}`}
-                aria-label={`View all courses from ${institute.name}`}
-                className="inline-flex min-h-11 items-center gap-2.5 rounded-sm border border-hairline bg-surface px-5 py-3 text-sm font-medium whitespace-nowrap text-ink-2 transition-colors duration-200 hover:border-accent-line hover:bg-surface-2 hover:text-accent"
-              >
-                <ChannelAvatar
-                  url={institute.logoUrl}
-                  name={institute.name}
-                  className="h-8 w-8"
-                />
-                {institute.name}
-              </Link>
-            ))}
-          </Marquee>
+          <Container>
+            <nav aria-label="Trusted YouTube channels" className="flex flex-wrap justify-center gap-3">
+              {institutes.map((institute) => (
+                <Link
+                  key={institute.id}
+                  to={`/browse?channel=${institute.id}`}
+                  aria-label={`View all courses from ${institute.name}`}
+                  className="inline-flex min-h-11 items-center gap-2.5 rounded-sm border border-hairline bg-surface px-5 py-3 text-sm font-medium whitespace-nowrap text-ink-2 transition-colors duration-200 hover:border-accent-line hover:bg-surface-2 hover:text-accent"
+                >
+                  <ChannelAvatar
+                    url={institute.logoUrl}
+                    name={institute.name}
+                    className="h-8 w-8"
+                  />
+                  {institute.name}
+                </Link>
+              ))}
+            </nav>
+          </Container>
         )}
       </Reveal>
 

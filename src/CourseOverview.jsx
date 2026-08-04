@@ -1,6 +1,7 @@
 import {
   AlertTriangle, BookOpen, Clock, Layers, Play, Star,
 } from "lucide-react";
+import { Link } from "react-router";
 import { useTheme } from "./theme.jsx";
 import {
   CONTENT_TYPE_LABELS, DIFFICULTY_LABELS, LANGUAGE_LABELS, formatDuration,
@@ -80,14 +81,29 @@ export default function CourseOverview({
                 </span>
               )}
               {course.institute && (
-                <span className="inline-flex items-center gap-1.5">
+                course.instituteId ? (
+                <Link
+                  to={`/browse?channel=${course.instituteId}`}
+                  aria-label={`View all courses from ${course.institute}`}
+                  className="inline-flex items-center gap-1.5 rounded-sm transition-colors hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                >
                   <ChannelAvatar
                     url={course.instituteLogoUrl}
                     name={course.institute}
                     className="h-6 w-6"
                   />
                   {course.institute}
-                </span>
+                </Link>
+                ) : (
+                  <span className="inline-flex items-center gap-1.5">
+                    <ChannelAvatar
+                      url={course.instituteLogoUrl}
+                      name={course.institute}
+                      className="h-6 w-6"
+                    />
+                    {course.institute}
+                  </span>
+                )
               )}
             </div>
           )}
