@@ -29,7 +29,7 @@ import { useState } from "react";
 import { Link, useParams, Navigate } from "react-router";
 import { BookOpen, PlayCircle } from "lucide-react";
 import {
-  useLearningGoals, useClassLevels, useGoalCatalog, useBoards,
+  useLearningGoals, useClassLevels, useGoalCatalog, useBoards, usePopulatedClasses,
 } from "./useExplore.js";
 import { CLASS_LEVELS_BY_GOAL } from "./classLevels.js";
 import { useDebouncedValue } from "./useBrowse.js";
@@ -80,6 +80,14 @@ export default function Explore() {
 
   const goalNode = goals.find((g) => g.slug === goal);
   const classNode = classLevels.find((c) => c.slug === cls);
+  const classStepActive = Boolean(goalNode) && !cls && (!isSchool || Boolean(boardNode));
+  const {
+    classSlugs: populatedClassSlugs,
+    loading: classesLoading,
+    error: classesError,
+    ready: classesReady,
+    retry: retryClasses,
+  } = usePopulatedClasses(goalNode?.slug, classStepActive);
   const {
     subjects, chaptersBySubject, loading: catLoading,
     error: catalogError, ready: catalogReady, retry: retryCatalog,
@@ -134,12 +142,21 @@ export default function Explore() {
       : isSchool && board && !boardsLoading && !boardsError && !boardsUnavailable &&
           boards.length > 0 && !boardNode
         ? path(goal)
+        : isSchool && boardNode && boardNode.courseCount === 0
+          ? path(goal)
         : cls && classLevels.length > 0 &&
             (!classNode || !offeredClassSlugs.includes(cls))
           ? p()
+          : classStepActive && classesReady && !classesError && populatedClassSlugs.length === 0
+            ? isSchool ? path(goal) : "/explore"
+          : cls && classNode && catalogReady && subjects.length === 0
+            ? p()
           : subject && classNode && catalogReady &&
               subjects.length > 0 && !subjectNode
             ? p(cls)
+            : subjectNode && catalogReady &&
+                (chaptersBySubject[subjectNode.id] ?? []).length === 0
+              ? p(cls)
             : chapter && subjectNode && catalogReady && !chapterNode
               ? p(cls, subject)
               : null;
@@ -234,11 +251,12 @@ export default function Explore() {
         ) : !classNode ? (
           <Step
             title="Which stage are you in?"
+            loading={classesLoading || !classesReady}
+            error={classesError}
+            onRetry={retryClasses}
             options={classLevels
               .filter((c) =>
-                (CLASS_LEVELS_BY_GOAL[goal] ?? classLevels.map((x) => x.slug)).includes(
-                  c.slug
-                )
+                populatedClassSlugs.includes(c.slug)
               )
               .map((c) => ({
                 key: c.id,

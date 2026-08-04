@@ -18,6 +18,9 @@ vi.mock("./useExplore.js", () => ({
     classLevels: [{ id: 2, slug: "class-11", name: "Class 11" }],
   }),
   useBoards: () => ({ boards: [], loading: false, error: null, unavailable: false }),
+  usePopulatedClasses: () => ({
+    classSlugs: ["class-11"], loading: false, error: null, ready: true, retry: () => {},
+  }),
   useGoalCatalog: () => ({
     subjects: [{ id: 11, slug: "physics", name: "Physics", count: 16 }],
     chaptersBySubject: {

@@ -34,13 +34,14 @@ vi.mock("./supabaseClient.js", () => ({
   get supabase() { return supabaseMock; },
 }));
 
-import { useGoalCatalog, useLearningGoals } from "./useExplore.js";
+import { useGoalCatalog, useLearningGoals, usePopulatedClasses } from "./useExplore.js";
 import { useBrowseFacets } from "./useBrowseFacets.js";
 import FilterPanel from "./FilterPanel.jsx";
 
 let hookState;
 function GoalProbe() { hookState = useLearningGoals(); return null; }
 function CatalogProbe(props) { hookState = useGoalCatalog(props); return null; }
+function ClassProbe(props) { hookState = usePopulatedClasses(props.goal, props.enabled); return null; }
 function FacetProbe(props) { hookState = useBrowseFacets(props); return null; }
 
 beforeEach(() => {
@@ -93,6 +94,31 @@ describe("verified curriculum RPC in the guided journey", () => {
     expect(hookState.chaptersBySubject).toEqual({});
     expect(hookState.error).toMatch(/couldn't load/i);
     console.error.mockRestore();
+  });
+
+  it("offers only classes that have at least one subject", async () => {
+    rpcImpl = (_name, args) => ({
+      data: args.p_class === "class-11"
+        ? [{ entity_id: 4, slug: "physics", name: "Physics", course_count: 5 }]
+        : [],
+      error: null,
+    });
+    render(<ClassProbe goal="jee" enabled />);
+    await waitFor(() => expect(hookState.ready).toBe(true));
+
+    expect(hookState.classSlugs).toEqual(["class-11"]);
+    expect(rpcCalls.map((call) => call.args.p_class)).toEqual([
+      "class-11", "class-12", "dropper",
+    ]);
+    expect(fromCalls).toEqual([]);
+  });
+
+  it("does not query class availability before the class picker is active", async () => {
+    render(<ClassProbe goal="jee" enabled={false} />);
+    await waitFor(() => expect(hookState.loading).toBe(false));
+
+    expect(rpcCalls).toEqual([]);
+    expect(hookState.classSlugs).toEqual([]);
   });
 
   it("forwards goal, class and subject and maps chapter course counts", async () => {

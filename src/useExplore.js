@@ -8,6 +8,7 @@
 
 import { useState, useEffect } from "react";
 import { supabase, isSupabaseConfigured } from "./supabaseClient";
+import { CLASS_LEVELS_BY_GOAL } from "./classLevels.js";
 
 const MISSING_CATALOG_RPC = /PGRST202|could not find the function|schema cache|function .* does not exist/i;
 const MISSING_BOARD_CAPABILITY = /PGRST200|PGRST205|42P01|does not exist|schema cache/i;
@@ -157,6 +158,72 @@ export function useClassLevels() {
   }, []);
 
   return { classLevels };
+}
+
+// Class levels are reference data, but not every valid class has catalogue
+// content. Resolve the small, fixed set in parallel so the guided journey
+// never links a student (or a JS-capable crawler) into an honest-empty branch.
+export function usePopulatedClasses(goal, enabled = true) {
+  const [classSlugs, setClassSlugs] = useState([]);
+  const [loading, setLoading] = useState(Boolean(enabled && goal));
+  const [error, setError] = useState(null);
+  const [loadedGoal, setLoadedGoal] = useState(null);
+  const [nonce, setNonce] = useState(0);
+
+  useEffect(() => {
+    let active = true;
+    if (!enabled || !goal) {
+      setClassSlugs([]);
+      setLoading(false);
+      setError(null);
+      setLoadedGoal(null);
+      return;
+    }
+    if (!isSupabaseConfigured) {
+      setClassSlugs([]);
+      setLoading(false);
+      setError("The course guide isn't available right now.");
+      setLoadedGoal(null);
+      return;
+    }
+
+    const candidates = CLASS_LEVELS_BY_GOAL[goal] ?? [];
+    setLoading(true);
+    setError(null);
+    setLoadedGoal(null);
+
+    Promise.all(candidates.map(async (classSlug) => {
+      const result = await supabase.rpc("get_browse_curriculum", {
+        p_goal: goal,
+        p_class: classSlug,
+        p_subject: null,
+      });
+      if (result.error) throw result.error;
+      return { classSlug, populated: (result.data ?? []).length > 0 };
+    })).then((results) => {
+      if (!active) return;
+      setClassSlugs(results.filter((item) => item.populated).map((item) => item.classSlug));
+      setLoadedGoal(goal);
+      setLoading(false);
+    }).catch((reason) => {
+      if (!active) return;
+      console.error("browse curriculum classes:", reason);
+      setClassSlugs([]);
+      setError("We couldn't load the available stages.");
+      setLoadedGoal(null);
+      setLoading(false);
+    });
+
+    return () => { active = false; };
+  }, [goal, enabled, nonce]);
+
+  return {
+    classSlugs,
+    loading,
+    error,
+    ready: enabled && loadedGoal === goal,
+    retry: () => setNonce((value) => value + 1),
+  };
 }
 
 // The bounded subject/chapter tree for one goal and class. v9 returns DISTINCT

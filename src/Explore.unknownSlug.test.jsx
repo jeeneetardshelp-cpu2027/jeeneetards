@@ -13,6 +13,8 @@ import { MemoryRouter, Route, Routes, useLocation } from "react-router";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const catalog = vi.hoisted(() => ({ state: null }));
+const populatedClasses = vi.hoisted(() => ({ state: null }));
+const boardCatalog = vi.hoisted(() => ({ state: null }));
 
 vi.mock("./useExplore.js", () => ({
   useLearningGoals: () => ({
@@ -33,12 +35,8 @@ vi.mock("./useExplore.js", () => ({
       { id: 4, slug: "dropper", name: "Dropper" },
     ],
   }),
-  useBoards: () => ({
-    boards: [{ id: 1, slug: "cbse", name: "CBSE", courseCount: 3 }],
-    loading: false,
-    error: null,
-    unavailable: false,
-  }),
+  useBoards: () => boardCatalog.state,
+  usePopulatedClasses: () => populatedClasses.state,
   useGoalCatalog: () => catalog.state,
 }));
 
@@ -91,6 +89,19 @@ const JEE_CLASS_11_CATALOG = {
 beforeEach(() => {
   window.scrollTo = vi.fn();
   catalog.state = { ...JEE_CLASS_11_CATALOG, subjects: [], chaptersBySubject: {}, ready: false };
+  populatedClasses.state = {
+    classSlugs: ["class-11", "class-12", "dropper"],
+    loading: false,
+    error: null,
+    ready: true,
+    retry: () => {},
+  };
+  boardCatalog.state = {
+    boards: [{ id: 1, slug: "cbse", name: "CBSE", courseCount: 3 }],
+    loading: false,
+    error: null,
+    unavailable: false,
+  };
 });
 
 describe("unknown explore slugs", () => {
@@ -105,9 +116,41 @@ describe("unknown explore slugs", () => {
     expect(screen.getByLabelText("route").textContent).toBe("/explore/jee");
   });
 
+  it("redirects a direct board URL after its course count reaches zero", () => {
+    boardCatalog.state = {
+      ...boardCatalog.state,
+      boards: [{ id: 2, slug: "icse", name: "ICSE", courseCount: 0 }],
+    };
+    renderAt("/explore/school/icse");
+    expect(screen.getByLabelText("route").textContent).toBe("/explore/school");
+  });
+
   it("keeps a valid offered class", () => {
     renderAt("/explore/jee/class-11");
     expect(screen.getByLabelText("route").textContent).toBe("/explore/jee/class-11");
+  });
+
+  it("does not offer valid-but-empty classes in the picker", () => {
+    populatedClasses.state = {
+      ...populatedClasses.state,
+      classSlugs: ["class-11"],
+    };
+    renderAt("/explore/jee");
+
+    expect(screen.getByRole("link", { name: "Class 11" })).toBeDefined();
+    expect(screen.queryByRole("link", { name: "Class 12" })).toBeNull();
+    expect(screen.queryByRole("link", { name: "Dropper" })).toBeNull();
+  });
+
+  it("redirects a valid class after the catalogue confirms it is empty", () => {
+    catalog.state = {
+      ...JEE_CLASS_11_CATALOG,
+      subjects: [],
+      chaptersBySubject: {},
+      ready: true,
+    };
+    renderAt("/explore/jee/class-11");
+    expect(screen.getByLabelText("route").textContent).toBe("/explore/jee");
   });
 
   it("never redirects a subject while the catalogue holds another scope's data", () => {
@@ -135,6 +178,14 @@ describe("unknown explore slugs", () => {
     renderAt("/explore/jee/class-11/physics/no-such-chapter");
     expect(screen.getByLabelText("route").textContent).toBe(
       "/explore/jee/class-11/physics",
+    );
+  });
+
+  it("redirects a subject that has no navigable chapters", () => {
+    catalog.state = { ...JEE_CLASS_11_CATALOG, ready: true };
+    renderAt("/explore/jee/class-11/chemistry");
+    expect(screen.getByLabelText("route").textContent).toBe(
+      "/explore/jee/class-11",
     );
   });
 });

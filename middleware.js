@@ -166,6 +166,13 @@ async function deepExploreResponse(url, route, supaUrl, supaKey) {
     )
     : Promise.resolve({ confirmed: true, data: [] });
   const classIsValid = !route.cls || validClasses.includes(route.cls);
+  const needsClassOptions = !route.cls && (!route.isSchool || Boolean(route.board));
+  const classOptionsPromise = needsClassOptions
+    ? Promise.all(validClasses.map(async (slug) => ({
+        slug,
+        result: await curriculum({ p_goal: route.goal, p_class: slug, p_subject: null }),
+      })))
+    : Promise.resolve([]);
   const subjectsPromise = route.cls && classIsValid
     ? curriculum({ p_goal: route.goal, p_class: route.cls, p_subject: null })
     : Promise.resolve({ confirmed: true, data: [] });
@@ -173,17 +180,22 @@ async function deepExploreResponse(url, route, supaUrl, supaKey) {
     ? curriculum({ p_goal: route.goal, p_class: route.cls, p_subject: route.subject })
     : Promise.resolve({ confirmed: true, data: [] });
 
-  const [boardsResult, subjectsResult, chaptersResult] = await Promise.all([
+  const [boardsResult, classOptionResults, subjectsResult, chaptersResult] = await Promise.all([
     boardsPromise,
+    classOptionsPromise,
     subjectsPromise,
     chaptersPromise,
   ]);
-  if (![boardsResult, subjectsResult, chaptersResult]
+  if (![boardsResult, subjectsResult, chaptersResult,
+    ...classOptionResults.map((item) => item.result)]
     .every((result) => result.confirmed)) return next();
 
   const boards = Array.isArray(boardsResult.data) ? boardsResult.data : [];
   const subjects = Array.isArray(subjectsResult.data) ? subjectsResult.data : [];
   const chapters = Array.isArray(chaptersResult.data) ? chaptersResult.data : [];
+  const populatedClasses = classOptionResults
+    .filter((item) => Array.isArray(item.result.data) && item.result.data.length > 0)
+    .map((item) => item.slug);
   const goal = { name: goalName, slug: route.goal };
 
   const goalUrl = explorePath(route.goal);
@@ -191,6 +203,9 @@ async function deepExploreResponse(url, route, supaUrl, supaKey) {
   if (route.isSchool) {
     board = route.board ? boards.find((item) => item.slug === route.board) : null;
     if (route.board && !board) return redirectResponse(url, goalUrl);
+    if (board && Number(board.playlist_boards?.[0]?.count ?? 0) <= 0) {
+      return redirectResponse(url, goalUrl);
+    }
   }
 
   const scopeUrl = route.isSchool && board
@@ -198,6 +213,12 @@ async function deepExploreResponse(url, route, supaUrl, supaKey) {
     : goalUrl;
   if (route.cls && !validClasses.includes(route.cls)) {
     return redirectResponse(url, scopeUrl);
+  }
+  if (route.cls && subjects.length === 0) {
+    return redirectResponse(url, scopeUrl);
+  }
+  if (!route.cls && needsClassOptions && populatedClasses.length === 0) {
+    return redirectResponse(url, route.isSchool ? goalUrl : "/explore");
   }
 
   const classUrl = route.cls ? `${scopeUrl}/${route.cls}` : null;
@@ -207,6 +228,9 @@ async function deepExploreResponse(url, route, supaUrl, supaKey) {
   if (route.subject && !subject) return redirectResponse(url, classUrl ?? scopeUrl);
 
   const subjectUrl = subject ? `${classUrl}/${subject.slug}` : null;
+  if (subject && chapters.length === 0) {
+    return redirectResponse(url, classUrl ?? scopeUrl);
+  }
   const chapter = route.chapter
     ? chapters.find((item) => item.slug === route.chapter)
     : null;
@@ -234,14 +258,16 @@ async function deepExploreResponse(url, route, supaUrl, supaKey) {
   let options;
   if (route.isSchool && !board) {
     heading = "Which board are you on?";
-    options = boards.map((item) => ({
-      name: item.name,
-      url: explorePath(route.goal, item.slug),
-      count: Number(item.playlist_boards?.[0]?.count ?? 0),
-    }));
+    options = boards
+      .filter((item) => Number(item.playlist_boards?.[0]?.count ?? 0) > 0)
+      .map((item) => ({
+        name: item.name,
+        url: explorePath(route.goal, item.slug),
+        count: Number(item.playlist_boards?.[0]?.count ?? 0),
+      }));
   } else if (!route.cls) {
     heading = "Which stage are you in?";
-    options = validClasses.map((slug) => ({
+    options = populatedClasses.map((slug) => ({
       name: className(slug),
       url: `${scopeUrl}/${slug}`,
     }));

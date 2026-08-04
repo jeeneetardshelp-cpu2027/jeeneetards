@@ -13,6 +13,7 @@ import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
 import { TEST_SECTIONS } from "../testPlatforms.js";
+import { CLASS_LEVELS_BY_GOAL } from "../classLevels.js";
 
 export const BASE = "https://www.jeeneetard.com";
 export const STATIC_ROUTES = [
@@ -93,24 +94,105 @@ export async function buildSitemap({
 
   if (!url || !key || !url.startsWith("http")) {
     console.warn("! sitemap: Supabase env not set");
-    return { outcome: preserveOrWriteStatic(out), courses: 0, faculty: 0 };
+    return { outcome: preserveOrWriteStatic(out), courses: 0, faculty: 0, explore: 0 };
   }
 
   try {
     const db = clientFactory(url, key, {
       auth: { persistSession: false, autoRefreshToken: false },
     });
-    const [courseResult, facultyResult] = await Promise.all([
+    const [courseResult, facultyResult, goalResult, boardResult] = await Promise.all([
       db.from("playlists").select("id, created_at").order("id"),
       db.rpc("get_faculty_facets", {
         p_chapter_id: null,
         p_subject_id: null,
         p_goal_id: null,
       }),
+      db.rpc("get_browse_curriculum", {
+        p_goal: null,
+        p_class: null,
+        p_subject: null,
+      }),
+      db.from("boards")
+        .select("id, name, slug, playlist_boards(count)")
+        .order("display_order"),
     ]);
 
     if (courseResult.error) throw new Error(`courses: ${courseResult.error.message}`);
     if (facultyResult.error) throw new Error(`faculty: ${facultyResult.error.message}`);
+    if (goalResult.error) throw new Error(`goals: ${goalResult.error.message}`);
+    if (boardResult.error) throw new Error(`boards: ${boardResult.error.message}`);
+
+    const activeGoals = (goalResult.data ?? []).filter((row) =>
+      CLASS_LEVELS_BY_GOAL[row.slug] && Number(row.course_count ?? 0) > 0,
+    );
+    const activeBoards = (boardResult.data ?? []).filter((row) =>
+      row.slug && Number(row.playlist_boards?.[0]?.count ?? 0) > 0,
+    );
+
+    // A class URL is indexable only when it exposes at least one subject, and
+    // a subject URL only when it exposes at least one chapter. Final chapter
+    // paths intentionally stay out: middleware redirects those to the one
+    // canonical Browse results URL.
+    const subjectScopes = await Promise.all(activeGoals.flatMap((goal) =>
+      CLASS_LEVELS_BY_GOAL[goal.slug].map(async (classSlug) => {
+        const result = await db.rpc("get_browse_curriculum", {
+          p_goal: goal.slug,
+          p_class: classSlug,
+          p_subject: null,
+        });
+        if (result.error) {
+          throw new Error(`subjects ${goal.slug}/${classSlug}: ${result.error.message}`);
+        }
+        return { goal: goal.slug, classSlug, subjects: result.data ?? [] };
+      }),
+    ));
+    const chapterChecks = await Promise.all(subjectScopes.flatMap((scope) =>
+      scope.subjects.map(async (subject) => {
+        const result = await db.rpc("get_browse_curriculum", {
+          p_goal: scope.goal,
+          p_class: scope.classSlug,
+          p_subject: subject.slug,
+        });
+        if (result.error) {
+          throw new Error(
+            `chapters ${scope.goal}/${scope.classSlug}/${subject.slug}: ${result.error.message}`,
+          );
+        }
+        return {
+          ...scope,
+          subject: subject.slug,
+          hasChapters: (result.data ?? []).length > 0,
+        };
+      }),
+    ));
+
+    const explorePaths = new Set();
+    for (const goal of activeGoals) {
+      const populated = chapterChecks.filter((scope) =>
+        scope.goal === goal.slug && scope.hasChapters,
+      );
+      if (!populated.length) continue;
+      explorePaths.add(`/explore/${encodeURIComponent(goal.slug)}`);
+      if (goal.slug === "school") {
+        for (const board of activeBoards) {
+          const boardBase = `/explore/school/${encodeURIComponent(board.slug)}`;
+          explorePaths.add(boardBase);
+          for (const scope of populated) {
+            const classBase = `${boardBase}/${encodeURIComponent(scope.classSlug)}`;
+            explorePaths.add(classBase);
+            explorePaths.add(`${classBase}/${encodeURIComponent(scope.subject)}`);
+          }
+        }
+      } else {
+        const goalBase = `/explore/${encodeURIComponent(goal.slug)}`;
+        for (const scope of populated) {
+          const classBase = `${goalBase}/${encodeURIComponent(scope.classSlug)}`;
+          explorePaths.add(classBase);
+          explorePaths.add(`${classBase}/${encodeURIComponent(scope.subject)}`);
+        }
+      }
+    }
 
     const staticEntries = STATIC_ROUTES.map((path) => urlEntry(path));
     const courseEntries = (courseResult.data ?? []).map((row) =>
@@ -125,21 +207,23 @@ export async function buildSitemap({
     const facultyEntries = facultySlugs.map((slug) =>
       urlEntry(`/faculty/${encodeURIComponent(slug)}`),
     );
+    const exploreEntries = [...explorePaths].sort().map((path) => urlEntry(path));
 
-    writeSitemap([...staticEntries, ...courseEntries, ...facultyEntries], out);
+    writeSitemap([...staticEntries, ...exploreEntries, ...courseEntries, ...facultyEntries], out);
     console.log(
       `sitemap: ${courseEntries.length} courses + ${facultyEntries.length} faculty + ` +
-        `${staticEntries.length} static routes`,
+        `${exploreEntries.length} deep Explore + ${staticEntries.length} static routes`,
     );
     console.log(`sitemap: wrote ${out}`);
     return {
       outcome: "written",
       courses: courseEntries.length,
       faculty: facultyEntries.length,
+      explore: exploreEntries.length,
     };
   } catch (error) {
     console.warn(`! sitemap: catalogue fetch failed (${error.message})`);
-    return { outcome: preserveOrWriteStatic(out), courses: 0, faculty: 0 };
+    return { outcome: preserveOrWriteStatic(out), courses: 0, faculty: 0, explore: 0 };
   }
 }
 
