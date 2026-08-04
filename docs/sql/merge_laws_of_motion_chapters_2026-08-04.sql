@@ -77,6 +77,8 @@ declare
   v_moved int;
   v_clash int;
   v_pos int;
+  v_null_before int;
+  v_null_after int;
   r record;
 begin
   if not exists (select 1 from public.chapters where id = v_from) then
@@ -111,8 +113,22 @@ begin
   update public.videos set title = 'Circular Motion (Part 1) — Foundation Series' where youtube_video_id = 'gpPt4bUXHgc';
   update public.videos set title = 'Circular Motion (Part 2) — Foundation Series' where youtube_video_id = 'n7CiepcP5Uw';
 
+  -- How many lessons have no chapter at all BEFORE this runs. There is one, and
+  -- it is deliberate: video 2122, a JEE Wallah "Live Practice Session: Laws of
+  -- Motion, Work-Energy-Power & Circular Motion" that sits in three courses and
+  -- genuinely belongs to three chapters, so it was left unassigned on 30 July
+  -- rather than filed under a wrong one. Compare before against after instead of
+  -- asserting a catalogue-wide zero -- an absolute check fails on a five-day-old
+  -- deliberate decision that has nothing to do with this merge.
+  select count(*) into v_null_before from public.videos where chapter_id is null;
+
   update public.videos set chapter_id = v_into where chapter_id = v_from;
   get diagnostics v_moved = row_count;
+
+  select count(*) into v_null_after from public.videos where chapter_id is null;
+  if v_null_after <> v_null_before then
+    raise exception 'the move changed the number of chapterless lessons from % to %', v_null_before, v_null_after;
+  end if;
 
   delete from public.chapters where id = v_from;
 
@@ -190,15 +206,26 @@ begin
     raise exception '% title(s) now appear three or more times - the merge stacked collisions', v_dup;
   end if;
 
-  -- Nothing orphaned or emptied.
-  select count(*) into v_orphan from public.videos where chapter_id is null;
-  if v_orphan <> 0 then raise exception '% lesson(s) lost their chapter', v_orphan; end if;
-  select count(*) into v_empty from public.playlists p
-   where not exists (select 1 from public.playlist_videos pv where pv.playlist_id = p.id);
-  if v_empty <> 0 then raise exception '% course(s) now have no lessons', v_empty; end if;
-  select count(*) into v_empty from public.chapters c
-   where not exists (select 1 from public.videos v where v.chapter_id = c.id);
-  if v_empty <> 0 then raise exception '% chapter(s) now have no lessons', v_empty; end if;
+  -- Nothing emptied. SCOPED to what this migration touches, deliberately.
+  --
+  -- Two earlier versions of this file aborted a correct merge on catalogue-wide
+  -- assertions that were about pre-existing state: first "zero duplicate titles"
+  -- (chapter 6 already had one, and 111 such pairs exist catalogue-wide), then
+  -- "zero chapterless lessons" (video 2122 was deliberately left unassigned on
+  -- 30 July). A migration that moves 13 rows between two chapters has no
+  -- business asserting the health of 4,300 rows it never touches -- that is what
+  -- lets an unrelated change by someone else fail an unrelated migration.
+  select count(*) into v_empty
+    from public.playlists p
+   where p.id in (92, 111, 114, 115, 117, 118, 323, 338, 339, 340)   -- held chapter-82 lessons
+     and not exists (select 1 from public.playlist_videos pv where pv.playlist_id = p.id);
+  if v_empty <> 0 then raise exception '% course(s) that held moved lessons are now empty', v_empty; end if;
+
+  select count(*) into v_empty
+    from public.chapters c
+   where c.subject_id = 1
+     and not exists (select 1 from public.videos v where v.chapter_id = c.id);
+  if v_empty <> 0 then raise exception '% Physics chapter(s) now have no lessons', v_empty; end if;
 
   -- Physics display_order must be a clean contiguous run.
   select count(*) into v_n from public.chapters where subject_id = 1;
