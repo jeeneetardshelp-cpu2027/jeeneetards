@@ -7,7 +7,7 @@ const sqlPath = "docs/sql/unacademy_neet_second_batch_quality_review_2026-08-04.
 const readinessPath = "docs/unacademy-neet-quality-second-batch-readiness-2026-08-04.md";
 const sql = readFileSync(sqlPath, "utf8");
 const readiness = readFileSync(readinessPath, "utf8");
-const expectedHash = "3393f13716d9263b08818248f7fe77410248f3a4cc5e0552ad2c1205b81f0366";
+const expectedHash = "957e06a2425bdad078ac2685f349fc3038393993acf6a766b9cd3982a1c98ebf";
 
 const seedProductionShape = async () => {
   const pg = new PGlite();
@@ -273,7 +273,14 @@ const seedProductionShape = async () => {
        'Anoop Vashishtha', 'PLsgHooHkqhhPx8PUmYV2q6n6IbpGnCDlg', 147, 2, 2,
        array['12th'], '12th');
 
-    insert into public.videos select n, 1 from generate_series(1, 4223) n;
+    insert into public.playlists
+    select n, 'School Course ' || n, 'School Source ' || n, false,
+           'pending', 'pending', 'full-course', 'hinglish', 'intermediate',
+           'Channel source', 'school-source-' || n, 148, 1, 8,
+           array['10th'], '10th'
+      from generate_series(377, 380) n;
+
+    insert into public.videos select n, 1 from generate_series(1, 4257) n;
     insert into public.chapters select n from generate_series(1, 250) n;
     insert into public.chapter_class_levels select n from generate_series(1, 92) n;
     insert into public.playlist_learning_goals select n, 1 from generate_series(1, 83) n;
@@ -291,8 +298,8 @@ const seedProductionShape = async () => {
     insert into public.playlist_videos
     select n, 376, n, n - 1332 from generate_series(1333, 1341) n;
     insert into public.playlist_videos
-    select n, 200, 1 + ((n - 1) % 4223), n - 1341
-      from generate_series(1342, 4229) n;
+    select n, 200, 1 + ((n - 1) % 4257), n - 1341
+      from generate_series(1342, 4263) n;
 
     insert into public.teachers
     select n, 'Existing ' || n, 'existing ' || n, 'existing-' || n, true
@@ -376,9 +383,9 @@ describe("Unacademy NEET second-batch quality-review production package", () => 
     expect(sql).toContain("and p.source_title is null");
     expect(sql).toContain("if v_updated <> 3 then");
     for (const fragment of [
-      "count(*) from public.playlists) <> 358",
-      "count(*) from public.videos) <> 4223",
-      "count(*) from public.playlist_videos) <> 4229",
+      "count(*) from public.playlists) <> 362",
+      "count(*) from public.videos) <> 4257",
+      "count(*) from public.playlist_videos) <> 4263",
       "count(*) from public.chapters) <> 250",
       "count(*) from public.chapter_class_levels) <> 92",
       "count(*) from public.teachers) <> 32",
@@ -393,7 +400,7 @@ describe("Unacademy NEET second-batch quality-review production package", () => 
   it("pins the immutable hash and prepared-only production state", () => {
     expect(createHash("sha256").update(sql, "utf8").digest("hex")).toBe(expectedHash);
     expect(readiness).toContain(`SHA-256: \`${expectedHash}\``);
-    expect(readiness).toContain("Prepared and rehearsed only");
+    expect(readiness).toContain("Replacement prepared and rehearsed only");
     expect(readiness).toContain("No production write has been performed");
     expect(readiness).toContain("separately approves its exact SHA-256");
     expect(readiness).toContain("No `release` push");
@@ -424,9 +431,9 @@ describe("Unacademy NEET second-batch quality-review production package", () => 
            from public.playlists where id in (374,375,376)) as missing
     `);
     expect(result.rows[0]).toEqual({
-      playlists: 358,
-      videos: 4223,
-      memberships: 4229,
+      playlists: 362,
+      videos: 4257,
+      memberships: 4263,
       teacher_links: 136,
       reviews: 6,
       titles: ["Rotational Motion", "Current Electricity", "Electrochemistry"],
