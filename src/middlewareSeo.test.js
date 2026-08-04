@@ -89,6 +89,8 @@ describe("edge-rendered discovery landings", () => {
     ["/browse", "All courses"],
     ["/explore", "What are you preparing for?"],
     ["/tests", "Mock tests"],
+    ["/terms", "Terms of Service &amp; Disclaimer"],
+    ["/privacy", "Privacy Policy"],
   ])("serves crawler-readable HTML for %s", async (pathname, heading) => {
     vi.stubGlobal("fetch", vi.fn(async () => new Response(shell, { status: 200 })));
 

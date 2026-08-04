@@ -151,6 +151,16 @@ export function renderLandingBody(pathname, meta) {
         ["Browse all courses", "/browse"],
       ],
     },
+    "/terms": {
+      heading: "Terms of Service & Disclaimer",
+      description: meta.description,
+      links: [["Privacy Policy", "/privacy"], ["Home", "/"]],
+    },
+    "/privacy": {
+      heading: "Privacy Policy",
+      description: meta.description,
+      links: [["Terms & Disclaimer", "/terms"], ["Home", "/"]],
+    },
   };
   // /tests is a list, not a blurb: the useful facts for an extractive
   // crawler are which exams are covered and where each test actually lives.
