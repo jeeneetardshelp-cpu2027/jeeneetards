@@ -2,16 +2,15 @@
 
 ## Status and safety boundary
 
-Read-only preparation complete; owner approval is still required. This pass used
+Read-only preparation and owner evidence approval are complete. This pass used
 the official YouTube Data API against `@UnacademyNEET`
 (`UCdQwYksctqqiRwqp3PiJMWA`) and anonymous production catalogue reads. It did
 not run a production import or dry-run, create a chapter or teacher, apply a
 migration, create a clone, push `release`, or rerun CI.
 
-The proposed decision ID is `a6ed2229-85bd-4f4a-afea-fd7f3a166199`. It is not
-an approval until the owner explicitly accepts the exact three playlists and
-teacher evidence below. The prepared manifests intentionally omit
-`teacher_evidence` so they fail closed until that decision is recorded.
+The owner approved decision ID `a6ed2229-85bd-4f4a-afea-fd7f3a166199` for the
+exact three playlists and teacher evidence below. Each manifest now carries a
+playlist-specific reviewed-evidence block covering every retained video.
 
 ## Fresh anonymous production snapshot
 
@@ -25,16 +24,20 @@ Captured at 4 August 2026 15:26 IST:
 - protected original JEE: 83 courses / 1,307 memberships / fingerprint
   `c742fabf93ff8dd33d6ecd5eb4793db0`.
 
-This is discovery evidence only. An approved write must take a fresh quiet-window
-baseline and PITR restore point immediately before each course.
+This is discovery evidence only. Course `66` and its three Communication
+Systems lessons were deliberately removed after this snapshot. On 4 August
+2026 the owner therefore rebaselined the protected JEE boundary to 82 courses,
+1,304 memberships, fingerprint `30eee4a4a6842e5beeb7c97083d7f812`.
+Every write must take a fresh quiet-window baseline and PITR restore point
+immediately before the course.
 
 ## Proposed lecture-only courses
 
 | Order | Course | Source playlist | Chapter and class | Retained | Excluded | Attribution | Prepared manifest SHA-256 | Source snapshot SHA-256 |
 | ---: | --- | --- | --- | ---: | ---: | --- | --- | --- |
-| 1 | Plant Morphology — Unacademy NEET | `PLsgHooHkqhhOkppPbQFJ1cbTT_IRK2zY9` | 116 — Morphology of Flowering Plants, class-11 | 18 | 3 quizzes | Pradeep Singh | `2b63de83a2f2f9652cb5639ab7ed422bd1be8baa3384891829e3f30a26960bfb` | `dc50dbbee0b7d509733329e3ceb485b1467a705e5d0958c4c7f14cb05a933383` |
-| 2 | Plant Kingdom — Unacademy NEET | `PLsgHooHkqhhNrWNVOeHEpvWwoNIE4yD7s` | 121 — Plant Kingdom, class-11 | 11 | 6 quizzes | Pradeep Singh | `1e08268195e6b95c28d6bce41371a222851a9b074009e160b5348c59903d058b` | `8fec2685bd22e62ce624faba14e80351b1ca5d630cc03fa87c55509badb0f0cd` |
-| 3 | Ray Optics — Unacademy NEET | `PLsgHooHkqhhOk8KTfwoET_2kSfZ1TcYoV` | 20 — Ray Optics and Optical Instruments, class-12 | 10 | 1 PYQ + 1 revision + 4 quizzes | Mahendra Singh | `a9c25c040665d10b58235062ba9fd485c758569fd4eb5226db4590e3ba971b4a` | `c00a9b21af5147ebcfe65464c814f10762d4cd50e338ec972d1093d9d545c1b2` |
+| 1 | Plant Morphology — Unacademy NEET | `PLsgHooHkqhhOkppPbQFJ1cbTT_IRK2zY9` | 116 — Morphology of Flowering Plants, class-11 | 18 | 3 quizzes | Pradeep Singh | `cc977352bb977d04a26f18bb3d27f9eaba996a190929ab3b75c9607c7f930841` | `dc50dbbee0b7d509733329e3ceb485b1467a705e5d0958c4c7f14cb05a933383` |
+| 2 | Plant Kingdom — Unacademy NEET | `PLsgHooHkqhhNrWNVOeHEpvWwoNIE4yD7s` | 121 — Plant Kingdom, class-11 | 11 | 6 quizzes | Pradeep Singh | `3ba7d3b374180d12be172f851c408677cd1a9c1b1ceaab8b0bb7c1f7238e5031` | `8fec2685bd22e62ce624faba14e80351b1ca5d630cc03fa87c55509badb0f0cd` |
+| 3 | Ray Optics — Unacademy NEET | `PLsgHooHkqhhOk8KTfwoET_2kSfZ1TcYoV` | 20 — Ray Optics and Optical Instruments, class-12 | 10 | 1 PYQ + 1 revision + 4 quizzes | Mahendra Singh | `63e4dc0a09a3fd1111c64c56a20b5f145b231c4d92e608093fe0a9c47a7599a6` | `c00a9b21af5147ebcfe65464c814f10762d4cd50e338ec972d1093d9d545c1b2` |
 
 All 39 retained videos are currently embeddable and have known positive
 durations. Their total retained duration is 117,219 seconds (32 hours 33
@@ -89,10 +92,14 @@ mixing a different teacher's lecture into it.
 The proposed execution order is Plant Morphology, Plant Kingdom, then Ray
 Optics. Each approved course needs its teacher-evidence block bound to the
 decision ID, a fresh anonymous production dry-run, its own create-only
-transaction, and immediate verification of the protected original-83 JEE
+transaction, and immediate verification of the owner-approved protected JEE
 fingerprint. Stop on source/video reuse, baseline drift, chapter/class mismatch,
 or any new blocker. No `release` push.
 
-## Required approval phrase
+## Approval record
 
 `Approve the reviewed Unacademy NEET third batch — Plant Morphology and Plant Kingdom (Pradeep Singh), and Ray Optics (Mahendra Singh) — under decision a6ed2229-85bd-4f4a-afea-fd7f3a166199. Bind the exact playlist-specific teacher evidence, then import create-only, one at a time, with a fresh PITR/baseline check and anonymous dry-run before each, and protected original-83 JEE fingerprint verification after each. Stop on reuse, drift, or any blocker; no release push.`
+
+The owner supplied this approval and separately approved the protected-boundary
+rebaseline to `82 / 1,304 / 30eee4a4a6842e5beeb7c97083d7f812` after the
+intentional Communication Systems removal.

@@ -2,6 +2,21 @@
   "version": 1,
   "request_id": "51673e66-c236-4c74-b765-88a2c8b831a1",
   "youtube_playlist_id": "PLsgHooHkqhhOk8KTfwoET_2kSfZ1TcYoV",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "a6ed2229-85bd-4f4a-afea-fd7f3a166199",
+    "youtube_playlist_id": "PLsgHooHkqhhOk8KTfwoET_2kSfZ1TcYoV",
+    "teacher": "Mahendra Singh",
+    "source_url": "https://www.youtube.com/playlist?list=PLsgHooHkqhhOk8KTfwoET_2kSfZ1TcYoV",
+    "source_label": "Official Unacademy NEET channel-owned Ray Optics playlist naming Mahendra Singh and every retained lecture title naming Mahendra Sir or Mahendra Singh",
+    "reviewed_by": "Owner",
+    "reviewed_on": "2026-08-04",
+    "youtube_video_ids": [
+      "6MPoK0bCORc", "va1pxCatPhA", "7h3O6FJSZcM", "ayMqtbQNOU0", "P14ZMlRUTSE",
+      "gIuTLLOQ2Mk", "HG0X85xUVlY", "f_akIXrfOUo", "bXo4JzRFjy0", "npHwPXLkY40"
+    ]
+  },
   "assignments": [
     { "position": 1, "youtube_video_id": "6MPoK0bCORc", "chapter": "Ray Optics and Optical Instruments", "lesson_number": 1 },
     { "position": 2, "youtube_video_id": "va1pxCatPhA", "chapter": "Ray Optics and Optical Instruments", "lesson_number": 2 },

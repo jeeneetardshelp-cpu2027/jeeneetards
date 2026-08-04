@@ -2,6 +2,21 @@
   "version": 1,
   "request_id": "da2b1050-71a9-425d-b0b3-0b4148f2f818",
   "youtube_playlist_id": "PLsgHooHkqhhNrWNVOeHEpvWwoNIE4yD7s",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "a6ed2229-85bd-4f4a-afea-fd7f3a166199",
+    "youtube_playlist_id": "PLsgHooHkqhhNrWNVOeHEpvWwoNIE4yD7s",
+    "teacher": "Pradeep Singh",
+    "source_url": "https://www.youtube.com/playlist?list=PLsgHooHkqhhNrWNVOeHEpvWwoNIE4yD7s",
+    "source_label": "Official Unacademy NEET channel-owned Plant Kingdom playlist naming Pradeep Singh and every retained lecture title naming Pradeep Sir or Pradeep Singh",
+    "reviewed_by": "Owner",
+    "reviewed_on": "2026-08-04",
+    "youtube_video_ids": [
+      "V7L5tco9Nlo", "bMxSfymXq0k", "8g0CBX3BkJQ", "c2MUoZ3GubM", "3ZPoNFLGQK0", "B9sevqb_IV0",
+      "rzll1I5dorc", "7B1z7fTgAt8", "bfqZLq9IN0g", "vmFhm8QSrJE", "1ZsenW8xlSI"
+    ]
+  },
   "assignments": [
     { "position": 1, "youtube_video_id": "V7L5tco9Nlo", "chapter": "Plant Kingdom", "lesson_number": 1 },
     { "position": 2, "youtube_video_id": "bMxSfymXq0k", "chapter": "Plant Kingdom", "lesson_number": 2 },

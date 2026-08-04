@@ -9,7 +9,11 @@ import { pathToFileURL } from "node:url";
 import { allExact, client, rows } from "./dbProbe.js";
 
 export const PROTECTED_JEE_PLAYLIST_ID_MAX_EXCLUSIVE = 167;
-export const EXPECTED_JEE_FINGERPRINT = "c742fabf93ff8dd33d6ecd5eb4793db0";
+// Rebaselined by owner approval on 4 August 2026 after the deliberate removal
+// of course 66 (Communication Systems) and its three lessons.
+export const EXPECTED_JEE_PLAYLIST_COUNT = 82;
+export const EXPECTED_JEE_MEMBERSHIP_COUNT = 1304;
+export const EXPECTED_JEE_FINGERPRINT = "30eee4a4a6842e5beeb7c97083d7f812";
 
 const playlistFields = [
   "id",
@@ -130,11 +134,21 @@ async function main() {
       ? null
       : PROTECTED_JEE_PLAYLIST_ID_MAX_EXCLUSIVE,
   });
-  const matches = expected === null ? null : result.fingerprint === expected;
+  const matches = expected === null
+    ? null
+    : result.playlistCount === EXPECTED_JEE_PLAYLIST_COUNT
+      && result.membershipCount === EXPECTED_JEE_MEMBERSHIP_COUNT
+      && result.fingerprint === expected;
 
   console.log(JSON.stringify({
-    scope: allJee ? "all-jee" : "protected-original-83",
+    scope: allJee ? "all-jee" : "protected-jee-baseline",
     ...result,
+    ...(allJee
+      ? {}
+      : {
+        expectedPlaylistCount: EXPECTED_JEE_PLAYLIST_COUNT,
+        expectedMembershipCount: EXPECTED_JEE_MEMBERSHIP_COUNT,
+      }),
     expected,
     matches,
   }, null, 2));

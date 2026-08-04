@@ -56,20 +56,24 @@ describe("Unacademy NEET third-batch read-only readiness", () => {
     ]);
   });
 
-  it("records the prepared manifest hashes and the zero-write approval boundary", () => {
+  it("records the evidence-bound manifest hashes and rebaselined approval boundary", () => {
     const hashes = manifestSources.map((source) => (
       createHash("sha256").update(source, "utf8").digest("hex")
     ));
     expect(hashes).toEqual([
-      "2b63de83a2f2f9652cb5639ab7ed422bd1be8baa3384891829e3f30a26960bfb",
-      "1e08268195e6b95c28d6bce41371a222851a9b074009e160b5348c59903d058b",
-      "a9c25c040665d10b58235062ba9fd485c758569fd4eb5226db4590e3ba971b4a",
+      "cc977352bb977d04a26f18bb3d27f9eaba996a190929ab3b75c9607c7f930841",
+      "3ba7d3b374180d12be172f851c408677cd1a9c1b1ceaab8b0bb7c1f7238e5031",
+      "63e4dc0a09a3fd1111c64c56a20b5f145b231c4d92e608093fe0a9c47a7599a6",
     ]);
-    expect(readiness).toContain("Read-only preparation complete; owner approval is still required");
+    expect(readiness).toContain("Read-only preparation and owner evidence approval are complete");
     expect(readiness).toContain("a6ed2229-85bd-4f4a-afea-fd7f3a166199");
-    expect(readiness).toContain("c742fabf93ff8dd33d6ecd5eb4793db0");
+    expect(readiness).toContain("30eee4a4a6842e5beeb7c97083d7f812");
     expect(readiness).toContain("No `release` push");
-    expect(manifests.every((manifest) => manifest.teacher_evidence === undefined)).toBe(true);
+    expect(manifests.every((manifest) => (
+      manifest.teacher_evidence?.decision_id === "a6ed2229-85bd-4f4a-afea-fd7f3a166199"
+      && manifest.teacher_evidence.youtube_playlist_id === manifest.youtube_playlist_id
+      && manifest.teacher_evidence.youtube_video_ids.length === manifest.assignments.length
+    ))).toBe(true);
   });
 
   it("defers the incomplete Animal Kingdom playlist instead of hiding the gap", () => {
