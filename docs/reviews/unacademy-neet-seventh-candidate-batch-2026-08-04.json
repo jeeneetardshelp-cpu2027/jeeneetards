@@ -1,0 +1,111 @@
+{
+  "version": 1,
+  "generated_on": "2026-08-04",
+  "safety_boundary": "Read-only source and anonymous production review; no production write authorized.",
+  "channel": {
+    "title": "Unacademy NEET",
+    "youtube_channel_id": "UCdQwYksctqqiRwqp3PiJMWA",
+    "handle": "@UnacademyNEET",
+    "public_playlist_count": 736
+  },
+  "production_snapshot": {
+    "playlists": 382,
+    "videos": 4498,
+    "memberships": 4504,
+    "chapters": 247,
+    "protected_jee": {
+      "courses": 82,
+      "memberships": 1304,
+      "fingerprint": "30eee4a4a6842e5beeb7c97083d7f812"
+    },
+    "rolling_jee": {
+      "courses": 212,
+      "memberships": 2848,
+      "fingerprint": "9eea2b44f0b19c08cc0907c57e091342"
+    }
+  },
+  "candidates": [
+    {
+      "order": 1,
+      "youtube_playlist_id": "PLsgHooHkqhhOLWySbDetaU3Z-KiEBLE63",
+      "playlist_title": "NEET: Biodiversity & Conservation | LIVE Daily 2.0 | Unacademy NEET | Pradeep Singh",
+      "teacher": "Pradeep Singh",
+      "teacher_id": 33,
+      "source_teacher_label": "Pradeep Singh",
+      "subject": "Biology",
+      "subject_id": 4,
+      "chapter": "Biodiversity and Conservation",
+      "chapter_id": 99,
+      "class_level": "class-12",
+      "class_level_id": 3,
+      "chapter_class_scope": "canonical class-12 row",
+      "source_collision_count": 0,
+      "video_collision_count": 0,
+      "videos": [
+        { "source_position": 1, "lesson_number": 1, "youtube_video_id": "Rip8dgRo_JU", "title": "NEET: Biodiversity & Conservation L1 | LIVE Daily 2.0 | Unacademy NEET | Pradeep Singh", "duration_seconds": 2820, "embedding_status": "embeddable" },
+        { "source_position": 2, "lesson_number": 2, "youtube_video_id": "GOTPIedVp-Y", "title": "NEET: Biodiversity & Conservation L2 | LIVE Daily 2.0 | Unacademy NEET | Pradeep Singh", "duration_seconds": 2875, "embedding_status": "embeddable" },
+        { "source_position": 3, "lesson_number": 3, "youtube_video_id": "ERUu1Gra_pE", "title": "NEET: Biodiversity & Conservation L3 | LIVE Daily 2.0 | Unacademy NEET | Pradeep Singh", "duration_seconds": 4333, "embedding_status": "embeddable" },
+        { "source_position": 4, "lesson_number": 5, "youtube_video_id": "VuTkb-hhyuA", "title": "NEET: Biodiversity & Conservation L5 | LIVE Daily 2.0 | Unacademy NEET | Pradeep Singh", "duration_seconds": 2590, "embedding_status": "embeddable" },
+        { "source_position": 5, "lesson_number": 4, "youtube_video_id": "z2OJzHkLSaM", "title": "NEET: Biodiversity & Conservation L4 | LIVE Daily 2.0 | Unacademy NEET | Pradeep Singh", "duration_seconds": 3172, "embedding_status": "embeddable" }
+      ],
+      "excluded_videos": []
+    },
+    {
+      "order": 2,
+      "youtube_playlist_id": "PLsgHooHkqhhMbUvz0HhRZwLrpa4--2M1F",
+      "playlist_title": "NEET: Cell Cycle & Cell Division | Class 11 | Live Daily 2.0 | Unacademy NEET | Pradeep Sir",
+      "teacher": "Pradeep Singh",
+      "teacher_id": 33,
+      "source_teacher_label": "Pradeep Sir",
+      "subject": "Biology",
+      "subject_id": 4,
+      "chapter": "Cell Cycle and Cell Division",
+      "chapter_id": 106,
+      "class_level": "class-11",
+      "class_level_id": 2,
+      "chapter_class_scope": "canonical class-11 row",
+      "source_collision_count": 0,
+      "video_collision_count": 0,
+      "videos": [
+        { "source_position": 1, "lesson_number": 1, "youtube_video_id": "p3gwQAYSMnw", "title": "NEET: Cell Cycle & Cell Division - L1 | Class 11 | Live Daily 2.0 | Unacademy NEET | Pradeep Sir", "duration_seconds": 3450, "embedding_status": "embeddable" },
+        { "source_position": 2, "lesson_number": 2, "youtube_video_id": "z9FuX2sXyk4", "title": "NEET: Cell Cycle & Cell Division - L2 | Class 11 | Live Daily 2.0 | Unacademy NEET | Pradeep Sir", "duration_seconds": 2793, "embedding_status": "embeddable" },
+        { "source_position": 3, "lesson_number": 3, "youtube_video_id": "yAbQQiPVscE", "title": "NEET: Cell Cycle & Cell Division - L3 | Class 11 | Live Daily 2.0 | Unacademy NEET | Pradeep Sir", "duration_seconds": 3372, "embedding_status": "embeddable" },
+        { "source_position": 4, "lesson_number": 4, "youtube_video_id": "c9rksFuU_wo", "title": "NEET: Cell Cycle & Cell Division - L4 | Class 11 | Live Daily 2.0 | Unacademy NEET | Pradeep Sir", "duration_seconds": 2989, "embedding_status": "embeddable" },
+        { "source_position": 5, "lesson_number": 5, "youtube_video_id": "HBVEWh9qoj0", "title": "NEET: Cell Cycle & Cell Division - L5 | Class 11 | Live Daily 2.0 | Unacademy NEET | Pradeep Sir", "duration_seconds": 3580, "embedding_status": "embeddable" },
+        { "source_position": 6, "lesson_number": 6, "youtube_video_id": "n3_peTeIG_0", "title": "NEET: Cell Cycle & Cell Division - L6 | Class 11 | Live Daily 2.0 | Unacademy NEET | Pradeep Sir", "duration_seconds": 3853, "embedding_status": "embeddable" },
+        { "source_position": 7, "lesson_number": 7, "youtube_video_id": "32ApiAa9jrM", "title": "NEET: Cell Cycle & Cell Division - L7 | Class 11 | Live Daily 2.0 | Unacademy NEET | Pradeep Sir", "duration_seconds": 3130, "embedding_status": "embeddable" }
+      ],
+      "excluded_videos": []
+    },
+    {
+      "order": 3,
+      "youtube_playlist_id": "PLsgHooHkqhhMeV7vEcqRc91GnmR15_eHw",
+      "playlist_title": "NEET: Microbes in Human Welfare | Class 12 | Unacademy NEET | Pradeep Singh",
+      "teacher": "Pradeep Singh",
+      "teacher_id": 33,
+      "source_teacher_label": "Pradeep Singh",
+      "subject": "Biology",
+      "subject_id": 4,
+      "chapter": "Microbes in Human Welfare",
+      "chapter_id": 115,
+      "class_level": "class-12",
+      "class_level_id": 3,
+      "chapter_class_scope": "canonical class-12 row",
+      "source_collision_count": 0,
+      "video_collision_count": 0,
+      "videos": [
+        { "source_position": 1, "lesson_number": 1, "youtube_video_id": "GcoZXsGWyZw", "title": "NEET: Microbes in Human Welfare  - L1 | Class 12 | Live Daily 2.0 | Unacademy NEET | Pradeep Singh", "duration_seconds": 3545, "embedding_status": "embeddable" },
+        { "source_position": 2, "lesson_number": 2, "youtube_video_id": "5440o7hZyyc", "title": "NEET: Microbes in Human Welfare  - L2 | Class 12 | Live Daily 2.0 | Unacademy NEET | Pradeep Singh", "duration_seconds": 3355, "embedding_status": "embeddable" },
+        { "source_position": 3, "lesson_number": 3, "youtube_video_id": "03tPty_spOc", "title": "NEET: Microbes in Human Welfare  - L3 | Class 12 | Live Daily 2.0 | Unacademy NEET | Pradeep Singh", "duration_seconds": 3039, "embedding_status": "embeddable" },
+        { "source_position": 4, "lesson_number": 4, "youtube_video_id": "oBl8JwQAwRA", "title": "NEET: Microbes in Human Welfare  - L4 | Class 12 | Live Daily 2.0 | Unacademy NEET | Pradeep Singh", "duration_seconds": 3468, "embedding_status": "embeddable" }
+      ],
+      "excluded_videos": []
+    }
+  ],
+  "deferrals": [
+    "Photosynthesis: the source playlist contains a Biodiversity lecture and two different rows labeled L3; row-level correction is not inferable safely.",
+    "Human Reproduction: source sequence still lacks lecture 4.",
+    "Neural Control and Coordination: source sequence still lacks lecture 3.",
+    "Animal Kingdom: source sequence still lacks lecture 3."
+  ]
+}
