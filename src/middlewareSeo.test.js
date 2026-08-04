@@ -157,6 +157,24 @@ describe("edge-rendered discovery landings", () => {
     expect(fetchSpy).not.toHaveBeenCalled();
   });
 
+  it.each([
+    ["/browse/", "https://www.jeeneetard.com/browse"],
+    ["/terms///?source=old", "https://www.jeeneetard.com/terms?source=old"],
+    ["/course/13/", "https://www.jeeneetard.com/course/13"],
+    ["/explore/jee/", "https://www.jeeneetard.com/explore/jee"],
+  ])("redirects duplicate trailing-slash URL %s to its canonical path", async (path, target) => {
+    const fetchSpy = vi.fn();
+    vi.stubGlobal("fetch", fetchSpy);
+
+    const response = await middleware(
+      new Request(`https://www.jeeneetard.com${path}`),
+    );
+
+    expect(response.status).toBe(308);
+    expect(response.headers.get("location")).toBe(target);
+    expect(fetchSpy).not.toHaveBeenCalled();
+  });
+
   it("includes homepage schemas in the served response", async () => {
     vi.stubGlobal("fetch", vi.fn(async () => new Response(shell, { status: 200 })));
 
