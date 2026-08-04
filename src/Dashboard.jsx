@@ -13,7 +13,7 @@
 // =====================================================================
 
 import { useState, useEffect } from "react";
-import { useSearchParams } from "react-router";
+import { Link, useSearchParams } from "react-router";
 import { useCanonicalFilters } from "./useCanonicalFilters.js";
 import { buildChips, removeChip, clearAllChips } from "./filterChips.js";
 import FilterPanel from "./FilterPanel.jsx";
@@ -22,7 +22,7 @@ import { useBrowseFacets } from "./useBrowseFacets.js";
 import { useGoalCatalog } from "./useExplore.js";
 import { parseFilterParams, normalizeFilterParams } from "./filterParams.js";
 import {
-  Search, X, Play, BookOpen, Building2, AlertTriangle,
+  Search, X, Play, AlertTriangle,
 } from "lucide-react";
 import { useVideos, useDebouncedValue, LECTURE_PAGE_SIZE } from "./useBrowse.js";
 import { GlobalHeader } from "./AppShell.jsx";
@@ -30,24 +30,23 @@ import PlaylistBrowse from "./PlaylistBrowse.jsx";
 import { FacultyFilter } from "./FacultyFilter.jsx";
 import { useTheme } from "./theme.jsx";
 import { RELEASE_CAPABILITIES } from "./releaseCapabilities.js";
-import { BRAND_NAVY, BRAND_TEAL } from "./brandColors.js";
+import { BRAND_TEAL } from "./brandColors.js";
+import YouTubeThumbnail from "./YouTubeThumbnail.jsx";
+import ChannelAvatar from "./ChannelAvatar.jsx";
 
 // Your Competishun brand colours. Change these two lines to re-theme.
-const BRAND = { navy: BRAND_NAVY, teal: BRAND_TEAL };
+const BRAND = { teal: BRAND_TEAL };
 
 
 // ---------------------------------------------------------------------
 // 2. HELPERS  — turn a video ID into YouTube URLs
 // ---------------------------------------------------------------------
-const thumbUrl = (id) => `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
 const embedUrl = (id) => `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0`;
 
 // ---------------------------------------------------------------------
 // 3. VIDEO CARD
 // ---------------------------------------------------------------------
-function VideoCard({ video, onOpen }) {
-  // If the thumbnail image fails to load, show a branded fallback instead.
-  const [imgFailed, setImgFailed] = useState(false);
+export function VideoCard({ video, onOpen }) {
   const { t } = useTheme();
 
   return (
@@ -55,23 +54,15 @@ function VideoCard({ video, onOpen }) {
       {/* Thumbnail (click to open) */}
       <button
         onClick={() => onOpen(video)}
+        aria-label={`Watch ${video.title}`}
         className="relative block aspect-video w-full overflow-hidden"
       >
-        {!imgFailed ? (
-          <img
-            src={thumbUrl(video.youtubeVideoId)}
-            alt={video.title}
-            onError={() => setImgFailed(true)}
-            className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
-          />
-        ) : (
-          <div
-            className="flex h-full w-full items-center justify-center"
-            style={{ background: `linear-gradient(135deg, ${BRAND.navy}, ${BRAND.teal})` }}
-          >
-            <BookOpen className="h-10 w-10 text-white/80" />
-          </div>
-        )}
+        <YouTubeThumbnail
+          videoId={video.youtubeVideoId}
+          alt={video.title}
+          className="h-full w-full"
+          imageClassName="transition duration-300 group-hover:scale-105"
+        />
         {/* Play overlay on hover */}
         <span
           className="absolute inset-0 flex items-center justify-center opacity-0 transition group-hover:opacity-100"
@@ -83,10 +74,30 @@ function VideoCard({ video, onOpen }) {
 
       {/* Text + button */}
       <div className="flex flex-1 flex-col gap-2 p-4">
-        <div className="flex items-center gap-1.5 text-xs font-medium" style={{ color: BRAND.teal }}>
-          <Building2 className="h-3.5 w-3.5" />
-          {video.institute}
-        </div>
+        {video.instituteId ? (
+          <Link
+            to={`/browse?channel=${video.instituteId}`}
+            aria-label={`View all courses from ${video.institute}`}
+            className="inline-flex w-fit items-center gap-1.5 rounded-sm text-xs font-medium transition-colors hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+            style={{ color: BRAND.teal }}
+          >
+            <ChannelAvatar
+              url={video.instituteLogoUrl}
+              name={video.institute}
+              className="h-6 w-6"
+            />
+            {video.institute}
+          </Link>
+        ) : (
+          <div className="flex items-center gap-1.5 text-xs font-medium" style={{ color: BRAND.teal }}>
+            <ChannelAvatar
+              url={video.instituteLogoUrl}
+              name={video.institute}
+              className="h-6 w-6"
+            />
+            {video.institute}
+          </div>
+        )}
 
         <h3 className={`line-clamp-2 font-semibold leading-snug ${t.text}`}>
           {video.title}
@@ -112,7 +123,7 @@ function VideoCard({ video, onOpen }) {
 // ---------------------------------------------------------------------
 // 4. VIDEO MODAL  — the YouTube pop-up player
 // ---------------------------------------------------------------------
-function VideoModal({ video, onClose }) {
+export function VideoModal({ video, onClose }) {
   const { t } = useTheme();
   // Close on Escape key, and stop the page behind from scrolling.
   useEffect(() => {
@@ -148,9 +159,36 @@ function VideoModal({ video, onClose }) {
         <div className={`flex items-start justify-between gap-4 border-b ${t.border} p-4`}>
           <div>
             <h2 id="video-modal-title" className={`font-semibold leading-snug ${t.text}`}>{video.title}</h2>
-            <p className={`mt-0.5 text-xs ${t.muted}`}>
-              {video.institute} · {video.subject} · {video.chapter}
-            </p>
+            <div className={`mt-1 flex flex-wrap items-center gap-1 text-xs ${t.muted}`}>
+              {video.instituteId ? (
+                <Link
+                  to={`/browse?channel=${video.instituteId}`}
+                  onClick={onClose}
+                  aria-label={`View all courses from ${video.institute}`}
+                  className="inline-flex items-center gap-1 rounded-sm font-medium hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                >
+                  <ChannelAvatar
+                    url={video.instituteLogoUrl}
+                    name={video.institute}
+                    className="h-5 w-5"
+                  />
+                  {video.institute}
+                </Link>
+              ) : (
+                <span className="inline-flex items-center gap-1">
+                  <ChannelAvatar
+                    url={video.instituteLogoUrl}
+                    name={video.institute}
+                    className="h-5 w-5"
+                  />
+                  {video.institute}
+                </span>
+              )}
+              <span aria-hidden="true">·</span>
+              <span>{video.subject}</span>
+              <span aria-hidden="true">·</span>
+              <span>{video.chapter}</span>
+            </div>
           </div>
           <button
             onClick={onClose}
