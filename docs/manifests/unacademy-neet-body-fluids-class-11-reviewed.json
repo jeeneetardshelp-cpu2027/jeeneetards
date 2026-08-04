@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "request_id": "9c7beb84-dee2-4cc6-a4c7-ef4d81478230",
+  "youtube_playlist_id": "PLsgHooHkqhhPqQIxg5ou5zcgC6_72mepm",
+  "assignments": [
+    { "position": 1, "youtube_video_id": "4lUiaSbVsI8", "chapter": "Body Fluids and Circulation", "lesson_number": 1 },
+    { "position": 2, "youtube_video_id": "7mgHkwRMA9Q", "chapter": "Body Fluids and Circulation", "lesson_number": 2 },
+    { "position": 3, "youtube_video_id": "6E3o1qxlBnw", "chapter": "Body Fluids and Circulation", "lesson_number": 3 },
+    { "position": 4, "youtube_video_id": "hXc8Ou4N-fE", "chapter": "Body Fluids and Circulation", "lesson_number": 4 },
+    { "position": 5, "youtube_video_id": "JVFT4jIzZ_o", "chapter": "Body Fluids and Circulation", "lesson_number": 5 },
+    { "position": 6, "youtube_video_id": "UOjYtrfiYIo", "chapter": "Body Fluids and Circulation", "lesson_number": 6 },
+    { "position": 7, "youtube_video_id": "svZextzY8ck", "chapter": "Body Fluids and Circulation", "lesson_number": 7 }
+  ],
+  "exclusions": [
+    { "position": 8, "youtube_video_id": "aSq6NTq25kI", "reason": "Live quiz; keep practice separate from the lecture catalogue." },
+    { "position": 9, "youtube_video_id": "7CPuinyrTmA", "reason": "Live quiz; keep practice separate from the lecture catalogue." },
+    { "position": 10, "youtube_video_id": "JniXbR5xX-Q", "reason": "Broad Human Physiology mega quiz; keep practice separate from the lecture catalogue." },
+    { "position": 11, "youtube_video_id": "P9d1ew2tB9I", "reason": "Broad Human Physiology mega quiz; keep practice separate from the lecture catalogue." },
+    { "position": 12, "youtube_video_id": "6d0XymCIWxE", "reason": "Broad Human Physiology mega quiz; keep practice separate from the lecture catalogue." },
+    { "position": 13, "youtube_video_id": "XCHhq6G4RIE", "reason": "Broad Human Physiology mega quiz; keep practice separate from the lecture catalogue." },
+    { "position": 14, "youtube_video_id": "F4WCVEiZr_8", "reason": "Broad Human Physiology mega quiz; keep practice separate from the lecture catalogue." }
+  ]
+}
