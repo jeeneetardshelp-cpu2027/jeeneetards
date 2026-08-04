@@ -179,19 +179,58 @@ export const TEST_SECTIONS = [
     label: "Olympiad",
     blurb:
       "Problem sets for science and mathematics olympiads, which reward depth over speed.",
-    resources: [],
+    resources: [
+      {
+        name: "HBCSE past papers and model solutions",
+        url: "https://olympiads.hbcse.tifr.res.in/how-to-prepare/past-papers/",
+        provider: "HBCSE–TIFR, the Olympiad Cell",
+        // HBCSE runs India's national olympiad programme (NSE → INO → IOI/IPhO
+        // team selection), so this is the conducting body, not a coaching site.
+        official: true,
+        access: "free",
+        description:
+          "Question papers with model solutions for the Astronomy, Biology, Chemistry, Junior Science, Mathematics and Physics olympiads, in English and Hindi, going back over a decade.",
+        findIt:
+          "Pick a subject from the tabs at the top — Astronomy, Biology, Chemistry, Junior Science, Mathematics, Physics — then the year.",
+      },
+    ],
   },
   {
     id: "class-10",
     label: "Class 10 Boards",
     blurb: "Sample papers and past papers for the Class 10 board exams.",
-    resources: [],
+    resources: [
+      {
+        name: "CBSE Class 10 sample papers with marking schemes (2025–26)",
+        // YEAR-PINNED: CBSE publishes a fresh page each session
+        // (SQP_CLASSX_2026-27.html and so on) and leaves the old ones up. Bump
+        // this when the next session's papers appear — a stale year still
+        // works, it just quietly stops being this year's paper.
+        url: "https://cbseacademic.nic.in/SQP_CLASSX_2025-26.html",
+        provider: "Central Board of Secondary Education (CBSE)",
+        official: true,
+        access: "free",
+        description:
+          "The board's own sample paper for every Class 10 subject, each published with its marking scheme so answers can be self-scored. Downloadable PDFs, not a timed online test.",
+      },
+    ],
   },
   {
     id: "class-12",
     label: "Class 12 Boards",
     blurb: "Sample papers and past papers for the Class 12 board exams.",
-    resources: [],
+    resources: [
+      {
+        name: "CBSE Class 12 sample papers with marking schemes (2025–26)",
+        // Year-pinned, same as the Class 10 entry above — bump both together.
+        url: "https://cbseacademic.nic.in/SQP_CLASSXII_2025-26.html",
+        provider: "Central Board of Secondary Education (CBSE)",
+        official: true,
+        access: "free",
+        description:
+          "The board's own sample paper for every Class 12 subject, each published with its marking scheme so answers can be self-scored. Downloadable PDFs, not a timed online test.",
+      },
+    ],
   },
 ];
 
