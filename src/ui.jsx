@@ -219,21 +219,35 @@ export function Pill({ tone = "neutral", className = "", children }) {
  * units out of the animated number. `label` explains it, `note` qualifies
  * it — a figure with no qualifier is how dashboards start lying.
  */
-export function Stat({ value, prefix = "", suffix = "", label, note, numeric = true }) {
+export function Stat({
+  value, prefix = "", suffix = "", label, note, numeric = true, to = null,
+}) {
   const [ref, inView] = useInView({ threshold: 0.4 });
   const counted = useCountUp(numeric ? value : 0, inView);
   const shown = numeric ? counted.toLocaleString("en-IN") : value;
+  const accessibleValue = numeric ? Number(value).toLocaleString("en-IN") : value;
+  const Component = to ? Link : "div";
 
   return (
-    <div ref={ref} className="text-center sm:text-left">
+    <Component
+      ref={ref}
+      {...(to ? { to, "aria-label": `${accessibleValue} ${label}. ${note ?? ""}`.trim() } : {})}
+      className={`text-center sm:text-left ${
+        to
+          ? "group/stat -m-3 block min-h-11 rounded-md p-3 transition-colors duration-200 hover:bg-surface-2"
+          : ""
+      }`}
+    >
       <p className="text-num text-display-sm text-ink">
         {prefix}
         {shown}
         {suffix && <span className="text-accent">{suffix}</span>}
       </p>
-      <p className="mt-2 text-sm font-medium text-ink">{label}</p>
+      <p className={`mt-2 text-sm font-medium text-ink ${to ? "transition-colors group-hover/stat:text-accent" : ""}`}>
+        {label}
+      </p>
       {note && <p className="mt-1 text-xs text-ink-3">{note}</p>}
-    </div>
+    </Component>
   );
 }
 
@@ -573,7 +587,7 @@ export function Marquee({ children, className = "" }) {
     >
       <div className="anim-marquee flex w-max items-center gap-4 group-hover/marquee:[animation-play-state:paused]">
         <div className="flex items-center gap-4">{children}</div>
-        <div aria-hidden="true" className="flex items-center gap-4">{children}</div>
+        <div aria-hidden="true" inert className="flex items-center gap-4">{children}</div>
       </div>
     </div>
   );
