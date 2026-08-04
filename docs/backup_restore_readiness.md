@@ -1122,3 +1122,22 @@ fingerprint `30eee4a4a6842e5beeb7c97083d7f812` after every write; rolling JEE
 remained 212 / 2,848 / `9eea2b44f0b19c08cc0907c57e091342`. No restore,
 clone, migration, update/delete, or `release` push occurred. Full evidence is
 in [unacademy-neet-seventh-batch-readiness-2026-08-04.md](unacademy-neet-seventh-batch-readiness-2026-08-04.md).
+
+## Unacademy NEET eighth production batch - 5 August 2026
+
+The owner approved three create-only courses under decision
+`809b153c-b5ff-48e0-a869-02faa49b0e8f`. Before every transaction, the signed-in
+production dashboard confirmed active seven-day PITR; recorded latest restore
+points were `05 Aug 2026, 00:57:02 IST`, `01:07:02 IST`, and `01:07:02 IST`.
+Each quiet-window baseline remained exact across its anonymous dry-run, with
+zero source/video collision and an `ok` quality result.
+
+Redox Reactions, Cell Organelles, and Molecular Basis of Inheritance became
+courses 405, 406, and 407. They added 7, 9, and 9 videos/memberships
+respectively, with zero reuse and no chapter creation. Final totals were 388
+playlists / 4,539 videos / 4,545 memberships / 247 chapters. The protected JEE
+boundary remained exactly 82 courses / 1,304 memberships / fingerprint
+`30eee4a4a6842e5beeb7c97083d7f812` after every write; rolling JEE remained
+212 / 2,848 / `9eea2b44f0b19c08cc0907c57e091342`. No restore, clone,
+migration, update/delete, or `release` push occurred. Full evidence is in
+[unacademy-neet-eighth-batch-readiness-2026-08-05.md](unacademy-neet-eighth-batch-readiness-2026-08-05.md).
