@@ -91,6 +91,7 @@ describe("bounded course detail query", () => {
     expect(calls[0].eq.id).toBe(4);
     expect(calls[0].cols).toContain("average_rating");
     expect(calls[0].cols).toContain("playlist_class_levels");
+    expect(calls[0].cols).toContain("institutes_channels(name, logo_url)");
     expect(calls[1].table).toBe("playlist_videos");
     expect(calls[1].eq.playlist_id).toBe(4);
     expect(calls[1].orders).toEqual([

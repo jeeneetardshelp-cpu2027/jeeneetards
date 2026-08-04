@@ -17,6 +17,7 @@ import { STAGES_BY_EXAM, SUBJECT_SLUGS_BY_GOAL } from "./filterModel.js";
 import { classSlugToStage } from "./canonicalUrl.js";
 import { useTheme } from "./theme.jsx";
 import { BRAND_TEAL } from "./brandColors.js";
+import ChannelAvatar from "./ChannelAvatar.jsx";
 
 const BRAND = { teal: BRAND_TEAL };
 
@@ -45,7 +46,7 @@ function Group({ label, count, defaultOpen = true, children }) {
   );
 }
 
-function Option({ selected, onClick, count, children }) {
+function Option({ selected, onClick, count, label, imageUrl = null }) {
   const { t } = useTheme();
   return (
     <button
@@ -53,7 +54,7 @@ function Option({ selected, onClick, count, children }) {
       aria-pressed={selected}
       aria-label={count == null
         ? undefined
-        : `${children}, ${count} course${count === 1 ? "" : "s"}`}
+        : `${label}, ${count} course${count === 1 ? "" : "s"}`}
       className={`flex min-h-11 w-full items-center gap-2 rounded-lg px-2 text-left text-sm transition ${
         selected ? `font-medium ${t.text}` : `${t.faint} ${t.hover}`
       }`}
@@ -67,7 +68,8 @@ function Option({ selected, onClick, count, children }) {
       >
         {selected && <span className="block h-1.5 w-1.5 rounded-sm bg-white" />}
       </span>
-      <span className="min-w-0 flex-1 truncate">{children}</span>
+      {imageUrl && <ChannelAvatar url={imageUrl} name={label} className="h-7 w-7" />}
+      <span className="min-w-0 flex-1 truncate">{label}</span>
       {count != null && (
         <span
           className={`shrink-0 text-xs tabular-nums ${t.muted}`}
@@ -117,9 +119,9 @@ function OptionList({ filter, options, selected, onToggle, counts }) {
             selected={selected.includes(String(o.value))}
             onClick={() => onToggle(filter, o.value)}
             count={optionCount(counts, filter.key, o.value)}
-          >
-            {o.label}
-          </Option>
+            label={o.label}
+            imageUrl={filter.key === "channel" ? o.logoUrl : null}
+          />
         ))}
         {shown.length === 0 && (
           <p className={`px-2 py-1 text-xs ${t.muted}`}>No match for “{term.trim()}”.</p>

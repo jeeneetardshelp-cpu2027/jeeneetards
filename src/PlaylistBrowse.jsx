@@ -14,7 +14,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useSearchParams, useNavigate, useLocation } from "react-router";
 import {
-  Star, Clock, Layers, Building2, SlidersHorizontal, X, AlertTriangle,
+  Star, Clock, Layers, SlidersHorizontal, X, AlertTriangle,
 } from "lucide-react";
 import { usePlaylistBrowse, formatDuration, PAGE_SIZE } from "./usePlaylistBrowse.js";
 import { COURSE_TYPES, DIFFICULTIES, MIN_COMPARE, MAX_COMPARE, SORTS, DEFAULT_SORT } from "./filterModel.js";
@@ -28,6 +28,7 @@ import { itemListSchema } from "./structuredData.js";
 import { subjectColor } from "./brandColors.js";
 import { useRatingsAvailability } from "./useRatingsAvailability.js";
 import YouTubeThumbnail from "./YouTubeThumbnail.jsx";
+import ChannelAvatar from "./ChannelAvatar.jsx";
 
 // Labels come from the canonical filter vocabulary — a second copy here would
 // drift, and the card would say "Advanced" while the filter said something else.
@@ -113,7 +114,11 @@ export function PlaylistCard({ course, onOpen, to, state, selected, onToggle, di
               {course.teacher && course.institute && <span className={t.muted}>·</span>}
               {course.institute && (
                 <span className={`inline-flex min-w-0 items-center gap-1 ${t.muted}`}>
-                  <Building2 className="h-3.5 w-3.5 shrink-0" />
+                  <ChannelAvatar
+                    url={course.instituteLogoUrl}
+                    name={course.institute}
+                    className="h-5 w-5"
+                  />
                   <span className="truncate">{course.institute}</span>
                 </span>
               )}

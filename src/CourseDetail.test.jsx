@@ -16,7 +16,10 @@ const playlist = (overrides = {}) => ({
   difficulty: "advanced",
   class_levels: [],
   last_verified_at: "2026-07-20T00:00:00Z",
-  institutes_channels: { name: "Competishun" },
+  institutes_channels: {
+    name: "Competishun",
+    logo_url: "https://yt3.ggpht.com/competishun=s88",
+  },
   subjects: { name: "Physics" },
   playlist_learning_goals: [{ learning_goals: { name: "JEE", slug: "jee" } }],
   playlist_class_levels: [{ class_levels: { name: "Class 11", slug: "class-11" } }],
@@ -48,6 +51,7 @@ describe("course detail mapping", () => {
     expect(mapped.course.totalDurationSeconds).toBe(3600);
     expect(mapped.course.classLevels).toEqual(["Class 11"]);
     expect(mapped.course.learningGoals).toEqual(["JEE"]);
+    expect(mapped.course.instituteLogoUrl).toBe("https://yt3.ggpht.com/competishun=s88");
   });
 
   it("never turns incomplete duration or availability into a plausible zero", () => {
@@ -71,7 +75,7 @@ describe("course overview truthfulness", () => {
     const { course } = mapCourseDetail(playlist(), [
       row(1, 1), row(2, 2, { embedding_status: "blocked" }),
     ]);
-    render(
+    const { container } = render(
       <ThemeProvider>
         <CourseOverview
           course={course}
@@ -85,6 +89,7 @@ describe("course overview truthfulness", () => {
 
     expect(screen.getByRole("heading", { name: "Complete Kinematics" })).toBeTruthy();
     expect(screen.getByText("ABJ Sir")).toBeTruthy();
+    expect(container.querySelector('img[src="https://yt3.ggpht.com/competishun=s88"]')).toBeTruthy();
     expect(screen.getByText("1h 0m")).toBeTruthy();
     expect(screen.getByText("Kinematics")).toBeTruthy();
     expect(screen.getByText(/not a claim of complete syllabus coverage/i)).toBeTruthy();

@@ -151,6 +151,7 @@ export function mapCourseDetail(playlist, lessonRows) {
       title: playlist.title,
       teacher: playlist.teacher ?? null,
       institute: playlist.institutes_channels?.name ?? null,
+      instituteLogoUrl: playlist.institutes_channels?.logo_url ?? null,
       subject: playlist.subjects?.name ?? null,
       lectures: lessons.length,
       language: playlist.language ?? null,
@@ -202,7 +203,7 @@ export function usePlaylistVideos(playlistId) {
         .from("playlists")
         .select(
           "id, title, teacher, average_rating, ratings_count, language, content_type," +
-          " difficulty, class_levels, last_verified_at, institutes_channels(name), subjects(name)," +
+          " difficulty, class_levels, last_verified_at, institutes_channels(name, logo_url), subjects(name)," +
           " playlist_learning_goals(learning_goals(name, slug))," +
           " playlist_class_levels(class_levels(name, slug))",
         )

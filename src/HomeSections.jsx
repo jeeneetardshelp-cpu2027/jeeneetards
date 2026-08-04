@@ -8,7 +8,7 @@
 
 import { Link } from "react-router";
 import {
-  ArrowRight, ArrowUpRight, Ban, BadgeCheck, Building2, Check, Columns3,
+  ArrowRight, ArrowUpRight, Ban, BadgeCheck, Check, Columns3,
   Compass, Gauge, GraduationCap, IndianRupee, Languages, Layers, ListFilter,
   MonitorPlay, Search, ShieldCheck, Smartphone, Sparkles, Star, Target,
 } from "lucide-react";
@@ -19,6 +19,7 @@ import {
   Stat, Surface,
 } from "./ui.jsx";
 import { Reveal, useParallax, useReveal } from "./motion.jsx";
+import ChannelAvatar from "./ChannelAvatar.jsx";
 
 /* ================================================================ shared */
 
@@ -194,7 +195,11 @@ export function SocialProof({ institutes, loading }) {
                 aria-label={`View all courses from ${institute.name}`}
                 className="inline-flex min-h-11 items-center gap-2.5 rounded-sm border border-hairline bg-surface px-5 py-3 text-sm font-medium whitespace-nowrap text-ink-2 transition-colors duration-200 hover:border-accent-line hover:bg-surface-2 hover:text-accent"
               >
-                <Building2 aria-hidden="true" className="h-4 w-4 text-ink-3" />
+                <ChannelAvatar
+                  url={institute.logoUrl}
+                  name={institute.name}
+                  className="h-8 w-8"
+                />
                 {institute.name}
               </Link>
             ))}
@@ -877,7 +882,7 @@ export function pickInstitutes(items, limit = 8) {
     const id = Number(course.instituteId);
     const name = course.institute?.trim();
     if (Number.isInteger(id) && id > 0 && name && !seen.some((row) => row.id === id)) {
-      seen.push({ id, name });
+      seen.push({ id, name, logoUrl: course.instituteLogoUrl ?? null });
     }
   });
   return seen.slice(0, limit);

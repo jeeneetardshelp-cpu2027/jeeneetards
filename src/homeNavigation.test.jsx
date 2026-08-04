@@ -24,18 +24,18 @@ describe("homepage navigation shortcuts", () => {
 
   it("keeps channel ids and links every channel to its filtered playlist catalogue", () => {
     const institutes = pickInstitutes([
-      { instituteId: 13, institute: "Competishun+" },
+      { instituteId: 13, institute: "Competishun+", instituteLogoUrl: "https://yt3.ggpht.com/competishun=s88" },
       { instituteId: 13, institute: "Competishun+" },
       { instituteId: 27, institute: "Mohit Tyagi" },
       { instituteId: null, institute: "Unknown channel" },
     ]);
 
     expect(institutes).toEqual([
-      { id: 13, name: "Competishun+" },
-      { id: 27, name: "Mohit Tyagi" },
+      { id: 13, name: "Competishun+", logoUrl: "https://yt3.ggpht.com/competishun=s88" },
+      { id: 27, name: "Mohit Tyagi", logoUrl: null },
     ]);
 
-    render(
+    const { container } = render(
       <MemoryRouter>
         <SocialProof institutes={institutes} loading={false} />
       </MemoryRouter>,
@@ -47,5 +47,8 @@ describe("homepage navigation shortcuts", () => {
     expect(competishunLinks.length).toBeGreaterThan(0);
     expect(competishunLinks.every((link) => link.getAttribute("href") === "/browse?channel=13"))
       .toBe(true);
+    expect([...container.querySelectorAll("img")].some(
+      (image) => image.getAttribute("src") === "https://yt3.ggpht.com/competishun=s88",
+    )).toBe(true);
   });
 });
