@@ -73,3 +73,4 @@ React / JS:
 - Go step by step; after each major step, run the app and pause for me to confirm.
 - Don't delete my original source files.
 - When I correct you, add a short rule to this file so the mistake doesn't repeat.
+- Never put visible navigation inside an inert marquee clone; test every repeated channel shortcut, not only the first one.

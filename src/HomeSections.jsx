@@ -187,14 +187,23 @@ export function SocialProof({ institutes, loading }) {
             </div>
           </Container>
         ) : (
-          <Container>
-            <nav aria-label="Trusted YouTube channels" className="flex flex-wrap justify-center gap-3">
+          // A moving marquee needs a duplicated visual track. Its duplicate was
+          // correctly hidden from assistive technology with `inert`, but that
+          // also made whichever channel copies happened to be on screen
+          // unclickable. This is navigation, so keep one real, horizontally
+          // scrollable set of links instead of decorative clones.
+          <nav
+            aria-label="Trusted YouTube channels"
+            data-allow-horizontal-scroll="true"
+            className="overflow-x-auto px-5 pb-2 sm:px-8"
+          >
+            <div className="mx-auto flex w-max min-w-full snap-x snap-mandatory items-center justify-center gap-4">
               {institutes.map((institute) => (
                 <Link
                   key={institute.id}
                   to={`/browse?channel=${institute.id}`}
                   aria-label={`View all courses from ${institute.name}`}
-                  className="inline-flex min-h-11 items-center gap-2.5 rounded-sm border border-hairline bg-surface px-5 py-3 text-sm font-medium whitespace-nowrap text-ink-2 transition-colors duration-200 hover:border-accent-line hover:bg-surface-2 hover:text-accent"
+                  className="inline-flex min-h-11 snap-start items-center gap-2.5 rounded-sm border border-hairline bg-surface px-5 py-3 text-sm font-medium whitespace-nowrap text-ink-2 transition-colors duration-200 hover:border-accent-line hover:bg-surface-2 hover:text-accent focus-visible:border-accent-line focus-visible:text-accent"
                 >
                   <ChannelAvatar
                     url={institute.logoUrl}
@@ -204,8 +213,8 @@ export function SocialProof({ institutes, loading }) {
                   {institute.name}
                 </Link>
               ))}
-            </nav>
-          </Container>
+            </div>
+          </nav>
         )}
       </Reveal>
 

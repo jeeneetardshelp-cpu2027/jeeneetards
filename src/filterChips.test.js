@@ -42,6 +42,12 @@ describe("what the chips say", () => {
   it("renders chips for legacy id-based links too", () => {
     expect(buildChips(P("goal=3&sub=5&ch=7")).map((c) => c.value)).toEqual(["3", "5", "7"]);
   });
+
+  it("shows a channel name instead of its internal database id", () => {
+    expect(buildChips(P("channel=136"), {
+      channel: { 136: "Aakash NEET" },
+    }).map((c) => c.label)).toEqual(["Aakash NEET"]);
+  });
 });
 
 describe("the dependency cascade", () => {

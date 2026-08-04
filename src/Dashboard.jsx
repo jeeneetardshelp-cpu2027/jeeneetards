@@ -473,6 +473,12 @@ export default function Dashboard() {
     subject: { ...(canonical.names?.subject ?? {}), ...(subjectName ? { [subjectRaw]: subjectName } : {}) },
     chapter: { ...(canonical.names?.chapter ?? {}), ...(chapterName ? { [chapterRaw]: chapterName } : {}) },
     board: { ...(canonical.names?.board ?? {}) },
+    // Channel URLs deliberately use stable database ids. The bounded channel
+    // option list is already loaded for the filter panel, so use it to show
+    // the human name instead of exposing an internal value such as "136".
+    channel: Object.fromEntries(
+      (filterOptions.options?.channel ?? []).map((option) => [String(option.value), option.label]),
+    ),
   };
   const chips = buildChips(params, chipNames);
 

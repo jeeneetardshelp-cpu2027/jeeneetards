@@ -27,14 +27,20 @@ describe("homepage navigation shortcuts", () => {
       { instituteId: 13, institute: "Competishun+", instituteLogoUrl: "https://yt3.ggpht.com/competishun=s88" },
       { instituteId: 13, institute: "Competishun+" },
       { instituteId: 27, institute: "Mohit Tyagi" },
+      { instituteId: 31, institute: "ALLEN NEET" },
       { instituteId: 42, institute: "Aakash NEET" },
+      { instituteId: 56, institute: "Hindi Adhyapak" },
+      { instituteId: 68, institute: "Mission JEET" },
       { instituteId: null, institute: "Unknown channel" },
     ]);
 
     expect(institutes).toEqual([
       { id: 13, name: "Competishun+", logoUrl: "https://yt3.ggpht.com/competishun=s88" },
       { id: 27, name: "Mohit Tyagi", logoUrl: null },
+      { id: 31, name: "ALLEN NEET", logoUrl: null },
       { id: 42, name: "Aakash NEET", logoUrl: null },
+      { id: 56, name: "Hindi Adhyapak", logoUrl: null },
+      { id: 68, name: "Mission JEET", logoUrl: null },
     ]);
 
     const { container } = render(
