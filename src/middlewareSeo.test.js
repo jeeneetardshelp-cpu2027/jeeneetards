@@ -144,7 +144,7 @@ describe("edge-rendered discovery landings", () => {
     expect(html).toContain("<h2>Faculty directory</h2>");
     expect(html).toContain('<a href="/faculty/amit-bijarnia">Amit Bijarnia</a>');
     expect(html).toContain('<a href="/faculty/mohit-tyagi">Mohit Tyagi</a>');
-    expect(html).toContain('<a href="/tests">Practice tests</a>');
+    expect(html).toContain('<a href="/tests">Mock tests</a>');
     expect(html).toContain('<a href="/terms">Terms</a>');
     expect(html).toContain('<a href="/privacy">Privacy</a>');
   });

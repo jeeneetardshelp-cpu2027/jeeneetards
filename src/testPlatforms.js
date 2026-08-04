@@ -134,7 +134,7 @@ export const TEST_SECTIONS = [
         provider: "Competishun",
         access: "account",
         description:
-          "Paper 1 and Paper 2 from all seven JEE Advanced sittings since 2019 — 14 papers listed, 180 marks and 180 minutes each, priced ₹0.",
+          "Paper 1 and Paper 2 from all seven JEE Advanced sittings since 2019 — all 14 papers attemptable, 180 marks and 180 minutes each, priced ₹0.",
         findIt:
           'IIT-JEE tab → 12th+ → "JEE ADVANCED PYQs 2025-2019" (₹0). Papers open in Competishun\'s Schoollog test portal after sign-in.',
       },

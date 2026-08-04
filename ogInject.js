@@ -209,7 +209,7 @@ export function renderBrowseDirectoryBody(meta, { courses = [], faculty = [] } =
     facultyItems ? `<ul>${facultyItems}</ul>` : "",
     '<nav aria-label="Course discovery"><a href="/">Home</a> ' +
       '<a href="/explore">Find a course</a> ' +
-      '<a href="/tests">Practice tests</a> ' +
+      '<a href="/tests">Mock tests</a> ' +
       '<a href="/terms">Terms</a> <a href="/privacy">Privacy</a></nav>',
     "</main>",
   ].join("");
