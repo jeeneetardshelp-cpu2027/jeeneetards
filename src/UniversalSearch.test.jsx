@@ -100,6 +100,25 @@ describe("grouped results (the five groups)", () => {
     expect(opt.textContent).toContain("Competishun · Physics · JEE");
   });
 
+  it("shows a YouTube thumbnail beside lecture results", async () => {
+    RPC_ROWS = [row({
+      group_key: "lecture",
+      entity_id: 9,
+      title: "Relative motion",
+      aka: null,
+      extra: { playlist_id: 7, youtube_video_id: "CBvaO-uDvs8" },
+    })];
+    const { container } = renderSearch();
+    type("relative motion");
+    await settle();
+    await screen.findByText("Relative motion");
+
+    const image = container.querySelector("img");
+    expect(image?.getAttribute("src"))
+      .toBe("https://img.youtube.com/vi/CBvaO-uDvs8/hqdefault.jpg");
+    expect(image?.getAttribute("loading")).toBe("lazy");
+  });
+
   it("omits a group entirely rather than drawing an empty one", async () => {
     RPC_ROWS = [row({ group_key: "chapter", aka: null })];
     renderSearch();

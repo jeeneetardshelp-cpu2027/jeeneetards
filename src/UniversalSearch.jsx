@@ -23,6 +23,7 @@ import { resultHref } from "./searchDestinations.js";
 import { normalizeForHighlight } from "./searchHighlight.js";
 import { useTheme } from "./theme.jsx";
 import { BRAND_NAVY, BRAND_TEAL } from "./brandColors.js";
+import YouTubeThumbnail from "./YouTubeThumbnail.jsx";
 
 const BRAND = { navy: BRAND_NAVY, teal: BRAND_TEAL };
 
@@ -72,10 +73,17 @@ function Row({ item, group, query, active, onPick, id }) {
         role="option"
         aria-selected={active}
         onClick={() => onPick(item, group)}
-        className={`flex min-h-11 w-full flex-col items-start gap-0.5 px-4 py-2.5 text-left ${
+        className={`flex min-h-11 w-full items-center gap-3 px-4 py-2.5 text-left ${
           active ? t.input : t.hover
         }`}
       >
+        {group === "lecture" && (
+          <YouTubeThumbnail
+            videoId={item.extra?.youtube_video_id}
+            className="aspect-video w-20 shrink-0 rounded-md border border-hairline sm:w-24"
+          />
+        )}
+        <span className="min-w-0 flex-1">
         <span className="flex w-full items-center gap-2">
           <span className={`truncate text-sm font-medium ${t.text}`}>
             <Highlight text={item.title} query={query} />
@@ -100,6 +108,7 @@ function Row({ item, group, query, active, onPick, id }) {
         {item.subtitle && (
           <span className={`truncate text-xs ${t.muted}`}>{item.subtitle}</span>
         )}
+        </span>
       </button>
     </li>
   );

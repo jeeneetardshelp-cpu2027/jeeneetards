@@ -23,6 +23,7 @@ import YouTubePlayer from "./YouTubePlayer.jsx";
 import { useTheme } from "./theme.jsx";
 import { formatDuration } from "./metadata.js";
 import { BRAND_TEAL, BRAND_SERIF } from "./brandColors.js";
+import YouTubeThumbnail from "./YouTubeThumbnail.jsx";
 export { ThemeProvider, ThemeContext, useTheme } from "./theme.jsx";
 
 // Accent colours stay the same in both themes (used via inline style).
@@ -254,7 +255,11 @@ export function LessonList({ lessons, activeLessonId, onSelectLesson, watchedIds
                     </span>
                   )}
                 </span>
-                <span className={active ? `font-semibold ${t.text}` : t.muted}>
+                <YouTubeThumbnail
+                  videoId={lesson.videoId}
+                  className="aspect-video w-20 shrink-0 rounded-md border border-hairline sm:w-24"
+                />
+                <span className={`min-w-0 flex-1 ${active ? `font-semibold ${t.text}` : t.muted}`}>
                   <span className="block">{lesson.title}</span>
                   <span className={`mt-1 flex flex-wrap items-center gap-2 text-xs font-normal ${t.faint}`}>
                     {lesson.durationSeconds > 0 && <span>{formatDuration(lesson.durationSeconds)}</span>}
