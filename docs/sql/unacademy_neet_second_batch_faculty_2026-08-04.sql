@@ -13,8 +13,8 @@ begin
   end if;
 
   if (select count(*) from public.playlists) <> 358
-     or (select count(*) from public.videos) <> 4222
-     or (select count(*) from public.playlist_videos) <> 4228
+     or (select count(*) from public.videos) <> 4223
+     or (select count(*) from public.playlist_videos) <> 4229
      or (select count(*) from public.chapters) <> 250
      or (select count(*) from public.chapter_class_levels) <> 92
      or (select count(*) from public.teachers) <> 29
@@ -237,8 +237,8 @@ declare
   v_protected record;
 begin
   if (select count(*) from public.playlists) <> 358
-     or (select count(*) from public.videos) <> 4222
-     or (select count(*) from public.playlist_videos) <> 4228
+     or (select count(*) from public.videos) <> 4223
+     or (select count(*) from public.playlist_videos) <> 4229
      or (select count(*) from public.chapters) <> 250
      or (select count(*) from public.chapter_class_levels) <> 92
      or (select count(*) from public.teachers) <> 32

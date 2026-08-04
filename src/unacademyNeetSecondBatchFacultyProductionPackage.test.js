@@ -7,7 +7,7 @@ const sqlPath = "docs/sql/unacademy_neet_second_batch_faculty_2026-08-04.sql";
 const readinessPath = "docs/unacademy-neet-faculty-second-batch-readiness-2026-08-04.md";
 const sql = readFileSync(sqlPath, "utf8");
 const readiness = readFileSync(readinessPath, "utf8");
-const expectedHash = "1bb1e25639885a6ec918a4c305f669ea6656414a28657afce6ad1ec73fad30cb";
+const expectedHash = "970b515f9092717fd0c03feccd426b5ecd2925c0874048cd2b0c9bfaef16c7c7";
 
 describe("Unacademy NEET second-batch faculty production package", () => {
   it("pins the approved identities, courses, and decision", () => {
@@ -35,8 +35,8 @@ describe("Unacademy NEET second-batch faculty production package", () => {
   it("pins exact baseline, postflight, aliases, and protected JEE", () => {
     for (const fragment of [
       "count(*) from public.playlists) <> 358",
-      "count(*) from public.videos) <> 4222",
-      "count(*) from public.playlist_videos) <> 4228",
+      "count(*) from public.videos) <> 4223",
+      "count(*) from public.playlist_videos) <> 4229",
       "count(*) from public.chapters) <> 250",
       "count(*) from public.teachers) <> 29",
       "count(*) from public.teacher_aliases) <> 45",
@@ -56,7 +56,7 @@ describe("Unacademy NEET second-batch faculty production package", () => {
   it("pins the immutable artifact hash and prepared-only handoff", () => {
     expect(createHash("sha256").update(sql, "utf8").digest("hex")).toBe(expectedHash);
     expect(readiness).toContain(`SHA-256: \`${expectedHash}\``);
-    expect(readiness).toContain("Prepared and locally rehearsed only");
+    expect(readiness).toContain("Reprepared and locally rehearsed only");
     expect(readiness).toContain("+3 teachers, +5 normalized aliases");
     expect(readiness).toContain("32 teachers / 50 aliases");
     expect(readiness).toContain("c742fabf93ff8dd33d6ecd5eb4793db0");
@@ -133,7 +133,7 @@ describe("Unacademy NEET second-batch faculty production package", () => {
       insert into public.class_levels values (1, 'protected'), (2, 'class-11'), (3, 'class-12');
       insert into public.chapters select n from generate_series(1, 250) n;
       insert into public.chapter_class_levels select n, 1 from generate_series(1, 92) n;
-      insert into public.videos select n from generate_series(1, 4222) n;
+      insert into public.videos select n from generate_series(1, 4223) n;
 
       insert into public.playlists
       select n, 'Protected ' || n, 'Teacher ' || n, 'protected-' || n,
@@ -154,7 +154,7 @@ describe("Unacademy NEET second-batch faculty production package", () => {
       insert into public.playlist_learning_goals values (374, 2), (375, 2), (376, 2);
       insert into public.playlist_class_levels values (374, 2), (375, 3), (376, 3);
       insert into public.playlist_videos
-      select n, 1 + ((n - 1) % 83), 1 + ((n - 1) % 4222),
+      select n, 1 + ((n - 1) % 83), 1 + ((n - 1) % 4223),
              1 + ((n - 1) / 83)::int
       from generate_series(1, 1307) n;
       insert into public.playlist_videos
@@ -164,8 +164,8 @@ describe("Unacademy NEET second-batch faculty production package", () => {
       insert into public.playlist_videos
       select n, 376, n, n - 1332 from generate_series(1333, 1341) n;
       insert into public.playlist_videos
-      select n, 500, 1 + ((n - 1) % 4222), n - 1341
-      from generate_series(1342, 4228) n;
+      select n, 500, 1 + ((n - 1) % 4223), n - 1341
+      from generate_series(1342, 4229) n;
 
       insert into public.teachers (display_name, canonical_name, slug, verified)
       select 'Existing Teacher ' || n, '', 'existing-' || n, true
