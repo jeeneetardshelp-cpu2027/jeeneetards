@@ -112,8 +112,70 @@ describe("edge-rendered discovery landings", () => {
     }
   });
 
+  it("serves canonical Browse as a linked course and faculty directory", async () => {
+    vi.stubEnv("VITE_SUPABASE_URL", "https://catalog.example");
+    vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
+    vi.stubGlobal("fetch", vi.fn(async (input) => {
+      const url = String(input);
+      if (url.includes("/rest/v1/playlists?")) {
+        return Response.json([
+          { id: 5, title: "Kinematics" },
+          { id: 8, title: "Newton's Laws of Motion" },
+        ]);
+      }
+      if (url.includes("/rest/v1/rpc/get_faculty_facets")) {
+        return Response.json([
+          { slug: "amit-bijarnia", display_name: "Amit Bijarnia", course_count: 4 },
+          { slug: "mohit-tyagi", display_name: "Mohit Tyagi", course_count: 3 },
+        ]);
+      }
+      return new Response(shell, { status: 200 });
+    }));
+
+    const response = await middleware(
+      new Request("https://www.jeeneetard.com/browse"),
+    );
+    const html = await response.text();
+
+    expect(response.status).toBe(200);
+    expect(html).toContain("<h2>Course directory</h2>");
+    expect(html).toContain('<a href="/course/5">Kinematics</a>');
+    expect(html).toContain("<a href=\"/course/8\">Newton's Laws of Motion</a>");
+    expect(html).toContain("<h2>Faculty directory</h2>");
+    expect(html).toContain('<a href="/faculty/amit-bijarnia">Amit Bijarnia</a>');
+    expect(html).toContain('<a href="/faculty/mohit-tyagi">Mohit Tyagi</a>');
+    expect(html).toContain('<a href="/tests">Practice tests</a>');
+    expect(html).toContain('<a href="/terms">Terms</a>');
+    expect(html).toContain('<a href="/privacy">Privacy</a>');
+  });
+
+  it("keeps Browse available when the directory lookup is unconfirmed", async () => {
+    vi.stubEnv("VITE_SUPABASE_URL", "https://catalog.example");
+    vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
+    vi.stubGlobal("fetch", vi.fn(async (input) => {
+      const url = String(input);
+      if (url.includes("/rest/v1/playlists?")) {
+        return new Response("temporarily unavailable", { status: 503 });
+      }
+      if (url.includes("/rest/v1/rpc/get_faculty_facets")) {
+        return Response.json([]);
+      }
+      return new Response(shell, { status: 200 });
+    }));
+
+    const response = await middleware(
+      new Request("https://www.jeeneetard.com/browse"),
+    );
+    const html = await response.text();
+
+    expect(response.status).toBe(200);
+    expect(html).toContain("<h1>All courses</h1>");
+    expect(html).not.toContain("<h2>Course directory</h2>");
+  });
+
   it("marks a browse search noindex before JavaScript runs", async () => {
-    vi.stubGlobal("fetch", vi.fn(async () => new Response(shell, { status: 200 })));
+    const fetchSpy = vi.fn(async () => new Response(shell, { status: 200 }));
+    vi.stubGlobal("fetch", fetchSpy);
 
     const response = await middleware(
       new Request("https://www.jeeneetard.com/browse?q=kinematics"),
@@ -123,6 +185,10 @@ describe("edge-rendered discovery landings", () => {
     expect(html).toContain('name="robots" content="noindex, follow"');
     expect(html).toContain(
       '<link rel="canonical" href="https://www.jeeneetard.com/browse" />',
+    );
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
+    expect(String(fetchSpy.mock.calls[0][0])).toBe(
+      "https://www.jeeneetard.com/index.html",
     );
   });
 

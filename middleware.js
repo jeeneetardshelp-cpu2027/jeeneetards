@@ -33,6 +33,7 @@ import {
   injectRootContent,
   landingSchemas,
   renderLandingBody,
+  renderBrowseDirectoryBody,
   renderNotFoundBody,
 } from "./ogInject.js";
 
@@ -124,6 +125,10 @@ async function edgeJson(url, options = {}) {
     const response = await fetch(url, { ...options, signal: controller.signal });
     if (!response.ok) return { confirmed: false, data: null };
     return { confirmed: true, data: await response.json() };
+  } catch {
+    // A timeout, network reset or non-JSON upstream response is an
+    // unconfirmed lookup, never a reason to break the public page.
+    return { confirmed: false, data: null };
   } finally {
     clearTimeout(timer);
   }
@@ -362,11 +367,44 @@ export default async function middleware(request) {
     if (!courseMatch && !facultyMatch) {
       const routeMeta = metadataForLocation(url.pathname, url.search);
       if (!routeMeta) return next();
-      const shell = await fetch(new URL("/index.html", url.origin));
+      const directoryPromise = url.pathname === "/browse" && !url.search && supaUrl && supaKey
+        ? Promise.all([
+            edgeJson(
+              `${supaUrl}/rest/v1/playlists?select=id,title&order=title.asc,id.asc&limit=1000`,
+              { headers: { apikey: supaKey, Authorization: `Bearer ${supaKey}` } },
+            ),
+            edgeJson(`${supaUrl}/rest/v1/rpc/get_faculty_facets`, {
+              method: "POST",
+              headers: {
+                apikey: supaKey,
+                Authorization: `Bearer ${supaKey}`,
+                "content-type": "application/json",
+              },
+              body: JSON.stringify({
+                p_chapter_id: null,
+                p_subject_id: null,
+                p_goal_id: null,
+              }),
+            }),
+          ])
+        : Promise.resolve(null);
+      const [shell, directory] = await Promise.all([
+        fetch(new URL("/index.html", url.origin)),
+        directoryPromise,
+      ]);
       if (!shell.ok) return next();
       let html = injectRouteMeta(await shell.text(), routeMeta);
       html = injectStructuredData(html, landingSchemas(url.pathname));
-      html = injectRootContent(html, renderLandingBody(url.pathname, routeMeta));
+      const [courseResult, facultyResult] = directory ?? [];
+      const hasDirectory = courseResult?.confirmed && facultyResult?.confirmed &&
+        ((courseResult.data?.length ?? 0) > 0 || (facultyResult.data?.length ?? 0) > 0);
+      const body = hasDirectory
+        ? renderBrowseDirectoryBody(routeMeta, {
+            courses: courseResult.data,
+            faculty: facultyResult.data,
+          })
+        : renderLandingBody(url.pathname, routeMeta);
+      html = injectRootContent(html, body);
       return htmlResponse(html);
     }
 
