@@ -84,7 +84,7 @@ export const TEST_SECTIONS = [
           "Full-length 75-question, 300-mark papers on a 180-minute timer, with the paper openable straight from the page.",
       },
       {
-        name: "Competishun previous year papers",
+        name: "Competishun JEE Main PYQs 2024–2026 (shift-wise)",
         url: "https://i.competishun.com/home/explore",
         provider: "Competishun",
         // Labelled `account`, not `free`, on purpose: this is the student
@@ -92,15 +92,17 @@ export const TEST_SECTIONS = [
         // open. The tests themselves cost nothing. Understating openness is
         // the safe error here — overstating it strands a student at a wall.
         access: "account",
-        // Deliberately does NOT claim "JEE Main previous-year papers". The
-        // only Competishun free-test listing actually seen is the JEE
-        // ADVANCED PYQs course under the IIT-JEE tab, so this entry says what
-        // is verifiable — the app's free JEE tests live behind that tab — and
-        // points the student at it rather than promising a paper nobody has
-        // confirmed exists.
+        // Restored to a specific claim: the paper list was since seen in full.
+        // Avoids "every" — many shifts are listed and more sit below the fold,
+        // but completeness was never verified and does not need to be claimed.
         description:
-          "Competishun's free timed tests for JEE inside its student app, listed under the IIT-JEE tab once you have signed in.",
-        findIt: "IIT-JEE tab → 11th / 12th / 12th+ → any course priced ₹0",
+          "JEE Main shift papers from the 2024, 2025 and 2026 sessions as free 300-mark, 180-minute tests — January and April sittings, Shift 1 and Shift 2.",
+        // The naming convention IS the navigation aid: inside the portal the
+        // papers are one long "Active and Upcoming Tests" grid, and a student
+        // hunting a specific sitting finds it by matching the date-and-shift
+        // filename rather than by browsing.
+        findIt:
+          'IIT-JEE tab → the ₹0 JEE Main PYQ course. Papers open in Competishun\'s Schoollog portal, named by date and shift — e.g. "JEE MAIN_24-01-2025_Shift-1".',
       },
       {
         name: "Quizrr test series",
