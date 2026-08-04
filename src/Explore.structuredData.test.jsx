@@ -73,6 +73,8 @@ describe("Explore structured data wiring", () => {
     await screen.findByRole("heading", {
       name: "Choose a chapter for JEE Class 11 Physics",
     });
+    expect(screen.getByRole("link", { name: /Kinematics/ }).getAttribute("href"))
+      .toBe("/browse?goal=jee&class=11&subject=physics&chapter=kinematics");
 
     const schema = breadcrumbSchema();
     expect(schema.itemListElement.map((i) => i.name)).toEqual([

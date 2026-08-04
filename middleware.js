@@ -284,7 +284,15 @@ async function deepExploreResponse(url, route, supaUrl, supaKey) {
     heading = exploreStepHeading("chapter", stepScope);
     options = chapters.map((item) => ({
       name: item.name,
-      url: `${subjectUrl}/${item.slug}`,
+      // Link the crawler-readable list directly to the same result URL React
+      // opens. Deep chapter paths remain compatibility redirects only.
+      url: canonicalBrowseUrl({
+        goal: route.goal,
+        cls: route.cls,
+        board: board?.slug,
+        subject: subject.slug,
+        chapter: item.slug,
+      }),
       count: Number(item.course_count ?? 0),
     }));
   }

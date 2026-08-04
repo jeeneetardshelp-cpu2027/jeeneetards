@@ -294,7 +294,16 @@ export default function Explore() {
               key: ch.id,
               label: ch.name,
               hint: countHint(ch),
-              to: p(cls, subject, ch.slug),
+              // This is the final choice, so link straight to the one results
+              // surface. The legacy deep path still redirects for old shares,
+              // but new navigation should not manufacture a 308 hop.
+              to: canonicalBrowseUrl({
+                goal: goalNode.slug,
+                cls: classNode.slug,
+                board: boardNode?.slug,
+                subject: subjectNode.slug,
+                chapter: ch.slug,
+              }),
             }))}
           />
         ) : (
