@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "request_id": "516ff6af-84ea-4881-90cd-b93c5236ab9c",
+  "youtube_playlist_id": "PLsgHooHkqhhNu-Uw9RzbSyF1wsdL0Q25z",
+  "assignments": [
+    { "position": 1, "youtube_video_id": "9pEnn4AYr1s", "chapter": "Ecosystem", "lesson_number": 1 },
+    { "position": 2, "youtube_video_id": "-HOM0EZ-lvU", "chapter": "Ecosystem", "lesson_number": 2 },
+    { "position": 3, "youtube_video_id": "JWbbwbMFTZc", "chapter": "Ecosystem", "lesson_number": 3 },
+    { "position": 4, "youtube_video_id": "p3BXX1_zlbU", "chapter": "Ecosystem", "lesson_number": 4 },
+    { "position": 5, "youtube_video_id": "boKRkEWNaIY", "chapter": "Ecosystem", "lesson_number": 5 },
+    { "position": 6, "youtube_video_id": "AuX-hOGI9fc", "chapter": "Ecosystem", "lesson_number": 6 }
+  ],
+  "exclusions": []
+}

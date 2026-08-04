@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "request_id": "a2ff2e58-fccf-488c-ae2d-1c0040524122",
+  "youtube_playlist_id": "PLsgHooHkqhhMil-qxm3tGjv6Q7uJ1s1WI",
+  "assignments": [
+    { "position": 1, "youtube_video_id": "z19PUhdRjiU", "chapter": "Wave Optics", "lesson_number": 1 },
+    { "position": 2, "youtube_video_id": "p_fNlh1wAb4", "chapter": "Wave Optics", "lesson_number": 2 },
+    { "position": 3, "youtube_video_id": "-U5sEl7wTh8", "chapter": "Wave Optics", "lesson_number": 3 },
+    { "position": 4, "youtube_video_id": "D8XGE0oGwYY", "chapter": "Wave Optics", "lesson_number": 4 },
+    { "position": 5, "youtube_video_id": "pyppwnPgIpc", "chapter": "Wave Optics", "lesson_number": 5 },
+    { "position": 6, "youtube_video_id": "Wk-rv-gKMbI", "chapter": "Wave Optics", "lesson_number": 6 },
+    { "position": 7, "youtube_video_id": "YfvIKgWcsnE", "chapter": "Wave Optics", "lesson_number": 7 }
+  ],
+  "exclusions": []
+}

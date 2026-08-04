@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "request_id": "7a803caa-eca4-43ad-acbb-9d92c4a172bc",
+  "youtube_playlist_id": "PLsgHooHkqhhN0mEZWnzPfkn8UcmdYg-Mx",
+  "assignments": [
+    { "position": 1, "youtube_video_id": "R-YvlRd0gDU", "chapter": "Gravitation", "lesson_number": 1 },
+    { "position": 2, "youtube_video_id": "vWlMC0mEJbw", "chapter": "Gravitation", "lesson_number": 2 },
+    { "position": 3, "youtube_video_id": "f2_eJP0GTMw", "chapter": "Gravitation", "lesson_number": 3 },
+    { "position": 4, "youtube_video_id": "G4sZZb0e_nk", "chapter": "Gravitation", "lesson_number": 4 },
+    { "position": 5, "youtube_video_id": "O1jya36Z4_M", "chapter": "Gravitation", "lesson_number": 5 }
+  ],
+  "exclusions": []
+}
