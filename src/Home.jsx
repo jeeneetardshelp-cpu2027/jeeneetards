@@ -48,6 +48,7 @@ import {
   Pricing, Process, SocialProof, Statistics, TopRated,
   pickInstitutes, pickTopRated,
 } from "./HomeSections.jsx";
+import YouTubeThumbnail from "./YouTubeThumbnail.jsx";
 
 // The comparison table's attribute count, and the languages the catalogue
 // classifies. Both are real product facts, stated once here so the numbers
@@ -415,6 +416,12 @@ function SearchResults({ groups, loading, error, tooShort, retry, query }) {
                     to={resultHref(g.key, row)}
                     className="group/row flex min-h-14 w-full items-center gap-4 px-5 py-4 text-left transition-colors duration-200 hover:bg-surface-2"
                   >
+                    {g.key === "lecture" && (
+                      <YouTubeThumbnail
+                        videoId={row.extra?.youtube_video_id}
+                        className="aspect-video w-20 shrink-0 rounded-md border border-hairline sm:w-24"
+                      />
+                    )}
                     <span className="min-w-0 flex-1">
                       <span className="block truncate text-sm font-medium text-ink">
                         {row.title}

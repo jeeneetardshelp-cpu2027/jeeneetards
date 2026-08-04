@@ -27,6 +27,7 @@ import { useStructuredData } from "./PageMetadata.jsx";
 import { itemListSchema } from "./structuredData.js";
 import { subjectColor } from "./brandColors.js";
 import { useRatingsAvailability } from "./useRatingsAvailability.js";
+import YouTubeThumbnail from "./YouTubeThumbnail.jsx";
 
 // Labels come from the canonical filter vocabulary — a second copy here would
 // drift, and the card would say "Advanced" while the filter said something else.
@@ -81,6 +82,10 @@ export function PlaylistCard({ course, onOpen, to, state, selected, onToggle, di
     <div className="edge-glow hover-lift flex h-full min-h-[15rem] flex-col overflow-hidden rounded-xl border border-hairline bg-surface shadow-e1">
       {/* subject colour spine */}
       <span className="h-1 w-full shrink-0" style={{ background: color }} />
+      <YouTubeThumbnail
+        videoId={course.coverVideoId}
+        className="aspect-video w-full border-b border-hairline"
+      />
       <div className="flex flex-1 flex-col p-4 sm:p-5">
         {kicker && (
           <span className="text-[0.68rem] font-semibold uppercase tracking-[0.08em]" style={{ color }}>
@@ -184,12 +189,15 @@ const cap = (s) => (s ? s[0].toUpperCase() + s.slice(1) : s);
 function SkeletonCard() {
   const { t } = useTheme();
   return (
-    <div className={`h-64 animate-pulse rounded-xl border ${t.border} ${t.card} p-5`}>
-      <div className={`h-3 w-16 rounded ${t.input}`} />
-      <div className={`mt-3 h-5 w-3/4 rounded ${t.input}`} />
-      <div className={`mt-2 h-4 w-1/2 rounded ${t.input}`} />
-      <div className={`mt-6 h-4 w-2/3 rounded ${t.input}`} />
-      <div className={`mt-8 h-11 w-full rounded-xl ${t.input}`} />
+    <div className={`animate-pulse overflow-hidden rounded-xl border ${t.border} ${t.card}`}>
+      <div className={`aspect-video w-full ${t.input}`} />
+      <div className="p-5">
+        <div className={`h-3 w-16 rounded ${t.input}`} />
+        <div className={`mt-3 h-5 w-3/4 rounded ${t.input}`} />
+        <div className={`mt-2 h-4 w-1/2 rounded ${t.input}`} />
+        <div className={`mt-6 h-4 w-2/3 rounded ${t.input}`} />
+        <div className={`mt-8 h-11 w-full rounded-xl ${t.input}`} />
+      </div>
     </div>
   );
 }

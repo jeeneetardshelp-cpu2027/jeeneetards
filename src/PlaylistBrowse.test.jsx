@@ -14,14 +14,26 @@ import { MemoryRouter, Routes, Route, useLocation } from "react-router";
 const calls = [];
 let NEXT_RESULTS = [];
 function makeBuilder(rows, count) {
-  const rec = { table: null, cols: null, eq: {}, range: null, ilike: null, orders: [] };
+  const rec = {
+    table: null, cols: null, eq: {}, range: null, ilike: null, orders: [],
+    referencedOrders: {}, referencedRanges: {},
+  };
   const b = {
     select(cols, opts) { rec.cols = cols; rec.opts = opts; return b; },
     order(column, options) {
-      rec.orders.push(options?.ascending === false ? `${column} desc` : column);
+      const value = options?.ascending === false ? `${column} desc` : column;
+      if (options?.referencedTable) {
+        (rec.referencedOrders[options.referencedTable] ??= []).push(value);
+      } else {
+        rec.orders.push(value);
+      }
       return b;
     },
-    range(a, z) { rec.range = [a, z]; return b; },
+    range(a, z, options) {
+      if (options?.referencedTable) rec.referencedRanges[options.referencedTable] = [a, z];
+      else rec.range = [a, z];
+      return b;
+    },
     eq(k, v) { rec.eq[k] = v; return b; },
     ilike(k, v) { rec.ilike = [k, v]; return b; },
     in(k, v) { rec.in = [k, v]; return b; },
@@ -55,6 +67,10 @@ import PlaylistBrowse from "./PlaylistBrowse.jsx";
 function Probe(props) {
   usePlaylistBrowse(props);
   return null;
+}
+function ResultProbe(props) {
+  const result = usePlaylistBrowse(props);
+  return <span>{result.items[0]?.coverVideoId ?? "none"}</span>;
 }
 const run = async (props) => {
   render(<MemoryRouter><Probe {...props} /></MemoryRouter>);
@@ -117,6 +133,22 @@ describe("chapter filtering happens in the database", () => {
 });
 
 describe("pagination", () => {
+  it("fetches only the first lesson image as each playlist cover", async () => {
+    ROWS = [row(11, "Indefinite Integration", {
+      cover: [{ id: 99, position: 1, videos: { youtube_video_id: "CBvaO-uDvs8" } }],
+    })];
+    COUNT = 1;
+
+    render(<MemoryRouter><ResultProbe /></MemoryRouter>);
+    expect(await screen.findByText("CBvaO-uDvs8")).toBeTruthy();
+
+    const q = calls[0];
+    expect(q.cols).toContain("cover:playlist_videos");
+    expect(q.cols).toContain("videos(youtube_video_id)");
+    expect(q.referencedOrders.cover).toEqual(["position", "id"]);
+    expect(q.referencedRanges.cover).toEqual([0, 0]);
+  });
+
   it("uses curated curriculum order before popularity and stable tie-breakers", async () => {
     const q = await run({});
     expect(q.cols).toContain("display_order");
