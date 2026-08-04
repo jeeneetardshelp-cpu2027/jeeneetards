@@ -144,11 +144,21 @@ export function ResourceCard({ resource }) {
           />
         </div>
 
-        <p className="mt-4 flex-1 text-sm leading-relaxed text-ink-3">
+        <p className="mt-4 text-sm leading-relaxed text-ink-3">
           {resource.description}
         </p>
 
-        <div className="mt-6 flex flex-wrap items-center gap-2">
+        {/* The click path on the destination, for platforms whose link lands
+            on a dashboard rather than the paper. Quoted in the platform's own
+            wording so a student can match it by eye. */}
+        {resource.findIt && (
+          <p className="mt-4 rounded-md border border-hairline bg-surface-2 px-3 py-2 text-xs leading-relaxed text-ink-2">
+            <span className="font-semibold text-ink">Find it:</span>{" "}
+            {resource.findIt}
+          </p>
+        )}
+
+        <div className="mt-6 flex flex-1 flex-wrap items-end gap-2">
           <AccessBadge access={resource.access} />
           {resource.official && (
             // Factual, not promotional: this is the body that conducts the

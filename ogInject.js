@@ -241,7 +241,10 @@ export function renderExamTestsBody(section, meta) {
         `<li><a href="${escapeHtml(r.url)}" rel="nofollow noopener">${escapeHtml(r.name)}</a>` +
         ` — ${escapeHtml(r.provider)}` +
         `${ACCESS[r.access] ? ` (${escapeHtml(ACCESS[r.access].label)})` : ""}` +
-        `${r.official ? " (official)" : ""}. ${escapeHtml(r.description)}</li>`,
+        `${r.official ? " (official)" : ""}. ${escapeHtml(r.description)}` +
+        // The click path matters most to a model answering "where do I find
+        // the JEE Advanced PYQs" — without it the answer stops at a dashboard.
+        `${r.findIt ? ` Find it: ${escapeHtml(r.findIt)}` : ""}</li>`,
     )
     .join("");
 
