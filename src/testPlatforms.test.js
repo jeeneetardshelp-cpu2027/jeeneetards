@@ -108,13 +108,27 @@ describe("test resources", () => {
     expect(paid).toBeGreaterThan(0); // the distinction is actually exercised
   });
 
+  // `official` renders as a badge that tells a student "the people who set
+  // your exam made this". An explicit allowlist rather than a loose keyword
+  // regex: a coaching brand with "Academy" or "Institute" in its name must
+  // not be able to earn the badge by wording. Extend this list deliberately
+  // when a genuine conducting body is added.
+  const CONDUCTING_BODIES = [
+    /\bNTA\b|National Testing Agency/i,
+    /\bCBSE\b|Central Board of Secondary Education/i,
+    /\bHBCSE\b|\bTIFR\b/i,
+  ];
+
   it("keeps `official` a real boolean claim, not a marketing flag", () => {
     for (const r of allResources) {
       if ("official" in r) expect(typeof r.official, `${r.url}`).toBe("boolean");
     }
-    // The one official entry today is the exam conductor itself.
-    const official = allResources.filter((r) => r.official);
-    for (const r of official) expect(r.provider).toMatch(/NTA|Board|Agency|Ministry/i);
+    for (const r of allResources.filter((x) => x.official)) {
+      expect(
+        CONDUCTING_BODIES.some((re) => re.test(r.provider)),
+        `"${r.provider}" is flagged official but is not a known conducting body`,
+      ).toBe(true);
+    }
   });
 
   it("counts what it actually holds", () => {
@@ -170,15 +184,28 @@ describe("crawler-readable /tests body", () => {
     }
   });
 
+  // Every section has a source today. This asserts the empty-state WORDING
+  // for any that are empty, without requiring one to exist — the previous
+  // version demanded an empty section and started failing the moment the
+  // last one was filled, which is backwards.
   it("says an empty section is empty rather than omitting it", () => {
     const html = renderTestsBody({ description: "d" });
-    const empty = TEST_SECTIONS.filter((s) => !s.resources.length);
-    expect(empty.length).toBeGreaterThan(0);
-    for (const s of empty) {
+    for (const s of TEST_SECTIONS.filter((x) => !x.resources.length)) {
       // The label is now a link to the exam's own page, so match on the
       // statement rather than on "Label: ..." being adjacent text.
       expect(html).toContain(`>${s.label}</a>: no test source listed yet`);
     }
+  });
+
+  // Exercises the empty branch directly with a synthetic section, so the
+  // wording stays covered no matter what the real data holds.
+  it("renders an honest empty state for a section with no sources", () => {
+    const html = renderExamTestsBody(
+      { id: "made-up", label: "Made Up Exam", blurb: "b", resources: [] },
+      { description: "d" },
+    );
+    expect(html).toContain("No Made Up Exam test source is listed yet.");
+    expect(html).not.toContain("<ul>");
   });
 
   it("links every exam to its own page, for crawlers that cannot run JS", () => {
