@@ -71,11 +71,22 @@ declare
   v_labelled int;
   v_long int;
 begin
-  -- THE REAL INVARIANT: every poem printed in NCERT First Flight must be named
+  -- THE REAL INVARIANT: every poem CBSE prescribes in First Flight must be named
   -- by at least one English lesson title, because title is all that search sees.
+  --
+  -- This list is the ten poems in the "Prescribed Books" section of
+  -- https://cbseacademic.nic.in/web_material/CurriculumMain27/SecPart1/English_LL_SecP1_2026-27.pdf
+  -- (Curriculum for the Academic Year 2026-27), read directly.
+  --
+  -- It used to carry an eleventh entry, 'Animals'. That was wrong: the poem was
+  -- rationalised out and appears nowhere in the prescribed list -- the only
+  -- "Animals" in that document is inside "How to Tell Wild Animals". The lesson
+  -- for it is removed by english_remove_offsyllabus_chapters_2026-08-04.sql, and
+  -- leaving 'Animals' here would have made this assertion fail the moment that
+  -- revert ran.
   foreach v_poem in array array[
     'Dust of Snow', 'Fire and Ice', 'A Tiger in the Zoo', 'How to Tell Wild Animals',
-    'The Ball Poem', 'Amanda', 'Animals', 'The Trees', 'Fog',
+    'The Ball Poem', 'Amanda', 'The Trees', 'Fog',
     'The Tale of Custard the Dragon', 'For Anne Gregory'
   ]
   loop
@@ -112,7 +123,7 @@ begin
     raise exception 'an old single-sitting title survived the rename';
   end if;
 
-  raise notice 'SELF-TEST PASSED: all 11 First Flight poems are named by some lesson title; 3 all-in-one cuts labelled; no title over 90 characters.';
+  raise notice 'SELF-TEST PASSED: all 10 prescribed First Flight poems are named by some lesson title; 3 all-in-one cuts labelled; no title over 90 characters.';
 end
 $verify$;
 
