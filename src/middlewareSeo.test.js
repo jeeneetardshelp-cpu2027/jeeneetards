@@ -195,6 +195,131 @@ describe("edge-rendered discovery landings", () => {
     );
   });
 
+  it("does not link empty class branches from an Explore goal page", async () => {
+    vi.stubEnv("VITE_SUPABASE_URL", "https://catalog.example");
+    vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
+    vi.stubGlobal("fetch", vi.fn(async (input, init) => {
+      if (String(input).includes("/rest/v1/rpc/get_browse_curriculum")) {
+        const args = JSON.parse(init.body);
+        return Response.json(args.p_class === "class-11"
+          ? [{ entity_id: 2, slug: "physics", name: "Physics", course_count: 30 }]
+          : []);
+      }
+      return new Response(shell, { status: 200 });
+    }));
+
+    const response = await middleware(
+      new Request("https://www.jeeneetard.com/explore/jee"),
+    );
+    const html = await response.text();
+
+    expect(response.status).toBe(200);
+    expect(html).toContain('href="/explore/jee/class-11"');
+    expect(html).not.toContain('href="/explore/jee/class-12"');
+    expect(html).not.toContain('href="/explore/jee/dropper"');
+  });
+
+  it("redirects an empty valid Explore class to its populated parent", async () => {
+    vi.stubEnv("VITE_SUPABASE_URL", "https://catalog.example");
+    vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
+    vi.stubGlobal("fetch", vi.fn(async (input) => {
+      const url = String(input);
+      if (url.includes("/rest/v1/boards")) {
+        return Response.json([
+          { id: 1, slug: "cbse", name: "CBSE", playlist_boards: [{ count: 2 }] },
+        ]);
+      }
+      if (url.includes("/rest/v1/rpc/get_browse_curriculum")) {
+        return Response.json([]);
+      }
+      return new Response(shell, { status: 200 });
+    }));
+
+    const response = await middleware(
+      new Request("https://www.jeeneetard.com/explore/school/cbse/class-11"),
+    );
+
+    expect(response.status).toBe(308);
+    expect(response.headers.get("location")).toBe(
+      "https://www.jeeneetard.com/explore/school/cbse",
+    );
+  });
+
+  it("does not link zero-course boards from the School Explore page", async () => {
+    vi.stubEnv("VITE_SUPABASE_URL", "https://catalog.example");
+    vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
+    vi.stubGlobal("fetch", vi.fn(async (input) => {
+      const url = String(input);
+      if (url.includes("/rest/v1/boards")) {
+        return Response.json([
+          { id: 1, slug: "cbse", name: "CBSE", playlist_boards: [{ count: 2 }] },
+          { id: 2, slug: "icse", name: "ICSE", playlist_boards: [{ count: 0 }] },
+        ]);
+      }
+      return new Response(shell, { status: 200 });
+    }));
+
+    const response = await middleware(
+      new Request("https://www.jeeneetard.com/explore/school"),
+    );
+    const html = await response.text();
+
+    expect(response.status).toBe(200);
+    expect(html).toContain('href="/explore/school/cbse"');
+    expect(html).not.toContain('href="/explore/school/icse"');
+  });
+
+  it("redirects a direct zero-course board URL to School Explore", async () => {
+    vi.stubEnv("VITE_SUPABASE_URL", "https://catalog.example");
+    vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
+    vi.stubGlobal("fetch", vi.fn(async (input) => {
+      const url = String(input);
+      if (url.includes("/rest/v1/boards")) {
+        return Response.json([
+          { id: 2, slug: "icse", name: "ICSE", playlist_boards: [{ count: 0 }] },
+        ]);
+      }
+      if (url.includes("/rest/v1/rpc/get_browse_curriculum")) {
+        return Response.json([
+          { entity_id: 2, slug: "mathematics", name: "Mathematics", course_count: 2 },
+        ]);
+      }
+      return new Response(shell, { status: 200 });
+    }));
+
+    const response = await middleware(
+      new Request("https://www.jeeneetard.com/explore/school/icse"),
+    );
+
+    expect(response.status).toBe(308);
+    expect(response.headers.get("location")).toBe(
+      "https://www.jeeneetard.com/explore/school",
+    );
+  });
+
+  it("redirects a subject with no navigable chapters to its class page", async () => {
+    vi.stubEnv("VITE_SUPABASE_URL", "https://catalog.example");
+    vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
+    vi.stubGlobal("fetch", vi.fn(async (input, init) => {
+      if (String(input).includes("/rest/v1/rpc/get_browse_curriculum")) {
+        const args = JSON.parse(init.body);
+        return Response.json(args.p_subject == null
+          ? [{ entity_id: 2, slug: "physics", name: "Physics", course_count: 1 }]
+          : []);
+      }
+      return new Response(shell, { status: 200 });
+    }));
+
+    const response = await middleware(
+      new Request("https://www.jeeneetard.com/explore/jee/class-11/physics"),
+    );
+
+    expect(response.status).toBe(308);
+    expect(response.headers.get("location")).toBe(
+      "https://www.jeeneetard.com/explore/jee/class-11",
+    );
+  });
+
   it("redirects a validated final Explore chapter to canonical browse results", async () => {
     vi.stubEnv("VITE_SUPABASE_URL", "https://catalog.example");
     vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
