@@ -245,9 +245,12 @@ export function usePlaylistBrowse({
 
 // "1h 40m" / "45m". Returns null when unknown so the caller can omit the field
 // entirely rather than printing "0m".
+// Rounds to whole minutes before splitting -- see the note on the copy in
+// src/metadata.js. Splitting first prints "6h 60m".
 export function formatDuration(seconds) {
   if (!seconds || seconds <= 0) return null;
-  const h = Math.floor(seconds / 3600);
-  const m = Math.round((seconds % 3600) / 60);
+  const totalMinutes = Math.round(seconds / 60);
+  const h = Math.floor(totalMinutes / 60);
+  const m = totalMinutes % 60;
   return h > 0 ? `${h}h ${m}m` : `${m}m`;
 }

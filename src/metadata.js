@@ -52,11 +52,17 @@ export function isoDurationToSeconds(iso) {
   return Number(m[1] || 0) * 3600 + Number(m[2] || 0) * 60 + Number(m[3] || 0);
 }
 
-// 2616 -> "43m", 3723 -> "1h 2m"
+// 2616 -> "44m", 3723 -> "1h 2m"   (2616s is 43m36s, and this rounds)
+//
+// Round to whole minutes FIRST, then split. Splitting first and rounding the
+// remainder lets a remainder of 3570-3599s round up to 60, printing "6h 60m"
+// (25176s, a real lesson) or "60m" instead of "1h". 21 lessons in the catalogue
+// hit that branch.
 export function formatDuration(seconds) {
   if (seconds == null) return null;
-  const h = Math.floor(seconds / 3600);
-  const m = Math.round((seconds % 3600) / 60);
+  const totalMinutes = Math.round(seconds / 60);
+  const h = Math.floor(totalMinutes / 60);
+  const m = totalMinutes % 60;
   if (h > 0) return `${h}h ${m}m`;
   return `${m}m`;
 }
