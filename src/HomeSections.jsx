@@ -187,14 +187,16 @@ export function SocialProof({ institutes, loading }) {
           </Container>
         ) : (
           <Marquee>
-            {institutes.map((name) => (
-              <span
-                key={name}
-                className="inline-flex items-center gap-2.5 rounded-sm border border-hairline bg-surface px-5 py-3 text-sm font-medium whitespace-nowrap text-ink-2"
+            {institutes.map((institute) => (
+              <Link
+                key={institute.id}
+                to={`/browse?channel=${institute.id}`}
+                aria-label={`View all courses from ${institute.name}`}
+                className="inline-flex min-h-11 items-center gap-2.5 rounded-sm border border-hairline bg-surface px-5 py-3 text-sm font-medium whitespace-nowrap text-ink-2 transition-colors duration-200 hover:border-accent-line hover:bg-surface-2 hover:text-accent"
               >
                 <Building2 aria-hidden="true" className="h-4 w-4 text-ink-3" />
-                {name}
-              </span>
+                {institute.name}
+              </Link>
             ))}
           </Marquee>
         )}
@@ -868,12 +870,15 @@ export function pickTopRated(items, limit = 3) {
     .map((row) => row.course);
 }
 
-/** Distinct channel names from whatever the catalogue actually returned. */
+/** Distinct clickable channels from whatever the catalogue actually returned. */
 export function pickInstitutes(items, limit = 8) {
   const seen = [];
   (items ?? []).forEach((course) => {
+    const id = Number(course.instituteId);
     const name = course.institute?.trim();
-    if (name && !seen.includes(name)) seen.push(name);
+    if (Number.isInteger(id) && id > 0 && name && !seen.some((row) => row.id === id)) {
+      seen.push({ id, name });
+    }
   });
   return seen.slice(0, limit);
 }

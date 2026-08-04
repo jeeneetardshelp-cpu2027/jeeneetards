@@ -127,8 +127,18 @@ export default function Home() {
   // rendered once at least one of them is real, so it never animates to zero.
   const heroStats = courseCount > 0
     ? [
-        { value: courseCount, label: "Free courses", note: "Curriculum-tagged" },
-        { value: liveTracks, label: "Exam tracks", note: "JEE, NEET, Boards" },
+        {
+          value: courseCount,
+          label: "Free courses",
+          note: "Curriculum-tagged",
+          to: "/browse",
+        },
+        {
+          value: liveTracks,
+          label: "Exam tracks",
+          note: "JEE, NEET, Boards",
+          to: "/explore",
+        },
         { value: "₹0", numeric: false, label: "Forever", note: "No account needed" },
       ]
     : [];
