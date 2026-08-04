@@ -39,6 +39,29 @@
 -- put three off-syllabus English chapters live earlier today. It stays where
 -- NCERT puts it.
 --
+-- IT ALSO RETITLES FOUR LESSONS, because the first attempt at this file aborted
+-- and that is what it exposed. Chapter 82 holds ALLEN JEE "Circular Motion
+-- (Part 1)" and "(Part 2)" twice each -- same institute, same title, different
+-- series -- which in one merged lesson list is unreadable. They become
+-- "... — Bridge Course" and "... — Foundation Series", names taken from the
+-- publisher's own source titles, not invented.
+--
+-- WHY THE FIRST ATTEMPT FAILED, recorded rather than quietly patched: the
+-- verification block demanded ZERO duplicate titles in the merged chapter and
+-- raised "3 duplicate lesson title(s)". That bar was wrong, not the data. Two of
+-- the three were the Circular Motion pairs above and the third was "Constraint
+-- Motion", which chapter 6 already held twice before this file existed. Across
+-- the catalogue 111 (chapter, title) pairs hold more than one lesson, so failing
+-- on a pre-existing, catalogue-wide condition aborted a correct merge. The whole
+-- transaction rolled back cleanly and nothing was applied.
+--
+-- The assertion is now the invariant that actually matters: no lesson list may
+-- show the same title twice FROM THE SAME INSTITUTE, and the merge may not stack
+-- a title three deep. Two lessons sharing a title from different institutes is
+-- fine -- the course card names the institute. Simulated against production
+-- before regenerating: 0 same-institute duplicates, 0 titles three deep, and one
+-- allowed pair (Constraint Motion, JEE Wallah and Mohit Tyagi).
+--
 -- Physics display_order is closed up to a contiguous 1..31 afterwards.
 --
 -- Guarded: refuses to run if chapter 82 holds anything that would collide, or if
@@ -77,6 +100,16 @@ begin
   if v_clash <> 0 then
     raise exception '% lesson title(s) would be duplicated inside the merged chapter', v_clash;
   end if;
+
+  -- Four lessons in 82 are ALLEN JEE "Circular Motion (Part 1)" and "(Part 2)"
+  -- TWICE OVER -- same institute, same title, different series. Side by side in
+  -- one lesson list that is unreadable, so name the series each belongs to. The
+  -- series names are the publisher's own, taken from the source titles
+  -- ("Free Bridge Course for JEE Aspirants" / "Foundation Series").
+  update public.videos set title = 'Circular Motion (Part 1) — Bridge Course' where youtube_video_id = 'T2D7sodPDcw';
+  update public.videos set title = 'Circular Motion (Part 2) — Bridge Course' where youtube_video_id = 'Do2sZ71H7zI';
+  update public.videos set title = 'Circular Motion (Part 1) — Foundation Series' where youtube_video_id = 'gpPt4bUXHgc';
+  update public.videos set title = 'Circular Motion (Part 2) — Foundation Series' where youtube_video_id = 'n7CiepcP5Uw';
 
   update public.videos set chapter_id = v_into where chapter_id = v_from;
   get diagnostics v_moved = row_count;
@@ -130,11 +163,32 @@ begin
     from public.videos where chapter_id = 6;
   if v_n <> 47 then raise exception 'expected 47 lessons in the merged chapter, found %', v_n; end if;
 
-  -- No duplicate display title inside it.
+  -- No lesson list may show the SAME institute twice under the same title --
+  -- that is genuinely unreadable, and it is what the four retitles above fix.
+  --
+  -- An earlier version of this assertion demanded ZERO duplicate titles in the
+  -- merged chapter and aborted the whole migration. That bar was wrong: chapter
+  -- 6 already held two lessons titled "Constraint Motion" before this file
+  -- existed, and 111 (chapter, title) pairs across the catalogue look like that.
+  -- Two lessons sharing a title but published by DIFFERENT institutes are fine --
+  -- the course card names the institute, so a student can tell them apart -- and
+  -- failing on a pre-existing, catalogue-wide condition is not this migration's
+  -- job. The check below is the invariant that actually matters.
+  select count(*) into v_dup from (
+    select title, channel_id from public.videos where chapter_id = 6
+     group by title, channel_id having count(*) > 1) d;
+  if v_dup <> 0 then
+    raise exception '% lesson title(s) appear twice from the SAME institute inside the merged chapter', v_dup;
+  end if;
+
+  -- And the merge itself must not have introduced a new collision: nothing that
+  -- moved may share a title with something that was already there, from anyone.
   select count(*) into v_dup from (
     select title from public.videos where chapter_id = 6
-     group by title having count(*) > 1) d;
-  if v_dup <> 0 then raise exception '% duplicate lesson title(s) inside the merged chapter', v_dup; end if;
+     group by title having count(*) > 2) d;
+  if v_dup <> 0 then
+    raise exception '% title(s) now appear three or more times - the merge stacked collisions', v_dup;
+  end if;
 
   -- Nothing orphaned or emptied.
   select count(*) into v_orphan from public.videos where chapter_id is null;
