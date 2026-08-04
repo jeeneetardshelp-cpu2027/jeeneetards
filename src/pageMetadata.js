@@ -82,7 +82,7 @@ export function metadataForLocation(pathname = "/", search = "") {
       title: `${isLectureView ? "Browse free lectures" : "Browse free courses"} | ${SITE_NAME}`,
       description: isLectureView
         ? "Browse free educational YouTube lectures by exam, class, subject and chapter."
-        : DEFAULT_DESCRIPTION,
+        : "Browse the complete JEENEETARD catalogue of free YouTube courses and filter by exam, class, subject, chapter and faculty.",
       // Every query variant canonicalizes to the stable catalogue landing.
       // Keep filters, pagination, tabs and personal searches out of the index
       // so crawlers cannot manufacture an unbounded faceted URL space.
@@ -103,7 +103,7 @@ export function metadataForLocation(pathname = "/", search = "") {
       title: `${scope ? `Explore ${scope} courses` : "Explore free courses"} | ${SITE_NAME}`,
       description: scope
         ? `Browse free educational YouTube courses for ${scope} by subject and chapter.`
-        : DEFAULT_DESCRIPTION,
+        : "Choose JEE, NEET, Olympiad or School Boards, then narrow by class, subject and chapter to find free educational YouTube courses.",
     };
   }
 

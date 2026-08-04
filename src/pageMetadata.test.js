@@ -15,6 +15,16 @@ describe("public page metadata", () => {
     expect(home.description.toLowerCase()).not.toContain("faculty");
   });
 
+  it("gives the three indexable discovery landings distinct descriptions", () => {
+    const home = metadataForLocation("/").description;
+    const browse = metadataForLocation("/browse").description;
+    const explore = metadataForLocation("/explore").description;
+
+    expect(new Set([home, browse, explore])).toHaveLength(3);
+    expect(browse).toContain("catalogue");
+    expect(explore).toContain("JEE, NEET, Olympiad or School Boards");
+  });
+
   it("creates readable, route-specific explore metadata", () => {
     expect(readablePathSegment("jee")).toBe("JEE");
     expect(readablePathSegment("class-12")).toBe("Class 12");
