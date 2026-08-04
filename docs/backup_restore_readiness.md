@@ -1102,3 +1102,23 @@ fingerprint `30eee4a4a6842e5beeb7c97083d7f812` after every write; rolling JEE
 remained 212 / 2,848 / `9eea2b44f0b19c08cc0907c57e091342`. No restore,
 clone, migration, update/delete, or `release` push occurred. Full evidence is
 in [unacademy-neet-sixth-batch-readiness-2026-08-04.md](unacademy-neet-sixth-batch-readiness-2026-08-04.md).
+
+## Unacademy NEET seventh production batch — 4 August 2026
+
+The owner approved three create-only Biology courses under decision
+`cf45d7d5-43ef-4311-abd7-5297ec2ea3b6`, explicitly accepting `Pradeep Sir` as
+the reviewed label for verified teacher Pradeep Singh. Before each transaction,
+the signed-in production dashboard confirmed active seven-day PITR; recorded
+latest restore points were `04 Aug 2026, 17:52:26 IST`, `18:34:28 IST`, and
+`18:36:29 IST`. Each quiet-window baseline remained exact across its anonymous
+dry-run, with zero source/video collision and an `ok` quality result.
+
+Biodiversity and Conservation, Cell Cycle and Cell Division, and Microbes in
+Human Welfare became courses 402, 403, and 404. They added 5, 7, and 4
+videos/memberships respectively, with zero reuse and no chapter creation. Final
+totals were 385 playlists / 4,514 videos / 4,520 memberships / 247 chapters.
+The protected JEE boundary remained exactly 82 courses / 1,304 memberships /
+fingerprint `30eee4a4a6842e5beeb7c97083d7f812` after every write; rolling JEE
+remained 212 / 2,848 / `9eea2b44f0b19c08cc0907c57e091342`. No restore,
+clone, migration, update/delete, or `release` push occurred. Full evidence is
+in [unacademy-neet-seventh-batch-readiness-2026-08-04.md](unacademy-neet-seventh-batch-readiness-2026-08-04.md).

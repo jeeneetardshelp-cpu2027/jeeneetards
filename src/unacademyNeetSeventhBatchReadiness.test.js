@@ -19,7 +19,7 @@ const manifestPaths = [
 const manifestSources = manifestPaths.map((path) => readFileSync(path, "utf8"));
 const manifests = manifestSources.map((source) => JSON.parse(source));
 
-describe("Unacademy NEET seventh-batch read-only readiness", () => {
+describe("Unacademy NEET seventh-batch production evidence", () => {
   it("pins the three official playlists in the proposed order", () => {
     expect(manifests.map((manifest) => manifest.youtube_playlist_id)).toEqual([
       "PLsgHooHkqhhOLWySbDetaU3Z-KiEBLE63",
@@ -85,19 +85,32 @@ describe("Unacademy NEET seventh-batch read-only readiness", () => {
     expect(manifestSources.map((source) => (
       createHash("sha256").update(source, "utf8").digest("hex")
     ))).toEqual([
-      "a980124726b9242075ce4f91d642943efb0814ce663ec3a8c4cad93ef139813b",
-      "cf62f0ee5e90152038d13e09b8e9923b78fd4cde4a64909d559dbf17961702ee",
-      "8504035c22590941032b6993a54b58499a5f03b6bf7b9a40d3cf87ed4c4688b4",
+      "7e246b59b15a6d667bca8567018d6e53e2cdfb71424c9a2b2bfd67f6fe462b14",
+      "32a015c6c55bba3f2f256ebfd9cb321811370fb35128c65ab246a4f673cfe078",
+      "df09998311f2e220d01347d111a27e72026897b6f472d3f9182cf3ec82f4c622",
     ]);
   });
 
-  it("keeps teacher binding and production writes behind owner approval", () => {
-    expect(manifests.every((manifest) => manifest.teacher_evidence == null)).toBe(true);
-    expect(readiness).toContain("Read-only preparation is complete");
-    expect(readiness).toContain("cf45d7d5-43ef-4311-abd7-5297ec2ea3b6");
+  it("binds owner-reviewed teacher evidence and pins execution evidence", () => {
+    expect(manifests.every((manifest) => (
+      manifest.teacher_evidence?.decision_id
+        === "cf45d7d5-43ef-4311-abd7-5297ec2ea3b6"
+      && manifest.teacher_evidence.teacher === "Pradeep Singh"
+      && manifest.teacher_evidence.youtube_playlist_id
+        === manifest.youtube_playlist_id
+      && manifest.teacher_evidence.youtube_video_ids.length
+        === manifest.assignments.length
+    ))).toBe(true);
+    expect(manifests[1].teacher_evidence.source_label).toContain("Pradeep Sir");
+    expect(readiness).toContain("Production execution is complete");
+    expect(readiness).toContain("Course 402");
+    expect(readiness).toContain("Course 403");
+    expect(readiness).toContain("Course 404");
+    expect(readiness).toContain("385 playlists / 4,514 videos / 4,520");
     expect(readiness).toContain("Pradeep Sir");
     expect(readiness).toContain("30eee4a4a6842e5beeb7c97083d7f812");
-    expect(readiness).toContain("No `release` push");
+    expect(readiness).toContain("zero normalized");
+    expect(readiness).toContain("No `release` push occurred");
   });
 
   it("documents incomplete and contaminated-source deferrals", () => {

@@ -2,6 +2,20 @@
   "version": 1,
   "request_id": "92547164-f6e5-459c-baac-fd6bf9706f2e",
   "youtube_playlist_id": "PLsgHooHkqhhOLWySbDetaU3Z-KiEBLE63",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "cf45d7d5-43ef-4311-abd7-5297ec2ea3b6",
+    "youtube_playlist_id": "PLsgHooHkqhhOLWySbDetaU3Z-KiEBLE63",
+    "teacher": "Pradeep Singh",
+    "source_url": "https://www.youtube.com/playlist?list=PLsgHooHkqhhOLWySbDetaU3Z-KiEBLE63",
+    "source_label": "Official Unacademy NEET channel-owned Biodiversity and Conservation playlist naming Pradeep Singh; every retained lecture title names Pradeep Singh",
+    "reviewed_by": "Owner",
+    "reviewed_on": "2026-08-04",
+    "youtube_video_ids": [
+      "Rip8dgRo_JU", "GOTPIedVp-Y", "ERUu1Gra_pE", "VuTkb-hhyuA", "z2OJzHkLSaM"
+    ]
+  },
   "assignments": [
     { "position": 1, "youtube_video_id": "Rip8dgRo_JU", "chapter": "Biodiversity and Conservation", "lesson_number": 1 },
     { "position": 2, "youtube_video_id": "GOTPIedVp-Y", "chapter": "Biodiversity and Conservation", "lesson_number": 2 },
