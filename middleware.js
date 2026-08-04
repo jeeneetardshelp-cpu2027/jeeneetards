@@ -330,7 +330,10 @@ export default async function middleware(request) {
     const legacyChapterMatch = url.pathname.match(/^\/chapter\/(\d+)\/?$/);
     const exploreRoute = parseExplorePath(url.pathname);
 
-    if (!isSupportedAppPath(url.pathname)) return notFoundResponse(url);
+    // Preserve the legacy route's direct hand-off even when an old link has a
+    // trailing slash. Every other non-root slash form is a duplicate URL, so
+    // collapse it before rendering or doing any catalogue lookup. Keep the
+    // query string because campaign parameters must survive canonicalisation.
     if (legacyChapterMatch) {
       const chapterId = Number(legacyChapterMatch[1]);
       return redirectResponse(
@@ -340,6 +343,11 @@ export default async function middleware(request) {
           : "/browse",
       );
     }
+    if (url.pathname.length > 1 && url.pathname.endsWith("/")) {
+      const canonicalPath = url.pathname.replace(/\/+$/, "") || "/";
+      return redirectResponse(url, `${canonicalPath}${url.search}`);
+    }
+    if (!isSupportedAppPath(url.pathname)) return notFoundResponse(url);
 
     const supaUrl = process.env.VITE_SUPABASE_URL;
     const supaKey = process.env.VITE_SUPABASE_ANON_KEY;
