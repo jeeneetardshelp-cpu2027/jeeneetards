@@ -296,7 +296,7 @@ describe("findIt navigation hints", () => {
       const hinted = section.resources.filter((r) => r.findIt);
       if (!hinted.length) continue;
       const html = renderExamTestsBody(section, { description: "d" });
-      for (const r of hinted) expect(html).toContain("Find it:");
+      expect(html.match(/Find it:/g) ?? []).toHaveLength(hinted.length);
     }
   });
 
