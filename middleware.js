@@ -317,9 +317,19 @@ export default async function middleware(request) {
     const url = new URL(request.url);
     const courseMatch = url.pathname.match(/^\/course\/(\d+)(?:\/chapter\/(\d+))?\/?$/);
     const facultyMatch = url.pathname.match(/^\/faculty\/([^/]+)\/?$/);
+    const legacyChapterMatch = url.pathname.match(/^\/chapter\/(\d+)\/?$/);
     const exploreRoute = parseExplorePath(url.pathname);
 
     if (!isSupportedAppPath(url.pathname)) return notFoundResponse(url);
+    if (legacyChapterMatch) {
+      const chapterId = Number(legacyChapterMatch[1]);
+      return redirectResponse(
+        url,
+        Number.isInteger(chapterId) && chapterId > 0
+          ? `/browse?ch=${chapterId}`
+          : "/browse",
+      );
+    }
 
     const supaUrl = process.env.VITE_SUPABASE_URL;
     const supaKey = process.env.VITE_SUPABASE_ANON_KEY;

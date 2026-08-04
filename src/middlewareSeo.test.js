@@ -124,6 +124,37 @@ describe("edge-rendered discovery landings", () => {
     );
   });
 
+  it("marks structured Browse filters noindex before JavaScript runs", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => new Response(shell, { status: 200 })));
+
+    const response = await middleware(new Request(
+      "https://www.jeeneetard.com/browse?goal=jee&class=11&subject=physics&chapter=kinematics",
+    ));
+    const html = await response.text();
+
+    expect(html).toContain('name="robots" content="noindex, follow"');
+    expect(html).toContain(
+      '<link rel="canonical" href="https://www.jeeneetard.com/browse" />',
+    );
+  });
+
+  it.each([
+    ["/chapter/79", "https://www.jeeneetard.com/browse?ch=79"],
+    ["/chapter/79/?source=old", "https://www.jeeneetard.com/browse?ch=79"],
+    ["/chapter/0", "https://www.jeeneetard.com/browse"],
+  ])("redirects legacy chapter URL %s at the edge", async (path, target) => {
+    const fetchSpy = vi.fn();
+    vi.stubGlobal("fetch", fetchSpy);
+
+    const response = await middleware(
+      new Request(`https://www.jeeneetard.com${path}`),
+    );
+
+    expect(response.status).toBe(308);
+    expect(response.headers.get("location")).toBe(target);
+    expect(fetchSpy).not.toHaveBeenCalled();
+  });
+
   it("includes homepage schemas in the served response", async () => {
     vi.stubGlobal("fetch", vi.fn(async () => new Response(shell, { status: 200 })));
 
