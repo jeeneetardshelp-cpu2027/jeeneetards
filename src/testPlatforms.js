@@ -119,13 +119,20 @@ export const TEST_SECTIONS = [
       "Full-length papers for the IIT entrance, where the question style differs sharply from JEE Main.",
     resources: [
       {
-        name: "Competishun JEE Advanced PYQs 2025–2019",
+        name: "Competishun JEE Advanced PYQs 2025–2019 (Paper 1 & 2)",
+        // NOT linked straight to competishun.digital.schoollog.in/all-exams,
+        // where the papers actually live: opened without a session that URL
+        // serves a bare Schoollog login form with no Competishun branding,
+        // which is a worse landing than the app's own explore screen. The
+        // portal is named in `findIt` instead, so the hand-off is expected
+        // rather than alarming.
         url: "https://i.competishun.com/home/explore",
         provider: "Competishun",
         access: "account",
         description:
-          "Seven years of JEE Advanced previous-year papers as free timed tests, priced ₹0 inside Competishun's student app.",
-        findIt: 'IIT-JEE tab → 12th+ → "JEE ADVANCED PYQs 2025-2019" (₹0)',
+          "Paper 1 and Paper 2 from all seven JEE Advanced sittings since 2019 — 14 papers listed, 180 marks and 180 minutes each, priced ₹0.",
+        findIt:
+          'IIT-JEE tab → 12th+ → "JEE ADVANCED PYQs 2025-2019" (₹0). Papers open in Competishun\'s Schoollog test portal after sign-in.',
       },
       {
         name: "Quizrr test series",
