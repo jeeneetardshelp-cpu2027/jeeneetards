@@ -81,16 +81,17 @@ export function metadataForLocation(pathname = "/", search = "") {
 
   if (path === "/browse") {
     const isLectureView = params.get("tab") === "lectures";
-    const hasSearch = Boolean(params.get("q")?.trim());
+    const hasQuery = [...params.keys()].length > 0;
     return {
       ...base,
       title: `${isLectureView ? "Browse free lectures" : "Browse free courses"} | ${SITE_NAME}`,
       description: isLectureView
         ? "Browse free educational YouTube lectures by exam, class, subject and chapter."
         : DEFAULT_DESCRIPTION,
-      // Search terms can be personal or low-quality crawl targets. Structured
-      // filters also canonicalize to the stable catalogue landing page.
-      robots: hasSearch ? "noindex, follow" : "index, follow",
+      // Every query variant canonicalizes to the stable catalogue landing.
+      // Keep filters, pagination, tabs and personal searches out of the index
+      // so crawlers cannot manufacture an unbounded faceted URL space.
+      robots: hasQuery ? "noindex, follow" : "index, follow",
       canonicalPath: "/browse",
     };
   }

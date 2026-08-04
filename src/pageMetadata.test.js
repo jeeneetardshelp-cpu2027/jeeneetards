@@ -33,6 +33,16 @@ describe("public page metadata", () => {
     expect(page.title).toBe("Browse free courses | JEENEETARD");
   });
 
+  it("keeps every filtered catalogue variant out of the index", () => {
+    const filtered = metadataForLocation(
+      "/browse",
+      "?goal=jee&class=11&subject=physics&chapter=kinematics",
+    );
+    expect(filtered.robots).toBe("noindex, follow");
+    expect(filtered.canonicalPath).toBe("/browse");
+    expect(metadataForLocation("/browse").robots).toBe("index, follow");
+  });
+
   it("keeps restricted and unavailable routes out of the index", () => {
     expect(metadataForLocation("/admin").robots).toBe("noindex, nofollow");
     expect(metadataForLocation("/admin/").robots).toBe("noindex, nofollow");
