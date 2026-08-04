@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { courseMeta } from "../ogInject.js";
 import {
   DEFAULT_DESCRIPTION,
   metadataForCourse,
@@ -84,7 +85,27 @@ describe("public page metadata", () => {
     expect(page.title).toBe(
       "Rectilinear Motion (Kinematics) | JEENEETARD",
     );
-    expect(page.description).toContain("Physics course with 12 lessons");
+    expect(page.description).toContain("12 Physics lectures");
     expect(page.type).toBe("article");
+  });
+
+  it("keeps server and hydrated course snippets identical and title-specific", () => {
+    const server = courseMeta({
+      title: "Rectilinear Motion (Kinematics)",
+      teacher: "ABJ Sir",
+      subjects: { name: "Physics" },
+      playlist_videos: [{ count: 12 }],
+    }, 5);
+    const client = metadataForCourse({
+      title: "Rectilinear Motion (Kinematics)",
+      teacher: "ABJ Sir",
+      subject: "Physics",
+      lectures: 12,
+    });
+
+    expect(server.title).toBe(client.title);
+    expect(server.description).toBe(client.description);
+    expect(server.description).toContain("Rectilinear Motion (Kinematics)");
+    expect(server.description.length).toBeLessThanOrEqual(160);
   });
 });

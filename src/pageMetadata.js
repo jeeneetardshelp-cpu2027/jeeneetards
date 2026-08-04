@@ -2,6 +2,7 @@ import { RELEASE_CAPABILITIES } from "./releaseCapabilities.js";
 // Pure data (no React), so this stays safe for the edge middleware, which
 // imports this module to compute the same metadata the client will.
 import { findTestSection, sectionIsAllFree } from "./testPlatforms.js";
+import { buildCourseMetadata } from "./courseMetadata.js";
 
 export const SITE_NAME = "JEENEETARD";
 export const DEFAULT_TITLE = "JEENEETARD - Free course finder";
@@ -24,12 +25,6 @@ const ACRONYMS = new Map([
   ["icse", "ICSE"],
   ["iit", "IIT"],
 ]);
-
-const shorten = (value, limit) => {
-  const text = String(value ?? "").trim();
-  if (text.length <= limit) return text;
-  return `${text.slice(0, Math.max(0, limit - 1)).trimEnd()}…`;
-};
 
 export function readablePathSegment(value) {
   const raw = String(value ?? "");
@@ -248,20 +243,5 @@ export function metadataForLocation(pathname = "/", search = "") {
 }
 
 export function metadataForCourse(course) {
-  if (!course?.title) return null;
-  const lessonCount = Number(course.lectures ?? 0);
-  const subject = String(course.subject ?? "").trim();
-  const lessonText = lessonCount > 0
-    ? `${lessonCount} ${lessonCount === 1 ? "lesson" : "lessons"}`
-    : "its lesson sequence";
-  const subjectText = subject ? `${subject} ` : "";
-
-  return {
-    title: `${shorten(course.title, 48)} | ${SITE_NAME}`,
-    description: shorten(
-      `Browse this free ${subjectText}course with ${lessonText} and watch through YouTube's privacy-enhanced player.`,
-      155,
-    ),
-    type: "article",
-  };
+  return buildCourseMetadata(course);
 }

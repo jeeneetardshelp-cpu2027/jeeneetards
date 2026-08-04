@@ -16,6 +16,7 @@ import {
 } from "./src/structuredData.js";
 // Pure data, no React — safe to pull into the edge runtime.
 import { TEST_SECTIONS, ACCESS, findTestSection } from "./src/testPlatforms.js";
+import { buildCourseMetadata } from "./src/courseMetadata.js";
 
 const SITE = "https://www.jeeneetard.com";
 
@@ -29,22 +30,10 @@ export function escapeHtml(value) {
 
 /** Build the { title, description, url } for a course row from PostgREST. */
 export function courseMeta(course, id) {
-  const subject = course?.subjects?.name || null;
-  const lessons = course?.playlist_videos?.[0]?.count ?? null;
-  const title = `${course.title} | JEENEETARD`;
-  const parts = [
-    "Free course",
-    lessons ? `${lessons} lecture${lessons === 1 ? "" : "s"}` : null,
-    subject,
-    course.teacher ? `by ${course.teacher}` : null,
-  ].filter(Boolean);
-  const description = `${parts.join(" · ")}. No JEENEETARD advertisements or sponsored rankings; YouTube may show ads or same-channel recommendations.`;
   return {
-    title,
-    description,
+    ...buildCourseMetadata(course),
     url: `${SITE}/course/${id}`,
     robots: "index, follow",
-    type: "article",
   };
 }
 
