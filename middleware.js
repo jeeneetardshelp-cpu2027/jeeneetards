@@ -363,8 +363,8 @@ export default async function middleware(request) {
       return deepExploreResponse(url, exploreRoute, supaUrl, supaKey);
     }
 
-    // Non-course routes need no DB lookup. metadataForLocation is the SAME
-    // function the client uses, so server and client never disagree.
+    // Static routes share the client's metadata. Canonical Browse and root
+    // Explore additionally fetch bounded directory data for crawler HTML.
     if (!courseMatch && !facultyMatch) {
       const routeMeta = metadataForLocation(url.pathname, url.search);
       if (!routeMeta) return next();
@@ -389,25 +389,54 @@ export default async function middleware(request) {
             }),
           ])
         : Promise.resolve(null);
-      const [shell, directory] = await Promise.all([
+      const exploreRootPromise = url.pathname === "/explore" && !url.search && supaUrl && supaKey
+        ? edgeJson(`${supaUrl}/rest/v1/rpc/get_browse_curriculum`, {
+            method: "POST",
+            headers: {
+              apikey: supaKey,
+              Authorization: `Bearer ${supaKey}`,
+              "content-type": "application/json",
+            },
+            body: JSON.stringify({ p_goal: null, p_class: null, p_subject: null }),
+          })
+        : Promise.resolve(null);
+      const [shell, directory, exploreRoot] = await Promise.all([
         fetch(new URL("/index.html", url.origin)),
         directoryPromise,
+        exploreRootPromise,
       ]);
       if (!shell.ok) return next();
       let html = injectRouteMeta(await shell.text(), routeMeta);
       const [courseResult, facultyResult] = directory ?? [];
       const hasDirectory = courseResult?.confirmed && facultyResult?.confirmed &&
         ((courseResult.data?.length ?? 0) > 0 || (facultyResult.data?.length ?? 0) > 0);
+      const exploreRootOptions = exploreRoot?.confirmed
+        ? (exploreRoot.data ?? [])
+            .filter((goal) => GOAL_NAMES[goal.slug] && Number(goal.course_count ?? 0) > 0)
+            .map((goal) => ({
+              name: GOAL_NAMES[goal.slug],
+              url: explorePath(goal.slug),
+              count: Number(goal.course_count),
+            }))
+        : [];
       html = injectStructuredData(html, [
         ...landingSchemas(url.pathname),
         ...(hasDirectory ? browseDirectorySchemas(courseResult.data) : []),
+        ...exploreSchemas([], exploreRootOptions),
       ]);
       const body = hasDirectory
         ? renderBrowseDirectoryBody(routeMeta, {
             courses: courseResult.data,
             faculty: facultyResult.data,
           })
-        : renderLandingBody(url.pathname, routeMeta);
+        : exploreRootOptions.length > 0
+          ? renderExploreBody({
+              heading: "What are you preparing for?",
+              meta: routeMeta,
+              crumbs: [],
+              options: exploreRootOptions,
+            })
+          : renderLandingBody(url.pathname, routeMeta);
       html = injectRootContent(html, body);
       return htmlResponse(html);
     }

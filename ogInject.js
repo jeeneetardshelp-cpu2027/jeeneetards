@@ -517,7 +517,7 @@ export function renderExploreBody({ heading, meta, crumbs, options, emptyMessage
 
   return [
     "<main>",
-    `<nav aria-label="Breadcrumb">${breadcrumb}</nav>`,
+    breadcrumb ? `<nav aria-label="Breadcrumb">${breadcrumb}</nav>` : "",
     `<h1>${escapeHtml(heading)}</h1>`,
     `<p>${escapeHtml(meta.description)}</p>`,
     items ? `<ul>${items}</ul>` : `<p>${escapeHtml(emptyMessage ?? "No courses are available for this selection yet.")}</p>`,

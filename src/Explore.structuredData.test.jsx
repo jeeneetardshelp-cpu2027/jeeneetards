@@ -49,7 +49,12 @@ function renderAt(url) {
     <ThemeProvider>
       <MemoryRouter initialEntries={[url]}>
         <Routes>
+          <Route path="/explore" element={<Explore />} />
+          <Route path="/explore/:goal" element={<Explore />} />
+          <Route path="/explore/:goal/:s1" element={<Explore />} />
           <Route path="/explore/:goal/:s1/:s2" element={<Explore />} />
+          <Route path="/explore/:goal/:s1/:s2/:s3" element={<Explore />} />
+          <Route path="/explore/:goal/:s1/:s2/:s3/:s4" element={<Explore />} />
         </Routes>
       </MemoryRouter>
     </ThemeProvider>,
@@ -63,11 +68,28 @@ function breadcrumbSchema() {
   return el ? JSON.parse(el.textContent) : null;
 }
 
+function itemListSchema() {
+  const el = document.head.querySelector(
+    'script[type="application/ld+json"][data-schema-key="ItemList"]',
+  );
+  return el ? JSON.parse(el.textContent) : null;
+}
+
 beforeEach(() => {
   window.scrollTo = vi.fn();
 });
 
 describe("Explore structured data wiring", () => {
+  it("describes the navigable goal choices on the root Explore page", async () => {
+    renderAt("/explore");
+    await screen.findByRole("heading", { name: "What are you preparing for?" });
+    const list = itemListSchema();
+    expect(list.itemListElement.map((item) => item.name)).toEqual(["JEE"]);
+    expect(list.itemListElement.map((item) => item.url)).toEqual([
+      "https://www.jeeneetard.com/explore/jee",
+    ]);
+  });
+
   it("mirrors the same crumbs the header renders, as absolute urls", async () => {
     renderAt("/explore/jee/class-11/physics");
     await screen.findByRole("heading", {
@@ -86,6 +108,8 @@ describe("Explore structured data wiring", () => {
       "https://www.jeeneetard.com/explore/jee/class-11",
       "https://www.jeeneetard.com/explore/jee/class-11/physics",
     ]);
+    expect(itemListSchema().itemListElement.map((item) => item.name))
+      .toEqual(["Kinematics"]);
   });
 
   it("removes the breadcrumb markup while a scoped search is live", async () => {
@@ -99,5 +123,6 @@ describe("Explore structured data wiring", () => {
       target: { value: "kinematics" },
     });
     await waitFor(() => expect(breadcrumbSchema()).toBeNull());
+    expect(itemListSchema()).toBeNull();
   });
 });
