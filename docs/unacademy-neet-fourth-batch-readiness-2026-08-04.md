@@ -2,8 +2,11 @@
 
 ## Status and safety boundary
 
-Read-only preparation is complete. No Supabase write, migration, chapter
-creation, clone, `release` push, or content import was performed. The official
+Production execution is complete under owner decision
+`0bd393bd-1ad4-4ed7-8f23-74b59dee5a23`. Preparation created no Supabase row;
+the later approved execution created only the three reviewed courses and their
+new video/membership rows. No migration, chapter creation, clone, or `release`
+push was performed. The official
 YouTube Data API was refreshed against `@UnacademyNEET`
 (`UCdQwYksctqqiRwqp3PiJMWA`), and production was queried anonymously for
 catalogue, source-ID, video-ID, chapter-scope, and protected-JEE evidence.
@@ -31,9 +34,9 @@ and repeat its anonymous dry-run immediately before writing.
 
 | Order | Course | Source playlist | Chapter and class | Retained | Excluded | Attribution | Prepared manifest SHA-256 | Source snapshot SHA-256 |
 | ---: | --- | --- | --- | ---: | ---: | --- | --- | --- |
-| 1 | Human Health and Disease — Unacademy NEET | `PLsgHooHkqhhOBJpGejuKlJjjyqLGSUgax` | 112 — Human Health and Disease; class-12 | 17 | 1 | Seep Pahuja | `09e5b060b6f06091d7e402a24796321b40b074abb5c2538e758207206c2bb5a6` | `0a9d74aa64cbf95e6d21d82fd4e7ad964828ba0f7f157963b4772b0c01ec2ff4` |
-| 2 | Body Fluids and Circulation — Unacademy NEET | `PLsgHooHkqhhPqQIxg5ou5zcgC6_72mepm` | 104 — Body Fluids and Circulation; class-11 | 7 | 7 | Dr. Sachin Kapur | `666bf311e7ae0df49046271152a9fc7f6c4549d8bce2f13a7a736010beafd191` | `74df70b349a6a2d2d02d9fc327a5a357f9a543af4b5ee174e6932272bd559a63` |
-| 3 | Mole Concept — Unacademy NEET | `PLsgHooHkqhhPW2M3F7WjhzIUSjTFDJrek` | 54 — Mole Concept; class-11 | 9 | 3 | Ashwani Tyagi | `742012790ca870caa5a94c172e0877b4b29df7cc79989b80e5cb9d913422ea35` | `4a0b33694c2d66678b6271cf6c6b888e13d132e48a5e37a37e041041edcc3a7c` |
+| 1 | Human Health and Disease — Unacademy NEET | `PLsgHooHkqhhOBJpGejuKlJjjyqLGSUgax` | 112 — Human Health and Disease; class-12 | 17 | 1 | Seep Pahuja | `8009aab3febb9864003631c8ec228e31ff8f91f81346c390a0948bcd2f0b67a5` | `0a9d74aa64cbf95e6d21d82fd4e7ad964828ba0f7f157963b4772b0c01ec2ff4` |
+| 2 | Body Fluids and Circulation — Unacademy NEET | `PLsgHooHkqhhPqQIxg5ou5zcgC6_72mepm` | 104 — Body Fluids and Circulation; class-11 | 7 | 7 | Dr. Sachin Kapur | `90a85e8b13e76a6581e8dda5f3c0bd8c5891095d7ae84d12b7cfeecdf0e9dab1` | `74df70b349a6a2d2d02d9fc327a5a357f9a543af4b5ee174e6932272bd559a63` |
+| 3 | Mole Concept — Unacademy NEET | `PLsgHooHkqhhPW2M3F7WjhzIUSjTFDJrek` | 54 — Mole Concept; class-11 | 9 | 3 | Ashwani Tyagi | `bf7fd69806cc83083b15df2c7d589932ebd33af75d589e7cab9a36d3ff6ea9fd` | `4a0b33694c2d66678b6271cf6c6b888e13d132e48a5e37a37e041041edcc3a7c` |
 
 All 33 retained videos are currently embeddable and have known positive
 durations. Average retained lecture durations are approximately 58, 58, and 59
@@ -87,15 +90,34 @@ only evidence proposed for a future write.
 - chapters: +0;
 - reused videos: 0.
 
-If approved, execute one course at a time in the table order. Bind the exact
-playlist-specific teacher evidence to decision
-`0bd393bd-1ad4-4ed7-8f23-74b59dee5a23`, then take a fresh PITR/baseline and
-anonymous dry-run before each create-only transaction. Verify the protected JEE
-boundary immediately after each import. Stop on source/video reuse, baseline
-drift, chapter/class mismatch, any new quality blocker, or any protected
-fingerprint change. No `release` push.
+The approved execution followed the table order. Exact playlist-specific
+teacher evidence was bound to decision
+`0bd393bd-1ad4-4ed7-8f23-74b59dee5a23`. Each course then received a refreshed
+seven-day PITR check, stable quiet-window baseline, anonymous `ok` dry-run, and
+one create-only transaction.
 
-## Required approval phrase
+## Production execution — complete
+
+| Order | Course ID | Latest PITR restore (IST) | Pre-write P/V/M/C | Result |
+| ---: | ---: | --- | --- | --- |
+| 1 | 394 | 4 Aug 2026 16:42:24 | 374 / 4,430 / 4,436 / 247 | +17 videos, +17 memberships, 0 reuse |
+| 2 | 395 | 4 Aug 2026 16:52:25 | 375 / 4,447 / 4,453 / 247 | +7 videos, +7 memberships, 0 reuse |
+| 3 | 396 | 4 Aug 2026 16:52:25 | 376 / 4,454 / 4,460 / 247 | +9 videos, +9 memberships, 0 reuse |
+
+All three anonymous dry-runs reported one `ok` plan, zero review findings, zero
+blockers, zero source collision, and zero retained-video reuse. Postflight
+course verification passed 9/9 checks for every course: exact `neet` goal,
+class, subject, single canonical chapter, ordered membership count, no JEE/NEET
+bleed, and all retained videos embeddable.
+
+Final totals are 377 playlists / 4,463 videos / 4,469 memberships / 247
+chapters. The batch delta is exactly +3 / +33 / +33 / +0, with zero reuse. The
+protected JEE boundary remained 82 courses / 1,304 memberships / fingerprint
+`30eee4a4a6842e5beeb7c97083d7f812` after every write. Rolling JEE remained 212
+courses / 2,848 memberships / fingerprint
+`9eea2b44f0b19c08cc0907c57e091342`. No `release` push occurred.
+
+## Approval record
 
 `Approve the reviewed Unacademy NEET fourth batch — Human Health and Disease
 (Seep Pahuja), Body Fluids and Circulation (Dr. Sachin Kapur), and Mole Concept

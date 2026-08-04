@@ -2,6 +2,21 @@
   "version": 1,
   "request_id": "9c7beb84-dee2-4cc6-a4c7-ef4d81478230",
   "youtube_playlist_id": "PLsgHooHkqhhPqQIxg5ou5zcgC6_72mepm",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "0bd393bd-1ad4-4ed7-8f23-74b59dee5a23",
+    "youtube_playlist_id": "PLsgHooHkqhhPqQIxg5ou5zcgC6_72mepm",
+    "teacher": "Dr. Sachin Kapur",
+    "source_url": "https://www.youtube.com/playlist?list=PLsgHooHkqhhPqQIxg5ou5zcgC6_72mepm",
+    "source_label": "Official Unacademy NEET channel-owned Body Fluids and Circulation playlist naming Dr. Sachin Kapur; every retained lecture title names Dr. Sachin Kapur",
+    "reviewed_by": "Owner",
+    "reviewed_on": "2026-08-04",
+    "youtube_video_ids": [
+      "4lUiaSbVsI8", "7mgHkwRMA9Q", "6E3o1qxlBnw", "hXc8Ou4N-fE", "JVFT4jIzZ_o",
+      "UOjYtrfiYIo", "svZextzY8ck"
+    ]
+  },
   "assignments": [
     { "position": 1, "youtube_video_id": "4lUiaSbVsI8", "chapter": "Body Fluids and Circulation", "lesson_number": 1 },
     { "position": 2, "youtube_video_id": "7mgHkwRMA9Q", "chapter": "Body Fluids and Circulation", "lesson_number": 2 },

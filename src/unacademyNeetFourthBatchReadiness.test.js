@@ -63,19 +63,27 @@ describe("Unacademy NEET fourth-batch read-only readiness", () => {
     });
   });
 
-  it("pins prepared hashes and keeps approval separate from production writes", () => {
+  it("pins evidence-bound hashes and the completed production gate", () => {
     expect(manifestSources.map((source) => (
       createHash("sha256").update(source, "utf8").digest("hex")
     ))).toEqual([
-      "09e5b060b6f06091d7e402a24796321b40b074abb5c2538e758207206c2bb5a6",
-      "666bf311e7ae0df49046271152a9fc7f6c4549d8bce2f13a7a736010beafd191",
-      "742012790ca870caa5a94c172e0877b4b29df7cc79989b80e5cb9d913422ea35",
+      "8009aab3febb9864003631c8ec228e31ff8f91f81346c390a0948bcd2f0b67a5",
+      "90a85e8b13e76a6581e8dda5f3c0bd8c5891095d7ae84d12b7cfeecdf0e9dab1",
+      "bf7fd69806cc83083b15df2c7d589932ebd33af75d589e7cab9a36d3ff6ea9fd",
     ]);
-    expect(readiness).toContain("Read-only preparation is complete");
+    expect(readiness).toContain("Production execution is complete");
     expect(readiness).toContain("0bd393bd-1ad4-4ed7-8f23-74b59dee5a23");
     expect(readiness).toContain("30eee4a4a6842e5beeb7c97083d7f812");
     expect(readiness).toContain("No `release` push");
-    expect(manifests.every((manifest) => manifest.teacher_evidence == null)).toBe(true);
+    expect(manifests.every((manifest) => (
+      manifest.teacher_evidence?.decision_id
+        === "0bd393bd-1ad4-4ed7-8f23-74b59dee5a23"
+      && manifest.teacher_evidence.youtube_playlist_id
+        === manifest.youtube_playlist_id
+      && manifest.teacher_evidence.youtube_video_ids.length
+        === manifest.assignments.length
+    ))).toBe(true);
+    expect(readiness).toContain("377 playlists / 4,463 videos / 4,469 memberships");
   });
 
   it("documents the three incomplete source deferrals", () => {

@@ -1043,3 +1043,21 @@ rolling JEE remained 212 courses / 2,848 memberships / fingerprint
 `9eea2b44f0b19c08cc0907c57e091342`. No release deployment was requested or
 performed. Full evidence is recorded in
 [unacademy-neet-third-batch-readiness-2026-08-04.md](unacademy-neet-third-batch-readiness-2026-08-04.md).
+
+## Unacademy NEET fourth production batch — 4 August 2026
+
+The owner approved three create-only courses under decision
+`0bd393bd-1ad4-4ed7-8f23-74b59dee5a23`. Before each transaction, the signed-in
+production dashboard confirmed active seven-day PITR; the recorded latest
+restore points were `04 Aug 2026, 16:42:24 IST`, `16:52:25 IST`, and
+`16:52:25 IST`. Each quiet-window baseline remained exact across its anonymous
+dry-run, with zero source/video collision and an `ok` quality result.
+
+Human Health and Disease, Body Fluids and Circulation, and Mole Concept became
+courses 394, 395, and 396. They added 17, 7, and 9 videos/memberships
+respectively, with zero reuse and no chapter creation. Final totals were 377
+playlists / 4,463 videos / 4,469 memberships / 247 chapters. The protected JEE
+boundary remained exactly 82 courses / 1,304 memberships / fingerprint
+`30eee4a4a6842e5beeb7c97083d7f812` after every write. No restore, clone,
+migration, update/delete, or `release` push occurred. Full evidence is in
+[unacademy-neet-fourth-batch-readiness-2026-08-04.md](unacademy-neet-fourth-batch-readiness-2026-08-04.md).

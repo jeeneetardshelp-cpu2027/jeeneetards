@@ -2,6 +2,21 @@
   "version": 1,
   "request_id": "b94d86b2-0616-4d3d-972f-009c2895bd78",
   "youtube_playlist_id": "PLsgHooHkqhhPW2M3F7WjhzIUSjTFDJrek",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "0bd393bd-1ad4-4ed7-8f23-74b59dee5a23",
+    "youtube_playlist_id": "PLsgHooHkqhhPW2M3F7WjhzIUSjTFDJrek",
+    "teacher": "Ashwani Tyagi",
+    "source_url": "https://www.youtube.com/playlist?list=PLsgHooHkqhhPW2M3F7WjhzIUSjTFDJrek",
+    "source_label": "Official Unacademy NEET channel-owned Mole Concept playlist naming Ashwani Tyagi; every retained lecture title names Ashwani Tyagi",
+    "reviewed_by": "Owner",
+    "reviewed_on": "2026-08-04",
+    "youtube_video_ids": [
+      "usDS1vmB7FI", "5RI6spjs1sQ", "shRredOGyHk", "z-_LGXcUdOA", "IYAcYnUdOyo",
+      "-ZN8Y6EWffU", "eLIVvgQXOgM", "ni84uQnLaiE", "cuJY3VaLzd8"
+    ]
+  },
   "assignments": [
     { "position": 1, "youtube_video_id": "usDS1vmB7FI", "chapter": "Mole Concept", "lesson_number": 1 },
     { "position": 2, "youtube_video_id": "5RI6spjs1sQ", "chapter": "Mole Concept", "lesson_number": 2 },

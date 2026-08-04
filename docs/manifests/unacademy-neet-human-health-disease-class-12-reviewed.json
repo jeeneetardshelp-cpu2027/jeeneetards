@@ -2,6 +2,23 @@
   "version": 1,
   "request_id": "f877f70c-04df-42b1-ad28-b7ae527e7b05",
   "youtube_playlist_id": "PLsgHooHkqhhOBJpGejuKlJjjyqLGSUgax",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "0bd393bd-1ad4-4ed7-8f23-74b59dee5a23",
+    "youtube_playlist_id": "PLsgHooHkqhhOBJpGejuKlJjjyqLGSUgax",
+    "teacher": "Seep Pahuja",
+    "source_url": "https://www.youtube.com/playlist?list=PLsgHooHkqhhOBJpGejuKlJjjyqLGSUgax",
+    "source_label": "Official Unacademy NEET channel-owned Human Health and Disease playlist naming Seep Pahuja; every retained lecture title names Seep Ma'am or Seep Pahuja",
+    "reviewed_by": "Owner",
+    "reviewed_on": "2026-08-04",
+    "youtube_video_ids": [
+      "CFB1HTWacxA", "XZD4Bh8MhDQ", "o3z0o1QimIg", "-nlWkqmJk5Q", "JQziZGYY_Os",
+      "eZvsGye6lXI", "4dqcy0EQgFc", "shlFBvx-3iA", "mqY3Eosc2Xs", "dvUzZpSqgik",
+      "J-sqeEn_bcw", "0br3aG0V8l8", "Kkpj5aeyNlo", "qdf295NMbug", "1-36ngXJpzQ",
+      "Ywn-kNU6XDs", "Um9SjKwH3Tk"
+    ]
+  },
   "assignments": [
     { "position": 1, "youtube_video_id": "CFB1HTWacxA", "chapter": "Human Health and Disease", "lesson_number": 1 },
     { "position": 2, "youtube_video_id": "XZD4Bh8MhDQ", "chapter": "Human Health and Disease", "lesson_number": 2 },
