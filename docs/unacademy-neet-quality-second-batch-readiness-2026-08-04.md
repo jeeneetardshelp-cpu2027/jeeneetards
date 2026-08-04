@@ -2,15 +2,13 @@
 
 ## Status
 
-Replacement prepared and rehearsed only. The separately approved prior hash
-`957e06a2425bdad078ac2685f349fc3038393993acf6a766b9cd3982a1c98ebf`
-was submitted once on 4 August 2026 after a fresh PITR check, but its exact-
-baseline guard detected seven additional course imports and raised before any
-write. Courses 374–376 and the quality audit remained unchanged. The revised
-SQL must not be applied until the owner separately approves its exact SHA-256
-and a fresh PITR plus exact-baseline preflight succeeds. No `release` push is
-part of this gate. No production write has been performed with the revised
-artifact.
+Applied successfully to production project `kezelafqhgqrprpadmlf` on 4 August
+2026 at `09:11:44.110351+00` (`14:41:44.110351` IST), after the owner separately
+approved exact SHA-256
+`9b504e35ad22f6326fe9ed9f3c01ec23ba201e8f1df16524eb51e02e8376c175`.
+The fresh PITR restore point was `04 Aug 2026, 14:18:17 IST`; the exact read-only
+preflight passed immediately before the transaction. All postflight guards
+passed. No `release` push was made.
 
 ## Reviewed scope
 
@@ -48,17 +46,17 @@ The growth since the prior artifact is limited to seven additive courses and 91
 videos/memberships. It did not touch the reviewed Unacademy targets, faculty
 registry, quality audit, or protected JEE catalogue.
 
-## Prepared artifact
+## Applied artifact
 
 - SQL: `docs/sql/unacademy_neet_second_batch_quality_review_2026-08-04.sql`
 - SHA-256: `9b504e35ad22f6326fe9ed9f3c01ec23ba201e8f1df16524eb51e02e8376c175`
-- target if separately approved: production project `kezelafqhgqrprpadmlf`;
-- expected row effect: three guarded `source_title` captures, three canonical
+- target: production project `kezelafqhgqrprpadmlf`;
+- row effect: three guarded `source_title` captures, three canonical
   quality-review transitions, and three appended audit rows;
-- expected catalogue, lesson, membership, chapter, faculty-registry, and
+- catalogue, lesson, membership, chapter, faculty-registry, and
   protected-JEE deltas: zero;
-- expected quality-audit total: 3→6;
-- expected target state: `approved / identified`, no missing quality fields.
+- quality-audit total: 3→6;
+- target state: `approved / identified`, no missing quality fields.
 
 ## Safety and rehearsal
 
@@ -80,11 +78,12 @@ Local validation of the replacement completed on the latest checked-out `main`:
   and 12 static routes);
 - production dependency audit: zero vulnerabilities.
 
-No automatic dependency fix or remote production action was run.
+No automatic dependency fix or release action was run.
 
-## Separate production approval
+## Production application record
 
-After reviewing the committed artifact, approve with the exact phrase reported
-in the handoff. Production execution must then begin with a fresh PITR restore
-point and repeat the exact read-only baseline. Stop without writing on any
-mismatch.
+The independent postflight confirmed 369 playlists, 4,348 videos, 4,354
+memberships, 250 chapters, 92 chapter-class scopes, 32 teachers, 136 course-
+teacher links, six quality-review rows, and all three targets ready. The
+protected original JEE catalogue remained exactly 83 courses / 1,307
+memberships / fingerprint `c742fabf93ff8dd33d6ecd5eb4793db0`.
