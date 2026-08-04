@@ -21,11 +21,11 @@
 // Anti-fabrication rules this module enforces on every caller's behalf:
 //   - aggregateRating is emitted ONLY when ratingsCount > 0 — real reviews,
 //     never a 0/0 placeholder rendered as if it were a rating.
-//   - VideoObject never carries uploadDate. There is no real upload-date
-//     column anywhere in the schema: last_verified_at is a verification
-//     timestamp (when we last confirmed the embed still plays), not when
-//     the video was uploaded, and a row's created_at is this DB's insert
-//     time, not YouTube's.
+//   - VideoObject never carries uploadDate until the nullable published_at
+//     field is populated from a trusted YouTube source. last_verified_at is
+//     a verification timestamp (when we last confirmed the embed still
+//     plays), not when the video was uploaded, and a row's created_at is this
+//     DB's insert time, not YouTube's.
 //   - Course.provider is the teaching institute/channel (institutes_channels
 //     .name), never this site. JEENEETARD embeds and indexes third-party
 //     YouTube courses; it did not create them. The site's own identity

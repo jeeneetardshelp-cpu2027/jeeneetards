@@ -110,6 +110,22 @@ export function landingSchemas(pathname) {
   ];
 }
 
+/** The canonical Browse response already renders every course link as HTML.
+ *  Describe that same ordered directory for non-JavaScript crawlers; the
+ *  client replaces this ItemList with the currently visible page on hydrate. */
+export function browseDirectorySchemas(courses = []) {
+  const list = itemListSchema(
+    courses
+      .filter((course) => course?.id && course?.title)
+      .map((course, index) => ({
+        title: course.title,
+        url: `/course/${encodeURIComponent(course.id)}`,
+        position: index + 1,
+      })),
+  );
+  return list ? [{ key: "ItemList", schema: list }] : [];
+}
+
 /**
  * Small, truthful fallbacks for public discovery landings. React replaces
  * this content during hydration; the wording and H1 mirror the visible page.

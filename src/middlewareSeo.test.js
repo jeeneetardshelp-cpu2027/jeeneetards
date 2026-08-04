@@ -147,6 +147,13 @@ describe("edge-rendered discovery landings", () => {
     expect(html).toContain('<a href="/tests">Mock tests</a>');
     expect(html).toContain('<a href="/terms">Terms</a>');
     expect(html).toContain('<a href="/privacy">Privacy</a>');
+    expect(html).toContain('data-schema-key="ItemList"');
+    expect(html).toContain(
+      '"url":"https://www.jeeneetard.com/course/5"',
+    );
+    expect(html).toContain(
+      '"url":"https://www.jeeneetard.com/course/8"',
+    );
   });
 
   it("keeps Browse available when the directory lookup is unconfirmed", async () => {
@@ -171,6 +178,7 @@ describe("edge-rendered discovery landings", () => {
     expect(response.status).toBe(200);
     expect(html).toContain("<h1>All courses</h1>");
     expect(html).not.toContain("<h2>Course directory</h2>");
+    expect(html).not.toContain('data-schema-key="ItemList"');
   });
 
   it("marks a browse search noindex before JavaScript runs", async () => {

@@ -32,6 +32,7 @@ import {
   renderExploreBody,
   injectRootContent,
   landingSchemas,
+  browseDirectorySchemas,
   renderLandingBody,
   renderBrowseDirectoryBody,
   renderNotFoundBody,
@@ -394,10 +395,13 @@ export default async function middleware(request) {
       ]);
       if (!shell.ok) return next();
       let html = injectRouteMeta(await shell.text(), routeMeta);
-      html = injectStructuredData(html, landingSchemas(url.pathname));
       const [courseResult, facultyResult] = directory ?? [];
       const hasDirectory = courseResult?.confirmed && facultyResult?.confirmed &&
         ((courseResult.data?.length ?? 0) > 0 || (facultyResult.data?.length ?? 0) > 0);
+      html = injectStructuredData(html, [
+        ...landingSchemas(url.pathname),
+        ...(hasDirectory ? browseDirectorySchemas(courseResult.data) : []),
+      ]);
       const body = hasDirectory
         ? renderBrowseDirectoryBody(routeMeta, {
             courses: courseResult.data,
