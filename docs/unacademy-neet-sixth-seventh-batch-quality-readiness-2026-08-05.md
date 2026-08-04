@@ -1,6 +1,6 @@
 # Unacademy NEET sixth/seventh-batch quality review readiness (2026-08-05)
 
-Status: **PREPARED AND REHEARSED ONLY — NOT APPLIED TO PRODUCTION**
+Status: **APPLIED SUCCESSFULLY TO PRODUCTION**
 
 ## Immutable artifact
 
@@ -10,8 +10,9 @@ Status: **PREPARED AND REHEARSED ONLY — NOT APPLIED TO PRODUCTION**
   - sixth batch: `1d0ea7b9-8cac-4f3b-968d-82b4307f264a`
   - seventh batch: `cf45d7d5-43ef-4311-abd7-5297ec2ea3b6`
 
-Do not run a file with any other hash. A separate owner approval naming this
-exact SHA-256 is required before a production write.
+The owner approved this exact SHA-256 and it was applied once to production on
+05 Aug 2026. Do not rerun it: the exact preflight intentionally rejects the
+post-transition state.
 
 ## Read-only production preflight
 
@@ -68,11 +69,26 @@ Expected postflight:
   when an exact baseline differs.
 - No content import, schema migration, deletion, or `release` push is included.
 
-## If separately approved later
+## Production result
 
-1. Confirm seven-day PITR and record a fresh restore timestamp.
-2. Use a quiet production-write window and a fresh SQL Editor connection.
-3. Recompute the file hash and require the exact value above.
-4. Run the whole file once. Stop on any mismatch; do not weaken a guard.
-5. Independently verify the five rows, five audit records, unchanged totals, and
-   protected JEE fingerprint before recording the rollout.
+- Seven-day PITR was active. The rollback point recorded immediately before the
+  write was `05 Aug 2026, 00:07:01 IST`.
+- A fresh SQL Editor connection returned the exact guarded baseline:
+  385 playlists / 4,514 videos / 4,520 memberships / 247 chapters /
+  92 chapter-class scopes / 140 course-teacher links / 6 quality-audit rows.
+- Target reviews were zero; all five courses had the expected source IDs,
+  lesson counts, class/goal scope, verified instructor link, pending status,
+  and missing-field set.
+- The SHA-256 was recomputed immediately before execution and matched the
+  approved value exactly.
+- The transaction committed once. Courses 400–404 now have their canonical
+  titles, preserved source titles, `approved` title status, `identified`
+  faculty status, and empty missing-field arrays.
+- Independent postflight: catalogue and faculty totals unchanged;
+  quality-audit total: 6→11; target audit rows: 0→5; duplicate audit rows: 0.
+- Each audit captures the exact before/after title, status, metadata, teacher
+  IDs, and its relevant owner decision note.
+- Protected JEE remained exactly 82 courses / 1,304 memberships /
+  `30eee4a4a6842e5beeb7c97083d7f812`.
+- No content import, schema migration, deletion, frontend deployment, or
+  `release` push occurred.

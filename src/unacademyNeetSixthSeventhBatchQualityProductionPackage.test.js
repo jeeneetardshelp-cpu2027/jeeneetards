@@ -332,12 +332,16 @@ describe("Unacademy NEET sixth/seventh-batch quality-review package", () => {
     expect(sql.match(/30eee4a4a6842e5beeb7c97083d7f812/g)).toHaveLength(2);
   });
 
-  it("pins the immutable hash and remains explicitly preparation-only", () => {
+  it("pins the immutable hash and completed production record", () => {
     expect(createHash("sha256").update(sql, "utf8").digest("hex")).toBe(expectedHash);
     expect(readiness).toContain(`SHA-256: \`${expectedHash}\``);
-    expect(readiness).toContain("PREPARED AND REHEARSED ONLY");
-    expect(readiness).toContain("quality-audit total 6→11");
-    expect(readiness).toContain("No content import, schema migration, deletion, or `release` push");
+    expect(readiness).toContain("APPLIED SUCCESSFULLY TO PRODUCTION");
+    expect(readiness).toContain("05 Aug 2026, 00:07:01 IST");
+    expect(readiness).toContain("quality-audit total: 6→11");
+    expect(readiness).toContain("target audit rows: 0→5");
+    expect(readiness).toContain("No content import, schema migration, deletion, frontend deployment, or");
+    expect(readiness).toContain("`release` push occurred");
+    expect(readiness).toContain("30eee4a4a6842e5beeb7c97083d7f812");
   });
 
   it("rehearses all five reviews atomically on a production-shaped database", async () => {
