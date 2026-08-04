@@ -70,7 +70,9 @@ beforeEach(() => {
 describe("Explore structured data wiring", () => {
   it("mirrors the same crumbs the header renders, as absolute urls", async () => {
     renderAt("/explore/jee/class-11/physics");
-    await screen.findByRole("heading", { name: "Choose a chapter" });
+    await screen.findByRole("heading", {
+      name: "Choose a chapter for JEE Class 11 Physics",
+    });
 
     const schema = breadcrumbSchema();
     expect(schema.itemListElement.map((i) => i.name)).toEqual([
@@ -86,7 +88,9 @@ describe("Explore structured data wiring", () => {
 
   it("removes the breadcrumb markup while a scoped search is live", async () => {
     renderAt("/explore/jee/class-11/physics");
-    await screen.findByRole("heading", { name: "Choose a chapter" });
+    await screen.findByRole("heading", {
+      name: "Choose a chapter for JEE Class 11 Physics",
+    });
     expect(breadcrumbSchema()).not.toBeNull();
 
     fireEvent.change(screen.getByPlaceholderText(/Search within/i), {

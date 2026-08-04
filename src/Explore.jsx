@@ -35,6 +35,7 @@ import { CLASS_LEVELS_BY_GOAL } from "./classLevels.js";
 import { useDebouncedValue } from "./useBrowse.js";
 import { useScopedSearch } from "./useScopedSearch.js";
 import { canonicalBrowseUrl } from "./canonicalUrl.js";
+import { exploreStepHeading } from "./exploreHeading.js";
 import { GlobalHeader, HeaderSearch, Container } from "./AppShell.jsx";
 import { useTheme } from "./theme.jsx";
 import { useStructuredData } from "./PageMetadata.jsx";
@@ -116,7 +117,8 @@ export default function Explore() {
   // Context search — scoped to whatever the student has selected so far.
   const [searchInput, setSearchInput] = useState("");
   const debouncedSearch = useDebouncedValue(searchInput, 250);
-  const scopeLabel = crumbs.slice(1).map((c) => c.label).join(" › ");
+  const stepScope = crumbs.slice(1).map((c) => c.label);
+  const scopeLabel = stepScope.join(" › ");
   const scoped = useScopedSearch(debouncedSearch, {
     goalId: goalNode?.id,
     subjectId: subjectNode?.id,
@@ -238,7 +240,7 @@ export default function Explore() {
           <p className={`mt-6 text-sm ${t.muted}`}>{boardsError}</p>
         ) : isSchool && !boardNode ? (
           <Step
-            title="Which board are you on?"
+            title={exploreStepHeading("board", stepScope)}
             loading={boardsLoading}
             options={boards.map((b) => ({
               key: b.id,
@@ -250,7 +252,7 @@ export default function Explore() {
           />
         ) : !classNode ? (
           <Step
-            title="Which stage are you in?"
+            title={exploreStepHeading("class", stepScope)}
             loading={classesLoading || !classesReady}
             error={classesError}
             onRetry={retryClasses}
@@ -266,7 +268,7 @@ export default function Explore() {
           />
         ) : !subjectNode ? (
           <Step
-            title="Choose a subject"
+            title={exploreStepHeading("subject", stepScope)}
             loading={catLoading}
             error={catalogError}
             onRetry={retryCatalog}
@@ -284,7 +286,7 @@ export default function Explore() {
           />
         ) : !chapterNode ? (
           <Step
-            title="Choose a chapter"
+            title={exploreStepHeading("chapter", stepScope)}
             loading={catLoading}
             error={catalogError}
             onRetry={retryCatalog}

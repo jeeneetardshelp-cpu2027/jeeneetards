@@ -197,7 +197,7 @@ describe("edge-rendered discovery landings", () => {
     expect(html).toContain(
       '<link rel="canonical" href="https://www.jeeneetard.com/explore/jee/class-11/physics" />',
     );
-    expect(html).toContain("<h1>Choose a chapter</h1>");
+    expect(html).toContain("<h1>Choose a chapter for JEE Class 11 Physics</h1>");
     expect(html).toContain('href="/explore/jee/class-11/physics/kinematics"');
     expect(html).toContain('data-schema-key="BreadcrumbList"');
     expect(html).toContain('data-schema-key="ItemList"');
