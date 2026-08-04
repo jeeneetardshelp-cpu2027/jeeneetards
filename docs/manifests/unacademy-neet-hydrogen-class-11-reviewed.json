@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "request_id": "86d8fe17-c217-48b6-af1a-dfadbb1d3178",
+  "youtube_playlist_id": "PLsgHooHkqhhP65sAqtkbWpVVSrK7FlTWA",
+  "assignments": [
+    { "position": 1, "youtube_video_id": "UwSHRuGvXDM", "chapter": "Hydrogen", "lesson_number": 1 },
+    { "position": 2, "youtube_video_id": "a5L0eHgIKB8", "chapter": "Hydrogen", "lesson_number": 2 },
+    { "position": 3, "youtube_video_id": "eIRNUvlOP4Q", "chapter": "Hydrogen", "lesson_number": 3 },
+    { "position": 4, "youtube_video_id": "1nJnNwh5Has", "chapter": "Hydrogen", "lesson_number": 4 },
+    { "position": 5, "youtube_video_id": "IRDUbSjI5_k", "chapter": "Hydrogen", "lesson_number": 5 },
+    { "position": 6, "youtube_video_id": "4AyCPH9PnIo", "chapter": "Hydrogen", "lesson_number": 6 }
+  ],
+  "exclusions": [
+    { "position": 7, "youtube_video_id": "nXyI43o7l1k", "reason": "NCERT-question session; keep practice separate from the lecture catalogue." },
+    { "position": 8, "youtube_video_id": "p67zTYCNYpk", "reason": "NCERT-question session; keep practice separate from the lecture catalogue." },
+    { "position": 9, "youtube_video_id": "ZfjKBvdxVlU", "reason": "NCERT Exemplar question session; keep practice separate from the lecture catalogue." }
+  ]
+}
