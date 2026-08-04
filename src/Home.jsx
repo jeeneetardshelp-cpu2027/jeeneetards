@@ -46,10 +46,11 @@ import { Button, EmptyState, Pill, Skeleton, Surface } from "./ui.jsx";
 import {
   Benefits, ContinueWatching, ExamGrid, Faq, Features, FinalCta, Hero,
   Pricing, Process, SocialProof, Statistics, TopRated,
-  pickInstitutes, pickTopRated,
+  pickTopRated,
 } from "./HomeSections.jsx";
 import YouTubeThumbnail from "./YouTubeThumbnail.jsx";
 import ChannelAvatar from "./ChannelAvatar.jsx";
+import { useHomepageChannels } from "./useHomepageChannels.js";
 
 // The comparison table's attribute count, and the languages the catalogue
 // classifies. Both are real product facts, stated once here so the numbers
@@ -94,9 +95,12 @@ export default function Home() {
 
   const [continueWatching] = useState(() => getContinueWatching(3));
   const { goals, loading: goalsLoading, error: goalsError } = useLearningGoals();
-  // ONE catalogue request serves four things: the hero stat rail, the rated
-  // strip, the channel marquee and the library-wide course total.
+  // One catalogue request serves the hero stat rail, rated strip, and
+  // library-wide course total. Channels come from their complete bounded
+  // dimension query below; a page of courses can never prove which channels
+  // exist elsewhere in the library.
   const { items, total, loading: catalogueLoading } = usePlaylistBrowse({ page: 0 });
+  const { channels, loading: channelsLoading } = useHomepageChannels();
 
   const exams = useMemo(
     () =>
@@ -118,7 +122,6 @@ export default function Home() {
     total ?? (goals ?? []).reduce((sum, goal) => sum + Number(goal.count ?? 0), 0);
 
   const topRated = useMemo(() => pickTopRated(items, 3), [items]);
-  const institutes = useMemo(() => pickInstitutes(items, 8), [items]);
 
   // Site identity, not search-state-dependent — written once, never removed
   // while Home stays mounted. organizationSchema describes the SITE itself,
@@ -181,7 +184,8 @@ export default function Home() {
           <Landing
             continueWatching={continueWatching}
             exams={exams}
-            institutes={institutes}
+            institutes={channels}
+            channelsLoading={channelsLoading}
             topRated={topRated}
             catalogueLoading={catalogueLoading}
             courseCount={courseCount}
@@ -275,13 +279,13 @@ function TrustChips() {
 // ---------------------------------------------------------------------
 function Landing({
   continueWatching, exams, institutes, topRated, catalogueLoading,
-  courseCount, liveTracks,
+  channelsLoading, courseCount, liveTracks,
 }) {
   return (
     <>
       <ContinueWatching entries={continueWatching} />
 
-      <SocialProof institutes={institutes} loading={catalogueLoading} />
+      <SocialProof institutes={institutes} loading={channelsLoading} />
 
       <ExamGrid exams={exams} />
 
