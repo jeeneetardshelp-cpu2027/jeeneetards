@@ -2,6 +2,20 @@
   "version": 1,
   "request_id": "86d8fe17-c217-48b6-af1a-dfadbb1d3178",
   "youtube_playlist_id": "PLsgHooHkqhhP65sAqtkbWpVVSrK7FlTWA",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "1d0ea7b9-8cac-4f3b-968d-82b4307f264a",
+    "youtube_playlist_id": "PLsgHooHkqhhP65sAqtkbWpVVSrK7FlTWA",
+    "teacher": "Anoop Vashishtha",
+    "source_url": "https://www.youtube.com/playlist?list=PLsgHooHkqhhP65sAqtkbWpVVSrK7FlTWA",
+    "source_label": "Official Unacademy NEET channel-owned Hydrogen playlist; playlist and all retained lecture titles use Anoop V., owner-reviewed as the abbreviated label for verified Anoop Vashishtha",
+    "reviewed_by": "Owner",
+    "reviewed_on": "2026-08-04",
+    "youtube_video_ids": [
+      "UwSHRuGvXDM", "a5L0eHgIKB8", "eIRNUvlOP4Q", "1nJnNwh5Has", "IRDUbSjI5_k", "4AyCPH9PnIo"
+    ]
+  },
   "assignments": [
     { "position": 1, "youtube_video_id": "UwSHRuGvXDM", "chapter": "Hydrogen", "lesson_number": 1 },
     { "position": 2, "youtube_video_id": "a5L0eHgIKB8", "chapter": "Hydrogen", "lesson_number": 2 },

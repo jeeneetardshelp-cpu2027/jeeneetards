@@ -1082,3 +1082,23 @@ courses / 1,304 memberships / fingerprint
 212 / 2,848 / `9eea2b44f0b19c08cc0907c57e091342`. No restore, clone,
 migration, update/delete, or `release` push occurred. Full evidence is in
 [unacademy-neet-fifth-batch-readiness-2026-08-04.md](unacademy-neet-fifth-batch-readiness-2026-08-04.md).
+
+## Unacademy NEET sixth production batch — 4 August 2026
+
+The owner approved two create-only courses under decision
+`1d0ea7b9-8cac-4f3b-968d-82b4307f264a`, including the reviewed `Anoop V.`
+abbreviation for verified teacher Anoop Vashishtha. Before each transaction,
+the signed-in production dashboard confirmed active seven-day PITR; the
+recorded latest restore points were `04 Aug 2026, 17:28:26 IST` and
+`04 Aug 2026, 17:46:26 IST`. Each quiet-window baseline remained exact across
+its anonymous dry-run, with zero source/video collision and an `ok` quality
+result.
+
+Hydrogen and Modern Physics became courses 400 and 401. They added 6 and 11
+videos/memberships respectively, with zero reuse and no chapter creation. Final
+totals were 382 playlists / 4,498 videos / 4,504 memberships / 247 chapters.
+The protected JEE boundary remained exactly 82 courses / 1,304 memberships /
+fingerprint `30eee4a4a6842e5beeb7c97083d7f812` after every write; rolling JEE
+remained 212 / 2,848 / `9eea2b44f0b19c08cc0907c57e091342`. No restore,
+clone, migration, update/delete, or `release` push occurred. Full evidence is
+in [unacademy-neet-sixth-batch-readiness-2026-08-04.md](unacademy-neet-sixth-batch-readiness-2026-08-04.md).

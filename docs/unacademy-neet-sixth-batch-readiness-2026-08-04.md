@@ -2,17 +2,20 @@
 
 ## Status and safety boundary
 
-Read-only preparation is complete. No Supabase row was created or changed, no
-migration or restore ran, and no `release` push occurred. The official YouTube
-Data API was refreshed against `@UnacademyNEET`
+Production execution is complete for the two owner-approved create-only
+imports under decision `1d0ea7b9-8cac-4f3b-968d-82b4307f264a`. Courses `400`
+and `401` were created one at a time after separate signed-in PITR checks,
+quiet-window baselines, collision probes, and anonymous dry-runs. No migration,
+restore, update, delete, or `release` push occurred. The official YouTube Data
+API was refreshed against `@UnacademyNEET`
 (`UCdQwYksctqqiRwqp3PiJMWA`), and production was queried anonymously for
 catalogue counts, source IDs, retained video IDs, taxonomy, teacher identities,
 chapter/class scopes, and both JEE fingerprints.
 
 This review resolves the two mixed sources deferred from the fifth batch by
-keeping only their numbered lecture sequences. All 17 retained videos are new
-to production, unique across the proposed batch, duration-complete, and
-embeddable. Teacher evidence remains unbound until explicit owner approval.
+keeping only their numbered lecture sequences. All 17 retained videos were new
+to production, unique across the batch, duration-complete, and embeddable. The
+exact playlist-specific teacher evidence is bound in both reviewed manifests.
 
 ## Fresh anonymous production snapshot
 
@@ -30,12 +33,55 @@ must start with a signed-in seven-day PITR check, fresh quiet-window counts,
 source/video collision checks, a fresh anonymous dry-run, and immediate
 protected-JEE verification.
 
+## Production execution evidence
+
+### Course 400 — Hydrogen
+
+- signed-in production PITR: active seven-day retention; latest restore point
+  `04 Aug 2026, 17:28:26 IST`;
+- exact preflight: 380 playlists / 4,481 videos / 4,487 memberships / 247
+  chapters, with zero source or retained-video collision;
+- anonymous mapped dry-run: 6 assignments, 3 explicit question-session
+  exclusions, capability v12, one `ok`, zero review, zero blocked;
+- realized delta: +1 playlist / +6 videos / +6 memberships / +0 chapters,
+  with zero reuse;
+- postflight: all six positions match the reviewed source order, every lesson
+  maps to chapter 44 `Hydrogen`, every lesson is embeddable, and the course has
+  exactly goal `neet`, class `11th`, and teacher label `Anoop Vashishtha`;
+- `verify:course` passed 11/11 checks (average lesson 53m24s).
+
+### Course 401 — Modern Physics
+
+- signed-in production PITR: active seven-day retention; latest restore point
+  `04 Aug 2026, 17:46:26 IST`;
+- exact preflight: 381 playlists / 4,487 videos / 4,493 memberships / 247
+  chapters, with zero source or retained-video collision;
+- anonymous mapped dry-run: 11 assignments, 1 explicit practice exclusion,
+  capability v12, one `ok`, zero review, zero blocked;
+- realized delta: +1 playlist / +11 videos / +11 memberships / +0 chapters,
+  with zero reuse;
+- postflight: all 11 positions match the reviewed source order, every lesson
+  maps to chapter 83 `Modern Physics`, every lesson is embeddable, and the
+  course has exactly goal `neet`, class `12th`, and teacher label `Anu Gupta`;
+- `verify:course` passed 11/11 checks (average lesson 66m21s).
+
+Final catalogue totals are 382 playlists / 4,498 videos / 4,504 memberships /
+247 chapters. After each write the protected original JEE boundary remained
+exactly 82 courses / 1,304 memberships / fingerprint
+`30eee4a4a6842e5beeb7c97083d7f812`; rolling JEE remained 212 courses / 2,848
+memberships / `9eea2b44f0b19c08cc0907c57e091342`.
+
+The mapped v12 path records the reviewed evidence in the immutable manifests
+and writes the legacy playlist teacher label. It does not create normalized
+`playlist_teachers` links; both new courses therefore have zero normalized
+faculty links, pending a separately reviewed faculty-registry gate.
+
 ## Proposed lecture-only courses
 
 | Order | Course | Source playlist | Chapter/class | Lectures | Excluded | Attribution | Manifest SHA-256 |
 | ---: | --- | --- | --- | ---: | ---: | --- | --- |
-| 1 | Hydrogen — Unacademy NEET | `PLsgHooHkqhhP65sAqtkbWpVVSrK7FlTWA` | 44 — Hydrogen; class-11 | 6 | 3 question sessions | Anoop Vashishtha (teacher 36; source says `Anoop V.`) | `2f18a04cb837fa73b8683c9a8bb88a34d66ea3c4fe0da7e301855fd936c1c405` |
-| 2 | Modern Physics — Unacademy NEET | `PLsgHooHkqhhMQWo55rneDci-gmYynS9Za` | 83 — Modern Physics; class-12 | 11 | 1 practice session | Anu Gupta (teacher 35) | `9efc26ea9a25dbd933a7ddf2f9860b8737ab19a983488a6e8ac023323aa17deb` |
+| 1 | Hydrogen — Unacademy NEET | `PLsgHooHkqhhP65sAqtkbWpVVSrK7FlTWA` | 44 — Hydrogen; class-11 | 6 | 3 question sessions | Anoop Vashishtha (teacher 36; source says `Anoop V.`) | `38da2bc6041a2bed8ad0b3d5aaafeaf785c07a92d9f533529a441c4ba13df446` |
+| 2 | Modern Physics — Unacademy NEET | `PLsgHooHkqhhMQWo55rneDci-gmYynS9Za` | 83 — Modern Physics; class-12 | 11 | 1 practice session | Anu Gupta (teacher 35) | `9958cc9ba7b733a879ee1e3639c71e1ed65fc292ffd4285e9d83ed11d408780e` |
 
 The exact source titles, positions, retained/excluded video IDs, durations,
 embedding state, taxonomy IDs, class-scope evidence, teacher IDs, collision
@@ -79,7 +125,7 @@ The retained lecture averages are approximately 53 minutes for Hydrogen and
 Incomplete numbered sequences must not be presented as complete courses, and
 question/practice content must not be silently mixed into the lecture catalogue.
 
-## Projected additive delta and execution gate
+## Realized additive delta
 
 - playlists: +2;
 - videos: +17;
@@ -87,14 +133,12 @@ question/practice content must not be silently mixed into the lecture catalogue.
 - chapters: +0;
 - reused videos: 0.
 
-If approved, bind exact playlist-specific teacher evidence to decision
+The exact playlist-specific evidence is bound to decision
 `1d0ea7b9-8cac-4f3b-968d-82b4307f264a`, including the reviewed `Anoop V.` to
-Anoop Vashishtha identity, then execute one course at a time in the listed
-order. Refresh PITR, counts, collisions, and the anonymous dry-run before each
-transaction. Stop on reuse, drift, teacher/taxonomy mismatch, any new quality
-finding, or protected fingerprint change. No `release` push.
+Anoop Vashishtha identity. Every requested guard passed before and after both
+transactions. No `release` push occurred.
 
-## Required approval phrase
+## Approval record
 
 `Approve the reviewed Unacademy NEET sixth batch — Hydrogen (Anoop Vashishtha,
 source label Anoop V.) and Modern Physics (Anu Gupta) — under decision

@@ -18,7 +18,7 @@ const manifestPaths = [
 const manifestSources = manifestPaths.map((path) => readFileSync(path, "utf8"));
 const manifests = manifestSources.map((source) => JSON.parse(source));
 
-describe("Unacademy NEET sixth-batch read-only readiness", () => {
+describe("Unacademy NEET sixth-batch production evidence", () => {
   it("pins the two official playlists in the proposed order", () => {
     expect(manifests.map((manifest) => manifest.youtube_playlist_id)).toEqual([
       "PLsgHooHkqhhP65sAqtkbWpVVSrK7FlTWA",
@@ -83,18 +83,30 @@ describe("Unacademy NEET sixth-batch read-only readiness", () => {
     expect(manifestSources.map((source) => (
       createHash("sha256").update(source, "utf8").digest("hex")
     ))).toEqual([
-      "2f18a04cb837fa73b8683c9a8bb88a34d66ea3c4fe0da7e301855fd936c1c405",
-      "9efc26ea9a25dbd933a7ddf2f9860b8737ab19a983488a6e8ac023323aa17deb",
+      "38da2bc6041a2bed8ad0b3d5aaafeaf785c07a92d9f533529a441c4ba13df446",
+      "9958cc9ba7b733a879ee1e3639c71e1ed65fc292ffd4285e9d83ed11d408780e",
     ]);
   });
 
-  it("keeps teacher binding and every production write behind approval", () => {
-    expect(manifests.every((manifest) => manifest.teacher_evidence == null)).toBe(true);
-    expect(readiness).toContain("Read-only preparation is complete");
-    expect(readiness).toContain("1d0ea7b9-8cac-4f3b-968d-82b4307f264a");
+  it("binds owner-reviewed teacher evidence and pins execution evidence", () => {
+    expect(manifests.map((manifest) => manifest.teacher_evidence.teacher)).toEqual([
+      "Anoop Vashishtha",
+      "Anu Gupta",
+    ]);
+    manifests.forEach((manifest) => {
+      expect(manifest.teacher_evidence.decision_id)
+        .toBe("1d0ea7b9-8cac-4f3b-968d-82b4307f264a");
+      expect(manifest.teacher_evidence.youtube_video_ids)
+        .toEqual(manifest.assignments.map((row) => row.youtube_video_id));
+    });
+    expect(readiness).toContain("Production execution is complete");
+    expect(readiness).toContain("Course 400");
+    expect(readiness).toContain("Course 401");
+    expect(readiness).toContain("382 playlists / 4,498 videos / 4,504 memberships");
     expect(readiness).toContain("Anoop V.");
     expect(readiness).toContain("30eee4a4a6842e5beeb7c97083d7f812");
-    expect(readiness).toContain("No `release` push");
+    expect(readiness).toContain("zero normalized");
+    expect(readiness).toContain("No `release` push occurred");
   });
 
   it("documents the still-incomplete numbered sequences", () => {
