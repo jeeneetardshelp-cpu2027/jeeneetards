@@ -1026,3 +1026,20 @@ links, two goal links, and three course-teacher links; catalogue totals stayed
 `334 / 3,955 / 3,961 / 245 / 92`, and protected JEE stayed `83 / 1,307 /
 c742fabf93ff8dd33d6ecd5eb4793db0`. No restore, migration, content write, or
 `release` push occurred.
+
+## Unacademy NEET third production batch — 4 August 2026
+
+The owner approved the protected JEE rebaseline to 82 courses, 1,304
+memberships, fingerprint `30eee4a4a6842e5beeb7c97083d7f812` after the
+deliberate removal of Communication Systems course 66 and its three lessons.
+
+Fresh seven-day PITR evidence and stable anonymous baselines preceded each
+create-only import. Plant Morphology, Plant Kingdom, and Ray Optics became
+courses 391, 392, and 393, adding 18, 11, and 10 videos respectively. The total
+batch delta was +3 playlists, +39 videos, +39 memberships, zero chapters, and
+zero reuse. Final totals were 374 playlists, 4,430 videos, 4,436 memberships,
+and 247 chapters. The protected JEE boundary remained exact after every import;
+rolling JEE remained 212 courses / 2,848 memberships / fingerprint
+`9eea2b44f0b19c08cc0907c57e091342`. No release deployment was requested or
+performed. Full evidence is recorded in
+[unacademy-neet-third-batch-readiness-2026-08-04.md](unacademy-neet-third-batch-readiness-2026-08-04.md).

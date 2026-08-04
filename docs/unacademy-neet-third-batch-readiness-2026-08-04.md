@@ -2,11 +2,12 @@
 
 ## Status and safety boundary
 
-Read-only preparation and owner evidence approval are complete. This pass used
+Read-only preparation and owner evidence approval are complete. The preparation pass used
 the official YouTube Data API against `@UnacademyNEET`
 (`UCdQwYksctqqiRwqp3PiJMWA`) and anonymous production catalogue reads. It did
 not run a production import or dry-run, create a chapter or teacher, apply a
-migration, create a clone, push `release`, or rerun CI.
+migration, create a clone, push `release`, or rerun CI. The later approved
+production execution is recorded below.
 
 The owner approved decision ID `a6ed2229-85bd-4f4a-afea-fd7f3a166199` for the
 exact three playlists and teacher evidence below. Each manifest now carries a
@@ -103,3 +104,28 @@ or any new blocker. No `release` push.
 The owner supplied this approval and separately approved the protected-boundary
 rebaseline to `82 / 1,304 / 30eee4a4a6842e5beeb7c97083d7f812` after the
 intentional Communication Systems removal.
+
+## Production execution — 4 August 2026
+
+All three imports completed create-only, one at a time. Each course had an
+anonymous dry-run with zero review findings, zero blockers, zero source
+collision, and zero retained-video reuse. Catalogue totals remained stable
+between the preflight and dry-run for each write.
+
+| Order | PITR latest restore point (IST) | Course ID | Added videos / memberships | Chapters created | Reuse |
+| ---: | --- | ---: | ---: | ---: | ---: |
+| 1 | `04 Aug 2026, 16:16:24` | 391 | 18 / 18 | 0 | 0 |
+| 2 | `04 Aug 2026, 16:18:23` | 392 | 11 / 11 | 0 | 0 |
+| 3 | `04 Aug 2026, 16:20:23` | 393 | 10 / 10 | 0 | 0 |
+
+The batch delta was exactly +3 playlists, +39 videos, +39 memberships, and
+zero chapters. Final catalogue totals were 374 playlists, 4,430 videos, 4,436
+memberships, and 247 chapters.
+
+Independent anonymous course verification passed for every course: exact NEET
+goal, exact class, correct subject and single reviewed chapter, no JEE/NEET
+goal bleed, and every lesson embeddable. The protected JEE boundary remained
+exactly 82 courses / 1,304 memberships / fingerprint
+`30eee4a4a6842e5beeb7c97083d7f812` after every import. Rolling JEE remained
+212 courses / 2,848 memberships / fingerprint
+`9eea2b44f0b19c08cc0907c57e091342`. No `release` push was made.
