@@ -84,7 +84,7 @@ export const TEST_SECTIONS = [
           "Full-length 75-question, 300-mark papers on a 180-minute timer, with the paper openable straight from the page.",
       },
       {
-        name: "Competishun JEE Main PYQs 2024–2026 (shift-wise)",
+        name: "Competishun JEE Main PYQs 2019–2026 (all shifts)",
         url: "https://i.competishun.com/home/explore",
         provider: "Competishun",
         // Labelled `account`, not `free`, on purpose: this is the student
@@ -92,17 +92,19 @@ export const TEST_SECTIONS = [
         // open. The tests themselves cost nothing. Understating openness is
         // the safe error here — overstating it strands a student at a wall.
         access: "account",
-        // Restored to a specific claim: the paper list was since seen in full.
-        // Avoids "every" — many shifts are listed and more sit below the fold,
-        // but completeness was never verified and does not need to be claimed.
+        // Range widened from "2024–2026" once the course itself was seen:
+        // it is sold as "All Shift (2019-2026), Includes January Attempts All
+        // Shifts". The earlier figure came from reading a paper grid that had
+        // more below the fold — a reminder that a visible list is a floor on
+        // coverage, not a measure of it.
         description:
-          "JEE Main shift papers from the 2024, 2025 and 2026 sessions as free 300-mark, 180-minute tests — January and April sittings, Shift 1 and Shift 2.",
+          "JEE Main shift papers from 2019 to 2026 as free 300-mark, 180-minute tests — January and April sittings, Shift 1 and Shift 2.",
         // The naming convention IS the navigation aid: inside the portal the
         // papers are one long "Active and Upcoming Tests" grid, and a student
         // hunting a specific sitting finds it by matching the date-and-shift
         // filename rather than by browsing.
         findIt:
-          'IIT-JEE tab → the ₹0 JEE Main PYQ course. Papers open in Competishun\'s Schoollog portal, named by date and shift — e.g. "JEE MAIN_24-01-2025_Shift-1".',
+          'IIT-JEE tab → "JEE MAIN PYQs Test Series" (₹0). Papers open in Competishun\'s Schoollog portal, named by date and shift — e.g. "JEE MAIN_24-01-2025_Shift-1".',
       },
       {
         name: "Quizrr test series",
@@ -163,6 +165,19 @@ export const TEST_SECTIONS = [
         access: "free",
         description:
           "The exam conductor's own practice portal, with past NEET papers in the actual test interface students will face on exam day.",
+      },
+      {
+        name: "Competishun NEET UG PYQs 2017–2026 (all shifts)",
+        // Deep-links straight to the NEET tab, unlike the JEE entries: the
+        // explore screen opens on IIT-JEE by default, so a NEET student
+        // arriving at the bare URL would land on the wrong exam's shelf.
+        url: "https://i.competishun.com/home/explore?tab=NEET",
+        provider: "Competishun",
+        access: "account",
+        description:
+          "Every NEET (UG) paper from 2017 to 2026 in the exam's own CBT interface — 11 tests including the 2024 re-NEET, 720 marks and 180–200 minutes each.",
+        findIt:
+          'NEET-UG tab → "NEET UG PYQs 2025-2017" (₹0 — the title says 2025 but the set now runs to 2026). Papers open in Competishun\'s Schoollog portal as "NEET(UG)_(2023)".',
       },
       {
         name: "ScienceLesson chapter-wise NEET mock tests",
