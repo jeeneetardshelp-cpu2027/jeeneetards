@@ -52,9 +52,12 @@ describe("Unacademy NEET sixth/seventh-batch faculty-link production package", (
   it("pins the immutable artifact hash and prepared-only handoff", () => {
     expect(createHash("sha256").update(sql, "utf8").digest("hex")).toBe(expectedHash);
     expect(readiness).toContain(`SHA-256: \`${expectedHash}\``);
-    expect(readiness).toContain("Prepared and locally rehearsed only");
+    expect(readiness).toContain("Applied successfully to production");
     expect(readiness).toContain("+5 course-teacher links only");
     expect(readiness).toContain("140 course links");
+    expect(readiness).toContain("04 Aug 2026, 18:52:29 IST");
+    expect(readiness).toContain("400 → Anoop Vashishtha");
+    expect(readiness).toContain("402 / 403 / 404 → Pradeep Singh");
     expect(readiness).toContain("30eee4a4a6842e5beeb7c97083d7f812");
   });
 

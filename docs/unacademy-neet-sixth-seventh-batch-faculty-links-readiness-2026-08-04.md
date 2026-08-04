@@ -2,11 +2,10 @@
 
 ## Status
 
-Prepared and locally rehearsed only. The SQL has **not** been applied to
-production. A separate exact-hash owner approval, a fresh PITR check, and a
-fresh exact-baseline check are required before any production write. No schema
-migration, clone, restore, content import, quality-review transition, or
-`release` push is part of this gate.
+Applied successfully to production on 4 August 2026 using the separately
+approved exact-hash artifact. The transaction ran after a fresh PITR check and
+an exact read-only baseline match. No schema migration, clone, restore, content
+import, quality-review transition, or `release` push was performed.
 
 ## Reviewed scope
 
@@ -45,8 +44,8 @@ courses, videos, chapters, memberships, or review statuses.
 - protected original JEE: 82 courses / 1,304 memberships / fingerprint
   `30eee4a4a6842e5beeb7c97083d7f812`.
 
-The artifact pins every value above and aborts before inserting anything on any
-mismatch.
+The artifact pinned every value above and would abort before inserting anything
+on any mismatch.
 
 ## Prepared artifact
 
@@ -73,8 +72,36 @@ committing.
   and 12 static routes);
 - production dependency audit: zero vulnerabilities.
 
-No automatic dependency fix or remote production command was run.
+No automatic dependency fix or `release` push was run.
 
-## Required production approval phrase
+## Production result
+
+- PITR was active with seven-day retention; the latest restore point immediately
+  before the write was `04 Aug 2026, 18:52:29 IST`;
+- the exact preflight matched 385 playlists / 4,514 videos / 4,520 memberships /
+  247 chapters / 92 chapter-class scopes;
+- faculty registry counts before the write were 32 teachers / 50 aliases / 33
+  institute links / 33 subject links / 32 learning-goal links / 135 course
+  links;
+- the transaction added exactly five `playlist_teachers` links, producing 140
+  total course links:
+  - 400 → Anoop Vashishtha (`teacher id 36`);
+  - 401 → Anu Gupta (`teacher id 35`);
+  - 402 / 403 / 404 → Pradeep Singh (`teacher id 33`);
+- all five links use role `instructor`, position 1;
+- playlists, videos, memberships, chapters, chapter-class scopes, teachers,
+  aliases, and teacher context-link counts were unchanged;
+- all five courses remain `pending` / `pending`, leaving quality review for a
+  separate gate;
+- protected original JEE remained 82 courses / 1,304 memberships / fingerprint
+  `30eee4a4a6842e5beeb7c97083d7f812`.
+
+The first editor submission before the write reran the read-only preflight and
+made no change. After the successful transaction, one verification attempt
+reused the artifact editor; the artifact's exact preflight rejected it because
+the link total was already 140, and that transaction rolled back. A fresh blank
+read-only query then confirmed the postflight totals and fingerprint above.
+
+## Approval used
 
 `Approve applying Unacademy NEET sixth/seventh-batch faculty-link artifact SHA-256 895cecede28139d452181e5b92172bec41344a5062a0b84ee912c8a60fb91e53 to production, after a fresh PITR and exact-baseline check; stop on any mismatch; no release push.`
