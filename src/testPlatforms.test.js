@@ -14,7 +14,7 @@ import {
   sectionIsAllFree,
   linkHost,
 } from "./testPlatforms.js";
-import { renderTestsBody } from "../ogInject.js";
+import { renderTestsBody, renderExamTestsBody } from "../ogInject.js";
 import { metadataForLocation } from "./pageMetadata.js";
 
 const allResources = TEST_SECTIONS.flatMap((s) =>
@@ -272,5 +272,42 @@ describe("/tests/:examId metadata", () => {
     const meta = metadataForLocation("/tests/not-an-exam", "");
     expect(meta.title).toMatch(/not found/i);
     expect(meta.robots).toBe("noindex, nofollow");
+  });
+});
+
+// `findIt` exists because a link that lands on a dashboard strands the
+// student. If it is present it must be usable, and it must reach the pages.
+describe("findIt navigation hints", () => {
+  const withHint = allResources.filter((r) => r.findIt);
+
+  it("is in use for at least one app-based source", () => {
+    expect(withHint.length).toBeGreaterThan(0);
+  });
+
+  it("is a non-empty string naming a real step", () => {
+    for (const r of withHint) {
+      expect(typeof r.findIt, `${r.url}`).toBe("string");
+      expect(r.findIt.trim().length, `${r.url}`).toBeGreaterThan(10);
+    }
+  });
+
+  it("reaches the crawler-readable exam HTML", () => {
+    for (const section of TEST_SECTIONS) {
+      const hinted = section.resources.filter((r) => r.findIt);
+      if (!hinted.length) continue;
+      const html = renderExamTestsBody(section, { description: "d" });
+      for (const r of hinted) expect(html).toContain("Find it:");
+    }
+  });
+
+  it("escapes the quotes a course name usually contains", () => {
+    // The Competishun hint quotes a course title; unescaped it would break
+    // out of the surrounding markup.
+    const section = TEST_SECTIONS.find((s) =>
+      s.resources.some((r) => r.findIt?.includes('"')),
+    );
+    if (!section) return;
+    const html = renderExamTestsBody(section, { description: "d" });
+    expect(html).toContain("&quot;");
   });
 });

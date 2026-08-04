@@ -47,7 +47,16 @@ export const ACCESS = Object.freeze({
  * @property {keyof ACCESS} access What it costs. Mandatory.
  * @property {boolean} [official] True only for the exam-conducting body.
  * @property {string} description One plain sentence: what they'll get.
+ * @property {string} [findIt]   Where to click AFTER the link opens.
  */
+
+// ON `findIt`: some platforms have no public deep link to the actual paper —
+// the URL lands on a generic dashboard and the student has to navigate. A
+// link that technically works but strands someone on an explore screen is
+// barely better than no link, so those entries carry the exact click path
+// (tab → sub-tab → course name) as it appears on the destination. Use the
+// platform's OWN wording, capitalisation included, so it can be matched by
+// eye; leave it off when the URL already lands on the test.
 
 /** @type {{id: string, label: string, blurb: string, resources: TestResource[]}[]} */
 export const TEST_SECTIONS = [
@@ -83,8 +92,15 @@ export const TEST_SECTIONS = [
         // open. The tests themselves cost nothing. Understating openness is
         // the safe error here — overstating it strands a student at a wall.
         access: "account",
+        // Deliberately does NOT claim "JEE Main previous-year papers". The
+        // only Competishun free-test listing actually seen is the JEE
+        // ADVANCED PYQs course under the IIT-JEE tab, so this entry says what
+        // is verifiable — the app's free JEE tests live behind that tab — and
+        // points the student at it rather than promising a paper nobody has
+        // confirmed exists.
         description:
-          "Previous-year JEE Main papers and topic-wise tests inside Competishun's student app, free to attempt once you have signed in.",
+          "Competishun's free timed tests for JEE inside its student app, listed under the IIT-JEE tab once you have signed in.",
+        findIt: "IIT-JEE tab → 11th / 12th / 12th+ → any course priced ₹0",
       },
       {
         name: "Quizrr test series",
@@ -102,6 +118,15 @@ export const TEST_SECTIONS = [
     blurb:
       "Full-length papers for the IIT entrance, where the question style differs sharply from JEE Main.",
     resources: [
+      {
+        name: "Competishun JEE Advanced PYQs 2025–2019",
+        url: "https://i.competishun.com/home/explore",
+        provider: "Competishun",
+        access: "account",
+        description:
+          "Seven years of JEE Advanced previous-year papers as free timed tests, priced ₹0 inside Competishun's student app.",
+        findIt: 'IIT-JEE tab → 12th+ → "JEE ADVANCED PYQs 2025-2019" (₹0)',
+      },
       {
         name: "Quizrr test series",
         url: "https://quizrr.in",
