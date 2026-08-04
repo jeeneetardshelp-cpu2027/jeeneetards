@@ -33,12 +33,14 @@ describe("Unacademy NEET second-batch readiness", () => {
     expect(readiness).toContain("memberships: +34");
   });
 
-  it("remains read-only and separately gates every production write", () => {
-    expect(readiness).toContain("Prepared read-only and awaiting exact owner approval");
+  it("records the separately gated production execution and exact postflight", () => {
+    expect(readiness).toContain("Imported to production under owner decision");
     expect(readiness).toContain("4555712a-b4ea-446c-8f57-04d2257562f9");
-    expect(readiness).toContain("fresh anonymous v12 dry-run");
+    expect(readiness).toContain("anonymous `ok` dry-run");
     expect(readiness).toContain("c742fabf93ff8dd33d6ecd5eb4793db0");
     expect(readiness).toContain("no release push");
-    expect(readiness).not.toContain("Applied to production");
+    expect(readiness).toContain("358 playlists / 4,222 videos / 4,228 memberships / 250");
+    expect(readiness).toContain("Courses 374, 375, and 376");
+    expect(readiness).toContain("0 reuse");
   });
 });
