@@ -72,6 +72,10 @@ function ResultProbe(props) {
   const result = usePlaylistBrowse(props);
   return <span>{result.items[0]?.coverVideoId ?? "none"}</span>;
 }
+function LogoProbe(props) {
+  const result = usePlaylistBrowse(props);
+  return <span>{result.items[0]?.instituteLogoUrl ?? "none"}</span>;
+}
 const run = async (props) => {
   render(<MemoryRouter><Probe {...props} /></MemoryRouter>);
   await new Promise((r) => setTimeout(r, 0));
@@ -133,6 +137,21 @@ describe("chapter filtering happens in the database", () => {
 });
 
 describe("pagination", () => {
+  it("maps the channel logo selected with each playlist", async () => {
+    ROWS = [row(11, "Indefinite Integration", {
+      institutes_channels: {
+        id: 5,
+        name: "Mohit Tyagi",
+        logo_url: "https://yt3.ggpht.com/mohit-tyagi=s88",
+      },
+    })];
+    COUNT = 1;
+
+    render(<MemoryRouter><LogoProbe /></MemoryRouter>);
+    expect(await screen.findByText("https://yt3.ggpht.com/mohit-tyagi=s88")).toBeTruthy();
+    expect(calls[0].cols).toContain("institutes_channels(id, name, logo_url)");
+  });
+
   it("fetches only the first lesson image as each playlist cover", async () => {
     ROWS = [row(11, "Indefinite Integration", {
       cover: [{ id: 99, position: 1, videos: { youtube_video_id: "CBvaO-uDvs8" } }],

@@ -24,6 +24,7 @@ import { normalizeForHighlight } from "./searchHighlight.js";
 import { useTheme } from "./theme.jsx";
 import { BRAND_NAVY, BRAND_TEAL } from "./brandColors.js";
 import YouTubeThumbnail from "./YouTubeThumbnail.jsx";
+import ChannelAvatar from "./ChannelAvatar.jsx";
 
 const BRAND = { navy: BRAND_NAVY, teal: BRAND_TEAL };
 
@@ -81,6 +82,13 @@ function Row({ item, group, query, active, onPick, id }) {
           <YouTubeThumbnail
             videoId={item.extra?.youtube_video_id}
             className="aspect-video w-20 shrink-0 rounded-md border border-hairline sm:w-24"
+          />
+        )}
+        {group === "institute" && (
+          <ChannelAvatar
+            url={item.extra?.logo_url}
+            name={item.title}
+            className="h-10 w-10 sm:h-11 sm:w-11"
           />
         )}
         <span className="min-w-0 flex-1">

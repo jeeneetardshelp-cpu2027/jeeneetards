@@ -36,7 +36,7 @@ export function useFilterOptions({ subjectId } = {}) {
       supabase.from("learning_goals").select("id, slug, name").order("display_order"),
       supabase.from("class_levels").select("id, slug, name").order("display_order"),
       supabase.from("subjects").select("id, slug, name").order("display_order"),
-      supabase.from("institutes_channels").select("id, name").order("name"),
+      supabase.from("institutes_channels").select("id, name, logo_url").order("name"),
     ];
 
     // Chapters ONLY for the chosen subject. Without a subject there is no
@@ -69,7 +69,9 @@ export function useFilterOptions({ subjectId } = {}) {
           goal: goals.data.map((r) => ({ id: r.id, value: r.slug, label: r.name })),
           class: classes.data.map((r) => ({ id: r.id, value: shortClass(r.slug), label: r.name })),
           subject: subjects.data.map((r) => ({ id: r.id, value: r.slug, label: r.name })),
-          channel: institutes.data.map((r) => ({ id: r.id, value: String(r.id), label: r.name })),
+          channel: institutes.data.map((r) => ({
+            id: r.id, value: String(r.id), label: r.name, logoUrl: r.logo_url ?? null,
+          })),
           chapter: (chapters?.data ?? []).map((r) => ({ id: r.id, value: r.slug, label: r.name })),
         },
       });

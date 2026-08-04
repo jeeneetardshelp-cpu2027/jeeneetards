@@ -50,6 +50,35 @@ export function groupRows(rows) {
   return out;
 }
 
+async function addChannelLogos(rows) {
+  const ids = [...new Set(
+    (rows ?? [])
+      .filter((row) => row.group_key === "institute")
+      .map((row) => Number(row.entity_id))
+      .filter((id) => Number.isInteger(id) && id > 0),
+  )];
+  if (!ids.length) return rows;
+
+  // One bounded lookup for every matched channel. A failed optional image
+  // lookup must never make names or navigation disappear.
+  const { data, error } = await supabase
+    .from("institutes_channels")
+    .select("id, logo_url")
+    .in("id", ids);
+  if (error) {
+    console.error("channel logos:", error);
+    return rows;
+  }
+
+  const byId = new Map((data ?? []).map((row) => [Number(row.id), row.logo_url ?? null]));
+  return rows.map((row) => row.group_key === "institute"
+    ? {
+        ...row,
+        extra: { ...(row.extra ?? {}), logo_url: byId.get(Number(row.entity_id)) ?? null },
+      }
+    : row);
+}
+
 export function useUniversalSearch(query, { type = null, limit = 5 } = {}) {
   const [state, setState] = useState({
     groups: EMPTY, loading: false, error: null, tooShort: false, query: "",
@@ -99,7 +128,7 @@ export function useUniversalSearch(query, { type = null, limit = 5 } = {}) {
           p_limit: limit,
           p_offset: page * limit,
         })
-        .then(({ data, error }) => {
+        .then(async ({ data, error }) => {
           if (gen !== generation.current) return;      // obsolete — drop it
           if (error) {
             console.error("universal_search:", error);
@@ -107,7 +136,9 @@ export function useUniversalSearch(query, { type = null, limit = 5 } = {}) {
                        error: "Search is unavailable. Please try again." });
             return;
           }
-          setState({ groups: groupRows(data), loading: false, error: null,
+          const enriched = await addChannelLogos(data);
+          if (gen !== generation.current) return;
+          setState({ groups: groupRows(enriched), loading: false, error: null,
                      tooShort: false, query: term });
         });
     }, DEBOUNCE_MS);

@@ -1,5 +1,5 @@
 import {
-  AlertTriangle, BookOpen, Building2, Clock, Layers, Play, Star,
+  AlertTriangle, BookOpen, Clock, Layers, Play, Star,
 } from "lucide-react";
 import { useTheme } from "./theme.jsx";
 import {
@@ -7,6 +7,7 @@ import {
 } from "./metadata.js";
 import { ratingDisplay } from "./ratingConfidence.js";
 import { BRAND_TEAL, BRAND_SERIF, subjectColor } from "./brandColors.js";
+import ChannelAvatar from "./ChannelAvatar.jsx";
 
 const TEAL = BRAND_TEAL;
 
@@ -78,7 +79,16 @@ export default function CourseOverview({
                   {course.teacher}
                 </span>
               )}
-              {course.institute && <span className="inline-flex items-center gap-1.5"><Building2 className="h-4 w-4" />{course.institute}</span>}
+              {course.institute && (
+                <span className="inline-flex items-center gap-1.5">
+                  <ChannelAvatar
+                    url={course.instituteLogoUrl}
+                    name={course.institute}
+                    className="h-6 w-6"
+                  />
+                  {course.institute}
+                </span>
+              )}
             </div>
           )}
           <div className={`mt-4 flex flex-wrap gap-x-4 gap-y-2 text-sm ${t.muted}`}>

@@ -49,6 +49,7 @@ import {
   pickInstitutes, pickTopRated,
 } from "./HomeSections.jsx";
 import YouTubeThumbnail from "./YouTubeThumbnail.jsx";
+import ChannelAvatar from "./ChannelAvatar.jsx";
 
 // The comparison table's attribute count, and the languages the catalogue
 // classifies. Both are real product facts, stated once here so the numbers
@@ -420,6 +421,13 @@ function SearchResults({ groups, loading, error, tooShort, retry, query }) {
                       <YouTubeThumbnail
                         videoId={row.extra?.youtube_video_id}
                         className="aspect-video w-20 shrink-0 rounded-md border border-hairline sm:w-24"
+                      />
+                    )}
+                    {g.key === "institute" && (
+                      <ChannelAvatar
+                        url={row.extra?.logo_url}
+                        name={row.title}
+                        className="h-10 w-10 sm:h-11 sm:w-11"
                       />
                     )}
                     <span className="min-w-0 flex-1">

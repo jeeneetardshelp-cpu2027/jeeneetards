@@ -25,6 +25,7 @@ function toCard(row) {
     teacher: row.teacher ?? null,           // LEGACY free text. Not a resolved identity.
     instituteId: row.institutes_channels?.id ?? null,
     institute: row.institutes_channels?.name ?? null,
+    instituteLogoUrl: row.institutes_channels?.logo_url ?? null,
     subject: row.subjects?.name ?? null,
     lectures,
     coverVideoId: row.cover?.[0]?.videos?.youtube_video_id ?? null,
@@ -153,7 +154,7 @@ export function usePlaylistBrowse({
     // videos from the unfiltered view.
     const cols =
       "id, title, display_order, teacher, average_rating, ratings_count, language, content_type," +
-      " difficulty, class_levels, view_count_total, stats_fetched_at, institutes_channels(id, name), subjects(name)," +
+      " difficulty, class_levels, view_count_total, stats_fetched_at, institutes_channels(id, name, logo_url), subjects(name)," +
       " playlist_videos(count), cover:playlist_videos(id, position, videos(youtube_video_id))" +
       (goalId ? ", playlist_learning_goals!inner(learning_goal_id)" : "") +
       // Board scoping lives in the QUERY, not in a post-filter. CBSE and ICSE
