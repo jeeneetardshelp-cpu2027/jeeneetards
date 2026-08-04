@@ -18,6 +18,7 @@ import { metadataForLocation, SITE_NAME } from "./src/pageMetadata.js";
 import { findTestSection } from "./src/testPlatforms.js";
 import { CLASS_LEVELS_BY_GOAL } from "./src/classLevels.js";
 import { canonicalBrowseUrl } from "./src/canonicalUrl.js";
+import { exploreStepHeading } from "./src/exploreHeading.js";
 import {
   courseMeta,
   injectCourseMeta,
@@ -254,10 +255,11 @@ async function deepExploreResponse(url, route, supaUrl, supaKey) {
     route.cls && { label: className(route.cls), url: classUrl },
     subject && { label: subject.name, url: subjectUrl },
   ].filter(Boolean);
+  const stepScope = crumbs.slice(1).map((crumb) => crumb.label);
   let heading;
   let options;
   if (route.isSchool && !board) {
-    heading = "Which board are you on?";
+    heading = exploreStepHeading("board", stepScope);
     options = boards
       .filter((item) => Number(item.playlist_boards?.[0]?.count ?? 0) > 0)
       .map((item) => ({
@@ -266,20 +268,20 @@ async function deepExploreResponse(url, route, supaUrl, supaKey) {
         count: Number(item.playlist_boards?.[0]?.count ?? 0),
       }));
   } else if (!route.cls) {
-    heading = "Which stage are you in?";
+    heading = exploreStepHeading("class", stepScope);
     options = populatedClasses.map((slug) => ({
       name: className(slug),
       url: `${scopeUrl}/${slug}`,
     }));
   } else if (!subject) {
-    heading = "Choose a subject";
+    heading = exploreStepHeading("subject", stepScope);
     options = subjects.map((item) => ({
       name: item.name,
       url: `${classUrl}/${item.slug}`,
       count: Number(item.course_count ?? 0),
     }));
   } else {
-    heading = "Choose a chapter";
+    heading = exploreStepHeading("chapter", stepScope);
     options = chapters.map((item) => ({
       name: item.name,
       url: `${subjectUrl}/${item.slug}`,
