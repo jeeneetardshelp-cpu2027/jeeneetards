@@ -172,7 +172,9 @@ export function SocialProof({ institutes, loading }) {
       <Container>
         <Reveal anim="fade" className="text-center">
           <p className="text-eyebrow text-ink-3">
-            Lectures from the channels students already trust
+            {loading
+              ? "YouTube channels in this library"
+              : `All ${institutes.length} YouTube channels in this library`}
           </p>
         </Reveal>
       </Container>
@@ -192,7 +194,7 @@ export function SocialProof({ institutes, loading }) {
               {institutes.map((institute) => (
                 <Link
                   key={institute.id}
-                  to={`/browse?channel=${institute.id}`}
+                  to={institute.to ?? `/browse?channel=${institute.id}`}
                   aria-label={`View all courses from ${institute.name}`}
                   className="inline-flex min-h-11 items-center gap-2.5 rounded-sm border border-hairline bg-surface px-5 py-3 text-sm font-medium whitespace-nowrap text-ink-2 transition-colors duration-200 hover:border-accent-line hover:bg-surface-2 hover:text-accent"
                 >

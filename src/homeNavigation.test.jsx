@@ -43,6 +43,8 @@ describe("homepage navigation shortcuts", () => {
       </MemoryRouter>,
     );
 
+    expect(screen.getByText("All 3 YouTube channels in this library")).toBeTruthy();
+
     institutes.forEach((institute) => {
       const links = screen.getAllByRole("link", {
         name: `View all courses from ${institute.name}`,
