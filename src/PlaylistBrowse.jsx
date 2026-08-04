@@ -113,14 +113,29 @@ export function PlaylistCard({ course, onOpen, to, state, selected, onToggle, di
               {course.teacher}
               {course.teacher && course.institute && <span className={t.muted}>·</span>}
               {course.institute && (
-                <span className={`inline-flex min-w-0 items-center gap-1 ${t.muted}`}>
+                course.instituteId ? (
+                <Link
+                  to={`/browse?channel=${course.instituteId}`}
+                  aria-label={`View all courses from ${course.institute}`}
+                  className={`inline-flex min-w-0 items-center gap-1 rounded-sm ${t.muted} transition-colors hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent`}
+                >
                   <ChannelAvatar
                     url={course.instituteLogoUrl}
                     name={course.institute}
                     className="h-5 w-5"
                   />
                   <span className="truncate">{course.institute}</span>
-                </span>
+                </Link>
+                ) : (
+                  <span className={`inline-flex min-w-0 items-center gap-1 ${t.muted}`}>
+                    <ChannelAvatar
+                      url={course.instituteLogoUrl}
+                      name={course.institute}
+                      className="h-5 w-5"
+                    />
+                    <span className="truncate">{course.institute}</span>
+                  </span>
+                )
               )}
             </span>
           </div>

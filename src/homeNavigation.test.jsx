@@ -27,12 +27,14 @@ describe("homepage navigation shortcuts", () => {
       { instituteId: 13, institute: "Competishun+", instituteLogoUrl: "https://yt3.ggpht.com/competishun=s88" },
       { instituteId: 13, institute: "Competishun+" },
       { instituteId: 27, institute: "Mohit Tyagi" },
+      { instituteId: 42, institute: "Aakash NEET" },
       { instituteId: null, institute: "Unknown channel" },
     ]);
 
     expect(institutes).toEqual([
       { id: 13, name: "Competishun+", logoUrl: "https://yt3.ggpht.com/competishun=s88" },
       { id: 27, name: "Mohit Tyagi", logoUrl: null },
+      { id: 42, name: "Aakash NEET", logoUrl: null },
     ]);
 
     const { container } = render(
@@ -41,12 +43,14 @@ describe("homepage navigation shortcuts", () => {
       </MemoryRouter>,
     );
 
-    const competishunLinks = screen.getAllByRole("link", {
-      name: "View all courses from Competishun+",
+    institutes.forEach((institute) => {
+      const links = screen.getAllByRole("link", {
+        name: `View all courses from ${institute.name}`,
+      });
+      expect(links).toHaveLength(1);
+      expect(links[0].getAttribute("href")).toBe(`/browse?channel=${institute.id}`);
     });
-    expect(competishunLinks.length).toBeGreaterThan(0);
-    expect(competishunLinks.every((link) => link.getAttribute("href") === "/browse?channel=13"))
-      .toBe(true);
+    expect(container.querySelector("[inert]")).toBeNull();
     expect([...container.querySelectorAll("img")].some(
       (image) => image.getAttribute("src") === "https://yt3.ggpht.com/competishun=s88",
     )).toBe(true);
