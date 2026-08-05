@@ -2,11 +2,11 @@
 
 ## Status
 
-Prepared and locally validated only. This package has **not** been applied to
-production. Applying it requires separate owner approval of the exact SHA-256,
-a fresh PITR check, and a fresh exact-baseline preflight. No content import,
-quality-review transition, migration, clone, restore, or `release` push is in
-scope.
+Applied successfully to production once under the owner's exact-hash approval.
+The guarded transaction passed its internal postflight and added exactly the
+three approved faculty links. No content import, quality-review transition,
+migration, clone, restore, or `release` push was in scope. The artifact must not
+be rerun.
 
 ## Reviewed scope
 
@@ -50,7 +50,7 @@ The transaction pins every value above and aborts before inserting anything on
 any mismatch. The protected JEE boundary was freshly rechecked after the NCERT
 addition and remains an exact match.
 
-## Prepared artifact
+## Immutable applied artifact
 
 - SQL: `docs/sql/unacademy_neet_ninth_batch_faculty_links_2026-08-05.sql`;
 - SHA-256: `fdfa5ccd18f05b72b93a270d99d28391d1dd5ba725907ec49d41127042aabfcc`;
@@ -77,11 +77,33 @@ three links, unchanged review state, and protected boundary before commit.
   and 13 static routes);
 - production dependency audit: zero vulnerabilities;
 - independent protected-JEE verification passed before preparation;
-- no production SQL, clone, restore, or `release` push occurred.
+- no production SQL, clone, restore, or `release` push occurred during package
+  preparation and rehearsal.
 
-## Required production approval
+## Production application evidence
 
-`Approve applying Unacademy NEET ninth-batch faculty-link artifact SHA-256
-fdfa5ccd18f05b72b93a270d99d28391d1dd5ba725907ec49d41127042aabfcc to
-production, after a fresh PITR and exact-baseline check; stop on any mismatch;
-no release push.`
+- owner approval matched the immutable SHA-256 above;
+- fresh PITR verification showed seven-day retention active, with the latest
+  restore point available at `2026-08-05 16:31:33 +05:30` before the write;
+- fresh preflight passed at 391 playlists / 4,566 videos / 4,572 memberships /
+  260 chapters / 92 chapter-class scopes / 32 teachers / 143 course links / 14
+  quality reviews;
+- the single transaction added exactly courses 408 -> teacher 33, 409 ->
+  teacher 34, and 410 -> teacher 36, reaching 146 course links;
+- its internal postflight completed before commit with every exact guard and
+  the protected JEE fingerprint unchanged;
+- the immediate independent read-only postflight found one unrelated concurrent
+  additive chapter (`321`, `Linear Programming`, Mathematics), so the live
+  chapter count had become 261; this faculty-link artifact cannot create or
+  modify chapters, and every other guarded count and target row matched;
+- production writes were stopped on that mismatch; no rollback or second run
+  was attempted;
+- the later quiet read-only baseline remained 391 / 4,566 / 4,572 / 261, with
+  146 faculty links, 14 quality reviews, all three exact target links, and
+  protected JEE still `30eee4a4a6842e5beeb7c97083d7f812`;
+- no `release` push was made, and the applied artifact must not be rerun.
+
+## Next gate
+
+Quality review remains separate. It requires its own freshly guarded artifact,
+immutable SHA-256, owner approval, PITR check, and exact-baseline preflight.
