@@ -1,0 +1,138 @@
+{
+  "reviewed_on": "2026-08-05",
+  "review_status": "candidate_review_complete_owner_evidence_pending",
+  "proposed_decision_id": "b988e5f2-fbf5-4cba-bb7a-54d3dd35a3a6",
+  "channel": {
+    "name": "Unacademy NEET",
+    "handle": "@UnacademyNEET",
+    "youtube_channel_id": "UCdQwYksctqqiRwqp3PiJMWA",
+    "production_institute_id": 147,
+    "playlist_count": 736
+  },
+  "preflight": {
+    "captured_at": "2026-08-05 15:16:22 +05:30",
+    "playlists": 388,
+    "videos": 4539,
+    "memberships": 4545,
+    "chapters": 247,
+    "mechanical_unused_candidate_count": 117,
+    "source_collision_count": 0,
+    "retained_video_collision_count": 0,
+    "cross_candidate_retained_video_collision_count": 0,
+    "protected_jee_courses": 82,
+    "protected_jee_memberships": 1304,
+    "protected_jee_fingerprint": "30eee4a4a6842e5beeb7c97083d7f812",
+    "rolling_jee_courses": 212,
+    "rolling_jee_memberships": 2848,
+    "rolling_jee_fingerprint": "9eea2b44f0b19c08cc0907c57e091342"
+  },
+  "candidates": [
+    {
+      "order": 1,
+      "youtube_playlist_id": "PLsgHooHkqhhNIEDFQnuZzTGUq9Nl2BANa",
+      "source_title": "NEET: Sexual Reproduction in Flowering Plants - Playlist | Class 12 | Unacademy NEET | Live Daily 2.0 | NEET Biology | Pradeep Singh",
+      "source_snapshot_sha256": "c7257a9f0ab5b59ee66961c6afb1bdd1bcc4adf8f1c9eb63d0c9cc3bb1d6bc29",
+      "subject_id": 4,
+      "chapter_id": 125,
+      "chapter": "Sexual Reproduction in Flowering Plants",
+      "class_level_id": 3,
+      "class_level": "class-12",
+      "teacher_id": 33,
+      "teacher": "Pradeep Singh",
+      "source_collision_count": 0,
+      "video_collision_count": 0,
+      "retained_source_positions": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15],
+      "excluded_source_positions": [11, 13, 14],
+      "videos": [
+        { "source_position": 1, "youtube_video_id": "Pcl8HPH1GO8", "title": "NEET: Sexual Reproduction in Flowering Plants - L1 | Live Daily 2.0 | Unacademy NEET | Pradeep Sir", "duration_seconds": 3399, "embedding_status": "embeddable" },
+        { "source_position": 2, "youtube_video_id": "zSexGJHIJRg", "title": "NEET: Sexual Reproduction in Flowering Plants - L2 | Live Daily 2.0 | Unacademy NEET | Pradeep Sir", "duration_seconds": 3378, "embedding_status": "embeddable" },
+        { "source_position": 3, "youtube_video_id": "BExnSdrqDC8", "title": "NEET: Sexual Reproduction in Flowering Plants - L3 | Live Daily 2.0 | Unacademy NEET | Pradeep Sir", "duration_seconds": 3365, "embedding_status": "embeddable" },
+        { "source_position": 4, "youtube_video_id": "ob9op2oduPE", "title": "NEET: Sexual Reproduction in Flowering Plants - L4 | Live Daily 2.0 | Unacademy NEET | Pradeep Sir", "duration_seconds": 3362, "embedding_status": "embeddable" },
+        { "source_position": 5, "youtube_video_id": "v2-RdAN7MlA", "title": "NEET: Sexual Reproduction in Flowering Plants - L5 | Live Daily 2.0 | Unacademy NEET | Pradeep Sir", "duration_seconds": 3166, "embedding_status": "embeddable" },
+        { "source_position": 6, "youtube_video_id": "rmhgK7vpqwI", "title": "NEET: Sexual Reproduction in Flowering Plants - L6 | Live Daily 2.0 | Unacademy NEET | Pradeep Sir", "duration_seconds": 3226, "embedding_status": "embeddable" },
+        { "source_position": 7, "youtube_video_id": "Ou2VMCl92fs", "title": "NEET: Sexual Reproduction in Flowering Plants - L7 | Live Daily 2.0 | Unacademy NEET | Pradeep Sir", "duration_seconds": 3309, "embedding_status": "embeddable" },
+        { "source_position": 8, "youtube_video_id": "C5j-8Cu6MM4", "title": "NEET: Sexual Reproduction in Flowering Plants - L8 | Live Daily 2.0 | Unacademy NEET | Pradeep Sir", "duration_seconds": 2988, "embedding_status": "embeddable" },
+        { "source_position": 9, "youtube_video_id": "eesPE96soRQ", "title": "NEET: Sexual Reproduction in Flowering Plants - L9 | Live Daily 2.0 | Unacademy NEET | Pradeep Sir", "duration_seconds": 3596, "embedding_status": "embeddable" },
+        { "source_position": 10, "youtube_video_id": "Rfr_q0u6PBQ", "title": "NEET: Sexual Reproduction in Flowering Plants - L10 | Live Daily 2.0 | Unacademy NEET | Pradeep Sir", "duration_seconds": 3276, "embedding_status": "embeddable" },
+        { "source_position": 12, "youtube_video_id": "FwBhodGRxGU", "title": "NEET: Sexual Reproduction in Flowering Plants - L11 | Live Daily 2.0 | Unacademy NEET | Pradeep Sir", "duration_seconds": 2925, "embedding_status": "embeddable" },
+        { "source_position": 15, "youtube_video_id": "97jlP53_YLQ", "title": "NEET: Sexual Reproduction in Flowering Plants - L12 | Live Daily 2.0 | Unacademy NEET | Pradeep Sir", "duration_seconds": 3020, "embedding_status": "embeddable" }
+      ],
+      "exclusions": [
+        { "source_position": 11, "youtube_video_id": "OcFOLqDQuzg", "title": "NEET: Reproduction in Flowering Plants - Quiz 1 | Menti | Quiz 2.0 | Unacademy NEET | Pradeep S.", "duration_seconds": 1253, "reason": "quiz" },
+        { "source_position": 13, "youtube_video_id": "3cC30gC9m84", "title": "NEET: Reproduction - Mega Menti Quiz | Live Quiz 2.0 | Biology | Unacademy NEET | Pradeep S.", "duration_seconds": 3590, "reason": "mega quiz" },
+        { "source_position": 14, "youtube_video_id": "LEC7jujH9lM", "title": "NEET: Complete Reproduction - Mega Menti Quiz | Live Quiz 2.0 | Biology | Unacademy NEET | Pradeep S", "duration_seconds": 3575, "reason": "mega quiz" }
+      ]
+    },
+    {
+      "order": 2,
+      "youtube_playlist_id": "PLsgHooHkqhhNaF6JnP38ojTYkuAZ5YFvd",
+      "source_title": "Alternating Current - Playlist | Class 12 | Unacademy NEET | LIVE DAILY | NEET Physics | Mahendra Singh",
+      "source_snapshot_sha256": "93d0edd374fd5aec27a189aff2dc440a29c943cf5bd83f6eb04df4edf33fe913",
+      "subject_id": 1,
+      "chapter_id": 14,
+      "chapter": "Alternating Current",
+      "class_level_id": 3,
+      "class_level": "class-12",
+      "teacher_id": 34,
+      "teacher": "Mahendra Singh",
+      "source_collision_count": 0,
+      "video_collision_count": 0,
+      "retained_source_positions": [1, 2, 3, 4, 5, 6],
+      "excluded_source_positions": [7],
+      "videos": [
+        { "source_position": 1, "youtube_video_id": "Vpxn_a-JeOo", "title": "Alternating Current - L 1 | Class 12 | Unacademy NEET | LIVE DAILY | NEET Physics | Mahendra Sir", "duration_seconds": 3378, "embedding_status": "embeddable" },
+        { "source_position": 2, "youtube_video_id": "OhjxnIuVsKE", "title": "Alternating Current - L 2 | RMS Values | Unacademy NEET | LIVE DAILY | NEET Physics | Mahendra Sir", "duration_seconds": 3478, "embedding_status": "embeddable" },
+        { "source_position": 3, "youtube_video_id": "Et2gonaVGoQ", "title": "Alternating Current - L 3 | AC Circuits | Unacademy NEET | LIVE DAILY | NEET Physics | Mahendra Sir", "duration_seconds": 3184, "embedding_status": "embeddable" },
+        { "source_position": 4, "youtube_video_id": "Ex0qzK4OhIc", "title": "Alternating Current - L 4 | LR Circuit | Unacademy NEET | LIVE DAILY | NEET Physics | Mahendra Sir", "duration_seconds": 3273, "embedding_status": "embeddable" },
+        { "source_position": 5, "youtube_video_id": "jU1ELUf-s4I", "title": "Alternating Current - L 5 | AC Circuits | Unacademy NEET | LIVE DAILY | NEET Physics | Mahendra Sir", "duration_seconds": 3283, "embedding_status": "embeddable" },
+        { "source_position": 6, "youtube_video_id": "NBB2-uRbjtc", "title": "Alternating Current - L 6 | Q Factor | Unacademy NEET | LIVE DAILY | NEET Physics | Mahendra Sir", "duration_seconds": 3627, "embedding_status": "embeddable" }
+      ],
+      "exclusions": [
+        { "source_position": 7, "youtube_video_id": "W5PyICSZsM8", "title": "Alternating Current - Quiz 1 | Class 12 | Unacademy NEET | LIVE QUIZ | NEET Physics | Indrajeet Sir", "duration_seconds": 2049, "reason": "quiz and different instructor" }
+      ]
+    },
+    {
+      "order": 3,
+      "youtube_playlist_id": "PLsgHooHkqhhNWeJHJ0f68rVPOY81tbaJa",
+      "source_title": "NEET: Chemical Kinetics - Playlist | Class 12 | Unacademy NEET | Live Daily | NEET Chemistry | Anoop Vashishtha",
+      "source_snapshot_sha256": "37fe28c3f8665222ec9def54325ba2e48ab3ce9019458a18c4be2b10112a3d0c",
+      "subject_id": 2,
+      "chapter_id": 35,
+      "chapter": "Chemical Kinetics",
+      "class_level_id": 3,
+      "class_level": "class-12",
+      "teacher_id": 36,
+      "teacher": "Anoop Vashishtha",
+      "source_collision_count": 0,
+      "video_collision_count": 0,
+      "retained_source_positions": [1, 2, 3, 4, 5, 6, 7, 8, 9],
+      "excluded_source_positions": [10, 11, 12, 13, 14],
+      "videos": [
+        { "source_position": 1, "youtube_video_id": "RIx683NzVz0", "title": "NEET Chemistry: Chemical Kinetics - L1 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3520, "embedding_status": "embeddable" },
+        { "source_position": 2, "youtube_video_id": "cSFUPEnRUhs", "title": "NEET Chemistry: Chemical Kinetics - L2 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3511, "embedding_status": "embeddable" },
+        { "source_position": 3, "youtube_video_id": "ryd-n-EPtBs", "title": "NEET Chemistry: Chemical Kinetics - L3 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3473, "embedding_status": "embeddable" },
+        { "source_position": 4, "youtube_video_id": "GWbE4mLVnY8", "title": "NEET Chemistry: Chemical Kinetics - L4 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3290, "embedding_status": "embeddable" },
+        { "source_position": 5, "youtube_video_id": "O87k9dDfExY", "title": "NEET Chemistry: Chemical Kinetics - L5 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3605, "embedding_status": "embeddable" },
+        { "source_position": 6, "youtube_video_id": "e-V9RfUFaUE", "title": "NEET Chemistry: Chemical Kinetics - L6 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3541, "embedding_status": "embeddable" },
+        { "source_position": 7, "youtube_video_id": "Ii6YSXFG_Rk", "title": "NEET Chemistry: Chemical Kinetics - L7 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3640, "embedding_status": "embeddable" },
+        { "source_position": 8, "youtube_video_id": "qLKbChrpaGA", "title": "NEET Chemistry: Chemical Kinetics - L8 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3535, "embedding_status": "embeddable" },
+        { "source_position": 9, "youtube_video_id": "q3FyroHWIZ8", "title": "NEET Chemistry: Chemical Kinetics - L9 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3643, "embedding_status": "embeddable" }
+      ],
+      "exclusions": [
+        { "source_position": 10, "youtube_video_id": "sPVeD_n4pNA", "title": "NEET: Chemical Kinetics - Quiz 1 | Menti Quiz | Live Quiz 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3266, "reason": "quiz" },
+        { "source_position": 11, "youtube_video_id": "X6OXBRbe7WU", "title": "NEET: Chemical Kinetics - Quiz 2 | Menti Quiz | Live Quiz 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3470, "reason": "quiz" },
+        { "source_position": 12, "youtube_video_id": "yb2uVpKoz4s", "title": "NEET: Chemical Kinetics - Quiz 3 | Menti Quiz | Live Quiz 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3609, "reason": "quiz" },
+        { "source_position": 13, "youtube_video_id": "sqI3VSDlcKQ", "title": "NEET: Chemical Kinetics - Quiz 5 | Menti Quiz | Live Quiz 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3280, "reason": "quiz" },
+        { "source_position": 14, "youtube_video_id": "ahShHvQE81s", "title": "Physical Chemistry - Mega Menti Quiz 1 | Class 12 | Live Quiz 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3506, "reason": "broad mega quiz" }
+      ]
+    }
+  ],
+  "deferred": [
+    "Breathing and Exchange of Gases is mechanically clean after quiz removal, but Dr. Sachin Kapur does not yet have a normalized production teacher record; keep it for the next faculty-aware batch.",
+    "Biomolecules is missing Lecture 3; the playlist position contains an unrelated Phoenix 2.0 video.",
+    "Respiration in Plants mixes two separately numbered, incomplete lecture sequences.",
+    "Coordination Compounds is missing Lecture 11.",
+    "Ionic Equilibrium is missing Lectures 5 and 6.",
+    "The previously documented Human Reproduction, Neural Control and Coordination, and Animal Kingdom playlists remain incomplete."
+  ]
+}
