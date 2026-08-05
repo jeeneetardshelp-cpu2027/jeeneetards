@@ -1,6 +1,6 @@
-// Read-only postflight for the first study-material production batch.
-// It verifies public visibility, exact curriculum scopes and contextual
-// chapter retrieval without using an admin or service-role credential.
+// Anonymous, read-only production postflight for the reviewed NCERT Class 11
+// Physics collection. It verifies the exact sources, curriculum scope count,
+// directory filters and chapter-context reads without an admin credential.
 
 import fs from "node:fs";
 import { createClient } from "@supabase/supabase-js";
@@ -24,6 +24,16 @@ if (!url || !key) {
   process.exit(2);
 }
 
+const EXPECTED_PAGES = new Map([
+  ["keph101", 12], ["keph102", 14], ["keph103", 22], ["keph104", 22],
+  ["keph105", 21], ["keph106", 35], ["keph107", 17], ["keph201", 13],
+  ["keph202", 22], ["keph203", 24], ["keph204", 18], ["keph205", 15],
+  ["keph206", 19], ["keph207", 22],
+]);
+const EXPECTED_URLS = [...EXPECTED_PAGES.keys()].map(
+  (code) => `https://ncert.nic.in/textbook/pdf/${code}.pdf`,
+);
+
 const db = createClient(url, key, { auth: { persistSession: false } });
 const checks = [];
 let failed = 0;
@@ -33,7 +43,7 @@ function record(label, pass, detail) {
   if (!pass) failed += 1;
 }
 
-async function rpc(filters) {
+async function materials(filters) {
   const { data, error } = await db.rpc("get_study_materials", {
     p_goal_slug: filters.goal ?? null,
     p_board_slug: filters.board ?? null,
@@ -43,64 +53,84 @@ async function rpc(filters) {
     p_chapter_id: filters.chapterId ?? null,
     p_video_id: null,
     p_material_type: filters.type ?? null,
-    p_limit: 10,
+    p_limit: 60,
     p_offset: 0,
   });
   if (error) throw error;
   return data ?? [];
 }
 
-const { data: chapters, error: chapterError } = await db
-  .from("chapters")
-  .select("id, name, slug, subjects!inner(slug)")
-  .eq("slug", "kinematics")
-  .eq("subjects.slug", "physics");
-if (chapterError) throw chapterError;
-const chapterId = chapters?.[0]?.id ?? null;
-record("Physics Kinematics chapter exists", Number.isInteger(chapterId), `id=${chapterId ?? "missing"}`);
-
-const { data: materials, error: materialError } = await db
+const { data: batch, error: materialError } = await db
   .from("study_materials")
-  .select("id, title, source_name, source_url, material_type, review_status")
-  .order("id");
+  .select("id, title, source_name, source_url, material_type, page_count, rights_status, review_status")
+  .in("source_url", EXPECTED_URLS)
+  .order("source_url");
 if (materialError) throw materialError;
-record("one approved public material", materials?.length === 1 && materials[0].review_status === "approved", `rows=${materials?.length ?? 0}`);
-record(
-  "official NCERT source is exact",
-  materials?.[0]?.source_name === "NCERT"
-    && materials?.[0]?.source_url === "https://ncert.nic.in/textbook/pdf/keph102.pdf"
-    && materials?.[0]?.material_type === "full_notes",
-  materials?.[0]?.title ?? "missing",
-);
+record("fourteen approved NCERT chapters", batch?.length === 14, `rows=${batch?.length ?? 0}`);
 
+const badMetadata = (batch ?? []).filter((row) => {
+  const code = row.source_url.match(/\/(keph\d{3})[.]pdf$/)?.[1];
+  return row.source_name !== "NCERT"
+    || row.material_type !== "full_notes"
+    || row.rights_status !== "official_source"
+    || row.review_status !== "approved"
+    || EXPECTED_PAGES.get(code) !== Number(row.page_count);
+});
+record("every source and page count is exact", badMetadata.length === 0, `invalid=${badMetadata.length}`);
+
+const materialIds = (batch ?? []).map((row) => row.id);
 const { data: scopes, error: scopeError } = await db
   .from("study_material_scopes")
-  .select("id, material_id, learning_goal_id, board_id, class_level_id, subject_id, chapter_id")
-  .order("id");
+  .select("id, material_id")
+  .in("material_id", materialIds);
 if (scopeError) throw scopeError;
-record("three public curriculum scopes", scopes?.length === 3, `rows=${scopes?.length ?? 0}`);
+record("fifty-one public curriculum scopes", scopes?.length === 51, `rows=${scopes?.length ?? 0}`);
 
-const common = { stage: "class-11", subject: "physics", chapter: "kinematics" };
+const common = { stage: "class-11", subject: "physics" };
 for (const [label, filters] of [
-  ["JEE directory", { ...common, goal: "jee" }],
-  ["NEET directory", { ...common, goal: "neet" }],
-  ["CBSE Class 11 directory", { ...common, goal: "school", board: "cbse" }],
+  ["JEE Class 11 Physics directory", { ...common, goal: "jee" }],
+  ["NEET Class 11 Physics directory", { ...common, goal: "neet" }],
+  ["CBSE Class 11 Physics directory", { ...common, goal: "school", board: "cbse" }],
 ]) {
-  const rows = await rpc(filters);
-  record(label, rows.length === 1 && rows[0].scopes?.length === 3, `rows=${rows.length}`);
+  const rows = await materials(filters);
+  record(label, rows.length === 14 && Number(rows[0]?.total_count) === 14, `rows=${rows.length}`);
 }
 
-const contextual = await rpc({ chapterId });
-record("lecture chapter context", contextual.length === 1, `rows=${contextual.length}`);
-const unrelated = await rpc({ ...common, goal: "jee", stage: "class-12" });
+for (const [chapter, expected] of [
+  ["kinematics", 2],
+  ["laws-of-motion", 1],
+  ["newtons-laws-of-motion-nlm", 1],
+  ["friction", 1],
+  ["system-of-particles-and-centre-of-mass", 1],
+  ["rotational-motion", 1],
+  ["oscillations-and-waves", 2],
+]) {
+  const rows = await materials({ ...common, goal: "jee", chapter });
+  record(`${chapter} chapter mapping`, rows.length === expected, `rows=${rows.length}`);
+}
+
+const { data: curriculum, error: curriculumError } = await db.rpc(
+  "get_study_material_curriculum",
+  {
+    p_goal_slug: "school",
+    p_board_slug: "cbse",
+    p_class_slug: "class-11",
+    p_subject_slug: "physics",
+  },
+);
+if (curriculumError) throw curriculumError;
+const chapters = (curriculum ?? []).filter((row) => row.level === "chapter");
+record("material filter exposes fifteen chapter nodes", chapters.length === 15, `rows=${chapters.length}`);
+
+const unrelated = await materials({ ...common, goal: "jee", stage: "class-12" });
 record("unrelated class remains empty", unrelated.length === 0, `rows=${unrelated.length}`);
 
 for (const check of checks) {
-  console.log(`${check.pass ? "✓" : "✗"} ${check.label} (${check.detail})`);
+  console.log(`${check.pass ? "PASS" : "FAIL"} ${check.label} (${check.detail})`);
 }
 if (failed) {
   console.error(`\n${failed} study-material production check${failed === 1 ? "" : "s"} failed.`);
   process.exitCode = 1;
 } else {
-  console.log("\nStudy-material production postflight passed (anonymous, read-only).");
+  console.log("\nStudy-material production postflight passed (anonymous, read-only).\n");
 }
