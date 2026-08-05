@@ -23,12 +23,12 @@ const decisionId = "b988e5f2-fbf5-4cba-bb7a-54d3dd35a3a6";
 const reviewHash = "b5d6212f49c5fd3cd499e4f02ebe1b0cda53e3ab41d7ead5a2a2818060d1805b";
 
 describe("Unacademy NEET ninth-batch candidate review", () => {
-  it("records the owner approval without widening the safety boundary", () => {
+  it("records the completed owner-approved execution without widening the boundary", () => {
     expect(review.review_status).toBe("candidate_review_complete_owner_evidence_pending");
     expect(review.proposed_decision_id).toBe(decisionId);
-    expect(readiness).toContain("the owner approved");
-    expect(readiness).toContain("does not authorize");
-    expect(readiness).toContain("Stop on reuse, drift, or any blocker");
+    expect(readiness).toContain("completed successfully, one at a time");
+    expect(readiness).toContain("No schema change, restore");
+    expect(readiness).toContain("No existing course was updated or deleted");
   });
 
   it("pins the three exact official source playlists", () => {
@@ -156,5 +156,16 @@ describe("Unacademy NEET ninth-batch candidate review", () => {
     ]) {
       expect(readiness).toContain(hash);
     }
+  });
+
+  it("records the exact production result and unchanged JEE boundaries", () => {
+    expect(readiness).toContain("courses `408`, `409`, and `410`");
+    expect(readiness).toContain("391 playlists / 4,566 videos / 4,572 memberships / 247 chapters");
+    expect(readiness).toContain("+3 playlists / +27 videos / +27 memberships / +0 chapters");
+    expect(readiness).toContain("30eee4a4a6842e5beeb7c97083d7f812");
+    expect(readiness).toContain("9eea2b44f0b19c08cc0907c57e091342");
+    expect(readiness).toContain("0 reused");
+    expect(readiness).toContain("11/11 checks");
+    expect(readiness).toContain("separate, hash-reviewed faculty-link and quality");
   });
 });

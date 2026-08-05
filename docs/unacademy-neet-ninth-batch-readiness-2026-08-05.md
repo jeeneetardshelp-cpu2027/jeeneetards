@@ -1,13 +1,14 @@
-# Unacademy NEET ninth-batch candidate review - 5 August 2026
+# Unacademy NEET ninth-batch production record - 5 August 2026
 
-## Status and safety boundary
+## Outcome and safety boundary
 
-Read-only candidate review is complete. On 5 August 2026 the owner approved the
-three-course batch under decision
-`b988e5f2-fbf5-4cba-bb7a-54d3dd35a3a6`. The exact playlist-specific teacher
-evidence is now bound in three immutable lecture-only manifests. This approval
-authorizes the gated create-only imports recorded below; it does not authorize
-a schema change, restore, clone, deployment, or `release` push.
+The owner-approved three-course batch under decision
+`b988e5f2-fbf5-4cba-bb7a-54d3dd35a3a6` completed successfully, one at a time.
+The exact playlist-specific teacher evidence was bound in three immutable
+lecture-only manifests before writing. They became production courses `408`,
+`409`, and `410`, with 27 new videos and memberships, zero reuse, and zero new
+chapters. No existing course was updated or deleted. No schema change, restore,
+clone, deployment, or `release` push occurred.
 
 The official YouTube Data API refreshed all 736 playlists owned by
 `@UnacademyNEET` (`UCdQwYksctqqiRwqp3PiJMWA`). Anonymous production reads
@@ -65,6 +66,38 @@ Keep the complete L1-L9 sequence at source positions 1-9. Drop source positions
 quiz. The playlist title names Anoop Vashishtha and every retained lecture names
 Anoop Sir.
 
+## Guarded production execution
+
+| Order | Course | PITR checkpoint (IST) | Exact preflight | Dry-run | Delta | Verification |
+| ---: | --- | --- | --- | --- | --- | --- |
+| 1 | `408` Sexual Reproduction in Flowering Plants | 05 Aug 2026 15:31:30 | 388 / 4,539 / 4,545 / 247; protected JEE exact | 12 mapped, 3 excluded; 1 ok / 0 review / 0 blocked | +1 / +12 / +12 / +0; 0 reused | 11/11 checks; chapter 125; avg 54m11s |
+| 2 | `409` Alternating Current | 05 Aug 2026 15:35:30 | 389 / 4,551 / 4,557 / 247; protected JEE exact | 6 mapped, 1 excluded; 1 ok / 0 review / 0 blocked | +1 / +6 / +6 / +0; 0 reused | 11/11 checks; chapter 14; avg 56m11s |
+| 3 | `410` Chemical Kinetics | 05 Aug 2026 15:37:30 | 390 / 4,557 / 4,563 / 247; protected JEE exact | 9 mapped, 5 excluded; 1 ok / 0 review / 0 blocked | +1 / +9 / +9 / +0; 0 reused | 11/11 checks; chapter 35; avg 58m49s |
+
+The signed-in production dashboard showed active seven-day PITR at every gate.
+Each anonymous dry-run reported exact source mapping, v12 capability, no
+existing playlist, and no write-blocking finding before its corresponding
+create-only import.
+
+## Final production verification
+
+- final catalogue: 391 playlists / 4,566 videos / 4,572 memberships / 247 chapters;
+- exact batch delta: +3 playlists / +27 videos / +27 memberships / +0 chapters;
+- all 27 batch membership video IDs are unique; importer reuse count was zero
+  for every course;
+- courses `408`, `409`, and `410` carry exactly the `neet` goal, class `12th`,
+  and their reviewed Biology, Physics, and Chemistry subjects;
+- every retained video is embeddable and mapped to the single reviewed chapter;
+- protected JEE after every write: 82 courses / 1,304 memberships / fingerprint
+  `30eee4a4a6842e5beeb7c97083d7f812`;
+- rolling JEE after every write: 212 courses / 2,848 memberships / fingerprint
+  `9eea2b44f0b19c08cc0907c57e091342`.
+
+The importer writes the reviewed legacy teacher label but does not create
+normalized `playlist_teachers` rows or approve quality reviews. Courses
+`408`-`410` therefore await separate, hash-reviewed faculty-link and quality
+review gates.
+
 ## Approved evidence package
 
 - candidate review:
@@ -80,8 +113,8 @@ Anoop Sir.
     - SHA-256 `5a82097859bb77eba78c28d59fd7a390f5a6de8cc0e0d3514a38e78b77521ccc`;
   - `docs/manifests/unacademy-neet-chemical-kinetics-class-12-reviewed.json`
     - SHA-256 `69ec046c66d0a65271c44c123f47e39e048f61af100b0e6398c7987ab2b43eff`;
-- projected additive delta after a later approved execution: +3 playlists / +27
-  videos / +27 memberships / +0 chapters, with zero reuse.
+- completed additive delta: +3 playlists / +27 videos / +27 memberships / +0
+  chapters, with zero reuse.
 
 The review JSON pins every retained/excluded source position, video ID, title,
 duration, embedding state, taxonomy ID, class scope, teacher ID, source
@@ -101,11 +134,8 @@ quiz rows, and bind the exact owner-reviewed teacher evidence.
 - The older Human Reproduction, Neural Control and Coordination, and Animal
   Kingdom playlists still contain the previously recorded sequence gaps.
 
-## Approved execution gate
+## Approval record
 
-Execute in the listed order, one course at a time. Before each course, record a
-fresh PITR point, verify the quiet-window catalogue baseline, confirm zero
-source/video reuse, and run the anonymous dry-run. After each create-only
-import, verify the exact catalogue delta and protected JEE fingerprint
-`30eee4a4a6842e5beeb7c97083d7f812`. Stop on reuse, drift, or any blocker. No
-`release` push.
+`Approve the reviewed Unacademy NEET ninth batch under decision
+b988e5f2-fbf5-4cba-bb7a-54d3dd35a3a6, exactly as recorded in the readiness
+document.`
