@@ -31,16 +31,19 @@ const EXPLORE = [
     : []),
 ];
 
+const CONTACT_EMAIL = "jeeneetardshelp@gmail.com";
+const CONTACT_URL = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(CONTACT_EMAIL)}&su=${encodeURIComponent("JEENEETARD feedback")}`;
+
 const LEGAL = [
   { label: "Terms & Disclaimer", to: "/terms" },
   { label: "Privacy Policy", to: "/privacy" },
-  { label: "Contact us", href: "mailto:jeeneetardshelp@gmail.com" },
+  { label: "Contact us", href: CONTACT_URL, external: true },
 ];
 
 const footerLinkClassName =
   "group/fl inline-flex min-h-11 items-center gap-1.5 rounded-md text-sm text-ink-2 transition-colors duration-200 hover:text-ink";
 
-function FooterLink({ to, href, children }) {
+function FooterLink({ to, href, external = false, children }) {
   const content = (
     <>
       {children}
@@ -54,7 +57,14 @@ function FooterLink({ to, href, children }) {
   return (
     <li>
       {href ? (
-        <a href={href} className={footerLinkClassName}>{content}</a>
+        <a
+          href={href}
+          className={footerLinkClassName}
+          target={external ? "_blank" : undefined}
+          rel={external ? "noreferrer" : undefined}
+        >
+          {content}
+        </a>
       ) : (
         <Link to={to} className={footerLinkClassName}>{content}</Link>
       )}
@@ -141,7 +151,12 @@ export default function Footer() {
             <h2 className="text-eyebrow text-ink-3">Good to know</h2>
             <ul className="mt-4">
               {LEGAL.map((item) => (
-                <FooterLink key={item.to ?? item.href} to={item.to} href={item.href}>
+                <FooterLink
+                  key={item.to ?? item.href}
+                  to={item.to}
+                  href={item.href}
+                  external={item.external}
+                >
                   {item.label}
                 </FooterLink>
               ))}
@@ -150,10 +165,12 @@ export default function Footer() {
               Have feedback or an idea for a feature that would make the website
               better? Email us at{" "}
               <a
-                href="mailto:jeeneetardshelp@gmail.com"
+                href={CONTACT_URL}
+                target="_blank"
+                rel="noreferrer"
                 className="font-medium text-ink-2 underline decoration-hairline underline-offset-4 transition-colors hover:text-ink"
               >
-                jeeneetardshelp@gmail.com
+                {CONTACT_EMAIL}
               </a>
               . We&apos;d love to hear from you.
             </p>
