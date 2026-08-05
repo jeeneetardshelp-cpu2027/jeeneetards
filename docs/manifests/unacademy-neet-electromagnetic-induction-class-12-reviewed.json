@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "request_id": "0f6b552c-57b5-424e-88ed-d2113a639198",
+  "youtube_playlist_id": "PLsgHooHkqhhNvpnnFH79_2cZGiXgI3zlt",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "0fab6ecf-934f-46ae-bb8a-05cbd6b9cea1",
+    "youtube_playlist_id": "PLsgHooHkqhhNvpnnFH79_2cZGiXgI3zlt",
+    "teacher": "Anu Gupta",
+    "source_url": "https://www.youtube.com/playlist?list=PLsgHooHkqhhNvpnnFH79_2cZGiXgI3zlt",
+    "source_label": "Official Unacademy NEET channel-owned Electromagnetic Induction playlist naming Anu Gupta; every retained lecture title names Anu Gupta",
+    "reviewed_by": "Owner",
+    "reviewed_on": "2026-08-05",
+    "youtube_video_ids": ["6M8MsZNkmc4", "AhZitScgYi8", "LIG9QqbcZ80"]
+  },
+  "assignments": [
+    { "position": 1, "youtube_video_id": "6M8MsZNkmc4", "chapter": "Electromagnetic Induction", "lesson_number": 1 },
+    { "position": 2, "youtube_video_id": "AhZitScgYi8", "chapter": "Electromagnetic Induction", "lesson_number": 2 },
+    { "position": 3, "youtube_video_id": "LIG9QqbcZ80", "chapter": "Electromagnetic Induction", "lesson_number": 3 }
+  ],
+  "exclusions": []
+}

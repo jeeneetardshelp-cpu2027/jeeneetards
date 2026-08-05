@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "request_id": "40ee09a0-894b-4d43-8bf0-87ec9bbf81b9",
+  "youtube_playlist_id": "PLsgHooHkqhhOn3bqr2nMVYEGq3Zh5bMDF",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "0fab6ecf-934f-46ae-bb8a-05cbd6b9cea1",
+    "youtube_playlist_id": "PLsgHooHkqhhOn3bqr2nMVYEGq3Zh5bMDF",
+    "teacher": "Pradeep Singh",
+    "source_url": "https://www.youtube.com/playlist?list=PLsgHooHkqhhOn3bqr2nMVYEGq3Zh5bMDF",
+    "source_label": "Official Unacademy NEET channel-owned Plant Growth and Development playlist naming Pradeep Singh; every retained lecture title names Pradeep Sir",
+    "reviewed_by": "Owner",
+    "reviewed_on": "2026-08-05",
+    "youtube_video_ids": [
+      "OlgSOWbMKmk", "V3-p7YoVsf4", "LdHp4Na3X_0", "HQ9VIpFSOAY", "SKmzQz6DRqU"
+    ]
+  },
+  "assignments": [
+    { "position": 1, "youtube_video_id": "OlgSOWbMKmk", "chapter": "Plant Growth and Development", "lesson_number": 1 },
+    { "position": 2, "youtube_video_id": "V3-p7YoVsf4", "chapter": "Plant Growth and Development", "lesson_number": 2 },
+    { "position": 3, "youtube_video_id": "LdHp4Na3X_0", "chapter": "Plant Growth and Development", "lesson_number": 3 },
+    { "position": 4, "youtube_video_id": "HQ9VIpFSOAY", "chapter": "Plant Growth and Development", "lesson_number": 4 },
+    { "position": 5, "youtube_video_id": "SKmzQz6DRqU", "chapter": "Plant Growth and Development", "lesson_number": 5 }
+  ],
+  "exclusions": []
+}
