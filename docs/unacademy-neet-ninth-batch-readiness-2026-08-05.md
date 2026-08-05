@@ -2,10 +2,12 @@
 
 ## Status and safety boundary
 
-Read-only candidate review is complete. No manifest currently claims owner
-approval, and no production dry-run or write is authorized by this document.
-No Supabase row, schema object, migration, restore, clone, deployment, or
-`release` branch was changed.
+Read-only candidate review is complete. On 5 August 2026 the owner approved the
+three-course batch under decision
+`b988e5f2-fbf5-4cba-bb7a-54d3dd35a3a6`. The exact playlist-specific teacher
+evidence is now bound in three immutable lecture-only manifests. This approval
+authorizes the gated create-only imports recorded below; it does not authorize
+a schema change, restore, clone, deployment, or `release` push.
 
 The official YouTube Data API refreshed all 736 playlists owned by
 `@UnacademyNEET` (`UCdQwYksctqqiRwqp3PiJMWA`). Anonymous production reads
@@ -63,7 +65,7 @@ Keep the complete L1-L9 sequence at source positions 1-9. Drop source positions
 quiz. The playlist title names Anoop Vashishtha and every retained lecture names
 Anoop Sir.
 
-## Exact evidence package
+## Approved evidence package
 
 - candidate review:
   `docs/reviews/unacademy-neet-ninth-candidate-batch-2026-08-05.json`;
@@ -71,14 +73,21 @@ Anoop Sir.
   `b5d6212f49c5fd3cd499e4f02ebe1b0cda53e3ab41d7ead5a2a2818060d1805b`;
 - proposed owner decision ID:
   `b988e5f2-fbf5-4cba-bb7a-54d3dd35a3a6`;
+- approved manifests, in execution order:
+  - `docs/manifests/unacademy-neet-sexual-reproduction-flowering-plants-class-12-reviewed.json`
+    - SHA-256 `ab72202c44b715ac7f2281035f4f755743686c21945ce42dbc5b57d33c5eb913`;
+  - `docs/manifests/unacademy-neet-alternating-current-class-12-reviewed.json`
+    - SHA-256 `5a82097859bb77eba78c28d59fd7a390f5a6de8cc0e0d3514a38e78b77521ccc`;
+  - `docs/manifests/unacademy-neet-chemical-kinetics-class-12-reviewed.json`
+    - SHA-256 `69ec046c66d0a65271c44c123f47e39e048f61af100b0e6398c7987ab2b43eff`;
 - projected additive delta after a later approved execution: +3 playlists / +27
   videos / +27 memberships / +0 chapters, with zero reuse.
 
 The review JSON pins every retained/excluded source position, video ID, title,
 duration, embedding state, taxonomy ID, class scope, teacher ID, source
-snapshot hash, and collision result. Import manifests are deliberately not
-created yet: doing so would falsely claim that the proposed owner evidence
-decision has already been approved.
+snapshot hash, and collision result. The manifests preserve the reviewed source
+positions, renumber only the retained lectures naturally, exclude all nine
+quiz rows, and bind the exact owner-reviewed teacher evidence.
 
 ## Explicit deferrals
 
@@ -92,13 +101,11 @@ decision has already been approved.
 - The older Human Reproduction, Neural Control and Coordination, and Animal
   Kingdom playlists still contain the previously recorded sequence gaps.
 
-## Required owner approval
+## Approved execution gate
 
-`Approve the reviewed Unacademy NEET ninth batch - Sexual Reproduction in
-Flowering Plants (Pradeep Singh), Alternating Current (Mahendra Singh), and
-Chemical Kinetics (Anoop Vashishtha) - under decision
-b988e5f2-fbf5-4cba-bb7a-54d3dd35a3a6. Bind the exact playlist-specific teacher
-evidence, prepare the lecture-only manifests, then import create-only, one at a
-time, with a fresh PITR and quiet-window baseline plus anonymous dry-run before
-each, and protected JEE fingerprint verification after each. Stop on reuse,
-drift, or any blocker; no release push.`
+Execute in the listed order, one course at a time. Before each course, record a
+fresh PITR point, verify the quiet-window catalogue baseline, confirm zero
+source/video reuse, and run the anonymous dry-run. After each create-only
+import, verify the exact catalogue delta and protected JEE fingerprint
+`30eee4a4a6842e5beeb7c97083d7f812`. Stop on reuse, drift, or any blocker. No
+`release` push.

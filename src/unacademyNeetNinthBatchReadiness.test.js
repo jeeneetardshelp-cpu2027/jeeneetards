@@ -11,16 +11,24 @@ const reviewSource = readFileSync(
   "utf8",
 );
 const review = JSON.parse(reviewSource);
+const manifestPaths = [
+  "docs/manifests/unacademy-neet-sexual-reproduction-flowering-plants-class-12-reviewed.json",
+  "docs/manifests/unacademy-neet-alternating-current-class-12-reviewed.json",
+  "docs/manifests/unacademy-neet-chemical-kinetics-class-12-reviewed.json",
+];
+const manifestSources = manifestPaths.map((path) => readFileSync(path, "utf8"));
+const manifests = manifestSources.map((source) => JSON.parse(source));
 
 const decisionId = "b988e5f2-fbf5-4cba-bb7a-54d3dd35a3a6";
 const reviewHash = "b5d6212f49c5fd3cd499e4f02ebe1b0cda53e3ab41d7ead5a2a2818060d1805b";
 
 describe("Unacademy NEET ninth-batch candidate review", () => {
-  it("keeps the package review-only until the owner approves it", () => {
+  it("records the owner approval without widening the safety boundary", () => {
     expect(review.review_status).toBe("candidate_review_complete_owner_evidence_pending");
     expect(review.proposed_decision_id).toBe(decisionId);
-    expect(readiness).toContain("No manifest currently claims owner");
-    expect(readiness).toContain("Import manifests are deliberately not");
+    expect(readiness).toContain("the owner approved");
+    expect(readiness).toContain("does not authorize");
+    expect(readiness).toContain("Stop on reuse, drift, or any blocker");
   });
 
   it("pins the three exact official source playlists", () => {
@@ -109,5 +117,44 @@ describe("Unacademy NEET ninth-batch candidate review", () => {
     expect(createHash("sha256").update(reviewSource, "utf8").digest("hex")).toBe(reviewHash);
     expect(readiness).toContain(reviewHash);
     expect(readiness).toContain(decisionId);
+  });
+
+  it("binds the exact approved teacher evidence and lecture-only mappings", () => {
+    expect(manifests.map((manifest) => manifest.youtube_playlist_id)).toEqual(
+      review.candidates.map((candidate) => candidate.youtube_playlist_id),
+    );
+    expect(new Set(manifests.map((manifest) => manifest.request_id)).size).toBe(3);
+    expect(manifests.map((manifest) => manifest.teacher_evidence.teacher)).toEqual([
+      "Pradeep Singh",
+      "Mahendra Singh",
+      "Anoop Vashishtha",
+    ]);
+    expect(manifests.every((manifest) => (
+      manifest.teacher_evidence.decision_id === decisionId
+      && manifest.teacher_evidence.youtube_playlist_id === manifest.youtube_playlist_id
+      && manifest.teacher_evidence.youtube_video_ids.length === manifest.assignments.length
+    ))).toBe(true);
+    expect(manifests.map((manifest) => manifest.assignments.length)).toEqual([12, 6, 9]);
+    expect(manifests.map((manifest) => manifest.exclusions.length)).toEqual([3, 1, 5]);
+    expect(manifests.every((manifest) => manifest.assignments.every(
+      (row, index) => row.lesson_number === index + 1,
+    ))).toBe(true);
+  });
+
+  it("pins the immutable approved manifest hashes", () => {
+    expect(manifestSources.map((source) => (
+      createHash("sha256").update(source, "utf8").digest("hex")
+    ))).toEqual([
+      "ab72202c44b715ac7f2281035f4f755743686c21945ce42dbc5b57d33c5eb913",
+      "5a82097859bb77eba78c28d59fd7a390f5a6de8cc0e0d3514a38e78b77521ccc",
+      "69ec046c66d0a65271c44c123f47e39e048f61af100b0e6398c7987ab2b43eff",
+    ]);
+    for (const hash of [
+      "ab72202c44b715ac7f2281035f4f755743686c21945ce42dbc5b57d33c5eb913",
+      "5a82097859bb77eba78c28d59fd7a390f5a6de8cc0e0d3514a38e78b77521ccc",
+      "69ec046c66d0a65271c44c123f47e39e048f61af100b0e6398c7987ab2b43eff",
+    ]) {
+      expect(readiness).toContain(hash);
+    }
   });
 });
