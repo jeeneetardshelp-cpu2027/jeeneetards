@@ -18,12 +18,27 @@ const CLASS_LABELS = {
 export function studyMaterialScopeLabel(material) {
   const scope = material?.scopes?.[0];
   if (!scope) return "General study material";
+  const sameFamily = (candidate) => (
+    candidate?.goal === scope.goal
+    && candidate?.board === scope.board
+    && candidate?.class === scope.class
+    && candidate?.subject?.slug === scope.subject?.slug
+  );
+  const chapterNames = [...new Set(
+    material.scopes
+      .filter(sameFamily)
+      .map((candidate) => candidate?.chapter?.name)
+      .filter(Boolean),
+  )];
+  const chapterLabel = chapterNames.length > 2
+    ? `${chapterNames.slice(0, 2).join(" + ")} + ${chapterNames.length - 2} more`
+    : chapterNames.join(" + ");
   const pieces = [
     GOAL_LABELS[scope.goal] ?? scope.goal,
     scope.board?.toUpperCase?.() ?? scope.board,
     CLASS_LABELS[scope.class] ?? scope.class,
     scope.subject?.name,
-    scope.chapter?.name,
+    chapterLabel || scope.chapter?.name,
   ].filter(Boolean);
   return pieces.join(" · ") || "General study material";
 }

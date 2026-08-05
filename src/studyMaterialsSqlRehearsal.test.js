@@ -27,6 +27,10 @@ const ncertClass10HindiBSeed = readFileSync(
   "docs/sql/study_materials_ncert_class10_hindi_b_seed_2026-08-05.sql",
   "utf8",
 );
+const ncertClass10HindiASeed = readFileSync(
+  "docs/sql/study_materials_ncert_class10_hindi_a_seed_2026-08-05.sql",
+  "utf8",
+);
 const ncertClass11MathematicsSeed = readFileSync(
   "docs/sql/study_materials_ncert_class11_mathematics_seed_2026-08-05.sql",
   "utf8",
@@ -113,7 +117,8 @@ async function productionShapedDatabase() {
       (3, 'Biology', 'biology', 3), (4, 'Mathematics', 'mathematics', 4),
       (5, 'English', 'english', 5),
       (6, 'Social Science', 'social-science', 6),
-      (7, 'Hindi B', 'hindi-b', 7);
+      (7, 'Hindi B', 'hindi-b', 7),
+      (8, 'Hindi A', 'hindi-a', 8);
     insert into public.chapters values
       (100, 1, 'Motion in a Straight Line', 'motion-in-a-straight-line', 1),
       (101, 1, 'Kinematics', 'kinematics', 2),
@@ -296,7 +301,24 @@ async function productionShapedDatabase() {
       (813, 7, 'कारतूस', 'kartus', 14),
       (814, 7, 'हरिहर काका', 'harihar-kaka', 15),
       (815, 7, 'सपनों के से दिन', 'sapnon-ke-se-din', 16),
-      (816, 7, 'टोपी शुक्ला', 'topi-shukla', 17);
+      (816, 7, 'टोपी शुक्ला', 'topi-shukla', 17),
+      (900, 8, 'सूरदास के पद', 'surdas-ke-pad', 1),
+      (901, 8, 'राम-लक्ष्मण-परशुराम संवाद', 'ram-lakshman-parshuram-samvad', 2),
+      (902, 8, 'आत्मकथ्य', 'aatmakathya', 3),
+      (903, 8, 'उत्साह', 'utsah', 4),
+      (904, 8, 'अट नहीं रही है', 'at-nahin-rahi-hai', 5),
+      (905, 8, 'यह दंतुरित मुसकान', 'yah-danturit-muskan', 6),
+      (906, 8, 'फसल', 'fasal', 7),
+      (907, 8, 'संगतकार', 'sangatkar', 8),
+      (908, 8, 'नेताजी का चश्मा', 'netaji-ka-chashma', 9),
+      (909, 8, 'बालगोबिन भगत', 'balgobin-bhagat', 10),
+      (910, 8, 'लखनवी अंदाज़', 'lakhnavi-andaz', 11),
+      (911, 8, 'एक कहानी यह भी', 'ek-kahani-yah-bhi', 12),
+      (912, 8, 'नौबतखाने में इबादत', 'naubatkhane-mein-ibadat', 13),
+      (913, 8, 'संस्कृति', 'sanskriti', 14),
+      (914, 8, 'माता का आँचल', 'mata-ka-aanchal', 15),
+      (915, 8, 'साना-साना हाथ जोड़ि', 'sana-sana-hath-jodi', 16),
+      (916, 8, 'मैं क्यों लिखता हूँ', 'main-kyon-likhta-hoon', 17);
     select setval(
       pg_get_serial_sequence('public.chapters', 'id'),
       (select max(id) from public.chapters),
@@ -654,6 +676,66 @@ describe("study materials v1 local SQL rehearsal", () => {
           p_goal_slug => 'jee',
           p_class_slug => 'class-10',
           p_subject_slug => 'hindi-b'
+        )
+      `);
+      expect(entrance.rows).toHaveLength(0);
+    } finally {
+      await pg.close();
+    }
+  }, 30_000);
+
+  it("loads rationalised NCERT Class 10 Hindi A with shared poem scopes", async () => {
+    const pg = await productionShapedDatabase();
+    try {
+      await pg.exec(ncertClass10HindiASeed);
+      await pg.exec(ncertClass10HindiASeed);
+
+      const counts = await pg.query(`
+        select
+          (select count(*)::integer from public.study_materials) as materials,
+          (select count(*)::integer from public.study_material_scopes) as scopes
+      `);
+      expect(counts.rows[0]).toEqual({ materials: 15, scopes: 17 });
+
+      const directory = await pg.query(`
+        select * from public.get_study_materials(
+          p_goal_slug => 'school',
+          p_board_slug => 'cbse',
+          p_class_slug => 'class-10',
+          p_subject_slug => 'hindi-a'
+        )
+      `);
+      expect(directory.rows).toHaveLength(15);
+      expect(Number(directory.rows[0].total_count)).toBe(15);
+
+      for (const [chapter, source] of [
+        ['surdas-ke-pad', 'jhks101.pdf'],
+        ['utsah', 'jhks104.pdf'],
+        ['at-nahin-rahi-hai', 'jhks104.pdf'],
+        ['yah-danturit-muskan', 'jhks105.pdf'],
+        ['fasal', 'jhks105.pdf'],
+        ['sanskriti', 'jhks112.pdf'],
+        ['mata-ka-aanchal', 'jhkr101.pdf'],
+        ['main-kyon-likhta-hoon', 'jhkr103.pdf'],
+      ]) {
+        const result = await pg.query(`
+          select * from public.get_study_materials(
+            p_goal_slug => 'school',
+            p_board_slug => 'cbse',
+            p_class_slug => 'class-10',
+            p_subject_slug => 'hindi-a',
+            p_chapter_slug => '${chapter}'
+          )
+        `);
+        expect(result.rows).toHaveLength(1);
+        expect(result.rows[0].source_url).toContain(source);
+      }
+
+      const entrance = await pg.query(`
+        select * from public.get_study_materials(
+          p_goal_slug => 'jee',
+          p_class_slug => 'class-10',
+          p_subject_slug => 'hindi-a'
         )
       `);
       expect(entrance.rows).toHaveLength(0);
