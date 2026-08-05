@@ -137,6 +137,7 @@ export function GlobalHeader({ crumbs = [], search = null, leading = null, width
     { label: "Find a course", to: "/explore" },
     { label: "Browse courses", to: "/browse" },
     { label: "Mock tests", to: "/tests" },
+    ...(RELEASE_CAPABILITIES.studyMaterials ? [{ label: "Study material", to: "/materials" }] : []),
     // The ranked, keyboard-friendly library search. Gated like its route: the
     // header must never advertise a page the release cannot honestly serve.
     ...(RELEASE_CAPABILITIES.universalSearch ? [{ label: "Search", to: "/search" }] : []),
