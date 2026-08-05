@@ -17,7 +17,7 @@ const manifestPaths = [
 describe("Unacademy NEET tenth-batch readiness", () => {
   it("pins the exact read-only baseline and protected JEE boundary", () => {
     const review = readJson(reviewPath);
-    expect(review.review_status).toBe("candidate_review_complete_owner_evidence_pending");
+    expect(review.review_status).toBe("production_import_complete");
     expect(review.proposed_decision_id).toBe("0fab6ecf-934f-46ae-bb8a-05cbd6b9cea1");
     expect(review.preflight).toMatchObject({
       playlists: 391,
@@ -82,5 +82,44 @@ describe("Unacademy NEET tenth-batch readiness", () => {
       "83fc258aa8a7637078149ac456377a865ba0647585d77f22f9db238581653351",
       "bf3bfdb3602eb79ea76ccb3400eb65864ff9175c0eeb94a8d52628129c2b9d03",
     ]);
+  });
+
+  it("records the exact create-only production result and both JEE boundaries", () => {
+    const review = readJson(reviewPath);
+    expect(review.production_execution).toMatchObject({
+      approved_decision_id: "0fab6ecf-934f-46ae-bb8a-05cbd6b9cea1",
+      final_catalogue: {
+        playlists: 394,
+        videos: 4578,
+        memberships: 4584,
+        chapters: 263,
+      },
+      delta: {
+        playlists: 3,
+        videos: 12,
+        memberships: 12,
+        chapters: 0,
+        videos_reused: 0,
+      },
+      protected_jee_after: {
+        courses: 82,
+        memberships: 1304,
+        fingerprint: "30eee4a4a6842e5beeb7c97083d7f812",
+      },
+      rolling_jee_after: {
+        courses: 212,
+        memberships: 2848,
+        fingerprint: "9eea2b44f0b19c08cc0907c57e091342",
+      },
+    });
+    expect(review.candidates.map((candidate) => candidate.production_import.course_id))
+      .toEqual([411, 412, 413]);
+    expect(review.candidates.every((candidate) => (
+      candidate.production_import.videos_reused === 0
+      && candidate.production_import.chapters_created === 0
+      && candidate.production_import.protected_jee_fingerprint_after
+        === "30eee4a4a6842e5beeb7c97083d7f812"
+    ))).toBe(true);
+    expect(review.production_execution.audit_note).toMatch(/no rows/i);
   });
 });

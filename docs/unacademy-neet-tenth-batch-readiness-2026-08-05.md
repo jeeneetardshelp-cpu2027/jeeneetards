@@ -47,15 +47,39 @@ is L1–L5. There are no quiz, DPP, recap, strategy, or promotional rows in thes
 three playlists. The first source uses the channel label `Mahendra S.`; the
 proposed evidence explicitly normalizes it to verified teacher Mahendra Singh.
 
-## Guarded future execution
+## Guarded production execution
 
-This readiness package does not authorize a write. After explicit owner approval,
-process the courses one at a time. Before each course: verify active PITR, take a
-fresh quiet-window baseline, refresh the official source snapshot, and run the
-anonymous mapped dry-run. Import create-only only when source ID reuse, video
-reuse, taxonomy review, teacher evidence review, and count shortfall are all
-zero. After each import, require the protected original-JEE fingerprint above to
-remain exact. Stop on any drift, reuse, source mutation, or other blocker.
+Owner approval `0fab6ecf-934f-46ae-bb8a-05cbd6b9cea1` was executed on 5 August
+2026, one course at a time. The signed-in production dashboard showed active
+seven-day PITR at every gate. Before every write, a fresh quiet-window baseline,
+official YouTube source snapshot, exact source/video reuse check, taxonomy and
+verified-teacher check, protected-JEE fingerprint, and anonymous mapped dry-run
+all passed.
+
+| Order | Course | Exact preflight | Dry-run | Delta | Verification |
+| ---: | --- | --- | --- | --- | --- |
+| 1 | `411` Thermal Properties of Matter | 391 / 4,566 / 4,572 / 263; protected JEE exact | 4 usable; 1 ok / 0 review / 0 blocked | +1 / +4 / +4 / +0; 0 reused | chapter 25; `neet`; class-11; source order exact |
+| 2 | `412` Electromagnetic Induction | 392 / 4,570 / 4,576 / 263; protected JEE exact | 3 usable; 1 ok / 0 review / 0 blocked | +1 / +3 / +3 / +0; 0 reused | chapter 13; `neet`; class-12; source order exact |
+| 3 | `413` Plant Growth and Development | 393 / 4,573 / 4,579 / 263; protected JEE exact | 5 usable; 1 ok / 0 review / 0 blocked | +1 / +5 / +5 / +0; 0 reused | chapter 120; `neet`; class-11; source order exact |
+
+## Final production verification
+
+- final catalogue: 394 playlists / 4,578 videos / 4,584 memberships / 263 chapters;
+- exact batch delta: +3 playlists / +12 videos / +12 memberships / +0 chapters;
+- importer reuse count: zero for every course;
+- protected JEE after every write: 82 courses / 1,304 memberships / fingerprint
+  `30eee4a4a6842e5beeb7c97083d7f812`;
+- rolling JEE remained 212 courses / 2,848 memberships / fingerprint
+  `9eea2b44f0b19c08cc0907c57e091342`;
+- all three courses carry exactly the reviewed `neet` goal, class scope,
+  subject, chapter assignment, teacher label, and official source order.
+
+The current production `playlist_import_audit` table did not contain rows for
+these three manifest request UUIDs. This did not affect the create-only row
+deltas or the exact postflight above, but it means the durable database audit
+trail for this batch is absent. The committed manifests, source hashes, dry-run
+evidence, and production state are the retained evidence; the audit-write gap
+should be investigated before relying on request replay for a later batch.
 
 ## Exact evidence package
 

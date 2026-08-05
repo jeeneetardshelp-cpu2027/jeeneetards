@@ -1,6 +1,6 @@
 {
   "reviewed_on": "2026-08-05",
-  "review_status": "candidate_review_complete_owner_evidence_pending",
+  "review_status": "production_import_complete",
   "proposed_decision_id": "0fab6ecf-934f-46ae-bb8a-05cbd6b9cea1",
   "channel": {
     "name": "Unacademy NEET",
@@ -28,6 +28,19 @@
     "rolling_jee_memberships": 2848,
     "rolling_jee_fingerprint": "9eea2b44f0b19c08cc0907c57e091342"
   },
+  "production_execution": {
+    "approved_decision_id": "0fab6ecf-934f-46ae-bb8a-05cbd6b9cea1",
+    "completed_at": "2026-08-05T13:13:30.708Z",
+    "pitr_retention_days": 7,
+    "pitr_restore_available_from_ist": "2026-07-30 00:01:35",
+    "pitr_latest_restore_at_ist": "2026-08-05 18:21:37",
+    "initial_catalogue": { "playlists": 391, "videos": 4566, "memberships": 4572, "chapters": 263 },
+    "final_catalogue": { "playlists": 394, "videos": 4578, "memberships": 4584, "chapters": 263 },
+    "delta": { "playlists": 3, "videos": 12, "memberships": 12, "chapters": 0, "videos_reused": 0 },
+    "protected_jee_after": { "courses": 82, "memberships": 1304, "fingerprint": "30eee4a4a6842e5beeb7c97083d7f812" },
+    "rolling_jee_after": { "courses": 212, "memberships": 2848, "fingerprint": "9eea2b44f0b19c08cc0907c57e091342" },
+    "audit_note": "The current production playlist_import_audit table has no rows for these three manifest request UUIDs; the exact source, manifest, dry-run, catalogue, taxonomy, and fingerprint evidence is retained here and in the committed manifests."
+  },
   "candidates": [
     {
       "order": 1,
@@ -51,7 +64,16 @@
         { "source_position": 3, "youtube_video_id": "Fl6WSiPMkXM", "title": "NEET: Thermal Properties of Matter L3 | Unacademy NEET | LIVE DAILY | NEET Physics | Mahendra S.", "duration_seconds": 3946, "embedding_status": "embeddable" },
         { "source_position": 4, "youtube_video_id": "3YwDg7UeTcQ", "title": "NEET: Thermal Properties of Matter L4 | Unacademy NEET | LIVE DAILY | NEET Physics | Mahendra S.", "duration_seconds": 2963, "embedding_status": "embeddable" }
       ],
-      "excluded": []
+      "excluded": [],
+      "production_import": {
+        "course_id": 411,
+        "verified_at": "2026-08-05T13:06:42.772Z",
+        "videos_added": 4,
+        "memberships_added": 4,
+        "videos_reused": 0,
+        "chapters_created": 0,
+        "protected_jee_fingerprint_after": "30eee4a4a6842e5beeb7c97083d7f812"
+      }
     },
     {
       "order": 2,
@@ -74,7 +96,16 @@
         { "source_position": 2, "youtube_video_id": "AhZitScgYi8", "title": "NEET: Electromagnetic Induction L2 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anu Gupta", "duration_seconds": 4064, "embedding_status": "embeddable" },
         { "source_position": 3, "youtube_video_id": "LIG9QqbcZ80", "title": "NEET: Electromagnetic Induction L3 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anu Gupta", "duration_seconds": 3716, "embedding_status": "embeddable" }
       ],
-      "excluded": []
+      "excluded": [],
+      "production_import": {
+        "course_id": 412,
+        "verified_at": "2026-08-05T13:10:01.959Z",
+        "videos_added": 3,
+        "memberships_added": 3,
+        "videos_reused": 0,
+        "chapters_created": 0,
+        "protected_jee_fingerprint_after": "30eee4a4a6842e5beeb7c97083d7f812"
+      }
     },
     {
       "order": 3,
@@ -99,7 +130,16 @@
         { "source_position": 4, "youtube_video_id": "HQ9VIpFSOAY", "title": "NEET: Plant Growth & Development - L 4 | Photoperiodism | Unacademy NEET | Pradeep Sir", "duration_seconds": 3606, "embedding_status": "embeddable" },
         { "source_position": 5, "youtube_video_id": "SKmzQz6DRqU", "title": "NEET: Plant Growth & Development - L 5 | Vernalisation | Unacademy NEET | Pradeep Sir", "duration_seconds": 2558, "embedding_status": "embeddable" }
       ],
-      "excluded": []
+      "excluded": [],
+      "production_import": {
+        "course_id": 413,
+        "verified_at": "2026-08-05T13:13:30.708Z",
+        "videos_added": 5,
+        "memberships_added": 5,
+        "videos_reused": 0,
+        "chapters_created": 0,
+        "protected_jee_fingerprint_after": "30eee4a4a6842e5beeb7c97083d7f812"
+      }
     }
   ],
   "deferred": [
