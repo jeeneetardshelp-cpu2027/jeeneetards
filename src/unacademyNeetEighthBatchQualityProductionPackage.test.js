@@ -312,13 +312,16 @@ describe("Unacademy NEET eighth-batch quality-review package", () => {
     expect(sql.match(/30eee4a4a6842e5beeb7c97083d7f812/g)).toHaveLength(2);
   });
 
-  it("pins the immutable hash and prepared-only handoff", () => {
+  it("pins the immutable hash and completed production handoff", () => {
     expect(createHash("sha256").update(sql, "utf8").digest("hex")).toBe(expectedHash);
     expect(readiness).toContain(`SHA-256: \`${expectedHash}\``);
-    expect(readiness).toContain("Prepared and locally rehearsed only");
+    expect(readiness).toContain("Applied successfully to production once");
     expect(readiness).toContain("11 -> 14");
+    expect(readiness).toContain("2026-08-05 14:33:28 +05:30");
+    expect(readiness).toContain("independent postflight passed");
     expect(readiness).toContain("30eee4a4a6842e5beeb7c97083d7f812");
-    expect(readiness).toContain("no production write or `release` push occurred");
+    expect(readiness).toContain("artifact must not be rerun");
+    expect(readiness).toContain("no `release` push was made");
   });
 
   it("rehearses all three reviews atomically on a production-shaped database", async () => {

@@ -2,10 +2,10 @@
 
 ## Status
 
-Prepared and locally rehearsed only. This quality-review artifact has not been
-applied to production and must not be applied without a separate owner approval
-naming its exact SHA-256. No content import, faculty-registry change, schema
-migration, restore, clone, frontend deployment, or `release` push is included.
+Applied successfully to production once under the owner's exact-hash approval.
+The guarded transaction and an independent read-only postflight both passed.
+No content import, faculty-registry change, schema migration, restore, clone,
+frontend deployment, or `release` push was included.
 
 ## Reviewed scope
 
@@ -46,11 +46,11 @@ The API role correctly cannot execute the privileged
 canonical v10 review capability inside the guarded postgres transaction; no
 permission was weakened for preparation.
 
-## Immutable prepared artifact
+## Immutable applied artifact
 
 - SQL: `docs/sql/unacademy_neet_eighth_batch_quality_review_2026-08-05.sql`;
 - SHA-256: `1f3e6d902eea43660977777b4b2843e4d737cfd5b0a9374d10ad7ee79555806e`;
-- production target only if separately approved: `kezelafqhgqrprpadmlf`;
+- production target: `kezelafqhgqrprpadmlf`;
 - expected transition: preserve three raw source titles, approve three
   canonical titles, identify the already-linked faculty, and append three
   immutable quality-review rows;
@@ -77,14 +77,26 @@ audit field and rejects duplicate quality-review rows before commit.
   left all three courses unreviewed;
 - static checks pin the owner decision, exact courses/source IDs, guarded write
   scope, preflight/postflight totals, protected fingerprint, and immutable hash;
-- full regression suite: 173 files / 1,634 tests passed;
+- full regression suite: 174 files / 1,638 tests passed after application;
 - ESLint and the production build passed; the production dependency audit
   reported zero vulnerabilities;
 - no production write or `release` push occurred while preparing this package.
 
-## Required approval wording
+## Production application evidence
 
-`Approve applying Unacademy NEET eighth-batch quality-review artifact SHA-256
-1f3e6d902eea43660977777b4b2843e4d737cfd5b0a9374d10ad7ee79555806e to
-production, after a fresh PITR and exact-baseline check; stop on any mismatch;
-no release push.`
+- owner approval matched the immutable SHA-256 above;
+- fresh PITR verification: seven-day retention active, with the latest restore
+  point available at `2026-08-05 14:33:28 +05:30` before the write;
+- fresh privileged preflight passed at 388 playlists / 4,539 videos / 4,545
+  memberships / 247 chapters / 92 chapter-class scopes / 32 teachers / 11
+  quality reviews;
+- the single transaction preserved the three exact source titles, set the
+  canonical titles to `Redox Reactions`, `Cell Organelles`, and `Molecular Basis
+  of Inheritance`, set title/faculty statuses to approved/identified, and added
+  exactly three immutable quality-review rows;
+- independent postflight passed at 388 playlists / 4,539 videos / 4,545
+  memberships / 247 chapters / 92 chapter-class scopes / 32 teachers / 14
+  quality reviews;
+- protected JEE remained exactly 82 courses / 1,304 memberships / fingerprint
+  `30eee4a4a6842e5beeb7c97083d7f812`;
+- the artifact must not be rerun; no `release` push was made.
