@@ -19,6 +19,10 @@ const ncertClass12PhysicsSeed = readFileSync(
   "docs/sql/study_materials_ncert_class12_physics_seed_2026-08-05.sql",
   "utf8",
 );
+const ncertClass11ChemistrySeed = readFileSync(
+  "docs/sql/study_materials_ncert_class11_chemistry_seed_2026-08-05.sql",
+  "utf8",
+);
 
 async function productionShapedDatabase() {
   const pg = new PGlite();
@@ -95,7 +99,22 @@ async function productionShapedDatabase() {
       (311, 1, 'Atoms', 'atoms', 28),
       (312, 1, 'Modern Physics', 'modern-physics', 29),
       (313, 1, 'Semiconductor Electronics', 'semiconductor-electronics', 30),
-      (200, 2, 'Redox Reactions', 'redox-reactions', 1);
+      (200, 2, 'Redox Reactions', 'redox-reactions', 1),
+      (201, 2, 'Introduction to Chemistry', 'introduction-to-chemistry', 2),
+      (202, 2, 'Mole Concept', 'mole-concept', 3),
+      (203, 2, 'Atomic Structure', 'atomic-structure', 4),
+      (204, 2, 'Periodic Table', 'periodic-table', 5),
+      (205, 2, 'Chemical Bonding and Molecular Structure', 'chemical-bonding-and-molecular-structure', 6),
+      (206, 2, 'Thermodynamics', 'thermodynamics', 7),
+      (207, 2, 'Thermochemistry', 'thermochemistry', 8),
+      (208, 2, 'Chemical Equilibrium', 'chemical-equilibrium', 9),
+      (209, 2, 'Ionic Equilibrium', 'ionic-equilibrium', 10),
+      (210, 2, 'Purification and Characterisation of Organic Compounds', 'purification-and-characterisation-of-organic-compounds', 11),
+      (211, 2, 'Some Basic Principles of Organic Chemistry', 'some-basic-principles-of-organic-chemistry', 12),
+      (212, 2, 'Structural Isomerism', 'structural-isomerism', 13),
+      (213, 2, 'Stereoisomerism', 'stereoisomerism', 14),
+      (214, 2, 'Organic Reaction Mechanisms', 'organic-reaction-mechanisms', 15),
+      (215, 2, 'Hydrocarbons', 'hydrocarbons', 16);
     insert into public.videos values (1000, 100);
 
     grant select on public.learning_goals, public.boards,
@@ -107,6 +126,55 @@ async function productionShapedDatabase() {
 }
 
 describe("study materials v1 local SQL rehearsal", () => {
+  it("loads the rationalised NCERT Class 11 Chemistry set across all curricula", async () => {
+    const pg = await productionShapedDatabase();
+    try {
+      await pg.exec(ncertClass11ChemistrySeed);
+      await pg.exec(ncertClass11ChemistrySeed);
+
+      const counts = await pg.query(`
+        select
+          (select count(*)::integer from public.study_materials) as materials,
+          (select count(*)::integer from public.study_material_scopes) as scopes
+      `);
+      expect(counts.rows[0]).toEqual({ materials: 9, scopes: 48 });
+
+      const class11 = await pg.query(`
+        select * from public.get_study_materials(
+          p_goal_slug => 'school',
+          p_board_slug => 'cbse',
+          p_class_slug => 'class-11',
+          p_subject_slug => 'chemistry'
+        )
+      `);
+      expect(class11.rows).toHaveLength(9);
+      expect(Number(class11.rows[0].total_count)).toBe(9);
+
+      for (const chapter of ['thermochemistry', 'ionic-equilibrium', 'organic-reaction-mechanisms']) {
+        const result = await pg.query(`
+          select * from public.get_study_materials(
+            p_goal_slug => 'jee',
+            p_class_slug => 'class-11',
+            p_subject_slug => 'chemistry',
+            p_chapter_slug => '${chapter}'
+          )
+        `);
+        expect(result.rows).toHaveLength(1);
+      }
+
+      const class12 = await pg.query(`
+        select * from public.get_study_materials(
+          p_goal_slug => 'neet',
+          p_class_slug => 'class-12',
+          p_subject_slug => 'chemistry'
+        )
+      `);
+      expect(class12.rows).toHaveLength(0);
+    } finally {
+      await pg.close();
+    }
+  }, 30_000);
+
   it("loads both complete NCERT Physics classes without cross-class leakage", async () => {
     const pg = await productionShapedDatabase();
     try {
