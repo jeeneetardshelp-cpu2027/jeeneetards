@@ -48,10 +48,12 @@ describe("Unacademy NEET eighth-batch faculty-link production package", () => {
     expect(sql.match(/30eee4a4a6842e5beeb7c97083d7f812/g)).toHaveLength(2);
   });
 
-  it("pins the immutable hash and prepared-only handoff", () => {
+  it("pins the immutable hash and completed production handoff", () => {
     expect(createHash("sha256").update(sql, "utf8").digest("hex")).toBe(expectedHash);
     expect(readiness).toContain(`SHA-256: \`${expectedHash}\``);
-    expect(readiness).toContain("Prepared and locally rehearsed only");
+    expect(readiness).toContain("Applied successfully to production project");
+    expect(readiness).toContain("05 Aug 2026, 02:17:04");
+    expect(readiness).toContain("140 course links / 11 quality reviews");
     expect(readiness).toContain("+3 `playlist_teachers` rows only");
     expect(readiness).toContain("143 course links");
     expect(readiness).toContain("30eee4a4a6842e5beeb7c97083d7f812");
