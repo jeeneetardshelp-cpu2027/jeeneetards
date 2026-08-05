@@ -120,6 +120,12 @@ describe("Unacademy NEET tenth-batch readiness", () => {
       && candidate.production_import.protected_jee_fingerprint_after
         === "30eee4a4a6842e5beeb7c97083d7f812"
     ))).toBe(true);
-    expect(review.production_execution.audit_note).toMatch(/no rows/i);
+    expect(review.production_execution).toMatchObject({
+      import_contract: "reviewed_single_chapter_legacy_merge_with_new_source_guard",
+      audit_snapshot_expected: false,
+      request_replay_expected: false,
+    });
+    expect(review.production_execution.audit_note).toMatch(/legacy import_playlist RPC/i);
+    expect(review.production_execution.audit_note).toMatch(/refuses an existing source/i);
   });
 });

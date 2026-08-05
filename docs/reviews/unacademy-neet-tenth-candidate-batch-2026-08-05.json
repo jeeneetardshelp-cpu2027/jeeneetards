@@ -39,7 +39,10 @@
     "delta": { "playlists": 3, "videos": 12, "memberships": 12, "chapters": 0, "videos_reused": 0 },
     "protected_jee_after": { "courses": 82, "memberships": 1304, "fingerprint": "30eee4a4a6842e5beeb7c97083d7f812" },
     "rolling_jee_after": { "courses": 212, "memberships": 2848, "fingerprint": "9eea2b44f0b19c08cc0907c57e091342" },
-    "audit_note": "The current production playlist_import_audit table has no rows for these three manifest request UUIDs; the exact source, manifest, dry-run, catalogue, taxonomy, and fingerprint evidence is retained here and in the committed manifests."
+    "import_contract": "reviewed_single_chapter_legacy_merge_with_new_source_guard",
+    "audit_snapshot_expected": false,
+    "request_replay_expected": false,
+    "audit_note": "These reviewed single-chapter lesson-order imports use the legacy import_playlist RPC, so playlist_import_audit rows and request replay are not part of this path. Each write had a zero-source-reuse preflight, zero video reuse, an exact catalogue delta, and exact postflight verification; the committed manifests and hashes retain the review evidence. The importer now exposes this contract and refuses an existing source before any future write."
   },
   "candidates": [
     {

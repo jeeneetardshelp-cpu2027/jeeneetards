@@ -74,12 +74,18 @@ all passed.
 - all three courses carry exactly the reviewed `neet` goal, class scope,
   subject, chapter assignment, teacher label, and official source order.
 
-The current production `playlist_import_audit` table did not contain rows for
-these three manifest request UUIDs. This did not affect the create-only row
-deltas or the exact postflight above, but it means the durable database audit
-trail for this batch is absent. The committed manifests, source hashes, dry-run
-evidence, and production state are the retained evidence; the audit-write gap
-should be investigated before relying on request replay for a later batch.
+These reviewed single-chapter lesson-order imports use the legacy
+`import_playlist` RPC. That path does not write `playlist_import_audit` rows and
+does not support request replay, so the absence of audit rows is expected rather
+than a failed v12 audit write. Each course had zero source reuse before writing,
+zero video reuse, an exact catalogue delta, and exact postflight verification.
+The committed manifests and source hashes retain the review evidence.
+
+The importer now exposes this legacy contract in dry-run output, blocks an
+existing source before a reviewed single-chapter write, and stops if the RPC
+ever reports an unexpected reuse. This is a client-side, quiet-window guard;
+unlike the v12 multi-chapter RPC, it is not an atomic database create-only or
+audit-backed replay guarantee.
 
 ## Exact evidence package
 
