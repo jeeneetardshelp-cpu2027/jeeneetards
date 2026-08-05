@@ -15,6 +15,10 @@ const ncertClass10MathematicsSeed = readFileSync(
   "docs/sql/study_materials_ncert_class10_mathematics_seed_2026-08-05.sql",
   "utf8",
 );
+const ncertClass11MathematicsSeed = readFileSync(
+  "docs/sql/study_materials_ncert_class11_mathematics_seed_2026-08-05.sql",
+  "utf8",
+);
 const ncertClass12MathematicsSeed = readFileSync(
   "docs/sql/study_materials_ncert_class12_mathematics_seed_2026-08-05.sql",
   "utf8",
@@ -211,7 +215,16 @@ async function productionShapedDatabase() {
       (523, 4, 'Definite Integration', 'definite-integration', 24),
       (524, 4, 'Application of Integrals', 'application-of-integrals', 25),
       (525, 4, 'Differential Equations', 'differential-equations', 26),
-      (526, 4, 'Vectors and Three Dimensional Geometry', 'vectors-and-three-dimensional-geometry', 27);
+      (526, 4, 'Vectors and Three Dimensional Geometry', 'vectors-and-three-dimensional-geometry', 27),
+      (527, 4, 'Trigonometry', 'trigonometry', 28),
+      (528, 4, 'Complex Numbers', 'complex-numbers', 29),
+      (529, 4, 'Sequences and Series', 'sequences-and-series', 30),
+      (530, 4, 'Permutations and Combinations', 'permutations-and-combinations', 31),
+      (531, 4, 'Binomial Theorem', 'binomial-theorem', 32),
+      (532, 4, 'Straight Lines', 'straight-lines', 33),
+      (533, 4, 'Parabola', 'parabola', 34),
+      (534, 4, 'Ellipse', 'ellipse', 35),
+      (535, 4, 'Hyperbola', 'hyperbola', 36);
     select setval(
       pg_get_serial_sequence('public.chapters', 'id'),
       (select max(id) from public.chapters),
@@ -228,6 +241,69 @@ async function productionShapedDatabase() {
 }
 
 describe("study materials v1 local SQL rehearsal", () => {
+  it("loads current NCERT Class 11 Mathematics across JEE and CBSE lecture taxonomy", async () => {
+    const pg = await productionShapedDatabase();
+    try {
+      await pg.exec(ncertClass11MathematicsSeed);
+      await pg.exec(ncertClass11MathematicsSeed);
+
+      const counts = await pg.query(`
+        select
+          (select count(*)::integer from public.study_materials) as materials,
+          (select count(*)::integer from public.study_material_scopes) as scopes
+      `);
+      expect(counts.rows[0]).toEqual({ materials: 14, scopes: 38 });
+
+      for (const [goal, board] of [["jee", null], ["school", "cbse"]]) {
+        const directory = await pg.query(`
+          select * from public.get_study_materials(
+            p_goal_slug => '${goal}',
+            p_board_slug => ${board ? `'${board}'` : "null"},
+            p_class_slug => 'class-11',
+            p_subject_slug => 'mathematics'
+          )
+        `);
+        expect(directory.rows).toHaveLength(14);
+        expect(Number(directory.rows[0].total_count)).toBe(14);
+      }
+
+      for (const chapter of [
+        "sets",
+        "trigonometry",
+        "complex-numbers",
+        "quadratic-equations",
+        "linear-inequalities",
+        "circles",
+        "parabola",
+        "ellipse",
+        "hyperbola",
+        "limits-continuity-and-differentiability",
+        "differentiation",
+      ]) {
+        const result = await pg.query(`
+          select * from public.get_study_materials(
+            p_goal_slug => 'jee',
+            p_class_slug => 'class-11',
+            p_subject_slug => 'mathematics',
+            p_chapter_slug => '${chapter}'
+          )
+        `);
+        expect(result.rows).toHaveLength(1);
+      }
+
+      const neet = await pg.query(`
+        select * from public.get_study_materials(
+          p_goal_slug => 'neet',
+          p_class_slug => 'class-11',
+          p_subject_slug => 'mathematics'
+        )
+      `);
+      expect(neet.rows).toHaveLength(0);
+    } finally {
+      await pg.close();
+    }
+  }, 30_000);
+
   it("loads current NCERT Class 12 Mathematics across JEE and CBSE lecture taxonomy", async () => {
     const pg = await productionShapedDatabase();
     try {
