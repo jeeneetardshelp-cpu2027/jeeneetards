@@ -27,6 +27,10 @@ const ncertClass12ChemistrySeed = readFileSync(
   "docs/sql/study_materials_ncert_class12_chemistry_seed_2026-08-05.sql",
   "utf8",
 );
+const ncertClass11BiologySeed = readFileSync(
+  "docs/sql/study_materials_ncert_class11_biology_seed_2026-08-05.sql",
+  "utf8",
+);
 
 async function productionShapedDatabase() {
   const pg = new PGlite();
@@ -71,7 +75,8 @@ async function productionShapedDatabase() {
       (11, 'Class 11', 'class-11', 2),
       (12, 'Class 12', 'class-12', 3);
     insert into public.subjects values
-      (1, 'Physics', 'physics', 1), (2, 'Chemistry', 'chemistry', 2);
+      (1, 'Physics', 'physics', 1), (2, 'Chemistry', 'chemistry', 2),
+      (3, 'Biology', 'biology', 3);
     insert into public.chapters values
       (100, 1, 'Motion in a Straight Line', 'motion-in-a-straight-line', 1),
       (101, 1, 'Kinematics', 'kinematics', 2),
@@ -129,7 +134,26 @@ async function productionShapedDatabase() {
       (223, 2, 'Carboxylic Acids and Derivatives', 'carboxylic-acids-and-derivatives', 24),
       (224, 2, 'Organic Compounds Containing Nitrogen', 'organic-compounds-containing-nitrogen', 25),
       (225, 2, 'Amines', 'amines', 26),
-      (226, 2, 'Biomolecules', 'biomolecules', 27);
+      (226, 2, 'Biomolecules', 'biomolecules', 27),
+      (400, 3, 'The Living World', 'the-living-world', 1),
+      (401, 3, 'Biological Classification', 'biological-classification', 2),
+      (402, 3, 'Plant Kingdom', 'plant-kingdom', 3),
+      (403, 3, 'Animal Kingdom', 'animal-kingdom', 4),
+      (404, 3, 'Morphology of Flowering Plants', 'morphology-of-flowering-plants', 5),
+      (405, 3, 'Anatomy of Flowering Plants', 'anatomy-of-flowering-plants', 6),
+      (406, 3, 'Structural Organisation in Animals', 'structural-organisation-in-animals', 7),
+      (407, 3, 'Cell: The Unit of Life', 'cell-the-unit-of-life', 8),
+      (408, 3, 'Biomolecules', 'biomolecules', 9),
+      (409, 3, 'Cell Cycle and Cell Division', 'cell-cycle-and-cell-division', 10),
+      (410, 3, 'Photosynthesis in Higher Plants', 'photosynthesis-in-higher-plants', 11),
+      (411, 3, 'Respiration in Plants', 'respiration-in-plants', 12),
+      (412, 3, 'Plant Growth and Development', 'plant-growth-and-development', 13),
+      (413, 3, 'Breathing and Exchange of Gases', 'breathing-and-exchange-of-gases', 14),
+      (414, 3, 'Body Fluids and Circulation', 'body-fluids-and-circulation', 15),
+      (415, 3, 'Excretory Products and Their Elimination', 'excretory-products-and-their-elimination', 16),
+      (416, 3, 'Locomotion and Movement', 'locomotion-and-movement', 17),
+      (417, 3, 'Neural Control and Coordination', 'neural-control-and-coordination', 18),
+      (418, 3, 'Chemical Coordination and Integration', 'chemical-coordination-and-integration', 19);
     insert into public.videos values (1000, 100);
 
     grant select on public.learning_goals, public.boards,
@@ -141,6 +165,60 @@ async function productionShapedDatabase() {
 }
 
 describe("study materials v1 local SQL rehearsal", () => {
+  it("loads the rationalised NCERT Class 11 Biology set for NEET and CBSE", async () => {
+    const pg = await productionShapedDatabase();
+    try {
+      await pg.exec(ncertClass11BiologySeed);
+      await pg.exec(ncertClass11BiologySeed);
+
+      const counts = await pg.query(`
+        select
+          (select count(*)::integer from public.study_materials) as materials,
+          (select count(*)::integer from public.study_material_scopes) as scopes
+      `);
+      expect(counts.rows[0]).toEqual({ materials: 19, scopes: 38 });
+
+      const class11 = await pg.query(`
+        select * from public.get_study_materials(
+          p_goal_slug => 'school',
+          p_board_slug => 'cbse',
+          p_class_slug => 'class-11',
+          p_subject_slug => 'biology'
+        )
+      `);
+      expect(class11.rows).toHaveLength(19);
+      expect(Number(class11.rows[0].total_count)).toBe(19);
+
+      for (const chapter of [
+        'the-living-world',
+        'cell-the-unit-of-life',
+        'photosynthesis-in-higher-plants',
+        'chemical-coordination-and-integration',
+      ]) {
+        const result = await pg.query(`
+          select * from public.get_study_materials(
+            p_goal_slug => 'neet',
+            p_class_slug => 'class-11',
+            p_subject_slug => 'biology',
+            p_chapter_slug => '${chapter}'
+          )
+        `);
+        expect(result.rows).toHaveLength(1);
+      }
+
+      const jee = await pg.query(`
+        select * from public.get_study_materials(
+          p_goal_slug => 'jee',
+          p_class_slug => 'class-11',
+          p_subject_slug => 'biology'
+        )
+      `);
+      expect(jee.rows).toHaveLength(0);
+    } finally {
+      await pg.close();
+    }
+  }, 30_000);
+
   it("loads the rationalised NCERT Class 12 Chemistry set across all curricula", async () => {
     const pg = await productionShapedDatabase();
     try {
