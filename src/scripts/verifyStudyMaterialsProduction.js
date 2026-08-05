@@ -78,6 +78,13 @@ const CLASS_10_MATHEMATICS_PAGES = new Map([
   ["jemh110", 10], ["jemh111", 7], ["jemh112", 10],
   ["jemh113", 31], ["jemh114", 16],
 ]);
+const CLASS_11_MATHEMATICS_PAGES = new Map([
+  ["kemh101", 23], ["kemh102", 19], ["kemh103", 33],
+  ["kemh104", 13], ["kemh105", 11], ["kemh106", 26],
+  ["kemh107", 9], ["kemh108", 16], ["kemh109", 25],
+  ["kemh110", 32], ["kemh111", 9], ["kemh112", 40],
+  ["kemh113", 32], ["kemh114", 25],
+]);
 const CLASS_12_MATHEMATICS_PAGES = new Map([
   ["lemh101", 17], ["lemh102", 16], ["lemh103", 42],
   ["lemh104", 28], ["lemh105", 43], ["lemh106", 40],
@@ -94,6 +101,7 @@ const EXPECTED_PAGES = new Map([
   ...CLASS_12_BIOLOGY_PAGES,
   ...CLASS_10_SCIENCE_PAGES,
   ...CLASS_10_MATHEMATICS_PAGES,
+  ...CLASS_11_MATHEMATICS_PAGES,
   ...CLASS_12_MATHEMATICS_PAGES,
 ]);
 const EXPECTED_URLS = [...EXPECTED_PAGES.keys()].map(
@@ -132,10 +140,10 @@ const { data: batch, error: materialError } = await db
   .in("source_url", EXPECTED_URLS)
   .order("source_url");
 if (materialError) throw materialError;
-record("one hundred nineteen approved NCERT chapters", batch?.length === 119, `rows=${batch?.length ?? 0}`);
+record("one hundred thirty-three approved NCERT chapters", batch?.length === 133, `rows=${batch?.length ?? 0}`);
 
 const badMetadata = (batch ?? []).filter((row) => {
-  const code = row.source_url.match(/\/((?:keph|leph|kech|lech|kebo|lebo|jesc|jemh|lemh)\d{3})[.]pdf$/)?.[1];
+  const code = row.source_url.match(/\/((?:keph|leph|kech|lech|kebo|lebo|jesc|jemh|kemh|lemh)\d{3})[.]pdf$/)?.[1];
   return row.source_name !== "NCERT"
     || row.material_type !== "full_notes"
     || row.rights_status !== "official_source"
@@ -150,7 +158,7 @@ const { data: scopes, error: scopeError } = await db
   .select("id, material_id")
   .in("material_id", materialIds);
 if (scopeError) throw scopeError;
-record("three hundred twelve public curriculum scopes", scopes?.length === 312, `rows=${scopes?.length ?? 0}`);
+record("three hundred fifty public curriculum scopes", scopes?.length === 350, `rows=${scopes?.length ?? 0}`);
 
 const physics11 = { stage: "class-11", subject: "physics" };
 const physics12 = { stage: "class-12", subject: "physics" };
@@ -162,6 +170,7 @@ const chemistry10 = { stage: "class-10", subject: "chemistry" };
 const biology10 = { stage: "class-10", subject: "biology" };
 const physics10 = { stage: "class-10", subject: "physics" };
 const mathematics10 = { stage: "class-10", subject: "mathematics" };
+const mathematics11 = { stage: "class-11", subject: "mathematics" };
 const mathematics12 = { stage: "class-12", subject: "mathematics" };
 for (const [label, filters, expected] of [
   ["JEE Class 11 Physics directory", { ...physics11, goal: "jee" }, 14],
@@ -184,6 +193,8 @@ for (const [label, filters, expected] of [
   ["CBSE Class 10 Biology directory", { ...biology10, goal: "school", board: "cbse" }, 5],
   ["CBSE Class 10 Physics directory", { ...physics10, goal: "school", board: "cbse" }, 4],
   ["CBSE Class 10 Mathematics directory", { ...mathematics10, goal: "school", board: "cbse" }, 14],
+  ["JEE Class 11 Mathematics directory", { ...mathematics11, goal: "jee" }, 14],
+  ["CBSE Class 11 Mathematics directory", { ...mathematics11, goal: "school", board: "cbse" }, 14],
   ["JEE Class 12 Mathematics directory", { ...mathematics12, goal: "jee" }, 13],
   ["CBSE Class 12 Mathematics directory", { ...mathematics12, goal: "school", board: "cbse" }, 13],
 ]) {
@@ -312,6 +323,31 @@ for (const [chapter, expected] of [
 ]) {
   const rows = await materials({ ...mathematics12, goal: "jee", chapter });
   record(`${chapter} Class 12 Mathematics mapping`, rows.length === expected, `rows=${rows.length}`);
+}
+
+for (const chapter of [
+  "sets",
+  "relations-and-functions",
+  "trigonometry",
+  "complex-numbers",
+  "quadratic-equations",
+  "linear-inequalities",
+  "permutations-and-combinations",
+  "binomial-theorem",
+  "sequences-and-series",
+  "straight-lines",
+  "circles",
+  "parabola",
+  "ellipse",
+  "hyperbola",
+  "vectors-and-three-dimensional-geometry",
+  "limits-continuity-and-differentiability",
+  "differentiation",
+  "statistics",
+  "probability",
+]) {
+  const rows = await materials({ ...mathematics11, goal: "jee", chapter });
+  record(`${chapter} Class 11 Mathematics mapping`, rows.length === 1, `rows=${rows.length}`);
 }
 
 for (const [chapter, expected] of [
@@ -451,6 +487,19 @@ const { data: mathematics12Curriculum, error: mathematics12CurriculumError } = a
 if (mathematics12CurriculumError) throw mathematics12CurriculumError;
 const mathematics12Chapters = (mathematics12Curriculum ?? []).filter((row) => row.level === "chapter");
 record("Class 12 Mathematics material filter exposes fifteen chapter nodes", mathematics12Chapters.length === 15, `rows=${mathematics12Chapters.length}`);
+
+const { data: mathematics11Curriculum, error: mathematics11CurriculumError } = await db.rpc(
+  "get_study_material_curriculum",
+  {
+    p_goal_slug: "school",
+    p_board_slug: "cbse",
+    p_class_slug: "class-11",
+    p_subject_slug: "mathematics",
+  },
+);
+if (mathematics11CurriculumError) throw mathematics11CurriculumError;
+const mathematics11Chapters = (mathematics11Curriculum ?? []).filter((row) => row.level === "chapter");
+record("Class 11 Mathematics material filter exposes nineteen chapter nodes", mathematics11Chapters.length === 19, `rows=${mathematics11Chapters.length}`);
 
 for (const [subject, expected] of [
   ["chemistry", 4], ["biology", 5], ["physics", 4], ["mathematics", 14],
