@@ -30,12 +30,14 @@ describe("repository onboarding contract", () => {
       comparison: true,
       facultyRegistry: true,
       boardClassification: true,
+      studyMaterials: true,
     });
     for (const label of [
       "Universal search",
       "Course comparison",
       "Faculty profiles and filtering",
       "School-board classification",
+      "Study-material library",
     ]) {
       expect(readme).toMatch(new RegExp(`\\| ${label} \\| Enabled \\|`));
     }

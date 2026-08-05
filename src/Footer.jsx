@@ -23,6 +23,9 @@ const EXPLORE = [
   { label: "Find a course", to: "/explore" },
   { label: "Browse courses", to: "/browse" },
   { label: "Mock tests", to: "/tests" },
+  ...(RELEASE_CAPABILITIES.studyMaterials
+    ? [{ label: "Study material", to: "/materials" }]
+    : []),
   ...(RELEASE_CAPABILITIES.universalSearch
     ? [{ label: "Search the library", to: "/search" }]
     : []),

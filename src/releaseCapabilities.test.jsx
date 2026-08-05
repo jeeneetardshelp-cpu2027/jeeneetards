@@ -20,6 +20,7 @@ describe("current production capability contract", () => {
       comparison: true,
       facultyRegistry: true,
       boardClassification: true,
+      studyMaterials: true,
     });
     expect(RELEASE_FEATURES).toEqual({
       studentAccounts: true,

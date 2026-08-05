@@ -15,6 +15,7 @@ import { readReturnUrl, rememberReturn, resolveBack } from "./returnTo.js";
 import CourseRating from "./CourseRating.jsx";
 import VideoReport from "./VideoReport.jsx";
 import CourseOverview from "./CourseOverview.jsx";
+import StudyMaterialPanel from "./StudyMaterialPanel.jsx";
 import { applyPageMetadata, useCourseMetadata, useStructuredData } from "./PageMetadata.jsx";
 import { breadcrumbListSchema, courseSchema, videoObjectSchema } from "./structuredData.js";
 import { metadataForCourse } from "./pageMetadata.js";
@@ -466,6 +467,13 @@ export default function CourseVideoPage() {
           playlistId={playlistId}
           initialAverage={Number(course.averageRating ?? 0)}
           initialCount={course.ratingsCount ?? 0}
+        />
+      }
+      materialsPanel={
+        <StudyMaterialPanel
+          chapterId={activeLesson.chapter?.id ?? scope.chapter?.id}
+          chapterName={activeLesson.chapter?.name ?? scope.chapter?.name}
+          videoId={activeLesson.id}
         />
       }
       reportSlot={
