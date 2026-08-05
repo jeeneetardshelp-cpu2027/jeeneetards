@@ -15,6 +15,10 @@ const ncertClass11PhysicsSeed = readFileSync(
   "docs/sql/study_materials_ncert_class11_physics_seed_2026-08-05.sql",
   "utf8",
 );
+const ncertClass12PhysicsSeed = readFileSync(
+  "docs/sql/study_materials_ncert_class12_physics_seed_2026-08-05.sql",
+  "utf8",
+);
 
 async function productionShapedDatabase() {
   const pg = new PGlite();
@@ -77,6 +81,20 @@ async function productionShapedDatabase() {
       (23, 1, 'Thermodynamics', 'thermodynamics', 14),
       (275, 1, 'Kinetic Theory of Gases', 'kinetic-theory-of-gases', 15),
       (84, 1, 'Oscillations and Waves', 'oscillations-and-waves', 16),
+      (300, 1, 'Electrostatics', 'electrostatics', 17),
+      (301, 1, 'Capacitance', 'capacitance', 18),
+      (302, 1, 'Current Electricity', 'current-electricity', 19),
+      (303, 1, 'Moving Charges and Magnetism', 'moving-charges-and-magnetism', 20),
+      (304, 1, 'Magnetism and Matter', 'magnetism-and-matter', 21),
+      (305, 1, 'Electromagnetic Induction', 'electromagnetic-induction', 22),
+      (306, 1, 'Alternating Current', 'alternating-current', 23),
+      (307, 1, 'Electromagnetic Waves', 'electromagnetic-waves', 24),
+      (308, 1, 'Ray Optics and Optical Instruments', 'ray-optics-and-optical-instruments', 25),
+      (309, 1, 'Wave Optics', 'wave-optics', 26),
+      (310, 1, 'Dual Nature of Radiation and Matter', 'dual-nature-of-radiation-and-matter', 27),
+      (311, 1, 'Atoms', 'atoms', 28),
+      (312, 1, 'Modern Physics', 'modern-physics', 29),
+      (313, 1, 'Semiconductor Electronics', 'semiconductor-electronics', 30),
       (200, 2, 'Redox Reactions', 'redox-reactions', 1);
     insert into public.videos values (1000, 100);
 
@@ -89,6 +107,64 @@ async function productionShapedDatabase() {
 }
 
 describe("study materials v1 local SQL rehearsal", () => {
+  it("loads both complete NCERT Physics classes without cross-class leakage", async () => {
+    const pg = await productionShapedDatabase();
+    try {
+      await pg.exec(ncertClass11PhysicsSeed);
+      await pg.exec(ncertClass12PhysicsSeed);
+      await pg.exec(ncertClass12PhysicsSeed);
+
+      const counts = await pg.query(`
+        select
+          (select count(*)::integer from public.study_materials) as materials,
+          (select count(*)::integer from public.study_material_scopes) as scopes
+      `);
+      expect(counts.rows[0]).toEqual({ materials: 28, scopes: 105 });
+
+      const class12 = await pg.query(`
+        select * from public.get_study_materials(
+          p_goal_slug => 'school',
+          p_board_slug => 'cbse',
+          p_class_slug => 'class-12',
+          p_subject_slug => 'physics'
+        )
+      `);
+      expect(class12.rows).toHaveLength(14);
+      expect(Number(class12.rows[0].total_count)).toBe(14);
+
+      const electrostatics = await pg.query(`
+        select * from public.get_study_materials(
+          p_goal_slug => 'jee',
+          p_class_slug => 'class-12',
+          p_subject_slug => 'physics',
+          p_chapter_slug => 'electrostatics'
+        )
+      `);
+      expect(electrostatics.rows).toHaveLength(2);
+
+      const modernPhysics = await pg.query(`
+        select * from public.get_study_materials(
+          p_goal_slug => 'neet',
+          p_class_slug => 'class-12',
+          p_subject_slug => 'physics',
+          p_chapter_slug => 'modern-physics'
+        )
+      `);
+      expect(modernPhysics.rows).toHaveLength(4);
+
+      const class11 = await pg.query(`
+        select * from public.get_study_materials(
+          p_goal_slug => 'jee',
+          p_class_slug => 'class-11',
+          p_subject_slug => 'physics'
+        )
+      `);
+      expect(class11.rows).toHaveLength(14);
+    } finally {
+      await pg.close();
+    }
+  }, 30_000);
+
   it("loads the complete NCERT Class 11 Physics set once across all three curricula", async () => {
     const pg = await productionShapedDatabase();
     try {
