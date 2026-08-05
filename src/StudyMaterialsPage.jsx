@@ -2,8 +2,7 @@ import { BookOpen, FileText, RefreshCw, SearchX } from "lucide-react";
 import { useSearchParams } from "react-router";
 import { Page } from "./AppShell.jsx";
 import StudyMaterialCard from "./StudyMaterialCard.jsx";
-import { CLASS_LEVELS_BY_GOAL } from "./classLevels.js";
-import { useBoards, useClassLevels, useGoalCatalog, useLearningGoals } from "./useExplore.js";
+import { useStudyMaterialCatalog } from "./useStudyMaterialCatalog.js";
 import { STUDY_MATERIAL_TYPES, useStudyMaterials } from "./useStudyMaterials.js";
 
 const FALLBACK_GOALS = [
@@ -101,15 +100,14 @@ export default function StudyMaterialsPage() {
   const type = params.get("type") ?? "";
   const isSchool = goal === "school";
 
-  const { goals } = useLearningGoals();
-  const { boards } = useBoards(isSchool);
-  const { classLevels } = useClassLevels();
-  const catalog = useGoalCatalog({ goal, stage: stage || null, subject: subject || null });
-  const subjectNode = catalog.subjects.find((item) => item.slug === subject);
-  const chapters = subjectNode ? (catalog.chaptersBySubject[subjectNode.id] ?? []) : [];
-  const validClasses = new Set(CLASS_LEVELS_BY_GOAL[goal] ?? classLevels.map((item) => item.slug));
-  const shownClasses = classLevels.filter((item) => validClasses.has(item.slug));
-  const shownGoals = goals.length > 0 ? goals : FALLBACK_GOALS;
+  const catalog = useStudyMaterialCatalog({
+    goal: goal || null,
+    board: isSchool ? board || null : null,
+    stage: stage || null,
+    subject: subject || null,
+  });
+  const catalogGoals = new Map(catalog.goals.map((item) => [item.slug, item]));
+  const shownGoals = FALLBACK_GOALS.map((item) => catalogGoals.get(item.slug) ?? item);
 
   const materials = useStudyMaterials({
     goal: goal || null,
@@ -153,12 +151,12 @@ export default function StudyMaterialsPage() {
           {isSchool && (
             <Filter label="Board" value={board} onChange={(event) => update("board", event.target.value, ["class", "subject", "chapter", "chapterId"])}>
               <option value="">All boards</option>
-              {boards.map((item) => <option key={item.id} value={item.slug}>{item.name}</option>)}
+              {catalog.boards.map((item) => <option key={item.id} value={item.slug}>{item.name}</option>)}
             </Filter>
           )}
-          <Filter label="Class" value={stage} disabled={!goal} onChange={(event) => update("class", event.target.value, ["subject", "chapter", "chapterId"])}>
+          <Filter label="Class" value={stage} disabled={!goal || catalog.loading} onChange={(event) => update("class", event.target.value, ["subject", "chapter", "chapterId"])}>
             <option value="">All classes</option>
-            {shownClasses.map((item) => <option key={item.id} value={item.slug}>{item.name}</option>)}
+            {catalog.classes.map((item) => <option key={item.id} value={item.slug}>{item.name}</option>)}
           </Filter>
           <Filter label="Subject" value={subject} disabled={!goal || catalog.loading} onChange={(event) => update("subject", event.target.value, ["chapter", "chapterId"])}>
             <option value="">All subjects</option>
@@ -166,9 +164,13 @@ export default function StudyMaterialsPage() {
           </Filter>
           <Filter label="Chapter" value={chapter} disabled={!subject || catalog.loading} onChange={(event) => update("chapter", event.target.value, ["chapterId"])}>
             <option value="">All chapters</option>
-            {chapters.map((item) => <option key={item.id} value={item.slug}>{item.name}</option>)}
+            {catalog.chapters.map((item) => <option key={item.id} value={item.slug}>{item.name}</option>)}
           </Filter>
         </div>
+
+        {catalog.error && (
+          <p role="alert" className="mt-4 text-sm text-danger">{catalog.error}</p>
+        )}
 
         <fieldset className="mt-5 border-t border-hairline pt-5">
           <legend className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-3">Material type</legend>
