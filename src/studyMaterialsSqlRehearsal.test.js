@@ -31,6 +31,10 @@ const ncertClass11BiologySeed = readFileSync(
   "docs/sql/study_materials_ncert_class11_biology_seed_2026-08-05.sql",
   "utf8",
 );
+const ncertClass12BiologySeed = readFileSync(
+  "docs/sql/study_materials_ncert_class12_biology_seed_2026-08-05.sql",
+  "utf8",
+);
 
 async function productionShapedDatabase() {
   const pg = new PGlite();
@@ -153,7 +157,20 @@ async function productionShapedDatabase() {
       (415, 3, 'Excretory Products and Their Elimination', 'excretory-products-and-their-elimination', 16),
       (416, 3, 'Locomotion and Movement', 'locomotion-and-movement', 17),
       (417, 3, 'Neural Control and Coordination', 'neural-control-and-coordination', 18),
-      (418, 3, 'Chemical Coordination and Integration', 'chemical-coordination-and-integration', 19);
+      (418, 3, 'Chemical Coordination and Integration', 'chemical-coordination-and-integration', 19),
+      (419, 3, 'Sexual Reproduction in Flowering Plants', 'sexual-reproduction-in-flowering-plants', 20),
+      (420, 3, 'Human Reproduction', 'human-reproduction', 21),
+      (421, 3, 'Reproductive Health', 'reproductive-health', 22),
+      (422, 3, 'Principles of Inheritance and Variation', 'principles-of-inheritance-and-variation', 23),
+      (423, 3, 'Molecular Basis of Inheritance', 'molecular-basis-of-inheritance', 24),
+      (424, 3, 'Evolution', 'evolution', 25),
+      (425, 3, 'Human Health and Disease', 'human-health-and-disease', 26),
+      (426, 3, 'Microbes in Human Welfare', 'microbes-in-human-welfare', 27),
+      (427, 3, 'Biotechnology: Principles and Processes', 'biotechnology-principles-and-processes', 28),
+      (428, 3, 'Biotechnology and its Applications', 'biotechnology-and-its-applications', 29),
+      (429, 3, 'Organisms and Populations', 'organisms-and-populations', 30),
+      (430, 3, 'Ecosystem', 'ecosystem', 31),
+      (431, 3, 'Biodiversity and Conservation', 'biodiversity-and-conservation', 32);
     insert into public.videos values (1000, 100);
 
     grant select on public.learning_goals, public.boards,
@@ -165,6 +182,60 @@ async function productionShapedDatabase() {
 }
 
 describe("study materials v1 local SQL rehearsal", () => {
+  it("loads the rationalised NCERT Class 12 Biology set for NEET and CBSE", async () => {
+    const pg = await productionShapedDatabase();
+    try {
+      await pg.exec(ncertClass12BiologySeed);
+      await pg.exec(ncertClass12BiologySeed);
+
+      const counts = await pg.query(`
+        select
+          (select count(*)::integer from public.study_materials) as materials,
+          (select count(*)::integer from public.study_material_scopes) as scopes
+      `);
+      expect(counts.rows[0]).toEqual({ materials: 13, scopes: 26 });
+
+      const class12 = await pg.query(`
+        select * from public.get_study_materials(
+          p_goal_slug => 'school',
+          p_board_slug => 'cbse',
+          p_class_slug => 'class-12',
+          p_subject_slug => 'biology'
+        )
+      `);
+      expect(class12.rows).toHaveLength(13);
+      expect(Number(class12.rows[0].total_count)).toBe(13);
+
+      for (const chapter of [
+        'sexual-reproduction-in-flowering-plants',
+        'molecular-basis-of-inheritance',
+        'biotechnology-principles-and-processes',
+        'biodiversity-and-conservation',
+      ]) {
+        const result = await pg.query(`
+          select * from public.get_study_materials(
+            p_goal_slug => 'neet',
+            p_class_slug => 'class-12',
+            p_subject_slug => 'biology',
+            p_chapter_slug => '${chapter}'
+          )
+        `);
+        expect(result.rows).toHaveLength(1);
+      }
+
+      const jee = await pg.query(`
+        select * from public.get_study_materials(
+          p_goal_slug => 'jee',
+          p_class_slug => 'class-12',
+          p_subject_slug => 'biology'
+        )
+      `);
+      expect(jee.rows).toHaveLength(0);
+    } finally {
+      await pg.close();
+    }
+  }, 30_000);
+
   it("loads the rationalised NCERT Class 11 Biology set for NEET and CBSE", async () => {
     const pg = await productionShapedDatabase();
     try {
