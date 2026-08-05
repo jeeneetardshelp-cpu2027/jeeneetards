@@ -1,0 +1,127 @@
+{
+  "reviewed_on": "2026-08-06",
+  "review_status": "candidate_review_complete_owner_evidence_pending",
+  "proposed_decision_id": "d8125eb3-7281-43da-bfd4-61acd655121f",
+  "channel": {
+    "name": "Unacademy NEET",
+    "handle": "@UnacademyNEET",
+    "youtube_channel_id": "UCdQwYksctqqiRwqp3PiJMWA",
+    "production_institute_id": 147,
+    "playlist_count": 736
+  },
+  "preflight": {
+    "captured_at": "2026-08-05T19:19:47.697Z",
+    "playlists": 394,
+    "videos": 4578,
+    "memberships": 4584,
+    "chapters": 263,
+    "chapter_class_levels": 92,
+    "teachers": 32,
+    "source_collision_count": 0,
+    "retained_video_collision_count": 0,
+    "cross_candidate_retained_video_collision_count": 0,
+    "protected_jee_courses": 82,
+    "protected_jee_memberships": 1304,
+    "protected_jee_fingerprint": "30eee4a4a6842e5beeb7c97083d7f812",
+    "rolling_jee_courses": 212,
+    "rolling_jee_memberships": 2848,
+    "rolling_jee_fingerprint": "9eea2b44f0b19c08cc0907c57e091342"
+  },
+  "candidates": [
+    {
+      "order": 1,
+      "youtube_playlist_id": "PLsgHooHkqhhPqS8MzgJCKn9bJwGRsR3Jl",
+      "source_title": "NEET: Chemical Equilibrium - Playlist | Class 11 | Unacademy NEET | Live Daily 2.0 | NEET Chemistry | Anoop Vashishtha",
+      "source_snapshot_sha256": "e6feeab7ac984edcd316a4aee700dc23593c5a276d6e66f379371a1f9b0296ac",
+      "subject_id": 2,
+      "chapter_id": 30,
+      "chapter": "Chemical Equilibrium",
+      "class_level_id": 2,
+      "class_level": "class-11",
+      "teacher_id": 36,
+      "teacher": "Anoop Vashishtha",
+      "source_collision_count": 0,
+      "video_collision_count": 0,
+      "retained_source_positions": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+      "excluded_source_positions": [],
+      "videos": [
+        { "source_position": 1, "youtube_video_id": "aHfn4DL4wQY", "title": "NEET: Chemical Equilibrium - L1 | Class 11 | Live Daily 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 2883, "embedding_status": "embeddable" },
+        { "source_position": 2, "youtube_video_id": "eSa1pql2qh4", "title": "NEET: Chemical Equilibrium - L2 | Class 11 | Live Daily 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3509, "embedding_status": "embeddable" },
+        { "source_position": 3, "youtube_video_id": "7pL4oKQWIjo", "title": "NEET: Chemical Equilibrium - L3 | Class 11 | Live Daily 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3611, "embedding_status": "embeddable" },
+        { "source_position": 4, "youtube_video_id": "CeTFK_I6Kkk", "title": "NEET: Chemical Equilibrium - L4 | Class 11 | Live Daily 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3486, "embedding_status": "embeddable" },
+        { "source_position": 5, "youtube_video_id": "szR6EqmoXOg", "title": "NEET: Chemical Equilibrium - L5 | Class 11 | Live Daily 2.0 | Unacademy NEET | Anoop Vashishtha", "duration_seconds": 3464, "embedding_status": "embeddable" },
+        { "source_position": 6, "youtube_video_id": "WNNPo-cTx_0", "title": "NEET: Chemical Equilibrium - L6 | Class 11 | Live Daily 2.0 | Unacademy NEET | Anoop Vashishtha", "duration_seconds": 3396, "embedding_status": "embeddable" },
+        { "source_position": 7, "youtube_video_id": "fVzvJNY5tU8", "title": "NEET: Chemical Equilibrium - L7 | Class 11 | Live Daily 2.0 | Unacademy NEET | Anoop Vashishtha", "duration_seconds": 3540, "embedding_status": "embeddable" },
+        { "source_position": 8, "youtube_video_id": "QIfYzbTKDuI", "title": "NEET: Chemical Equilibrium - L8 | Class 11 | Live Daily 2.0 | Unacademy NEET | Anoop Vashishtha", "duration_seconds": 3526, "embedding_status": "embeddable" },
+        { "source_position": 9, "youtube_video_id": "TVZZozr2Yqk", "title": "NEET: Chemical Equilibrium - L9 | Class 11 | Live Daily 2.0 | Unacademy NEET | Anoop Vashishtha", "duration_seconds": 2706, "embedding_status": "embeddable" },
+        { "source_position": 10, "youtube_video_id": "NZLuN2gWiwM", "title": "NEET: Chemical Equilibrium - L10 | Class 11 | Live Daily 2.0 | Unacademy NEET | Anoop Vashishtha", "duration_seconds": 3188, "embedding_status": "embeddable" }
+      ],
+      "exclusions": []
+    },
+    {
+      "order": 2,
+      "youtube_playlist_id": "PLsgHooHkqhhP5Nu98FZfS--EqYQpo15KT",
+      "source_title": "NEET: Surface Chemistry - Playlist | Class 12 | Unacademy NEET | Live Daily | NEET Chemistry | Anoop Vashishtha",
+      "source_snapshot_sha256": "0d791b1b922a3208c8d0e899e93972026ea145a7a383bc985db3ac976c60b230",
+      "subject_id": 2,
+      "chapter_id": 32,
+      "chapter": "Surface Chemistry",
+      "class_level_id": 3,
+      "class_level": "class-12",
+      "teacher_id": 36,
+      "teacher": "Anoop Vashishtha",
+      "source_collision_count": 0,
+      "video_collision_count": 0,
+      "retained_source_positions": [1, 2, 3, 4, 5],
+      "excluded_source_positions": [6, 7],
+      "videos": [
+        { "source_position": 1, "youtube_video_id": "y9ldy2De_Nk", "title": "NEET: Surface Chemistry - L1 | Adsorption | Class 12 | Live Daily 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3447, "embedding_status": "embeddable" },
+        { "source_position": 2, "youtube_video_id": "qkci1SpYaLc", "title": "NEET: Surface Chemistry - L2 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3640, "embedding_status": "embeddable" },
+        { "source_position": 3, "youtube_video_id": "Xj5nPbrIC6Y", "title": "NEET: Surface Chemistry - L3 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3506, "embedding_status": "embeddable" },
+        { "source_position": 4, "youtube_video_id": "l7R7Tdn7neM", "title": "NEET: Surface Chemistry - L4 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3531, "embedding_status": "embeddable" },
+        { "source_position": 5, "youtube_video_id": "4XsWizjv280", "title": "NEET: Surface Chemistry - L5 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3676, "embedding_status": "embeddable" }
+      ],
+      "exclusions": [
+        { "source_position": 6, "youtube_video_id": "h2VzpDzeI08", "title": "NEET: Surface Chemistry - Quiz 1 | Menti Quiz | Live Quiz 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3810, "reason": "quiz" },
+        { "source_position": 7, "youtube_video_id": "NKgsm3U3omg", "title": "NEET: Surface Chemistry - Quiz 2 | Menti Quiz | Live Quiz 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3758, "reason": "quiz" }
+      ]
+    },
+    {
+      "order": 3,
+      "youtube_playlist_id": "PLsgHooHkqhhM_8IsqTEL1V6sDYskLuymO",
+      "source_title": "NEET: P Block Elements - Playlist | Class 12 | UnaPlaylist | Class 12 | Unacademy NEET | Live Daily | NEET Chemistry | Anoop Vashishtha",
+      "source_snapshot_sha256": "1d440750d5566618c4ba4d5c63987f2df738752e1add2bdbb19cde95625b24fa",
+      "subject_id": 2,
+      "chapter_id": 93,
+      "chapter": "P-Block Elements",
+      "class_level_id": 3,
+      "class_level": "class-12",
+      "teacher_id": 36,
+      "teacher": "Anoop Vashishtha",
+      "source_collision_count": 0,
+      "video_collision_count": 0,
+      "retained_source_positions": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+      "excluded_source_positions": [],
+      "videos": [
+        { "source_position": 1, "youtube_video_id": "1nvcAW2-Vh4", "title": "NEET: P Block Elements L1 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3252, "embedding_status": "embeddable" },
+        { "source_position": 2, "youtube_video_id": "_roqDOfRZds", "title": "NEET: P Block Elements L2 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3209, "embedding_status": "embeddable" },
+        { "source_position": 3, "youtube_video_id": "AE0_l920alc", "title": "NEET: P Block Elements L3 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 4918, "embedding_status": "embeddable" },
+        { "source_position": 4, "youtube_video_id": "gwkDIzulbM4", "title": "NEET: P Block Elements L4 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3504, "embedding_status": "embeddable" },
+        { "source_position": 5, "youtube_video_id": "gP_0x9Zdddo", "title": "NEET: P Block Elements L5 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3541, "embedding_status": "embeddable" },
+        { "source_position": 6, "youtube_video_id": "dKYpRC5jsQc", "title": "NEET: P Block Elements L6 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anoop Vashishtha", "duration_seconds": 3644, "embedding_status": "embeddable" },
+        { "source_position": 7, "youtube_video_id": "SotzQs9b-BM", "title": "NEET: P Block Elements L7 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anoop Vashishtha", "duration_seconds": 3650, "embedding_status": "embeddable" },
+        { "source_position": 8, "youtube_video_id": "GG1jDVqv_8Q", "title": "NEET: P Block Elements L8 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anoop Vashishtha", "duration_seconds": 3112, "embedding_status": "embeddable" },
+        { "source_position": 9, "youtube_video_id": "Oz06ev9gHqo", "title": "NEET: P Block Elements L9 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anoop Vashishtha", "duration_seconds": 3451, "embedding_status": "embeddable" },
+        { "source_position": 10, "youtube_video_id": "L8qjDOXE0gU", "title": "NEET: P Block Elements L10 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anoop Vashishtha", "duration_seconds": 3550, "embedding_status": "embeddable" }
+      ],
+      "exclusions": []
+    }
+  ],
+  "deferred": [
+    "Coordination Compounds is missing Lecture 11; its official playlist jumps from L10 to L12.",
+    "Atomic Structure is complete after excluding 14 quiz and mega-quiz rows, but its larger 28-row source is held for a separate review gate.",
+    "Locomotion and Movement starts with an unrelated Phoenix 2.0 row and then begins at Lecture 2.",
+    "Biological Classification starts with an unrelated Phoenix 2.0 row and then begins at Lecture 2.",
+    "Previously recorded incomplete Breathing and Gas Exchange, Biomolecules, Respiration in Plants, Ionic Equilibrium, Human Reproduction, Neural Control and Coordination, and Animal Kingdom candidates remain deferred."
+  ]
+}
