@@ -310,12 +310,15 @@ describe("Unacademy NEET ninth-batch quality-review package", () => {
     expect(sql.match(/30eee4a4a6842e5beeb7c97083d7f812/g)).toHaveLength(2);
   });
 
-  it("pins the immutable hash and prepared-only handoff", () => {
+  it("pins the immutable hash and completed production handoff", () => {
     expect(createHash("sha256").update(sql, "utf8").digest("hex")).toBe(expectedHash);
     expect(readiness).toContain(`SHA-256: \`${expectedHash}\``);
-    expect(readiness).toContain("Prepared and locally validated only");
-    expect(readiness).toContain("has **not** been applied to");
+    expect(readiness).toContain("Applied successfully to production once");
     expect(readiness).toContain("14 -> 17");
+    expect(readiness).toContain("2026-08-05 17:11:35 +05:30");
+    expect(readiness).toContain("independent postflight passed");
+    expect(readiness).toContain("artifact must not be rerun");
+    expect(readiness).toContain("no `release` push was made");
     expect(readiness).toContain("30eee4a4a6842e5beeb7c97083d7f812");
   });
 

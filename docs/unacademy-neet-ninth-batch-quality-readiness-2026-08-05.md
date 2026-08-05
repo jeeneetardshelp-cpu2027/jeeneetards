@@ -2,11 +2,11 @@
 
 ## Status
 
-Prepared and locally validated only. This package has **not** been applied to
-production. Applying it requires separate owner approval of the exact SHA-256,
-a fresh PITR check, and a fresh exact-baseline preflight. No content import,
-faculty-registry change, schema migration, clone, restore, or `release` push is
-in scope.
+Applied successfully to production once under the owner's refreshed exact-hash
+approval. The guarded transaction and an independent privileged read-only
+postflight both passed. No content import, faculty-registry change, schema
+migration, clone, restore, or `release` push was included. The artifact must not
+be rerun.
 
 ## Reviewed scope
 
@@ -85,11 +85,26 @@ result and each immutable before/after review row before commit.
 - production build passed (391 courses, 32 faculty, 48 deep Explore routes,
   and 13 static routes);
 - production dependency audit reported zero vulnerabilities;
-- no production SQL or `release` push occurred while preparing this package.
+- no production SQL or `release` push occurred while preparing and rehearsing
+  this package.
 
-## Required production approval
+## Production application evidence
 
-`Approve applying refreshed Unacademy NEET ninth-batch quality-review artifact
-SHA-256 fc98767ea7c14d7678fe7718ae037e460848b1de07668ae0a5a307955256fb63
-to production, after a fresh PITR and exact-baseline check; stop on any
-mismatch; no release push.`
+- owner approval matched the refreshed immutable SHA-256 above;
+- fresh PITR verification showed seven-day retention active, with the latest
+  restore point available at `2026-08-05 17:11:35 +05:30` before execution;
+- fresh external preflight passed at 391 playlists / 4,566 videos / 4,572
+  memberships / 263 chapters / 92 chapter-class scopes / 32 teachers / 146
+  course links / 14 quality reviews;
+- the browser editor round-trip reproduced the exact approved artifact after
+  normalizing browser line endings;
+- the single transaction returned all three expected courses with canonical
+  titles and verbatim preserved source titles;
+- independent postflight passed at 391 playlists / 4,566 videos / 4,572
+  memberships / 263 chapters / 92 chapter-class scopes / 32 teachers / 146
+  course links / 17 quality reviews;
+- courses 408-410 are approved/identified, retain their exact instructor links,
+  and each has one exact before/after quality-review audit row;
+- protected JEE remained exactly 82 courses / 1,304 memberships / fingerprint
+  `30eee4a4a6842e5beeb7c97083d7f812`;
+- the artifact must not be rerun; no `release` push was made.
