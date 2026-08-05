@@ -7,7 +7,7 @@ const sqlPath = "docs/sql/unacademy_neet_ninth_batch_quality_review_2026-08-05.s
 const readinessPath = "docs/unacademy-neet-ninth-batch-quality-readiness-2026-08-05.md";
 const sql = readFileSync(sqlPath, "utf8");
 const readiness = readFileSync(readinessPath, "utf8");
-const expectedHash = "ed433e82a7a345c5ec2eb994bf1862f8629566b265707cca1cb0570fe09a398c";
+const expectedHash = "fc98767ea7c14d7678fe7718ae037e460848b1de07668ae0a5a307955256fb63";
 
 const seedProductionShape = async () => {
   const pg = new PGlite();
@@ -194,10 +194,14 @@ const seedProductionShape = async () => {
     update public.videos set chapter_id = 125 where id between 1305 and 1316;
     update public.videos set chapter_id = 14 where id between 1317 and 1322;
     update public.videos set chapter_id = 35 where id between 1323 and 1331;
-    insert into public.chapters select n, 'Chapter ' || n, 1 from generate_series(1, 261) n;
+    insert into public.chapters select n, 'Chapter ' || n, 1 from generate_series(1, 260) n;
     update public.chapters set name = 'Alternating Current', subject_id = 1 where id = 14;
     update public.chapters set name = 'Chemical Kinetics', subject_id = 2 where id = 35;
     update public.chapters set name = 'Sexual Reproduction in Flowering Plants', subject_id = 4 where id = 125;
+    insert into public.chapters values
+      (321, 'Linear Programming', 3),
+      (322, 'Sets', 3),
+      (323, 'Linear Inequalities', 3);
     insert into public.chapter_class_levels select n from generate_series(1, 92) n;
     insert into public.playlist_learning_goals select n, 1 from generate_series(1, 82) n;
     insert into public.playlist_learning_goals values (408, 2), (409, 2), (410, 2);
@@ -297,7 +301,7 @@ describe("Unacademy NEET ninth-batch quality-review package", () => {
       "count(*) from public.playlists) <> 391",
       "count(*) from public.videos) <> 4566",
       "count(*) from public.playlist_videos) <> 4572",
-      "count(*) from public.chapters) <> 261",
+      "count(*) from public.chapters) <> 263",
       "count(*) from public.chapter_class_levels) <> 92",
       "count(*) from public.playlist_teachers) <> 146",
       "count(*) from public.playlist_quality_reviews) <> 14",
@@ -354,7 +358,7 @@ describe("Unacademy NEET ninth-batch quality-review package", () => {
 
   it("rolls back cleanly when an exact baseline guard differs", async () => {
     const pg = await seedProductionShape();
-    await pg.exec("insert into public.chapters values (321, 'Concurrent chapter', 3)");
+    await pg.exec("insert into public.chapters values (324, 'Concurrent chapter', 3)");
     await expect(pg.exec(await withLocalFingerprint(pg))).rejects.toThrow(/exact baseline differs/);
     await pg.exec("rollback");
     const result = await pg.query(`

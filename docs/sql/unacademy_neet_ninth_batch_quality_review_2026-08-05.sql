@@ -32,7 +32,7 @@ begin
   if (select count(*) from public.playlists) <> 391
      or (select count(*) from public.videos) <> 4566
      or (select count(*) from public.playlist_videos) <> 4572
-     or (select count(*) from public.chapters) <> 261
+     or (select count(*) from public.chapters) <> 263
      or (select count(*) from public.chapter_class_levels) <> 92
      or (select count(*) from public.teachers) <> 32
      or (select count(*) from public.teacher_aliases) <> 50
@@ -164,7 +164,10 @@ begin
   or not exists (select 1 from public.class_levels where id = 3 and slug = 'class-12')
   or not exists (select 1 from public.chapters where id = 14 and name = 'Alternating Current' and subject_id = 1)
   or not exists (select 1 from public.chapters where id = 35 and name = 'Chemical Kinetics' and subject_id = 2)
-  or not exists (select 1 from public.chapters where id = 125 and name = 'Sexual Reproduction in Flowering Plants' and subject_id = 4) then
+  or not exists (select 1 from public.chapters where id = 125 and name = 'Sexual Reproduction in Flowering Plants' and subject_id = 4)
+  or not exists (select 1 from public.chapters where id = 321 and name = 'Linear Programming' and subject_id = 3)
+  or not exists (select 1 from public.chapters where id = 322 and name = 'Sets' and subject_id = 3)
+  or not exists (select 1 from public.chapters where id = 323 and name = 'Linear Inequalities' and subject_id = 3) then
     raise exception 'refusing Unacademy ninth-batch quality review: reference data differs';
   end if;
 
@@ -284,7 +287,7 @@ begin
   if (select count(*) from public.playlists) <> 391
      or (select count(*) from public.videos) <> 4566
      or (select count(*) from public.playlist_videos) <> 4572
-     or (select count(*) from public.chapters) <> 261
+     or (select count(*) from public.chapters) <> 263
      or (select count(*) from public.chapter_class_levels) <> 92
      or (select count(*) from public.teachers) <> 32
      or (select count(*) from public.teacher_aliases) <> 50

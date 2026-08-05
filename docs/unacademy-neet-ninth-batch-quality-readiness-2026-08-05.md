@@ -27,10 +27,12 @@ teacher links.
 
 ## Fresh read-only production snapshot
 
-Refreshed after the faculty-link postflight stopped on the unrelated concurrent
-addition of Mathematics chapter `321`, `Linear Programming`:
+Refreshed again after the first approved quality-review artifact stopped before
+execution because two more unrelated Mathematics chapters appeared. Production
+now includes `321` (`Linear Programming`), `322` (`Sets`), and `323` (`Linear
+Inequalities`); all three are explicitly pinned by the refreshed package:
 
-- catalogue: 391 playlists / 4,566 videos / 4,572 memberships / 261 chapters;
+- catalogue: 391 playlists / 4,566 videos / 4,572 memberships / 263 chapters;
 - chapter-class scopes: 92;
 - faculty registry: 32 teachers / 50 aliases / 33 institute links / 33 subject
   links / 32 learning-goal links / 146 course links;
@@ -50,7 +52,7 @@ Production remained read-only during this snapshot and package preparation.
 ## Immutable prepared artifact
 
 - SQL: `docs/sql/unacademy_neet_ninth_batch_quality_review_2026-08-05.sql`;
-- SHA-256: `ed433e82a7a345c5ec2eb994bf1862f8629566b265707cca1cb0570fe09a398c`;
+- SHA-256: `fc98767ea7c14d7678fe7718ae037e460848b1de07668ae0a5a307955256fb63`;
 - target after separate approval: production project `kezelafqhgqrprpadmlf`;
 - expected transition: capture three source titles, approve three canonical
   titles, identify the already-linked faculty, and append three immutable
@@ -68,16 +70,17 @@ result and each immutable before/after review row before commit.
 
 ## Local validation
 
-- production-shaped PGlite rehearsal passed: the transaction preserved all
-  catalogue and teacher-link totals and changed quality reviews 14 -> 17;
+- production-shaped PGlite rehearsal passed against the refreshed 263-chapter
+  baseline. It preserved all catalogue and teacher-link totals and changed
+  quality reviews 14 -> 17;
 - target result: three canonical titles, three exact source titles,
   approved/identified statuses, exact instructor IDs, and empty missing-field
   arrays;
-- rollback-on-drift rehearsal passed: a chapter-count mismatch rejected the
+- refreshed rollback-on-drift rehearsal passed: a 264th chapter rejected the
   transaction and left all three courses unreviewed;
-- focused package validation: 2 files / 10 tests passed;
-- full regression suite after rebasing the independent upstream NCERT materials
-  commit: 183 files / 1,683 tests passed;
+- refreshed focused package validation: 1 file / 5 tests passed;
+- refreshed full regression suite after rebasing the independent NCERT Class 11
+  Mathematics materials commit: 184 files / 1,688 tests passed;
 - ESLint passed with zero warnings;
 - production build passed (391 courses, 32 faculty, 48 deep Explore routes,
   and 13 static routes);
@@ -86,7 +89,7 @@ result and each immutable before/after review row before commit.
 
 ## Required production approval
 
-`Approve applying Unacademy NEET ninth-batch quality-review artifact SHA-256
-ed433e82a7a345c5ec2eb994bf1862f8629566b265707cca1cb0570fe09a398c to
-production, after a fresh PITR and exact-baseline check; stop on any mismatch;
-no release push.`
+`Approve applying refreshed Unacademy NEET ninth-batch quality-review artifact
+SHA-256 fc98767ea7c14d7678fe7718ae037e460848b1de07668ae0a5a307955256fb63
+to production, after a fresh PITR and exact-baseline check; stop on any
+mismatch; no release push.`
