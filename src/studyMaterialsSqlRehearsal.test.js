@@ -11,6 +11,10 @@ const ncertSeed = readFileSync(
   "docs/sql/study_materials_ncert_kinematics_seed_2026-08-05.sql",
   "utf8",
 );
+const ncertClass11PhysicsSeed = readFileSync(
+  "docs/sql/study_materials_ncert_class11_physics_seed_2026-08-05.sql",
+  "utf8",
+);
 
 async function productionShapedDatabase() {
   const pg = new PGlite();
@@ -59,6 +63,20 @@ async function productionShapedDatabase() {
     insert into public.chapters values
       (100, 1, 'Motion in a Straight Line', 'motion-in-a-straight-line', 1),
       (101, 1, 'Kinematics', 'kinematics', 2),
+      (28, 1, 'Units and Measurements', 'units-and-measurements', 3),
+      (82, 1, 'Laws of Motion', 'laws-of-motion', 4),
+      (6, 1, 'Newton''s Laws of Motion (NLM)', 'newtons-laws-of-motion-nlm', 5),
+      (7, 1, 'Friction', 'friction', 6),
+      (21, 1, 'Work, Energy and Power', 'work-energy-and-power', 7),
+      (22, 1, 'System of Particles and Centre of Mass', 'system-of-particles-and-centre-of-mass', 8),
+      (27, 1, 'Rotational Motion', 'rotational-motion', 9),
+      (81, 1, 'Gravitation', 'gravitation', 10),
+      (24, 1, 'Mechanical Properties of Solids', 'mechanical-properties-of-solids', 11),
+      (26, 1, 'Mechanical Properties of Fluids', 'mechanical-properties-of-fluids', 12),
+      (25, 1, 'Thermal Properties of Matter', 'thermal-properties-of-matter', 13),
+      (23, 1, 'Thermodynamics', 'thermodynamics', 14),
+      (275, 1, 'Kinetic Theory of Gases', 'kinetic-theory-of-gases', 15),
+      (84, 1, 'Oscillations and Waves', 'oscillations-and-waves', 16),
       (200, 2, 'Redox Reactions', 'redox-reactions', 1);
     insert into public.videos values (1000, 100);
 
@@ -71,6 +89,69 @@ async function productionShapedDatabase() {
 }
 
 describe("study materials v1 local SQL rehearsal", () => {
+  it("loads the complete NCERT Class 11 Physics set once across all three curricula", async () => {
+    const pg = await productionShapedDatabase();
+    try {
+      await pg.exec(ncertClass11PhysicsSeed);
+      await pg.exec(ncertClass11PhysicsSeed);
+
+      const counts = await pg.query(`
+        select
+          (select count(*)::integer from public.study_materials) as materials,
+          (select count(*)::integer from public.study_material_scopes) as scopes
+      `);
+      expect(counts.rows[0]).toEqual({ materials: 14, scopes: 51 });
+
+      const sources = await pg.query(`
+        select source_url, page_count
+          from public.study_materials
+         order by source_url
+      `);
+      expect(sources.rows).toHaveLength(14);
+      expect(sources.rows[0]).toEqual({
+        source_url: "https://ncert.nic.in/textbook/pdf/keph101.pdf",
+        page_count: 12,
+      });
+      expect(sources.rows.at(-1)).toEqual({
+        source_url: "https://ncert.nic.in/textbook/pdf/keph207.pdf",
+        page_count: 22,
+      });
+
+      const jee = await pg.query(`
+        select * from public.get_study_materials(
+          p_goal_slug => 'jee',
+          p_class_slug => 'class-11',
+          p_subject_slug => 'physics'
+        )
+      `);
+      expect(jee.rows).toHaveLength(14);
+      expect(Number(jee.rows[0].total_count)).toBe(14);
+
+      const kinematics = await pg.query(`
+        select * from public.get_study_materials(
+          p_goal_slug => 'school',
+          p_board_slug => 'cbse',
+          p_class_slug => 'class-11',
+          p_subject_slug => 'physics',
+          p_chapter_slug => 'kinematics'
+        )
+      `);
+      expect(kinematics.rows).toHaveLength(2);
+
+      const oscillations = await pg.query(`
+        select * from public.get_study_materials(
+          p_goal_slug => 'neet',
+          p_class_slug => 'class-11',
+          p_subject_slug => 'physics',
+          p_chapter_slug => 'oscillations-and-waves'
+        )
+      `);
+      expect(oscillations.rows).toHaveLength(2);
+    } finally {
+      await pg.close();
+    }
+  });
+
   it("exposes CBSE material taxonomy even when no matching course exists", async () => {
     const pg = await productionShapedDatabase();
     try {
