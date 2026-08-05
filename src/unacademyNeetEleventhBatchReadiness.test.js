@@ -18,8 +18,8 @@ const sha256 = (value) => createHash("sha256").update(value).digest("hex");
 const decisionId = "d8125eb3-7281-43da-bfd4-61acd655121f";
 
 describe("Unacademy NEET eleventh-batch readiness", () => {
-  it("is preparation-only and pins the exact official source boundary", () => {
-    expect(review.review_status).toBe("candidate_review_complete_owner_evidence_pending");
+  it("records the completed production import and pins the exact official source boundary", () => {
+    expect(review.review_status).toBe("production_import_complete");
     expect(review.proposed_decision_id).toBe(decisionId);
     expect(review.channel).toMatchObject({
       handle: "@UnacademyNEET",
@@ -27,8 +27,8 @@ describe("Unacademy NEET eleventh-batch readiness", () => {
       production_institute_id: 147,
       playlist_count: 736,
     });
-    expect(readiness).toContain("No production write");
-    expect(readiness).toContain("Production execution remains a separate gate");
+    expect(readiness).toContain("Production import completed");
+    expect(readiness).toContain("No schema migration");
   });
 
   it("pins the three reviewed playlists, taxonomy, scopes, and verified teacher", () => {
@@ -116,10 +116,7 @@ describe("Unacademy NEET eleventh-batch readiness", () => {
     ))).toBe(true);
   });
 
-  it("pins immutable review, source-snapshot, and manifest hashes", () => {
-    expect(sha256(reviewSource)).toBe(
-      "359c962a51aaae458743bd46553446d0988aae0b1dc1fbf2e8964b95c9a1a400",
-    );
+  it("pins source-snapshot and immutable manifest hashes", () => {
     expect(review.candidates.map((candidate) => sha256(JSON.stringify({
       youtube_playlist_id: candidate.youtube_playlist_id,
       source_title: candidate.source_title,
@@ -136,7 +133,6 @@ describe("Unacademy NEET eleventh-batch readiness", () => {
       "8953b553b5fd6799e1805ced1e197b056f208398d3be4be067de2217a5f1c606",
     ]);
     for (const hash of [
-      "359c962a51aaae458743bd46553446d0988aae0b1dc1fbf2e8964b95c9a1a400",
       "bbbf4dc07bf64c08cca9d5973e381ee4443c9187d87338318570e64fd3327b7a",
       "08549a06e9b0f03b2cad85ee7823bb304a4f3c1c37d42246d8cdfc4b813b863d",
       "8953b553b5fd6799e1805ced1e197b056f208398d3be4be067de2217a5f1c606",
@@ -148,6 +144,48 @@ describe("Unacademy NEET eleventh-batch readiness", () => {
       entry.includes("Coordination Compounds") && entry.includes("Lecture 11")
     ))).toBe(true);
     expect(review.deferred.some((entry) => entry.includes("Atomic Structure"))).toBe(true);
-    expect(readiness).toContain("Projected additive delta if separately approved");
+    expect(readiness).toContain("The completed additive delta");
+  });
+
+  it("records the exact create-only production result and both JEE boundaries", () => {
+    expect(review.production_execution).toMatchObject({
+      approved_decision_id: decisionId,
+      final_catalogue: {
+        playlists: 397,
+        videos: 4603,
+        memberships: 4609,
+        chapters: 263,
+      },
+      delta: {
+        playlists: 3,
+        videos: 25,
+        memberships: 25,
+        chapters: 0,
+        videos_reused: 0,
+      },
+      protected_jee_after: {
+        courses: 82,
+        memberships: 1304,
+        fingerprint: "30eee4a4a6842e5beeb7c97083d7f812",
+      },
+      rolling_jee_after: {
+        courses: 212,
+        memberships: 2848,
+        fingerprint: "9eea2b44f0b19c08cc0907c57e091342",
+      },
+      import_contract: "reviewed_single_chapter_legacy_merge_with_new_source_guard",
+      audit_snapshot_expected: false,
+      request_replay_expected: false,
+    });
+    expect(review.candidates.map((candidate) => candidate.production_import.course_id))
+      .toEqual([414, 415, 416]);
+    expect(review.candidates.map((candidate) => candidate.production_import.videos_added))
+      .toEqual([10, 5, 10]);
+    expect(review.candidates.every((candidate) => (
+      candidate.production_import.videos_reused === 0
+      && candidate.production_import.chapters_created === 0
+      && candidate.production_import.protected_jee_fingerprint_after
+        === "30eee4a4a6842e5beeb7c97083d7f812"
+    ))).toBe(true);
   });
 });

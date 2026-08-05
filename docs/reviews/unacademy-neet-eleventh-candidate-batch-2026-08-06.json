@@ -1,6 +1,6 @@
 {
   "reviewed_on": "2026-08-06",
-  "review_status": "candidate_review_complete_owner_evidence_pending",
+  "review_status": "production_import_complete",
   "proposed_decision_id": "d8125eb3-7281-43da-bfd4-61acd655121f",
   "channel": {
     "name": "Unacademy NEET",
@@ -26,6 +26,22 @@
     "rolling_jee_courses": 212,
     "rolling_jee_memberships": 2848,
     "rolling_jee_fingerprint": "9eea2b44f0b19c08cc0907c57e091342"
+  },
+  "production_execution": {
+    "approved_decision_id": "d8125eb3-7281-43da-bfd4-61acd655121f",
+    "completed_at": "2026-08-05T19:43:13.924Z",
+    "pitr_retention_days": 7,
+    "pitr_restore_available_from_ist": "2026-07-30 01:10:22",
+    "pitr_latest_restore_at_ist": "2026-08-06 01:10:22",
+    "initial_catalogue": { "playlists": 394, "videos": 4578, "memberships": 4584, "chapters": 263 },
+    "final_catalogue": { "playlists": 397, "videos": 4603, "memberships": 4609, "chapters": 263 },
+    "delta": { "playlists": 3, "videos": 25, "memberships": 25, "chapters": 0, "videos_reused": 0 },
+    "protected_jee_after": { "courses": 82, "memberships": 1304, "fingerprint": "30eee4a4a6842e5beeb7c97083d7f812" },
+    "rolling_jee_after": { "courses": 212, "memberships": 2848, "fingerprint": "9eea2b44f0b19c08cc0907c57e091342" },
+    "import_contract": "reviewed_single_chapter_legacy_merge_with_new_source_guard",
+    "audit_snapshot_expected": false,
+    "request_replay_expected": false,
+    "audit_note": "These reviewed single-chapter imports use the legacy import_playlist RPC. The guarded client refuses an existing source and unexpected reuse; playlist_import_audit rows and request replay are not expected for this path."
   },
   "candidates": [
     {
@@ -56,7 +72,16 @@
         { "source_position": 9, "youtube_video_id": "TVZZozr2Yqk", "title": "NEET: Chemical Equilibrium - L9 | Class 11 | Live Daily 2.0 | Unacademy NEET | Anoop Vashishtha", "duration_seconds": 2706, "embedding_status": "embeddable" },
         { "source_position": 10, "youtube_video_id": "NZLuN2gWiwM", "title": "NEET: Chemical Equilibrium - L10 | Class 11 | Live Daily 2.0 | Unacademy NEET | Anoop Vashishtha", "duration_seconds": 3188, "embedding_status": "embeddable" }
       ],
-      "exclusions": []
+      "exclusions": [],
+      "production_import": {
+        "course_id": 414,
+        "verified_at": "2026-08-05T19:38:05.986Z",
+        "videos_added": 10,
+        "memberships_added": 10,
+        "videos_reused": 0,
+        "chapters_created": 0,
+        "protected_jee_fingerprint_after": "30eee4a4a6842e5beeb7c97083d7f812"
+      }
     },
     {
       "order": 2,
@@ -84,7 +109,16 @@
       "exclusions": [
         { "source_position": 6, "youtube_video_id": "h2VzpDzeI08", "title": "NEET: Surface Chemistry - Quiz 1 | Menti Quiz | Live Quiz 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3810, "reason": "quiz" },
         { "source_position": 7, "youtube_video_id": "NKgsm3U3omg", "title": "NEET: Surface Chemistry - Quiz 2 | Menti Quiz | Live Quiz 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3758, "reason": "quiz" }
-      ]
+      ],
+      "production_import": {
+        "course_id": 415,
+        "verified_at": "2026-08-05T19:41:53.062Z",
+        "videos_added": 5,
+        "memberships_added": 5,
+        "videos_reused": 0,
+        "chapters_created": 0,
+        "protected_jee_fingerprint_after": "30eee4a4a6842e5beeb7c97083d7f812"
+      }
     },
     {
       "order": 3,
@@ -114,7 +148,16 @@
         { "source_position": 9, "youtube_video_id": "Oz06ev9gHqo", "title": "NEET: P Block Elements L9 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anoop Vashishtha", "duration_seconds": 3451, "embedding_status": "embeddable" },
         { "source_position": 10, "youtube_video_id": "L8qjDOXE0gU", "title": "NEET: P Block Elements L10 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anoop Vashishtha", "duration_seconds": 3550, "embedding_status": "embeddable" }
       ],
-      "exclusions": []
+      "exclusions": [],
+      "production_import": {
+        "course_id": 416,
+        "verified_at": "2026-08-05T19:43:13.924Z",
+        "videos_added": 10,
+        "memberships_added": 10,
+        "videos_reused": 0,
+        "chapters_created": 0,
+        "protected_jee_fingerprint_after": "30eee4a4a6842e5beeb7c97083d7f812"
+      }
     }
   ],
   "deferred": [
