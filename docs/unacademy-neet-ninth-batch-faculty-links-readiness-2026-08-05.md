@@ -25,9 +25,15 @@ aliases, courses, videos, chapters, memberships, or review statuses.
 
 ## Fresh read-only production snapshot
 
-Captured 5 August 2026 at `2026-08-05T10:19:43.07756+00:00`:
+Refreshed 5 August 2026 after the first approved artifact stopped on its exact
+chapter-count guard. The only drift was the separately reviewed and applied
+NCERT Class 10 Science materials package from commit `b6bac61`, which created
+the 13 expected Science reference chapters (IDs 308-320). No Unacademy faculty
+row was written by the stopped attempt.
 
-- catalogue: 391 playlists / 4,566 videos / 4,572 memberships / 247 chapters;
+Current production baseline:
+
+- catalogue: 391 playlists / 4,566 videos / 4,572 memberships / 260 chapters;
 - chapter-class scopes: 92;
 - faculty registry: 32 teachers / 50 aliases / 33 institute links / 33 subject
   links / 32 learning-goal links / 143 course links;
@@ -41,12 +47,13 @@ Captured 5 August 2026 at `2026-08-05T10:19:43.07756+00:00`:
   `30eee4a4a6842e5beeb7c97083d7f812`.
 
 The transaction pins every value above and aborts before inserting anything on
-any mismatch.
+any mismatch. The protected JEE boundary was freshly rechecked after the NCERT
+addition and remains an exact match.
 
 ## Prepared artifact
 
 - SQL: `docs/sql/unacademy_neet_ninth_batch_faculty_links_2026-08-05.sql`;
-- SHA-256: `69101a0cebf09948df612f4052e6ba71050f2c0ad1baf4c94aebe7a290b302a4`;
+- SHA-256: `fdfa5ccd18f05b72b93a270d99d28391d1dd5ba725907ec49d41127042aabfcc`;
 - target after separate approval: production project `kezelafqhgqrprpadmlf`;
 - expected delta: +3 `playlist_teachers` rows only;
 - expected postflight: 146 course links, with every other catalogue, faculty,
@@ -75,6 +82,6 @@ three links, unchanged review state, and protected boundary before commit.
 ## Required production approval
 
 `Approve applying Unacademy NEET ninth-batch faculty-link artifact SHA-256
-69101a0cebf09948df612f4052e6ba71050f2c0ad1baf4c94aebe7a290b302a4 to
+fdfa5ccd18f05b72b93a270d99d28391d1dd5ba725907ec49d41127042aabfcc to
 production, after a fresh PITR and exact-baseline check; stop on any mismatch;
 no release push.`

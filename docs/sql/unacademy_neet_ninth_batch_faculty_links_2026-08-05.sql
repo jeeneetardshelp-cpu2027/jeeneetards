@@ -15,7 +15,7 @@ begin
   if (select count(*) from public.playlists) <> 391
      or (select count(*) from public.videos) <> 4566
      or (select count(*) from public.playlist_videos) <> 4572
-     or (select count(*) from public.chapters) <> 247
+     or (select count(*) from public.chapters) <> 260
      or (select count(*) from public.chapter_class_levels) <> 92
      or (select count(*) from public.teachers) <> 32
      or (select count(*) from public.teacher_aliases) <> 50
@@ -168,7 +168,7 @@ begin
   if (select count(*) from public.playlists) <> 391
      or (select count(*) from public.videos) <> 4566
      or (select count(*) from public.playlist_videos) <> 4572
-     or (select count(*) from public.chapters) <> 247
+     or (select count(*) from public.chapters) <> 260
      or (select count(*) from public.chapter_class_levels) <> 92
      or (select count(*) from public.teachers) <> 32
      or (select count(*) from public.teacher_aliases) <> 50

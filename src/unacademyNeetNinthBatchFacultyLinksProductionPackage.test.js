@@ -7,7 +7,7 @@ const sqlPath = "docs/sql/unacademy_neet_ninth_batch_faculty_links_2026-08-05.sq
 const readinessPath = "docs/unacademy-neet-ninth-batch-faculty-links-readiness-2026-08-05.md";
 const sql = readFileSync(sqlPath, "utf8");
 const readiness = readFileSync(readinessPath, "utf8");
-const expectedHash = "69101a0cebf09948df612f4052e6ba71050f2c0ad1baf4c94aebe7a290b302a4";
+const expectedHash = "fdfa5ccd18f05b72b93a270d99d28391d1dd5ba725907ec49d41127042aabfcc";
 
 describe("Unacademy NEET ninth-batch faculty-link production package", () => {
   it("pins the reviewed decision, exact courses, sources, and teacher links", () => {
@@ -41,7 +41,7 @@ describe("Unacademy NEET ninth-batch faculty-link production package", () => {
       "count(*) from public.playlists) <> 391",
       "count(*) from public.videos) <> 4566",
       "count(*) from public.playlist_videos) <> 4572",
-      "count(*) from public.chapters) <> 247",
+      "count(*) from public.chapters) <> 260",
       "count(*) from public.chapter_class_levels) <> 92",
       "count(*) from public.teachers) <> 32",
       "count(*) from public.teacher_aliases) <> 50",
@@ -120,7 +120,7 @@ describe("Unacademy NEET ninth-batch faculty-link production package", () => {
         (4, 'Biology', 'biology');
       insert into public.learning_goals values (1, 'jee'), (2, 'neet');
       insert into public.class_levels values (1, 'protected'), (3, 'class-12');
-      insert into public.chapters select n from generate_series(1, 247) n;
+      insert into public.chapters select n from generate_series(1, 260) n;
       insert into public.chapter_class_levels select n, 1 from generate_series(1, 92) n;
       insert into public.videos select n from generate_series(1, 4566) n;
 
