@@ -23,6 +23,10 @@ const ncertClass10SocialScienceSeed = readFileSync(
   "docs/sql/study_materials_ncert_class10_social_science_seed_2026-08-05.sql",
   "utf8",
 );
+const ncertClass10HindiBSeed = readFileSync(
+  "docs/sql/study_materials_ncert_class10_hindi_b_seed_2026-08-05.sql",
+  "utf8",
+);
 const ncertClass11MathematicsSeed = readFileSync(
   "docs/sql/study_materials_ncert_class11_mathematics_seed_2026-08-05.sql",
   "utf8",
@@ -108,7 +112,8 @@ async function productionShapedDatabase() {
       (1, 'Physics', 'physics', 1), (2, 'Chemistry', 'chemistry', 2),
       (3, 'Biology', 'biology', 3), (4, 'Mathematics', 'mathematics', 4),
       (5, 'English', 'english', 5),
-      (6, 'Social Science', 'social-science', 6);
+      (6, 'Social Science', 'social-science', 6),
+      (7, 'Hindi B', 'hindi-b', 7);
     insert into public.chapters values
       (100, 1, 'Motion in a Straight Line', 'motion-in-a-straight-line', 1),
       (101, 1, 'Kinematics', 'kinematics', 2),
@@ -274,7 +279,24 @@ async function productionShapedDatabase() {
       (718, 6, 'Sectors of the Indian Economy', 'sectors-of-the-indian-economy', 19),
       (719, 6, 'Money and Credit', 'money-and-credit', 20),
       (720, 6, 'Globalisation and the Indian Economy', 'globalisation-and-the-indian-economy', 21),
-      (721, 6, 'Consumer Rights', 'consumer-rights', 22);
+      (721, 6, 'Consumer Rights', 'consumer-rights', 22),
+      (800, 7, 'कबीर की साखी', 'kabir-ki-sakhi', 1),
+      (801, 7, 'मीरा के पद', 'meera-ke-pad', 2),
+      (802, 7, 'मनुष्यता', 'manushyata', 3),
+      (803, 7, 'पर्वत प्रदेश में पावस', 'parvat-pradesh-mein-pavas', 4),
+      (804, 7, 'तोप', 'top', 5),
+      (805, 7, 'कर चले हम फ़िदा', 'kar-chale-hum-fida', 6),
+      (806, 7, 'आत्मत्राण', 'aatmatran', 7),
+      (807, 7, 'बड़े भाई साहब', 'bade-bhai-sahab', 8),
+      (808, 7, 'डायरी का एक पन्ना', 'diary-ka-ek-panna', 9),
+      (809, 7, 'तताँरा वामीरो कथा', 'tatara-vamiro-katha', 10),
+      (810, 7, 'तीसरी कसम के शिल्पकार शैलेंद्र', 'teesri-kasam-ke-shilpkar-shailendra', 11),
+      (811, 7, 'अब कहाँ दूसरों के दुख से दुखी होने वाले', 'ab-kahan-doosron-ke-dukh-se-dukhi-hone-wale', 12),
+      (812, 7, 'पतझर में टूटी पत्तियाँ', 'patjhar-mein-tooti-pattiyan', 13),
+      (813, 7, 'कारतूस', 'kartus', 14),
+      (814, 7, 'हरिहर काका', 'harihar-kaka', 15),
+      (815, 7, 'सपनों के से दिन', 'sapnon-ke-se-din', 16),
+      (816, 7, 'टोपी शुक्ला', 'topi-shukla', 17);
     select setval(
       pg_get_serial_sequence('public.chapters', 'id'),
       (select max(id) from public.chapters),
@@ -575,6 +597,63 @@ describe("study materials v1 local SQL rehearsal", () => {
           p_goal_slug => 'jee',
           p_class_slug => 'class-10',
           p_subject_slug => 'social-science'
+        )
+      `);
+      expect(entrance.rows).toHaveLength(0);
+    } finally {
+      await pg.close();
+    }
+  }, 30_000);
+
+  it("loads rationalised NCERT Class 10 Hindi B into exact CBSE chapter scopes", async () => {
+    const pg = await productionShapedDatabase();
+    try {
+      await pg.exec(ncertClass10HindiBSeed);
+      await pg.exec(ncertClass10HindiBSeed);
+
+      const counts = await pg.query(`
+        select
+          (select count(*)::integer from public.study_materials) as materials,
+          (select count(*)::integer from public.study_material_scopes) as scopes
+      `);
+      expect(counts.rows[0]).toEqual({ materials: 17, scopes: 17 });
+
+      const directory = await pg.query(`
+        select * from public.get_study_materials(
+          p_goal_slug => 'school',
+          p_board_slug => 'cbse',
+          p_class_slug => 'class-10',
+          p_subject_slug => 'hindi-b'
+        )
+      `);
+      expect(directory.rows).toHaveLength(17);
+      expect(Number(directory.rows[0].total_count)).toBe(17);
+
+      for (const [chapter, source] of [
+        ['kabir-ki-sakhi', 'jhsp101.pdf'],
+        ['teesri-kasam-ke-shilpkar-shailendra', 'jhsp111.pdf'],
+        ['kartus', 'jhsp114.pdf'],
+        ['harihar-kaka', 'jhsy101.pdf'],
+        ['topi-shukla', 'jhsy103.pdf'],
+      ]) {
+        const result = await pg.query(`
+          select * from public.get_study_materials(
+            p_goal_slug => 'school',
+            p_board_slug => 'cbse',
+            p_class_slug => 'class-10',
+            p_subject_slug => 'hindi-b',
+            p_chapter_slug => '${chapter}'
+          )
+        `);
+        expect(result.rows).toHaveLength(1);
+        expect(result.rows[0].source_url).toContain(source);
+      }
+
+      const entrance = await pg.query(`
+        select * from public.get_study_materials(
+          p_goal_slug => 'jee',
+          p_class_slug => 'class-10',
+          p_subject_slug => 'hindi-b'
         )
       `);
       expect(entrance.rows).toHaveLength(0);
