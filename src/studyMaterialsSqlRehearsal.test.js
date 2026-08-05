@@ -67,6 +67,10 @@ const ncertClass12BiologySeed = readFileSync(
   "docs/sql/study_materials_ncert_class12_biology_seed_2026-08-05.sql",
   "utf8",
 );
+const jeeAdvanced2026PapersSeed = readFileSync(
+  "docs/sql/study_materials_jee_advanced_2026_papers_seed_2026-08-06.sql",
+  "utf8",
+);
 
 async function productionShapedDatabase() {
   const pg = new PGlite();
@@ -1296,4 +1300,53 @@ describe("study materials v1 local SQL rehearsal", () => {
       await pg.close();
     }
   });
+
+  it("loads all four JEE Advanced 2026 papers into one JEE-only exam scope each", async () => {
+    const pg = await productionShapedDatabase();
+    try {
+      await pg.exec(jeeAdvanced2026PapersSeed);
+      await pg.exec(jeeAdvanced2026PapersSeed);
+
+      const counts = await pg.query(`
+        select
+          (select count(*)::integer from public.study_materials) as materials,
+          (select count(*)::integer from public.study_material_scopes) as scopes
+      `);
+      expect(counts.rows[0]).toEqual({ materials: 4, scopes: 4 });
+
+      const jee = await pg.query(`
+        select * from public.get_study_materials(
+          p_goal_slug => 'jee',
+          p_material_type => 'previous_year_paper'
+        )
+      `);
+      expect(jee.rows).toHaveLength(4);
+      expect(Number(jee.rows[0].total_count)).toBe(4);
+      expect(new Set(jee.rows.map((row) => row.language))).toEqual(new Set(["English", "Hindi"]));
+      expect(jee.rows.every((row) => row.exam_year === 2026)).toBe(true);
+      expect(jee.rows.every((row) => row.scopes.length === 1)).toBe(true);
+      expect(jee.rows.every((row) => row.scopes[0].goal === "jee")).toBe(true);
+      expect(jee.rows.every((row) => row.scopes[0].subject === null)).toBe(true);
+      expect(jee.rows.every((row) => row.scopes[0].chapter === null)).toBe(true);
+
+      const neet = await pg.query(`
+        select * from public.get_study_materials(
+          p_goal_slug => 'neet',
+          p_material_type => 'previous_year_paper'
+        )
+      `);
+      expect(neet.rows).toHaveLength(0);
+
+      const classSpecific = await pg.query(`
+        select * from public.get_study_materials(
+          p_goal_slug => 'jee',
+          p_class_slug => 'class-12',
+          p_material_type => 'previous_year_paper'
+        )
+      `);
+      expect(classSpecific.rows).toHaveLength(0);
+    } finally {
+      await pg.close();
+    }
+  }, 30_000);
 });
