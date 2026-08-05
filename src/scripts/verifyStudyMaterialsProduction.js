@@ -1,6 +1,7 @@
 // Anonymous, read-only production postflight for the reviewed NCERT Class 11
-// Physics collection. It verifies the exact sources, curriculum scope count,
-// directory filters and chapter-context reads without an admin credential.
+// and Class 12 Physics collections. It verifies the exact sources, curriculum
+// scope counts, directory filters and chapter-context reads without an admin
+// credential.
 
 import fs from "node:fs";
 import { createClient } from "@supabase/supabase-js";
@@ -24,12 +25,19 @@ if (!url || !key) {
   process.exit(2);
 }
 
-const EXPECTED_PAGES = new Map([
+const CLASS_11_PAGES = new Map([
   ["keph101", 12], ["keph102", 14], ["keph103", 22], ["keph104", 22],
   ["keph105", 21], ["keph106", 35], ["keph107", 17], ["keph201", 13],
   ["keph202", 22], ["keph203", 24], ["keph204", 18], ["keph205", 15],
   ["keph206", 19], ["keph207", 22],
 ]);
+const CLASS_12_PAGES = new Map([
+  ["leph101", 44], ["leph102", 36], ["leph103", 26], ["leph104", 29],
+  ["leph105", 18], ["leph106", 23], ["leph107", 24], ["leph108", 14],
+  ["leph201", 34], ["leph202", 19], ["leph203", 16], ["leph204", 16],
+  ["leph205", 17], ["leph206", 21],
+]);
+const EXPECTED_PAGES = new Map([...CLASS_11_PAGES, ...CLASS_12_PAGES]);
 const EXPECTED_URLS = [...EXPECTED_PAGES.keys()].map(
   (code) => `https://ncert.nic.in/textbook/pdf/${code}.pdf`,
 );
@@ -66,10 +74,10 @@ const { data: batch, error: materialError } = await db
   .in("source_url", EXPECTED_URLS)
   .order("source_url");
 if (materialError) throw materialError;
-record("fourteen approved NCERT chapters", batch?.length === 14, `rows=${batch?.length ?? 0}`);
+record("twenty-eight approved NCERT Physics chapters", batch?.length === 28, `rows=${batch?.length ?? 0}`);
 
 const badMetadata = (batch ?? []).filter((row) => {
-  const code = row.source_url.match(/\/(keph\d{3})[.]pdf$/)?.[1];
+  const code = row.source_url.match(/\/([kl]eph\d{3})[.]pdf$/)?.[1];
   return row.source_name !== "NCERT"
     || row.material_type !== "full_notes"
     || row.rights_status !== "official_source"
@@ -84,13 +92,17 @@ const { data: scopes, error: scopeError } = await db
   .select("id, material_id")
   .in("material_id", materialIds);
 if (scopeError) throw scopeError;
-record("fifty-one public curriculum scopes", scopes?.length === 51, `rows=${scopes?.length ?? 0}`);
+record("one hundred five public curriculum scopes", scopes?.length === 105, `rows=${scopes?.length ?? 0}`);
 
-const common = { stage: "class-11", subject: "physics" };
+const class11 = { stage: "class-11", subject: "physics" };
+const class12 = { stage: "class-12", subject: "physics" };
 for (const [label, filters] of [
-  ["JEE Class 11 Physics directory", { ...common, goal: "jee" }],
-  ["NEET Class 11 Physics directory", { ...common, goal: "neet" }],
-  ["CBSE Class 11 Physics directory", { ...common, goal: "school", board: "cbse" }],
+  ["JEE Class 11 Physics directory", { ...class11, goal: "jee" }],
+  ["NEET Class 11 Physics directory", { ...class11, goal: "neet" }],
+  ["CBSE Class 11 Physics directory", { ...class11, goal: "school", board: "cbse" }],
+  ["JEE Class 12 Physics directory", { ...class12, goal: "jee" }],
+  ["NEET Class 12 Physics directory", { ...class12, goal: "neet" }],
+  ["CBSE Class 12 Physics directory", { ...class12, goal: "school", board: "cbse" }],
 ]) {
   const rows = await materials(filters);
   record(label, rows.length === 14 && Number(rows[0]?.total_count) === 14, `rows=${rows.length}`);
@@ -105,8 +117,22 @@ for (const [chapter, expected] of [
   ["rotational-motion", 1],
   ["oscillations-and-waves", 2],
 ]) {
-  const rows = await materials({ ...common, goal: "jee", chapter });
+  const rows = await materials({ ...class11, goal: "jee", chapter });
   record(`${chapter} chapter mapping`, rows.length === expected, `rows=${rows.length}`);
+}
+
+for (const [chapter, expected] of [
+  ["electrostatics", 2],
+  ["capacitance", 1],
+  ["current-electricity", 1],
+  ["ray-optics-and-optical-instruments", 1],
+  ["dual-nature-of-radiation-and-matter", 1],
+  ["atoms", 1],
+  ["modern-physics", 4],
+  ["semiconductor-electronics", 1],
+]) {
+  const rows = await materials({ ...class12, goal: "jee", chapter });
+  record(`${chapter} Class 12 mapping`, rows.length === expected, `rows=${rows.length}`);
 }
 
 const { data: curriculum, error: curriculumError } = await db.rpc(
@@ -122,8 +148,21 @@ if (curriculumError) throw curriculumError;
 const chapters = (curriculum ?? []).filter((row) => row.level === "chapter");
 record("material filter exposes fifteen chapter nodes", chapters.length === 15, `rows=${chapters.length}`);
 
-const unrelated = await materials({ ...common, goal: "jee", stage: "class-12" });
-record("unrelated class remains empty", unrelated.length === 0, `rows=${unrelated.length}`);
+const { data: class12Curriculum, error: class12CurriculumError } = await db.rpc(
+  "get_study_material_curriculum",
+  {
+    p_goal_slug: "school",
+    p_board_slug: "cbse",
+    p_class_slug: "class-12",
+    p_subject_slug: "physics",
+  },
+);
+if (class12CurriculumError) throw class12CurriculumError;
+const class12Chapters = (class12Curriculum ?? []).filter((row) => row.level === "chapter");
+record("Class 12 material filter exposes fourteen chapter nodes", class12Chapters.length === 14, `rows=${class12Chapters.length}`);
+
+const unrelated = await materials({ goal: "jee", stage: "class-12", subject: "chemistry" });
+record("unrelated subject remains empty", unrelated.length === 0, `rows=${unrelated.length}`);
 
 for (const check of checks) {
   console.log(`${check.pass ? "PASS" : "FAIL"} ${check.label} (${check.detail})`);
