@@ -15,6 +15,10 @@ const ncertClass10MathematicsSeed = readFileSync(
   "docs/sql/study_materials_ncert_class10_mathematics_seed_2026-08-05.sql",
   "utf8",
 );
+const ncertClass12MathematicsSeed = readFileSync(
+  "docs/sql/study_materials_ncert_class12_mathematics_seed_2026-08-05.sql",
+  "utf8",
+);
 const ncertSeed = readFileSync(
   "docs/sql/study_materials_ncert_kinematics_seed_2026-08-05.sql",
   "utf8",
@@ -194,7 +198,20 @@ async function productionShapedDatabase() {
       (510, 4, 'Areas Related to Circles', 'areas-related-to-circles', 11),
       (511, 4, 'Surface Areas and Volumes', 'surface-areas-and-volumes', 12),
       (512, 4, 'Statistics', 'statistics', 13),
-      (513, 4, 'Probability', 'probability', 14);
+      (513, 4, 'Probability', 'probability', 14),
+      (514, 4, 'Relations and Functions', 'relations-and-functions', 15),
+      (515, 4, 'Inverse Trigonometric Functions', 'inverse-trigonometric-functions', 16),
+      (516, 4, 'Matrices', 'matrices', 17),
+      (517, 4, 'Determinants', 'determinants', 18),
+      (518, 4, 'Continuity', 'continuity', 19),
+      (519, 4, 'Differentiation', 'differentiation', 20),
+      (520, 4, 'Limits, Continuity and Differentiability', 'limits-continuity-and-differentiability', 21),
+      (521, 4, 'Applications of Derivatives', 'applications-of-derivatives', 22),
+      (522, 4, 'Indefinite Integration', 'indefinite-integration', 23),
+      (523, 4, 'Definite Integration', 'definite-integration', 24),
+      (524, 4, 'Application of Integrals', 'application-of-integrals', 25),
+      (525, 4, 'Differential Equations', 'differential-equations', 26),
+      (526, 4, 'Vectors and Three Dimensional Geometry', 'vectors-and-three-dimensional-geometry', 27);
     select setval(
       pg_get_serial_sequence('public.chapters', 'id'),
       (select max(id) from public.chapters),
@@ -211,6 +228,65 @@ async function productionShapedDatabase() {
 }
 
 describe("study materials v1 local SQL rehearsal", () => {
+  it("loads current NCERT Class 12 Mathematics across JEE and CBSE lecture taxonomy", async () => {
+    const pg = await productionShapedDatabase();
+    try {
+      await pg.exec(ncertClass12MathematicsSeed);
+      await pg.exec(ncertClass12MathematicsSeed);
+
+      const counts = await pg.query(`
+        select
+          (select count(*)::integer from public.study_materials) as materials,
+          (select count(*)::integer from public.study_material_scopes) as scopes
+      `);
+      expect(counts.rows[0]).toEqual({ materials: 13, scopes: 32 });
+
+      for (const [goal, board] of [["jee", null], ["school", "cbse"]]) {
+        const directory = await pg.query(`
+          select * from public.get_study_materials(
+            p_goal_slug => '${goal}',
+            p_board_slug => ${board ? `'${board}'` : "null"},
+            p_class_slug => 'class-12',
+            p_subject_slug => 'mathematics'
+          )
+        `);
+        expect(directory.rows).toHaveLength(13);
+        expect(Number(directory.rows[0].total_count)).toBe(13);
+      }
+
+      for (const [chapter, expected] of [
+        ["limits-continuity-and-differentiability", 1],
+        ["continuity", 1],
+        ["differentiation", 1],
+        ["indefinite-integration", 1],
+        ["definite-integration", 1],
+        ["vectors-and-three-dimensional-geometry", 2],
+        ["linear-programming", 1],
+      ]) {
+        const result = await pg.query(`
+          select * from public.get_study_materials(
+            p_goal_slug => 'jee',
+            p_class_slug => 'class-12',
+            p_subject_slug => 'mathematics',
+            p_chapter_slug => '${chapter}'
+          )
+        `);
+        expect(result.rows).toHaveLength(expected);
+      }
+
+      const neet = await pg.query(`
+        select * from public.get_study_materials(
+          p_goal_slug => 'neet',
+          p_class_slug => 'class-12',
+          p_subject_slug => 'mathematics'
+        )
+      `);
+      expect(neet.rows).toHaveLength(0);
+    } finally {
+      await pg.close();
+    }
+  }, 30_000);
+
   it("loads current NCERT Class 10 Mathematics beside the existing CBSE lecture taxonomy", async () => {
     const pg = await productionShapedDatabase();
     try {
