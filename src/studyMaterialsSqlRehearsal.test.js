@@ -3,6 +3,10 @@ import { PGlite } from "@electric-sql/pglite";
 import { describe, expect, it } from "vitest";
 
 const migration = readFileSync("src/migrations/study_materials_v1.sql", "utf8");
+const curriculumMigration = readFileSync(
+  "src/migrations/study_materials_v2_catalog.sql",
+  "utf8",
+);
 const ncertSeed = readFileSync(
   "docs/sql/study_materials_ncert_kinematics_seed_2026-08-05.sql",
   "utf8",
@@ -57,12 +61,46 @@ async function productionShapedDatabase() {
       (101, 1, 'Kinematics', 'kinematics', 2),
       (200, 2, 'Redox Reactions', 'redox-reactions', 1);
     insert into public.videos values (1000, 100);
+
+    grant select on public.learning_goals, public.boards,
+      public.class_levels, public.subjects, public.chapters
+      to anon, authenticated;
   `);
   await pg.exec(migration);
   return pg;
 }
 
 describe("study materials v1 local SQL rehearsal", () => {
+  it("exposes CBSE material taxonomy even when no matching course exists", async () => {
+    const pg = await productionShapedDatabase();
+    try {
+      await pg.exec(ncertSeed);
+      await pg.exec(curriculumMigration);
+      await pg.exec("set role anon");
+
+      const curriculum = await pg.query(`
+        select level, slug, name, resource_count::integer
+          from public.get_study_material_curriculum(
+            p_goal_slug => 'school',
+            p_board_slug => 'cbse',
+            p_class_slug => 'class-11',
+            p_subject_slug => 'physics'
+          )
+      `);
+      expect(curriculum.rows).toEqual(expect.arrayContaining([
+        { level: "goal", slug: "school", name: "School Boards", resource_count: 1 },
+        { level: "board", slug: "cbse", name: "CBSE", resource_count: 1 },
+        { level: "class", slug: "class-11", name: "Class 11", resource_count: 1 },
+        { level: "subject", slug: "physics", name: "Physics", resource_count: 1 },
+        { level: "chapter", slug: "kinematics", name: "Kinematics", resource_count: 1 },
+      ]));
+
+      await pg.exec("reset role");
+    } finally {
+      await pg.close();
+    }
+  });
+
   it("publishes the reviewed NCERT chapter once across JEE, NEET and CBSE scopes", async () => {
     const pg = await productionShapedDatabase();
     try {
