@@ -15,6 +15,10 @@ const ncertClass10MathematicsSeed = readFileSync(
   "docs/sql/study_materials_ncert_class10_mathematics_seed_2026-08-05.sql",
   "utf8",
 );
+const ncertClass10EnglishSeed = readFileSync(
+  "docs/sql/study_materials_ncert_class10_english_seed_2026-08-05.sql",
+  "utf8",
+);
 const ncertClass11MathematicsSeed = readFileSync(
   "docs/sql/study_materials_ncert_class11_mathematics_seed_2026-08-05.sql",
   "utf8",
@@ -98,7 +102,8 @@ async function productionShapedDatabase() {
       (12, 'Class 12', 'class-12', 3);
     insert into public.subjects values
       (1, 'Physics', 'physics', 1), (2, 'Chemistry', 'chemistry', 2),
-      (3, 'Biology', 'biology', 3), (4, 'Mathematics', 'mathematics', 4);
+      (3, 'Biology', 'biology', 3), (4, 'Mathematics', 'mathematics', 4),
+      (5, 'English', 'english', 5);
     insert into public.chapters values
       (100, 1, 'Motion in a Straight Line', 'motion-in-a-straight-line', 1),
       (101, 1, 'Kinematics', 'kinematics', 2),
@@ -224,7 +229,25 @@ async function productionShapedDatabase() {
       (532, 4, 'Straight Lines', 'straight-lines', 33),
       (533, 4, 'Parabola', 'parabola', 34),
       (534, 4, 'Ellipse', 'ellipse', 35),
-      (535, 4, 'Hyperbola', 'hyperbola', 36);
+      (535, 4, 'Hyperbola', 'hyperbola', 36),
+      (600, 5, 'A Letter to God', 'a-letter-to-god', 1),
+      (601, 5, 'Nelson Mandela: Long Walk to Freedom', 'nelson-mandela-long-walk-to-freedom', 2),
+      (602, 5, 'Two Stories about Flying', 'two-stories-about-flying', 3),
+      (603, 5, 'From the Diary of Anne Frank', 'from-the-diary-of-anne-frank', 4),
+      (604, 5, 'Glimpses of India', 'glimpses-of-india', 5),
+      (605, 5, 'Mijbil the Otter', 'mijbil-the-otter', 6),
+      (606, 5, 'Madam Rides the Bus', 'madam-rides-the-bus', 7),
+      (607, 5, 'The Sermon at Benares', 'the-sermon-at-benares', 8),
+      (608, 5, 'The Proposal', 'the-proposal', 9),
+      (609, 5, 'A Triumph of Surgery', 'a-triumph-of-surgery', 10),
+      (610, 5, 'The Thief''s Story', 'the-thiefs-story', 11),
+      (611, 5, 'The Midnight Visitor', 'the-midnight-visitor', 12),
+      (612, 5, 'A Question of Trust', 'a-question-of-trust', 13),
+      (613, 5, 'Footprints Without Feet', 'footprints-without-feet', 14),
+      (614, 5, 'The Making of a Scientist', 'the-making-of-a-scientist', 15),
+      (615, 5, 'The Necklace', 'the-necklace', 16),
+      (616, 5, 'Bholi', 'bholi', 17),
+      (617, 5, 'The Book That Saved the Earth', 'the-book-that-saved-the-earth', 18);
     select setval(
       pg_get_serial_sequence('public.chapters', 'id'),
       (select max(id) from public.chapters),
@@ -411,6 +434,63 @@ describe("study materials v1 local SQL rehearsal", () => {
           p_goal_slug => 'jee',
           p_class_slug => 'class-10',
           p_subject_slug => 'mathematics'
+        )
+      `);
+      expect(entrance.rows).toHaveLength(0);
+    } finally {
+      await pg.close();
+    }
+  }, 30_000);
+
+  it("loads both rationalised NCERT Class 10 English readers into exact CBSE chapter scopes", async () => {
+    const pg = await productionShapedDatabase();
+    try {
+      await pg.exec(ncertClass10EnglishSeed);
+      await pg.exec(ncertClass10EnglishSeed);
+
+      const counts = await pg.query(`
+        select
+          (select count(*)::integer from public.study_materials) as materials,
+          (select count(*)::integer from public.study_material_scopes) as scopes
+      `);
+      expect(counts.rows[0]).toEqual({ materials: 18, scopes: 18 });
+
+      const directory = await pg.query(`
+        select * from public.get_study_materials(
+          p_goal_slug => 'school',
+          p_board_slug => 'cbse',
+          p_class_slug => 'class-10',
+          p_subject_slug => 'english'
+        )
+      `);
+      expect(directory.rows).toHaveLength(18);
+      expect(Number(directory.rows[0].total_count)).toBe(18);
+
+      for (const [chapter, source] of [
+        ['a-letter-to-god', 'jeff101.pdf'],
+        ['the-proposal', 'jeff109.pdf'],
+        ['a-triumph-of-surgery', 'jefp101.pdf'],
+        ['the-making-of-a-scientist', 'jefp106.pdf'],
+        ['the-book-that-saved-the-earth', 'jefp109.pdf'],
+      ]) {
+        const result = await pg.query(`
+          select * from public.get_study_materials(
+            p_goal_slug => 'school',
+            p_board_slug => 'cbse',
+            p_class_slug => 'class-10',
+            p_subject_slug => 'english',
+            p_chapter_slug => '${chapter}'
+          )
+        `);
+        expect(result.rows).toHaveLength(1);
+        expect(result.rows[0].source_url).toContain(source);
+      }
+
+      const entrance = await pg.query(`
+        select * from public.get_study_materials(
+          p_goal_slug => 'jee',
+          p_class_slug => 'class-10',
+          p_subject_slug => 'english'
         )
       `);
       expect(entrance.rows).toHaveLength(0);
