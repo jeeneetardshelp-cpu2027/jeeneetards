@@ -23,6 +23,10 @@ const ncertClass11ChemistrySeed = readFileSync(
   "docs/sql/study_materials_ncert_class11_chemistry_seed_2026-08-05.sql",
   "utf8",
 );
+const ncertClass12ChemistrySeed = readFileSync(
+  "docs/sql/study_materials_ncert_class12_chemistry_seed_2026-08-05.sql",
+  "utf8",
+);
 
 async function productionShapedDatabase() {
   const pg = new PGlite();
@@ -114,7 +118,18 @@ async function productionShapedDatabase() {
       (212, 2, 'Structural Isomerism', 'structural-isomerism', 13),
       (213, 2, 'Stereoisomerism', 'stereoisomerism', 14),
       (214, 2, 'Organic Reaction Mechanisms', 'organic-reaction-mechanisms', 15),
-      (215, 2, 'Hydrocarbons', 'hydrocarbons', 16);
+      (215, 2, 'Hydrocarbons', 'hydrocarbons', 16),
+      (216, 2, 'Solutions', 'solutions', 17),
+      (217, 2, 'Electrochemistry', 'electrochemistry', 18),
+      (218, 2, 'Chemical Kinetics', 'chemical-kinetics', 19),
+      (219, 2, 'The d- and f-Block Elements', 'the-d-and-f-block-elements', 20),
+      (220, 2, 'Coordination Compounds', 'coordination-compounds', 21),
+      (221, 2, 'Organic Compounds Containing Halogens', 'organic-compounds-containing-halogens', 22),
+      (222, 2, 'Organic Compounds Containing Oxygen', 'organic-compounds-containing-oxygen', 23),
+      (223, 2, 'Carboxylic Acids and Derivatives', 'carboxylic-acids-and-derivatives', 24),
+      (224, 2, 'Organic Compounds Containing Nitrogen', 'organic-compounds-containing-nitrogen', 25),
+      (225, 2, 'Amines', 'amines', 26),
+      (226, 2, 'Biomolecules', 'biomolecules', 27);
     insert into public.videos values (1000, 100);
 
     grant select on public.learning_goals, public.boards,
@@ -126,6 +141,59 @@ async function productionShapedDatabase() {
 }
 
 describe("study materials v1 local SQL rehearsal", () => {
+  it("loads the rationalised NCERT Class 12 Chemistry set across all curricula", async () => {
+    const pg = await productionShapedDatabase();
+    try {
+      await pg.exec(ncertClass12ChemistrySeed);
+      await pg.exec(ncertClass12ChemistrySeed);
+
+      const counts = await pg.query(`
+        select
+          (select count(*)::integer from public.study_materials) as materials,
+          (select count(*)::integer from public.study_material_scopes) as scopes
+      `);
+      expect(counts.rows[0]).toEqual({ materials: 10, scopes: 36 });
+
+      const class12 = await pg.query(`
+        select * from public.get_study_materials(
+          p_goal_slug => 'school',
+          p_board_slug => 'cbse',
+          p_class_slug => 'class-12',
+          p_subject_slug => 'chemistry'
+        )
+      `);
+      expect(class12.rows).toHaveLength(10);
+      expect(Number(class12.rows[0].total_count)).toBe(10);
+
+      for (const [chapter, expected] of [
+        ['organic-compounds-containing-oxygen', 2],
+        ['carboxylic-acids-and-derivatives', 1],
+        ['amines', 1],
+      ]) {
+        const result = await pg.query(`
+          select * from public.get_study_materials(
+            p_goal_slug => 'jee',
+            p_class_slug => 'class-12',
+            p_subject_slug => 'chemistry',
+            p_chapter_slug => '${chapter}'
+          )
+        `);
+        expect(result.rows).toHaveLength(expected);
+      }
+
+      const class11 = await pg.query(`
+        select * from public.get_study_materials(
+          p_goal_slug => 'neet',
+          p_class_slug => 'class-11',
+          p_subject_slug => 'chemistry'
+        )
+      `);
+      expect(class11.rows).toHaveLength(0);
+    } finally {
+      await pg.close();
+    }
+  }, 30_000);
+
   it("loads the rationalised NCERT Class 11 Chemistry set across all curricula", async () => {
     const pg = await productionShapedDatabase();
     try {
