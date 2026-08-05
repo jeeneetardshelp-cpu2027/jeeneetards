@@ -19,6 +19,10 @@ const ncertClass10EnglishSeed = readFileSync(
   "docs/sql/study_materials_ncert_class10_english_seed_2026-08-05.sql",
   "utf8",
 );
+const ncertClass10SocialScienceSeed = readFileSync(
+  "docs/sql/study_materials_ncert_class10_social_science_seed_2026-08-05.sql",
+  "utf8",
+);
 const ncertClass11MathematicsSeed = readFileSync(
   "docs/sql/study_materials_ncert_class11_mathematics_seed_2026-08-05.sql",
   "utf8",
@@ -103,7 +107,8 @@ async function productionShapedDatabase() {
     insert into public.subjects values
       (1, 'Physics', 'physics', 1), (2, 'Chemistry', 'chemistry', 2),
       (3, 'Biology', 'biology', 3), (4, 'Mathematics', 'mathematics', 4),
-      (5, 'English', 'english', 5);
+      (5, 'English', 'english', 5),
+      (6, 'Social Science', 'social-science', 6);
     insert into public.chapters values
       (100, 1, 'Motion in a Straight Line', 'motion-in-a-straight-line', 1),
       (101, 1, 'Kinematics', 'kinematics', 2),
@@ -247,7 +252,29 @@ async function productionShapedDatabase() {
       (614, 5, 'The Making of a Scientist', 'the-making-of-a-scientist', 15),
       (615, 5, 'The Necklace', 'the-necklace', 16),
       (616, 5, 'Bholi', 'bholi', 17),
-      (617, 5, 'The Book That Saved the Earth', 'the-book-that-saved-the-earth', 18);
+      (617, 5, 'The Book That Saved the Earth', 'the-book-that-saved-the-earth', 18),
+      (700, 6, 'The Rise of Nationalism in Europe', 'the-rise-of-nationalism-in-europe', 1),
+      (701, 6, 'Nationalism in India', 'nationalism-in-india', 2),
+      (702, 6, 'The Making of a Global World', 'the-making-of-a-global-world', 3),
+      (703, 6, 'The Age of Industrialisation', 'the-age-of-industrialisation', 4),
+      (704, 6, 'Print Culture and the Modern World', 'print-culture-and-the-modern-world', 5),
+      (705, 6, 'Resources and Development', 'resources-and-development', 6),
+      (706, 6, 'Forest and Wildlife Resources', 'forest-and-wildlife-resources', 7),
+      (707, 6, 'Water Resources', 'water-resources', 8),
+      (708, 6, 'Agriculture', 'agriculture', 9),
+      (709, 6, 'Minerals and Energy Resources', 'minerals-and-energy-resources', 10),
+      (710, 6, 'Manufacturing Industries', 'manufacturing-industries', 11),
+      (711, 6, 'Lifelines of National Economy', 'lifelines-of-national-economy', 12),
+      (712, 6, 'Power Sharing', 'power-sharing', 13),
+      (713, 6, 'Federalism', 'federalism', 14),
+      (714, 6, 'Gender, Religion and Caste', 'gender-religion-and-caste', 15),
+      (715, 6, 'Political Parties', 'political-parties', 16),
+      (716, 6, 'Outcomes of Democracy', 'outcomes-of-democracy', 17),
+      (717, 6, 'Development', 'development', 18),
+      (718, 6, 'Sectors of the Indian Economy', 'sectors-of-the-indian-economy', 19),
+      (719, 6, 'Money and Credit', 'money-and-credit', 20),
+      (720, 6, 'Globalisation and the Indian Economy', 'globalisation-and-the-indian-economy', 21),
+      (721, 6, 'Consumer Rights', 'consumer-rights', 22);
     select setval(
       pg_get_serial_sequence('public.chapters', 'id'),
       (select max(id) from public.chapters),
@@ -491,6 +518,63 @@ describe("study materials v1 local SQL rehearsal", () => {
           p_goal_slug => 'jee',
           p_class_slug => 'class-10',
           p_subject_slug => 'english'
+        )
+      `);
+      expect(entrance.rows).toHaveLength(0);
+    } finally {
+      await pg.close();
+    }
+  }, 30_000);
+
+  it("loads all four rationalised NCERT Class 10 Social Science books into exact CBSE chapter scopes", async () => {
+    const pg = await productionShapedDatabase();
+    try {
+      await pg.exec(ncertClass10SocialScienceSeed);
+      await pg.exec(ncertClass10SocialScienceSeed);
+
+      const counts = await pg.query(`
+        select
+          (select count(*)::integer from public.study_materials) as materials,
+          (select count(*)::integer from public.study_material_scopes) as scopes
+      `);
+      expect(counts.rows[0]).toEqual({ materials: 22, scopes: 22 });
+
+      const directory = await pg.query(`
+        select * from public.get_study_materials(
+          p_goal_slug => 'school',
+          p_board_slug => 'cbse',
+          p_class_slug => 'class-10',
+          p_subject_slug => 'social-science'
+        )
+      `);
+      expect(directory.rows).toHaveLength(22);
+      expect(Number(directory.rows[0].total_count)).toBe(22);
+
+      for (const [chapter, source] of [
+        ['the-rise-of-nationalism-in-europe', 'jess301.pdf'],
+        ['resources-and-development', 'jess101.pdf'],
+        ['power-sharing', 'jess401.pdf'],
+        ['development', 'jess201.pdf'],
+        ['consumer-rights', 'jess205.pdf'],
+      ]) {
+        const result = await pg.query(`
+          select * from public.get_study_materials(
+            p_goal_slug => 'school',
+            p_board_slug => 'cbse',
+            p_class_slug => 'class-10',
+            p_subject_slug => 'social-science',
+            p_chapter_slug => '${chapter}'
+          )
+        `);
+        expect(result.rows).toHaveLength(1);
+        expect(result.rows[0].source_url).toContain(source);
+      }
+
+      const entrance = await pg.query(`
+        select * from public.get_study_materials(
+          p_goal_slug => 'jee',
+          p_class_slug => 'class-10',
+          p_subject_slug => 'social-science'
         )
       `);
       expect(entrance.rows).toHaveLength(0);
