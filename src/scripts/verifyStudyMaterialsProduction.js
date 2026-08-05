@@ -1,5 +1,5 @@
 // Anonymous, read-only production postflight for the reviewed NCERT Physics,
-// Chemistry, Biology and Class 10 Science collections. It verifies exact
+// Chemistry, Biology, Class 10 Science and Mathematics collections. It verifies exact
 // sources, curriculum scopes, directory filters and chapter-context reads
 // without an admin credential.
 
@@ -71,6 +71,13 @@ const CLASS_10_SCIENCE_PAGES = new Map([
   ["jesc110", 10], ["jesc111", 24], ["jesc112", 13],
   ["jesc113", 10],
 ]);
+const CLASS_10_MATHEMATICS_PAGES = new Map([
+  ["jemh101", 9], ["jemh102", 14], ["jemh103", 14],
+  ["jemh104", 11], ["jemh105", 24], ["jemh106", 26],
+  ["jemh107", 14], ["jemh108", 20], ["jemh109", 11],
+  ["jemh110", 10], ["jemh111", 7], ["jemh112", 10],
+  ["jemh113", 31], ["jemh114", 16],
+]);
 const EXPECTED_PAGES = new Map([
   ...CLASS_11_PHYSICS_PAGES,
   ...CLASS_12_PHYSICS_PAGES,
@@ -79,6 +86,7 @@ const EXPECTED_PAGES = new Map([
   ...CLASS_11_BIOLOGY_PAGES,
   ...CLASS_12_BIOLOGY_PAGES,
   ...CLASS_10_SCIENCE_PAGES,
+  ...CLASS_10_MATHEMATICS_PAGES,
 ]);
 const EXPECTED_URLS = [...EXPECTED_PAGES.keys()].map(
   (code) => `https://ncert.nic.in/textbook/pdf/${code}.pdf`,
@@ -116,10 +124,10 @@ const { data: batch, error: materialError } = await db
   .in("source_url", EXPECTED_URLS)
   .order("source_url");
 if (materialError) throw materialError;
-record("ninety-two approved NCERT chapters", batch?.length === 92, `rows=${batch?.length ?? 0}`);
+record("one hundred six approved NCERT chapters", batch?.length === 106, `rows=${batch?.length ?? 0}`);
 
 const badMetadata = (batch ?? []).filter((row) => {
-  const code = row.source_url.match(/\/((?:keph|leph|kech|lech|kebo|lebo|jesc)\d{3})[.]pdf$/)?.[1];
+  const code = row.source_url.match(/\/((?:keph|leph|kech|lech|kebo|lebo|jesc|jemh)\d{3})[.]pdf$/)?.[1];
   return row.source_name !== "NCERT"
     || row.material_type !== "full_notes"
     || row.rights_status !== "official_source"
@@ -134,7 +142,7 @@ const { data: scopes, error: scopeError } = await db
   .select("id, material_id")
   .in("material_id", materialIds);
 if (scopeError) throw scopeError;
-record("two hundred sixty-six public curriculum scopes", scopes?.length === 266, `rows=${scopes?.length ?? 0}`);
+record("two hundred eighty public curriculum scopes", scopes?.length === 280, `rows=${scopes?.length ?? 0}`);
 
 const physics11 = { stage: "class-11", subject: "physics" };
 const physics12 = { stage: "class-12", subject: "physics" };
@@ -145,6 +153,7 @@ const biology12 = { stage: "class-12", subject: "biology" };
 const chemistry10 = { stage: "class-10", subject: "chemistry" };
 const biology10 = { stage: "class-10", subject: "biology" };
 const physics10 = { stage: "class-10", subject: "physics" };
+const mathematics10 = { stage: "class-10", subject: "mathematics" };
 for (const [label, filters, expected] of [
   ["JEE Class 11 Physics directory", { ...physics11, goal: "jee" }, 14],
   ["NEET Class 11 Physics directory", { ...physics11, goal: "neet" }, 14],
@@ -165,6 +174,7 @@ for (const [label, filters, expected] of [
   ["CBSE Class 10 Chemistry directory", { ...chemistry10, goal: "school", board: "cbse" }, 4],
   ["CBSE Class 10 Biology directory", { ...biology10, goal: "school", board: "cbse" }, 5],
   ["CBSE Class 10 Physics directory", { ...physics10, goal: "school", board: "cbse" }, 4],
+  ["CBSE Class 10 Mathematics directory", { ...mathematics10, goal: "school", board: "cbse" }, 14],
 ]) {
   const rows = await materials(filters);
   record(label, rows.length === expected && Number(rows[0]?.total_count) === expected, `rows=${rows.length}`);
@@ -254,6 +264,28 @@ for (const [subject, chapters10] of [
     });
     record(`${chapter} Class 10 Science mapping`, rows.length === 1, `rows=${rows.length}`);
   }
+}
+
+for (const chapter of [
+  "real-numbers",
+  "polynomials",
+  "pair-of-linear-equations-in-two-variables",
+  "quadratic-equations",
+  "arithmetic-progressions",
+  "triangles",
+  "coordinate-geometry",
+  "introduction-to-trigonometry",
+  "some-applications-of-trigonometry",
+  "circles",
+  "areas-related-to-circles",
+  "surface-areas-and-volumes",
+  "statistics",
+  "probability",
+]) {
+  const rows = await materials({
+    goal: "school", board: "cbse", ...mathematics10, chapter,
+  });
+  record(`${chapter} Class 10 Mathematics mapping`, rows.length === 1, `rows=${rows.length}`);
 }
 
 for (const [chapter, expected] of [
@@ -382,7 +414,7 @@ const biology12Chapters = (biology12Curriculum ?? []).filter((row) => row.level 
 record("Class 12 Biology material filter exposes thirteen chapter nodes", biology12Chapters.length === 13, `rows=${biology12Chapters.length}`);
 
 for (const [subject, expected] of [
-  ["chemistry", 4], ["biology", 5], ["physics", 4],
+  ["chemistry", 4], ["biology", 5], ["physics", 4], ["mathematics", 14],
 ]) {
   const { data, error } = await db.rpc("get_study_material_curriculum", {
     p_goal_slug: "school",

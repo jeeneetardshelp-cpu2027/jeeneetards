@@ -11,6 +11,10 @@ const ncertClass10ScienceSeed = readFileSync(
   "docs/sql/study_materials_ncert_class10_science_seed_2026-08-05.sql",
   "utf8",
 );
+const ncertClass10MathematicsSeed = readFileSync(
+  "docs/sql/study_materials_ncert_class10_mathematics_seed_2026-08-05.sql",
+  "utf8",
+);
 const ncertSeed = readFileSync(
   "docs/sql/study_materials_ncert_kinematics_seed_2026-08-05.sql",
   "utf8",
@@ -86,7 +90,7 @@ async function productionShapedDatabase() {
       (12, 'Class 12', 'class-12', 3);
     insert into public.subjects values
       (1, 'Physics', 'physics', 1), (2, 'Chemistry', 'chemistry', 2),
-      (3, 'Biology', 'biology', 3);
+      (3, 'Biology', 'biology', 3), (4, 'Mathematics', 'mathematics', 4);
     insert into public.chapters values
       (100, 1, 'Motion in a Straight Line', 'motion-in-a-straight-line', 1),
       (101, 1, 'Kinematics', 'kinematics', 2),
@@ -176,7 +180,21 @@ async function productionShapedDatabase() {
       (428, 3, 'Biotechnology and its Applications', 'biotechnology-and-its-applications', 29),
       (429, 3, 'Organisms and Populations', 'organisms-and-populations', 30),
       (430, 3, 'Ecosystem', 'ecosystem', 31),
-      (431, 3, 'Biodiversity and Conservation', 'biodiversity-and-conservation', 32);
+      (431, 3, 'Biodiversity and Conservation', 'biodiversity-and-conservation', 32),
+      (500, 4, 'Real Numbers', 'real-numbers', 1),
+      (501, 4, 'Polynomials', 'polynomials', 2),
+      (502, 4, 'Pair of Linear Equations in Two Variables', 'pair-of-linear-equations-in-two-variables', 3),
+      (503, 4, 'Quadratic Equations', 'quadratic-equations', 4),
+      (504, 4, 'Arithmetic Progressions', 'arithmetic-progressions', 5),
+      (505, 4, 'Triangles', 'triangles', 6),
+      (506, 4, 'Coordinate Geometry', 'coordinate-geometry', 7),
+      (507, 4, 'Introduction to Trigonometry', 'introduction-to-trigonometry', 8),
+      (508, 4, 'Some Applications of Trigonometry', 'some-applications-of-trigonometry', 9),
+      (509, 4, 'Circles', 'circles', 10),
+      (510, 4, 'Areas Related to Circles', 'areas-related-to-circles', 11),
+      (511, 4, 'Surface Areas and Volumes', 'surface-areas-and-volumes', 12),
+      (512, 4, 'Statistics', 'statistics', 13),
+      (513, 4, 'Probability', 'probability', 14);
     select setval(
       pg_get_serial_sequence('public.chapters', 'id'),
       (select max(id) from public.chapters),
@@ -193,6 +211,62 @@ async function productionShapedDatabase() {
 }
 
 describe("study materials v1 local SQL rehearsal", () => {
+  it("loads current NCERT Class 10 Mathematics beside the existing CBSE lecture taxonomy", async () => {
+    const pg = await productionShapedDatabase();
+    try {
+      await pg.exec(ncertClass10MathematicsSeed);
+      await pg.exec(ncertClass10MathematicsSeed);
+
+      const counts = await pg.query(`
+        select
+          (select count(*)::integer from public.study_materials) as materials,
+          (select count(*)::integer from public.study_material_scopes) as scopes
+      `);
+      expect(counts.rows[0]).toEqual({ materials: 14, scopes: 14 });
+
+      const directory = await pg.query(`
+        select * from public.get_study_materials(
+          p_goal_slug => 'school',
+          p_board_slug => 'cbse',
+          p_class_slug => 'class-10',
+          p_subject_slug => 'mathematics'
+        )
+      `);
+      expect(directory.rows).toHaveLength(14);
+      expect(Number(directory.rows[0].total_count)).toBe(14);
+
+      for (const chapter of [
+        'real-numbers',
+        'quadratic-equations',
+        'introduction-to-trigonometry',
+        'surface-areas-and-volumes',
+        'probability',
+      ]) {
+        const result = await pg.query(`
+          select * from public.get_study_materials(
+            p_goal_slug => 'school',
+            p_board_slug => 'cbse',
+            p_class_slug => 'class-10',
+            p_subject_slug => 'mathematics',
+            p_chapter_slug => '${chapter}'
+          )
+        `);
+        expect(result.rows).toHaveLength(1);
+      }
+
+      const entrance = await pg.query(`
+        select * from public.get_study_materials(
+          p_goal_slug => 'jee',
+          p_class_slug => 'class-10',
+          p_subject_slug => 'mathematics'
+        )
+      `);
+      expect(entrance.rows).toHaveLength(0);
+    } finally {
+      await pg.close();
+    }
+  }, 30_000);
+
   it("loads current NCERT Class 10 Science into exact CBSE subject and chapter scopes", async () => {
     const pg = await productionShapedDatabase();
     try {
