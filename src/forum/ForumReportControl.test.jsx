@@ -45,6 +45,16 @@ describe("forum report control", () => {
     expect(screen.queryByText("Sent for urgent human review")).toBeNull();
   });
 
+  it("keeps focus on a report reason when the controlled drawer rerenders", () => {
+    renderControl({ submitReport: vi.fn() });
+    fireEvent.click(screen.getByRole("button", { name: "Report this discussion" }));
+    const selfHarm = screen.getByLabelText("Self-harm or suicide concern");
+    selfHarm.focus();
+    fireEvent.click(selfHarm);
+    expect(document.activeElement).toBe(selfHarm);
+    expect(screen.getByRole("note")).toBeTruthy();
+  });
+
   it("reuses the existing student sign-in surface", () => {
     renderControl({ submitReport: vi.fn() }, { session: null, loading: false });
     fireEvent.click(screen.getByRole("button", { name: "Report this discussion" }));

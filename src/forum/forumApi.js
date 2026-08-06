@@ -131,6 +131,12 @@ export function createForumApi(client = supabase) {
         p_report_id: reportId,
       }), "apply that moderation action");
     },
+
+    async dismissReport({ reportId }) {
+      return unwrap(await requireClient(client).rpc("forum_admin_dismiss_report", {
+        p_report_id: reportId,
+      }), "dismiss that report");
+    },
   });
 }
 

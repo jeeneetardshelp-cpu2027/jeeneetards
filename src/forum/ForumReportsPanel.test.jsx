@@ -45,11 +45,17 @@ describe("forum moderation queue", () => {
     })));
   });
 
-  it("does not invent an action for a missing target", async () => {
-    const api = { listReports: vi.fn().mockResolvedValue([{ ...urgentReport, target_exists: false, content_preview: null }]) };
+  it("dismisses a missing-target report without inventing a content action", async () => {
+    const api = {
+      listReports: vi.fn().mockResolvedValue([{ ...urgentReport, target_exists: false, content_preview: null }]),
+      dismissReport: vi.fn().mockResolvedValue(null),
+    };
     renderPanel(api);
-    expect(await screen.findByText(/backend cannot dismiss the remaining report/i)).toBeTruthy();
+    expect(await screen.findByText(/without changing discussion content/i)).toBeTruthy();
     expect(screen.queryByRole("button", { name: /resolve|remove/i })).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "Dismiss report without changing content" }));
+    await waitFor(() => expect(api.dismissReport).toHaveBeenCalledWith({ reportId: 8 }));
+    expect(screen.getByText("No open forum reports")).toBeTruthy();
   });
 
   it("does not force an admin to undo an existing hide or lock to resolve a report", async () => {
