@@ -14,6 +14,12 @@ A local, unapplied claim delta now exists for full review:
 - a PGlite behavioural rehearsal and a guarded real JWT staging verifier;
 - UI claim gates and locally preserved post/answer drafts behind the forum flag.
 
+Privacy correction approved on 2026-08-06: guest drafts and signed-in drafts
+remain separate. An anonymous draft cannot prove that the next account belongs
+to the same person, so the UI never automatically adopts or exposes guest
+content after sign-in. Each signed-in account reads and clears only its own
+draft key; the guest copy remains on the device under the guest key.
+
 Nothing in this checkpoint has been applied to staging or production. This
 remains a launch blocker until the SQL diff is approved, the persistent staging
 delta and JWT fixture cycle pass, and the final production application receives
@@ -37,8 +43,9 @@ assigns one to existing profiles.
    availability check. Duplicate-name errors must return a friendly retry.
 4. Reserved staff-like, abusive, impersonating, and misleading names are
    rejected server-side.
-5. After a successful claim, the original draft is restored and the student can
-   submit it normally.
+5. After a successful claim, the student resumes that signed-in account's own
+   draft. A guest draft remains separate and is never automatically shown to an
+   account on a shared device.
 
 ## Existing profiles
 
@@ -62,7 +69,8 @@ mode must not be set to `open` for student writing.
 
 - New and existing accounts can claim a username.
 - Concurrent claims of the same name yield one winner and one friendly error.
-- Refreshing or returning from sign-in does not lose a saved draft.
+- Refreshing or returning from sign-in does not delete either the guest draft or
+  that signed-in account's own draft, and never crosses the two identities.
 - Direct browser writes cannot bypass the claim RPC or reserved-name policy.
 - Moderation views and public author labels show the claimed username only.
 - The light and dark mobile layouts remain clear at the claim gate.

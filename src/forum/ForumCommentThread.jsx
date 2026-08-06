@@ -3,12 +3,13 @@ import { useMemo, useState } from "react";
 import { buildCommentTree } from "./buildCommentTree.js";
 import { compactNumber, timeAgo } from "./forumFormatting.js";
 import ForumMathContent from "./ForumMathContent.jsx";
+import ForumVoteControl from "./ForumVoteControl.jsx";
 
 function descendantCount(comment) {
   return comment.replies.reduce((total, reply) => total + 1 + descendantCount(reply), 0);
 }
 
-function CommentNode({ comment, depth = 0 }) {
+function CommentNode({ comment, depth = 0, voting = null }) {
   const [collapsed, setCollapsed] = useState(false);
   const descendants = descendantCount(comment);
   const addIndent = depth > 0 && depth <= 3;
@@ -21,15 +22,34 @@ function CommentNode({ comment, depth = 0 }) {
           <span aria-hidden="true">·</span>
           <time dateTime={comment.created_at}>{timeAgo(comment.created_at)}</time>
           {comment.edited_at && <span>(edited)</span>}
-          <span className="inline-flex items-center gap-1" aria-label={`${comment.score} score`}>
-            <TrendingUp aria-hidden="true" className="h-3.5 w-3.5" />
-            {compactNumber(comment.score)}
-          </span>
+          {!voting && (
+            <span className="inline-flex items-center gap-1" aria-label={`${comment.score} score`}>
+              <TrendingUp aria-hidden="true" className="h-3.5 w-3.5" />
+              {compactNumber(comment.score)}
+            </span>
+          )}
         </div>
 
         <ForumMathContent className={`mt-3 ${comment.is_tombstone ? "italic text-ink-3" : ""}`}>
           {comment.body}
         </ForumMathContent>
+
+        {voting && !comment.is_tombstone && (
+          <div className="mt-3">
+            <ForumVoteControl
+              targetType="comment"
+              targetId={comment.id}
+              score={comment.score}
+              upvoteCount={comment.upvote_count}
+              downvoteCount={comment.downvote_count}
+              viewerVote={comment.viewer_vote}
+              canVote={voting.canVote}
+              api={voting.api}
+              onBlocked={voting.onBlocked}
+              compact
+            />
+          </div>
+        )}
 
         {descendants > 0 && (
           <button
@@ -49,14 +69,14 @@ function CommentNode({ comment, depth = 0 }) {
       {!collapsed && comment.replies.length > 0 && (
         <ul className="space-y-1">
           {comment.replies.map((reply) => (
-            <CommentNode key={reply.id} comment={reply} depth={depth + 1} />
+            <CommentNode key={reply.id} comment={reply} depth={depth + 1} voting={voting} />
           ))}
         </ul>
       )}
     </li>
   );
 }
-export default function ForumCommentThread({ comments }) {
+export default function ForumCommentThread({ comments, voting = null }) {
   const tree = useMemo(() => buildCommentTree(comments), [comments]);
   if (!tree.length) {
     return (
@@ -69,7 +89,7 @@ export default function ForumCommentThread({ comments }) {
 
   return (
     <ul className="divide-y divide-hairline rounded-xl border border-hairline bg-surface px-4 sm:px-6">
-      {tree.map((comment) => <CommentNode key={comment.id} comment={comment} />)}
+      {tree.map((comment) => <CommentNode key={comment.id} comment={comment} voting={voting} />)}
     </ul>
   );
 }
