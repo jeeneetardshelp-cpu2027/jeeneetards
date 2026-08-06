@@ -25,10 +25,16 @@ describe("Unacademy NEET fourteenth-batch production report", () => {
     expect(report).toContain("9eea2b44f0b19c08cc0907c57e091342");
   });
 
-  it("records the source refresh and keeps later transitions gated", () => {
+  it("records the source refresh and the guarded faculty-link transition", () => {
     expect(report).toContain("24c74a76-22fa-4bcc-8d31-5fbd688a9045");
     expect(report).toContain("excluded only the\ncurrent Quiz 2 row");
+    expect(report).toContain("fed469e8036e346ccfb45cae8e8c01cd66f1c32addcbd40eae4c1a641f5d16c1");
+    expect(report).toContain("| 420 | 34 | Mahendra Singh | 1 |");
+    expect(report).toContain("| 421 | 33 | Pradeep Singh | 1 |");
+    expect(report).toContain("| 422 | 33 | Pradeep Singh | 1 |");
+    expect(report).toContain("158 total faculty links");
+    expect(report).toContain("zero target quality reviews");
     expect(report).toContain("no `release` push");
-    expect(report).toMatch(/remain\s+separate, later hash-gated production steps/);
+    expect(report).toMatch(/content-quality review transition[\s\S]*remains a separate,[\s\S]*hash-gated production step/);
   });
 });

@@ -54,8 +54,41 @@ memberships / `30eee4a4a6842e5beeb7c97083d7f812`** after every write. The
 rolling JEE catalogue remained exactly **212 courses / 2,848 memberships /
 `9eea2b44f0b19c08cc0907c57e091342`**.
 
+## Faculty-link transition
+
+The separately approved faculty-link artifact was applied later on 6 August
+2026. The normalized SQL editor content exactly matched SHA-256
+`fed469e8036e346ccfb45cae8e8c01cd66f1c32addcbd40eae4c1a641f5d16c1`;
+the editor's only byte-level difference was CRLF line-ending conversion.
+
+Before the write, the signed-in production dashboard confirmed active seven-day
+PITR with latest restore availability at `06 Aug 2026, 15:48:54 IST`. The fresh
+production preflight matched exactly:
+
+- 403 playlists / 4,655 videos / 4,661 memberships / 263 chapters;
+- 92 chapter-class scopes / 32 teachers / 50 aliases / 33 institutes;
+- 33 teacher-subject rows / 32 teacher-goal rows;
+- 155 faculty links / 26 quality reviews;
+- zero existing faculty links and zero quality reviews for courses 420-422;
+- protected JEE boundary 82 courses / 1,304 memberships /
+  `30eee4a4a6842e5beeb7c97083d7f812`.
+
+The guarded transaction inserted exactly three normalized links:
+
+| Course ID | Teacher ID | Teacher | Position |
+| ---: | ---: | --- | ---: |
+| 420 | 34 | Mahendra Singh | 1 |
+| 421 | 33 | Pradeep Singh | 1 |
+| 422 | 33 | Pradeep Singh | 1 |
+
+An independent read-only postflight confirmed 158 total faculty links, 26
+quality reviews, exactly those three target links, zero target quality reviews,
+unchanged catalogue totals, and the unchanged protected JEE boundary. All three
+courses remain `pending` for title and faculty-credit review. No `release` push
+was performed.
+
 ## Remaining gated work
 
-Faculty-link and content-quality review transitions for courses 420-422 remain
-separate, later hash-gated production steps. This content-import gate does not
-authorize either transition or a deployment.
+The content-quality review transition for courses 420-422 remains a separate,
+later hash-gated production step. This faculty-link gate did not authorize that
+transition or a deployment.
