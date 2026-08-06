@@ -44,6 +44,10 @@ describe("Unacademy NEET fifteenth-batch readiness", () => {
     expect(readiness).toContain("82 courses / 1,304");
     expect(readiness).toContain("30eee4a4a6842e5beeb7c97083d7f812");
     expect(readiness).toContain("course 3 was not attempted");
+    expect(readiness).toContain("fifteenth batch is now complete");
+    expect(readiness).toContain("courses 423-425");
+    expect(readiness).toContain("+3 playlists / +28 videos / +28 memberships / +0 chapters");
+    expect(readiness).toContain("406 / 4,683 / 4,689 / 263");
   });
 
   it("pins the reviewed taxonomy, class scopes, and verified teachers", () => {

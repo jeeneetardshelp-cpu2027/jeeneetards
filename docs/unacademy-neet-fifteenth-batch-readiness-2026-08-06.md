@@ -133,6 +133,14 @@ recorded in
 `unacademy-neet-fifteenth-remaining-refresh-readiness-2026-08-06.md`; it has a
 new, separate owner-decision gate and does not weaken this stop record.
 
+That refreshed continuation was subsequently approved under decision
+`1412ca96-56dc-47ef-8bc0-18ce97f7dfb6` and completed as courses 424 and 425.
+Across both decisions, the fifteenth batch is now complete: courses 423-425,
++3 playlists / +28 videos / +28 memberships / +0 chapters, zero reused videos,
+and final production totals 406 / 4,683 / 4,689 / 263. Protected and rolling JEE
+remained unchanged after every write. Faculty links and quality review remain
+separate later gates.
+
 After course 1, the protected JEE boundary remained exactly 82 courses / 1,304
 memberships / `30eee4a4a6842e5beeb7c97083d7f812`; rolling JEE remained 212
 courses / 2,848 memberships / `9eea2b44f0b19c08cc0907c57e091342`.

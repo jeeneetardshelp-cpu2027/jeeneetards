@@ -2,11 +2,11 @@
 
 ## Status
 
-Review-only continuation package prepared after decision
-`5b4b1d41-b7dc-4f12-80cf-b490e72edd96` imported course 423 and then correctly
-stopped on the Fluid Mechanics source-snapshot mismatch. This continuation made
-no production write, schema change, restore, clone, deployment, or `release`
-push.
+Owner decision `1412ca96-56dc-47ef-8bc0-18ce97f7dfb6` was executed after
+decision `5b4b1d41-b7dc-4f12-80cf-b490e72edd96` imported course 423 and then
+correctly stopped on the Fluid Mechanics source-snapshot mismatch. The two
+remaining courses were imported create-only, one at a time. This continuation
+made no schema change, restore, clone, deployment, or `release` push.
 
 ## Fresh production boundary
 
@@ -41,18 +41,30 @@ The refreshed review artifact is
 `docs/reviews/unacademy-neet-fifteenth-remaining-refresh-2026-08-06.json`,
 SHA-256 `5b2b668ee827ab0fc4d36fcbaef1de5398e0554f51b5152fcf9ec3a98e51ddc0`.
 
-## Required execution gate
+## Guarded production execution
 
-After a matching owner decision, run Fluid Mechanics and then Kinematics 1D,
-one at a time. Before each write, refresh PITR, exact quiet-window counts, the
-exact official source, source/video reuse, and the anonymous mapped dry-run.
-Require the refreshed source snapshot above, import create-only, and verify the
-protected original-82 JEE fingerprint after each. Stop on any further source
-mutation, reuse, drift, dry-run finding, or JEE mismatch. Faculty links and
-quality review remain later, separately hash-gated transitions. No `release`
-push is authorized.
+The signed-in production dashboard confirmed active seven-day PITR before each
+write, with latest restore point `6 August 2026, 17:53:00 IST`. Each exact
+source refresh matched the approved whitespace-only snapshot above; each
+target source ID and retained video set had zero production reuse; and both
+anonymous mapped dry-runs returned 1 ok / 0 review / 0 blocked.
 
-## Proposed owner decision
+| Order | Course | Course ID | Exact preflight | Delta | Verification |
+| ---: | --- | ---: | --- | --- | --- |
+| 1 | Fluid Mechanics | `424` | 404 / 4,666 / 4,672 / 263; protected JEE exact | +1 playlist / +11 videos / +11 memberships / +0 chapters; 0 reused | chapter 26; NEET-only; class-11; positions 1-11 |
+| 2 | Kinematics 1D | `425` | 405 / 4,677 / 4,683 / 263; protected JEE exact | +1 playlist / +6 videos / +6 memberships / +0 chapters; 0 reused | chapter 1; NEET-only; class-11; positions 1-6 |
+
+Final production totals are 406 playlists / 4,683 videos / 4,689 memberships /
+263 chapters. The continuation delta is +2 playlists / +17 videos / +17
+memberships / +0 chapters, with zero video reuse. After each write, protected
+JEE remained exactly 82 courses / 1,304 memberships /
+`30eee4a4a6842e5beeb7c97083d7f812`; rolling JEE remained 212 courses / 2,848
+memberships / `9eea2b44f0b19c08cc0907c57e091342`.
+
+Faculty links and quality review remain later, separately hash-gated
+transitions. No `release` push was performed.
+
+## Historical owner decision
 
 `Approve the refreshed Unacademy NEET fifteenth-batch remainder — Fluid
 Mechanics and Kinematics 1D — under decision

@@ -18,15 +18,25 @@ const original = JSON.parse(readFileSync(
 const sha256 = (value) => createHash("sha256").update(value).digest("hex");
 
 describe("Unacademy NEET fifteenth-batch remainder refresh", () => {
-  it("keeps the continuation review-only with a new explicit decision", () => {
+  it("records the executed continuation under the new explicit decision", () => {
     expect(refresh).toMatchObject({
       review_status: "owner_approval_required",
       proposed_decision_id: "1412ca96-56dc-47ef-8bc0-18ce97f7dfb6",
       parent_decision_id: "5b4b1d41-b7dc-4f12-80cf-b490e72edd96",
       parent_execution_commit: "5c0254bb58090b00c81a847812d7c792c905c5f4",
     });
-    expect(readiness).toContain("no production write");
-    expect(readiness).toContain("No `release`\npush is authorized");
+    expect(readiness).toContain("two\nremaining courses were imported create-only");
+    expect(readiness).toContain("No `release` push was performed");
+  });
+
+  it("records exact course deltas, final totals, and PITR evidence", () => {
+    expect(readiness).toContain("6 August 2026, 17:53:00 IST");
+    expect(readiness).toContain("| 1 | Fluid Mechanics | `424`");
+    expect(readiness).toContain("+1 playlist / +11 videos / +11 memberships / +0 chapters; 0 reused");
+    expect(readiness).toContain("| 2 | Kinematics 1D | `425`");
+    expect(readiness).toContain("+1 playlist / +6 videos / +6 memberships / +0 chapters; 0 reused");
+    expect(readiness).toContain("406 playlists / 4,683 videos / 4,689 memberships /\n263 chapters");
+    expect(readiness).toContain("+2 playlists / +17 videos / +17");
   });
 
   it("pins the exact post-course-423 catalogue and both JEE boundaries", () => {
