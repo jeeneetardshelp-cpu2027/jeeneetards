@@ -47,6 +47,7 @@ const AdminPanel = lazy(() => import("./AdminPanel.jsx"));
 const CourseVideoPage = lazy(() => import("./CourseVideoPage.jsx"));
 const TestsPage = lazy(() => import("./TestsPage.jsx"));
 const ExamTestsPage = lazy(() => import("./ExamTestsPage.jsx"));
+const StudyMaterialsPage = lazy(() => import("./StudyMaterialsPage.jsx"));
 
 function RouteFallback() {
   return (
@@ -265,6 +266,16 @@ function FacultyRoute() {
   );
 }
 
+function StudyMaterialsRoute() {
+  if (RELEASE_CAPABILITIES.studyMaterials) return <StudyMaterialsPage />;
+  return (
+    <FeatureUnavailable
+      title="Study material is coming soon"
+      detail="Short notes, formula sheets, lecture notes and previous-year papers are being checked before they are published."
+    />
+  );
+}
+
 // ---------------------------------------------------------------------
 //  THE APP
 //  ThemeProvider sits above everything, so the light/dark toggle in one
@@ -300,6 +311,7 @@ export default function App() {
           <Route path="/faculty/:slug" element={<FacultyRoute />} />
           <Route path="/compare" element={<ComparisonRoute />} />
           <Route path="/search" element={<UniversalSearchRoute />} />
+          <Route path="/materials" element={<StudyMaterialsRoute />} />
           {/* Both screens are addressed by real database ids. */}
           <Route path="/chapter/:chapterId" element={<LegacyChapterRedirect />} />
           {/* A course opened from the catalogue has no chapter context, so the

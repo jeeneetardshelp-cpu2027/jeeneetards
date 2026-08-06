@@ -27,5 +27,20 @@ export default defineConfig({
   test: {
     environment: "jsdom",
     globals: true,
+    // Vitest defaults to a 5s per-test timeout (verified by probe, not assumed).
+    // The heaviest component tests — CourseSequence's full-course paging,
+    // Dashboard.goal's mobile search, shellSafety's statistics band — normally
+    // take 2.1–2.4s, so only a ~2x slowdown is enough to blow that budget. With
+    // 130+ files sharing 12 cores that happens intermittently: one run failed
+    // four of them, the next run failed a different one, and every one passed in
+    // isolation. A suite that fails somewhere different each run trains people
+    // to re-run rather than read the failure, which is how a real break gets
+    // waved through.
+    //
+    // 15s keeps roughly a 6x margin over the slowest of them. It does not mask
+    // real breakage: a genuinely broken test fails its assertion immediately,
+    // and only a hang waits out the timeout.
+    testTimeout: 15000,
+    hookTimeout: 15000,
   },
 });

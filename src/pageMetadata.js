@@ -219,6 +219,18 @@ export function metadataForLocation(pathname = "/", search = "") {
       : comingSoon(base);
   }
 
+  if (path === "/materials") {
+    if (!RELEASE_CAPABILITIES.studyMaterials) return comingSoon(base);
+    const hasFilters = [...params.keys()].length > 0;
+    return {
+      ...base,
+      title: `Free study material by exam and chapter | ${SITE_NAME}`,
+      description: "Find reviewed short notes, formula sheets, full lecture notes and previous-year papers by exam, class, subject and chapter.",
+      canonicalPath: "/materials",
+      robots: hasFilters ? "noindex, follow" : "index, follow",
+    };
+  }
+
   if (path === "/compare") {
     return RELEASE_CAPABILITIES.comparison
       ? {

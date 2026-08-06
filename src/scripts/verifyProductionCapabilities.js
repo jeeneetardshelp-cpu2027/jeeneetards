@@ -18,7 +18,10 @@ function readEnv(file = ".env") {
   return out;
 }
 
-const env = readEnv();
+// Linked worktrees intentionally do not copy the git-ignored .env. Allow CI
+// and release checks to receive the same browser-safe values through process
+// environment variables without writing another secrets file to disk.
+const env = fs.existsSync(".env") ? { ...process.env, ...readEnv() } : process.env;
 const url = env.VITE_SUPABASE_URL;
 const key = env.VITE_SUPABASE_ANON_KEY;
 if (!url || !key) {
@@ -82,6 +85,11 @@ const actual = {
     p_query: "abj", p_limit: 1,
   }, (data) => Array.isArray(data) && data.length > 0),
   boardClassification: await boardCounts(),
+  studyMaterials: await rpc("get_study_materials", {
+    p_goal_slug: null, p_board_slug: null, p_class_slug: null,
+    p_subject_slug: null, p_chapter_slug: null, p_chapter_id: null,
+    p_video_id: null, p_material_type: null, p_limit: 1, p_offset: 0,
+  }, (data) => Array.isArray(data) && data.length > 0),
 };
 
 let failed = 0;

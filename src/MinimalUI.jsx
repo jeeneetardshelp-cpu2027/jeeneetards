@@ -311,6 +311,7 @@ export function VideoView({
   watchedIds = [],
   ratingPanel = null,
   reportSlot = null,
+  materialsPanel = null,
   overview = null,
   onSelectLesson = () => {},
   onLessonPlay = () => {},
@@ -568,6 +569,7 @@ export function VideoView({
               </nav>
             )}
 
+            {materialsPanel}
             {reportSlot}
           </div>
 

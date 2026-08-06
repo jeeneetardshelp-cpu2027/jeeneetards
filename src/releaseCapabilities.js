@@ -16,6 +16,9 @@ export const RELEASE_CAPABILITIES = Object.freeze({
   comparison: true,
   facultyRegistry: true,
   boardClassification: true,
+  // Released after the anonymous production postflight confirmed the schema,
+  // reviewed NCERT seed and exact JEE/NEET/CBSE + lecture-context retrieval.
+  studyMaterials: true,
 });
 
 // Product rollout decisions are separate from database capability. In
