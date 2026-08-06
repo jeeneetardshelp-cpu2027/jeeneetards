@@ -7,8 +7,9 @@
   "allow_new_users_to_sign_up": true,
   "allow_anonymous_sign_ins": false,
   "allow_manual_linking": false,
-  "confirm_email": false,
+  "confirm_email": true,
+  "confirm_email_persisted_after_dashboard_reload": true,
   "production_writes_during_recording": 0,
   "supersedes_for_current_state": "docs/browse_only_auth_evidence.json",
-  "production_forum_launch_gate": "Confirm email must be enabled before forum writing opens to production users."
+  "production_forum_launch_gate": "closed on 2026-08-06 by the project owner; Confirm email is enabled and persisted after reload"
 }

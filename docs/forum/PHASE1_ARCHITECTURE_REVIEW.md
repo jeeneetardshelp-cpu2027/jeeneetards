@@ -1,6 +1,6 @@
 # Forum Phase 1 architecture review
 
-Status: **rollback staging gate passed; persistent staging/JWT testing authorized**
+Status: **step 7 release-candidate verification passed; forum flag remains off pending release approval**
 Target: the existing `edu-library` React/Vite/Supabase application
 Reference prototype: sibling `jeeneetard-forum` project (reference only; not deployable)
 
@@ -68,14 +68,13 @@ repository's explicit release contract.
 
 The project owner directly verified production project `kezelafqhgqrprpadmlf`
 in the Supabase dashboard on 2026-08-06. New-user signup is on; anonymous
-sign-in and manual linking are off; Confirm email is off. The dated evidence is
+sign-in and manual linking are off; Confirm email is on and persisted after a
+dashboard reload. The dated evidence is
 `docs/browse_only_auth_evidence_2026-08-06.json`, which supersedes the stale
 2026-07-23 signup snapshot for current-state decisions.
 
-Confirm email being off does not block controlled staging/JWT testing. It
-remains an explicit production launch gate: email confirmation must be enabled
-before real forum writing opens to production users. The owner will change that
-dashboard setting before launch; Codex is not authorized to change it here.
+The production email-confirmation launch gate is therefore closed. This record
+is owner-reported; Codex did not change any production Auth setting.
 
 ### Vote uniqueness
 
@@ -138,19 +137,23 @@ moderation-only fields.
 ## Launch gates
 
 1. Live signup and email-confirmation settings verified on 2026-08-06. Signup
-   is on; Confirm email remains off and must be enabled before production forum
-   writing. — current state verified; launch action still open
+   is on; Confirm email is on and persisted after reload. — resolved by the
+   project owner; no production setting was changed by Codex
 2. `alecc.daddy` owns the moderation queue with a twice-daily review
    commitment. — resolved
-3. Non-admin and anonymous adversarial RLS tests pass.
+3. Non-admin and anonymous adversarial RLS tests pass. — resolved in genuine
+   staging Auth/PostgREST verification
 4. Concurrent vote, rate-limit, recount, hidden-thread, lock, tombstone, and
-   remote-kill-switch tests pass in disposable staging.
+   remote-kill-switch tests pass in disposable staging. — resolved across the
+   reviewed SQL rehearsals and genuine staging JWT runs
 5. Both themes, keyboard use, screen-reader states, formulas, XSS strings, and
-   360 px layout are browser-verified.
+   360 px layout are browser-verified. — resolved; see
+   `FORUM_RELEASE_CANDIDATE_V1_REVIEW.md`
 6. Privacy Policy and forum rules explain that posts are public and may be
-   indexed before the composer is enabled.
+   indexed before the composer is enabled. — resolved in the release candidate
 7. The build-time flag remains off until the database, moderation queue, and
-   live capability checks all pass.
+   live capability checks all pass. — verification passed; flag intentionally
+   remains off pending a separate owner-approved release change
 
 ## Owner decisions approved on 2026-08-06
 

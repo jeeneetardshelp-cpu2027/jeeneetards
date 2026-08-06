@@ -72,14 +72,14 @@ export default function PrivacyPolicy() {
               and protect an account.
             </p>
             <p>
-              Student accounts, course ratings, written reviews, and content
-              reporting are enabled. An account is only needed to rate a
-              course, write a review, report a problem, or sync watch progress
+              Student accounts, course ratings, written reviews, forum contributions,
+              and content reporting are enabled. An account is only needed to rate a
+              course, write a review, join the forum, report a problem, or sync watch progress
               across devices — never to browse or watch.
             </p>
           </Section>
 
-          <Section title="3. Ratings, reviews, and content reports">
+          <Section title="3. Ratings, reviews, forum posts, and content reports">
             <p>
               The course-rating path stores a student account
               identifier; overall, clarity, and question ratings; difficulty
@@ -98,6 +98,11 @@ export default function PrivacyPolicy() {
               The reporting path stores a report reason, optional free-text note, and reporter account identifier. Free
               text may contain personal information if a person chooses to
               include it, so users should submit only what is necessary.
+            </p>
+            <p>
+              Forum posts, answers, and public usernames are visible to anyone and may be indexed by search engines.
+              Students should not publish real names, contact details, schools, coaching batches, account credentials,
+              or other personal information. Reports and moderation records are restricted to authorized moderators.
             </p>
           </Section>
 
@@ -229,7 +234,7 @@ export default function PrivacyPolicy() {
               The catalogue is likely to be used by students under 18. A parent
               or guardian should be involved when an under-18 student creates an
               account, follows an external link, or submits information —
-              particularly a written review, which is published publicly.
+              particularly a written review or forum contribution, which is published publicly.
             </p>
             <p>
               Browsing and watching never require an account. A parent or

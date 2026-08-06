@@ -50,7 +50,7 @@ export default function ForumFeedControls({ sort, topic, query, topics, onChange
       </form>
 
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <div className="flex rounded-md border border-hairline bg-surface-inset p-1" aria-label="Sort discussions">
+        <div role="group" className="flex rounded-md border border-hairline bg-surface-inset p-1" aria-label="Sort discussions">
           {SORTS.map((option) => (
             <button
               key={option.id}
@@ -70,7 +70,7 @@ export default function ForumFeedControls({ sort, topic, query, topics, onChange
       </div>
 
       <div className="space-y-3">
-        <div data-allow-horizontal-scroll="true" className="flex max-w-full gap-2 overflow-x-auto pb-1">
+        <div role="group" aria-label="Filter discussions by topic" data-allow-horizontal-scroll="true" className="flex max-w-full gap-2 overflow-x-auto pb-1">
           <button
             type="button"
             aria-pressed={!topic}

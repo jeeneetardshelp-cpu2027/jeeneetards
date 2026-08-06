@@ -7,6 +7,7 @@ import { Button, Note, SectionHead, Surface } from "../ui.jsx";
 import { forumApi } from "./forumApi.js";
 import { forumContributionError } from "./forumErrorMessages.js";
 import ForumMathContent from "./ForumMathContent.jsx";
+import ForumPublicNotice from "./ForumPublicNotice.jsx";
 import { ForumLoadError, ForumLoading, ForumUnavailable } from "./ForumStates.jsx";
 import ForumSignInPanel from "./ForumSignInPanel.jsx";
 import ForumUsernameClaim from "./ForumUsernameClaim.jsx";
@@ -95,6 +96,10 @@ export default function ForumSubmitPage({ api = forumApi, authState = null }) {
         title="Ask a clear question"
         lead="Include what you tried, where you became stuck, and enough context for another student to help."
       />
+
+      <div className="mb-5">
+        <ForumPublicNotice />
+      </div>
 
       {setup.mode !== "open" && (
         <p role="status" className="mb-5 rounded-lg border border-hairline bg-surface-2 p-4 text-sm text-ink-2">

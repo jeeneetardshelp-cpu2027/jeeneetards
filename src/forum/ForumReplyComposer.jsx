@@ -5,6 +5,7 @@ import { Button, Note, Surface } from "../ui.jsx";
 import { forumApi } from "./forumApi.js";
 import { forumContributionError } from "./forumErrorMessages.js";
 import ForumMathContent from "./ForumMathContent.jsx";
+import ForumPublicNotice from "./ForumPublicNotice.jsx";
 import { ForumLoadError, ForumLoading } from "./ForumStates.jsx";
 import ForumSignInPanel from "./ForumSignInPanel.jsx";
 import ForumUsernameClaim from "./ForumUsernameClaim.jsx";
@@ -70,6 +71,7 @@ export default function ForumReplyComposer({ postId, mode, locked, api = forumAp
       <Surface>
         <h2 id="forum-answer-composer-title" className="text-lg font-semibold text-ink">Write an answer</h2>
         <p className="mt-2 text-sm text-ink-2">Explain the reasoning, not only the final result.</p>
+        <div className="mt-4"><ForumPublicNotice compact /></div>
         <form onSubmit={submit} className="mt-5">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <label htmlFor="forum-answer-body" className="text-sm font-medium text-ink">Your answer</label>

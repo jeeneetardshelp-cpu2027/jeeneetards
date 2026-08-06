@@ -61,6 +61,22 @@ export default function ForumReportsPanel({ api = forumApi }) {
     }
   };
 
+  const dismiss = async (report) => {
+    setBusyId(report.id);
+    setActionError(null);
+    try {
+      await api.dismissReport({ reportId: report.id });
+      setState((current) => ({
+        ...current,
+        reports: current.reports.filter((item) => item.id !== report.id),
+      }));
+    } catch (error) {
+      setActionError(error?.message ?? "Could not dismiss that report.");
+    } finally {
+      setBusyId(null);
+    }
+  };
+
   if (state.status === "loading") return <p role="status" className={`text-sm ${t.muted}`}>Loading forum reports…</p>;
   if (state.status === "error") {
     return (
@@ -130,12 +146,14 @@ export default function ForumReportsPanel({ api = forumApi }) {
               </p>
             )}
 
-            {!report.target_exists ? (
-              <p role="alert" className={`mt-4 text-sm ${t.muted}`}>
-                This target no longer exists. The current backend cannot dismiss the remaining report without a separate reviewed RPC.
+            {!report.target_exists && (
+              <p role="status" className={`mt-4 text-sm ${t.muted}`}>
+                The reported target no longer exists. Dismissing this report closes the queue item without changing discussion content.
               </p>
-            ) : (
-              <div className="mt-4 flex flex-wrap gap-2">
+            )}
+            <div className="mt-4 flex flex-wrap gap-2">
+              {report.target_exists && (
+                <>
                 <button
                   type="button"
                   disabled={busy}
@@ -186,8 +204,17 @@ export default function ForumReportsPanel({ api = forumApi }) {
                 >
                   Permanently remove…
                 </button>
-              </div>
-            )}
+                </>
+              )}
+              <button
+                type="button"
+                disabled={busy}
+                onClick={() => dismiss(report)}
+                className={`min-h-11 rounded-lg border px-3 text-xs font-semibold ${t.border} ${t.muted} disabled:opacity-50`}
+              >
+                Dismiss report without changing content
+              </button>
+            </div>
 
             {removing && (
               <div className={`mt-4 rounded-xl border border-danger-line p-4 ${t.card}`}>

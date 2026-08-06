@@ -128,11 +128,13 @@ describe("forum read API", () => {
     await api.moderate({
       targetType: "comment", targetId: 42, action: "hide", reason: " reviewed ", reportId: 8,
     });
+    await api.dismissReport({ reportId: 9 });
 
     expect(calls).toEqual([
       { name: "forum_submit_report", params: { p_target_type: "comment", p_target_id: 42, p_reason: "self_harm", p_note: "urgent context" } },
       { name: "forum_admin_list_reports", params: { p_limit: 50 } },
       { name: "forum_admin_moderate", params: { p_target_type: "comment", p_target_id: 42, p_action: "hide", p_reason: "reviewed", p_report_id: 8 } },
+      { name: "forum_admin_dismiss_report", params: { p_report_id: 9 } },
     ]);
     expect(JSON.stringify(calls)).not.toContain("reporter_id");
   });
