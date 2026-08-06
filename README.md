@@ -13,7 +13,7 @@ institute or a coaching provider.
 
 ## Current release
 
-The production frontend is intentionally a **browse-only MVP**. Existing code
+The production frontend is intentionally **capability-gated**. Existing code
 does not make a feature production-ready; the matching database capability,
 security controls and release evidence must also be present.
 
@@ -32,7 +32,7 @@ security controls and release evidence must also be present.
 | Rating submission | Enabled |
 | Review display | Enabled |
 | Content reporting | Enabled |
-| Student forum | Disabled |
+| Student forum | Enabled |
 
 The source of truth is
 [`src/releaseCapabilities.js`](src/releaseCapabilities.js). Do not enable a

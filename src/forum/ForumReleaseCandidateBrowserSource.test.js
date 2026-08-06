@@ -6,8 +6,8 @@ const fixture = readFileSync("src/forum/ForumReleaseCandidateBrowserFixture.jsx"
 const verifier = readFileSync("src/scripts/verifyForumReleaseCandidateBrowser.js", "utf8");
 
 describe("forum release-candidate browser gate source", () => {
-  it("keeps the public flag off while covering both themes and all four surfaces", () => {
-    expect(RELEASE_FEATURES.forum).toBe(false);
+  it("retains the pre-release browser gate after the approved flag flip", () => {
+    expect(RELEASE_FEATURES.forum).toBe(true);
     expect(verifier).toContain('const screenNames = ["feed", "thread", "submit", "admin"]');
     expect(verifier).toContain('await visit(screen, "light")');
     expect(verifier).toContain('await visit(screen, "dark")');

@@ -54,15 +54,17 @@ describe("public page metadata", () => {
     expect(metadataForLocation("/browse").robots).toBe("index, follow");
   });
 
-  it("keeps restricted and unavailable routes out of the index", () => {
+  it("keeps restricted routes out while exposing the released forum metadata", () => {
     expect(metadataForLocation("/admin").robots).toBe("noindex, nofollow");
     expect(metadataForLocation("/admin/").robots).toBe("noindex, nofollow");
     expect(metadataForLocation("/reset").robots).toBe("noindex, nofollow");
     expect(metadataForLocation("/compare").robots).toBe("noindex, follow");
     const forum = metadataForLocation("/forum/post/42");
-    expect(forum.robots).toBe("noindex, follow");
-    expect(forum.canonicalPath).toBe("/forum");
-    expect(forum.title).toBe("Feature coming soon | JEENEETARD");
+    expect(forum.robots).toBe("index, follow");
+    expect(forum.canonicalPath).toBe("/forum/post/42");
+    expect(forum.title).toBe("Student preparation forum | JEENEETARD");
+    expect(metadataForLocation("/forum", "?q=rotation").robots).toBe("noindex, follow");
+    expect(metadataForLocation("/forum/submit").robots).toBe("noindex, follow");
   });
 
   it("treats the legacy /chapter redirect as supported, not as a 404", () => {
