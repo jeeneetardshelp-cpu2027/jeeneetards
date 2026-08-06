@@ -3,6 +3,7 @@ import { MemoryRouter, useLocation } from "react-router";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ThemeProvider } from "../theme.jsx";
 import { ForumApiError } from "./forumApi.js";
+import { loadForumDraft } from "./forumDraftStorage.js";
 import ForumSubmitPage from "./ForumSubmitPage.jsx";
 
 const mocks = vi.hoisted(() => ({
@@ -64,7 +65,7 @@ describe("forum discussion composer", () => {
     expect(container.querySelector('img[src="x"]')).toBeNull();
   });
 
-  it("preserves a signed-out draft through sign-in, username claim and successful publishing", async () => {
+  it("keeps a guest draft private while a signed-in student claims a username and publishes", async () => {
     const api = apiWith({
       getMyIdentity: vi.fn().mockResolvedValue({ username: null, needs_username: true }),
     });
@@ -80,8 +81,13 @@ describe("forum discussion composer", () => {
 
     mocks.auth = { session: { user: { id: "student-1" } }, loading: false };
     renderPage(api);
-    expect(await screen.findByDisplayValue("Why does angular momentum stay constant?")).toBeTruthy();
-    expect(screen.getByDisplayValue(/taking moments about the hinge/)).toBeTruthy();
+    await screen.findByRole("heading", { name: "Ask a clear question" });
+    expect(screen.getByLabelText("Title").value).toBe("");
+    expect(screen.getByLabelText("Question and context").value).toBe("");
+    expect(loadForumDraft(localStorage, { kind: "post", target: "new" }))
+      .toMatchObject({ title: "Why does angular momentum stay constant?" });
+
+    fillDraft();
     fireEvent.change(await screen.findByLabelText("Username"), { target: { value: "physics-helper" } });
     fireEvent.click(screen.getByRole("button", { name: "Claim username" }));
     expect(await screen.findByText(/publishing publicly as/i)).toBeTruthy();
@@ -89,8 +95,10 @@ describe("forum discussion composer", () => {
     fireEvent.click(screen.getByRole("button", { name: "Publish discussion" }));
     await waitFor(() => expect(api.createPost).toHaveBeenCalledWith(expect.objectContaining({ topic: "physics" })));
     await waitFor(() => expect(screen.getByLabelText("location").textContent).toBe("/forum/post/77"));
-    expect([...Array(localStorage.length)].some((_, index) => localStorage.getItem(localStorage.key(index))?.includes("angular momentum")))
-      .toBe(false);
+    expect(loadForumDraft(localStorage, { kind: "post", target: "new" }))
+      .toMatchObject({ title: "Why does angular momentum stay constant?" });
+    expect(loadForumDraft(localStorage, { kind: "post", target: "new", userId: "student-1" }))
+      .toBeNull();
   });
 
   it("keeps the complete draft when the write RPC fails", async () => {

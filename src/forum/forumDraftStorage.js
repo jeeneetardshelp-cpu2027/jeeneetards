@@ -35,24 +35,3 @@ export function clearForumDraft(storage, descriptor) {
     // Storage can be disabled or full; in-memory form state still works.
   }
 }
-
-export function adoptGuestForumDraft(storage, descriptor, userId) {
-  const guestDescriptor = { ...descriptor, userId: null };
-  const guest = loadForumDraft(storage, guestDescriptor);
-  const ownedDescriptor = { ...descriptor, userId };
-  const owned = loadForumDraft(storage, ownedDescriptor);
-
-  if (!guest) return owned;
-
-  const guestIsNewer = !owned
-    || Number(guest.updated_at ?? 0) > Number(owned.updated_at ?? 0);
-  if (guestIsNewer) {
-    if (saveForumDraft(storage, ownedDescriptor, guest)) {
-      clearForumDraft(storage, guestDescriptor);
-    }
-    return guest;
-  }
-
-  clearForumDraft(storage, guestDescriptor);
-  return owned;
-}
