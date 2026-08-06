@@ -45,6 +45,7 @@ describe("repository onboarding contract", () => {
 
   it("documents which public write features are enabled and which remain disabled", () => {
     expect(RELEASE_FEATURES).toEqual({
+      forum: false,
       studentAccounts: true,
       courseRatingSubmission: true,
       reviewDisplay: true,
@@ -55,6 +56,7 @@ describe("repository onboarding contract", () => {
     ]) {
       expect(readme).toMatch(new RegExp(`\\| ${label} \\| Enabled \\|`));
     }
+    expect(readme).toMatch(/\| Student forum \| Disabled \|/);
   });
 
   it("keeps privileged keys out of frontend guidance", () => {

@@ -1,4 +1,4 @@
-import { RELEASE_CAPABILITIES } from "./releaseCapabilities.js";
+import { RELEASE_CAPABILITIES, RELEASE_FEATURES } from "./releaseCapabilities.js";
 // Pure data (no React), so this stays safe for the edge middleware, which
 // imports this module to compute the same metadata the client will.
 import { findTestSection, sectionIsAllFree } from "./testPlatforms.js";
@@ -158,6 +158,19 @@ export function metadataForLocation(pathname = "/", search = "") {
       title: `Mock tests and previous year papers | ${SITE_NAME}`,
       description:
         "Free mock tests and previous-year papers for JEE Main, JEE Advanced, NEET, Olympiads and the Class 10 and 12 boards, plus paid test series — each labelled with what it costs, linked to the platform that runs it.",
+    };
+  }
+
+  if (path === "/forum" || path === "/forum/submit" || /^\/forum\/post\/\d+$/.test(path)) {
+    if (!RELEASE_FEATURES.forum) return comingSoon({ ...base, canonicalPath: "/forum" });
+    const isSearch = path === "/forum" && params.has("q");
+    return {
+      ...base,
+      title: `Student preparation forum | ${SITE_NAME}`,
+      description: "Discuss JEE and NEET preparation questions with other students.",
+      canonicalPath: path === "/forum" ? "/forum" : path,
+      robots: isSearch || path === "/forum/submit" ? "noindex, follow" : "index, follow",
+      type: path.startsWith("/forum/post/") ? "article" : "website",
     };
   }
 
