@@ -92,6 +92,53 @@ describe("edge-rendered discovery landings", () => {
     expect(isSupportedAppPath("/forum/post/42/extra")).toBe(false);
   });
 
+  it("returns a hard 404 when a forum post is confirmed absent", async () => {
+    vi.stubEnv("VITE_SUPABASE_URL", "https://forum.example");
+    vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
+    vi.stubGlobal("fetch", vi.fn(async (input) => {
+      const url = String(input);
+      if (url.endsWith("/rpc/forum_mode")) return Response.json("read_only");
+      if (url.endsWith("/rpc/get_forum_post")) return Response.json([]);
+      return new Response(shell, { status: 200 });
+    }));
+
+    const response = await middleware(new Request("https://www.jeeneetard.com/forum/post/404"));
+    const html = await response.text();
+    expect(response.status).toBe(404);
+    expect(response.headers.get("x-robots-tag")).toBe("noindex, nofollow");
+    expect(html).toContain("Forum post not found");
+  });
+
+  it("serves the shell when a forum post exists", async () => {
+    vi.stubEnv("VITE_SUPABASE_URL", "https://forum.example");
+    vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
+    vi.stubGlobal("fetch", vi.fn(async (input) => {
+      const url = String(input);
+      if (url.endsWith("/rpc/forum_mode")) return Response.json("read_only");
+      if (url.endsWith("/rpc/get_forum_post")) return Response.json([{ id: 42 }]);
+      return new Response(shell, { status: 200 });
+    }));
+
+    const response = await middleware(new Request("https://www.jeeneetard.com/forum/post/42"));
+    expect(response.status).toBe(200);
+  });
+
+  it("does not hard-404 forum posts while the forum is off", async () => {
+    vi.stubEnv("VITE_SUPABASE_URL", "https://forum.example");
+    vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
+    const fetchSpy = vi.fn(async (input) => {
+      const url = String(input);
+      if (url.endsWith("/rpc/forum_mode")) return Response.json("off");
+      return new Response(shell, { status: 200 });
+    });
+    vi.stubGlobal("fetch", fetchSpy);
+
+    const response = await middleware(new Request("https://www.jeeneetard.com/forum/post/42"));
+    expect(response.status).toBe(200);
+    expect(fetchSpy.mock.calls.some(([input]) => String(input).endsWith("/rpc/get_forum_post")))
+      .toBe(false);
+  });
+
   it.each([
     ["/", "Find the right lecture. Skip the noise."],
     ["/browse", "All courses"],
