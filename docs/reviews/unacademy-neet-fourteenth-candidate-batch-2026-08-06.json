@@ -1,0 +1,118 @@
+{
+  "reviewed_on": "2026-08-06",
+  "review_status": "owner_approval_required",
+  "proposed_decision_id": "b19eaa58-7931-4c84-8cea-8b6622230b4d",
+  "channel": {
+    "name": "Unacademy NEET",
+    "handle": "@UnacademyNEET",
+    "youtube_channel_id": "UCdQwYksctqqiRwqp3PiJMWA",
+    "production_institute_id": 147,
+    "playlist_count": 736
+  },
+  "preflight": {
+    "captured_at": "2026-08-06T08:23:16.306Z",
+    "playlists": 400,
+    "videos": 4641,
+    "memberships": 4647,
+    "chapters": 263,
+    "chapter_class_levels": 92,
+    "teachers": 32,
+    "source_collision_count": 0,
+    "retained_video_collision_count": 0,
+    "cross_candidate_retained_video_collision_count": 0,
+    "protected_jee_courses": 82,
+    "protected_jee_memberships": 1304,
+    "protected_jee_fingerprint": "30eee4a4a6842e5beeb7c97083d7f812",
+    "rolling_jee_courses": 212,
+    "rolling_jee_memberships": 2848,
+    "rolling_jee_fingerprint": "9eea2b44f0b19c08cc0907c57e091342"
+  },
+  "candidates": [
+    {
+      "order": 1,
+      "youtube_playlist_id": "PLsgHooHkqhhM5-Ujy03Tn7YjofINdftRM",
+      "source_title": "NEET: Friction - Playlist | Class 11 | Unacademy NEET | Live Daily 2.0 | NEET Physics | Mahendra Singh",
+      "source_snapshot_sha256": "4486612870e5c4a996b733ecfccb563abbc9027ec5a37a1e92c805fd1c2c5e3b",
+      "subject_id": 1,
+      "chapter_id": 7,
+      "chapter": "Friction",
+      "class_level_id": 2,
+      "class_level": "class-11",
+      "teacher_id": 34,
+      "teacher": "Mahendra Singh",
+      "source_collision_count": 0,
+      "video_collision_count": 0,
+      "retained_source_positions": [1, 2, 3, 4],
+      "excluded_source_positions": [5, 6],
+      "videos": [
+        { "source_position": 1, "youtube_video_id": "hgPD1d2C1aE", "title": "NEET: Friction - L1 | Class 11 | Live Daily 2.0 | Unacademy NEET | Mahendra Sir", "duration_seconds": 3711, "embedding_status": "embeddable" },
+        { "source_position": 2, "youtube_video_id": "j6Mkm64845o", "title": "NEET: Friction - L2 | Class 11 | Live Daily 2.0 | Unacademy NEET | Mahendra Sir", "duration_seconds": 3556, "embedding_status": "embeddable" },
+        { "source_position": 3, "youtube_video_id": "EMpTL5lkSyU", "title": "NEET: Friction - L3 | Class 11 | Live Daily 2.0 | Unacademy NEET | Mahendra Sir", "duration_seconds": 3640, "embedding_status": "embeddable" },
+        { "source_position": 4, "youtube_video_id": "JODjqGrjIsw", "title": "NEET: Friction - L4 | Class 11 | Live Daily 2.0 | Unacademy NEET | Mahendra Sir", "duration_seconds": 3611, "embedding_status": "embeddable" }
+      ],
+      "exclusions": [
+        { "source_position": 5, "youtube_video_id": "unq2Wpi3HKE", "title": "NEET: Friction - Quiz 2 | DPP | Live Quiz 2.0 | Unacademy NEET | Mahendra Sir", "duration_seconds": 3280, "reason": "quiz" },
+        { "source_position": 6, "youtube_video_id": "YCIF4LmUIZI", "title": "Private video", "duration_seconds": null, "reason": "private_unavailable" }
+      ]
+    },
+    {
+      "order": 2,
+      "youtube_playlist_id": "PLsgHooHkqhhM6fzJQ3Vhv7s6iOglsVJw2",
+      "source_title": "NEET: The Unit of Life - Playlist | Class 11 | Unacademy NEET | Live Daily 2.0 | NEET Biology | Pradeep Singh",
+      "source_snapshot_sha256": "9a8adfac37dfa99fe4f7110153850abd81819a0c62ed9c2fcc0a2f60dfa0281a",
+      "subject_id": 4,
+      "chapter_id": 107,
+      "chapter": "Cell: The Unit of Life",
+      "class_level_id": 2,
+      "class_level": "class-11",
+      "teacher_id": 33,
+      "teacher": "Pradeep Singh",
+      "source_collision_count": 0,
+      "video_collision_count": 0,
+      "retained_source_positions": [1, 2, 3, 4],
+      "excluded_source_positions": [5],
+      "videos": [
+        { "source_position": 1, "youtube_video_id": "FT0tu_hVtVY", "title": "NEET: The Unit of Life - L1 | Class 11 | Live Daily 2.0 | Unacademy NEET | Pradeep Sir", "duration_seconds": 3395, "embedding_status": "embeddable" },
+        { "source_position": 2, "youtube_video_id": "EmZfiGMbY7g", "title": "NEET: The Unit of Life - L2 | Class 11 | Live Daily 2.0 | Unacademy NEET | Pradeep Sir", "duration_seconds": 3371, "embedding_status": "embeddable" },
+        { "source_position": 3, "youtube_video_id": "2YkF8igeSEQ", "title": "NEET: The Unit of Life - L3 | Class 11 | Live Daily 2.0 | Unacademy NEET | Pradeep Sir", "duration_seconds": 2638, "embedding_status": "embeddable" },
+        { "source_position": 4, "youtube_video_id": "KSwPeW0wolo", "title": "NEET: The Unit of Life - L4 | Class 11 | Live Daily 2.0 | Unacademy NEET | Pradeep Sir", "duration_seconds": 3145, "embedding_status": "embeddable" }
+      ],
+      "exclusions": [
+        { "source_position": 5, "youtube_video_id": "haLvt8Ro0H4", "title": "NEET: Cell: The Unit of Life Quiz - 1| DPP | Class 11 | Live Daily 2.0 | Unacademy NEET | Pradeep S.", "duration_seconds": 2438, "reason": "quiz" }
+      ]
+    },
+    {
+      "order": 3,
+      "youtube_playlist_id": "PLsgHooHkqhhPkkXnKHj60aao7jClkwioE",
+      "source_title": "Plant Anatomy - Playlist | Class 11 | Unacademy NEET | LIVE DAILY | NEET Biology | Pradeep Singh",
+      "source_snapshot_sha256": "0ff7411af44a7b562119b76703b1c1865c0ec26323ada775542528a117002b11",
+      "subject_id": 4,
+      "chapter_id": 97,
+      "chapter": "Anatomy of Flowering Plants",
+      "class_level_id": 2,
+      "class_level": "class-11",
+      "teacher_id": 33,
+      "teacher": "Pradeep Singh",
+      "source_collision_count": 0,
+      "video_collision_count": 0,
+      "retained_source_positions": [1, 2, 3, 4, 5, 6],
+      "excluded_source_positions": [7],
+      "videos": [
+        { "source_position": 1, "youtube_video_id": "bnT0aEz9Jxo", "title": "NEET: Plant Anatomy - L 1 | Plant Tissues | NEET Biology | Class 11 | Unacademy NEET | Pradeep Sir", "duration_seconds": 3155, "embedding_status": "embeddable" },
+        { "source_position": 2, "youtube_video_id": "bZQZP2MJ7R4", "title": "NEET: Plant Anatomy L 2 | Vascular Tissue System | Biology | Class 11| Unacademy NEET | Pradeep Sir", "duration_seconds": 3141, "embedding_status": "embeddable" },
+        { "source_position": 3, "youtube_video_id": "FIGH4ko_l5I", "title": "NEET: Plant Anatomy L 3 | Ground Tissue System | Biology | Class 11 | Unacademy NEET | Pradeep Sir", "duration_seconds": 3000, "embedding_status": "embeddable" },
+        { "source_position": 4, "youtube_video_id": "NBJvH0k1oCg", "title": "NEET: Plant Anatomy L 4 | T.S of Stem & Root | NEET Biology | Class 11| Unacademy NEET | Pradeep Sir", "duration_seconds": 2345, "embedding_status": "embeddable" },
+        { "source_position": 5, "youtube_video_id": "nfQL2F6fUkc", "title": "NEET: Plant Anatomy - L 5 | T.S of a Leaf | NEET Biology | Class 11| Unacademy NEET | Pradeep Sir", "duration_seconds": 3105, "embedding_status": "embeddable" },
+        { "source_position": 6, "youtube_video_id": "2lzd5rpmYBA", "title": "NEET: Plant Anatomy - L 6 | Secondary Growth | NEET Biology | Class 11| Unacademy NEET | Pradeep Sir", "duration_seconds": 2358, "embedding_status": "embeddable" }
+      ],
+      "exclusions": [
+        { "source_position": 7, "youtube_video_id": "4N2ltVNVeJE", "title": "NEET Biology: Plant Anatomy - Quiz 2 | Menti Quiz | LIVE Quiz 2.0 | Unacademy NEET | Pradeep Sir", "duration_seconds": 2955, "reason": "quiz" }
+      ]
+    }
+  ],
+  "deferred": [
+    "Ionic Equilibrium is missing Lectures 5-6 from the public source sequence.",
+    "Excretory Products and Their Elimination contains quizzes plus an older duplicate/out-of-order Lecture 2.",
+    "General Principles and Processes of Isolation of Elements has no matching current production chapter and was not mapped by assumption."
+  ]
+}
