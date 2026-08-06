@@ -1,6 +1,8 @@
 # Unacademy NEET sixteenth-batch readiness — 2026-08-07
 
-Status: **PREPARED FOR OWNER REVIEW ONLY**. No production write was made. No `release` push was made.
+Status: **CONTENT IMPORT COMPLETED IN PRODUCTION** under owner decision
+`f7992243-3b5b-4c39-bac9-433dd766a70a`. The three courses were imported
+create-only, one at a time. No schema migration and no `release` push occurred.
 
 ## Proposed owner decision
 
@@ -82,14 +84,33 @@ File SHA-256 values:
 - The Living World manifest: `37ab6380c7391f4349aa73f623a0f44573493f82bcd1cd2bfc87582dbf1fe9a0`
 - Reproductive Health manifest: `5e6b696ce1d3c88f6765197317290cea18dd9a24c1d208cbe70dcb6c94ad7206`
 
-## Required next gates
+## Production execution evidence
 
-1. Owner approves decision `f7992243-3b5b-4c39-bac9-433dd766a70a`, explicitly
-   accepting Seep Pahuja and Dr. Sachin Kapur attribution for these exact
-   playlists.
-2. Refresh each official playlist and stop on any source mutation.
-3. Run a fresh PITR and exact quiet-window baseline check.
-4. Run a fresh anonymous dry-run, then import create-only one course at a time.
-5. After each import, require zero reuse and the exact protected JEE boundary.
-6. Prepare normalized faculty records/links as separate guarded SQL and obtain a
-   separate exact-hash production approval before applying it.
+PITR was confirmed active with seven-day retention before the writes. At the
+gate, the Supabase dashboard advertised restore availability through
+`07 Aug 2026, 00:33:21 IST` (earliest retained point
+`31 Jul 2026, 00:33:21 IST`). Each official playlist was refreshed from the
+YouTube Data API and reproduced its approved source hash exactly. Each fresh
+anonymous dry-run returned `ok`, zero blockers, and no existing source course.
+
+| Order | Course ID | Course | Added videos / memberships | Reused | Chapters created |
+|---:|---:|---|---:|---:|---:|
+| 1 | 426 | Applications of Biotechnology | 4 / 4 | 0 | 0 |
+| 2 | 427 | The Living World | 5 / 5 | 0 | 0 |
+| 3 | 428 | Reproductive Health | 7 / 7 | 0 | 0 |
+
+Final production catalogue: **409 playlists / 4,699 videos / 4,705
+memberships / 263 chapters**. Exact batch delta: **+3 / +16 / +16 / +0**.
+All 16 memberships preserve the approved source order, point to their exact
+reviewed chapter, and carry embeddable videos. Each course has the exact `neet`
+goal and its reviewed class scope.
+
+The protected original-JEE boundary remained exact after every import and at
+the decisive postflight: **82 courses / 1,304 memberships /
+`30eee4a4a6842e5beeb7c97083d7f812`**. The rolling JEE boundary also remained
+unchanged at **212 / 2,848 / `9eea2b44f0b19c08cc0907c57e091342`**.
+
+Normalized faculty links remain absent for courses 426-428, deliberately.
+Their separate guarded package is recorded in
+`unacademy-neet-sixteenth-batch-faculty-links-readiness-2026-08-07.md` and must
+receive an exact-hash owner approval before any production faculty write.

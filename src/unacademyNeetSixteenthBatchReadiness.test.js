@@ -19,7 +19,7 @@ const sha256 = (value) => createHash("sha256").update(value).digest("hex");
 const decisionId = "f7992243-3b5b-4c39-bac9-433dd766a70a";
 
 describe("Unacademy NEET sixteenth-batch readiness", () => {
-  it("pins the official channel and leaves the production boundary closed", () => {
+  it("pins the official channel and records the completed content import", () => {
     expect(review).toMatchObject({
       review_status: "owner_approval_required",
       proposed_decision_id: decisionId,
@@ -30,9 +30,13 @@ describe("Unacademy NEET sixteenth-batch readiness", () => {
         playlist_count: 736,
       },
     });
-    expect(readiness).toContain("PREPARED FOR OWNER REVIEW ONLY");
-    expect(readiness).toContain("No production write was made");
-    expect(readiness).toContain("No `release` push");
+    expect(readiness).toContain("CONTENT IMPORT COMPLETED IN PRODUCTION");
+    expect(readiness).toContain("courses 426-428");
+    expect(readiness).toContain("+3 / +16 / +16 / +0");
+    expect(readiness).toContain("409 playlists / 4,699 videos / 4,705");
+    expect(readiness).toContain("82 courses / 1,304 memberships");
+    expect(readiness).toContain("30eee4a4a6842e5beeb7c97083d7f812");
+    expect(readiness).toContain("no `release` push occurred");
   });
 
   it("pins the fresh public catalogue and JEE boundaries", () => {
