@@ -91,7 +91,14 @@ export default function ForumFeedPage({ api = forumApi, authState = null }) {
               {query ? `Results for “${query}”` : topicName || "All visible discussions"}
             </p>
             <div className="space-y-4">
-              {feed.posts.map((post) => <ForumPostCard key={post.id} post={post} voting={voting} />)}
+              {feed.posts.map((post) => (
+                <ForumPostCard
+                  key={post.id}
+                  post={post}
+                  voting={voting}
+                  reporting={{ api, authState }}
+                />
+              ))}
             </div>
 
             {feed.pageError && (

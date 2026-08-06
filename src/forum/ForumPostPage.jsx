@@ -7,6 +7,7 @@ import ForumCommentThread from "./ForumCommentThread.jsx";
 import { compactNumber, timeAgo } from "./forumFormatting.js";
 import ForumMathContent from "./ForumMathContent.jsx";
 import ForumReplyComposer from "./ForumReplyComposer.jsx";
+import ForumReportControl from "./ForumReportControl.jsx";
 import ForumVoteControl from "./ForumVoteControl.jsx";
 import ForumVoteGate from "./ForumVoteGate.jsx";
 import {
@@ -88,6 +89,12 @@ function ForumPostDataPage({ postId, api, authState }) {
           {post.is_locked && (
             <Pill tone="quiet"><LockKeyhole aria-hidden="true" className="h-3.5 w-3.5" /> Locked</Pill>
           )}
+          <ForumReportControl
+            targetType="post"
+            targetId={post.id}
+            api={api}
+            authState={authState}
+          />
         </div>
       </Surface>
 
@@ -119,7 +126,11 @@ function ForumPostDataPage({ postId, api, authState }) {
           lead="Answers are shown as a conversation; nested replies can be collapsed."
         />
         <div className="mt-5">
-          <ForumCommentThread comments={thread.comments} voting={voting} />
+          <ForumCommentThread
+            comments={thread.comments}
+            voting={voting}
+            reporting={{ api, authState }}
+          />
         </div>
       </section>
     </>

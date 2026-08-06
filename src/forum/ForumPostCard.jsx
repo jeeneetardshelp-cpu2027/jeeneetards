@@ -4,8 +4,9 @@ import { Surface } from "../ui.jsx";
 import { compactNumber, previewText, timeAgo } from "./forumFormatting.js";
 import { forumTopicStyle } from "./forumTopicColors.js";
 import ForumVoteControl from "./ForumVoteControl.jsx";
+import ForumReportControl from "./ForumReportControl.jsx";
 
-export default function ForumPostCard({ post, voting = null }) {
+export default function ForumPostCard({ post, voting = null, reporting = null }) {
   return (
     <Surface as="article" lift className="min-w-0">
       <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 text-xs text-ink-3">
@@ -60,6 +61,15 @@ export default function ForumPostCard({ post, voting = null }) {
           <span className="inline-flex items-center gap-1.5 font-medium text-accent">
             <CheckCircle2 aria-hidden="true" className="h-4 w-4" /> Solved
           </span>
+        )}
+        {reporting && (
+          <ForumReportControl
+            targetType="post"
+            targetId={post.id}
+            api={reporting.api}
+            authState={reporting.authState}
+            compact
+          />
         )}
       </div>
     </Surface>

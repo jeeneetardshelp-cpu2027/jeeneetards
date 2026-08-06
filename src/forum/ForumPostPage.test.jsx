@@ -46,12 +46,13 @@ function renderPost(api, entry = "/forum/post/42", authState = null) {
 }
 
 describe("signed-out forum thread", () => {
-  it("renders safe maths, nesting and missing-parent replies without write controls", async () => {
+  it("renders safe maths, nesting and report entry points without mounting contribution forms", async () => {
     const { container } = renderPost(apiWith());
     expect(await screen.findByRole("heading", { name: forumPost.title })).toBeTruthy();
     expect(container.querySelector(".katex-display")).toBeTruthy();
     expect(screen.getByText("The missing parent does not hide this reply.")).toBeTruthy();
-    expect(screen.queryByRole("button", { name: /reply|vote|report/i })).toBeNull();
+    expect(screen.queryByRole("button", { name: /reply|vote/i })).toBeNull();
+    expect(screen.getAllByRole("button", { name: /Report this (discussion|answer)/ })).toHaveLength(4);
     expect(container.querySelector(".reveal")).toBeNull();
   });
 

@@ -4,12 +4,13 @@ import { buildCommentTree } from "./buildCommentTree.js";
 import { compactNumber, timeAgo } from "./forumFormatting.js";
 import ForumMathContent from "./ForumMathContent.jsx";
 import ForumVoteControl from "./ForumVoteControl.jsx";
+import ForumReportControl from "./ForumReportControl.jsx";
 
 function descendantCount(comment) {
   return comment.replies.reduce((total, reply) => total + 1 + descendantCount(reply), 0);
 }
 
-function CommentNode({ comment, depth = 0, voting = null }) {
+function CommentNode({ comment, depth = 0, voting = null, reporting = null }) {
   const [collapsed, setCollapsed] = useState(false);
   const descendants = descendantCount(comment);
   const addIndent = depth > 0 && depth <= 3;
@@ -35,7 +36,7 @@ function CommentNode({ comment, depth = 0, voting = null }) {
         </ForumMathContent>
 
         {voting && !comment.is_tombstone && (
-          <div className="mt-3">
+          <div className="mt-3 flex flex-wrap items-center gap-2">
             <ForumVoteControl
               targetType="comment"
               targetId={comment.id}
@@ -46,6 +47,27 @@ function CommentNode({ comment, depth = 0, voting = null }) {
               canVote={voting.canVote}
               api={voting.api}
               onBlocked={voting.onBlocked}
+              compact
+            />
+            {reporting && (
+              <ForumReportControl
+                targetType="comment"
+                targetId={comment.id}
+                api={reporting.api}
+                authState={reporting.authState}
+                compact
+              />
+            )}
+          </div>
+        )}
+
+        {!voting && reporting && !comment.is_tombstone && (
+          <div className="mt-2">
+            <ForumReportControl
+              targetType="comment"
+              targetId={comment.id}
+              api={reporting.api}
+              authState={reporting.authState}
               compact
             />
           </div>
@@ -69,14 +91,14 @@ function CommentNode({ comment, depth = 0, voting = null }) {
       {!collapsed && comment.replies.length > 0 && (
         <ul className="space-y-1">
           {comment.replies.map((reply) => (
-            <CommentNode key={reply.id} comment={reply} depth={depth + 1} voting={voting} />
+            <CommentNode key={reply.id} comment={reply} depth={depth + 1} voting={voting} reporting={reporting} />
           ))}
         </ul>
       )}
     </li>
   );
 }
-export default function ForumCommentThread({ comments, voting = null }) {
+export default function ForumCommentThread({ comments, voting = null, reporting = null }) {
   const tree = useMemo(() => buildCommentTree(comments), [comments]);
   if (!tree.length) {
     return (
@@ -89,7 +111,7 @@ export default function ForumCommentThread({ comments, voting = null }) {
 
   return (
     <ul className="divide-y divide-hairline rounded-xl border border-hairline bg-surface px-4 sm:px-6">
-      {tree.map((comment) => <CommentNode key={comment.id} comment={comment} voting={voting} />)}
+      {tree.map((comment) => <CommentNode key={comment.id} comment={comment} voting={voting} reporting={reporting} />)}
     </ul>
   );
 }
