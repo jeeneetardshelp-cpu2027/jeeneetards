@@ -2,9 +2,12 @@
 
 ## Status and safety boundary
 
-Review package prepared only. No production import, schema change, restore,
-clone, deployment, or `release` push was performed. The official YouTube Data
-API was refreshed against `@UnacademyNEET`
+Owner decision `5b4b1d41-b7dc-4f12-80cf-b490e72edd96` was executed until the
+first mandatory stop condition. The first course was imported create-only;
+the batch then stopped before course 2 because its refreshed source snapshot
+no longer matched the reviewed snapshot. No schema change, restore, clone,
+deployment, or `release` push was performed. The official YouTube Data API was
+refreshed against `@UnacademyNEET`
 (`UCdQwYksctqqiRwqp3PiJMWA`), and production was queried read-only for catalogue
 counts, source IDs, retained video IDs, taxonomy, class scopes, verified
 teachers, and both JEE integrity boundaries.
@@ -91,10 +94,50 @@ Pinned normalized source snapshots:
   Principles and Processes of Isolation of Elements retain the fourteenth-batch
   blockers.
 
-## Required execution gate
+## Guarded production execution
 
-The package remains unapproved and unimported. After a matching owner decision,
-run each course separately in the listed order. Before every write:
+The signed-in production dashboard confirmed active seven-day PITR with latest
+restore point `6 August 2026, 17:22:58 IST`. The fresh quiet-window preflight at
+`2026-08-06T12:06:40.488Z` exactly matched the reviewed baseline: 403 playlists,
+4,655 videos, 4,661 memberships, 263 chapters, zero target source/video reuse,
+and the protected JEE boundary.
+
+Course 1's official source title and every reviewed row matched the pinned
+normalized source snapshot
+`d2cb6cb00c8eb5c3d430a090779ae5c891a560aca92fe988bbc40cd011d8698c`.
+Its anonymous mapped dry-run returned 1 ok / 0 review / 0 blocked. Production
+then created course `423` with 11 new videos, 11 memberships, zero reused
+videos, and zero new chapters. All lessons are in natural L1-L11 order on
+chapter 92; the course carries only the NEET goal and class-12 scope.
+
+| Order | Course | Outcome | Catalogue delta | Postflight |
+| ---: | --- | --- | --- | --- |
+| 1 | Alcohols, Phenols & Ethers | imported as course `423` | +1 playlist / +11 videos / +11 memberships / +0 chapters; 0 reused | 404 / 4,666 / 4,672 / 263; protected JEE exact |
+| 2 | Fluid Mechanics | **STOPPED before dry-run/write** | none | refreshed source snapshot mismatch |
+| 3 | Kinematics 1D | not attempted after stop | none | no source refresh, dry-run, or write |
+
+The course-2 quiet-window baseline was exactly 404 / 4,666 / 4,672 / 263 with
+zero source or retained-video reuse. The source rows remained public,
+embeddable, duration-complete, and in the reviewed positions, but the official
+playlist title changed from the reviewed `Fluid Mechanics - Playlist ...` to
+`Fluid Mechanics -  Playlist ...` (an additional space). The recomputed
+normalized source hash was
+`b7a1b79c07792331919693f1b38a1ef899715cd46b5615721a4fd28b7bcca0e3`,
+not the approved
+`d3d1be7d7eae2571d5dbfece4921e6c50bac95d500ccd6a55459d017a5cdc478`.
+The source-mutation guard therefore stopped the batch before any course-2
+dry-run or write, and course 3 was not attempted.
+
+After course 1, the protected JEE boundary remained exactly 82 courses / 1,304
+memberships / `30eee4a4a6842e5beeb7c97083d7f812`; rolling JEE remained 212
+courses / 2,848 memberships / `9eea2b44f0b19c08cc0907c57e091342`.
+Faculty links and quality review remain later, separately hash-gated
+transitions.
+
+## Execution rule retained
+
+Any refreshed follow-up approval must continue to run each remaining course
+separately in listed order. Before every write:
 
 1. refresh PITR and the quiet-window baseline;
 2. refresh the exact YouTube playlist and require its pinned source snapshot;
@@ -103,10 +146,9 @@ run each course separately in the listed order. Before every write:
 5. import create-only, then verify the protected JEE fingerprint.
 
 Stop on source mutation, reuse, baseline drift, dry-run findings, or protected
-JEE mismatch. Faculty links and quality review remain later, separately
-hash-gated transitions. No `release` push is part of this batch.
+JEE mismatch. No `release` push is part of this batch.
 
-## Proposed owner decision
+## Historical owner decision
 
 `Approve the reviewed Unacademy NEET fifteenth batch — Alcohols, Phenols and
 Ethers (Anoop Vashishtha), Fluid Mechanics (Mahendra Singh), and Kinematics 1D

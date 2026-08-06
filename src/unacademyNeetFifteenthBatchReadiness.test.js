@@ -19,7 +19,7 @@ const sha256 = (value) => createHash("sha256").update(value).digest("hex");
 const decisionId = "5b4b1d41-b7dc-4f12-80cf-b490e72edd96";
 
 describe("Unacademy NEET fifteenth-batch readiness", () => {
-  it("keeps the package review-only and pins the official channel", () => {
+  it("records the guarded partial production execution and pins the official channel", () => {
     expect(review).toMatchObject({
       review_status: "owner_approval_required",
       proposed_decision_id: decisionId,
@@ -30,8 +30,20 @@ describe("Unacademy NEET fifteenth-batch readiness", () => {
         playlist_count: 736,
       },
     });
-    expect(readiness).toContain("No production import");
+    expect(readiness).toContain("first course was imported create-only");
+    expect(readiness).toContain("course `423`");
+    expect(readiness).toContain("STOPPED before dry-run/write");
     expect(readiness).toContain("No `release` push");
+  });
+
+  it("records the source-mutation stop and exact postflight boundaries", () => {
+    expect(readiness).toContain("b7a1b79c07792331919693f1b38a1ef899715cd46b5615721a4fd28b7bcca0e3");
+    expect(readiness).toContain("d3d1be7d7eae2571d5dbfece4921e6c50bac95d500ccd6a55459d017a5cdc478");
+    expect(readiness).toContain("+1 playlist / +11 videos / +11 memberships / +0 chapters; 0 reused");
+    expect(readiness).toContain("404 / 4,666 / 4,672 / 263");
+    expect(readiness).toContain("82 courses / 1,304");
+    expect(readiness).toContain("30eee4a4a6842e5beeb7c97083d7f812");
+    expect(readiness).toContain("course 3 was not attempted");
   });
 
   it("pins the reviewed taxonomy, class scopes, and verified teachers", () => {
