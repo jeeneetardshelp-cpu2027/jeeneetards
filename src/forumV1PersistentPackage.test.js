@@ -60,6 +60,11 @@ describe("forum v1 persistent staging and JWT package", () => {
     expect(verifier).toContain("get_forum_feed");
     expect(verifier).toContain("authenticated JWT cannot select forum base table");
     expect(verifier).toContain("admin JWT receives actionable moderation context");
+    expect(verifier).toContain("admin JWT dismisses one report without content side effects");
+    expect(verifier).toContain("dismissed report leaves the pending admin queue");
+    expect(verifier).toContain('admin.rpc("forum_admin_dismiss_report"');
+    expect(verifier).toContain('select("status,resolved_at,resolved_by")');
+    expect(verifier).toContain("moderation_log_unchanged");
     expect(verifier).toContain("row.content_preview");
     expect(verifier).toContain("row.target_author_username");
     expect(verifier).toContain("serviceKey");

@@ -295,6 +295,53 @@ async function runHttpJourney() {
         && row.target_exists === true
       )),
     }));
+
+  const reportToDismiss = reports[0];
+  const contentBeforeResponse = await service.from("forum_posts")
+    .select("title,body,hidden_at,hidden_by,hidden_reason,locked_at,locked_by,deleted_at")
+    .eq("id", postId).single();
+  const contentBefore = must(contentBeforeResponse, "content before report dismissal");
+  const logCountBefore = await exactCount("forum_moderation_log", (query) => query
+    .eq("target_type", "post").eq("target_id", postId));
+  const dismissResponse = await admin.rpc("forum_admin_dismiss_report", {
+    p_report_id: reportToDismiss.id,
+  });
+  must(dismissResponse, "admin dismisses report");
+  const dismissedStateResponse = await service.from("forum_reports")
+    .select("status,resolved_at,resolved_by").eq("id", reportToDismiss.id).single();
+  const dismissedState = must(dismissedStateResponse, "dismissed report state");
+  const contentAfterResponse = await service.from("forum_posts")
+    .select("title,body,hidden_at,hidden_by,hidden_reason,locked_at,locked_by,deleted_at")
+    .eq("id", postId).single();
+  const contentAfter = must(contentAfterResponse, "content after report dismissal");
+  const logCountAfter = await exactCount("forum_moderation_log", (query) => query
+    .eq("target_type", "post").eq("target_id", postId));
+  record("admin JWT dismisses one report without content side effects",
+    dismissedState.status === "dismissed"
+      && Boolean(dismissedState.resolved_at)
+      && dismissedState.resolved_by === fixtures[0].id
+      && JSON.stringify(contentAfter) === JSON.stringify(contentBefore)
+      && logCountAfter === logCountBefore,
+    evidence([
+      dismissResponse, dismissedStateResponse, contentBeforeResponse, contentAfterResponse,
+    ], {
+      status_is_dismissed: dismissedState.status === "dismissed",
+      resolver_is_admin: dismissedState.resolved_by === fixtures[0].id,
+      content_unchanged: JSON.stringify(contentAfter) === JSON.stringify(contentBefore),
+      moderation_log_unchanged: logCountAfter === logCountBefore,
+    }));
+  const remainingReportsResponse = await admin.rpc("forum_admin_list_reports", { p_limit: 100 });
+  const remainingReports = must(remainingReportsResponse, "admin relists reports")
+    .filter((row) => Number(row.target_id) === postId);
+  const dismissedReportAbsent = !remainingReports.some(
+    (row) => Number(row.id) === Number(reportToDismiss.id),
+  );
+  record("dismissed report leaves the pending admin queue",
+    remainingReports.length === 2 && dismissedReportAbsent,
+    evidence(remainingReportsResponse, {
+      pending_target_reports: remainingReports.length,
+      dismissed_report_absent: dismissedReportAbsent,
+    }));
   must(await admin.rpc("forum_admin_moderate", {
     p_target_type: "post", p_target_id: postId, p_action: "unhide",
     p_reason: "HTTP JWT staging verification", p_report_id: null,
