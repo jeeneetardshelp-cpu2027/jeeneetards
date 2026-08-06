@@ -1,7 +1,7 @@
 # Unacademy NEET sixteenth-batch faculty-link readiness — 2026-08-07
 
-Status: **PREPARED AND LOCALLY REHEARSED ONLY**. The SQL was not applied to
-production. No `release` push occurred.
+Status: **APPLIED SUCCESSFULLY TO PRODUCTION** at `2026-08-07 01:05 IST`
+under the separate exact-hash owner approval. No `release` push occurred.
 
 ## Exact artifact
 
@@ -36,4 +36,26 @@ quality-review state, and the protected JEE boundary all match. It contains no
 update, delete, alter, drop, or truncate statement. Title/faculty review status
 remains pending and quality review remains a separate later gate.
 
-This hash needs a separate owner approval before production execution.
+## Production execution evidence
+
+Before execution, the signed-in Supabase dashboard confirmed active seven-day
+PITR with restore availability through `07 Aug 2026, 00:57:20 IST`. A fresh
+read-only SQL connection returned the exact encoded baseline, zero target
+faculty links/reviews, zero matching normalized teachers, and the protected JEE
+boundary `82 / 1,304 / 30eee4a4a6842e5beeb7c97083d7f812`.
+
+The locally loaded file reproduced the approved SHA-256 exactly. The first Run
+attempt was rejected at parse time because the SQL editor had retained the
+earlier baseline query ahead of the artifact; no transaction began and no row
+changed. The editor was cleared completely, the exact artifact was reloaded,
+and the guarded transaction then committed successfully.
+
+Independent postflight:
+
+- catalogue unchanged: `409 / 4,699 / 4,705 / 263`
+- teachers `32 -> 34`; aliases `50 -> 54`
+- institute links `33 -> 35`; subject links `33 -> 35`; goal links `32 -> 34`
+- course-teacher links `161 -> 164`; quality reviews unchanged at `32`
+- course `426 -> seep-pahuja`; courses `427-428 -> sachin-kapur`
+- target quality reviews: `0`; title/faculty review statuses remain pending
+- protected JEE unchanged: `82 / 1,304 / 30eee4a4a6842e5beeb7c97083d7f812`

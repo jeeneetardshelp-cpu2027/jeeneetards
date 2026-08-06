@@ -217,9 +217,10 @@ describe("Unacademy NEET sixteenth-batch faculty-link production package", () =>
   it("pins the immutable hash and prepared-only handoff", () => {
     expect(createHash("sha256").update(sql, "utf8").digest("hex")).toBe(expectedHash);
     expect(readiness).toContain(`SHA-256: \`${expectedHash}\``);
-    expect(readiness).toContain("PREPARED AND LOCALLY REHEARSED ONLY");
-    expect(readiness).toContain("This hash needs a separate owner approval");
-    expect(readiness).toContain("The SQL was not applied to");
+    expect(readiness).toContain("APPLIED SUCCESSFULLY TO PRODUCTION");
+    expect(readiness).toContain("teachers `32 -> 34`");
+    expect(readiness).toContain("course-teacher links `161 -> 164`");
+    expect(readiness).toContain("82 / 1,304 / 30eee4a4a6842e5beeb7c97083d7f812");
     expect(readiness).toContain("No `release` push occurred");
   });
 
