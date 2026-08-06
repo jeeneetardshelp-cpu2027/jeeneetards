@@ -139,6 +139,10 @@ const jeeAdvanced2009PapersSeed = readFileSync(
   "docs/sql/study_materials_jee_advanced_2009_papers_seed_2026-08-06.sql",
   "utf8",
 );
+const jeeAdvanced2008PapersSeed = readFileSync(
+  "docs/sql/study_materials_jee_advanced_2008_papers_seed_2026-08-06.sql",
+  "utf8",
+);
 
 async function productionShapedDatabase() {
   const pg = new PGlite();
@@ -2111,6 +2115,44 @@ describe("study materials v1 local SQL rehearsal", () => {
       expect(Number(jee.rows[0].total_count)).toBe(2);
       expect(jee.rows.every((row) => row.language === "English")).toBe(true);
       expect(jee.rows.every((row) => row.exam_year === 2009)).toBe(true);
+      expect(jee.rows.every((row) => row.scopes.length === 1)).toBe(true);
+      expect(jee.rows.every((row) => row.scopes[0].goal === "jee")).toBe(true);
+      expect(jee.rows.every((row) => row.scopes[0].subject === null)).toBe(true);
+      expect(jee.rows.every((row) => row.scopes[0].chapter === null)).toBe(true);
+
+      const neet = await pg.query(`select * from public.get_study_materials(
+        p_goal_slug => 'neet', p_material_type => 'previous_year_paper'
+      )`);
+      expect(neet.rows).toHaveLength(0);
+      const classSpecific = await pg.query(`select * from public.get_study_materials(
+        p_goal_slug => 'jee', p_class_slug => 'class-12',
+        p_material_type => 'previous_year_paper'
+      )`);
+      expect(classSpecific.rows).toHaveLength(0);
+    } finally {
+      await pg.close();
+    }
+  }, 30_000);
+
+  it("loads both IIT-JEE 2008 papers into one JEE-only exam scope each", async () => {
+    const pg = await productionShapedDatabase();
+    try {
+      await pg.exec(jeeAdvanced2008PapersSeed);
+      await pg.exec(jeeAdvanced2008PapersSeed);
+      const counts = await pg.query(`
+        select
+          (select count(*)::integer from public.study_materials) as materials,
+          (select count(*)::integer from public.study_material_scopes) as scopes
+      `);
+      expect(counts.rows[0]).toEqual({ materials: 2, scopes: 2 });
+
+      const jee = await pg.query(`select * from public.get_study_materials(
+        p_goal_slug => 'jee', p_material_type => 'previous_year_paper'
+      )`);
+      expect(jee.rows).toHaveLength(2);
+      expect(Number(jee.rows[0].total_count)).toBe(2);
+      expect(jee.rows.every((row) => row.language === "English")).toBe(true);
+      expect(jee.rows.every((row) => row.exam_year === 2008)).toBe(true);
       expect(jee.rows.every((row) => row.scopes.length === 1)).toBe(true);
       expect(jee.rows.every((row) => row.scopes[0].goal === "jee")).toBe(true);
       expect(jee.rows.every((row) => row.scopes[0].subject === null)).toBe(true);
