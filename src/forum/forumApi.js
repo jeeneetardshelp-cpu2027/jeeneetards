@@ -105,6 +105,32 @@ export function createForumApi(client = supabase) {
         .single();
       return unwrap(response, "record your vote");
     },
+
+    async submitReport({ targetType, targetId, reason, note = null }) {
+      return unwrap(await requireClient(client).rpc("forum_submit_report", {
+        p_target_type: targetType,
+        p_target_id: targetId,
+        p_reason: reason,
+        p_note: note?.trim() || null,
+      }), "send your report");
+    },
+
+    async listReports({ limit = 100 } = {}) {
+      const data = unwrap(await requireClient(client).rpc("forum_admin_list_reports", {
+        p_limit: limit,
+      }), "load forum reports");
+      return Array.isArray(data) ? data : [];
+    },
+
+    async moderate({ targetType, targetId, action, reason = null, reportId = null }) {
+      return unwrap(await requireClient(client).rpc("forum_admin_moderate", {
+        p_target_type: targetType,
+        p_target_id: targetId,
+        p_action: action,
+        p_reason: reason?.trim() || null,
+        p_report_id: reportId,
+      }), "apply that moderation action");
+    },
   });
 }
 

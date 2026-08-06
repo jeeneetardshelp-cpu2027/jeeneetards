@@ -112,4 +112,28 @@ describe("forum read API", () => {
     }]);
     expect(JSON.stringify(calls)).not.toContain("voter");
   });
+
+  it("maps reporting and moderation onto the bounded RPC contracts", async () => {
+    const calls = [];
+    const api = createForumApi(clientWith(async (name, params) => {
+      calls.push({ name, params });
+      if (name === "forum_admin_list_reports") return { data: [{ id: 8 }], error: null };
+      return { data: name === "forum_submit_report" ? 8 : null, error: null };
+    }));
+
+    await expect(api.submitReport({
+      targetType: "comment", targetId: 42, reason: "self_harm", note: "  urgent context  ",
+    })).resolves.toBe(8);
+    await expect(api.listReports({ limit: 50 })).resolves.toEqual([{ id: 8 }]);
+    await api.moderate({
+      targetType: "comment", targetId: 42, action: "hide", reason: " reviewed ", reportId: 8,
+    });
+
+    expect(calls).toEqual([
+      { name: "forum_submit_report", params: { p_target_type: "comment", p_target_id: 42, p_reason: "self_harm", p_note: "urgent context" } },
+      { name: "forum_admin_list_reports", params: { p_limit: 50 } },
+      { name: "forum_admin_moderate", params: { p_target_type: "comment", p_target_id: 42, p_action: "hide", p_reason: "reviewed", p_report_id: 8 } },
+    ]);
+    expect(JSON.stringify(calls)).not.toContain("reporter_id");
+  });
 });

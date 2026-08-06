@@ -29,6 +29,7 @@ import FacultyReviewPanel from "./FacultyReviewPanel.jsx";
 import ContentQualityPanel from "./ContentQualityPanel.jsx";
 import { hasAdminAccess } from "./adminAccess.js";
 import ManageCatalogPanel from "./ManageCatalogPanel.jsx";
+import ForumReportsPanel from "./forum/ForumReportsPanel.jsx";
 
 export { slugify } from "./adminUI.jsx";
 
@@ -610,7 +611,7 @@ const REASON_LABELS = {
   other: "Something else",
 };
 
-function ReportsPanel() {
+function ContentReportsPanel() {
   const { t } = useTheme();
   const { reports, loading, error, setStatus } = useReports();
   const [busyId, setBusyId] = useState(null);
@@ -999,7 +1000,20 @@ export default function AdminPanel() {
         )}
 
         {tab === "reports" ? (
-          <ReportsPanel />
+          <div className="space-y-10">
+            <section aria-labelledby="forum-reports-heading">
+              <h2 id="forum-reports-heading" className={`mb-4 text-lg font-semibold ${t.text}`}>
+                Forum reports
+              </h2>
+              <ForumReportsPanel />
+            </section>
+            <section aria-labelledby="catalogue-reports-heading">
+              <h2 id="catalogue-reports-heading" className={`mb-4 text-lg font-semibold ${t.text}`}>
+                Lecture and course reports
+              </h2>
+              <ContentReportsPanel />
+            </section>
+          </div>
         ) : tab === "reviews" ? (
           <ReviewModerationPanel />
         ) : tab === "quality" ? (
