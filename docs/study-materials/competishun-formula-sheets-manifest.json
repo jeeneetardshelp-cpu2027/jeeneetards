@@ -1,0 +1,182 @@
+[
+  {
+    "title": "Statistics Formula Sheet",
+    "file": "statistics-formula-sheet.pdf",
+    "sha256": "77BCD40E6D65AE25C77C31D66D6E202577AB71A45BE4A59110DD37503C038637",
+    "pageCount": 2,
+    "subject": "mathematics",
+    "chapters": ["statistics"],
+    "goals": ["jee"]
+  },
+  {
+    "title": "Ionic Equilibrium Formula Sheet",
+    "file": "ionic-equilibrium-formula-sheet.pdf",
+    "sha256": "0CF71AE0713C338452786FD1042201C62706BF7303FECCE9D3E45BBE64B5D4D3",
+    "pageCount": 6,
+    "subject": "chemistry",
+    "chapters": ["ionic-equilibrium"],
+    "goals": ["jee", "neet"]
+  },
+  {
+    "title": "Friction Quick Revision Formula Sheet",
+    "file": "friction-formula-sheet.pdf",
+    "sha256": "6FFC6BE4F0488D93822721C475AFED14340FC05759628C2230B5F867E7E72A7E",
+    "pageCount": 11,
+    "subject": "physics",
+    "chapters": ["friction"],
+    "goals": ["jee", "neet"]
+  },
+  {
+    "title": "GOC 2: Reactive Intermediates and Mechanism Formula Sheet",
+    "file": "goc-2-reactive-intermediates-mechanism-formula-sheet.pdf",
+    "sha256": "ECE5C06D0941DF0F94D2A7F3E360496DC951C3A570AA52A47078DA9659413224",
+    "pageCount": 14,
+    "subject": "chemistry",
+    "chapters": ["organic-reaction-mechanisms"],
+    "goals": ["jee", "neet"]
+  },
+  {
+    "title": "Relations and Functions Formula Sheet",
+    "file": "relations-and-functions-formula-sheet.pdf",
+    "sha256": "4C11659B7BECB5AE3B996E1C8E511E89FB396CDE965B060F207D7BE05C3F1962",
+    "pageCount": 3,
+    "subject": "mathematics",
+    "chapters": ["relations-and-functions"],
+    "goals": ["jee"]
+  },
+  {
+    "title": "Work, Energy and Power Quick Revision Formula Sheet",
+    "file": "work-energy-power-formula-sheet.pdf",
+    "sha256": "119BE2C98AF2FB3542EA35872D78FE22586F40F46F188018DFDD48D976E9A50D",
+    "pageCount": 11,
+    "subject": "physics",
+    "chapters": ["work-energy-and-power"],
+    "goals": ["jee", "neet"]
+  },
+  {
+    "title": "Chemical Equilibrium Formula Sheet",
+    "file": "chemical-equilibrium-formula-sheet.pdf",
+    "sha256": "F8B66C8C464AE207EFF576EA08375ECFA97CD4880B0759121454F7D847742BEF",
+    "pageCount": 6,
+    "subject": "chemistry",
+    "chapters": ["chemical-equilibrium"],
+    "goals": ["jee", "neet"]
+  },
+  {
+    "title": "GOC 1: Basic Organic Chemistry Formula Sheet",
+    "file": "goc-1-basic-organic-chemistry-formula-sheet.pdf",
+    "sha256": "5E540E3965AF3F0222F23F491268095E4F9B7F15A5D05F34CBBAED5303FCD5B6",
+    "pageCount": 11,
+    "subject": "chemistry",
+    "chapters": ["some-basic-principles-of-organic-chemistry"],
+    "goals": ["jee", "neet"]
+  },
+  {
+    "title": "Quadratic Equations Formula Sheet",
+    "file": "quadratic-equations-formula-sheet.pdf",
+    "sha256": "8B84FB44A3260152F557C46D4469A046971A382A0F3A605B000382EFE4B35A59",
+    "pageCount": 4,
+    "subject": "mathematics",
+    "chapters": ["quadratic-equations"],
+    "goals": ["jee"]
+  },
+  {
+    "title": "Chemical Bonding Formula Sheet",
+    "file": "chemical-bonding-formula-sheet.pdf",
+    "sha256": "096D4EA2BFA5C2B631609673BF15DEFFE1D280E4CCB7A8DE371CCB8D8D93AE19",
+    "pageCount": 16,
+    "subject": "chemistry",
+    "chapters": ["chemical-bonding-and-molecular-structure"],
+    "goals": ["jee", "neet"]
+  },
+  {
+    "title": "Newton's Laws of Motion Quick Revision Formula Sheet",
+    "file": "newtons-laws-of-motion-formula-sheet.pdf",
+    "sha256": "984E1F49BFAE4996B13347B725BA420EEA6EC4AFEAB8AB1F8A0FE3565769B27E",
+    "pageCount": 11,
+    "subject": "physics",
+    "chapters": ["newtons-laws-of-motion-nlm"],
+    "goals": ["jee", "neet"]
+  },
+  {
+    "title": "Isomerism Formula Sheet",
+    "file": "isomerism-formula-sheet.pdf",
+    "sha256": "7ACA65CEB6C5E120A77527526C032DBDF7B6B1170CA6187975FDB560D2ED4D3C",
+    "pageCount": 8,
+    "subject": "chemistry",
+    "chapters": ["structural-isomerism", "stereoisomerism"],
+    "goals": ["jee", "neet"]
+  },
+  {
+    "title": "Trigonometry Formula Sheet",
+    "file": "trigonometry-formula-sheet.pdf",
+    "sha256": "E776805A94B8BDB4DBD371710294C083CBE6E94E30FF8B7381C427587962C610",
+    "pageCount": 13,
+    "subject": "mathematics",
+    "chapters": ["trigonometry"],
+    "goals": ["jee"]
+  },
+  {
+    "title": "Structural Identification and Practical Organic Chemistry Formula Sheet",
+    "file": "structural-identification-poc-formula-sheet.pdf",
+    "sha256": "283B7B7A1CEC026B3FFEBDA762E335C818BF49A9D730EFBD1B642BE9A153595E",
+    "pageCount": 9,
+    "subject": "chemistry",
+    "chapters": ["purification-and-characterisation-of-organic-compounds"],
+    "goals": ["jee", "neet"]
+  },
+  {
+    "title": "Fundamentals of Mathematics Formula Sheet",
+    "file": "fundamentals-of-mathematics-formula-sheet.pdf",
+    "sha256": "9EDD2065F32080B6B01C17574867E6296A5F08F9098FFB8EA29D699FE86DB8CF",
+    "pageCount": 6,
+    "subject": "mathematics",
+    "chapters": ["fundamentals-of-mathematics"],
+    "goals": ["jee"]
+  },
+  {
+    "title": "Centre of Mass, Momentum and Collisions Formula Sheet",
+    "file": "centre-of-mass-formula-sheet.pdf",
+    "sha256": "12A3842A048DB418B0717DDD0E8D948B4CA3B8959D0E367535D4B3666F2F3612",
+    "pageCount": 11,
+    "subject": "physics",
+    "chapters": ["system-of-particles-and-centre-of-mass"],
+    "goals": ["jee", "neet"]
+  },
+  {
+    "title": "IUPAC Nomenclature Formula Sheet",
+    "file": "iupac-nomenclature-formula-sheet.pdf",
+    "sha256": "021A198F923E75464934E71E234ABE87DF0F294F12B1C8061433B105F370AAD7",
+    "pageCount": 13,
+    "subject": "chemistry",
+    "chapters": ["some-basic-principles-of-organic-chemistry"],
+    "goals": ["jee", "neet"]
+  },
+  {
+    "title": "Sets Formula Sheet",
+    "file": "sets-formula-sheet.pdf",
+    "sha256": "96A23B5ABFAA33179CE010549A41AE366542B868726685231A24A877D9A9A4AC",
+    "pageCount": 5,
+    "subject": "mathematics",
+    "chapters": ["sets"],
+    "goals": ["jee"]
+  },
+  {
+    "title": "Mole Concept Formula Sheet",
+    "file": "mole-concept-formula-sheet.pdf",
+    "sha256": "C1991E3532947ADD94357D8F0EA9DE5C14AA49F163238C9000D747061C161161",
+    "pageCount": 4,
+    "subject": "chemistry",
+    "chapters": ["mole-concept"],
+    "goals": ["jee", "neet"]
+  },
+  {
+    "title": "Mathematical Tools for Physics Formula Sheet",
+    "file": "mathematical-tools-physics-formula-sheet.pdf",
+    "sha256": "6BD5AB7E1125F6810B078FA249B4BD9DCD43526929966B9DDB0E74BC40FD2F76",
+    "pageCount": 6,
+    "subject": "physics",
+    "chapters": ["basic-mathematics-for-physics"],
+    "goals": ["jee", "neet"]
+  }
+]
