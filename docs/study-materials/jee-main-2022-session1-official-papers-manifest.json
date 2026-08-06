@@ -1,0 +1,94 @@
+{
+  "exam": "JEE Main 2022 Session 1 Paper 1 (B.E./B.Tech.)",
+  "language": "English",
+  "officialArchiveUrl": "https://www.nta.ac.in/NoticeBoardArchive",
+  "officialNoticeUrl": "https://www.nta.ac.in/Download/Notice/Notice_20220702204623.pdf",
+  "verificationDate": "2026-08-07",
+  "verification": "Each live NTA PDF was checked for Paper 1 identity, date, shift, English language, 90 questions, 30 questions each in Mathematics, Physics and Chemistry, absence of an answer key, page count, SHA-256 and complete visual rendering.",
+  "papers": [
+    {
+      "title": "JEE Main 2022 Session 1 - 24 June Shift 1 (English)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20230320112124.pdf",
+      "pageCount": 26,
+      "byteLength": 3316693,
+      "sha256": "C81531F24DC18E171716CD7037C59F8AE28F70023C9F03F24571F31544197BF1"
+    },
+    {
+      "title": "JEE Main 2022 Session 1 - 24 June Shift 2 (English)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20230320113108.pdf",
+      "pageCount": 18,
+      "byteLength": 2223908,
+      "sha256": "02A9CE9725DBAE07D2D646D2B95238D5B18457FB7F1CFA877EABF5FF8B501EE5"
+    },
+    {
+      "title": "JEE Main 2022 Session 1 - 25 June Shift 1 (English)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20230320120251.pdf",
+      "pageCount": 26,
+      "byteLength": 3196399,
+      "sha256": "E765DBEB9EAB9EE3C88EA916AB2CECB6DA180B098D35FBE8F685597B3AC73AA6"
+    },
+    {
+      "title": "JEE Main 2022 Session 1 - 25 June Shift 2 (English)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20230320124553.pdf",
+      "pageCount": 21,
+      "byteLength": 2327710,
+      "sha256": "E4BFEA639D1E6435409F57920B29DCE752117DA2869911EDFA875F612C056C5A"
+    },
+    {
+      "title": "JEE Main 2022 Session 1 - 26 June Shift 1 (English)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20230320130740.pdf",
+      "pageCount": 28,
+      "byteLength": 3302145,
+      "sha256": "61AB56923156402B8870AC4CD4F2A0ABB2E5575FCBAC66FF72BB68A6D4CD8408"
+    },
+    {
+      "title": "JEE Main 2022 Session 1 - 26 June Shift 2 (English)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20230320131539.pdf",
+      "pageCount": 20,
+      "byteLength": 2184270,
+      "sha256": "B9B0C8B69A22E13C80549A5571AEEC541BFAF942F95DA6D0E13FDDB1D51C7300"
+    },
+    {
+      "title": "JEE Main 2022 Session 1 - 27 June Shift 1 (English)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20230320133453.pdf",
+      "pageCount": 27,
+      "byteLength": 3292322,
+      "sha256": "EB04D4A4D0D4FCBF30FC0ACED75E1E47F2AF391E36A80DDA2CA1A8F619C8AC0D"
+    },
+    {
+      "title": "JEE Main 2022 Session 1 - 27 June Shift 2 (English)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20230322111449.pdf",
+      "pageCount": 22,
+      "byteLength": 2564804,
+      "sha256": "CB82942A08AF7254736CD6B58389E297AB63C3F29F5AA8B26E938D735E2212AE"
+    },
+    {
+      "title": "JEE Main 2022 Session 1 - 28 June Shift 1 (English)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20230321125442.pdf",
+      "pageCount": 21,
+      "byteLength": 2457023,
+      "sha256": "677030EE2CEE703B5E027425BE291690FFFEB8C481D488F5C7781E595031B319"
+    },
+    {
+      "title": "JEE Main 2022 Session 1 - 28 June Shift 2 (English)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20230322124511.pdf",
+      "pageCount": 28,
+      "byteLength": 3562462,
+      "sha256": "5513D18B73B6AAB90CA63408EAE6329CE4206CE3C79D701F9F5084654C9CAB7E"
+    },
+    {
+      "title": "JEE Main 2022 Session 1 - 29 June Shift 1 (English)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20230322130815.pdf",
+      "pageCount": 26,
+      "byteLength": 3335693,
+      "sha256": "7531BD16FD7041685762321B03A3406A6C4F1678E3598D73D00E616F6B8346F2"
+    },
+    {
+      "title": "JEE Main 2022 Session 1 - 29 June Shift 2 (English)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20230322131758.pdf",
+      "pageCount": 20,
+      "byteLength": 2445835,
+      "sha256": "522FED6B476D901F6AAA59F7315D7C9B5A9D8AB063BA7270FCDA305A4CDCAF22"
+    }
+  ]
+}
