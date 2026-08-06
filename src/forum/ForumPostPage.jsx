@@ -1,0 +1,96 @@
+import { CheckCircle2, LockKeyhole, MessageCircle, TrendingUp } from "lucide-react";
+import { useParams } from "react-router";
+import { Page } from "../AppShell.jsx";
+import { Button, Pill, SectionHead, Surface } from "../ui.jsx";
+import ForumCommentThread from "./ForumCommentThread.jsx";
+import { compactNumber, timeAgo } from "./forumFormatting.js";
+import ForumMathContent from "./ForumMathContent.jsx";
+import {
+  ForumLoadError, ForumLoading, ForumUnavailable,
+} from "./ForumStates.jsx";
+import { forumTopicStyle } from "./forumTopicColors.js";
+import { useForumThread } from "./useForumThread.js";
+
+function MissingPost() {
+  return (
+    <Surface as="section" className="text-center">
+      <h1 className="text-xl font-semibold text-ink">Discussion not found</h1>
+      <p className="mx-auto mt-3 max-w-lg text-sm leading-relaxed text-ink-2">
+        This post may have been removed, hidden for review, or the link may be incorrect.
+      </p>
+      <Button to="/forum" variant="secondary" size="sm" className="mt-6">
+        Back to discussions
+      </Button>
+    </Surface>
+  );
+}
+function ForumPostDataPage({ postId, api }) {
+  const thread = useForumThread(postId, api);
+
+  if (thread.status === "loading") return <ForumLoading kind="thread" />;
+  if (thread.status === "unavailable") return <ForumUnavailable />;
+  if (thread.status === "error") return <ForumLoadError detail={thread.error} onRetry={thread.retry} />;
+  if (thread.status === "not_found") return <MissingPost />;
+
+  const { post } = thread;
+  return (
+    <>
+      <Surface as="article" className="min-w-0">
+        <div className="flex min-w-0 flex-wrap items-center gap-2 text-xs text-ink-3">
+          <span className="rounded-sm border px-2.5 py-1 font-medium" style={forumTopicStyle(post.topic_slug)}>
+            {post.topic_name}
+          </span>
+          <span>by {post.author_username || "Deleted student"}</span>
+          <span aria-hidden="true">·</span>
+          <time dateTime={post.created_at}>{timeAgo(post.created_at)}</time>
+          {post.edited_at && <span>(edited)</span>}
+        </div>
+
+        <SectionHead as="h1" className="mt-5" title={post.title} />
+        <ForumMathContent className="mt-6 text-[0.95rem]">{post.body}</ForumMathContent>
+
+        <div className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-hairline pt-5 text-xs text-ink-3">
+          <span className="inline-flex items-center gap-1.5" aria-label={`${post.score} score`}>
+            <TrendingUp aria-hidden="true" className="h-4 w-4" /> {compactNumber(post.score)}
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <MessageCircle aria-hidden="true" className="h-4 w-4" />
+            {compactNumber(post.comment_count)} {Number(post.comment_count) === 1 ? "answer" : "answers"}
+          </span>
+          {post.is_solved && (
+            <Pill tone="accent"><CheckCircle2 aria-hidden="true" className="h-3.5 w-3.5" /> Solved</Pill>
+          )}
+          {post.is_locked && (
+            <Pill tone="quiet"><LockKeyhole aria-hidden="true" className="h-3.5 w-3.5" /> Locked</Pill>
+          )}
+        </div>
+      </Surface>
+
+      <section className="mt-8" aria-labelledby="forum-answers-title">
+        <SectionHead
+          id="forum-answers-title"
+          title={`${post.comment_count} ${Number(post.comment_count) === 1 ? "answer" : "answers"}`}
+          lead="Answers are shown as a conversation; nested replies can be collapsed."
+        />
+        <div className="mt-5">
+          <ForumCommentThread comments={thread.comments} />
+        </div>
+      </section>
+    </>
+  );
+}
+
+export default function ForumPostPage({ api }) {
+  const { postId: rawPostId } = useParams();
+  const postId = Number(rawPostId);
+  const valid = Number.isSafeInteger(postId) && postId > 0;
+
+  return (
+    <Page
+      crumbs={[{ label: "Student forum", to: "/forum" }, { label: valid ? "Discussion" : "Not found" }]}
+      width="reading"
+    >
+      {valid ? <ForumPostDataPage postId={postId} api={api} /> : <MissingPost />}
+    </Page>
+  );
+}
