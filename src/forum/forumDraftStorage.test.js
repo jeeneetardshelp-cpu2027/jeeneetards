@@ -31,6 +31,26 @@ describe("forum draft storage", () => {
     expect(loadForumDraft(storage, { ...descriptor, userId: "student-1" })).toMatchObject({ title: "guest work" });
   });
 
+  it("keeps the guest draft when adoption cannot be persisted to the account", () => {
+    const storage = memoryStorage();
+    const descriptor = { kind: "post", target: "new" };
+    saveForumDraft(storage, descriptor, { title: "guest work", updated_at: 20 });
+    const blockedAccountStorage = {
+      ...storage,
+      setItem: (key, value) => {
+        if (key === forumDraftKey({ ...descriptor, userId: "student-1" })) {
+          throw new Error("quota");
+        }
+        storage.setItem(key, value);
+      },
+    };
+
+    expect(adoptGuestForumDraft(blockedAccountStorage, descriptor, "student-1"))
+      .toMatchObject({ title: "guest work" });
+    expect(loadForumDraft(storage, descriptor)).toMatchObject({ title: "guest work" });
+    expect(loadForumDraft(storage, { ...descriptor, userId: "student-1" })).toBeNull();
+  });
+
   it("fails closed around corrupt or unavailable storage without losing in-memory work", () => {
     const broken = {
       getItem: () => "{not-json",

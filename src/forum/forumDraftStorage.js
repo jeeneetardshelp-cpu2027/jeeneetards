@@ -37,15 +37,22 @@ export function clearForumDraft(storage, descriptor) {
 }
 
 export function adoptGuestForumDraft(storage, descriptor, userId) {
-  const guest = loadForumDraft(storage, { ...descriptor, userId: null });
+  const guestDescriptor = { ...descriptor, userId: null };
+  const guest = loadForumDraft(storage, guestDescriptor);
   const ownedDescriptor = { ...descriptor, userId };
   const owned = loadForumDraft(storage, ownedDescriptor);
-  const selected = !guest
-    ? owned
-    : !owned
-      ? guest
-      : Number(guest.updated_at ?? 0) > Number(owned.updated_at ?? 0) ? guest : owned;
-  if (selected) saveForumDraft(storage, ownedDescriptor, selected);
-  clearForumDraft(storage, { ...descriptor, userId: null });
-  return selected;
+
+  if (!guest) return owned;
+
+  const guestIsNewer = !owned
+    || Number(guest.updated_at ?? 0) > Number(owned.updated_at ?? 0);
+  if (guestIsNewer) {
+    if (saveForumDraft(storage, ownedDescriptor, guest)) {
+      clearForumDraft(storage, guestDescriptor);
+    }
+    return guest;
+  }
+
+  clearForumDraft(storage, guestDescriptor);
+  return owned;
 }
