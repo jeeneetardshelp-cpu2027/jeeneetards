@@ -25,11 +25,11 @@ export const RELEASE_CAPABILITIES = Object.freeze({
 // particular, the presence of a writable table does not make an anonymous
 // submission feature safe to expose without throttling and abuse controls.
 export const RELEASE_FEATURES = Object.freeze({
-  // The reviewed forum backend is intentionally not a public navigation
-  // surface yet. Its three routes may be built and reviewed behind this flag,
-  // but nav/footer/sitemap links stay absent until the complete UI release is
-  // explicitly approved.
-  forum: false,
+  // Forum release approved after the production schema was installed in mode
+  // `off`, its atomic postflight passed, and anonymous production calls proved
+  // the fail-closed surface. Opening the database mode remains a separate
+  // operational decision after the flagged frontend is deployed and checked.
+  forum: true,
   // Ratings launch (2026-07-30): the site owner reviewed the under-18
   // consent/age-assurance question and chose to proceed. Enabling ratings
   // requires accounts (rating.jsx gates submission on a signed-in user), so

@@ -115,6 +115,7 @@ describe("sitemap generation", () => {
     expect(result.outcome).toBe("static");
     expect(xml).toContain("<loc>https://www.jeeneetard.com/</loc>");
     expect(xml).toContain("<loc>https://www.jeeneetard.com/explore</loc>");
+    expect(xml).toContain("<loc>https://www.jeeneetard.com/forum</loc>");
     expect(xml).not.toContain("/course/");
   });
 });
