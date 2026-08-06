@@ -59,6 +59,9 @@ describe("forum v1 persistent staging and JWT package", () => {
     expect(verifier).toContain("decodeJwtPayload");
     expect(verifier).toContain("get_forum_feed");
     expect(verifier).toContain("authenticated JWT cannot select forum base table");
+    expect(verifier).toContain("admin JWT receives actionable moderation context");
+    expect(verifier).toContain("row.content_preview");
+    expect(verifier).toContain("row.target_author_username");
     expect(verifier).toContain("serviceKey");
     expect(verifier).toContain("[REDACTED]");
     expect(verifier).toMatch(/rpc\("get_forum_post", \{ p_post_id: postId \}\)\s*\.single\(\)/);

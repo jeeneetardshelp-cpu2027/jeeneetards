@@ -274,6 +274,27 @@ async function runHttpJourney() {
     .filter((row) => Number(row.target_id) === postId);
   record("admin JWT sees all three pending reports", reports.length === 3,
     evidence(reportsResponse, { count: reports.length }));
+  const expectedTitle = `HTTP JWT staging post ${runId}`;
+  const expectedAuthor = `stage_http_${runId}_2`;
+  record("admin JWT receives actionable moderation context",
+    reports.length === 3 && reports.every((row) => (
+      Number(row.post_id) === postId
+      && row.topic_slug === "physics"
+      && row.post_title === expectedTitle
+      && row.target_author_username === expectedAuthor
+      && row.content_preview === "A disposable staging post used to verify real PostgREST JWT authorization."
+      && row.target_exists === true
+      && row.target_is_hidden === true
+      && row.target_is_deleted === false
+      && row.post_is_locked === false
+    )), evidence(reportsResponse, {
+      count: reports.length,
+      all_context_fields_match: reports.length === 3 && reports.every((row) => (
+        Number(row.post_id) === postId
+        && typeof row.content_preview === "string"
+        && row.target_exists === true
+      )),
+    }));
   must(await admin.rpc("forum_admin_moderate", {
     p_target_type: "post", p_target_id: postId, p_action: "unhide",
     p_reason: "HTTP JWT staging verification", p_report_id: null,
