@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "request_id": "09872de1-d91b-41b3-b31e-1db7afc1a28a",
+  "youtube_playlist_id": "PLsgHooHkqhhNWiiYtSlpdjPEVYhHqtCkR",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "f7992243-3b5b-4c39-bac9-433dd766a70a",
+    "youtube_playlist_id": "PLsgHooHkqhhNWiiYtSlpdjPEVYhHqtCkR",
+    "teacher": "Dr. Sachin Kapur",
+    "source_url": "https://www.youtube.com/playlist?list=PLsgHooHkqhhNWiiYtSlpdjPEVYhHqtCkR",
+    "source_label": "Official Unacademy NEET channel-owned The Living World playlist naming Dr Sachin Kapur; every retained lecture title names Sachin Sir, while the Pradeep Singh row is an excluded mixed-chapter quiz",
+    "reviewed_by": "Owner",
+    "reviewed_on": "2026-08-07",
+    "youtube_video_ids": ["JwladftMRQg", "Pc43bhZrwaw", "piJUnYrXEwk", "Cv0p3FQ6EG8", "8ynCLl0sRqY"]
+  },
+  "assignments": [
+    { "position": 1, "youtube_video_id": "JwladftMRQg", "chapter": "The Living World", "lesson_number": 1 },
+    { "position": 2, "youtube_video_id": "Pc43bhZrwaw", "chapter": "The Living World", "lesson_number": 2 },
+    { "position": 3, "youtube_video_id": "piJUnYrXEwk", "chapter": "The Living World", "lesson_number": 3 },
+    { "position": 4, "youtube_video_id": "Cv0p3FQ6EG8", "chapter": "The Living World", "lesson_number": 4 },
+    { "position": 5, "youtube_video_id": "8ynCLl0sRqY", "chapter": "The Living World", "lesson_number": 5 }
+  ],
+  "exclusions": [
+    { "position": 6, "youtube_video_id": "nA45gLKa1rA", "reason": "practice_dpp" },
+    { "position": 7, "youtube_video_id": "xu5aC40Y5YI", "reason": "mixed_chapter_quiz" }
+  ]
+}

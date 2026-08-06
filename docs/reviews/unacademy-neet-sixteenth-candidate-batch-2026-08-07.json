@@ -1,0 +1,142 @@
+{
+  "reviewed_on": "2026-08-07",
+  "review_status": "owner_approval_required",
+  "proposed_decision_id": "f7992243-3b5b-4c39-bac9-433dd766a70a",
+  "channel": {
+    "name": "Unacademy NEET",
+    "handle": "@UnacademyNEET",
+    "youtube_channel_id": "UCdQwYksctqqiRwqp3PiJMWA",
+    "production_institute_id": 147,
+    "playlist_count": 736
+  },
+  "preflight": {
+    "captured_at": "2026-08-06T18:56:32.090Z",
+    "playlists": 406,
+    "videos": 4683,
+    "memberships": 4689,
+    "chapters": 263,
+    "chapter_class_levels": 92,
+    "teachers": 32,
+    "faculty_links": 161,
+    "quality_reviews_last_confirmed": 32,
+    "source_collision_count": 0,
+    "retained_video_collision_count": 0,
+    "cross_candidate_retained_video_collision_count": 0,
+    "protected_jee_courses": 82,
+    "protected_jee_memberships": 1304,
+    "protected_jee_fingerprint": "30eee4a4a6842e5beeb7c97083d7f812",
+    "rolling_jee_courses": 212,
+    "rolling_jee_memberships": 2848,
+    "rolling_jee_fingerprint": "9eea2b44f0b19c08cc0907c57e091342"
+  },
+  "candidates": [
+    {
+      "order": 1,
+      "youtube_playlist_id": "PLsgHooHkqhhP1V_qdWDRNO0MczNtM6Q1m",
+      "source_title": "NEET: Applications Of Biotechnology | Live Daily 2.0 | Unacademy NEET | Seep Pahuja",
+      "source_snapshot_sha256": "e6bc2be51f4e5d22e1b40290534495ba4664cf5c8a5ba0bd901bc57249352ef7",
+      "source_item_count": 4,
+      "subject_id": 4,
+      "chapter_id": 102,
+      "chapter": "Biotechnology and its Applications",
+      "mapping_rationale": "The source topic Applications of Biotechnology maps to the existing NCERT chapter Biotechnology and its Applications.",
+      "class_level_id": 3,
+      "class_level": "class-12",
+      "teacher_id": null,
+      "teacher": "Seep Pahuja",
+      "teacher_verified": false,
+      "teacher_record_status": "normalized_record_missing",
+      "source_collision_count": 0,
+      "video_collision_count": 0,
+      "retained_source_positions": [1, 2, 3, 4],
+      "excluded_source_positions": [],
+      "videos": [
+        { "source_position": 1, "youtube_video_id": "rhahYJHcJHE", "title": "NEET: Applications Of Biotechnology - L1 | Live Daily 2.0 | Unacademy NEET | Seep Pahuja", "duration_seconds": 3828, "embedding_status": "embeddable" },
+        { "source_position": 2, "youtube_video_id": "t4UOmldFpfQ", "title": "NEET: Applications Of Biotechnology - L2 | Live Daily 2.0 | Unacademy NEET | Seep Pahuja", "duration_seconds": 3625, "embedding_status": "embeddable" },
+        { "source_position": 3, "youtube_video_id": "gI3dZOni3AI", "title": "NEET: Applications Of Biotechnology - L3 | Live Daily 2.0 | Unacademy NEET | Seep Pahuja", "duration_seconds": 4338, "embedding_status": "embeddable" },
+        { "source_position": 4, "youtube_video_id": "dXVXq7un7FQ", "title": "NEET: Applications Of Biotechnology - L4 | Live Daily 2.0 | Unacademy NEET | Seep Pahuja", "duration_seconds": 3681, "embedding_status": "embeddable" }
+      ],
+      "exclusions": []
+    },
+    {
+      "order": 2,
+      "youtube_playlist_id": "PLsgHooHkqhhNWiiYtSlpdjPEVYhHqtCkR",
+      "source_title": "NEET: The Living World - Playlist | Class 11 | Unacademy NEET | Live Daily 2.0 | NEET Biology | Dr Sachin Kapur | Pradeep Singh",
+      "source_snapshot_sha256": "36d5336c2188aee54b7d1189341e51a7672fd356290d153651e452e2818a8d22",
+      "source_item_count": 7,
+      "subject_id": 4,
+      "chapter_id": 127,
+      "chapter": "The Living World",
+      "mapping_rationale": "The retained L1-L5 sequence is entirely The Living World; the DPP and mixed-chapter quiz are excluded.",
+      "class_level_id": 2,
+      "class_level": "class-11",
+      "teacher_id": null,
+      "teacher": "Dr. Sachin Kapur",
+      "teacher_verified": false,
+      "teacher_record_status": "normalized_record_missing",
+      "source_collision_count": 0,
+      "video_collision_count": 0,
+      "retained_source_positions": [1, 2, 3, 4, 5],
+      "excluded_source_positions": [6, 7],
+      "videos": [
+        { "source_position": 1, "youtube_video_id": "JwladftMRQg", "title": "NEET Biology: The Living World - L1 | Class 11 | Live Daily 2.0 | Unacademy NEET | Sachin Sir", "duration_seconds": 3453, "embedding_status": "embeddable" },
+        { "source_position": 2, "youtube_video_id": "Pc43bhZrwaw", "title": "NEET Biology: The Living World - L2 | Class 11 | Live Daily 2.0 | Unacademy NEET | Sachin Sir", "duration_seconds": 3580, "embedding_status": "embeddable" },
+        { "source_position": 3, "youtube_video_id": "piJUnYrXEwk", "title": "NEET Biology: The Living World - L3 | Class 11 | Live Daily 2.0 | Unacademy NEET | Sachin Sir", "duration_seconds": 3493, "embedding_status": "embeddable" },
+        { "source_position": 4, "youtube_video_id": "Cv0p3FQ6EG8", "title": "NEET Biology: The Living World - L4 | Class 11 | Live Daily 2.0 | Unacademy NEET | Sachin Sir", "duration_seconds": 2786, "embedding_status": "embeddable" },
+        { "source_position": 5, "youtube_video_id": "8ynCLl0sRqY", "title": "NEET Biology: The Living World - L5 | Class 11 | Live Daily 2.0 | Unacademy NEET | Sachin Sir", "duration_seconds": 3532, "embedding_status": "embeddable" }
+      ],
+      "exclusions": [
+        { "source_position": 6, "youtube_video_id": "nA45gLKa1rA", "title": "NEET Biology: The Living World - DPP 1 | Class 11 | Live Quiz 2.0 | Unacademy NEET | Sachin Sir", "duration_seconds": 1576, "reason": "practice_dpp" },
+        { "source_position": 7, "youtube_video_id": "xu5aC40Y5YI", "title": "Living World | Biological Classification - Mega Menti Quiz | Quiz 2.0 | Unacademy NEET | Pradeep S.", "duration_seconds": 3760, "reason": "mixed_chapter_quiz" }
+      ]
+    },
+    {
+      "order": 3,
+      "youtube_playlist_id": "PLsgHooHkqhhPZfPFIHshnh3J0Nsod2uDw",
+      "source_title": "NEET: Reproductive Health - Playlist | Class 12 | Unacademy NEET | Live Daily 2.0 | NEET Biology | Dr Sachin Kapur",
+      "source_snapshot_sha256": "937d3c46bf998cacbf5963ff117ab17ab1a5e90ab0f5850e52aa478856fe1d7b",
+      "source_item_count": 12,
+      "subject_id": 4,
+      "chapter_id": 123,
+      "chapter": "Reproductive Health",
+      "mapping_rationale": "The retained L1-L7 sequence is the complete lecture series; all five quiz, DPP, or mixed-chapter practice rows are excluded.",
+      "class_level_id": 3,
+      "class_level": "class-12",
+      "teacher_id": null,
+      "teacher": "Dr. Sachin Kapur",
+      "teacher_verified": false,
+      "teacher_record_status": "normalized_record_missing",
+      "source_collision_count": 0,
+      "video_collision_count": 0,
+      "retained_source_positions": [1, 2, 3, 4, 5, 6, 7],
+      "excluded_source_positions": [8, 9, 10, 11, 12],
+      "videos": [
+        { "source_position": 1, "youtube_video_id": "LuhyELqB-6U", "title": "NEET Biology: Reproductive Health - L1 | Class 12 | Live Daily 2.0 | Unacademy NEET | Sachin Sir", "duration_seconds": 3545, "embedding_status": "embeddable" },
+        { "source_position": 2, "youtube_video_id": "lc4YnjYmyVk", "title": "NEET Biology: Reproductive Health - L2 | Class 12 | Live Daily 2.0 | Unacademy NEET | Sachin Sir", "duration_seconds": 3706, "embedding_status": "embeddable" },
+        { "source_position": 3, "youtube_video_id": "yFL_vpr0Xzo", "title": "NEET Biology: Reproductive Health - L3 | Class 12 | Live Daily 2.0 | Unacademy NEET | Sachin Sir", "duration_seconds": 3700, "embedding_status": "embeddable" },
+        { "source_position": 4, "youtube_video_id": "IQX_C7Rp0MY", "title": "NEET Biology: Reproductive Health - L4 | Class 12 | Live Daily 2.0 | Unacademy NEET | Sachin Sir", "duration_seconds": 3637, "embedding_status": "embeddable" },
+        { "source_position": 5, "youtube_video_id": "tns9bpS1i94", "title": "NEET Biology: Reproductive Health - L5 | Class 12 | Live Daily 2.0 | Unacademy NEET | Sachin Sir", "duration_seconds": 3706, "embedding_status": "embeddable" },
+        { "source_position": 6, "youtube_video_id": "sBf0PhnYneI", "title": "NEET Biology: Reproductive Health - L6 | Class 12 | Live Daily 2.0 | Unacademy NEET | Sachin Sir", "duration_seconds": 3608, "embedding_status": "embeddable" },
+        { "source_position": 7, "youtube_video_id": "U7Ic278pABQ", "title": "NEET Biology: Reproductive Health - L7 | Class 12 | Live Daily 2.0 | Unacademy NEET | Sachin Sir", "duration_seconds": 3091, "embedding_status": "embeddable" }
+      ],
+      "exclusions": [
+        { "source_position": 8, "youtube_video_id": "NCpjEJjca6I", "title": "NEET: Reproductive Health - Quiz 1 | Menti Quiz | Live Quiz 2.0 | Unacademy NEET | Pradeep Sir", "duration_seconds": 2971, "reason": "quiz" },
+        { "source_position": 9, "youtube_video_id": "Hu9oRxtzFcg", "title": "NEET: Reproductive Health - Quiz 2 | DPP | Class 12 | Live Quiz 2.0 | Unacademy NEET | Sachin Sir", "duration_seconds": 1986, "reason": "practice_dpp" },
+        { "source_position": 10, "youtube_video_id": "LEC7jujH9lM", "title": "NEET: Complete Reproduction - Mega Menti Quiz | Live Quiz 2.0 | Biology | Unacademy NEET | Pradeep S", "duration_seconds": 3575, "reason": "mixed_chapter_quiz" },
+        { "source_position": 11, "youtube_video_id": "UEm2xYUlxzw", "title": "Human Reproduction, Reproductive Health - Mega Quiz | Menti | Quiz 2.0 | Unacademy NEET | Seep Ma'am", "duration_seconds": 3520, "reason": "mixed_chapter_quiz" },
+        { "source_position": 12, "youtube_video_id": "g7mW4xxMIJw", "title": "NEET: Reproductive Health - Quiz 3 | Menti | Class 12 | Live Quiz 2.0 | Unacademy NEET | Seep Ma'am", "duration_seconds": 2870, "reason": "quiz" }
+      ]
+    }
+  ],
+  "teacher_normalization_gate": {
+    "status": "owner_decision_required",
+    "matching_production_teacher_records": 0,
+    "required_new_teacher_records": ["Seep Pahuja", "Dr. Sachin Kapur"],
+    "note": "The content manifests may be reviewed now, but no production content or faculty write is authorized until the owner approves both exact identities under the proposed decision ID. Faculty registry/link SQL remains a later, separately hash-approved gate."
+  },
+  "deferred": [
+    "Breathing and Exchange of Gases is still mechanically useful but was not added to this three-course batch because the current pass was limited to the previously grouped clean trio.",
+    "Photosynthesis retains the previously recorded Biodiversity contamination and duplicate Lecture 3 ambiguity.",
+    "Organisms and Populations, Aldehydes Ketones and Carboxylic Acids, Ionic Equilibrium, Excretory Products and Their Elimination, and General Principles and Processes of Isolation of Elements retain their recorded source blockers."
+  ]
+}

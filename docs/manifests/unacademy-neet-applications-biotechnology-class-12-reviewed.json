@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "request_id": "47959d16-fa7e-43e3-a4a3-70abbde23b0e",
+  "youtube_playlist_id": "PLsgHooHkqhhP1V_qdWDRNO0MczNtM6Q1m",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "f7992243-3b5b-4c39-bac9-433dd766a70a",
+    "youtube_playlist_id": "PLsgHooHkqhhP1V_qdWDRNO0MczNtM6Q1m",
+    "teacher": "Seep Pahuja",
+    "source_url": "https://www.youtube.com/playlist?list=PLsgHooHkqhhP1V_qdWDRNO0MczNtM6Q1m",
+    "source_label": "Official Unacademy NEET channel-owned Applications of Biotechnology playlist naming Seep Pahuja; every retained lecture title names Seep Pahuja",
+    "reviewed_by": "Owner",
+    "reviewed_on": "2026-08-07",
+    "youtube_video_ids": ["rhahYJHcJHE", "t4UOmldFpfQ", "gI3dZOni3AI", "dXVXq7un7FQ"]
+  },
+  "assignments": [
+    { "position": 1, "youtube_video_id": "rhahYJHcJHE", "chapter": "Biotechnology and its Applications", "lesson_number": 1 },
+    { "position": 2, "youtube_video_id": "t4UOmldFpfQ", "chapter": "Biotechnology and its Applications", "lesson_number": 2 },
+    { "position": 3, "youtube_video_id": "gI3dZOni3AI", "chapter": "Biotechnology and its Applications", "lesson_number": 3 },
+    { "position": 4, "youtube_video_id": "dXVXq7un7FQ", "chapter": "Biotechnology and its Applications", "lesson_number": 4 }
+  ],
+  "exclusions": []
+}

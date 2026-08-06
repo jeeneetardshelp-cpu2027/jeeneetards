@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "request_id": "651cb0ac-8302-487a-919e-428a0951a09a",
+  "youtube_playlist_id": "PLsgHooHkqhhPZfPFIHshnh3J0Nsod2uDw",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "f7992243-3b5b-4c39-bac9-433dd766a70a",
+    "youtube_playlist_id": "PLsgHooHkqhhPZfPFIHshnh3J0Nsod2uDw",
+    "teacher": "Dr. Sachin Kapur",
+    "source_url": "https://www.youtube.com/playlist?list=PLsgHooHkqhhPZfPFIHshnh3J0Nsod2uDw",
+    "source_label": "Official Unacademy NEET channel-owned Reproductive Health playlist naming Dr Sachin Kapur; every retained lecture title names Sachin Sir",
+    "reviewed_by": "Owner",
+    "reviewed_on": "2026-08-07",
+    "youtube_video_ids": ["LuhyELqB-6U", "lc4YnjYmyVk", "yFL_vpr0Xzo", "IQX_C7Rp0MY", "tns9bpS1i94", "sBf0PhnYneI", "U7Ic278pABQ"]
+  },
+  "assignments": [
+    { "position": 1, "youtube_video_id": "LuhyELqB-6U", "chapter": "Reproductive Health", "lesson_number": 1 },
+    { "position": 2, "youtube_video_id": "lc4YnjYmyVk", "chapter": "Reproductive Health", "lesson_number": 2 },
+    { "position": 3, "youtube_video_id": "yFL_vpr0Xzo", "chapter": "Reproductive Health", "lesson_number": 3 },
+    { "position": 4, "youtube_video_id": "IQX_C7Rp0MY", "chapter": "Reproductive Health", "lesson_number": 4 },
+    { "position": 5, "youtube_video_id": "tns9bpS1i94", "chapter": "Reproductive Health", "lesson_number": 5 },
+    { "position": 6, "youtube_video_id": "sBf0PhnYneI", "chapter": "Reproductive Health", "lesson_number": 6 },
+    { "position": 7, "youtube_video_id": "U7Ic278pABQ", "chapter": "Reproductive Health", "lesson_number": 7 }
+  ],
+  "exclusions": [
+    { "position": 8, "youtube_video_id": "NCpjEJjca6I", "reason": "quiz" },
+    { "position": 9, "youtube_video_id": "Hu9oRxtzFcg", "reason": "practice_dpp" },
+    { "position": 10, "youtube_video_id": "LEC7jujH9lM", "reason": "mixed_chapter_quiz" },
+    { "position": 11, "youtube_video_id": "UEm2xYUlxzw", "reason": "mixed_chapter_quiz" },
+    { "position": 12, "youtube_video_id": "g7mW4xxMIJw", "reason": "quiz" }
+  ]
+}
