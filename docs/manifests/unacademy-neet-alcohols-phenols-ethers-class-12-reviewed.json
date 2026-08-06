@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "request_id": "dcf21c62-bb4d-42c8-ad86-2bc978307aa7",
+  "youtube_playlist_id": "PLsgHooHkqhhNnQ7F6-Wfril1wn1_JrWNP",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "5b4b1d41-b7dc-4f12-80cf-b490e72edd96",
+    "youtube_playlist_id": "PLsgHooHkqhhNnQ7F6-Wfril1wn1_JrWNP",
+    "teacher": "Anoop Vashishtha",
+    "source_url": "https://www.youtube.com/playlist?list=PLsgHooHkqhhNnQ7F6-Wfril1wn1_JrWNP",
+    "source_label": "Official Unacademy NEET channel-owned Alcohols, Phenols and Ethers playlist; every retained lecture names Anoop V.",
+    "reviewed_by": "Owner",
+    "reviewed_on": "2026-08-06",
+    "youtube_video_ids": ["pjxLYhPFXgY", "p1nCXVx5UJI", "dQftMmBciaM", "482pHFyy3oQ", "Z4kl9uxqp7M", "9PcqTtChxT4", "D7dZ1qD-zZY", "-c1rao7yUxg", "zgHy5W12uTw", "D8FsgtOBy1o", "-1GYkJrZKQY"]
+  },
+  "assignments": [
+    { "position": 1, "youtube_video_id": "pjxLYhPFXgY", "chapter": "Organic Compounds Containing Oxygen", "lesson_number": 1 },
+    { "position": 2, "youtube_video_id": "p1nCXVx5UJI", "chapter": "Organic Compounds Containing Oxygen", "lesson_number": 2 },
+    { "position": 3, "youtube_video_id": "dQftMmBciaM", "chapter": "Organic Compounds Containing Oxygen", "lesson_number": 3 },
+    { "position": 4, "youtube_video_id": "482pHFyy3oQ", "chapter": "Organic Compounds Containing Oxygen", "lesson_number": 4 },
+    { "position": 5, "youtube_video_id": "Z4kl9uxqp7M", "chapter": "Organic Compounds Containing Oxygen", "lesson_number": 5 },
+    { "position": 6, "youtube_video_id": "9PcqTtChxT4", "chapter": "Organic Compounds Containing Oxygen", "lesson_number": 6 },
+    { "position": 7, "youtube_video_id": "D7dZ1qD-zZY", "chapter": "Organic Compounds Containing Oxygen", "lesson_number": 7 },
+    { "position": 8, "youtube_video_id": "-c1rao7yUxg", "chapter": "Organic Compounds Containing Oxygen", "lesson_number": 8 },
+    { "position": 9, "youtube_video_id": "zgHy5W12uTw", "chapter": "Organic Compounds Containing Oxygen", "lesson_number": 9 },
+    { "position": 10, "youtube_video_id": "D8FsgtOBy1o", "chapter": "Organic Compounds Containing Oxygen", "lesson_number": 10 },
+    { "position": 12, "youtube_video_id": "-1GYkJrZKQY", "chapter": "Organic Compounds Containing Oxygen", "lesson_number": 11 }
+  ],
+  "exclusions": [
+    { "position": 11, "youtube_video_id": "2MVaOHw5su4", "reason": "different_chapter_aldehydes_ketones_carboxylic_acids" }
+  ]
+}

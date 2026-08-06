@@ -1,0 +1,150 @@
+{
+  "reviewed_on": "2026-08-06",
+  "review_status": "owner_approval_required",
+  "proposed_decision_id": "5b4b1d41-b7dc-4f12-80cf-b490e72edd96",
+  "channel": {
+    "name": "Unacademy NEET",
+    "handle": "@UnacademyNEET",
+    "youtube_channel_id": "UCdQwYksctqqiRwqp3PiJMWA",
+    "production_institute_id": 147,
+    "playlist_count": 736
+  },
+  "preflight": {
+    "captured_at": "2026-08-06T11:44:30.812Z",
+    "playlists": 403,
+    "videos": 4655,
+    "memberships": 4661,
+    "chapters": 263,
+    "chapter_class_levels": 92,
+    "teachers": 32,
+    "teacher_aliases": 50,
+    "teacher_institutes": 33,
+    "teacher_subjects": 33,
+    "teacher_learning_goals": 32,
+    "faculty_links": 158,
+    "quality_reviews": 29,
+    "source_collision_count": 0,
+    "retained_video_collision_count": 0,
+    "cross_candidate_retained_video_collision_count": 0,
+    "protected_jee_courses": 82,
+    "protected_jee_memberships": 1304,
+    "protected_jee_fingerprint": "30eee4a4a6842e5beeb7c97083d7f812",
+    "rolling_jee_courses": 212,
+    "rolling_jee_memberships": 2848,
+    "rolling_jee_fingerprint": "9eea2b44f0b19c08cc0907c57e091342"
+  },
+  "candidates": [
+    {
+      "order": 1,
+      "youtube_playlist_id": "PLsgHooHkqhhNnQ7F6-Wfril1wn1_JrWNP",
+      "source_title": "NEET: Alcohols, Phenols & Ethers | Class 12 | Unacademy NEET | Anoop V.",
+      "source_snapshot_sha256": "d2cb6cb00c8eb5c3d430a090779ae5c891a560aca92fe988bbc40cd011d8698c",
+      "source_item_count": 12,
+      "subject_id": 2,
+      "chapter_id": 92,
+      "chapter": "Organic Compounds Containing Oxygen",
+      "mapping_rationale": "The current NEET taxonomy groups Alcohols, Phenols and Ethers under Organic Compounds Containing Oxygen.",
+      "class_level_id": 3,
+      "class_level": "class-12",
+      "teacher_id": 36,
+      "teacher": "Anoop Vashishtha",
+      "teacher_verified": true,
+      "source_collision_count": 0,
+      "video_collision_count": 0,
+      "retained_source_positions": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12],
+      "excluded_source_positions": [11],
+      "videos": [
+        { "source_position": 1, "youtube_video_id": "pjxLYhPFXgY", "title": "NEET: Alcohols, Phenols & Ethers - L1 | Class 12 | Unacademy NEET | Anoop V.", "duration_seconds": 3625, "embedding_status": "embeddable" },
+        { "source_position": 2, "youtube_video_id": "p1nCXVx5UJI", "title": "NEET: Alcohols, Phenols & Ethers - L2 | Class 12 | Unacademy NEET | Anoop V.", "duration_seconds": 3385, "embedding_status": "embeddable" },
+        { "source_position": 3, "youtube_video_id": "dQftMmBciaM", "title": "NEET: Alcohols, Phenols & Ethers - L3 | Class 12 | Unacademy NEET | Anoop V.", "duration_seconds": 3190, "embedding_status": "embeddable" },
+        { "source_position": 4, "youtube_video_id": "482pHFyy3oQ", "title": "NEET: Alcohols, Phenols & Ethers - L4 | Class 12 | Unacademy NEET | Anoop V.", "duration_seconds": 3650, "embedding_status": "embeddable" },
+        { "source_position": 5, "youtube_video_id": "Z4kl9uxqp7M", "title": "NEET: Alcohols, Phenols & Ethers - L5 | Class 12 | Unacademy NEET | Anoop V.", "duration_seconds": 3280, "embedding_status": "embeddable" },
+        { "source_position": 6, "youtube_video_id": "9PcqTtChxT4", "title": "NEET: Alcohols, Phenols & Ethers - L6 | Class 12 | Unacademy NEET | Anoop V.", "duration_seconds": 3208, "embedding_status": "embeddable" },
+        { "source_position": 7, "youtube_video_id": "D7dZ1qD-zZY", "title": "NEET: Alcohols, Phenols & Ethers - L7 | Class 12 | Unacademy NEET | Anoop V.", "duration_seconds": 3710, "embedding_status": "embeddable" },
+        { "source_position": 8, "youtube_video_id": "-c1rao7yUxg", "title": "NEET: Alcohols, Phenols & Ethers - L8 | Class 12 | Unacademy NEET | Anoop V.", "duration_seconds": 3465, "embedding_status": "embeddable" },
+        { "source_position": 9, "youtube_video_id": "zgHy5W12uTw", "title": "NEET: Alcohols, Phenols & Ethers - L9 | Class 12 | Unacademy NEET | Anoop V.", "duration_seconds": 3390, "embedding_status": "embeddable" },
+        { "source_position": 10, "youtube_video_id": "D8FsgtOBy1o", "title": "NEET: Alcohols, Phenols & Ethers - L10 | Class 12 | Unacademy NEET | Anoop V.", "duration_seconds": 3440, "embedding_status": "embeddable" },
+        { "source_position": 12, "youtube_video_id": "-1GYkJrZKQY", "title": "NEET: Alcohols, Phenols & Ethers - L11 | Class 12 | Unacademy NEET | Anoop V.", "duration_seconds": 3380, "embedding_status": "embeddable" }
+      ],
+      "exclusions": [
+        { "source_position": 11, "youtube_video_id": "2MVaOHw5su4", "title": "NEET: Aldehydes Ketones & Carboxylic Acids- L 1 | Class 12 | Unacademy NEET | Anoop V.", "duration_seconds": 3520, "reason": "different_chapter_aldehydes_ketones_carboxylic_acids" }
+      ]
+    },
+    {
+      "order": 2,
+      "youtube_playlist_id": "PLsgHooHkqhhMMPfEYr7m_ofP61K_YScyw",
+      "source_title": "Fluid Mechanics - Playlist | Class 11 | Unacademy NEET | LIVE DAILY | NEET Physics | Mahendra Singh",
+      "source_snapshot_sha256": "d3d1be7d7eae2571d5dbfece4921e6c50bac95d500ccd6a55459d017a5cdc478",
+      "source_item_count": 12,
+      "subject_id": 1,
+      "chapter_id": 26,
+      "chapter": "Mechanical Properties of Fluids",
+      "mapping_rationale": "Fluid Mechanics is the source title for the existing Mechanical Properties of Fluids chapter.",
+      "class_level_id": 2,
+      "class_level": "class-11",
+      "teacher_id": 34,
+      "teacher": "Mahendra Singh",
+      "teacher_verified": true,
+      "source_collision_count": 0,
+      "video_collision_count": 0,
+      "retained_source_positions": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12],
+      "excluded_source_positions": [11],
+      "videos": [
+        { "source_position": 1, "youtube_video_id": "YDAmpY5Ltuw", "title": "Fluid Mechanics - Lecture 1 | Class 11 | Unacademy NEET | LIVE DAILY | NEET Physics | Mahendra Sir", "duration_seconds": 3513, "embedding_status": "embeddable" },
+        { "source_position": 2, "youtube_video_id": "gCbZdFytavU", "title": "Fluid Mechanics - L 2 | Hydrostatic Pressure | Unacademy NEET | LIVE DAILY | Physics | Mahendra Sir", "duration_seconds": 2965, "embedding_status": "embeddable" },
+        { "source_position": 3, "youtube_video_id": "4XOyLNYMEAg", "title": "Fluid Mechanics - L 3 | Archimedes Principle | Unacademy NEET | LIVE DAILY | Physics | Mahendra Sir", "duration_seconds": 3243, "embedding_status": "embeddable" },
+        { "source_position": 4, "youtube_video_id": "_U2nUzirfPg", "title": "Fluid Mechanics - L 4 | Fluid in Accelerated Container | Unacademy NEET | Physics | Mahendra Sir", "duration_seconds": 3192, "embedding_status": "embeddable" },
+        { "source_position": 5, "youtube_video_id": "k1FJxpk0ldE", "title": "Fluid Mechanics - L 5 | Bernoulli's Theorem | Unacademy NEET | LIVE DAILY | Physics | Mahendra Sir", "duration_seconds": 3036, "embedding_status": "embeddable" },
+        { "source_position": 6, "youtube_video_id": "Y6Bw17IdKcA", "title": "Fluid Mechanics - L 6 | Bernoulli's Theorem | Unacademy NEET | LIVE DAILY | Physics | Mahendra Sir", "duration_seconds": 3047, "embedding_status": "embeddable" },
+        { "source_position": 7, "youtube_video_id": "reS2GKKFYFU", "title": "Fluid Mechanics - L 7 | Viscosity | Unacademy NEET | LIVE DAILY | Physics | Mahendra Sir", "duration_seconds": 3043, "embedding_status": "embeddable" },
+        { "source_position": 8, "youtube_video_id": "14uTcuI9qAg", "title": "Fluid Mechanics - L 8 | Stokes' Law | Unacademy NEET | LIVE DAILY | NEET Physics | Mahendra Sir", "duration_seconds": 3297, "embedding_status": "embeddable" },
+        { "source_position": 9, "youtube_video_id": "jLmIBKL07JI", "title": "Fluid Mechanics - L 9 | Surface Tension | Unacademy NEET | LIVE DAILY | NEET Physics | Mahendra Sir", "duration_seconds": 3116, "embedding_status": "embeddable" },
+        { "source_position": 10, "youtube_video_id": "nuXcXTGitIg", "title": "Fluid Mechanics - L 10 | Excess Pressure | Unacademy NEET | LIVE DAILY | NEET Physics | Mahendra Sir", "duration_seconds": 3117, "embedding_status": "embeddable" },
+        { "source_position": 12, "youtube_video_id": "rD4OBjxyTLQ", "title": "Fluid Mechanics - L 11 | Capillarity | Unacademy NEET | LIVE DAILY | NEET Physics | Mahendra Sir", "duration_seconds": 3179, "embedding_status": "embeddable" }
+      ],
+      "exclusions": [
+        { "source_position": 11, "youtube_video_id": "bgpLvLY9mqU", "title": "Fluid Mechanics - Quiz 1 | Class 11 | Unacademy NEET | NEET LIVE QUIZ | NEET Physics | Mahendra Sir", "duration_seconds": 1788, "reason": "quiz" }
+      ]
+    },
+    {
+      "order": 3,
+      "youtube_playlist_id": "PLsgHooHkqhhM5m3xbTdZ2cDX8S_22jdSX",
+      "source_title": "Kinematics 1D - Playlist | Class 11 | Unacademy NEET | LIVE DAILY | NEET Physics | Mahendra Singh",
+      "source_snapshot_sha256": "29891a8f3814b43df38c3869887fc8279b66d5f9fcdf2724016f8fee8165a487",
+      "source_item_count": 9,
+      "subject_id": 1,
+      "chapter_id": 1,
+      "chapter": "Kinematics",
+      "mapping_rationale": "Kinematics 1D is the straight-line part of the existing Class 11 Kinematics chapter.",
+      "class_level_id": 2,
+      "class_level": "class-11",
+      "teacher_id": 34,
+      "teacher": "Mahendra Singh",
+      "teacher_verified": true,
+      "source_collision_count": 0,
+      "video_collision_count": 0,
+      "retained_source_positions": [1, 2, 3, 4, 5, 6],
+      "excluded_source_positions": [7, 8, 9],
+      "videos": [
+        { "source_position": 1, "youtube_video_id": "Fj1H3ZEogxk", "title": "NEET 2020: Kinematics 1D - L 1 | Class 11 | NEET Physics | Unacademy NEET | Mahendra Sir", "duration_seconds": 3035, "embedding_status": "embeddable" },
+        { "source_position": 2, "youtube_video_id": "PozfdhfpMg8", "title": "NEET 2020: Kinematics 1D - L 2 | Class 11 | NEET Physics | Unacademy NEET | Mahendra Sir", "duration_seconds": 3031, "embedding_status": "embeddable" },
+        { "source_position": 3, "youtube_video_id": "EeGVNt_3c2k", "title": "NEET 2020: Kinematics 1D - L 3 | Class 11 |  NEET Physics | Unacademy NEET | Mahendra Sir", "duration_seconds": 3353, "embedding_status": "embeddable" },
+        { "source_position": 4, "youtube_video_id": "M-S7sv3rI94", "title": "NEET 2020: Kinematics 1D - L 4 | Class 11 | NEET Physics | Unacademy NEET | Mahendra Sir", "duration_seconds": 3328, "embedding_status": "embeddable" },
+        { "source_position": 5, "youtube_video_id": "_2FUWa-A19o", "title": "NEET 2020: Kinematics 1D - L 5 | Class 11 | NEET Physics | Unacademy NEET | Mahendra Sir", "duration_seconds": 3363, "embedding_status": "embeddable" },
+        { "source_position": 6, "youtube_video_id": "LEJFHcenR_A", "title": "NEET 2020: Kinematics 1D - L 6 | Class 11 | NEET Physics | Unacademy NEET | Mahendra Sir", "duration_seconds": 3514, "embedding_status": "embeddable" }
+      ],
+      "exclusions": [
+        { "source_position": 7, "youtube_video_id": "qu9IjRQT4CQ", "title": "Kinematics-1D - Quiz 1 | Unacademy NEET | LIVE QUIZ | NEET Physics | Mahendra Singh", "duration_seconds": 1967, "reason": "quiz" },
+        { "source_position": 8, "youtube_video_id": "SFAS1wctyHA", "title": "Kinematics 1D - QUIZ 2 | Unacademy NEET | LIVE QUIZ | NEET Physics | Mahendra Singh", "duration_seconds": 2707, "reason": "quiz" },
+        { "source_position": 9, "youtube_video_id": "_KRr5ZqwDbA", "title": "Kinematics 1D - QUIZ 3 | Unacademy NEET | LIVE QUIZ | NEET Physics | Mahendra Singh Sir", "duration_seconds": 2604, "reason": "quiz" }
+      ]
+    }
+  ],
+  "deferred": [
+    "Organisms and Populations starts at Lecture 4 and also lacks Lectures 9, 12, and 13.",
+    "Aldehydes, Ketones and Carboxylic Acids lacks Lecture 1 and contains an unrelated Bonding Visualization row.",
+    "Applications of Biotechnology, The Living World, and Reproductive Health are mechanically clean but Seep Pahuja and Dr. Sachin Kapur still lack normalized verified production teacher records.",
+    "Photosynthesis retains the previously recorded Biodiversity contamination and duplicate Lecture 3 ambiguity.",
+    "Ionic Equilibrium, Excretory Products and Their Elimination, and General Principles and Processes of Isolation of Elements retain the fourteenth-batch blockers."
+  ]
+}
