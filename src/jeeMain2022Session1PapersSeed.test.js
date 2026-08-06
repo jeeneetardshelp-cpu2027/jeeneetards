@@ -5,25 +5,34 @@ const seed = readFileSync(
   "docs/sql/study_materials_jee_main_2022_session1_papers_seed_2026-08-06.sql",
   "utf8",
 );
-const expected = new Map([
-  ["Paper_20230320113108.pdf", { date: "24 June", pages: 18 }],
-  ["Paper_20230320131539.pdf", { date: "26 June", pages: 20 }],
-  ["Paper_20230322131758.pdf", { date: "29 June", pages: 20 }],
-]);
+const manifest = JSON.parse(readFileSync(
+  "docs/study-materials/jee-main-2022-session1-official-papers-manifest.json",
+  "utf8",
+));
 
-describe("JEE Main 2022 Session 1 official question-paper seed", () => {
-  it("contains the three visually verified live NTA English PDFs", () => {
-    for (const [file, metadata] of expected) {
-      expect(seed).toContain(`https://www.nta.ac.in/Download/ExamPaper/${file}`);
-      expect(seed).toContain(`${metadata.date} Shift 2 (English)`);
-      expect(seed).toContain(`'English', ${metadata.pages}`);
+describe("JEE Main 2022 Session 1 official question-paper package", () => {
+  it("records the complete visually verified English Paper 1 set", () => {
+    expect(manifest.officialArchiveUrl).toBe("https://www.nta.ac.in/NoticeBoardArchive");
+    expect(manifest.officialNoticeUrl).toBe(
+      "https://www.nta.ac.in/Download/Notice/Notice_20220702204623.pdf",
+    );
+    expect(manifest.papers).toHaveLength(12);
+    expect(manifest.papers.map((paper) => paper.pageCount)).toEqual([
+      26, 18, 26, 21, 28, 20, 27, 22, 21, 28, 26, 20,
+    ]);
+    expect(new Set(manifest.papers.map((paper) => paper.sourceUrl)).size).toBe(12);
+    for (const paper of manifest.papers) {
+      expect(paper.sourceUrl).toMatch(
+        /^https:\/\/www\.nta\.ac\.in\/Download\/ExamPaper\/Paper_202303\d+\.pdf$/,
+      );
+      expect(paper.sha256).toMatch(/^[A-F0-9]{64}$/);
+      expect(seed).toContain(paper.title);
+      expect(seed).toContain(paper.sourceUrl);
+      expect(seed).toContain(`, ${paper.pageCount})`);
     }
-    expect(seed.match(/https:\/\/www\.nta\.ac\.in\/Download\/ExamPaper\/Paper_202303\d+\.pdf/g)).toHaveLength(9);
-    expect(seed).toContain("date, shift, language, 90-question completeness and page count were checked");
-    expect(seed).toContain("Questions only; no answer key is included");
-    expect(seed).toContain("'previous_year_paper'");
-    expect(seed).toContain("'official_source'");
-    expect(seed).toContain("National Testing Agency (JEE Main)");
+    expect(seed).toContain("90-question/three-subject");
+    expect(seed).toContain("Questions only; no answer key or solutions are included");
+    expect(seed).toContain("Linked only; not mirrored or redistributed by JEENEETARD");
   });
 
   it("uses one exam-level JEE scope without false class or subject attachment", () => {
@@ -37,12 +46,14 @@ describe("JEE Main 2022 Session 1 official question-paper seed", () => {
     expect(seed).not.toContain("where slug = 'school'");
   });
 
-  it("is transactional, rerunnable and guarded by exact postflight counts", () => {
+  it("is transactional, rerunnable and guarded by exact postflight checks", () => {
     expect(seed).toMatch(/^--[\s\S]*\nbegin;/i);
     expect(seed).toContain("on conflict (title, source_url) do update set");
     expect(seed).toContain("if not exists (");
-    expect(seed).toContain("expected 3 materials");
-    expect(seed).toContain("expected 3 JEE-only scopes");
+    expect(seed).toContain("expected 12 materials");
+    expect(seed).toContain("expected exactly 12 total scopes");
+    expect(seed).toContain("expected 12 JEE-only scopes");
+    expect(seed).toContain("metadata mismatches");
     expect(seed.trimEnd()).toMatch(/commit;$/i);
   });
 });
