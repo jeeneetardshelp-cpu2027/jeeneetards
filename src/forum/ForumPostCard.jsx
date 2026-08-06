@@ -3,8 +3,9 @@ import { Link } from "react-router";
 import { Surface } from "../ui.jsx";
 import { compactNumber, previewText, timeAgo } from "./forumFormatting.js";
 import { forumTopicStyle } from "./forumTopicColors.js";
+import ForumVoteControl from "./ForumVoteControl.jsx";
 
-export default function ForumPostCard({ post }) {
+export default function ForumPostCard({ post, voting = null }) {
   return (
     <Surface as="article" lift className="min-w-0">
       <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 text-xs text-ink-3">
@@ -32,10 +33,25 @@ export default function ForumPostCard({ post }) {
       )}
 
       <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-ink-3">
-        <span className="inline-flex items-center gap-1.5" aria-label={`${post.score} score`}>
-          <TrendingUp aria-hidden="true" className="h-4 w-4" />
-          {compactNumber(post.score)}
-        </span>
+        {voting ? (
+          <ForumVoteControl
+            targetType="post"
+            targetId={post.id}
+            score={post.score}
+            upvoteCount={post.upvote_count}
+            downvoteCount={post.downvote_count}
+            viewerVote={post.viewer_vote}
+            canVote={voting.canVote}
+            api={voting.api}
+            onBlocked={voting.onBlocked}
+            compact
+          />
+        ) : (
+          <span className="inline-flex items-center gap-1.5" aria-label={`${post.score} score`}>
+            <TrendingUp aria-hidden="true" className="h-4 w-4" />
+            {compactNumber(post.score)}
+          </span>
+        )}
         <span className="inline-flex items-center gap-1.5">
           <MessageCircle aria-hidden="true" className="h-4 w-4" />
           {compactNumber(post.comment_count)} {Number(post.comment_count) === 1 ? "answer" : "answers"}

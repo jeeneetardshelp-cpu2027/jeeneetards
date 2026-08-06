@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router";
 import { describe, expect, it, vi } from "vitest";
 import { ThemeProvider } from "../theme.jsx";
@@ -33,12 +33,12 @@ function apiWith(post = forumPost, rows = comments) {
   };
 }
 
-function renderPost(api, entry = "/forum/post/42") {
+function renderPost(api, entry = "/forum/post/42", authState = null) {
   return render(
     <ThemeProvider>
       <MemoryRouter initialEntries={[entry]}>
         <Routes>
-          <Route path="/forum/post/:postId" element={<ForumPostPage api={api} />} />
+          <Route path="/forum/post/:postId" element={<ForumPostPage api={api} authState={authState} />} />
         </Routes>
       </MemoryRouter>
     </ThemeProvider>,
@@ -78,5 +78,48 @@ describe("signed-out forum thread", () => {
     renderPost(api, "/forum/post/not-a-number");
     expect(screen.getByRole("heading", { name: "Discussion not found" })).toBeTruthy();
     expect(api.getMode).not.toHaveBeenCalled();
+  });
+
+  it("votes independently on the discussion and an answer when identity is ready", async () => {
+    const api = apiWith();
+    api.getMode.mockResolvedValue("open");
+    api.getMyIdentity = vi.fn().mockResolvedValue({ username: "student-one", needs_username: false });
+    api.castVote = vi.fn(({ targetType }) => Promise.resolve({
+      viewer_vote: 1,
+      score: targetType === "post" ? 13 : 5,
+      upvote_count: 1,
+      downvote_count: 0,
+    }));
+    api.createComment = vi.fn();
+    renderPost(api, "/forum/post/42", {
+      session: { user: { id: "student-1" } }, loading: false,
+    });
+
+    await screen.findByRole("heading", { name: forumPost.title });
+    await waitFor(() => expect(api.getMyIdentity).toHaveBeenCalled());
+    fireEvent.click(screen.getByRole("button", { name: "Upvote this discussion" }));
+    fireEvent.click(screen.getAllByRole("button", { name: "Upvote this answer" })[0]);
+
+    await waitFor(() => expect(api.castVote).toHaveBeenCalledWith({
+      targetType: "post", targetId: 42, value: 1,
+    }));
+    await waitFor(() => expect(api.castVote).toHaveBeenCalledWith({
+      targetType: "comment", targetId: 1, value: 1,
+    }));
+    expect(await screen.findByLabelText("13 score")).toBeTruthy();
+    expect(await screen.findByLabelText("5 score")).toBeTruthy();
+  });
+
+  it("reuses the answer composer auth surface for a signed-out vote", async () => {
+    const api = apiWith();
+    api.getMode.mockResolvedValue("open");
+    api.createComment = vi.fn();
+    renderPost(api, "/forum/post/42", { session: null, loading: false });
+
+    fireEvent.click(await screen.findByRole("button", { name: "Upvote this discussion" }));
+    expect(screen.getByRole("status").textContent).toMatch(/answer panel below/i);
+    expect(screen.getAllByRole("heading", { name: "Sign in to publish this answer" })).toHaveLength(1);
+    expect(screen.queryByRole("heading", { name: "Sign in to vote on discussions" })).toBeNull();
+    expect(api.castVote).toBeUndefined();
   });
 });

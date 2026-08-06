@@ -2,20 +2,29 @@ import { useCallback, useMemo } from "react";
 import { useSearchParams } from "react-router";
 import { Page } from "../AppShell.jsx";
 import { Button, SectionHead } from "../ui.jsx";
+import { forumApi } from "./forumApi.js";
 import ForumFeedControls from "./ForumFeedControls.jsx";
 import ForumPostCard from "./ForumPostCard.jsx";
+import ForumVoteGate from "./ForumVoteGate.jsx";
 import { normalizeForumSort } from "./forumCursor.js";
 import {
   ForumEmpty, ForumLoadError, ForumLoading, ForumUnavailable,
 } from "./ForumStates.jsx";
 import { useForumFeed } from "./useForumFeed.js";
+import { useForumVoteAccess } from "./useForumVoteAccess.js";
 
-export default function ForumFeedPage({ api }) {
+export default function ForumFeedPage({ api = forumApi, authState = null }) {
   const [params, setParams] = useSearchParams();
   const sort = normalizeForumSort(params.get("sort"));
   const topic = params.get("topic") || "";
   const query = (params.get("q") || "").trim().slice(0, 100);
   const feed = useForumFeed({ sort, topic: topic || null, query: query || null, api });
+  const voteAccess = useForumVoteAccess({ api, authState });
+  const voting = feed.mode === "open" ? {
+    api,
+    canVote: voteAccess.canVote,
+    onBlocked: voteAccess.requestAccess,
+  } : null;
 
   const topicName = useMemo(
     () => feed.topics.find((item) => item.slug === topic)?.name ?? "",
@@ -63,6 +72,12 @@ export default function ForumFeedPage({ api }) {
         onChange={changeFilters}
       />
 
+      {voteAccess.requested && !voteAccess.canVote && (
+        <div className="mt-6">
+          <ForumVoteGate access={voteAccess} api={api} />
+        </div>
+      )}
+
       <div className="mt-6" aria-live="polite">
         {feed.status === "loading" && <ForumLoading />}
         {feed.status === "unavailable" && <ForumUnavailable />}
@@ -76,7 +91,7 @@ export default function ForumFeedPage({ api }) {
               {query ? `Results for “${query}”` : topicName || "All visible discussions"}
             </p>
             <div className="space-y-4">
-              {feed.posts.map((post) => <ForumPostCard key={post.id} post={post} />)}
+              {feed.posts.map((post) => <ForumPostCard key={post.id} post={post} voting={voting} />)}
             </div>
 
             {feed.pageError && (
