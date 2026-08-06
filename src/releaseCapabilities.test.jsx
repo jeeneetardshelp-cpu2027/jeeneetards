@@ -23,6 +23,7 @@ describe("current production capability contract", () => {
       studyMaterials: true,
     });
     expect(RELEASE_FEATURES).toEqual({
+      forum: false,
       studentAccounts: true,
       courseRatingSubmission: true,
       reviewDisplay: true,

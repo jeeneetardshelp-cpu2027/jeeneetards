@@ -36,7 +36,7 @@ import FeatureUnavailable from "./FeatureUnavailable.jsx";
 import NotFound from "./NotFound.jsx";
 import AppErrorBoundary from "./AppErrorBoundary.jsx";
 import RouteMetadata from "./PageMetadata.jsx";
-import { RELEASE_CAPABILITIES } from "./releaseCapabilities.js";
+import { RELEASE_CAPABILITIES, RELEASE_FEATURES } from "./releaseCapabilities.js";
 
 const Explore = lazy(() => import("./Explore.jsx"));
 const FacultyProfile = lazy(() => import("./FacultyProfile.jsx"));
@@ -48,6 +48,7 @@ const CourseVideoPage = lazy(() => import("./CourseVideoPage.jsx"));
 const TestsPage = lazy(() => import("./TestsPage.jsx"));
 const ExamTestsPage = lazy(() => import("./ExamTestsPage.jsx"));
 const StudyMaterialsPage = lazy(() => import("./StudyMaterialsPage.jsx"));
+const ForumFeatureUnavailable = lazy(() => import("./forum/ForumFeatureUnavailable.jsx"));
 
 function RouteFallback() {
   return (
@@ -276,6 +277,10 @@ function StudyMaterialsRoute() {
   );
 }
 
+function ForumRoute() {
+  return <ForumFeatureUnavailable released={RELEASE_FEATURES.forum} />;
+}
+
 // ---------------------------------------------------------------------
 //  THE APP
 //  ThemeProvider sits above everything, so the light/dark toggle in one
@@ -312,6 +317,12 @@ export default function App() {
           <Route path="/compare" element={<ComparisonRoute />} />
           <Route path="/search" element={<UniversalSearchRoute />} />
           <Route path="/materials" element={<StudyMaterialsRoute />} />
+          {/* The forum is deliberately routeable before release so its edge
+              contract and review builds cannot silently 404. The feature flag
+              keeps it out of public navigation until the complete UI ships. */}
+          <Route path="/forum" element={<ForumRoute />} />
+          <Route path="/forum/post/:postId" element={<ForumRoute />} />
+          <Route path="/forum/submit" element={<ForumRoute />} />
           {/* Both screens are addressed by real database ids. */}
           <Route path="/chapter/:chapterId" element={<LegacyChapterRedirect />} />
           {/* A course opened from the catalogue has no chapter context, so the

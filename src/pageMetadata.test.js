@@ -59,6 +59,10 @@ describe("public page metadata", () => {
     expect(metadataForLocation("/admin/").robots).toBe("noindex, nofollow");
     expect(metadataForLocation("/reset").robots).toBe("noindex, nofollow");
     expect(metadataForLocation("/compare").robots).toBe("noindex, follow");
+    const forum = metadataForLocation("/forum/post/42");
+    expect(forum.robots).toBe("noindex, follow");
+    expect(forum.canonicalPath).toBe("/forum");
+    expect(forum.title).toBe("Feature coming soon | JEENEETARD");
   });
 
   it("treats the legacy /chapter redirect as supported, not as a 404", () => {

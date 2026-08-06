@@ -64,7 +64,7 @@ const LOOKUP_TIMEOUT_MS = 1500;
 
 const STATIC_APP_ROUTES = new Set([
   "/", "/admin", "/browse", "/compare", "/explore", "/privacy",
-  "/materials", "/reset", "/search", "/terms", "/tests",
+  "/forum", "/forum/submit", "/materials", "/reset", "/search", "/terms", "/tests",
 ]);
 
 /** Mirrors the route shapes in App.jsx. Resource existence is checked later. */
@@ -78,6 +78,7 @@ export function isSupportedAppPath(pathname) {
     return Boolean(findTestSection(path.slice("/tests/".length)));
   }
   if (path.startsWith("/explore/")) return Boolean(parseExplorePath(path));
+  if (/^\/forum\/post\/\d+$/.test(path)) return true;
   if (/^\/faculty\/[^/]+$/.test(path)) return true;
   if (/^\/chapter\/\d+$/.test(path)) return true;
   return /^\/course\/\d+(?:\/chapter\/\d+)?$/.test(path);
