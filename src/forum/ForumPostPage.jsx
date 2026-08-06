@@ -5,6 +5,7 @@ import { Button, Pill, SectionHead, Surface } from "../ui.jsx";
 import ForumCommentThread from "./ForumCommentThread.jsx";
 import { compactNumber, timeAgo } from "./forumFormatting.js";
 import ForumMathContent from "./ForumMathContent.jsx";
+import ForumReplyComposer from "./ForumReplyComposer.jsx";
 import {
   ForumLoadError, ForumLoading, ForumUnavailable,
 } from "./ForumStates.jsx";
@@ -65,6 +66,14 @@ function ForumPostDataPage({ postId, api }) {
           )}
         </div>
       </Surface>
+
+      <ForumReplyComposer
+        postId={post.id}
+        mode={thread.mode}
+        locked={post.is_locked}
+        api={api}
+        onPublished={thread.retry}
+      />
 
       <section className="mt-8" aria-labelledby="forum-answers-title">
         <SectionHead

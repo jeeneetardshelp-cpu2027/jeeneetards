@@ -51,6 +51,7 @@ const StudyMaterialsPage = lazy(() => import("./StudyMaterialsPage.jsx"));
 const ForumFeatureUnavailable = lazy(() => import("./forum/ForumFeatureUnavailable.jsx"));
 const ForumFeedPage = lazy(() => import("./forum/ForumFeedPage.jsx"));
 const ForumPostPage = lazy(() => import("./forum/ForumPostPage.jsx"));
+const ForumSubmitPage = lazy(() => import("./forum/ForumSubmitPage.jsx"));
 
 function RouteFallback() {
   return (
@@ -292,7 +293,9 @@ function ForumPostRoute() {
 }
 
 function ForumSubmitRoute() {
-  return <ForumFeatureUnavailable released={RELEASE_FEATURES.forum} />;
+  return RELEASE_FEATURES.forum
+    ? <ForumSubmitPage />
+    : <ForumFeatureUnavailable released={false} />;
 }
 
 // ---------------------------------------------------------------------
