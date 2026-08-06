@@ -25,7 +25,7 @@ describe("Unacademy NEET fourteenth-batch production report", () => {
     expect(report).toContain("9eea2b44f0b19c08cc0907c57e091342");
   });
 
-  it("records the source refresh and the guarded faculty-link transition", () => {
+  it("records the source refresh and both guarded quality transitions", () => {
     expect(report).toContain("24c74a76-22fa-4bcc-8d31-5fbd688a9045");
     expect(report).toContain("excluded only the\ncurrent Quiz 2 row");
     expect(report).toContain("fed469e8036e346ccfb45cae8e8c01cd66f1c32addcbd40eae4c1a641f5d16c1");
@@ -34,7 +34,11 @@ describe("Unacademy NEET fourteenth-batch production report", () => {
     expect(report).toContain("| 422 | 33 | Pradeep Singh | 1 |");
     expect(report).toContain("158 total faculty links");
     expect(report).toContain("zero target quality reviews");
+    expect(report).toContain("20640b0bff00fda560c1563cd295ff9798da0528d63efc69b3983dadea8f5965");
+    expect(report).toContain("29 total quality reviews");
+    expect(report).toContain("exactly three target reviews");
+    expect(report).toContain("all three targets are `approved` / `identified`");
     expect(report).toContain("no `release` push");
-    expect(report).toMatch(/content-quality review transition[\s\S]*remains a separate,[\s\S]*hash-gated production step/);
+    expect(report).toMatch(/fourteenth-batch content, faculty links, and quality transitions[\s\S]*are complete/);
   });
 });

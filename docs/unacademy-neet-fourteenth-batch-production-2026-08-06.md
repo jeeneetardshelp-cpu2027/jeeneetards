@@ -87,8 +87,38 @@ unchanged catalogue totals, and the unchanged protected JEE boundary. All three
 courses remain `pending` for title and faculty-credit review. No `release` push
 was performed.
 
+## Quality-review transition
+
+The separately approved quality-review artifact was applied later on 6 August
+2026. The normalized SQL editor content exactly matched SHA-256
+`20640b0bff00fda560c1563cd295ff9798da0528d63efc69b3983dadea8f5965`;
+the editor's only byte-level difference was CRLF line-ending conversion.
+
+The signed-in production dashboard confirmed active seven-day PITR with latest
+restore availability at `06 Aug 2026, 16:38:57 IST`. The fresh read-only
+preflight matched the exact 403 / 4,655 / 4,661 / 263 catalogue, 158 faculty
+links, 26 quality reviews, three expected target links, zero target reviews,
+and the protected JEE boundary. All three targets had null source titles,
+pending review statuses, and exactly the expected title/source/faculty missing
+fields.
+
+The guarded transaction preserved each verbatim YouTube source title and
+approved the canonical titles `Friction`, `Cell: The Unit of Life`, and
+`Anatomy of Flowering Plants`. It retained Mahendra Singh (`34`) for course 420
+and Pradeep Singh (`33`) for courses 421-422, then appended exactly three
+immutable quality-review rows.
+
+Independent read-only postflight at `2026-08-06T11:23:12.128168Z` confirmed:
+
+- unchanged catalogue totals and 158 faculty links;
+- 29 total quality reviews and exactly three target reviews;
+- all three targets are `approved` / `identified` with no missing fields;
+- protected JEE remains 82 courses / 1,304 memberships /
+  `30eee4a4a6842e5beeb7c97083d7f812`.
+
+No `release` push was performed.
+
 ## Remaining gated work
 
-The content-quality review transition for courses 420-422 remains a separate,
-later hash-gated production step. This faculty-link gate did not authorize that
-transition or a deployment.
+The reviewed fourteenth-batch content, faculty links, and quality transitions
+are complete. Any deployment or later catalogue change remains a separate gate.
