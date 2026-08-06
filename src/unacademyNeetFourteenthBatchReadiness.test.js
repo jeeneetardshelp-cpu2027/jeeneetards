@@ -15,12 +15,14 @@ const review = JSON.parse(reviewSource);
 const manifestSources = manifestPaths.map((path) => readFileSync(path, "utf8"));
 const manifests = manifestSources.map((source) => JSON.parse(source));
 const sha256 = (value) => createHash("sha256").update(value).digest("hex");
-const decisionId = "b19eaa58-7931-4c84-8cea-8b6622230b4d";
+const refreshedDecisionId = "b98191cb-c0be-4d3c-9e15-95905da4fffc";
+const originalDecisionId = "b19eaa58-7931-4c84-8cea-8b6622230b4d";
 
 describe("Unacademy NEET fourteenth-batch readiness", () => {
   it("keeps the batch review-only and pins the official source", () => {
     expect(review.review_status).toBe("owner_approval_required");
-    expect(review.proposed_decision_id).toBe(decisionId);
+    expect(review.proposed_decision_id).toBe(refreshedDecisionId);
+    expect(review.previous_decision_id).toBe(originalDecisionId);
     expect(review.channel).toMatchObject({
       handle: "@UnacademyNEET",
       youtube_channel_id: "UCdQwYksctqqiRwqp3PiJMWA",
@@ -28,6 +30,7 @@ describe("Unacademy NEET fourteenth-batch readiness", () => {
       playlist_count: 736,
     });
     expect(readiness).toContain("No production import");
+    expect(readiness).toContain("zero production writes");
     expect(readiness).toContain("No `release` push");
   });
 
@@ -46,14 +49,19 @@ describe("Unacademy NEET fourteenth-batch readiness", () => {
 
   it("keeps natural lecture order and excludes only reviewed non-lecture rows", () => {
     expect(review.candidates.map((candidate) => candidate.videos.length)).toEqual([4, 4, 6]);
-    expect(review.candidates.map((candidate) => candidate.exclusions.length)).toEqual([2, 1, 1]);
+    expect(review.candidates.map((candidate) => candidate.exclusions.length)).toEqual([1, 1, 1]);
     for (const candidate of review.candidates) {
       expect(candidate.videos.map((video) => (
         Number(video.title.match(/\bL\s*(\d+)\b/i)?.[1])
       ))).toEqual(candidate.videos.map((_, index) => index + 1));
     }
     expect(review.candidates.flatMap((candidate) => candidate.exclusions)
-      .map((row) => row.reason)).toEqual(["quiz", "private_unavailable", "quiz", "quiz"]);
+      .map((row) => row.reason)).toEqual(["quiz", "quiz", "quiz"]);
+    expect(review.candidates[0]).toMatchObject({
+      source_item_count: 5,
+      source_rows_sha256: "bd6db75e90429a5305be577494375193652225392fd3a39cf0fff23da4de659c",
+      excluded_source_positions: [5],
+    });
   });
 
   it("pins unique, embeddable, duration-complete, unreused lectures", () => {
@@ -88,11 +96,12 @@ describe("Unacademy NEET fourteenth-batch readiness", () => {
   });
 
   it("binds exact playlist-specific teacher evidence and assignments", () => {
+    const evidenceDecisions = [refreshedDecisionId, originalDecisionId, originalDecisionId];
     for (const [index, manifest] of manifests.entries()) {
       const candidate = review.candidates[index];
       expect(manifest.youtube_playlist_id).toBe(candidate.youtube_playlist_id);
       expect(manifest.teacher_evidence).toMatchObject({
-        decision_id: decisionId,
+        decision_id: evidenceDecisions[index],
         youtube_playlist_id: candidate.youtube_playlist_id,
         teacher: candidate.teacher,
       });
@@ -104,6 +113,18 @@ describe("Unacademy NEET fourteenth-batch readiness", () => {
       expect(manifest.exclusions.map((row) => row.reason))
         .toEqual(candidate.exclusions.map((row) => row.reason));
     }
+  });
+
+  it("records the stopped source-mutation gate without claiming a write", () => {
+    expect(review.execution_history).toEqual([
+      expect.objectContaining({
+        decision_id: originalDecisionId,
+        course: "Friction",
+        outcome: "stopped_before_write",
+        production_writes: 0,
+        remaining_courses_attempted: 0,
+      }),
+    ]);
   });
 
   it("pins immutable review, source-snapshot, and manifest hashes", () => {

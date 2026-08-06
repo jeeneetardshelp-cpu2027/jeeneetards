@@ -1,7 +1,18 @@
 {
   "reviewed_on": "2026-08-06",
   "review_status": "owner_approval_required",
-  "proposed_decision_id": "b19eaa58-7931-4c84-8cea-8b6622230b4d",
+  "proposed_decision_id": "b98191cb-c0be-4d3c-9e15-95905da4fffc",
+  "previous_decision_id": "b19eaa58-7931-4c84-8cea-8b6622230b4d",
+  "execution_history": [
+    {
+      "decision_id": "b19eaa58-7931-4c84-8cea-8b6622230b4d",
+      "course": "Friction",
+      "outcome": "stopped_before_write",
+      "reason": "The public playlist changed from six source rows to five because the recorded private/unavailable row disappeared.",
+      "production_writes": 0,
+      "remaining_courses_attempted": 0
+    }
+  ],
   "channel": {
     "name": "Unacademy NEET",
     "handle": "@UnacademyNEET",
@@ -32,7 +43,9 @@
       "order": 1,
       "youtube_playlist_id": "PLsgHooHkqhhM5-Ujy03Tn7YjofINdftRM",
       "source_title": "NEET: Friction - Playlist | Class 11 | Unacademy NEET | Live Daily 2.0 | NEET Physics | Mahendra Singh",
-      "source_snapshot_sha256": "4486612870e5c4a996b733ecfccb563abbc9027ec5a37a1e92c805fd1c2c5e3b",
+      "source_snapshot_sha256": "c75a549c164a13a4efe1acbc6c3b471e6045c8411ad8484ba8353bca6ad02987",
+      "source_rows_sha256": "bd6db75e90429a5305be577494375193652225392fd3a39cf0fff23da4de659c",
+      "source_item_count": 5,
       "subject_id": 1,
       "chapter_id": 7,
       "chapter": "Friction",
@@ -43,7 +56,7 @@
       "source_collision_count": 0,
       "video_collision_count": 0,
       "retained_source_positions": [1, 2, 3, 4],
-      "excluded_source_positions": [5, 6],
+      "excluded_source_positions": [5],
       "videos": [
         { "source_position": 1, "youtube_video_id": "hgPD1d2C1aE", "title": "NEET: Friction - L1 | Class 11 | Live Daily 2.0 | Unacademy NEET | Mahendra Sir", "duration_seconds": 3711, "embedding_status": "embeddable" },
         { "source_position": 2, "youtube_video_id": "j6Mkm64845o", "title": "NEET: Friction - L2 | Class 11 | Live Daily 2.0 | Unacademy NEET | Mahendra Sir", "duration_seconds": 3556, "embedding_status": "embeddable" },
@@ -51,8 +64,7 @@
         { "source_position": 4, "youtube_video_id": "JODjqGrjIsw", "title": "NEET: Friction - L4 | Class 11 | Live Daily 2.0 | Unacademy NEET | Mahendra Sir", "duration_seconds": 3611, "embedding_status": "embeddable" }
       ],
       "exclusions": [
-        { "source_position": 5, "youtube_video_id": "unq2Wpi3HKE", "title": "NEET: Friction - Quiz 2 | DPP | Live Quiz 2.0 | Unacademy NEET | Mahendra Sir", "duration_seconds": 3280, "reason": "quiz" },
-        { "source_position": 6, "youtube_video_id": "YCIF4LmUIZI", "title": "Private video", "duration_seconds": null, "reason": "private_unavailable" }
+        { "source_position": 5, "youtube_video_id": "unq2Wpi3HKE", "title": "NEET: Friction - Quiz 2 | DPP | Live Quiz 2.0 | Unacademy NEET | Mahendra Sir", "duration_seconds": 3280, "reason": "quiz" }
       ]
     },
     {

@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "request_id": "9396c63f-d710-4557-999d-b5d88f5b2c52",
+  "request_id": "24c74a76-22fa-4bcc-8d31-5fbd688a9045",
   "youtube_playlist_id": "PLsgHooHkqhhM5-Ujy03Tn7YjofINdftRM",
   "teacher_evidence": {
     "version": 1,
     "kind": "reviewed_external_source",
-    "decision_id": "b19eaa58-7931-4c84-8cea-8b6622230b4d",
+    "decision_id": "b98191cb-c0be-4d3c-9e15-95905da4fffc",
     "youtube_playlist_id": "PLsgHooHkqhhM5-Ujy03Tn7YjofINdftRM",
     "teacher": "Mahendra Singh",
     "source_url": "https://www.youtube.com/playlist?list=PLsgHooHkqhhM5-Ujy03Tn7YjofINdftRM",
@@ -21,7 +21,6 @@
     { "position": 4, "youtube_video_id": "JODjqGrjIsw", "chapter": "Friction", "lesson_number": 4 }
   ],
   "exclusions": [
-    { "position": 5, "youtube_video_id": "unq2Wpi3HKE", "reason": "quiz" },
-    { "position": 6, "youtube_video_id": "YCIF4LmUIZI", "reason": "private_unavailable" }
+    { "position": 5, "youtube_video_id": "unq2Wpi3HKE", "reason": "quiz" }
   ]
 }
