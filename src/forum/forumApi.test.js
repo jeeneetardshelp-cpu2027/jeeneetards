@@ -66,4 +66,29 @@ describe("forum read API", () => {
     const api = createForumApi(null);
     await expect(api.getMode()).rejects.toBeInstanceOf(ForumApiError);
   });
+
+  it("uses bounded identity and contribution RPCs without client-owned author fields", async () => {
+    const calls = [];
+    const api = createForumApi(clientWith((name, params) => {
+      calls.push({ name, params });
+      if (name === "forum_get_my_identity") {
+        return { single: async () => ({ data: { username: null, needs_username: true }, error: null }) };
+      }
+      return Promise.resolve({ data: name === "forum_create_post" ? 44 : "student-name", error: null });
+    }));
+
+    await expect(api.getMyIdentity()).resolves.toEqual({ username: null, needs_username: true });
+    await expect(api.claimUsername("student-name")).resolves.toBe("student-name");
+    await expect(api.createPost({ topic: "physics", title: "A real question", body: "Worked maths" }))
+      .resolves.toBe(44);
+    await api.createComment({ postId: 44, body: "An answer" });
+
+    expect(calls).toEqual([
+      { name: "forum_get_my_identity", params: undefined },
+      { name: "forum_claim_username", params: { p_username: "student-name" } },
+      { name: "forum_create_post", params: { p_topic_slug: "physics", p_title: "A real question", p_body: "Worked maths" } },
+      { name: "forum_create_comment", params: { p_post_id: 44, p_parent_id: null, p_body: "An answer" } },
+    ]);
+    expect(JSON.stringify(calls)).not.toContain("author_id");
+  });
 });

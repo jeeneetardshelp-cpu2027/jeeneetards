@@ -65,6 +65,35 @@ export function createForumApi(client = supabase) {
       }), "load forum answers");
       return Array.isArray(data) ? data : [];
     },
+
+    async getMyIdentity() {
+      const response = await requireClient(client)
+        .rpc("forum_get_my_identity")
+        .single();
+      return unwrap(response, "load your forum identity");
+    },
+
+    async claimUsername(username) {
+      return unwrap(await requireClient(client).rpc("forum_claim_username", {
+        p_username: username,
+      }), "claim that username");
+    },
+
+    async createPost({ topic, title, body }) {
+      return unwrap(await requireClient(client).rpc("forum_create_post", {
+        p_topic_slug: topic,
+        p_title: title,
+        p_body: body,
+      }), "publish your discussion");
+    },
+
+    async createComment({ postId, parentId = null, body }) {
+      return unwrap(await requireClient(client).rpc("forum_create_comment", {
+        p_post_id: postId,
+        p_parent_id: parentId,
+        p_body: body,
+      }), "publish your answer");
+    },
   });
 }
 
