@@ -1,0 +1,62 @@
+{
+  "sourceName": "National Testing Agency (JEE Main)",
+  "officialIndexUrl": "https://jeemain.nta.nic.in/sitemap/",
+  "verifiedOn": "2026-08-06",
+  "distribution": "Linked from the official NTA/NIC host; not mirrored by JEENEETARD.",
+  "papers": [
+    {
+      "title": "JEE Main 2026 Session 2 - 2 April Shift 1 (English)",
+      "sourceUrl": "https://cdnbbsr.s3waas.gov.in/s3f8e59f4b2fe7c5705bf878bbd494ccdf/uploads/2026/04/202604092096865379.pdf",
+      "pageCount": 30,
+      "sha256": "BA8B5256533E0A29E2EB71DF3E322885335219D48259F4083365662F5AD7933B"
+    },
+    {
+      "title": "JEE Main 2026 Session 2 - 2 April Shift 2 (English)",
+      "sourceUrl": "https://cdnbbsr.s3waas.gov.in/s3f8e59f4b2fe7c5705bf878bbd494ccdf/uploads/2026/04/20260409481957146.pdf",
+      "pageCount": 31,
+      "sha256": "7C9F31086094684CB7CF5CA9CE884B8991A3C19315DAB282C7D320ED86EAF405"
+    },
+    {
+      "title": "JEE Main 2026 Session 2 - 4 April Shift 1 (English)",
+      "sourceUrl": "https://cdnbbsr.s3waas.gov.in/s3f8e59f4b2fe7c5705bf878bbd494ccdf/uploads/2026/04/202604091916616339.pdf",
+      "pageCount": 28,
+      "sha256": "1D8B98A5EBE417B5E9456996D00CF55A890ED87898919A2BBF2D580EF3685B4A"
+    },
+    {
+      "title": "JEE Main 2026 Session 2 - 4 April Shift 2 (English)",
+      "sourceUrl": "https://cdnbbsr.s3waas.gov.in/s3f8e59f4b2fe7c5705bf878bbd494ccdf/uploads/2026/04/20260409432593766.pdf",
+      "pageCount": 30,
+      "sha256": "2146491216C3EF79B210B8E4E4A2ED3C7AFCA1E9DB198D4ADCC23DD346CF5FC5"
+    },
+    {
+      "title": "JEE Main 2026 Session 2 - 5 April Shift 1 (English)",
+      "sourceUrl": "https://cdnbbsr.s3waas.gov.in/s3f8e59f4b2fe7c5705bf878bbd494ccdf/uploads/2026/04/20260409828731207.pdf",
+      "pageCount": 30,
+      "sha256": "20A14808D521007D48289171297030A4AC18710ABC180BB7E3B2D23E2A0A19FB"
+    },
+    {
+      "title": "JEE Main 2026 Session 2 - 5 April Shift 2 (English)",
+      "sourceUrl": "https://cdnbbsr.s3waas.gov.in/s3f8e59f4b2fe7c5705bf878bbd494ccdf/uploads/2026/04/20260409829414602.pdf",
+      "pageCount": 30,
+      "sha256": "876EFB4250B5D8E096F28BB48D9078E39F25F1AD70473701E5C13523716588D4"
+    },
+    {
+      "title": "JEE Main 2026 Session 2 - 6 April Shift 1 (English)",
+      "sourceUrl": "https://cdnbbsr.s3waas.gov.in/s3f8e59f4b2fe7c5705bf878bbd494ccdf/uploads/2026/04/202604092007095665.pdf",
+      "pageCount": 28,
+      "sha256": "A95FBBD91673783722FE98E0455860FAC1585135D2E84E31F147CBD893226EEB"
+    },
+    {
+      "title": "JEE Main 2026 Session 2 - 6 April Shift 2 (English)",
+      "sourceUrl": "https://cdnbbsr.s3waas.gov.in/s3f8e59f4b2fe7c5705bf878bbd494ccdf/uploads/2026/04/20260409725707538.pdf",
+      "pageCount": 31,
+      "sha256": "2983BACA258AD15A77A4BC66968AA57239A217298A73E3F4E51CAAD1777368D5"
+    },
+    {
+      "title": "JEE Main 2026 Session 2 - 8 April Shift 2 (English)",
+      "sourceUrl": "https://cdnbbsr.s3waas.gov.in/s3f8e59f4b2fe7c5705bf878bbd494ccdf/uploads/2026/04/20260409932754345.pdf",
+      "pageCount": 31,
+      "sha256": "079E3B7AE67B70309F22B33E37B720CBA65B47C6D96760113A4302CEE1122416"
+    }
+  ]
+}
