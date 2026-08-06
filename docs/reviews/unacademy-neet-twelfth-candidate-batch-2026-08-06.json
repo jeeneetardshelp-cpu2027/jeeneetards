@@ -1,0 +1,87 @@
+{
+  "reviewed_on": "2026-08-06",
+  "review_status": "candidate_review_complete_owner_evidence_pending",
+  "proposed_decision_id": "227d1fa5-a7b9-4af2-b6b7-305e90edb412",
+  "channel": {
+    "name": "Unacademy NEET",
+    "handle": "@UnacademyNEET",
+    "youtube_channel_id": "UCdQwYksctqqiRwqp3PiJMWA",
+    "production_institute_id": 147,
+    "playlist_count": 736
+  },
+  "preflight": {
+    "captured_at": "2026-08-06T04:16:06.372Z",
+    "playlists": 397,
+    "videos": 4603,
+    "memberships": 4609,
+    "chapters": 263,
+    "chapter_class_levels": 92,
+    "teachers": 32,
+    "source_collision_count": 0,
+    "retained_video_collision_count": 0,
+    "cross_candidate_retained_video_collision_count": 0,
+    "protected_jee_courses": 82,
+    "protected_jee_memberships": 1304,
+    "protected_jee_fingerprint": "30eee4a4a6842e5beeb7c97083d7f812",
+    "rolling_jee_courses": 212,
+    "rolling_jee_memberships": 2848,
+    "rolling_jee_fingerprint": "9eea2b44f0b19c08cc0907c57e091342"
+  },
+  "candidates": [
+    {
+      "order": 1,
+      "youtube_playlist_id": "PLsgHooHkqhhNW5IzFI54d-RGuxgvOpfn3",
+      "source_title": "NEET: Atomic Structure - Playlist | Class 11 | Unacademy NEET | Live Daily | NEET Chemistry | Anoop Vashishtha",
+      "source_snapshot_sha256": "3fd093312496690ded29287715a040c4d83886bc9e8fce9b2e99e7a73e6a3d56",
+      "subject_id": 2,
+      "chapter_id": 37,
+      "chapter": "Atomic Structure",
+      "class_level_id": 2,
+      "class_level": "class-11",
+      "teacher_id": 36,
+      "teacher": "Anoop Vashishtha",
+      "source_collision_count": 0,
+      "video_collision_count": 0,
+      "retained_source_positions": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+      "excluded_source_positions": [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28],
+      "videos": [
+        { "source_position": 1, "youtube_video_id": "KCP92cYsJO8", "title": "NEET: Atomic Structure - L1 | Cathode Rays | Class 11 | Live Daily 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3382, "embedding_status": "embeddable" },
+        { "source_position": 2, "youtube_video_id": "hMaiMtvOXIw", "title": "NEET: Atomic Structure - L2 | Atomic Model | Class 11 | Live Daily 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3542, "embedding_status": "embeddable" },
+        { "source_position": 3, "youtube_video_id": "BPzbR-BhfIk", "title": "NEET: Atomic Structure - L3 | Hydrogen Spectrum | Live Daily 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3355, "embedding_status": "embeddable" },
+        { "source_position": 4, "youtube_video_id": "79gcbJzm1ZI", "title": "NEET: Atomic Structure - L4 | Photoelectric Effect | Live Daily 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3325, "embedding_status": "embeddable" },
+        { "source_position": 5, "youtube_video_id": "nU0oS7rzDAM", "title": "NEET: Atomic Structure - L5 | Bohr's Atomic Model | Live Daily 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3460, "embedding_status": "embeddable" },
+        { "source_position": 6, "youtube_video_id": "T0Dt6xdfJsg", "title": "NEET: Atomic Structure - L6 | Bohr's Atomic Model | Live Daily 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3483, "embedding_status": "embeddable" },
+        { "source_position": 7, "youtube_video_id": "1Va5IbrQekk", "title": "NEET: Atomic Structure - L7 | Bohr's Atomic Model | Live Daily 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3356, "embedding_status": "embeddable" },
+        { "source_position": 8, "youtube_video_id": "QubDVeDFGfA", "title": "NEET: Atomic Structure - L8 | Bohr's Model: Drawbacks | Live Daily 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3150, "embedding_status": "embeddable" },
+        { "source_position": 9, "youtube_video_id": "HLcwLY8ZdkA", "title": "NEET: Atomic Structure - L9 | De Broglie Equation | Live Daily 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3596, "embedding_status": "embeddable" },
+        { "source_position": 10, "youtube_video_id": "nsBWEG8O-10", "title": "NEET: Atomic Structure - L10 | Uncertainty Principle | Live Daily 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3429, "embedding_status": "embeddable" },
+        { "source_position": 11, "youtube_video_id": "FPdSATOnprk", "title": "NEET: Atomic Structure - L11 | Schrodinger's Equation | Live Daily 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3651, "embedding_status": "embeddable" },
+        { "source_position": 12, "youtube_video_id": "iAH3wPo2LMI", "title": "NEET: Atomic Structure - L12 | Quantum Numbers | Live Daily 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3676, "embedding_status": "embeddable" },
+        { "source_position": 13, "youtube_video_id": "rbicckkQdzU", "title": "NEET: Atomic Structure - L13 | Electron Configuration | Live Daily 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3573, "embedding_status": "embeddable" },
+        { "source_position": 14, "youtube_video_id": "SG_tDj2riyw", "title": "NEET: Atomic Structure - L14 | Filling of Orbitals | Live Daily 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3556, "embedding_status": "embeddable" }
+      ],
+      "exclusions": [
+        { "source_position": 15, "youtube_video_id": "dqAS361SZ7g", "title": "NEET: Atomic Structure - Quiz 1 | Menti Quiz | Live Quiz 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3040, "reason": "quiz" },
+        { "source_position": 16, "youtube_video_id": "9I9ZZZBniOM", "title": "NEET: Atomic Structure - Quiz 2 | Menti Quiz | Live Quiz 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3448, "reason": "quiz" },
+        { "source_position": 17, "youtube_video_id": "Q3zLVeRKfzY", "title": "NEET: Atomic Structure - Quiz 3 | Menti Quiz | Live Quiz 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3963, "reason": "quiz" },
+        { "source_position": 18, "youtube_video_id": "FABzME2951s", "title": "NEET: Atomic Structure - Quiz 4 | Menti Quiz | Live Quiz 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3260, "reason": "quiz" },
+        { "source_position": 19, "youtube_video_id": "t4QFXZvghps", "title": "NEET: Atomic Structure - Quiz 5 | Menti Quiz | Live Quiz 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3461, "reason": "quiz" },
+        { "source_position": 20, "youtube_video_id": "nT6We-LdfAI", "title": "Atomic Structure - Quiz 6 | Menti Quiz | Live Quiz 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3476, "reason": "quiz" },
+        { "source_position": 21, "youtube_video_id": "LpNY1ZS_JSQ", "title": "Atomic Structure - Quiz 7 | Menti Quiz | Live Quiz 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3432, "reason": "quiz" },
+        { "source_position": 22, "youtube_video_id": "_wJiv0euLfs", "title": "Atomic Structure - Quiz 8 | Menti Quiz | Live Quiz 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3556, "reason": "quiz" },
+        { "source_position": 23, "youtube_video_id": "FoIb7pEUN2s", "title": "Atomic Structure - Quiz 9 | Menti Quiz | Live Quiz 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3691, "reason": "quiz" },
+        { "source_position": 24, "youtube_video_id": "s7FLfzRQncQ", "title": "Atomic Structure - Quiz 10 | Menti Quiz | Live Quiz 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3205, "reason": "quiz" },
+        { "source_position": 25, "youtube_video_id": "zbEFkVjyl4A", "title": "Physical Chemistry - Mega Menti Quiz | Live Quiz 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3651, "reason": "broad_physical_chemistry_mega_quiz" },
+        { "source_position": 26, "youtube_video_id": "AQSwvNMtRj0", "title": "Physical Chemistry - Mega Menti Quiz 2 | Live Quiz 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3270, "reason": "broad_physical_chemistry_mega_quiz" },
+        { "source_position": 27, "youtube_video_id": "ip9ypzd8H3U", "title": "Physical Chemistry - Mega Menti Quiz 3 | Class 11 | Live Quiz 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3200, "reason": "broad_physical_chemistry_mega_quiz" },
+        { "source_position": 28, "youtube_video_id": "nF8uzeuZGpc", "title": "Physical Chemistry - Mega Menti Quiz 4 | Class 11 | Live Quiz 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3624, "reason": "broad_physical_chemistry_mega_quiz" }
+      ]
+    }
+  ],
+  "deferred": [
+    "Coordination Compounds is missing Lecture 11; its official playlist jumps from L10 to L12.",
+    "Locomotion and Movement starts with an unrelated Phoenix 2.0 row and then begins at Lecture 2.",
+    "Biological Classification starts with an unrelated Phoenix 2.0 row and then begins at Lecture 2.",
+    "Previously recorded incomplete Breathing and Gas Exchange, Biomolecules, Respiration in Plants, Ionic Equilibrium, Human Reproduction, Neural Control and Coordination, and Animal Kingdom candidates remain deferred."
+  ]
+}

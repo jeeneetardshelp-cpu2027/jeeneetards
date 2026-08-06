@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "request_id": "993cf0c1-44c3-453a-904d-57fe77304cdf",
+  "youtube_playlist_id": "PLsgHooHkqhhNW5IzFI54d-RGuxgvOpfn3",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "227d1fa5-a7b9-4af2-b6b7-305e90edb412",
+    "youtube_playlist_id": "PLsgHooHkqhhNW5IzFI54d-RGuxgvOpfn3",
+    "teacher": "Anoop Vashishtha",
+    "source_url": "https://www.youtube.com/playlist?list=PLsgHooHkqhhNW5IzFI54d-RGuxgvOpfn3",
+    "source_label": "Official Unacademy NEET channel-owned Atomic Structure playlist naming Anoop Vashishtha; every retained lecture names Anoop Sir",
+    "reviewed_by": "Owner",
+    "reviewed_on": "2026-08-06",
+    "youtube_video_ids": ["KCP92cYsJO8", "hMaiMtvOXIw", "BPzbR-BhfIk", "79gcbJzm1ZI", "nU0oS7rzDAM", "T0Dt6xdfJsg", "1Va5IbrQekk", "QubDVeDFGfA", "HLcwLY8ZdkA", "nsBWEG8O-10", "FPdSATOnprk", "iAH3wPo2LMI", "rbicckkQdzU", "SG_tDj2riyw"]
+  },
+  "assignments": [
+    { "position": 1, "youtube_video_id": "KCP92cYsJO8", "chapter": "Atomic Structure", "lesson_number": 1 },
+    { "position": 2, "youtube_video_id": "hMaiMtvOXIw", "chapter": "Atomic Structure", "lesson_number": 2 },
+    { "position": 3, "youtube_video_id": "BPzbR-BhfIk", "chapter": "Atomic Structure", "lesson_number": 3 },
+    { "position": 4, "youtube_video_id": "79gcbJzm1ZI", "chapter": "Atomic Structure", "lesson_number": 4 },
+    { "position": 5, "youtube_video_id": "nU0oS7rzDAM", "chapter": "Atomic Structure", "lesson_number": 5 },
+    { "position": 6, "youtube_video_id": "T0Dt6xdfJsg", "chapter": "Atomic Structure", "lesson_number": 6 },
+    { "position": 7, "youtube_video_id": "1Va5IbrQekk", "chapter": "Atomic Structure", "lesson_number": 7 },
+    { "position": 8, "youtube_video_id": "QubDVeDFGfA", "chapter": "Atomic Structure", "lesson_number": 8 },
+    { "position": 9, "youtube_video_id": "HLcwLY8ZdkA", "chapter": "Atomic Structure", "lesson_number": 9 },
+    { "position": 10, "youtube_video_id": "nsBWEG8O-10", "chapter": "Atomic Structure", "lesson_number": 10 },
+    { "position": 11, "youtube_video_id": "FPdSATOnprk", "chapter": "Atomic Structure", "lesson_number": 11 },
+    { "position": 12, "youtube_video_id": "iAH3wPo2LMI", "chapter": "Atomic Structure", "lesson_number": 12 },
+    { "position": 13, "youtube_video_id": "rbicckkQdzU", "chapter": "Atomic Structure", "lesson_number": 13 },
+    { "position": 14, "youtube_video_id": "SG_tDj2riyw", "chapter": "Atomic Structure", "lesson_number": 14 }
+  ],
+  "exclusions": [
+    { "position": 15, "youtube_video_id": "dqAS361SZ7g", "reason": "quiz" },
+    { "position": 16, "youtube_video_id": "9I9ZZZBniOM", "reason": "quiz" },
+    { "position": 17, "youtube_video_id": "Q3zLVeRKfzY", "reason": "quiz" },
+    { "position": 18, "youtube_video_id": "FABzME2951s", "reason": "quiz" },
+    { "position": 19, "youtube_video_id": "t4QFXZvghps", "reason": "quiz" },
+    { "position": 20, "youtube_video_id": "nT6We-LdfAI", "reason": "quiz" },
+    { "position": 21, "youtube_video_id": "LpNY1ZS_JSQ", "reason": "quiz" },
+    { "position": 22, "youtube_video_id": "_wJiv0euLfs", "reason": "quiz" },
+    { "position": 23, "youtube_video_id": "FoIb7pEUN2s", "reason": "quiz" },
+    { "position": 24, "youtube_video_id": "s7FLfzRQncQ", "reason": "quiz" },
+    { "position": 25, "youtube_video_id": "zbEFkVjyl4A", "reason": "broad_physical_chemistry_mega_quiz" },
+    { "position": 26, "youtube_video_id": "AQSwvNMtRj0", "reason": "broad_physical_chemistry_mega_quiz" },
+    { "position": 27, "youtube_video_id": "ip9ypzd8H3U", "reason": "broad_physical_chemistry_mega_quiz" },
+    { "position": 28, "youtube_video_id": "nF8uzeuZGpc", "reason": "broad_physical_chemistry_mega_quiz" }
+  ]
+}
