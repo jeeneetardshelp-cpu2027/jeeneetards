@@ -49,7 +49,10 @@ export default function ForumFeedPage({ api }) {
         as="h1"
         eyebrow="Student discussions"
         title="Ask, explain and prepare together"
-        lead="Read preparation questions and answers from other students. Posting controls remain closed in this review slice."
+        lead="Read preparation questions and answers from other students, or share a clear doubt of your own."
+        action={feed.status === "ready" && feed.mode === "open"
+          ? <Button to="/forum/submit">Start a discussion</Button>
+          : null}
       />
 
       <ForumFeedControls
