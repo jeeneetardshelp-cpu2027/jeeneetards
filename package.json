@@ -37,6 +37,7 @@
     "build:forum-persistent-staging": "node src/scripts/buildForumV1PersistentStaging.js",
     "verify:forum-jwt-staging": "node src/scripts/verifyForumV1JwtStaging.js",
     "verify:forum-renderer-browser": "node src/scripts/verifyForumRendererBrowser.js",
+    "verify:forum-read-only-browser": "node src/scripts/verifyForumReadOnlyBrowser.js",
     "build:content-quality-staging": "node src/scripts/buildContentQualityStagingDelta.js",
     "build:faculty-quality-production": "node src/scripts/buildFacultyQualityProductionPackage.js",
     "build:faculty-quality-wrapper-test": "node src/scripts/buildFacultyQualityProductionWrapperDryRun.js",
