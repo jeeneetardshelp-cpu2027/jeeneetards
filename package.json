@@ -39,6 +39,7 @@
     "verify:forum-renderer-browser": "node src/scripts/verifyForumRendererBrowser.js",
     "verify:forum-read-only-browser": "node src/scripts/verifyForumReadOnlyBrowser.js",
     "verify:forum-auth-drafts-browser": "node src/scripts/verifyForumAuthDraftBrowser.js",
+    "verify:forum-voting-browser": "node src/scripts/verifyForumVotingBrowser.js",
     "verify:forum-username-jwt-staging": "node src/scripts/verifyForumUsernameClaimJwtStaging.js",
     "build:content-quality-staging": "node src/scripts/buildContentQualityStagingDelta.js",
     "build:faculty-quality-production": "node src/scripts/buildFacultyQualityProductionPackage.js",

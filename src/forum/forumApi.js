@@ -94,6 +94,17 @@ export function createForumApi(client = supabase) {
         p_body: body,
       }), "publish your answer");
     },
+
+    async castVote({ targetType, targetId, value }) {
+      const response = await requireClient(client)
+        .rpc("forum_cast_vote", {
+          p_target_type: targetType,
+          p_target_id: targetId,
+          p_value: value,
+        })
+        .single();
+      return unwrap(response, "record your vote");
+    },
   });
 }
 

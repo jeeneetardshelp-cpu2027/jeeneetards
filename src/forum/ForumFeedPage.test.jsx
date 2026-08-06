@@ -32,11 +32,11 @@ function LocationProbe() {
   return <output aria-label="location">{location.pathname + location.search}</output>;
 }
 
-function renderFeed(api, entry = "/forum") {
+function renderFeed(api, entry = "/forum", authState = null) {
   return render(
     <ThemeProvider>
       <MemoryRouter initialEntries={[entry]}>
-        <ForumFeedPage api={api} />
+        <ForumFeedPage api={api} authState={authState} />
         <LocationProbe />
       </MemoryRouter>
     </ThemeProvider>,
@@ -48,6 +48,9 @@ function apiWith(feed = [post(1)]) {
     getMode: vi.fn().mockResolvedValue("read_only"),
     getTopics: vi.fn().mockResolvedValue(topics),
     getFeed: vi.fn().mockResolvedValue(feed),
+    getMyIdentity: vi.fn().mockResolvedValue({ username: "student-one", needs_username: false }),
+    claimUsername: vi.fn().mockResolvedValue("student-one"),
+    castVote: vi.fn().mockResolvedValue({ viewer_vote: 1, score: 2, upvote_count: 2, downvote_count: 0 }),
   };
 }
 
@@ -110,5 +113,44 @@ describe("signed-out forum feed", () => {
     renderFeed(apiWith([]), "/forum?topic=physics");
     expect(await screen.findByRole("heading", { name: "No discussions found" })).toBeTruthy();
     expect(screen.getByText(/no visible posts in physics/i)).toBeTruthy();
+  });
+
+  it("keeps voting visible signed out and opens the existing auth surface on request", async () => {
+    const api = apiWith();
+    api.getMode.mockResolvedValue("open");
+    renderFeed(api, "/forum", { session: null, loading: false });
+
+    fireEvent.click(await screen.findByRole("button", { name: "Upvote this discussion" }));
+    expect(await screen.findByRole("heading", { name: "Sign in to vote on discussions" })).toBeTruthy();
+    expect(api.castVote).not.toHaveBeenCalled();
+  });
+
+  it("wires an authenticated vote through the reviewed RPC result", async () => {
+    const api = apiWith();
+    api.getMode.mockResolvedValue("open");
+    renderFeed(api, "/forum", {
+      session: { user: { id: "student-1" } }, loading: false,
+    });
+
+    await waitFor(() => expect(api.getMyIdentity).toHaveBeenCalledOnce());
+    fireEvent.click(await screen.findByRole("button", { name: "Upvote this discussion" }));
+    await waitFor(() => expect(api.castVote).toHaveBeenCalledWith({
+      targetType: "post", targetId: 1, value: 1,
+    }));
+    expect(await screen.findByLabelText("2 score")).toBeTruthy();
+  });
+
+  it("requires the signed-in student to claim a public username before voting", async () => {
+    const api = apiWith();
+    api.getMode.mockResolvedValue("open");
+    api.getMyIdentity.mockResolvedValue({ username: null, needs_username: true });
+    renderFeed(api, "/forum", {
+      session: { user: { id: "student-1" } }, loading: false,
+    });
+
+    await waitFor(() => expect(api.getMyIdentity).toHaveBeenCalledOnce());
+    fireEvent.click(await screen.findByRole("button", { name: "Upvote this discussion" }));
+    expect(await screen.findByRole("heading", { name: "Choose your public forum username" })).toBeTruthy();
+    expect(api.castVote).not.toHaveBeenCalled();
   });
 });

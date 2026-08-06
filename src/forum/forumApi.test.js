@@ -91,4 +91,25 @@ describe("forum read API", () => {
     ]);
     expect(JSON.stringify(calls)).not.toContain("author_id");
   });
+
+  it("uses the single-row vote RPC contract without exposing voter identity", async () => {
+    const calls = [];
+    const api = createForumApi(clientWith((name, params) => ({
+      single: async () => {
+        calls.push({ name, params });
+        return {
+          data: { viewer_vote: 1, score: 8, upvote_count: 9, downvote_count: 1 },
+          error: null,
+        };
+      },
+    })));
+
+    await expect(api.castVote({ targetType: "comment", targetId: 42, value: 1 }))
+      .resolves.toEqual({ viewer_vote: 1, score: 8, upvote_count: 9, downvote_count: 1 });
+    expect(calls).toEqual([{
+      name: "forum_cast_vote",
+      params: { p_target_type: "comment", p_target_id: 42, p_value: 1 },
+    }]);
+    expect(JSON.stringify(calls)).not.toContain("voter");
+  });
 });
