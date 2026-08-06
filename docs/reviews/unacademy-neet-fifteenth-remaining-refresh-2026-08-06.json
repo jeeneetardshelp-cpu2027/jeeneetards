@@ -1,0 +1,91 @@
+{
+  "review_status": "owner_approval_required",
+  "proposed_decision_id": "1412ca96-56dc-47ef-8bc0-18ce97f7dfb6",
+  "parent_decision_id": "5b4b1d41-b7dc-4f12-80cf-b490e72edd96",
+  "parent_execution_commit": "5c0254bb58090b00c81a847812d7c792c905c5f4",
+  "captured_at": "2026-08-06T12:23:09.429Z",
+  "channel": {
+    "handle": "@UnacademyNEET",
+    "youtube_channel_id": "UCdQwYksctqqiRwqp3PiJMWA"
+  },
+  "preflight": {
+    "playlists": 404,
+    "videos": 4666,
+    "memberships": 4672,
+    "chapters": 263,
+    "remaining_source_collision_count": 0,
+    "remaining_retained_video_collision_count": 0,
+    "protected_jee_courses": 82,
+    "protected_jee_memberships": 1304,
+    "protected_jee_fingerprint": "30eee4a4a6842e5beeb7c97083d7f812",
+    "rolling_jee_courses": 212,
+    "rolling_jee_memberships": 2848,
+    "rolling_jee_fingerprint": "9eea2b44f0b19c08cc0907c57e091342"
+  },
+  "source_mutation_review": {
+    "classification": "playlist_title_whitespace_only",
+    "video_ids_changed": false,
+    "source_positions_changed": false,
+    "video_titles_changed": false,
+    "durations_changed": false,
+    "embedding_status_changed": false,
+    "exclusions_changed": false
+  },
+  "candidates": [
+    {
+      "order": 1,
+      "course": "Fluid Mechanics",
+      "youtube_playlist_id": "PLsgHooHkqhhMMPfEYr7m_ofP61K_YScyw",
+      "previous_source_title": "Fluid Mechanics - Playlist | Class 11 | Unacademy NEET | LIVE DAILY | NEET Physics | Mahendra Singh",
+      "source_title": "Fluid Mechanics -  Playlist | Class 11 | Unacademy NEET | LIVE DAILY | NEET Physics | Mahendra Singh",
+      "previous_source_snapshot_sha256": "d3d1be7d7eae2571d5dbfece4921e6c50bac95d500ccd6a55459d017a5cdc478",
+      "source_snapshot_sha256": "b7a1b79c07792331919693f1b38a1ef899715cd46b5615721a4fd28b7bcca0e3",
+      "manifest": "docs/manifests/unacademy-neet-fluid-mechanics-class-11-reviewed.json",
+      "manifest_sha256": "0a35ba41c0be551d48b4f521ffa5c324e283062e3c83222cd45a678ad4e839b4",
+      "request_id": "0f7c245d-4f5b-48b7-af2e-5745cc64ec9c",
+      "teacher": "Mahendra Singh",
+      "teacher_id": 34,
+      "subject": "Physics",
+      "subject_id": 1,
+      "chapter": "Mechanical Properties of Fluids",
+      "chapter_id": 26,
+      "class_label": "11th",
+      "class_level_id": 2,
+      "retained_video_count": 11,
+      "excluded_video_count": 1,
+      "retained_video_ids": [
+        "YDAmpY5Ltuw", "gCbZdFytavU", "4XOyLNYMEAg", "_U2nUzirfPg",
+        "k1FJxpk0ldE", "Y6Bw17IdKcA", "reS2GKKFYFU", "14uTcuI9qAg",
+        "jLmIBKL07JI", "nuXcXTGitIg", "rD4OBjxyTLQ"
+      ],
+      "excluded_video_ids": ["bgpLvLY9mqU"]
+    },
+    {
+      "order": 2,
+      "course": "Kinematics 1D",
+      "youtube_playlist_id": "PLsgHooHkqhhM5m3xbTdZ2cDX8S_22jdSX",
+      "previous_source_title": "Kinematics 1D - Playlist | Class 11 | Unacademy NEET | LIVE DAILY | NEET Physics | Mahendra Singh",
+      "source_title": "Kinematics 1D -  Playlist | Class 11 | Unacademy NEET | LIVE DAILY | NEET Physics | Mahendra Singh",
+      "previous_source_snapshot_sha256": "29891a8f3814b43df38c3869887fc8279b66d5f9fcdf2724016f8fee8165a487",
+      "source_snapshot_sha256": "313d749d524f3099b7cdcfe9406c838635ace992240f79b1dbcf1d82eb19fa5e",
+      "manifest": "docs/manifests/unacademy-neet-kinematics-1d-class-11-reviewed.json",
+      "manifest_sha256": "682356a8ecec18d73db0a65fa08adaccd0dce4dde376e45840ac3d08b4e82622",
+      "request_id": "95f7b00e-0946-46b9-a7e6-b5b16d555c51",
+      "teacher": "Mahendra Singh",
+      "teacher_id": 34,
+      "subject": "Physics",
+      "subject_id": 1,
+      "chapter": "Kinematics",
+      "chapter_id": 1,
+      "class_label": "11th",
+      "class_level_id": 2,
+      "retained_video_count": 6,
+      "excluded_video_count": 3,
+      "retained_video_ids": [
+        "Fj1H3ZEogxk", "PozfdhfpMg8", "EeGVNt_3c2k", "M-S7sv3rI94",
+        "_2FUWa-A19o", "LEJFHcenR_A"
+      ],
+      "excluded_video_ids": ["qu9IjRQT4CQ", "SFAS1wctyHA", "_KRr5ZqwDbA"]
+    }
+  ]
+}

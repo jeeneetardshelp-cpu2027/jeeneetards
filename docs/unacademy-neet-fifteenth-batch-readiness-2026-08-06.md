@@ -128,6 +128,11 @@ not the approved
 The source-mutation guard therefore stopped the batch before any course-2
 dry-run or write, and course 3 was not attempted.
 
+A read-only refreshed continuation package for the two remaining courses is
+recorded in
+`unacademy-neet-fifteenth-remaining-refresh-readiness-2026-08-06.md`; it has a
+new, separate owner-decision gate and does not weaken this stop record.
+
 After course 1, the protected JEE boundary remained exactly 82 courses / 1,304
 memberships / `30eee4a4a6842e5beeb7c97083d7f812`; rolling JEE remained 212
 courses / 2,848 memberships / `9eea2b44f0b19c08cc0907c57e091342`.
