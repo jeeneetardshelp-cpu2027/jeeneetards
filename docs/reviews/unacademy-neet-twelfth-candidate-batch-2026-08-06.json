@@ -1,6 +1,6 @@
 {
   "reviewed_on": "2026-08-06",
-  "review_status": "candidate_review_complete_owner_evidence_pending",
+  "review_status": "production_import_complete",
   "proposed_decision_id": "227d1fa5-a7b9-4af2-b6b7-305e90edb412",
   "channel": {
     "name": "Unacademy NEET",
@@ -26,6 +26,22 @@
     "rolling_jee_courses": 212,
     "rolling_jee_memberships": 2848,
     "rolling_jee_fingerprint": "9eea2b44f0b19c08cc0907c57e091342"
+  },
+  "production_execution": {
+    "approved_decision_id": "227d1fa5-a7b9-4af2-b6b7-305e90edb412",
+    "completed_at": "2026-08-06T04:45:05.396Z",
+    "pitr_retention_days": 7,
+    "pitr_restore_available_from_ist": "2026-07-31 00:02:22",
+    "pitr_latest_restore_at_ist": "2026-08-06 09:58:42",
+    "initial_catalogue": { "playlists": 397, "videos": 4603, "memberships": 4609, "chapters": 263 },
+    "final_catalogue": { "playlists": 398, "videos": 4617, "memberships": 4623, "chapters": 263 },
+    "delta": { "playlists": 1, "videos": 14, "memberships": 14, "chapters": 0, "videos_reused": 0 },
+    "protected_jee_after": { "courses": 82, "memberships": 1304, "fingerprint": "30eee4a4a6842e5beeb7c97083d7f812" },
+    "rolling_jee_after": { "courses": 212, "memberships": 2848, "fingerprint": "9eea2b44f0b19c08cc0907c57e091342" },
+    "import_contract": "reviewed_single_chapter_legacy_merge_with_new_source_guard",
+    "audit_snapshot_expected": false,
+    "request_replay_expected": false,
+    "audit_note": "This reviewed single-chapter import uses the legacy import_playlist RPC. The guarded client refused an existing source and unexpected reuse; playlist_import_audit rows and request replay are not expected for this path."
   },
   "candidates": [
     {
@@ -75,7 +91,16 @@
         { "source_position": 26, "youtube_video_id": "AQSwvNMtRj0", "title": "Physical Chemistry - Mega Menti Quiz 2 | Live Quiz 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3270, "reason": "broad_physical_chemistry_mega_quiz" },
         { "source_position": 27, "youtube_video_id": "ip9ypzd8H3U", "title": "Physical Chemistry - Mega Menti Quiz 3 | Class 11 | Live Quiz 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3200, "reason": "broad_physical_chemistry_mega_quiz" },
         { "source_position": 28, "youtube_video_id": "nF8uzeuZGpc", "title": "Physical Chemistry - Mega Menti Quiz 4 | Class 11 | Live Quiz 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3624, "reason": "broad_physical_chemistry_mega_quiz" }
-      ]
+      ],
+      "production_import": {
+        "course_id": 417,
+        "verified_at": "2026-08-06T04:45:05.396Z",
+        "videos_added": 14,
+        "memberships_added": 14,
+        "videos_reused": 0,
+        "chapters_created": 0,
+        "protected_jee_fingerprint_after": "30eee4a4a6842e5beeb7c97083d7f812"
+      }
     }
   ],
   "deferred": [

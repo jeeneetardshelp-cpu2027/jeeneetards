@@ -14,8 +14,8 @@ const sha256 = (value) => createHash("sha256").update(value).digest("hex");
 const decisionId = "227d1fa5-a7b9-4af2-b6b7-305e90edb412";
 
 describe("Unacademy NEET twelfth-batch readiness", () => {
-  it("is preparation-only and pins the official source", () => {
-    expect(review.review_status).toBe("candidate_review_complete_owner_evidence_pending");
+  it("records the completed production import and pins the official source", () => {
+    expect(review.review_status).toBe("production_import_complete");
     expect(review.proposed_decision_id).toBe(decisionId);
     expect(review.channel).toMatchObject({
       handle: "@UnacademyNEET",
@@ -23,8 +23,8 @@ describe("Unacademy NEET twelfth-batch readiness", () => {
       production_institute_id: 147,
       playlist_count: 736,
     });
-    expect(readiness).toContain("No production write");
-    expect(readiness).toContain("Production execution remains a separate gate");
+    expect(readiness).toContain("Production import completed");
+    expect(readiness).toContain("No schema migration");
   });
 
   it("pins the canonical taxonomy, class, and verified teacher", () => {
@@ -121,6 +121,46 @@ describe("Unacademy NEET twelfth-batch readiness", () => {
       entry.includes("Coordination Compounds") && entry.includes("Lecture 11")
     ))).toBe(true);
     expect(review.deferred.some((entry) => entry.includes("Locomotion and Movement"))).toBe(true);
-    expect(readiness).toContain("Projected additive delta if separately approved");
+    expect(readiness).toContain("The completed additive delta");
+  });
+
+  it("records the exact create-only production result and both JEE boundaries", () => {
+    expect(review.production_execution).toMatchObject({
+      approved_decision_id: decisionId,
+      final_catalogue: {
+        playlists: 398,
+        videos: 4617,
+        memberships: 4623,
+        chapters: 263,
+      },
+      delta: {
+        playlists: 1,
+        videos: 14,
+        memberships: 14,
+        chapters: 0,
+        videos_reused: 0,
+      },
+      protected_jee_after: {
+        courses: 82,
+        memberships: 1304,
+        fingerprint: "30eee4a4a6842e5beeb7c97083d7f812",
+      },
+      rolling_jee_after: {
+        courses: 212,
+        memberships: 2848,
+        fingerprint: "9eea2b44f0b19c08cc0907c57e091342",
+      },
+      import_contract: "reviewed_single_chapter_legacy_merge_with_new_source_guard",
+      audit_snapshot_expected: false,
+      request_replay_expected: false,
+    });
+    expect(review.candidates[0].production_import).toMatchObject({
+      course_id: 417,
+      videos_added: 14,
+      memberships_added: 14,
+      videos_reused: 0,
+      chapters_created: 0,
+      protected_jee_fingerprint_after: "30eee4a4a6842e5beeb7c97083d7f812",
+    });
   });
 });
