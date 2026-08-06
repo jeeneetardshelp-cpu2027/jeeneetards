@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
-  adoptGuestForumDraft, clearForumDraft, forumDraftKey, loadForumDraft, saveForumDraft,
+  clearForumDraft, forumDraftKey, loadForumDraft, saveForumDraft,
 } from "./forumDraftStorage.js";
 
 function memoryStorage() {
@@ -20,35 +20,15 @@ describe("forum draft storage", () => {
     expect(new Set([guest, student, answer]).size).toBe(3);
   });
 
-  it("moves the newest guest draft to the account after sign-in", () => {
+  it("keeps guest and signed-in drafts in separate storage", () => {
     const storage = memoryStorage();
     const descriptor = { kind: "post", target: "new" };
     saveForumDraft(storage, descriptor, { title: "guest work", updated_at: 20 });
-    saveForumDraft(storage, { ...descriptor, userId: "student-1" }, { title: "old work", updated_at: 10 });
+    saveForumDraft(storage, { ...descriptor, userId: "student-1" }, { title: "student work", updated_at: 10 });
 
-    expect(adoptGuestForumDraft(storage, descriptor, "student-1")).toMatchObject({ title: "guest work" });
-    expect(loadForumDraft(storage, descriptor)).toBeNull();
-    expect(loadForumDraft(storage, { ...descriptor, userId: "student-1" })).toMatchObject({ title: "guest work" });
-  });
-
-  it("keeps the guest draft when adoption cannot be persisted to the account", () => {
-    const storage = memoryStorage();
-    const descriptor = { kind: "post", target: "new" };
-    saveForumDraft(storage, descriptor, { title: "guest work", updated_at: 20 });
-    const blockedAccountStorage = {
-      ...storage,
-      setItem: (key, value) => {
-        if (key === forumDraftKey({ ...descriptor, userId: "student-1" })) {
-          throw new Error("quota");
-        }
-        storage.setItem(key, value);
-      },
-    };
-
-    expect(adoptGuestForumDraft(blockedAccountStorage, descriptor, "student-1"))
-      .toMatchObject({ title: "guest work" });
     expect(loadForumDraft(storage, descriptor)).toMatchObject({ title: "guest work" });
-    expect(loadForumDraft(storage, { ...descriptor, userId: "student-1" })).toBeNull();
+    expect(loadForumDraft(storage, { ...descriptor, userId: "student-1" }))
+      .toMatchObject({ title: "student work" });
   });
 
   it("fails closed around corrupt or unavailable storage without losing in-memory work", () => {
