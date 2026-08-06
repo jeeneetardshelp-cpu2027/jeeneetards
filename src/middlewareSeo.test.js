@@ -84,6 +84,14 @@ describe("edge-rendered discovery landings", () => {
     }
   });
 
+  it("supports the router's numeric forum thread route at the edge", () => {
+    const app = readFileSync(resolve(import.meta.dirname, "./App.jsx"), "utf8");
+    expect(app).toContain('<Route path="/forum/post/:postId"');
+    expect(isSupportedAppPath("/forum/post/42")).toBe(true);
+    expect(isSupportedAppPath("/forum/post/not-a-number")).toBe(false);
+    expect(isSupportedAppPath("/forum/post/42/extra")).toBe(false);
+  });
+
   it.each([
     ["/", "Find the right lecture. Skip the noise."],
     ["/browse", "All courses"],
