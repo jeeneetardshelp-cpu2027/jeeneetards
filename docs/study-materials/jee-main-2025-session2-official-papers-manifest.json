@@ -1,0 +1,69 @@
+{
+  "exam": "JEE Main 2025 Session 2 Paper 1 (B.E./B.Tech.)",
+  "language": "English and Hindi",
+  "databaseLanguageFacet": "English",
+  "officialIndexUrl": "https://www.nta.ac.in/Downloads",
+  "officialApiUrl": "https://www.nta.ac.in/downloads/getlist",
+  "officialNoticeUrl": "https://cdnbbsr.s3waas.gov.in/s3f8e59f4b2fe7c5705bf878bbd494ccdf/uploads/2025/04/2025041144.pdf",
+  "verificationDate": "2026-08-07",
+  "coverageNote": "Includes the eight usable bilingual Paper 1 PDFs in the official NTA archive for 2, 3, 4, 7 and 8 April 2025. The official 4 April Shift 1 PDF was excluded because complete rendering showed that many pages omit the question text and options. No third-party substitute is included.",
+  "verification": "Each included live NTA PDF was checked for Paper 1 identity, date, shift, English and Hindi question versions, 75 unique questions, all Mathematics, Physics and Chemistry sections, absence of an answer key, page count, byte length, SHA-256 and complete visual rendering.",
+  "papers": [
+    {
+      "title": "JEE Main 2025 Session 2 - 2 April Shift 1 (English & Hindi)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20250715182237.pdf",
+      "pageCount": 66,
+      "byteLength": 5055409,
+      "sha256": "A5A18A2F1AC3217392F339C2256B0E467D1F0032F979B1E26D63D139E59B1EFF"
+    },
+    {
+      "title": "JEE Main 2025 Session 2 - 2 April Shift 2 (English & Hindi)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20250715180818.pdf",
+      "pageCount": 67,
+      "byteLength": 4721342,
+      "sha256": "6C99D655D233F02F81786FEE03AF53A37A59E4F2CE8C5C4F9BA3A1E4A20D9D09"
+    },
+    {
+      "title": "JEE Main 2025 Session 2 - 3 April Shift 1 (English & Hindi)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20250715182146.pdf",
+      "pageCount": 63,
+      "byteLength": 4690027,
+      "sha256": "006F7DA72EF881751DF2F3658039775E878344E66EE27D17CE1906B6A5F5D500"
+    },
+    {
+      "title": "JEE Main 2025 Session 2 - 3 April Shift 2 (English & Hindi)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20250715182051.pdf",
+      "pageCount": 59,
+      "byteLength": 4625525,
+      "sha256": "6202E47057B86F0EA40F0AFE2E83FC7D2D4138E4B55B6D6F94225DD8349F5D08"
+    },
+    {
+      "title": "JEE Main 2025 Session 2 - 4 April Shift 2 (English & Hindi)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20250715181844.pdf",
+      "pageCount": 67,
+      "byteLength": 5052010,
+      "sha256": "00D7A533D062388342D932BC21764AE679008295252575F84CBA59558384EEEE"
+    },
+    {
+      "title": "JEE Main 2025 Session 2 - 7 April Shift 1 (English & Hindi)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20250715181804.pdf",
+      "pageCount": 65,
+      "byteLength": 4627418,
+      "sha256": "E8C9BA7A58CDA97F03FF76A12D15A42F0F9D8A7600FFAAAE073FB238B835E112"
+    },
+    {
+      "title": "JEE Main 2025 Session 2 - 7 April Shift 2 (English & Hindi)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20250715181705.pdf",
+      "pageCount": 66,
+      "byteLength": 4944893,
+      "sha256": "A74EE5541150FF1623A6731352E1048D157217880A1D0AA9D473017159AB5987"
+    },
+    {
+      "title": "JEE Main 2025 Session 2 - 8 April Shift 2 (English & Hindi)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20250715181556.pdf",
+      "pageCount": 62,
+      "byteLength": 4528607,
+      "sha256": "0E5F20F6D1414488698FDDE7F1A9A1EFBAEF8CED4A0072701C9965ABE58A947E"
+    }
+  ]
+}
