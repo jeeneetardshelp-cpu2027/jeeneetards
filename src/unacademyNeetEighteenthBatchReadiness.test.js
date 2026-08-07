@@ -19,7 +19,7 @@ const sha256 = (value) => createHash("sha256").update(value).digest("hex");
 const decisionId = "8f19ac66-a1b4-4304-8a6f-468131f63732";
 
 describe("Unacademy NEET eighteenth-batch readiness", () => {
-  it("pins the official channel and remains owner-approval-only", () => {
+  it("pins the official channel and records the completed guarded import", () => {
     expect(review).toMatchObject({
       review_status: "owner_approval_required",
       proposed_decision_id: decisionId,
@@ -30,8 +30,10 @@ describe("Unacademy NEET eighteenth-batch readiness", () => {
         playlist_count: 736,
       },
     });
-    expect(readiness).toContain("Prepared and reviewed locally only");
-    expect(readiness).toContain("No production write and no `release` push occurred");
+    expect(readiness).toContain("CONTENT IMPORT COMPLETED IN PRODUCTION");
+    expect(readiness).toContain(decisionId);
+    expect(readiness).toContain("No schema migration, faculty-link write");
+    expect(readiness).toContain("`release` push occurred");
   });
 
   it("pins the fresh catalogue and both JEE boundaries", () => {
@@ -187,5 +189,32 @@ describe("Unacademy NEET eighteenth-batch readiness", () => {
     });
     expect(readiness).toContain(sha256(reviewSource));
     manifestSources.forEach((source) => expect(readiness).toContain(sha256(source)));
+  });
+
+  it("records exact course deltas and the decisive production postflight", () => {
+    expect(readiness).toContain("| 1 | 430 |");
+    expect(readiness).toContain("| 2 | 431 |");
+    expect(readiness).toContain("| 3 | 432 |");
+    expect(readiness).toContain("`4796`-`4798`");
+    expect(readiness).toContain("`4799`-`4806`");
+    expect(readiness).toContain("`4807`-`4813`");
+    expect(readiness).toContain("2026-08-07T10:04:33.957866Z");
+    expect(readiness).toContain("all three approved source playlists exist exactly once");
+    expect(readiness).toContain("all 18 retained YouTube video IDs exist exactly once");
+    expect(readiness).toContain("413 / 4,723 / 4,729 / 263");
+    expect(readiness).toContain("82 / 1,304");
+    expect(readiness).toContain("30eee4a4a6842e5beeb7c97083d7f812");
+    expect(readiness).toContain("212 / 2,848");
+    expect(readiness).toContain("9eea2b44f0b19c08cc0907c57e091342");
+  });
+
+  it("records anonymous public browse and player evidence", () => {
+    expect(readiness).toContain("https://www.jeeneetard.com/course/430/chapter/119");
+    expect(readiness).toContain("https://www.jeeneetard.com/course/431/chapter/38");
+    expect(readiness).toContain("https://www.jeeneetard.com/course/432/chapter/111");
+    expect(readiness).toContain("5jycoZ1eYKE");
+    expect(readiness).toContain("gTlmFUV9mhA");
+    expect(readiness).toContain("Lesson 7 of 7");
+    expect(readiness).toContain("playlist_teachers` rows and quality-review transitions remain");
   });
 });
