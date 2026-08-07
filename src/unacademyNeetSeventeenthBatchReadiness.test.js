@@ -15,7 +15,7 @@ const sha256 = (value) => createHash("sha256").update(value).digest("hex");
 const decisionId = "ae4a8549-84d5-4784-91ed-2f56e4208d88";
 
 describe("Unacademy NEET seventeenth-batch readiness", () => {
-  it("pins the official channel and keeps production behind owner approval", () => {
+  it("pins the official channel and records the completed production import", () => {
     expect(review).toMatchObject({
       review_status: "owner_approval_required",
       proposed_decision_id: decisionId,
@@ -26,9 +26,22 @@ describe("Unacademy NEET seventeenth-batch readiness", () => {
         playlist_count: 736,
       },
     });
-    expect(readiness).toContain("PREPARED ONLY — OWNER APPROVAL REQUIRED");
-    expect(readiness).toContain("No production write");
+    expect(readiness).toContain("CONTENT IMPORT COMPLETED IN PRODUCTION");
+    expect(readiness).toContain("course `429`");
     expect(readiness).toContain("`release` push occurred");
+  });
+
+  it("records the exact additive delta and unchanged JEE boundaries", () => {
+    expect(readiness).toContain("410 playlists / 4,705 videos / 4,711 memberships / 263 chapters");
+    expect(readiness).toContain("+1 / +6 / +6 / +0");
+    expect(readiness).toContain("1 ok / 0 review / 0 blocked");
+    expect(readiness).toContain("82 / 1,304");
+    expect(readiness).toContain("30eee4a4a6842e5beeb7c97083d7f812");
+    expect(readiness).toContain("212 / 2,848");
+    expect(readiness).toContain("9eea2b44f0b19c08cc0907c57e091342");
+    expect(readiness).toContain("https://www.jeeneetard.com/course/429/chapter/105");
+    expect(readiness).toContain("official YouTube iframe for `bmF2tmenuMI`");
+    expect(readiness).toContain("playlist_teachers` link for course 429 remains absent");
   });
 
   it("pins the fresh public catalogue and protected JEE boundaries", () => {
