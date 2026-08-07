@@ -2,9 +2,8 @@
 
 ## Status
 
-Prepared and locally rehearsed only. No production SQL or `release` push was run.
-Production application requires a separate owner approval matching the exact
-SHA-256 below, followed by another fresh PITR and exact-baseline check.
+Applied successfully to production at `2026-08-07 11:31 IST` under the separate
+exact-hash owner approval. No `release` push occurred.
 
 ## Reviewed scope
 
@@ -67,12 +66,33 @@ target and its immutable before/after audit row before commit.
 - ESLint and `git diff --check` passed;
 - no production SQL or `release` push occurred during preparation.
 
-## Next gate
+## Production execution evidence
 
-Apply the exact artifact only after a fresh PITR check, exact-baseline preflight,
-and separate owner approval matching its SHA-256. Stop on any mismatch. Do not
-rerun the completed faculty-link artifact, and do not push `release`.
+Before execution, the signed-in Supabase dashboard confirmed active seven-day
+PITR with restore availability through `07 Aug 2026, 11:01:39 IST` (earliest
+retained point `01 Aug 2026, 00:02:34 IST`). The exact local artifact reproduced
+the approved SHA-256 before it was loaded into a fresh SQL query.
 
-Approve with:
+The independent preflight matched every encoded guard:
 
-`Approve applying Unacademy NEET sixteenth-batch quality-review artifact SHA-256 55470c5d03f5f4fdd0763a47d31dd898b24b6895c134d6e7fbf33e4955eea00d to production, after a fresh PITR and exact-baseline check; stop on any mismatch; no release push.`
+- catalogue `409 / 4,699 / 4,705 / 263` and 92 chapter-class rows;
+- 34 teachers / 54 aliases / 35 institute links / 35 subject links / 34 goal
+  links / 164 course-teacher links / 32 quality reviews;
+- target courses had the exact three faculty links, zero quality reviews, and
+  only `title-review`, `source-title`, and `faculty-credit` missing;
+- protected JEE remained `82 / 1,304 / 30eee4a4a6842e5beeb7c97083d7f812`.
+
+The guarded transaction committed and returned all three target rows. An
+independent postflight then confirmed:
+
+- catalogue, taxonomy, registry, and faculty-link totals unchanged;
+- quality reviews `32 -> 35`, with exactly one new review for each of courses
+  426-428;
+- canonical titles are Applications of Biotechnology, The Living World, and
+  Reproductive Health;
+- all three courses are `approved / identified` with no missing quality fields;
+- exact links remain `426 -> seep-pahuja` and `427-428 -> sachin-kapur`;
+- protected JEE remains exactly
+  `82 / 1,304 / 30eee4a4a6842e5beeb7c97083d7f812`.
+
+The completed artifact must not be rerun. No `release` push occurred.
