@@ -86,14 +86,33 @@ activation.
 - rollback restores the three-mode contract only in test/staging and refuses
   production.
 
+## Rollback-only staging package
+
+`npm run build:forum-beta-staging` generates
+`staging/forum_closed_beta_v1_rehearsal/rollback_rehearsal.sql` from the pinned
+preflight, audit, migration, postflight, and rollback sources. The generated
+manifest records every source hash and the artifact hash. The rehearsal:
+
+- refuses anything except an explicitly marked disposable staging project;
+- requires the installed forum baseline, mode `off`, and empty forum data;
+- runs with genuine `authenticated` and `anon` PostgreSQL roles;
+- proves member writing, non-member denial, safety reporting, private-table
+  denial, admin guarding, public reads, open-mode compatibility, and read-only
+  pausing;
+- ends with one unconditional `ROLLBACK` and an all-true restoration row.
+
+This remains local evidence only. It has not been run against Supabase and
+cannot prove real HTTP/PostgREST JWT behavior.
+
 ## Remaining gates
 
 This SQL must not be applied merely because local tests pass. The next reviewed
 rounds are:
 
 1. independent SQL diff review;
-2. generated staging package plus PGlite rehearsal;
-3. genuine staging Auth/PostgREST JWT proof for admin, member, non-member, and
+2. independent review of the generated staging package and PGlite rehearsal;
+3. approved disposable-staging execution, followed by genuine staging
+   Auth/PostgREST JWT proof for admin, member, non-member, and
    anonymous roles;
 4. JavaScript UI support for the `beta` mode, including draft preservation and
    a clear non-member state;

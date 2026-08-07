@@ -1,0 +1,30 @@
+{
+  "status": "rollback-only-not-authorized-for-persistent-apply",
+  "generatedAt": "2026-08-07T07:48:54.409Z",
+  "sources": {
+    "preflight": {
+      "path": "src/migrations/forum_closed_beta_v1_preflight.sql",
+      "sha256": "a920d6ac100002d9d5d469055c8cf0f31b27c8b73a46af5422c88755ba142bb9"
+    },
+    "audit": {
+      "path": "src/migrations/forum_closed_beta_v1_audit.sql",
+      "sha256": "fc4858c213075dee47807608d02db2c7675bce566daad6d347c9d66e3a5aa352"
+    },
+    "migration": {
+      "path": "src/migrations/forum_closed_beta_v1.sql",
+      "sha256": "b750988752e3056bab1e149d1abaca8fbeda8360500677d8179db50ce82ac9ec"
+    },
+    "postflight": {
+      "path": "src/migrations/forum_closed_beta_v1_postflight.sql",
+      "sha256": "08375e83443c3eb12efc292f355dfba2f4d6b56f87ec05169b9e534faeaca020"
+    },
+    "rollback": {
+      "path": "src/migrations/forum_closed_beta_v1_rollback.sql",
+      "sha256": "8b3fe83b4d5f5580e0e24bd0e7010f9d222a895c6e7879cc94746ac0b876e3cb"
+    }
+  },
+  "artifact": {
+    "path": "staging/forum_closed_beta_v1_rehearsal/rollback_rehearsal.sql",
+    "sha256": "aea4a176436d0ec63ed8aece3fb00fde909953bd0ee22cc06412b6f82a6bbde2"
+  }
+}
