@@ -1,0 +1,80 @@
+{
+  "reviewed_on": "2026-08-07",
+  "review_status": "owner_approval_required",
+  "proposed_decision_id": "ae4a8549-84d5-4784-91ed-2f56e4208d88",
+  "channel": {
+    "name": "Unacademy NEET",
+    "handle": "@UnacademyNEET",
+    "youtube_channel_id": "UCdQwYksctqqiRwqp3PiJMWA",
+    "production_institute_id": 147,
+    "playlist_count": 736
+  },
+  "preflight": {
+    "captured_at": "2026-08-07T06:25:14.075Z",
+    "playlists": 409,
+    "videos": 4699,
+    "memberships": 4705,
+    "chapters": 263,
+    "chapter_class_levels": 92,
+    "teachers": 34,
+    "faculty_links": 164,
+    "quality_reviews_last_confirmed": 35,
+    "source_collision_count": 0,
+    "retained_video_collision_count": 0,
+    "protected_jee_courses": 82,
+    "protected_jee_memberships": 1304,
+    "protected_jee_fingerprint": "30eee4a4a6842e5beeb7c97083d7f812",
+    "rolling_jee_courses": 212,
+    "rolling_jee_memberships": 2848,
+    "rolling_jee_fingerprint": "9eea2b44f0b19c08cc0907c57e091342"
+  },
+  "candidates": [
+    {
+      "order": 1,
+      "youtube_playlist_id": "PLsgHooHkqhhMpUzdl2c1YMGYdrTxCCXFe",
+      "source_title": "NEET: Breathing & Exchange of Gases - Playlist | Class 11 | Unacademy NEET | Live Daily 2.0 | NEET Biology | Dr Sachin Kapur",
+      "source_snapshot_sha256": "949828a53683731df930b75a821d49fc60983829bc7a45a9416c282e2407d088",
+      "source_item_count": 10,
+      "subject_id": 4,
+      "chapter_id": 105,
+      "chapter": "Breathing and Exchange of Gases",
+      "mapping_rationale": "The official playlist contains a complete L1-L6 lecture sequence for Breathing and Exchange of Gases; all four following quiz or mixed-chapter practice rows are excluded.",
+      "class_level_id": 2,
+      "class_level": "class-11",
+      "teacher_id": 38,
+      "teacher": "Dr. Sachin Kapur",
+      "teacher_verified": true,
+      "teacher_record_status": "normalized_record_present",
+      "source_collision_count": 0,
+      "video_collision_count": 0,
+      "retained_source_positions": [1, 2, 3, 4, 5, 6],
+      "excluded_source_positions": [7, 8, 9, 10],
+      "videos": [
+        { "source_position": 1, "youtube_video_id": "bmF2tmenuMI", "title": "NEET: Breathing & Exchange of Gases - L1 | Class 11 | Live Daily 2.0 | Unacademy NEET | Sachin Sir", "duration_seconds": 3560, "embedding_status": "embeddable" },
+        { "source_position": 2, "youtube_video_id": "fG72ty2A2tg", "title": "NEET: Breathing & Exchange of Gases - L2 | Class 11 | Live Daily 2.0 | Unacademy NEET | Sachin Sir", "duration_seconds": 3616, "embedding_status": "embeddable" },
+        { "source_position": 3, "youtube_video_id": "at_rKPlIXoo", "title": "NEET: Breathing & Exchange of Gases - L3 | Class 11 | Live Daily 2.0 | Unacademy NEET | Sachin Sir", "duration_seconds": 3407, "embedding_status": "embeddable" },
+        { "source_position": 4, "youtube_video_id": "5Jls9m-jDjM", "title": "NEET: Breathing & Exchange of Gases - L4 | Class 11 | Live Daily 2.0 | Unacademy NEET | Sachin Sir", "duration_seconds": 3666, "embedding_status": "embeddable" },
+        { "source_position": 5, "youtube_video_id": "Ev3t9nip0PU", "title": "NEET: Breathing & Exchange of Gases - L5 | Class 11 | Live Daily 2.0 | Unacademy NEET | Sachin Sir", "duration_seconds": 3269, "embedding_status": "embeddable" },
+        { "source_position": 6, "youtube_video_id": "zNpJSgVOR1M", "title": "NEET: Breathing & Exchange of Gases - L6 | Class 11 | Live Daily 2.0 | Unacademy NEET | Sachin Sir", "duration_seconds": 3346, "embedding_status": "embeddable" }
+      ],
+      "exclusions": [
+        { "source_position": 7, "youtube_video_id": "CVdTTRSt_0A", "title": "NEET: Breathing & Exchange of Gases - Quiz 1 | Menti Quiz | Quiz 2.0 | Unacademy NEET | Pradeep Sir", "duration_seconds": 2051, "reason": "quiz" },
+        { "source_position": 8, "youtube_video_id": "Bl-YgxRq_fQ", "title": "NEET: Breathing & Exchange of Gases - Quiz 2 | Menti Quiz | Quiz 2.0 | Unacademy NEET | Pradeep Sir", "duration_seconds": 2420, "reason": "quiz" },
+        { "source_position": 9, "youtube_video_id": "Qk3QYf6QHjo", "title": "NEET Biology: Human Physiology - Mega Menti Quiz | LIVE Quiz 2.0 | Unacademy NEET | Pradeep Sir", "duration_seconds": 2000, "reason": "mixed_chapter_quiz" },
+        { "source_position": 10, "youtube_video_id": "fAfY2QDcc60", "title": "NEET: Breathing & Exchange of Gases - Quiz 3 | Menti Quiz | Quiz 2.0 | Unacademy NEET | Seep Ma'am", "duration_seconds": 3190, "reason": "quiz" }
+      ]
+    }
+  ],
+  "teacher_normalization_gate": {
+    "status": "satisfied",
+    "matching_production_teacher_records": 1,
+    "teacher_id": 38,
+    "teacher_slug": "sachin-kapur",
+    "teacher_verified": true,
+    "note": "The verified normalized Dr. Sachin Kapur record was created by the separately approved sixteenth-batch faculty package. This candidate still requires an owner-reviewed playlist-specific attribution decision before content import."
+  },
+  "deferred": [
+    "Photosynthesis retains Biodiversity contamination and duplicate Lecture 3 ambiguity.",
+    "Organisms and Populations, Aldehydes Ketones and Carboxylic Acids, Ionic Equilibrium, Excretory Products and Their Elimination, and General Principles and Processes of Isolation of Elements retain their recorded source blockers."
+  ]
+}
