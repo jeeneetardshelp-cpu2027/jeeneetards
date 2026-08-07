@@ -1,7 +1,9 @@
 # Forum closed-beta v1 persistent staging evidence
 
-Run date: 2026-08-07  
-Disposable project: `essmxonestbrgmgrtywn` (`edu-library-faculty-staging`)  
+Run date: 2026-08-07
+
+Disposable project: `essmxonestbrgmgrtywn` (`edu-library-faculty-staging`)
+
 Reviewed package commit: `d5204d1feb793d872b87a6c998f35886a4d4f13f`
 
 Production was not contacted. The frontend release flag was not changed.
