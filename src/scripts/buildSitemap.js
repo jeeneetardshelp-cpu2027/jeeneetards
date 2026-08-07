@@ -14,12 +14,13 @@ import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
 import { TEST_SECTIONS } from "../testPlatforms.js";
 import { CLASS_LEVELS_BY_GOAL } from "../classLevels.js";
-import { RELEASE_CAPABILITIES } from "../releaseCapabilities.js";
+import { RELEASE_CAPABILITIES, RELEASE_FEATURES } from "../releaseCapabilities.js";
 
 export const BASE = "https://www.jeeneetard.com";
 export const STATIC_ROUTES = [
   "/", "/browse", "/explore", "/tests", "/terms", "/privacy",
   ...(RELEASE_CAPABILITIES.studyMaterials ? ["/materials"] : []),
+  ...(RELEASE_FEATURES.forum ? ["/forum"] : []),
   // One entry per exam that actually has sources. An exam with an empty list
   // is deliberately absent: pageMetadata marks it noindex, and a sitemap must
   // never advertise a URL that tells Google not to index it.

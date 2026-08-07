@@ -27,5 +27,7 @@ describe("Footer contact and feedback", () => {
     expect(document.body.textContent).toContain(
       "Have feedback or an idea for a feature that would make the website better?",
     );
+    expect(screen.getByRole("link", { name: "Student forum" }).getAttribute("href"))
+      .toBe("/forum");
   });
 });

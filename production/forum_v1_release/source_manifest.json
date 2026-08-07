@@ -1,0 +1,101 @@
+{
+  "status": "prepared-only-not-authorized-for-production-execution",
+  "targetProjectRef": "kezelafqhgqrprpadmlf",
+  "sourcePolicy": "exact reviewed bodies; outer transaction wrappers removed only inside atomic installer",
+  "generator": {
+    "path": "src/scripts/buildForumV1ProductionPackage.js",
+    "sha256": "430a9f4723ea9beb9d32418192652f86963f00c5ee2bf6cc2f011e77e3d5095a"
+  },
+  "sources": {
+    "corePreflight": {
+      "path": "src/migrations/forum_v1_preflight.sql",
+      "sha256": "3e009b762338b29d9f508addbdbef84a1689026a8e14100c632c48baf43f4d70"
+    },
+    "coreMigration": {
+      "path": "src/migrations/forum_v1.sql",
+      "sha256": "9fcf733655cd268589915254078c1e1d6d68da5fd252d5b9d73b290b283d9866"
+    },
+    "corePostflight": {
+      "path": "src/migrations/forum_v1_postflight.sql",
+      "sha256": "3a6defe5610c8b7c54504487498bdebc7fe28f500e3d3501cb7e82d3d453d583"
+    },
+    "coreRollback": {
+      "path": "src/migrations/forum_v1_rollback.sql",
+      "sha256": "a42f830a1ff3b1ade5b85b396bacc452eccbecc3be554458c8e38b06b446ab2a"
+    },
+    "usernamePreflight": {
+      "path": "src/migrations/forum_username_claim_v1_preflight.sql",
+      "sha256": "085a2dbbecb19a2bdb8a4a6338bbf5a5d164e07170e39cc8a30536ce09cceb75"
+    },
+    "usernameAudit": {
+      "path": "src/migrations/forum_username_claim_v1_audit.sql",
+      "sha256": "496e0d6ce4399b685a2dec13786293cc70c5c56b002b4f7c20c3fd1083d60624"
+    },
+    "usernameMigration": {
+      "path": "src/migrations/forum_username_claim_v1.sql",
+      "sha256": "6a943438cb3b047ca24d2301d74771e5f1699c4df4d7bc58905af9782f200b72"
+    },
+    "usernamePostflight": {
+      "path": "src/migrations/forum_username_claim_v1_postflight.sql",
+      "sha256": "3acb1db1efdd01154224f91c2a640bc9b9b77da9ed0978ec2a8950beb917bbda"
+    },
+    "moderationPreflight": {
+      "path": "src/migrations/forum_moderation_context_v1_preflight.sql",
+      "sha256": "9346899077404d94440b71f5948c9cfe3e19a85f3981f6678d02051ab3c4e088"
+    },
+    "moderationAudit": {
+      "path": "src/migrations/forum_moderation_context_v1_audit.sql",
+      "sha256": "51180449732975a434d9b4a455a6643f36f673859765befe752d12f6991a753c"
+    },
+    "moderationMigration": {
+      "path": "src/migrations/forum_moderation_context_v1.sql",
+      "sha256": "3e3c1c0c6399ed1fe3f05644869ae866876d9e494000bacc5406d16f65ca40db"
+    },
+    "moderationPostflight": {
+      "path": "src/migrations/forum_moderation_context_v1_postflight.sql",
+      "sha256": "8e4bcf635033aabaac581ef2c1ffb49ebc4622beea879832fb8913b9d9c5e83a"
+    },
+    "dismissalPreflight": {
+      "path": "src/migrations/forum_report_dismissal_v1_preflight.sql",
+      "sha256": "acddafe571da9a2aa580446227ed33c16c43f757f97e37da3c564355222bc5e0"
+    },
+    "dismissalAudit": {
+      "path": "src/migrations/forum_report_dismissal_v1_audit.sql",
+      "sha256": "f51cce8f708b6a8689a070049e4a516cf4617f250c7476ec2e3b6daf4772f4b3"
+    },
+    "dismissalMigration": {
+      "path": "src/migrations/forum_report_dismissal_v1.sql",
+      "sha256": "b8cd78449234a6ac5ab38c1abf8281a6dcf1213b68db3a478b1607e6b11c2480"
+    },
+    "dismissalPostflight": {
+      "path": "src/migrations/forum_report_dismissal_v1_postflight.sql",
+      "sha256": "592b0aa5c32d7a42f26ffc25988115d1b059f3dc41193c47c75b1e648d57b084"
+    }
+  },
+  "artifacts": {
+    "preflight.sql": {
+      "path": "production/forum_v1_release/preflight.sql",
+      "sha256": "19c755d50e01e4c427e3719919b9921596dbdd031d67761f9ddceda730d3e6af"
+    },
+    "audit.sql": {
+      "path": "production/forum_v1_release/audit.sql",
+      "sha256": "e00aacff3bc44249624162b6638f196120078ca4123bfa9fa5d7526db7144c96"
+    },
+    "install.sql": {
+      "path": "production/forum_v1_release/install.sql",
+      "sha256": "d71584c4daa74fc8b674113cf937b6aa7e18ac9eb98250c13bf55e546771730e"
+    },
+    "postflight.sql": {
+      "path": "production/forum_v1_release/postflight.sql",
+      "sha256": "c43813b0bb4a80f0bc6e4d0949ebd0feef739a85f5a7bd1e5b416be2425fa15c"
+    },
+    "rollback.sql": {
+      "path": "production/forum_v1_release/rollback.sql",
+      "sha256": "4900f1314d02cd4c61d942dd053ab71460c54234dae93cebc7a52b30bf7bbce7"
+    },
+    "README.md": {
+      "path": "production/forum_v1_release/README.md",
+      "sha256": "5a5ef3a3084979c7720b31bd0ebf3d08b16d80ee05cef14aa651b3ddcb6e8bae"
+    }
+  }
+}

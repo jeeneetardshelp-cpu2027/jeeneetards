@@ -403,7 +403,10 @@ export function Drawer({
 }) {
   const panelRef = useRef(null);
   const closeRef = useRef(null);
+  const onCloseRef = useRef(onClose);
   const titleId = useId();
+
+  useEffect(() => { onCloseRef.current = onClose; }, [onClose]);
 
   useEffect(() => {
     if (!open) return undefined;
@@ -415,7 +418,7 @@ export function Drawer({
     const onKeyDown = (event) => {
       if (event.key === "Escape") {
         event.preventDefault();
-        onClose();
+        onCloseRef.current();
         return;
       }
       if (event.key !== "Tab" || !panelRef.current) return;
@@ -440,7 +443,7 @@ export function Drawer({
       document.body.style.overflow = previousOverflow;
       returnTarget?.focus?.();
     };
-  }, [open, onClose, returnFocusTo]);
+  }, [open, returnFocusTo]);
 
   if (!open) return null;
 

@@ -33,6 +33,7 @@ describe("shared shell accessibility and theme", () => {
     expect(screen.queryByRole("button", { name: "Relative motion" })).toBeNull();
     expect(screen.getByText("Relative motion").getAttribute("aria-current")).toBe("page");
     expect(screen.getAllByRole("navigation", { name: "Primary navigation" })).toHaveLength(2);
+    expect(screen.getAllByRole("link", { name: "Forum" })).toHaveLength(2);
   });
 
   // Dark is the product default, not a mirror of prefers-color-scheme: it is

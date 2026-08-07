@@ -45,6 +45,7 @@ describe("repository onboarding contract", () => {
 
   it("documents which public write features are enabled and which remain disabled", () => {
     expect(RELEASE_FEATURES).toEqual({
+      forum: true,
       studentAccounts: true,
       courseRatingSubmission: true,
       reviewDisplay: true,
@@ -52,6 +53,7 @@ describe("repository onboarding contract", () => {
     });
     for (const label of [
       "Public student accounts", "Rating submission", "Review display", "Content reporting",
+      "Student forum",
     ]) {
       expect(readme).toMatch(new RegExp(`\\| ${label} \\| Enabled \\|`));
     }
