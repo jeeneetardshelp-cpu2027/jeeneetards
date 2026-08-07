@@ -14,6 +14,8 @@ const sources = {
   migration: "src/migrations/forum_closed_beta_v1.sql",
   postflight: "src/migrations/forum_closed_beta_v1_postflight.sql",
   rollback: "src/migrations/forum_closed_beta_v1_rollback.sql",
+  provision: "staging/forum_closed_beta_v1_rehearsal/provision_test_accounts.sql",
+  teardown: "staging/forum_closed_beta_v1_rehearsal/teardown_test_accounts.sql",
 };
 const outputDir = resolve(root, "staging/forum_closed_beta_v1_rehearsal");
 const outputName = "rollback_rehearsal.sql";
@@ -341,12 +343,12 @@ production installation, beta membership provisioning, or a mode change.
 - The clone needs one admin and two non-admin accounts older than ten minutes.
 - Stop traffic to the disposable project for the duration of the rehearsal.
 
-If the disposable clone is empty, use the separately reviewed
-\`staging/forum_v1_rehearsal/provision_test_accounts.sql\` first. It creates
-five non-login \`@staging.invalid\` fixtures behind its own staging guard. Run
-the paired \`teardown_test_accounts.sql\` immediately after this rehearsal and
-confirm both fixture-removal fields are true. Neither credential nor a service
-role key belongs in this package.
+If the disposable clone is empty, run this package's reviewed
+\`provision_test_accounts.sql\` first. It creates three non-login
+\`@staging.invalid\` fixtures behind its own persistent-forum staging guard.
+Run the paired \`teardown_test_accounts.sql\` immediately after this rehearsal
+and confirm both fixture-removal fields are true. Neither credential nor a
+service role key belongs in this package.
 
 ## Run
 

@@ -8,6 +8,8 @@ const artifact = readFileSync(`${directory}/rollback_rehearsal.sql`, "utf8");
 const hashLine = readFileSync(`${directory}/rollback_rehearsal.sha256.txt`, "utf8").trim();
 const manifest = JSON.parse(readFileSync(`${directory}/source_manifest.json`, "utf8"));
 const readme = readFileSync(`${directory}/README.md`, "utf8");
+const provision = readFileSync(`${directory}/provision_test_accounts.sql`, "utf8");
+const teardown = readFileSync(`${directory}/teardown_test_accounts.sql`, "utf8");
 const sha256 = (value) => createHash("sha256").update(value).digest("hex");
 const read = (path) => readFileSync(path, "utf8").replace(/\r\n/g, "\n");
 
@@ -48,6 +50,11 @@ describe("forum closed-beta staging rehearsal package", () => {
     expect(readme).toContain("provision_test_accounts.sql");
     expect(readme).toContain("teardown_test_accounts.sql");
     expect(readme).toContain("@staging.invalid");
+    expect(provision).toContain("reviewed persistent forum baseline is incomplete");
+    expect(provision).toContain("staging auth/profile store is not empty");
+    expect(teardown).toContain("beta schema persisted");
+    expect(teardown).toContain("exact three-user beta fixture set was not found");
+    expect(provision).not.toContain("remove the forum schema before provisioning fixtures");
   });
 
   it("runs the complete delta proof and restores the persistent baseline", async () => {
@@ -60,7 +67,14 @@ describe("forum closed-beta staging rehearsal package", () => {
         create schema auth;
         create table auth.users (
           id uuid primary key,
+          aud varchar,
+          role varchar,
+          email varchar,
+          email_confirmed_at timestamptz,
+          raw_app_meta_data jsonb,
+          raw_user_meta_data jsonb,
           created_at timestamptz not null default now()
+          ,updated_at timestamptz
         );
         create function auth.uid() returns uuid language sql stable as $$
           select nullif(current_setting('request.jwt.claim.sub', true), '')::uuid
@@ -76,6 +90,33 @@ describe("forum closed-beta staging rehearsal package", () => {
           is_admin boolean not null default false,
           created_at timestamptz not null default now()
         );
+        create function public.handle_new_user() returns trigger
+        language plpgsql security definer set search_path = public as $$
+        begin
+          insert into public.profiles (id, full_name, avatar_url)
+          values (
+            new.id,
+            new.raw_user_meta_data ->> 'full_name',
+            new.raw_user_meta_data ->> 'avatar_url'
+          );
+          return new;
+        end;
+        $$;
+        create trigger on_auth_user_created after insert on auth.users
+          for each row execute function public.handle_new_user();
+        create function public.protect_profile_admin_flag() returns trigger
+        language plpgsql security definer set search_path = '' as $$
+        begin
+          if coalesce(auth.role(), '') <> 'service_role'
+             and new.is_admin is distinct from old.is_admin then
+            raise exception 'profiles.is_admin may only be changed by service_role';
+          end if;
+          return new;
+        end;
+        $$;
+        create trigger trg_protect_profile_admin_flag
+          before update on public.profiles
+          for each row execute function public.protect_profile_admin_flag();
         create function public.is_admin() returns boolean
         language sql stable security definer set search_path = '' as $$
           select exists (
@@ -87,17 +128,10 @@ describe("forum closed-beta staging rehearsal package", () => {
           name text not null check (name in ('production','staging','test'))
         );
         insert into public.app_environment (id, name) values (true, 'staging');
-        insert into auth.users (id, created_at) values
-          ('32000000-0000-4000-8000-000000000001', now() - interval '1 day'),
-          ('32000000-0000-4000-8000-000000000002', now() - interval '1 day'),
-          ('32000000-0000-4000-8000-000000000003', now() - interval '1 day');
-        insert into public.profiles (id, username, is_admin) values
-          ('32000000-0000-4000-8000-000000000001', 'stage_admin', true),
-          ('32000000-0000-4000-8000-000000000002', 'stage_member', false),
-          ('32000000-0000-4000-8000-000000000003', 'stage_outsider', false);
       `);
       for (const source of baselineSources) await pg.exec(read(source));
 
+      await pg.exec(provision);
       await pg.exec(artifact);
 
       const restored = await pg.query(`
@@ -108,8 +142,8 @@ describe("forum closed-beta staging rehearsal package", () => {
           (select count(*)::integer from public.forum_posts) as posts,
           (select count(*)::integer from public.forum_comments) as comments,
           (select count(*)::integer from public.forum_reports) as reports,
-          (select count(*)::integer from public.profiles
-            where username like 'cb_%') as changed_usernames
+          (select count(*)::integer from public.profiles) as profiles,
+          (select count(*)::integer from auth.users) as auth_users
       `);
       expect(restored.rows[0]).toEqual({
         mode: "off",
@@ -118,8 +152,17 @@ describe("forum closed-beta staging rehearsal package", () => {
         posts: 0,
         comments: 0,
         reports: 0,
-        changed_usernames: 0,
+        profiles: 3,
+        auth_users: 3,
       });
+
+      await pg.exec(teardown);
+      const cleaned = await pg.query(`
+        select
+          (select count(*)::integer from auth.users) as auth_users,
+          (select count(*)::integer from public.profiles) as profiles
+      `);
+      expect(cleaned.rows[0]).toEqual({ auth_users: 0, profiles: 0 });
     } finally {
       await pg.close();
     }
