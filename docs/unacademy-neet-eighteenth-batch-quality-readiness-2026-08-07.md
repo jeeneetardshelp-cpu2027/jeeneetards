@@ -2,9 +2,8 @@
 
 ## Status
 
-Prepared only. Production remains untouched by this quality-review package. A
-separate owner approval of the final exact SHA-256 is required before execution;
-no `release` push is in scope.
+Applied successfully to production at `2026-08-07 17:12 IST` under the separate
+exact-hash owner approval. No `release` push occurred.
 
 ## Reviewed scope
 
@@ -41,11 +40,11 @@ Read-only evidence refreshed at `2026-08-07T11:11:27.566Z`:
 - protected original JEE remains 82 courses / 1,304 memberships / fingerprint
   `30eee4a4a6842e5beeb7c97083d7f812`.
 
-## Prepared artifact
+## Approved artifact
 
 - SQL: `docs/sql/unacademy_neet_eighteenth_batch_quality_review_2026-08-07.sql`;
 - SHA-256: `b6e4421a027bd50e8639302f23f204635876a1f17f1855c2da7c400fa9f7a442`;
-- target after separate approval: production project `kezelafqhgqrprpadmlf`;
+- target: production project `kezelafqhgqrprpadmlf`;
 - expected transition: capture three source titles, approve three canonical
   titles, identify the already-linked faculty, and append three immutable
   quality-review rows;
@@ -67,11 +66,41 @@ target and its immutable before/after audit row before commit.
 - focused package validation: 1 file / 5 tests passed;
 - full controlled-concurrency regression: 279 files / 2,124 tests passed;
 - ESLint, production build, and `git diff --check` passed;
-- no production SQL was executed during preparation. No `release` push occurred.
+- no production SQL was executed during preparation; the later approved
+  production execution is recorded below. No `release` push occurred.
 
-## Execution gate
+## Production execution evidence
 
-Before any future production execution, recheck active PITR in the signed-in
-Supabase dashboard, open a fresh SQL connection, independently confirm the exact
-encoded baseline and protected JEE boundary, and reproduce the approved SHA-256.
-Stop without writing on any mismatch. The completed artifact must not be rerun.
+Immediately before execution, the signed-in Supabase dashboard confirmed active
+seven-day PITR with restore availability through `07 Aug 2026, 16:47:54 IST`
+(earliest retained point `01 Aug 2026, 00:02:34 IST`). The exact local artifact
+reproduced the owner-approved SHA-256 before it was loaded into a separate blank
+SQL query.
+
+The independent read-only preflight matched every encoded guard:
+
+- catalogue `413 / 4,723 / 4,729 / 263` and 92 chapter-class rows;
+- 34 teachers / 54 aliases / 35 institute links / 35 subject links / 34 goal
+  links / 168 course-teacher links / 36 quality reviews;
+- courses 430-432 had the exact 3 / 8 / 7 source-ordered lesson IDs, exact
+  chapter mappings, exact instructor links, zero reviews, and only
+  `title-review`, `source-title`, and `faculty-credit` missing;
+- protected JEE was exactly
+  `82 / 1,304 / 30eee4a4a6842e5beeb7c97083d7f812`.
+
+The guarded transaction committed and returned exactly the three target rows.
+An independent postflight in another blank query confirmed:
+
+- catalogue, taxonomy, registry, and faculty-link totals unchanged;
+- quality reviews `36 -> 39`, exactly one audit row per target;
+- canonical titles are Photosynthesis in Higher Plants, Ionic Equilibrium, and
+  Excretory Products and Their Elimination;
+- all three courses are `approved / identified` with no missing quality fields;
+- exact instructor links remain `430 -> pradeep-singh`, `431 -> ashwani-tyagi`,
+  and `432 -> sachin-kapur`;
+- every preserved source title matches its audit before-state and every
+  canonical title matches its audit after-state;
+- protected JEE remains exactly
+  `82 / 1,304 / 30eee4a4a6842e5beeb7c97083d7f812`.
+
+The completed artifact must not be rerun. No `release` push occurred.

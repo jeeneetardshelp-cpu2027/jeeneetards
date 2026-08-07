@@ -320,13 +320,12 @@ describe("Unacademy NEET eighteenth-batch quality-review package", () => {
     expect(sql.match(/30eee4a4a6842e5beeb7c97083d7f812/g)).toHaveLength(2);
   });
 
-  it("pins the immutable hash and prepared-only execution boundary", () => {
+  it("pins the immutable hash and successful production evidence", () => {
     expect(createHash("sha256").update(sql, "utf8").digest("hex")).toBe(expectedHash);
     expect(readiness).toContain(`SHA-256: \`${expectedHash}\``);
-    expect(readiness).toContain("Prepared only");
-    expect(readiness).toContain("Production remains untouched");
+    expect(readiness).toContain("Applied successfully to production");
     expect(readiness).toContain("36 -> 39");
-    expect(readiness).toContain("separate owner approval of the final exact SHA-256");
+    expect(readiness).toContain("exact-hash owner approval");
     expect(readiness).toContain("The completed artifact must not be rerun");
     expect(readiness).toContain("No `release` push occurred");
     expect(readiness).toContain("30eee4a4a6842e5beeb7c97083d7f812");
