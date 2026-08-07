@@ -11,27 +11,34 @@ const manifest = JSON.parse(readFileSync(
 ));
 
 describe("JEE Main 2024 Session 1 official question-paper package", () => {
-  it("records only the complete, visually verified official bilingual Paper 1 PDF", () => {
+  it("records only the eight complete, visually verified official bilingual Paper 1 PDFs", () => {
     expect(manifest.officialIndexUrl).toBe("https://www.nta.ac.in/NoticeBoardArchive");
     expect(manifest.officialNoticeUrl).toBe(
       "https://www.nta.ac.in/Download/Notice/Notice_20240212120843.pdf",
     );
     expect(manifest.language).toBe("English and Hindi");
     expect(manifest.databaseLanguageFacet).toBe("English");
-    expect(manifest.coverageNote).toContain("remaining nine shifts");
-    expect(manifest.coverageNote).toContain("No third-party mirror");
+    expect(manifest.coverageNote).toContain("27 January Shift 2");
+    expect(manifest.coverageNote).toContain("29 January Shift 2");
+    expect(manifest.coverageNote).toContain("No third-party substitute");
     expect(manifest.verification).toContain("90 unique questions numbered 1-90");
-    expect(manifest.verification).toContain("all 104 pages");
-    expect(manifest.papers).toHaveLength(1);
-    expect(manifest.papers[0]).toEqual({
-      title: "JEE Main 2024 Session 1 - 29 January Shift 1 (English & Hindi)",
-      sourceUrl: "https://www.nta.ac.in/Download/ExamPaper/Paper_20250910115932.pdf",
-      pageCount: 104,
-      byteLength: 4767560,
-      sha256: "ECA0B6440D70656C5272DB9123E085F106D837D1688E17C75981E1E9F9DA1E9D",
-    });
-    expect(seed).toContain(manifest.papers[0].title);
-    expect(seed).toContain(manifest.papers[0].sourceUrl);
+    expect(manifest.verification).toContain("all 894 pages");
+    expect(manifest.verification).toContain("blank trailing page after question 90");
+    expect(manifest.papers).toHaveLength(8);
+    expect(manifest.papers.map((paper) => paper.pageCount)).toEqual([
+      117, 104, 121, 105, 106, 108, 117, 116,
+    ]);
+    expect(new Set(manifest.papers.map((paper) => paper.sourceUrl)).size).toBe(8);
+    expect(new Set(manifest.papers.map((paper) => paper.sha256)).size).toBe(8);
+    for (const paper of manifest.papers) {
+      expect(paper.sourceUrl).toMatch(
+        /^https:\/\/www\.nta\.ac\.in\/Download\/ExamPaper\/Paper_20250910\d+\.pdf$/,
+      );
+      expect(paper.sha256).toMatch(/^[A-F0-9]{64}$/);
+      expect(seed).toContain(paper.title);
+      expect(seed).toContain(paper.sourceUrl);
+      expect(seed).toContain(`, ${paper.pageCount})`);
+    }
     expect(seed).toContain("90-question");
     expect(seed).toContain("six-section");
     expect(seed).toContain("possible-answer fields for numerical-response questions");
@@ -54,9 +61,9 @@ describe("JEE Main 2024 Session 1 official question-paper package", () => {
     expect(seed).toMatch(/^--[\s\S]*\nbegin;/i);
     expect(seed).toContain("on conflict (title, source_url) do update set");
     expect(seed).toContain("if not exists (");
-    expect(seed).toContain("expected 1 material");
-    expect(seed).toContain("expected exactly 1 total scope");
-    expect(seed).toContain("expected 1 JEE-only scope");
+    expect(seed).toContain("expected 8 materials");
+    expect(seed).toContain("expected exactly 8 total scopes");
+    expect(seed).toContain("expected 8 JEE-only scopes");
     expect(seed).toContain("metadata mismatches");
     expect(seed.trimEnd()).toMatch(/commit;$/i);
   });

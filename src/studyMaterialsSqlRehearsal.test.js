@@ -2352,7 +2352,7 @@ describe("study materials v1 local SQL rehearsal", () => {
     }
   }, 30_000);
 
-  it("loads the verified official JEE Main 2024 Session 1 paper into a JEE-only exam scope", async () => {
+  it("loads eight verified official JEE Main 2024 Session 1 papers into JEE-only exam scopes", async () => {
     const pg = await productionShapedDatabase();
     try {
       await pg.exec(jeeMain2024Session1PapersSeed);
@@ -2362,22 +2362,24 @@ describe("study materials v1 local SQL rehearsal", () => {
           (select count(*)::integer from public.study_materials) as materials,
           (select count(*)::integer from public.study_material_scopes) as scopes
       `);
-      expect(counts.rows[0]).toEqual({ materials: 1, scopes: 1 });
+      expect(counts.rows[0]).toEqual({ materials: 8, scopes: 8 });
 
       const jee = await pg.query(`select * from public.get_study_materials(
         p_goal_slug => 'jee', p_material_type => 'previous_year_paper'
       )`);
-      expect(jee.rows).toHaveLength(1);
-      expect(Number(jee.rows[0].total_count)).toBe(1);
-      expect(jee.rows[0].language).toBe("English");
-      expect(jee.rows[0].title).toContain("English & Hindi");
-      expect(jee.rows[0].exam_year).toBe(2024);
-      expect(jee.rows[0].page_count).toBe(104);
-      expect(jee.rows[0].source_name).toBe("National Testing Agency (JEE Main)");
-      expect(jee.rows[0].scopes).toHaveLength(1);
-      expect(jee.rows[0].scopes[0].goal).toBe("jee");
-      expect(jee.rows[0].scopes[0].subject).toBeNull();
-      expect(jee.rows[0].scopes[0].chapter).toBeNull();
+      expect(jee.rows).toHaveLength(8);
+      expect(Number(jee.rows[0].total_count)).toBe(8);
+      expect(jee.rows.every((row) => row.language === "English")).toBe(true);
+      expect(jee.rows.every((row) => row.title.includes("English & Hindi"))).toBe(true);
+      expect(jee.rows.every((row) => row.exam_year === 2024)).toBe(true);
+      expect(jee.rows.map((row) => row.page_count).sort((a, b) => a - b)).toEqual([
+        104, 105, 106, 108, 116, 117, 117, 121,
+      ]);
+      expect(jee.rows.every((row) => row.source_name === "National Testing Agency (JEE Main)")).toBe(true);
+      expect(jee.rows.every((row) => row.scopes.length === 1)).toBe(true);
+      expect(jee.rows.every((row) => row.scopes[0].goal === "jee")).toBe(true);
+      expect(jee.rows.every((row) => row.scopes[0].subject === null)).toBe(true);
+      expect(jee.rows.every((row) => row.scopes[0].chapter === null)).toBe(true);
 
       const neet = await pg.query(`select * from public.get_study_materials(
         p_goal_slug => 'neet', p_material_type => 'previous_year_paper'

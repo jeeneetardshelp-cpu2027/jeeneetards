@@ -5,15 +5,64 @@
   "officialIndexUrl": "https://www.nta.ac.in/NoticeBoardArchive",
   "officialNoticeUrl": "https://www.nta.ac.in/Download/Notice/Notice_20240212120843.pdf",
   "verificationDate": "2026-08-07",
-  "coverageNote": "Includes the one Session 1 Paper 1 PDF currently recovered as a direct NTA-hosted file that passed complete verification: 29 January 2024 Shift 1. The remaining nine shifts are deliberately not seeded because no direct, complete NTA PDF was independently verified. No third-party mirror is included.",
-  "verification": "The live NTA PDF was checked for Paper 1 identity, 29 January 2024 Shift 1 metadata, English and Hindi question versions, 90 unique questions numbered 1-90, 90 unique question IDs, all six Mathematics, Physics and Chemistry sections, page count, byte length, SHA-256 and complete visual rendering of all 104 pages. The NTA export exposes possible-answer fields for numerical-response questions but contains no worked solutions.",
+  "coverageNote": "Includes the eight Session 1 Paper 1 PDFs recovered as direct NTA-hosted files that passed complete verification. The 27 January Shift 2 and 29 January Shift 2 papers are deliberately not seeded because no direct, complete NTA PDF was independently verified. No third-party substitute is included.",
+  "verification": "Every live NTA PDF was checked for Paper 1 identity, date and shift metadata, English and Hindi question versions, 90 unique questions numbered 1-90, 90 unique question IDs, all six Mathematics, Physics and Chemistry sections, page count, byte length, SHA-256 and complete visual rendering of all 894 pages. The 31 January Shift 1 export has one blank trailing page after question 90; no exam content is missing. The NTA exports expose possible-answer fields for numerical-response questions but contain no worked solutions.",
   "papers": [
+    {
+      "title": "JEE Main 2024 Session 1 - 27 January Shift 1 (English & Hindi)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20250910115805.pdf",
+      "pageCount": 117,
+      "byteLength": 5242299,
+      "sha256": "231563C1E7CD061D5D21C47A30774AA5C5BDB8305AF101A829AC3C0634567B9B"
+    },
     {
       "title": "JEE Main 2024 Session 1 - 29 January Shift 1 (English & Hindi)",
       "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20250910115932.pdf",
       "pageCount": 104,
       "byteLength": 4767560,
       "sha256": "ECA0B6440D70656C5272DB9123E085F106D837D1688E17C75981E1E9F9DA1E9D"
+    },
+    {
+      "title": "JEE Main 2024 Session 1 - 30 January Shift 1 (English & Hindi)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20250910120036.pdf",
+      "pageCount": 121,
+      "byteLength": 5518940,
+      "sha256": "79F881DBEB20A3029A8647450931FC5DE4865CADE7A5687683B3458A370FDB75"
+    },
+    {
+      "title": "JEE Main 2024 Session 1 - 30 January Shift 2 (English & Hindi)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20250910120131.pdf",
+      "pageCount": 105,
+      "byteLength": 5211600,
+      "sha256": "6DE481EFBDB4818EE0614397FBE79C1E18350DF52BD1EEFAA1CAD71B0310A2E1"
+    },
+    {
+      "title": "JEE Main 2024 Session 1 - 31 January Shift 1 (English & Hindi)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20250910120211.pdf",
+      "pageCount": 106,
+      "byteLength": 4924247,
+      "sha256": "5CD29301B9D4D0787F48311FB9E1D21B18B66AAD7E788630C13E875AA7DD0C64"
+    },
+    {
+      "title": "JEE Main 2024 Session 1 - 31 January Shift 2 (English & Hindi)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20250910120321.pdf",
+      "pageCount": 108,
+      "byteLength": 4946804,
+      "sha256": "8CF8B0924A966991C0A7EA660994D645B41D11D2B440F54709207E031B3FC3CD"
+    },
+    {
+      "title": "JEE Main 2024 Session 1 - 1 February Shift 1 (English & Hindi)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20250910115616.pdf",
+      "pageCount": 117,
+      "byteLength": 5459130,
+      "sha256": "42C9C4AF11EB648A4D00114FF58A544139EC78666F1B604F4DA6F91E90A142D2"
+    },
+    {
+      "title": "JEE Main 2024 Session 1 - 1 February Shift 2 (English & Hindi)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20250910115723.pdf",
+      "pageCount": 116,
+      "byteLength": 5392148,
+      "sha256": "2303861BF486CE2EFC5CBB57A162A5F058DE9F674A2CAD66689910AB8E4554AC"
     }
   ]
 }
