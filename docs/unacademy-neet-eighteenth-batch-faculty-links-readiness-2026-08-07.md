@@ -72,7 +72,9 @@ three new instructor links and every unchanged boundary before commit.
 - ESLint passed with zero warnings;
 - production build passed; the missing Supabase environment in the isolated
   worktree preserved the last known complete sitemap as designed;
-- hosted CI: pending preparation commit;
+- GitHub Actions CI passed for preparation commit
+  `d3a84a37ff202c858b6fc5655ab5b0dc8bb7d7b8`
+  ([run 31171230556](https://github.com/jeeneetardshelp-cpu2027/jeeneetards/actions/runs/31171230556));
 - no production SQL or `release` push occurred during preparation.
 
 ## Required next approval
