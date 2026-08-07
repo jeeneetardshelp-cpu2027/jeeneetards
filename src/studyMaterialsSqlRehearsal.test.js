@@ -159,6 +159,10 @@ const jeeMain2025Session2PapersSeed = readFileSync(
   "docs/sql/study_materials_jee_main_2025_session2_papers_seed_2026-08-07.sql",
   "utf8",
 );
+const jeeMain2024Session1PapersSeed = readFileSync(
+  "docs/sql/study_materials_jee_main_2024_session1_papers_seed_2026-08-07.sql",
+  "utf8",
+);
 const jeeMain2026Session2PapersSeed = readFileSync(
   "docs/sql/study_materials_jee_main_2026_session2_papers_seed_2026-08-06.sql",
   "utf8",
@@ -2333,6 +2337,47 @@ describe("study materials v1 local SQL rehearsal", () => {
       expect(jee.rows.every((row) => row.scopes[0].goal === "jee")).toBe(true);
       expect(jee.rows.every((row) => row.scopes[0].subject === null)).toBe(true);
       expect(jee.rows.every((row) => row.scopes[0].chapter === null)).toBe(true);
+
+      const neet = await pg.query(`select * from public.get_study_materials(
+        p_goal_slug => 'neet', p_material_type => 'previous_year_paper'
+      )`);
+      expect(neet.rows).toHaveLength(0);
+      const classSpecific = await pg.query(`select * from public.get_study_materials(
+        p_goal_slug => 'jee', p_class_slug => 'class-12',
+        p_material_type => 'previous_year_paper'
+      )`);
+      expect(classSpecific.rows).toHaveLength(0);
+    } finally {
+      await pg.close();
+    }
+  }, 30_000);
+
+  it("loads the verified official JEE Main 2024 Session 1 paper into a JEE-only exam scope", async () => {
+    const pg = await productionShapedDatabase();
+    try {
+      await pg.exec(jeeMain2024Session1PapersSeed);
+      await pg.exec(jeeMain2024Session1PapersSeed);
+      const counts = await pg.query(`
+        select
+          (select count(*)::integer from public.study_materials) as materials,
+          (select count(*)::integer from public.study_material_scopes) as scopes
+      `);
+      expect(counts.rows[0]).toEqual({ materials: 1, scopes: 1 });
+
+      const jee = await pg.query(`select * from public.get_study_materials(
+        p_goal_slug => 'jee', p_material_type => 'previous_year_paper'
+      )`);
+      expect(jee.rows).toHaveLength(1);
+      expect(Number(jee.rows[0].total_count)).toBe(1);
+      expect(jee.rows[0].language).toBe("English");
+      expect(jee.rows[0].title).toContain("English & Hindi");
+      expect(jee.rows[0].exam_year).toBe(2024);
+      expect(jee.rows[0].page_count).toBe(104);
+      expect(jee.rows[0].source_name).toBe("National Testing Agency (JEE Main)");
+      expect(jee.rows[0].scopes).toHaveLength(1);
+      expect(jee.rows[0].scopes[0].goal).toBe("jee");
+      expect(jee.rows[0].scopes[0].subject).toBeNull();
+      expect(jee.rows[0].scopes[0].chapter).toBeNull();
 
       const neet = await pg.query(`select * from public.get_study_materials(
         p_goal_slug => 'neet', p_material_type => 'previous_year_paper'

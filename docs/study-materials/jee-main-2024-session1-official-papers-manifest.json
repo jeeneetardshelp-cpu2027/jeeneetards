@@ -1,0 +1,19 @@
+{
+  "exam": "JEE Main 2024 Session 1 Paper 1 (B.E./B.Tech.)",
+  "language": "English and Hindi",
+  "databaseLanguageFacet": "English",
+  "officialIndexUrl": "https://www.nta.ac.in/NoticeBoardArchive",
+  "officialNoticeUrl": "https://www.nta.ac.in/Download/Notice/Notice_20240212120843.pdf",
+  "verificationDate": "2026-08-07",
+  "coverageNote": "Includes the one Session 1 Paper 1 PDF currently recovered as a direct NTA-hosted file that passed complete verification: 29 January 2024 Shift 1. The remaining nine shifts are deliberately not seeded because no direct, complete NTA PDF was independently verified. No third-party mirror is included.",
+  "verification": "The live NTA PDF was checked for Paper 1 identity, 29 January 2024 Shift 1 metadata, English and Hindi question versions, 90 unique questions numbered 1-90, 90 unique question IDs, all six Mathematics, Physics and Chemistry sections, page count, byte length, SHA-256 and complete visual rendering of all 104 pages. The NTA export exposes possible-answer fields for numerical-response questions but contains no worked solutions.",
+  "papers": [
+    {
+      "title": "JEE Main 2024 Session 1 - 29 January Shift 1 (English & Hindi)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20250910115932.pdf",
+      "pageCount": 104,
+      "byteLength": 4767560,
+      "sha256": "ECA0B6440D70656C5272DB9123E085F106D837D1688E17C75981E1E9F9DA1E9D"
+    }
+  ]
+}
