@@ -290,12 +290,12 @@ describe("Unacademy NEET seventeenth-batch quality-review package", () => {
     expect(sql).not.toContain("insert into public.playlist_videos");
   });
 
-  it("pins the immutable hash and prepared-only approval boundary", () => {
+  it("pins the immutable hash and records the approved production boundary", () => {
     expect(createHash("sha256").update(sql, "utf8").digest("hex")).toBe(expectedHash);
     expect(readiness).toContain(`SHA-256: \`${expectedHash}\``);
-    expect(readiness).toContain("Prepared and locally rehearsed only");
+    expect(readiness).toContain("Applied successfully to production project");
     expect(readiness).toContain("35 -> 36");
-    expect(readiness).toContain("separate owner approval");
+    expect(readiness).toContain("owner approved exact SHA-256");
     expect(readiness).toContain("no production SQL or `release` push occurred");
   });
 
