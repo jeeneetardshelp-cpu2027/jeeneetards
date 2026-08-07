@@ -50,5 +50,52 @@ The immediate read-only residue check returned all true:
 - no reports.
 
 The package now includes a dedicated guarded three-account beta fixture setup
-and teardown. These must pass independent diff review before the remote
-sequence resumes.
+and teardown. The remote sequence remained paused until that focused diff
+passed local full-suite validation and GitHub CI.
+
+## 2026-08-07 — corrected rollback rehearsal passed
+
+After the dedicated fixture correction passed local and GitHub validation, the
+complete sequence was retried on the same disposable staging project. Every
+SQL editor buffer was copied back and SHA-256 verified before execution.
+
+Fixture setup SHA-256:
+`0387b4a1f3421acfc2234c055664f1399994311cfb650e9299bc16abd007aa66`
+
+Fixture setup terminal row — all true:
+
+- environment is staging;
+- three fixture users created;
+- three fixture profiles created;
+- exactly one fixture admin.
+
+Rollback rehearsal SHA-256:
+`aea4a176436d0ec63ed8aece3fb00fde909953bd0ee22cc06412b6f82a6bbde2`
+
+Rollback rehearsal terminal row — all true:
+
+- environment is staging;
+- beta table removed;
+- beta membership-check RPC removed;
+- beta admin RPC removed;
+- forum mode restored to off;
+- no posts created;
+- no reports created.
+
+Fixture teardown SHA-256:
+`c696fe43f6387834178e36b0a160fd41174286820b9f9afc798483f67cfaefa8`
+
+Fixture teardown terminal row — all true:
+
+- environment is staging;
+- fixture users removed;
+- fixture profiles removed.
+
+The final aggregate-only read-only residue object returned true for all eleven
+fields: staging environment, forum mode off, username claim present, beta delta
+absent, no Auth users, no profiles, no posts, no comments, no votes, no
+reports, and no beta membership audit actions.
+
+No assertion was bypassed. The beta schema and all beta rehearsal data rolled
+back, the three exact fixture accounts were removed, and production was not
+contacted.
