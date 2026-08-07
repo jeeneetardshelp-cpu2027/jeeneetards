@@ -36,6 +36,7 @@
     "build:forum-staging": "node src/scripts/buildForumV1StagingRehearsal.js",
     "build:forum-persistent-staging": "node src/scripts/buildForumV1PersistentStaging.js",
     "build:forum-production": "node src/scripts/buildForumV1ProductionPackage.js",
+    "build:forum-beta-production": "node src/scripts/buildForumClosedBetaProductionPackage.js",
     "build:forum-beta-staging": "node src/scripts/buildForumClosedBetaStagingRehearsal.js",
     "build:forum-beta-persistent-staging": "node src/scripts/buildForumClosedBetaPersistentStaging.js",
     "verify:forum-jwt-staging": "node src/scripts/verifyForumV1JwtStaging.js",
