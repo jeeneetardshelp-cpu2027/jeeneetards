@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
+import { validateChapterManifest } from "./scripts/ingestionSafety.js";
 
 const reviewPath =
   "docs/reviews/unacademy-neet-nineteenth-candidate-batch-2026-08-07.json";
@@ -25,11 +26,11 @@ function snapshotHash(candidate) {
 }
 
 describe("Unacademy NEET nineteenth-batch readiness", () => {
-  it("stays behind a separate owner approval gate", () => {
+  it("records the approved guarded production content import", () => {
     expect(review.review_status).toBe("owner_approval_required");
     expect(review.proposed_decision_id).toBe("e6539ac8-512b-4e76-8bd1-774c1a3c4bdc");
-    expect(readiness).toContain("PREPARED, NOT APPROVED, NOT IMPORTED");
-    expect(readiness).toContain("No production write");
+    expect(readiness).toContain("CONTENT IMPORT COMPLETED IN PRODUCTION");
+    expect(readiness).toContain("No schema migration, faculty-link write");
     expect(readiness).toContain("1 ok / 0 review / 0 blocked");
   });
 
@@ -71,5 +72,57 @@ describe("Unacademy NEET nineteenth-batch readiness", () => {
     expect(parsedManifests[2].exclusions).toEqual([
       { position: 4, youtube_video_id: "cv6mAJ4wd3Q", reason: "quiz" },
     ]);
+  });
+
+  it("passes the production importer contract for all three manifests", () => {
+    review.candidates.forEach((candidate, index) => {
+      const sourceRows = [...candidate.videos, ...candidate.exclusions]
+        .sort((left, right) => left.source_position - right.source_position)
+        .map((row) => ({
+          videoId: row.youtube_video_id,
+          title: row.title,
+          sourcePosition: row.source_position - 1,
+          position: row.source_position - 1,
+          durationSeconds: row.duration_seconds,
+          embeddingStatus: row.embedding_status,
+        }));
+      const mapped = validateChapterManifest({
+        manifest: parsedManifests[index],
+        playlistId: candidate.youtube_playlist_id,
+        teacher: candidate.teacher,
+        videos: sourceRows,
+      });
+      expect(mapped.videos).toHaveLength(candidate.videos.length);
+      expect(mapped.excludedVideos).toHaveLength(candidate.exclusions.length);
+    });
+  });
+
+  it("records exact additive deltas and the decisive postflight", () => {
+    expect(readiness).toContain("+3 playlists / +8 videos / +8 memberships");
+    expect(readiness).toContain("416 / 4,731 / 4,737 / 263");
+    expect(readiness).toContain("| 1 | 433 |");
+    expect(readiness).toContain("| 2 | 434 |");
+    expect(readiness).toContain("| 3 | 435 |");
+    expect(readiness).toContain("`4814`-`4815`");
+    expect(readiness).toContain("`4816`-`4818`");
+    expect(readiness).toContain("`4819`-`4821`");
+    expect(readiness).toContain("2026-08-07T13:38:16.994248Z");
+    expect(readiness).toContain("all eight retained YouTube video IDs exist exactly once");
+    expect(readiness).toContain("cv6mAJ4wd3Q` remains absent");
+    expect(readiness).toContain("82 / 1,304");
+    expect(readiness).toContain("30eee4a4a6842e5beeb7c97083d7f812");
+    expect(readiness).toContain("212 / 2,848");
+    expect(readiness).toContain("9eea2b44f0b19c08cc0907c57e091342");
+  });
+
+  it("records anonymous browse and first/last player evidence", () => {
+    expect(readiness).toContain("https://www.jeeneetard.com/course/433/chapter/45");
+    expect(readiness).toContain("https://www.jeeneetard.com/course/434/chapter/48");
+    expect(readiness).toContain("https://www.jeeneetard.com/course/435/chapter/29");
+    for (const videoId of [
+      "0BwLckcTdUA", "3ZlCJ1keY6s", "MQ-3hQrodgU",
+      "5YTW3Cn198A", "xpTqTM1fk1c", "7_lzRbhRJYA",
+    ]) expect(readiness).toContain(videoId);
+    expect(readiness).toContain("playlist_teachers` rows and quality-review transitions remain");
   });
 });

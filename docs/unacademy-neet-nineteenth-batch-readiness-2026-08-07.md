@@ -2,8 +2,10 @@
 
 ## Status
 
-**PREPARED, NOT APPROVED, NOT IMPORTED.** This is a read-only readiness gate.
-No production write, schema migration, deployment, or `release` push occurred.
+**CONTENT IMPORT COMPLETED IN PRODUCTION** under owner decision
+`e6539ac8-512b-4e76-8bd1-774c1a3c4bdc`. The three courses were imported
+create-only, one at a time. No schema migration, faculty-link write,
+quality-review write, deployment, or `release` push occurred.
 
 ## Proposed owner decision
 
@@ -81,8 +83,74 @@ must be dry-run again immediately before any separately approved write.
 | 2 | Amines | `PLsgHooHkqhhNPE4mZf-DoUlsANEdkP0ik` | 48 - Amines / class-12 | Anoop Vashishtha (36) | 3 | 0 |
 | 3 | Thermochemistry | `PLsgHooHkqhhMSvDuuO5dL3-iba7hfWB6F` | 29 - Thermochemistry / class-11 | Ashwani Tyagi (32) | 3 | 1 quiz |
 
-Projected create-only delta: **+3 playlists / +8 videos / +8 memberships /
-+0 chapters**. No production content write has occurred.
+Completed create-only delta: **+3 playlists / +8 videos / +8 memberships /
++0 chapters**, with zero reuse. Final totals after all three clean imports:
+**416 / 4,731 / 4,737 / 263**.
+
+## Production execution evidence
+
+PITR was freshly confirmed active with seven-day retention immediately before
+the batch. The Supabase dashboard advertised restore availability from
+`01 Aug 2026, 00:02:34 IST` through `07 Aug 2026, 19:01:58 IST`.
+
+The fresh live preflight at `2026-08-07T13:33:08.938552Z` reproduced the
+approved boundary exactly:
+
+- 413 playlists / 4,723 videos / 4,729 memberships / 263 chapters;
+- 92 chapter-class rows / 34 teachers / 168 playlist-teacher links / 39 quality
+  reviews;
+- zero source-playlist collisions, zero retained-video collisions, and zero
+  collision for the excluded quiz;
+- all three expected chapters and both normalized verified teachers present;
+  and
+- protected original JEE unchanged at 82 courses / 1,304 memberships /
+  `30eee4a4a6842e5beeb7c97083d7f812`.
+
+Each exact manifest then passed a fresh anonymous production dry-run before its
+independent create-only write:
+
+| Order | Course ID | Dry-run | Created videos | Reused | Pre-write totals | Post-write totals |
+| ---: | ---: | --- | ---: | ---: | --- | --- |
+| 1 | 433 | 1 ok / 0 review / 0 blocked; 2 assignments | 2 (`4814`-`4815`) | 0 | 413 / 4,723 / 4,729 | 414 / 4,725 / 4,731 at `13:34:02Z` |
+| 2 | 434 | 1 ok / 0 review / 0 blocked; 3 assignments | 3 (`4816`-`4818`) | 0 | 414 / 4,725 / 4,731 | 415 / 4,728 / 4,734 at `13:34:48Z` |
+| 3 | 435 | 1 ok / 0 review / 0 blocked; 3 assignments + 1 quiz exclusion | 3 (`4819`-`4821`) | 0 | 415 / 4,728 / 4,734 | 416 / 4,731 / 4,737 at `13:35:35Z` |
+
+The decisive read-only postflight at `2026-08-07T13:37:52.223523Z` and final
+boundary check at `2026-08-07T13:38:16.994248Z` confirmed:
+
+- all three approved source playlists exist exactly once;
+- all eight retained YouTube video IDs exist exactly once and the excluded
+  quiz `cv6mAJ4wd3Q` remains absent;
+- membership positions preserve official source order: 1-2, 1-3, and 1-3;
+- course 433 maps both lessons to chapter 45, course 434 maps all three lessons
+  to chapter 48, and course 435 maps all three lessons to chapter 29;
+- all eight videos have positive durations and remain embeddable;
+- each course carries only the `neet` learning goal and its reviewed
+  `class-12`, `class-12`, or `class-11` scope;
+- the protected original JEE boundary remains exactly 82 / 1,304 /
+  `30eee4a4a6842e5beeb7c97083d7f812`; and
+- rolling JEE remains exactly 212 / 2,848 /
+  `9eea2b44f0b19c08cc0907c57e091342`.
+
+Anonymous public browse and player verification passed for all three courses:
+
+- `https://www.jeeneetard.com/course/433/chapter/45` - 2 lessons; the official
+  YouTube iframes loaded for first lesson `0BwLckcTdUA` and final lesson
+  `3ZlCJ1keY6s`;
+- `https://www.jeeneetard.com/course/434/chapter/48` - 3 lessons; the official
+  YouTube iframes loaded for first lesson `MQ-3hQrodgU` and final lesson
+  `5YTW3Cn198A`; and
+- `https://www.jeeneetard.com/course/435/chapter/29` - 3 lessons; the official
+  YouTube iframes loaded for first lesson `xpTqTM1fk1c` and final lesson
+  `7_lzRbhRJYA`.
+
+The canonical anonymous NEET browse filters for Class 12 Chemistry / The d and
+f Block Elements, Class 12 Chemistry / Amines, and Class 11 Chemistry /
+Thermochemistry each showed the new course. No empty or error state appeared.
+
+The normalized `playlist_teachers` rows and quality-review transitions remain
+absent for courses 433-435 by design. They are separate guarded gates and were
+not authorized by this content-import decision.
 
 ## Immutable evidence
 
@@ -114,5 +182,5 @@ blocked embed, or fingerprint mismatch defers that course.
 - Electromagnetic Waves has clean videos but requires a separate identity review
   for the teacher named only as `Samip`.
 
-No production write, faculty-link write, quality-review write, deployment, or
-`release` push occurred during this readiness preparation.
+No schema migration, faculty-link write, quality-review write, deployment, or
+`release` push occurred during this production content batch.
