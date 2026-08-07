@@ -2,9 +2,10 @@
 
 ## Status
 
-Prepared and locally rehearsed only. Production has not been changed by this
-package. A separate owner approval naming the exact SHA-256 below is required
-before the SQL may run. No `release` push is part of this gate.
+Applied successfully to production after separate owner approval naming the
+exact SHA-256 below. Only the three reviewed `playlist_teachers` rows were
+inserted. No content import, quality review, schema migration, clone, restore,
+deployment, or `release` push was run.
 
 ## Reviewed scope
 
@@ -47,13 +48,13 @@ Service-role read-only evidence was captured at `2026-08-07T10:26:50.265Z`:
 The transaction pins every value above and aborts before inserting anything on
 any mismatch.
 
-## Immutable prepared artifact
+## Immutable applied artifact
 
 - SQL: `docs/sql/unacademy_neet_eighteenth_batch_faculty_links_2026-08-07.sql`;
 - SHA-256: `19ca7904e2816364992a5be9c3a67ec88e2f241048ede9d95a4f230b00d96355`;
-- intended target: production project `kezelafqhgqrprpadmlf`;
-- expected delta: +3 `playlist_teachers` rows only, from 165 to 168;
-- expected protected-JEE delta: zero.
+- applied target: production project `kezelafqhgqrprpadmlf`;
+- applied delta: +3 `playlist_teachers` rows only, from 165 to 168;
+- verified protected-JEE delta: zero.
 
 The SQL is insert-only and runs as one transaction. It verifies the production
 marker, exact catalogue and registry counts, all three course/source/video/
@@ -77,8 +78,31 @@ three new instructor links and every unchanged boundary before commit.
   ([run 31171230556](https://github.com/jeeneetardshelp-cpu2027/jeeneetards/actions/runs/31171230556));
 - no production SQL or `release` push occurred during preparation.
 
-## Required next approval
+## Production application evidence
 
-After the final SQL hash and validation evidence are pinned here, production
-application remains blocked until the owner separately approves that exact
-SHA-256 with a fresh PITR and exact-baseline check.
+- owner approved exact SHA-256
+  `19ca7904e2816364992a5be9c3a67ec88e2f241048ede9d95a4f230b00d96355`;
+- PITR was active with a seven-day retention window; the recorded rollback
+  target was `2026-08-07 15:47:52 +05:30`;
+- the independent preflight at `2026-08-07T11:00:51.996252Z` matched exactly:
+  413 playlists / 4,723 videos / 4,729 memberships / 263 chapters / 92
+  chapter-class scopes / 34 teachers / 165 faculty links / 36 quality reviews;
+- courses 430–432 retained their exact reviewed sources, lesson counts, and
+  `pending` / `pending` review states, with zero prior faculty links and zero
+  quality reviews;
+- the guarded transaction committed once and inserted exactly:
+  - course 430 → teacher 33, Pradeep Singh (`pradeep-singh`), instructor 1;
+  - course 431 → teacher 32, Ashwani Tyagi (`ashwani-tyagi`), instructor 1;
+  - course 432 → teacher 38, Dr. Sachin Kapur (`sachin-kapur`), instructor 1;
+- independent postflight at `2026-08-07T11:01:48.654263Z` verified 168 faculty
+  links and the expected three batch links; all other guarded counts remained
+  unchanged and the three courses still had no quality reviews;
+- protected JEE remained exactly 82 courses / 1,304 memberships / fingerprint
+  `30eee4a4a6842e5beeb7c97083d7f812`;
+- direct read-only link verification completed at `2026-08-07T11:02:06.497Z`;
+- no `release` push occurred.
+
+## Next gate
+
+Faculty linking is complete. Quality review remains a later, separately
+prepared and hash-approved production gate.
