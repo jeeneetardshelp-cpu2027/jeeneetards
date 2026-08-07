@@ -193,14 +193,16 @@ describe("Unacademy NEET seventeenth-batch faculty-link production package", () 
     expect(sql.match(/30eee4a4a6842e5beeb7c97083d7f812/g)).toHaveLength(2);
   });
 
-  it("pins the immutable artifact hash and prepared-only handoff", () => {
+  it("pins the immutable artifact hash and audited production handoff", () => {
     expect(createHash("sha256").update(sql, "utf8").digest("hex")).toBe(expectedHash);
     expect(readiness).toContain(`SHA-256: \`${expectedHash}\``);
-    expect(readiness).toContain("Prepared and locally rehearsed only");
+    expect(readiness).toContain("Applied successfully to production");
+    expect(readiness).toContain("2026-08-07 13:07:47 +05:30");
+    expect(readiness).toContain("course `429` -> teacher `38`");
     expect(readiness).toContain("+1 `playlist_teachers` row only");
     expect(readiness).toContain("165 course links");
     expect(readiness).toContain("separate owner approval");
-    expect(readiness).toContain("no production SQL or `release` push occurred");
+    expect(readiness).toContain("no `release` push occurred");
   });
 
   it("executes atomically and rolls back on baseline drift", async () => {
