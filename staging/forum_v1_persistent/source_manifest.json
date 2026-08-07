@@ -1,0 +1,22 @@
+{
+  "status": "persistent-disposable-staging-only",
+  "generatedAt": "2026-08-06T06:00:58.590Z",
+  "sources": {
+    "preflight": {
+      "path": "src/migrations/forum_v1_preflight.sql",
+      "sha256": "3e009b762338b29d9f508addbdbef84a1689026a8e14100c632c48baf43f4d70"
+    },
+    "core": {
+      "path": "src/migrations/forum_v1.sql",
+      "sha256": "9fcf733655cd268589915254078c1e1d6d68da5fd252d5b9d73b290b283d9866"
+    },
+    "postflight": {
+      "path": "src/migrations/forum_v1_postflight.sql",
+      "sha256": "3a6defe5610c8b7c54504487498bdebc7fe28f500e3d3501cb7e82d3d453d583"
+    }
+  },
+  "artifact": {
+    "path": "staging/forum_v1_persistent/install.sql",
+    "sha256": "402e0379f750bf31c126ccaa3aec2fd22b1061deae511d9a4b9a24d3753d6e49"
+  }
+}

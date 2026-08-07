@@ -64,7 +64,7 @@ const LOOKUP_TIMEOUT_MS = 1500;
 
 const STATIC_APP_ROUTES = new Set([
   "/", "/admin", "/browse", "/compare", "/explore", "/privacy",
-  "/materials", "/reset", "/search", "/terms", "/tests",
+  "/forum", "/forum/submit", "/materials", "/reset", "/search", "/terms", "/tests",
 ]);
 
 /** Mirrors the route shapes in App.jsx. Resource existence is checked later. */
@@ -78,6 +78,7 @@ export function isSupportedAppPath(pathname) {
     return Boolean(findTestSection(path.slice("/tests/".length)));
   }
   if (path.startsWith("/explore/")) return Boolean(parseExplorePath(path));
+  if (/^\/forum\/post\/\d+$/.test(path)) return true;
   if (/^\/faculty\/[^/]+$/.test(path)) return true;
   if (/^\/chapter\/\d+$/.test(path)) return true;
   return /^\/course\/\d+(?:\/chapter\/\d+)?$/.test(path);
@@ -333,6 +334,7 @@ export default async function middleware(request) {
     const url = new URL(request.url);
     const courseMatch = url.pathname.match(/^\/course\/(\d+)(?:\/chapter\/(\d+))?\/?$/);
     const facultyMatch = url.pathname.match(/^\/faculty\/([^/]+)\/?$/);
+    const forumPostMatch = url.pathname.match(/^\/forum\/post\/(\d+)\/?$/);
     const legacyChapterMatch = url.pathname.match(/^\/chapter\/(\d+)\/?$/);
     const exploreRoute = parseExplorePath(url.pathname);
 
@@ -357,6 +359,33 @@ export default async function middleware(request) {
 
     const supaUrl = process.env.VITE_SUPABASE_URL;
     const supaKey = process.env.VITE_SUPABASE_ANON_KEY;
+
+    // A thread URL whose database row is confirmed absent gets a real 404.
+    // First ask for the forum mode: get_forum_post intentionally returns no
+    // rows while mode is off, which must not make every valid pre-release URL
+    // look deleted. Any unconfirmed lookup fails through to the normal shell.
+    if (forumPostMatch && supaUrl && supaKey) {
+      const headers = {
+        apikey: supaKey,
+        Authorization: `Bearer ${supaKey}`,
+        "content-type": "application/json",
+      };
+      const mode = await edgeJson(`${supaUrl}/rest/v1/rpc/forum_mode`, {
+        method: "POST", headers, body: "{}",
+      });
+      if (!mode.confirmed) return next();
+      if (mode.data !== "off") {
+        const found = await edgeJson(`${supaUrl}/rest/v1/rpc/get_forum_post`, {
+          method: "POST",
+          headers,
+          body: JSON.stringify({ p_post_id: Number(forumPostMatch[1]) }),
+        });
+        if (!found.confirmed) return next();
+        if (Array.isArray(found.data) && found.data.length === 0) {
+          return notFoundResponse(url, "Forum post not found");
+        }
+      }
+    }
 
     if (exploreRoute) {
       if (!supaUrl || !supaKey) return next();

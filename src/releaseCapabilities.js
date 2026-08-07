@@ -25,6 +25,11 @@ export const RELEASE_CAPABILITIES = Object.freeze({
 // particular, the presence of a writable table does not make an anonymous
 // submission feature safe to expose without throttling and abuse controls.
 export const RELEASE_FEATURES = Object.freeze({
+  // Forum release approved after the production schema was installed in mode
+  // `off`, its atomic postflight passed, and anonymous production calls proved
+  // the fail-closed surface. Opening the database mode remains a separate
+  // operational decision after the flagged frontend is deployed and checked.
+  forum: true,
   // Ratings launch (2026-07-30): the site owner reviewed the under-18
   // consent/age-assurance question and chose to proceed. Enabling ratings
   // requires accounts (rating.jsx gates submission on a signed-in user), so
@@ -39,12 +44,10 @@ export const RELEASE_FEATURES = Object.freeze({
   // the UI control, DB RLS is the real boundary) — the flag just decides
   // when students are actually shown the "Report an issue" button.
   //
-  // NOTE: flipping this flag alone does not turn on real sign-ups. Supabase
-  // Auth's own project setting ("Allow new users to sign up") was verified
-  // OFF in production on 2026-07-23 (docs/browse_only_auth_evidence.json)
-  // and can only be changed from the Supabase dashboard -- not from this
-  // codebase, and not by an automated agent (account creation is outside
-  // what this assistant will do, including to test it).
+  // Production Auth was owner-verified on 2026-08-06 with sign-up and email
+  // confirmation both ON. See docs/browse_only_auth_evidence_2026-08-06.json;
+  // it supersedes the stale 2026-07-23 snapshot. These dashboard settings are
+  // outside this codebase and are not changed by the frontend release flags.
   studentAccounts: true,
   courseRatingSubmission: true,
   // Deliberately sequenced AFTER admin review moderation shipped

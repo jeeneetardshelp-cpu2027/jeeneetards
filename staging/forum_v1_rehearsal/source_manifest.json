@@ -1,0 +1,22 @@
+{
+  "status": "rollback-only-not-authorized-for-persistent-apply",
+  "generatedAt": "2026-08-06T04:16:51.824Z",
+  "sources": {
+    "preflight": {
+      "path": "src/migrations/forum_v1_preflight.sql",
+      "sha256": "3e009b762338b29d9f508addbdbef84a1689026a8e14100c632c48baf43f4d70"
+    },
+    "core": {
+      "path": "src/migrations/forum_v1.sql",
+      "sha256": "9fcf733655cd268589915254078c1e1d6d68da5fd252d5b9d73b290b283d9866"
+    },
+    "postflight": {
+      "path": "src/migrations/forum_v1_postflight.sql",
+      "sha256": "3a6defe5610c8b7c54504487498bdebc7fe28f500e3d3501cb7e82d3d453d583"
+    }
+  },
+  "artifact": {
+    "path": "staging/forum_v1_rehearsal/rollback_rehearsal.sql",
+    "sha256": "051879f8f7c3fe8e042ea5de97486645fb1469b43466777cc43d2019702f5262"
+  }
+}

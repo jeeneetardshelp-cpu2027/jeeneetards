@@ -33,7 +33,7 @@ import {
 import { useTheme } from "./theme.jsx";
 import { useSession } from "./useSession.js";
 import { supabase } from "./supabaseClient.js";
-import { RELEASE_CAPABILITIES } from "./releaseCapabilities.js";
+import { RELEASE_CAPABILITIES, RELEASE_FEATURES } from "./releaseCapabilities.js";
 import { clearProgress } from "./progress.js";
 import { prefersReducedMotion } from "./motion.jsx";
 
@@ -138,6 +138,7 @@ export function GlobalHeader({ crumbs = [], search = null, leading = null, width
     { label: "Browse courses", to: "/browse" },
     { label: "Mock tests", to: "/tests" },
     ...(RELEASE_CAPABILITIES.studyMaterials ? [{ label: "Study material", to: "/materials" }] : []),
+    ...(RELEASE_FEATURES.forum ? [{ label: "Forum", to: "/forum" }] : []),
     // The ranked, keyboard-friendly library search. Gated like its route: the
     // header must never advertise a page the release cannot honestly serve.
     ...(RELEASE_CAPABILITIES.universalSearch ? [{ label: "Search", to: "/search" }] : []),

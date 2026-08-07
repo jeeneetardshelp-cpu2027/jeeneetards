@@ -16,7 +16,7 @@
 import { Link } from "react-router";
 import { ArrowUpRight } from "lucide-react";
 import { Container } from "./AppShell.jsx";
-import { RELEASE_CAPABILITIES } from "./releaseCapabilities.js";
+import { RELEASE_CAPABILITIES, RELEASE_FEATURES } from "./releaseCapabilities.js";
 
 const EXPLORE = [
   { label: "Home", to: "/" },
@@ -25,6 +25,9 @@ const EXPLORE = [
   { label: "Mock tests", to: "/tests" },
   ...(RELEASE_CAPABILITIES.studyMaterials
     ? [{ label: "Study material", to: "/materials" }]
+    : []),
+  ...(RELEASE_FEATURES.forum
+    ? [{ label: "Student forum", to: "/forum" }]
     : []),
   ...(RELEASE_CAPABILITIES.universalSearch
     ? [{ label: "Search the library", to: "/search" }]
