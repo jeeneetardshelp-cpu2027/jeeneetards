@@ -1,6 +1,6 @@
 {
   "status": "persistent-disposable-staging-only-not-executed",
-  "generatedAt": "2026-08-07T10:34:16.998Z",
+  "generatedAt": "2026-08-07T11:03:24.721Z",
   "sources": {
     "preflight": {
       "path": "src/migrations/forum_closed_beta_v1_preflight.sql",

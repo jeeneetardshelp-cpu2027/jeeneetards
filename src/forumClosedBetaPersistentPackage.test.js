@@ -14,6 +14,11 @@ const helperRollback = readFileSync(
 );
 const verifier = readFileSync("src/scripts/verifyForumClosedBetaJwtStaging.js", "utf8");
 const betaRollback = readFileSync("src/migrations/forum_closed_beta_v1_rollback.sql", "utf8");
+const liveEvidenceRaw = readFileSync(
+  `${directory}/REAL_STAGING_JWT_EVIDENCE_2026-08-07.json`, "utf8",
+);
+const liveEvidence = JSON.parse(liveEvidenceRaw);
+const liveNotes = readFileSync(`${directory}/REAL_STAGING_NOTES.md`, "utf8");
 const sha256 = (value) => createHash("sha256").update(value).digest("hex");
 const read = (path) => readFileSync(path, "utf8").replace(/\r\n/g, "\n");
 const baselineSources = [
@@ -88,6 +93,24 @@ describe("forum closed-beta persistent staging and JWT package", () => {
     expect(verifier).not.toMatch(/eyJ[A-Za-z0-9_-]{20,}/);
     expect(verifier).not.toMatch(/postgres(?:ql)?:\/\//i);
     expect(verifier).not.toMatch(/service_role\s*=\s*["'][^"']+/i);
+  });
+
+  it("preserves a clean, zero-residue real staging evidence file", () => {
+    expect(liveEvidence.project_ref).toBe("essmxonestbrgmgrtywn");
+    expect(liveEvidence.environment).toBe("staging");
+    expect(liveEvidence.tests).toHaveLength(31);
+    expect(liveEvidence.tests.every((check) => (
+      check.passed === true && check.detail?.raw_response_shape
+    ))).toBe(true);
+    expect(liveEvidence.fatal).toBeNull();
+    expect(liveEvidence.cleanup).toMatchObject({ attempted: true, completed: true });
+    expect(Object.values(liveEvidence.cleanup.residue).every((count) => count === 0))
+      .toBe(true);
+    expect(liveEvidenceRaw).not.toMatch(/eyJ[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}/);
+    expect(liveEvidenceRaw).not.toContain("@staging.invalid");
+    expect(liveEvidenceRaw).not.toMatch(/https:\/\/[^\s"]+\.supabase\.co/i);
+    expect(liveNotes).toContain(`${sha256(liveEvidenceRaw)}`);
+    expect(readme).toContain("REAL_STAGING_JWT_EVIDENCE_2026-08-07.json");
   });
 
   it("installs persistently and restores the reviewed baseline in PGlite", async () => {

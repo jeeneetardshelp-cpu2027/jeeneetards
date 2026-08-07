@@ -39,3 +39,7 @@ in the uncommitted staging environment file and never enters evidence.
 The verifier must finish with mode `off`, zero beta memberships, zero fixture
 accounts/profiles, and no fixture forum data or audit residue. A failed remote
 assertion is a stop condition; do not edit around it live.
+
+The completed 2026-08-07 disposable-staging run is recorded in
+`REAL_STAGING_NOTES.md`; its complete sanitized 31-check evidence is preserved
+in `REAL_STAGING_JWT_EVIDENCE_2026-08-07.json`.
