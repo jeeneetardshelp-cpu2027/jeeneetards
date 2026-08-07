@@ -1,0 +1,127 @@
+{
+  "reviewed_on": "2026-08-07",
+  "review_status": "owner_approval_required",
+  "proposed_decision_id": "e6539ac8-512b-4e76-8bd1-774c1a3c4bdc",
+  "channel": {
+    "name": "Unacademy NEET",
+    "handle": "@UnacademyNEET",
+    "youtube_channel_id": "UCdQwYksctqqiRwqp3PiJMWA",
+    "production_institute_id": 147,
+    "playlist_count": 736
+  },
+  "preflight": {
+    "captured_at": "2026-08-07T12:19:45.547690Z",
+    "playlists": 413,
+    "videos": 4723,
+    "memberships": 4729,
+    "chapters": 263,
+    "chapter_class_levels": 92,
+    "teachers": 34,
+    "faculty_links": 168,
+    "quality_reviews": 39,
+    "source_collision_count": 0,
+    "retained_video_collision_count": 0,
+    "protected_jee_courses": 82,
+    "protected_jee_memberships": 1304,
+    "protected_jee_fingerprint": "30eee4a4a6842e5beeb7c97083d7f812",
+    "rolling_jee_courses": 212,
+    "rolling_jee_memberships": 2848,
+    "rolling_jee_fingerprint": "9eea2b44f0b19c08cc0907c57e091342"
+  },
+  "candidates": [
+    {
+      "order": 1,
+      "youtube_playlist_id": "PLsgHooHkqhhNKfP8VeJvlmz5qO-RgNqzQ",
+      "source_title": "D and F Block Elements - Playlist | Class 12 | Unacademy NEET | NEET Live Daily | NEET Chemistry | Anoop Sir",
+      "source_snapshot_sha256": "d3008abb6a01734f64e4f88a3db238c3eb1ff64d435b8c5df1d6a5ac02858e0c",
+      "source_item_count": 2,
+      "subject_id": 2,
+      "chapter_id": 45,
+      "chapter": "The d and f Block Elements",
+      "mapping_rationale": "The exact official playlist is a two-part L1-L2 chapter sequence with no supplementary rows.",
+      "class_level_id": 3,
+      "class_level": "class-12",
+      "teacher_id": 36,
+      "teacher": "Anoop Vashishtha",
+      "teacher_verified": true,
+      "source_collision_count": 0,
+      "video_collision_count": 0,
+      "retained_source_positions": [1, 2],
+      "excluded_source_positions": [],
+      "videos": [
+        { "source_position": 1, "youtube_video_id": "0BwLckcTdUA", "title": "D and F Block Elements - L 1 | Physical Properties | Unacademy NEET | Chemistry | Anoop Sir", "duration_seconds": 3019, "embedding_status": "embeddable" },
+        { "source_position": 2, "youtube_video_id": "3ZlCJ1keY6s", "title": "D and F Block Elements - L 2 | Properties & Compounds | Unacademy NEET | Chemistry | Anoop Sir", "duration_seconds": 2664, "embedding_status": "embeddable" }
+      ],
+      "exclusions": []
+    },
+    {
+      "order": 2,
+      "youtube_playlist_id": "PLsgHooHkqhhNPE4mZf-DoUlsANEdkP0ik",
+      "source_title": "Amines | Playlist | Class 12 | Unacademy NEET | Live Daily | Chemistry | Anoop SIr",
+      "source_snapshot_sha256": "68dfee31cef6498318536690e93cbf40a453cdebf69c64fd01157597fe8f98dd",
+      "source_item_count": 3,
+      "subject_id": 2,
+      "chapter_id": 48,
+      "chapter": "Amines",
+      "mapping_rationale": "The exact official playlist is an uninterrupted L1-L3 Amines sequence with no supplementary rows.",
+      "class_level_id": 3,
+      "class_level": "class-12",
+      "teacher_id": 36,
+      "teacher": "Anoop Vashishtha",
+      "teacher_verified": true,
+      "source_collision_count": 0,
+      "video_collision_count": 0,
+      "retained_source_positions": [1, 2, 3],
+      "excluded_source_positions": [],
+      "videos": [
+        { "source_position": 1, "youtube_video_id": "MQ-3hQrodgU", "title": "Amines L1 | Preparation & Properties | Unacademy NEET | Live Daily | Chemistry | Anoop Sir", "duration_seconds": 2882, "embedding_status": "embeddable" },
+        { "source_position": 2, "youtube_video_id": "I91sc6HdzF0", "title": "Amines L2 | Chemical Properties | Class 12 |  Unacademy NEET | Live Daily | Chemistry | Anoop Sir", "duration_seconds": 2814, "embedding_status": "embeddable" },
+        { "source_position": 3, "youtube_video_id": "5YTW3Cn198A", "title": "Amines L3 | Chemical Properties | Class 12 | Unacademy NEET | Live Daily | Chemistry | Anoop Sir", "duration_seconds": 2616, "embedding_status": "embeddable" }
+      ],
+      "exclusions": []
+    },
+    {
+      "order": 3,
+      "youtube_playlist_id": "PLsgHooHkqhhMSvDuuO5dL3-iba7hfWB6F",
+      "source_title": "Thermochemistry - Playlist | Class 11 | Unacademy NEET | LIVE DAILY | NEET Chemistry | Ashwani Tyagi",
+      "source_snapshot_sha256": "2772c0e61d19e0723ef351364b684f924b42823f5effc89be718407b619abb22",
+      "source_item_count": 4,
+      "subject_id": 2,
+      "chapter_id": 29,
+      "chapter": "Thermochemistry",
+      "mapping_rationale": "Retain the complete L1-L3 Thermochemistry lecture sequence and exclude the final chapter quiz.",
+      "class_level_id": 2,
+      "class_level": "class-11",
+      "teacher_id": 32,
+      "teacher": "Ashwani Tyagi",
+      "teacher_verified": true,
+      "source_collision_count": 0,
+      "video_collision_count": 0,
+      "retained_source_positions": [1, 2, 3],
+      "excluded_source_positions": [4],
+      "videos": [
+        { "source_position": 1, "youtube_video_id": "xpTqTM1fk1c", "title": "Thermochemistry - Lecture 1 | Class 11 | Unacademy NEET | LIVE DAILY | NEET Chemistry | Ashwani Sir", "duration_seconds": 3343, "embedding_status": "embeddable" },
+        { "source_position": 2, "youtube_video_id": "iQ-a7mYRBEk", "title": "Thermochemistry - L 2 | Reaction Enthalpy | Unacademy NEET | LIVE DAILY | Chemistry | Ashwani Sir", "duration_seconds": 3620, "embedding_status": "embeddable" },
+        { "source_position": 3, "youtube_video_id": "7_lzRbhRJYA", "title": "Thermochemistry - L 3 | Bond Energy | Unacademy NEET | LIVE DAILY | NEET Chemistry | Ashwani Sir", "duration_seconds": 3541, "embedding_status": "embeddable" }
+      ],
+      "exclusions": [
+        { "source_position": 4, "youtube_video_id": "cv6mAJ4wd3Q", "title": "Thermochemistry - Quiz 1 | Class 11 | Unacademy NEET | LIVE QUIZ | NEET Chemistry | Ashwani Sir", "duration_seconds": 1857, "embedding_status": "embeddable", "reason": "quiz" }
+      ]
+    }
+  ],
+  "teacher_normalization_gate": {
+    "status": "satisfied",
+    "matching_production_teacher_records": 2,
+    "teachers": [
+      { "teacher_id": 32, "teacher_slug": "ashwani-tyagi", "teacher_verified": true },
+      { "teacher_id": 36, "teacher_slug": "anoop-vashishtha", "teacher_verified": true }
+    ],
+    "note": "Both normalized verified teacher records and their Unacademy NEET associations already exist. Owner approval is still required for these exact playlist-specific attributions."
+  },
+  "deferred": [
+    "Hydrocarbons is missing Lecture 4 and remains incomplete.",
+    "Carboxylic Acids covers only part of the broader Carboxylic Acids and Derivatives chapter and remains deferred for scope review.",
+    "Mineral Nutrition and Transport in Plants do not have current production chapter records and remain deferred; no reference-data write is proposed.",
+    "Electromagnetic Waves is mechanically clean, but its teacher evidence names only Samip and requires a separate identity review before it can be proposed."
+  ]
+}
