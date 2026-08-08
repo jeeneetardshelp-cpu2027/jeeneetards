@@ -204,16 +204,17 @@ describe("Unacademy NEET nineteenth-batch faculty-link production package", () =
     expect(sql.match(/30eee4a4a6842e5beeb7c97083d7f812/g)).toHaveLength(2);
   });
 
-  it("pins the immutable hash and prepared-only approval boundary", () => {
+  it("pins the immutable hash and completed production evidence", () => {
     expect(createHash("sha256").update(sql, "utf8").digest("hex")).toBe(expectedHash);
     expect(readiness).toContain(`SHA-256: \`${expectedHash}\``);
-    expect(readiness).toContain("PREPARED ONLY, NOT APPLIED");
+    expect(readiness).toContain("APPLIED TO PRODUCTION ON 8 AUGUST 2026");
     expect(readiness).toContain("+3 `playlist_teachers` rows only");
     expect(readiness).toContain("from 168 to 171");
     expect(readiness).toContain("82 courses / 1,304 memberships");
-    expect(readiness).toContain("separate owner approval");
-    expect(readiness).toContain("07 Aug 2026, 19:11:58 IST");
-    expect(readiness).toContain("no production SQL or `release` push occurred");
+    expect(readiness).toContain("2026-08-08T06:00:04.374319Z");
+    expect(readiness).toContain("2026-08-08T06:01:24.838299Z");
+    expect(readiness).toContain("no `release` push occurred");
+    expect(readiness).toContain("Quality review remains a separate gate");
   });
 
   it("executes atomically and rolls back on baseline drift", async () => {

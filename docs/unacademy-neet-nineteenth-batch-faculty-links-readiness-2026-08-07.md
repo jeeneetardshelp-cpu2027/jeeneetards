@@ -2,10 +2,10 @@
 
 ## Status
 
-**PREPARED ONLY, NOT APPLIED.** Production remains unchanged. This package is
-waiting for separate owner approval naming the exact SHA-256 below. No content
-import, quality review, schema migration, clone, restore, deployment, or
-`release` push occurred.
+**APPLIED TO PRODUCTION ON 8 AUGUST 2026.** The owner approved the exact
+SHA-256 below. The guarded transaction inserted only the three reviewed
+`playlist_teachers` rows. No content import, quality review, schema migration,
+clone, restore, deployment, or `release` push occurred.
 
 ## Reviewed scope
 
@@ -75,6 +75,31 @@ the exact three new instructor links and every unchanged boundary before commit.
 - ESLint passed with zero warnings;
 - no production SQL or `release` push occurred during preparation.
 
+## Production execution evidence
+
+- exact approved artifact SHA-256 reverified immediately before execution:
+  `97d5d23937bb7b979aa989aa94e0cf9b3f661b0782a5f168b1a5fc40101825c1`;
+- PITR rechecked before the write: seven-day retention active, restore
+  availability from `02 Aug 2026, 00:01:09 IST` through
+  `08 Aug 2026, 00:09:35 IST`;
+- fresh read-only preflight at `2026-08-08T06:00:04.374319Z` matched the exact
+  guarded baseline: catalogue `416 / 4,731 / 4,737 / 263`, chapter-class scopes
+  `92`, faculty links `168`, quality reviews `39`, and no target faculty links
+  or quality reviews;
+- the SQL editor value was copied back and compared to the approved artifact
+  before execution; it matched exactly after newline normalization;
+- the guarded transaction committed and returned exactly courses 433-435;
+- independent read-only postflight at `2026-08-08T06:01:24.838299Z` confirmed
+  faculty links `171`, target links
+  `433:anoop-vashishtha:instructor:1`,
+  `434:anoop-vashishtha:instructor:1`, and
+  `435:ashwani-tyagi:instructor:1`;
+- all three target courses remained `pending / pending`, target quality reviews
+  remained `0`, and every other guarded catalogue/registry count was unchanged;
+- protected JEE remained exactly `82 / 1,304 /
+  30eee4a4a6842e5beeb7c97083d7f812`;
+- no `release` push occurred. Quality review remains a separate gate.
+
 ## Required approval wording
 
 `Approve applying Unacademy NEET nineteenth-batch faculty-link artifact SHA-256
@@ -84,5 +109,5 @@ no release push.`
 
 ## Next gate
 
-Stop here. Do not run this SQL without the exact-hash approval above. Quality
-review remains a later, separately prepared and hash-approved production gate.
+Stop here. Faculty links are complete. Quality review remains a later,
+separately prepared and hash-approved production gate.
