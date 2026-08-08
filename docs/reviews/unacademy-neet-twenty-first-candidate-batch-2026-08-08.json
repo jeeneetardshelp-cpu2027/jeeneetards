@@ -1,0 +1,106 @@
+{
+  "reviewed_on": "2026-08-08",
+  "review_status": "owner_approval_required",
+  "proposed_decision_id": "9443dd70-a2c6-4747-9a5e-a9022f7012cf",
+  "channel": {
+    "name": "Unacademy NEET",
+    "handle": "@UnacademyNEET",
+    "youtube_channel_id": "UCdQwYksctqqiRwqp3PiJMWA",
+    "production_institute_id": 147,
+    "playlist_count": 736
+  },
+  "preflight": {
+    "captured_at": "2026-08-08T12:00:00.053Z",
+    "playlists": 419,
+    "videos": 4740,
+    "memberships": 4746,
+    "chapters": 263,
+    "chapter_class_levels": 92,
+    "teachers": 35,
+    "faculty_links": 174,
+    "quality_reviews": 45,
+    "source_collision_count": 0,
+    "retained_video_collision_count": 0,
+    "protected_jee_courses": 82,
+    "protected_jee_memberships": 1304,
+    "protected_jee_fingerprint": "30eee4a4a6842e5beeb7c97083d7f812",
+    "rolling_jee_courses": 212,
+    "rolling_jee_memberships": 2848,
+    "rolling_jee_fingerprint": "9eea2b44f0b19c08cc0907c57e091342"
+  },
+  "candidates": [
+    {
+      "order": 1,
+      "youtube_playlist_id": "PLsgHooHkqhhMZ0ocHynO-84oB0VVcuyoG",
+      "source_title": "Kinetic Theory of Gases",
+      "source_snapshot_sha256": "cc773d0df0234f01c034a7d18ada457435b00c735a0967108c539b4efebd9056",
+      "source_item_count": 2,
+      "subject_id": 1,
+      "chapter_id": 275,
+      "chapter": "Kinetic Theory of Gases",
+      "mapping_rationale": "The chapter-titled lesson auto-maps; Numerical on Ideal Gas Equation is manually confirmed to the same Kinetic Theory of Gases chapter.",
+      "class_level_id": 2,
+      "class_level": "class-11",
+      "teacher_id": null,
+      "teacher": "Shubham Kumar",
+      "teacher_verified": false,
+      "teacher_evidence_url": "https://unacademy.com/lesson/assumptions-of-kinetic-theory-definition-of-an-ideal-gas-in-hindi/2TBU4FK8",
+      "source_collision_count": 0,
+      "video_collision_count": 0,
+      "retained_source_positions": [1, 2],
+      "excluded_source_positions": [],
+      "videos": [
+        { "source_position": 1, "youtube_video_id": "v9q8mDQdXbM", "title": "Kinetic Theory of Gases", "duration_seconds": 899, "embedding_status": "embeddable" },
+        { "source_position": 2, "youtube_video_id": "NBwkv5Q-OK0", "title": "Numerical on Ideal Gas Equation", "duration_seconds": 800, "embedding_status": "embeddable" }
+      ],
+      "exclusions": []
+    },
+    {
+      "order": 2,
+      "youtube_playlist_id": "PLsgHooHkqhhPkYyUO_zMJpEQZ5MST56fK",
+      "source_title": "Electromagnetic Waves",
+      "source_snapshot_sha256": "d046ae1cd01328f9e33537660e4d714e2b045dc2cd0aaffa699ad2e6faec3367",
+      "source_item_count": 4,
+      "subject_id": 1,
+      "chapter_id": 15,
+      "chapter": "Electromagnetic Waves",
+      "mapping_rationale": "All four source lessons explicitly cover Electromagnetic Waves and auto-map to the existing Class 12 chapter.",
+      "class_level_id": 3,
+      "class_level": "class-12",
+      "teacher_id": null,
+      "teacher": "Samip Velani",
+      "teacher_verified": false,
+      "teacher_evidence_url": "https://unacademy.com/course/electromagnetic-waves-for-class-12/5WOQB7FD",
+      "source_collision_count": 0,
+      "video_collision_count": 0,
+      "retained_source_positions": [1, 2, 3, 4],
+      "excluded_source_positions": [],
+      "videos": [
+        { "source_position": 1, "youtube_video_id": "hixsCud1ajA", "title": "Electromagnetic Waves - Story behind the Idea", "duration_seconds": 814, "embedding_status": "embeddable" },
+        { "source_position": 2, "youtube_video_id": "BumQy7Ni8Gg", "title": "Electromagnetic Waves - Displacement Current and Maxwell's Equations", "duration_seconds": 896, "embedding_status": "embeddable" },
+        { "source_position": 3, "youtube_video_id": "nwFN57p4x2o", "title": "Electromagnetic Waves - Nature of Electromagnetic Waves", "duration_seconds": 901, "embedding_status": "embeddable" },
+        { "source_position": 4, "youtube_video_id": "I3hOh2-0uHI", "title": "Electromagnetic Waves - Electromagnetic Spectrum", "duration_seconds": 901, "embedding_status": "embeddable" }
+      ],
+      "exclusions": []
+    }
+  ],
+  "teacher_normalization_gate": {
+    "status": "owner_review_required",
+    "matching_production_teacher_records": 0,
+    "teachers": [
+      { "teacher_id": null, "teacher_slug": "shubham-kumar", "teacher_verified": false },
+      { "teacher_id": null, "teacher_slug": "samip-velani", "teacher_verified": false }
+    ],
+    "note": "Official source evidence resolves both names for these exact playlists, but owner approval is required before playlist-specific attribution may be used. Normalized teacher creation and playlist linking remain separate later gates."
+  },
+  "anonymous_dry_runs": [
+    { "order": 1, "status": "ok", "published": 2, "usable": 2, "assignments": 2, "exclusions": 0, "review": 0, "blocked": 0 },
+    { "order": 2, "status": "ok", "published": 4, "usable": 4, "assignments": 4, "exclusions": 0, "review": 0, "blocked": 0 }
+  ],
+  "deferred": [
+    "Mineral Nutrition has a five-lecture Pradeep Singh source with zero reuse, but production has no Mineral Nutrition chapter; it remains behind a separate additive reference-data gate.",
+    "Transport in Plants has a three-lecture Pradeep Singh source with zero reuse, but production has no Transport in Plants chapter; it remains behind a separate additive reference-data gate.",
+    "The reviewed Plant Growth and Development source is already present as production course 413 and must not be duplicated.",
+    "Hydrocarbons remains incomplete because Lecture 4 is absent."
+  ]
+}

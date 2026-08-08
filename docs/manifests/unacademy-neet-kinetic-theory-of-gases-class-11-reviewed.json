@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "request_id": "9ae43a37-564b-468b-a971-758b3e1fd681",
+  "youtube_playlist_id": "PLsgHooHkqhhMZ0ocHynO-84oB0VVcuyoG",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "9443dd70-a2c6-4747-9a5e-a9022f7012cf",
+    "youtube_playlist_id": "PLsgHooHkqhhMZ0ocHynO-84oB0VVcuyoG",
+    "teacher": "Shubham Kumar",
+    "source_url": "https://www.youtube.com/playlist?list=PLsgHooHkqhhMZ0ocHynO-84oB0VVcuyoG",
+    "source_label": "Official Unacademy NEET channel-owned Kinetic Theory of Gases playlist; both video descriptions link to more courses by Shubham Kumar, and the matching official Unacademy course identifies Shubham Kumar",
+    "reviewed_by": "Owner",
+    "reviewed_on": "2026-08-08",
+    "youtube_video_ids": ["v9q8mDQdXbM", "NBwkv5Q-OK0"]
+  },
+  "assignments": [
+    { "position": 1, "youtube_video_id": "v9q8mDQdXbM", "chapter": "Kinetic Theory of Gases", "lesson_number": 1 },
+    { "position": 2, "youtube_video_id": "NBwkv5Q-OK0", "chapter": "Kinetic Theory of Gases", "lesson_number": 2 }
+  ],
+  "exclusions": []
+}

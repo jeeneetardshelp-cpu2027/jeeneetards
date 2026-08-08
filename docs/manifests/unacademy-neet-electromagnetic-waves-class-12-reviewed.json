@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "request_id": "407149b3-61a3-4cdd-b4b5-eed7a4ba84a9",
+  "youtube_playlist_id": "PLsgHooHkqhhPkYyUO_zMJpEQZ5MST56fK",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "9443dd70-a2c6-4747-9a5e-a9022f7012cf",
+    "youtube_playlist_id": "PLsgHooHkqhhPkYyUO_zMJpEQZ5MST56fK",
+    "teacher": "Samip Velani",
+    "source_url": "https://www.youtube.com/playlist?list=PLsgHooHkqhhPkYyUO_zMJpEQZ5MST56fK",
+    "source_label": "Official Unacademy NEET channel-owned Electromagnetic Waves playlist; every description names Samip, and the matching official Unacademy Electromagnetic Waves course identifies Samip Velani",
+    "reviewed_by": "Owner",
+    "reviewed_on": "2026-08-08",
+    "youtube_video_ids": ["hixsCud1ajA", "BumQy7Ni8Gg", "nwFN57p4x2o", "I3hOh2-0uHI"]
+  },
+  "assignments": [
+    { "position": 1, "youtube_video_id": "hixsCud1ajA", "chapter": "Electromagnetic Waves", "lesson_number": 1 },
+    { "position": 2, "youtube_video_id": "BumQy7Ni8Gg", "chapter": "Electromagnetic Waves", "lesson_number": 2 },
+    { "position": 3, "youtube_video_id": "nwFN57p4x2o", "chapter": "Electromagnetic Waves", "lesson_number": 3 },
+    { "position": 4, "youtube_video_id": "I3hOh2-0uHI", "chapter": "Electromagnetic Waves", "lesson_number": 4 }
+  ],
+  "exclusions": []
+}
