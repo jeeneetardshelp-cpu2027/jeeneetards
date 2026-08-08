@@ -2,9 +2,9 @@
 
 ## Status
 
-**PREPARED ONLY - SEPARATE HASH APPROVAL REQUIRED.** The guarded quality-review
-package has been assembled and rehearsed locally. No production SQL was run,
-no deployment occurred, and no `release` push occurred during this gate.
+**APPLIED TO PRODUCTION ON 8 AUGUST 2026.** The owner approved the exact
+SHA-256 below. The guarded transaction completed the three reviewed quality
+transitions. No deployment or `release` push occurred.
 
 ## Reviewed scope
 
@@ -22,10 +22,11 @@ the concise canonical title. It retains the normalized instructor links from
 the completed faculty-link gate and does not create or delete catalogue,
 taxonomy, registry, or faculty-link rows.
 
-## Current production boundary
+## Fresh production boundary before execution
 
 The completed twentieth-batch faculty-link postflight at
-`2026-08-08T10:28:34.391104Z` established this boundary:
+`2026-08-08T10:28:34.391104Z` established the expected boundary. A fresh
+read-only preflight at `2026-08-08T11:09:08.905312Z` reproduced it exactly:
 
 - catalogue: 419 playlists / 4,740 videos / 4,746 memberships / 263 chapters;
 - chapter-class scopes: 92;
@@ -39,11 +40,9 @@ The completed twentieth-batch faculty-link postflight at
 - protected original JEE remains 82 courses / 1,304 memberships / fingerprint
   `30eee4a4a6842e5beeb7c97083d7f812`.
 
-PITR was active with seven-day retention during the preceding production gate,
-with restore availability from `02 Aug 2026, 00:01:09 IST` through
-`08 Aug 2026, 15:10:06 IST`. This is preparation evidence only: a fresh PITR
-and exact-baseline check are mandatory immediately before any separately
-approved production execution.
+PITR was rechecked immediately before the write. Seven-day retention was
+active, with restore availability from `02 Aug 2026, 00:01:09 IST` through
+`08 Aug 2026, 15:58:08 IST`; the latter is this gate's rollback point.
 
 ## Immutable prepared artifact
 
@@ -78,7 +77,32 @@ verifies each target and its immutable before/after audit row before commit.
   were intentionally absent;
 - no production SQL was run during preparation.
 
-## Required approval wording
+## Production execution evidence
+
+- the approved SQL artifact was re-read from disk immediately before execution:
+  20,164 UTF-8 bytes and exact SHA-256
+  `6ea0f50eb369bdc7f2daee25d20631729c76e527b2f70d07616bc775e4efa023`;
+- the first editor readback exposed stale preflight text ahead of the artifact;
+  nothing was executed, the entire editor was cleared, and the exact 400-line
+  artifact was reloaded with its approved header, final postflight query, and
+  `commit;` terminator verified before execution;
+- the guarded transaction committed and returned exactly courses 436-438 with
+  canonical titles, preserved source titles, and `approved` title status;
+- all three immutable review rows were written at
+  `2026-08-08T11:10:27.901115Z`;
+- independent read-only postflight at `2026-08-08T11:11:14.834137Z` confirmed
+  quality reviews `42 -> 45`, exactly one review row per target, and exact
+  pending-to-approved / pending-to-identified before-and-after states;
+- courses 436-438 retain their exact instructor links (36, 36, and 39), have
+  no missing quality fields, and preserve their exact YouTube source titles;
+- catalogue, taxonomy, registry, and faculty-link totals remained unchanged at
+  `419 / 4,740 / 4,746 / 263`, 92 chapter-class scopes, and
+  `35 / 56 / 36 / 36 / 35 / 174` faculty-registry totals;
+- protected JEE remained exactly `82 / 1,304 /
+  30eee4a4a6842e5beeb7c97083d7f812`; and
+- no `release` push occurred.
+
+## Consumed approval wording
 
 `Approve applying Unacademy NEET twentieth-batch quality-review artifact
 SHA-256 6ea0f50eb369bdc7f2daee25d20631729c76e527b2f70d07616bc775e4efa023 to
@@ -87,6 +111,6 @@ no release push.`
 
 ## Next gate
 
-Stop here. Production execution requires the exact-hash approval above and a
-fresh PITR plus exact quiet-window baseline check. The completed faculty-link
-artifact must not be rerun.
+Stop here. The completed faculty-link and quality-review artifacts must not be
+rerun. Any later content, faculty, quality, schema, deployment, or `release`
+work remains a separate gate.
