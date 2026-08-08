@@ -68,6 +68,53 @@ describe("StudyMaterialsDirectoryView", () => {
     expect(retry).toHaveBeenCalledTimes(1);
   });
 
+  it("loads beyond the first bounded page and reports visible progress", () => {
+    const loadMore = vi.fn();
+    const items = Array.from({ length: 60 }, (_, index) => ({
+      ...MATERIAL,
+      id: index + 1,
+      title: `JEE paper ${index + 1}`,
+      sourceUrl: `https://example.edu/paper-${index + 1}.pdf`,
+    }));
+    const view = render(
+      <StudyMaterialsDirectoryView
+        items={items}
+        total={124}
+        hasMore
+        loadMore={loadMore}
+      />,
+    );
+
+    expect(screen.getByText("Showing 60 of 124 resources")).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: "Load 60 more resources" }));
+    expect(loadMore).toHaveBeenCalledTimes(1);
+
+    view.rerender(
+      <StudyMaterialsDirectoryView
+        items={items}
+        total={124}
+        hasMore
+        loadMore={loadMore}
+        loadingMore
+      />,
+    );
+    expect(screen.getByRole("button", { name: /Loading more resources/ }).disabled).toBe(true);
+
+    view.rerender(
+      <StudyMaterialsDirectoryView
+        items={items}
+        total={124}
+        hasMore
+        loadMore={loadMore}
+        loadMoreError="Couldn't load more study material."
+      />,
+    );
+    expect(screen.getByRole("alert").textContent).toContain("Couldn't load more study material.");
+    fireEvent.click(screen.getByRole("button", { name: "Try loading more again" }));
+    expect(loadMore).toHaveBeenCalledTimes(2);
+    expect(screen.queryByRole("button", { name: "Load 60 more resources" })).toBeNull();
+  });
+
   it("offers material-backed CBSE filters even without a lecture catalogue branch", () => {
     render(
       <MemoryRouter initialEntries={["/materials?goal=school&board=cbse&class=class-11&subject=physics"]}>

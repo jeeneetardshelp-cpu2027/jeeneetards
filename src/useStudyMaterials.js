@@ -1,4 +1,4 @@
-// One bounded study-material read for both the directory and the watch page.
+// Bounded study-material reads for both the directory and the watch page.
 // The database owns review/rights filtering; this mapper only turns the RPC's
 // snake_case contract into the small, predictable shape components consume.
 
@@ -18,7 +18,8 @@ const TYPE_LABELS = new Map(STUDY_MATERIAL_TYPES.map((item) => [item.value, item
 const MISSING_RPC = /PGRST202|could not find the function|schema cache|does not exist/i;
 
 const EMPTY = {
-  items: [], total: 0, loading: false, error: null, unavailable: false,
+  items: [], total: 0, loading: false, loadingMore: false,
+  error: null, loadMoreError: null, unavailable: false,
 };
 
 export function materialTypeLabel(value) {
@@ -92,7 +93,7 @@ export function useStudyMaterials(filters = {}, { enabled = true } = {}) {
     offset = 0,
   } = filters;
 
-  const load = useCallback(async () => {
+  const load = useCallback(async ({ append = false, pageOffset = offset } = {}) => {
     const currentGeneration = ++generation.current;
     const current = () => currentGeneration === generation.current;
     request.current?.abort();
@@ -108,14 +109,28 @@ export function useStudyMaterials(filters = {}, { enabled = true } = {}) {
 
     const controller = new AbortController();
     request.current = controller;
-    setState((previous) => ({ ...previous, loading: true, error: null }));
+    setState((previous) => append
+      ? { ...previous, loadingMore: true, loadMoreError: null }
+      : {
+        ...previous, loading: true, loadingMore: false,
+        error: null, loadMoreError: null,
+      });
     try {
       const result = await fetchStudyMaterials(supabase, {
-        goal, board, stage, subject, chapter, chapterId, videoId, type, limit, offset,
+        goal, board, stage, subject, chapter, chapterId, videoId, type,
+        limit, offset: pageOffset,
       }, { signal: controller.signal });
       if (!current()) return;
       if (result.error) {
         if (!result.unavailable) console.error("study materials:", result.error);
+        if (append && !result.unavailable) {
+          setState((previous) => ({
+            ...previous,
+            loadingMore: false,
+            loadMoreError: "Couldn't load more study material.",
+          }));
+          return;
+        }
         setState({
           ...EMPTY,
           unavailable: result.unavailable,
@@ -123,22 +138,58 @@ export function useStudyMaterials(filters = {}, { enabled = true } = {}) {
         });
         return;
       }
-      setState({ ...result.data, loading: false, error: null, unavailable: false });
+      setState((previous) => {
+        const items = append
+          ? [...new Map([...previous.items, ...result.data.items].map((item) => [item.id, item])).values()]
+          : result.data.items;
+        return {
+          ...result.data,
+          items,
+          loading: false,
+          loadingMore: false,
+          error: null,
+          loadMoreError: null,
+          unavailable: false,
+        };
+      });
     } catch (reason) {
       if (!current() || controller.signal.aborted) return;
       console.error("study materials:", reason);
+      if (append) {
+        setState((previous) => ({
+          ...previous,
+          loadingMore: false,
+          loadMoreError: "Couldn't reach the next page of study material.",
+        }));
+        return;
+      }
       setState({ ...EMPTY, error: "Couldn't reach the study-material library." });
     }
   }, [board, chapter, chapterId, enabled, goal, limit, offset, stage, subject, type, videoId]);
 
   useEffect(() => {
-    load();
+    load({ append: false, pageOffset: offset });
     return () => {
       generation.current += 1;
       request.current?.abort();
       request.current = null;
     };
-  }, [load]);
+  }, [load, offset]);
 
-  return { ...state, retry: load };
+  const loadMore = useCallback(() => {
+    if (state.loading || state.loadingMore || state.items.length >= state.total) return undefined;
+    return load({ append: true, pageOffset: offset + state.items.length });
+  }, [load, offset, state.items.length, state.loading, state.loadingMore, state.total]);
+
+  const retry = useCallback(
+    () => load({ append: false, pageOffset: offset }),
+    [load, offset],
+  );
+
+  return {
+    ...state,
+    hasMore: state.items.length < state.total,
+    loadMore,
+    retry,
+  };
 }
