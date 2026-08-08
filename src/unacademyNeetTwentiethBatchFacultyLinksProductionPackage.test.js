@@ -226,9 +226,11 @@ describe("Unacademy NEET twentieth-batch faculty-link production package", () =>
     expect(sql.match(/30eee4a4a6842e5beeb7c97083d7f812/g)).toHaveLength(2);
     expect(createHash("sha256").update(sql, "utf8").digest("hex")).toBe(expectedHash);
     expect(readiness).toContain(`SHA-256: \`${expectedHash}\``);
-    expect(readiness).toContain("REVISED PREPARED ONLY - NEW HASH APPROVAL REQUIRED");
+    expect(readiness).toContain("APPLIED SUCCESSFULLY TO PRODUCTION ON 8 AUGUST 2026");
     expect(readiness).toContain("47c61d0354124e33241cd17e3e4d8cffc1c57abbcd07b716b46a050c7520200c");
-    expect(readiness).toContain("failed closed before its first insert");
+    expect(readiness).toContain("before any insert");
+    expect(readiness).toContain("2026-08-08T10:28:34.391104Z");
+    expect(readiness).toContain("438:indrajeet-singh-sangtani:1");
     expect(readiness).toContain("Quality review remains a separate later gate");
   });
 

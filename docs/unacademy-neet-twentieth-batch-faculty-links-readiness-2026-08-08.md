@@ -2,10 +2,9 @@
 
 ## Status
 
-**REVISED PREPARED ONLY - NEW HASH APPROVAL REQUIRED.** The first approved
-artifact was attempted once, failed closed before its first insert, and rolled
-back. Production remains unchanged. No quality-review transition, deployment,
-or `release` push occurred.
+**APPLIED SUCCESSFULLY TO PRODUCTION ON 8 AUGUST 2026.** The revised exact-hash
+artifact committed after fresh PITR and exact-baseline verification. No
+quality-review transition, deployment, or `release` push occurred.
 
 ## Exact artifact
 
@@ -13,7 +12,7 @@ or `release` push occurred.
 - SHA-256: `9ae58b0c2ebdb0cd276dfe36cf45e2daae67c7ac409ea4ec0c8857182f543852`
 - Evidence decision: `8de024c6-7317-4901-a91e-5006a5efcd7e`
 
-Proposed approval wording:
+Approved execution wording:
 
 > Approve applying Unacademy NEET twentieth-batch faculty-link artifact
 > SHA-256 `9ae58b0c2ebdb0cd276dfe36cf45e2daae67c7ac409ea4ec0c8857182f543852`
@@ -34,6 +33,32 @@ The only mismatch was course 438's exact stored title: production contains two
 ordinary spaces after `Class 12 |`, while the first artifact expected one. All
 other guarded course clauses passed. This revision changes only that expected
 title literal and its test fixture; it does not change any proposed write.
+
+## Production execution evidence
+
+- exact approved artifact SHA-256 was reverified immediately before execution:
+  `9ae58b0c2ebdb0cd276dfe36cf45e2daae67c7ac409ea4ec0c8857182f543852`;
+- PITR was active with seven-day retention, with restore availability from
+  `02 Aug 2026, 00:01:09 IST` through `08 Aug 2026, 15:10:06 IST`;
+- fresh read-only preflight at `2026-08-08T10:26:57.386740Z` matched every
+  exact guard: catalogue `419 / 4,740 / 4,746 / 263`, chapter-class scopes `92`,
+  registry `34 / 54 / 35 / 35 / 34 / 171`, quality reviews `42`, production
+  marker `0`, and all target teacher/alias/faculty/review counts `0`;
+- the SQL editor value was copied back before execution and matched the approved
+  artifact exactly after newline normalization;
+- the guarded transaction committed and returned exactly courses 436-438;
+- independent read-only postflight at `2026-08-08T10:28:34.391104Z` confirmed
+  registry `35 / 56 / 36 / 36 / 35 / 174` with catalogue, chapter-class scopes,
+  and the 42 quality reviews unchanged;
+- new verified teacher `39` is `indrajeet-singh-sangtani`, with normalized
+  aliases `indrajeet` and `indrajeet singh sangtani` and the exact Unacademy
+  NEET / Physics / NEET context links;
+- target faculty links are exactly `436:anoop-vashishtha:1`,
+  `437:anoop-vashishtha:1`, and `438:indrajeet-singh-sangtani:1`;
+- courses 436-438 remain `pending / pending`, and target quality reviews remain
+  `0`; and
+- protected JEE remains exactly `82 / 1,304 /
+  30eee4a4a6842e5beeb7c97083d7f812`.
 
 ## Additive scope
 
