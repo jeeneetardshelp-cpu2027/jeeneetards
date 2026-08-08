@@ -2,21 +2,38 @@
 
 ## Status
 
-**PREPARED ONLY - SEPARATE HASH APPROVAL REQUIRED.** No production SQL was run.
-No quality-review transition, deployment, or `release` push occurred.
+**REVISED PREPARED ONLY - NEW HASH APPROVAL REQUIRED.** The first approved
+artifact was attempted once, failed closed before its first insert, and rolled
+back. Production remains unchanged. No quality-review transition, deployment,
+or `release` push occurred.
 
 ## Exact artifact
 
 - SQL: `docs/sql/unacademy_neet_twentieth_batch_faculty_links_2026-08-08.sql`
-- SHA-256: `47c61d0354124e33241cd17e3e4d8cffc1c57abbcd07b716b46a050c7520200c`
+- SHA-256: `9ae58b0c2ebdb0cd276dfe36cf45e2daae67c7ac409ea4ec0c8857182f543852`
 - Evidence decision: `8de024c6-7317-4901-a91e-5006a5efcd7e`
 
 Proposed approval wording:
 
 > Approve applying Unacademy NEET twentieth-batch faculty-link artifact
-> SHA-256 `47c61d0354124e33241cd17e3e4d8cffc1c57abbcd07b716b46a050c7520200c`
+> SHA-256 `9ae58b0c2ebdb0cd276dfe36cf45e2daae67c7ac409ea4ec0c8857182f543852`
 > to production, after a fresh PITR and exact-baseline check; stop on any
 > mismatch; no release push.
+
+## Aborted first attempt
+
+The owner-approved first artifact, SHA-256
+`47c61d0354124e33241cd17e3e4d8cffc1c57abbcd07b716b46a050c7520200c`, was
+attempted once after a fresh production preflight at
+`2026-08-08T09:37:04.878452Z`. Its guard raised
+`refusing Unacademy twentieth-batch faculty package: reviewed course differs`
+before any insert. The transaction rolled back and read-only post-abort counts
+confirmed zero faculty-package changes.
+
+The only mismatch was course 438's exact stored title: production contains two
+ordinary spaces after `Class 12 |`, while the first artifact expected one. All
+other guarded course clauses passed. This revision changes only that expected
+title literal and its test fixture; it does not change any proposed write.
 
 ## Additive scope
 

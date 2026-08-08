@@ -42,7 +42,7 @@ begin
        2::bigint, 46::bigint, 'class-11'::text, '11th'::text,
        array['CdCL4s9L4F8','4-LZNHTDJaE','1pEXZvaack4']::text[]),
       (438::bigint,
-       'Semiconductors - Playlist | Class 12 | Unacademy NEET | LIVE DAILY | NEET Physics | Indrajeet Sir'::text,
+       'Semiconductors - Playlist | Class 12 |  Unacademy NEET | LIVE DAILY | NEET Physics | Indrajeet Sir'::text,
        'Indrajeet Singh Sangtani'::text, 'PLsgHooHkqhhNhMBc1PNiIav8Kv_O7NPIT'::text,
        1::bigint, 17::bigint, 'class-12'::text, '12th'::text,
        array['6r2dj5wPfMk','OLymGXjoLUQ','q_Yji3EdXfg']::text[])

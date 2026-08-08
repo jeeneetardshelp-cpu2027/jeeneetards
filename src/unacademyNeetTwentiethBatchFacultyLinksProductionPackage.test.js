@@ -7,7 +7,7 @@ const sqlPath = "docs/sql/unacademy_neet_twentieth_batch_faculty_links_2026-08-0
 const readinessPath = "docs/unacademy-neet-twentieth-batch-faculty-links-readiness-2026-08-08.md";
 const sql = readFileSync(sqlPath, "utf8");
 const readiness = readFileSync(readinessPath, "utf8");
-const expectedHash = "47c61d0354124e33241cd17e3e4d8cffc1c57abbcd07b716b46a050c7520200c";
+const expectedHash = "9ae58b0c2ebdb0cd276dfe36cf45e2daae67c7ac409ea4ec0c8857182f543852";
 
 async function productionShapedDb() {
   const pg = new PGlite();
@@ -112,7 +112,7 @@ async function productionShapedDb() {
     insert into public.playlists values
       (436, 'Metallurgy - Playlist | Class 12 | Unacademy NEET | NEET Live Daily | NEET Chemistry | Anoop Sir', null, 'Anoop Vashishtha', 'PLsgHooHkqhhMzQKgCZ2vyX2bh3ejb1eIQ', 2, 2, array['12th'], '12th', 'full-course', 'hinglish', 'intermediate', 147, 'pending', 'pending'),
       (437, 'S Block Elements - Playlist | Class 11 | Unacademy NEET | Chemistry | Anoop Sir', null, 'Anoop Vashishtha', 'PLsgHooHkqhhMRv85qlHflI5j8SoA8yZ0n', 2, 2, array['11th'], '11th', 'full-course', 'hinglish', 'intermediate', 147, 'pending', 'pending'),
-      (438, 'Semiconductors - Playlist | Class 12 | Unacademy NEET | LIVE DAILY | NEET Physics | Indrajeet Sir', null, 'Indrajeet Singh Sangtani', 'PLsgHooHkqhhNhMBc1PNiIav8Kv_O7NPIT', 2, 1, array['12th'], '12th', 'full-course', 'hinglish', 'intermediate', 147, 'pending', 'pending');
+      (438, 'Semiconductors - Playlist | Class 12 |  Unacademy NEET | LIVE DAILY | NEET Physics | Indrajeet Sir', null, 'Indrajeet Singh Sangtani', 'PLsgHooHkqhhNhMBc1PNiIav8Kv_O7NPIT', 2, 1, array['12th'], '12th', 'full-course', 'hinglish', 'intermediate', 147, 'pending', 'pending');
 
     insert into public.playlist_learning_goals select n, 1 from generate_series(1, 82) n;
     insert into public.playlist_learning_goals values (436, 2), (437, 2), (438, 2);
@@ -198,6 +198,7 @@ describe("Unacademy NEET twentieth-batch faculty-link production package", () =>
       "438:indrajeet-singh-sangtani:1",
       "tZWyg6ewJb8",
       "q_Yji3EdXfg",
+      "Semiconductors - Playlist | Class 12 |  Unacademy NEET | LIVE DAILY | NEET Physics | Indrajeet Sir",
     ]) expect(sql).toContain(fragment);
     const executable = sql.replace(/^\s*--.*$/gm, "");
     expect(executable).not.toMatch(/\b(?:update|delete|alter|drop|truncate)\b/i);
@@ -225,7 +226,9 @@ describe("Unacademy NEET twentieth-batch faculty-link production package", () =>
     expect(sql.match(/30eee4a4a6842e5beeb7c97083d7f812/g)).toHaveLength(2);
     expect(createHash("sha256").update(sql, "utf8").digest("hex")).toBe(expectedHash);
     expect(readiness).toContain(`SHA-256: \`${expectedHash}\``);
-    expect(readiness).toContain("PREPARED ONLY - SEPARATE HASH APPROVAL REQUIRED");
+    expect(readiness).toContain("REVISED PREPARED ONLY - NEW HASH APPROVAL REQUIRED");
+    expect(readiness).toContain("47c61d0354124e33241cd17e3e4d8cffc1c57abbcd07b716b46a050c7520200c");
+    expect(readiness).toContain("failed closed before its first insert");
     expect(readiness).toContain("Quality review remains a separate later gate");
   });
 
