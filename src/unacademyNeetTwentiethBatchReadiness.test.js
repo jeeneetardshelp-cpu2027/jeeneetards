@@ -26,11 +26,11 @@ function snapshotHash(candidate) {
 }
 
 describe("Unacademy NEET twentieth-batch readiness", () => {
-  it("stays at the reviewed owner-decision gate with no production authorization", () => {
+  it("records the approved guarded production content import", () => {
     expect(review.review_status).toBe("owner_approval_required");
     expect(review.proposed_decision_id).toBe("8de024c6-7317-4901-a91e-5006a5efcd7e");
-    expect(readiness).toContain("PREPARED ONLY - OWNER APPROVAL REQUIRED");
-    expect(readiness).toContain("No production write");
+    expect(readiness).toContain("CONTENT IMPORT COMPLETED IN PRODUCTION");
+    expect(readiness).toContain("No schema migration, faculty-link write");
     expect(readiness).toContain("no `release` push");
   });
 
@@ -118,5 +118,34 @@ describe("Unacademy NEET twentieth-batch readiness", () => {
     });
     expect(readiness).toContain("Normalized faculty creation/linking and quality-review");
     expect(readiness).toContain("+3 playlists / +9 videos / +9 memberships");
+  });
+
+  it("records exact additive deltas and the decisive production postflight", () => {
+    expect(readiness).toContain("419 / 4,740 / 4,746 / 263");
+    expect(readiness).toContain("| 1 | 436 |");
+    expect(readiness).toContain("| 2 | 437 |");
+    expect(readiness).toContain("| 3 | 438 |");
+    expect(readiness).toContain("`4822`-`4824`");
+    expect(readiness).toContain("`4825`-`4827`");
+    expect(readiness).toContain("`4828`-`4830`");
+    expect(readiness).toContain("2026-08-08T07:39:28.232027Z");
+    expect(readiness).toContain("all nine retained YouTube video IDs exist exactly once");
+    expect(readiness).toContain("ihpwvwe6Y9I` and `4IMGrDbroK4` remain absent");
+    expect(readiness).toContain("82 / 1,304");
+    expect(readiness).toContain("30eee4a4a6842e5beeb7c97083d7f812");
+    expect(readiness).toContain("212 / 2,848");
+    expect(readiness).toContain("9eea2b44f0b19c08cc0907c57e091342");
+  });
+
+  it("records anonymous browse and first/final player evidence", () => {
+    expect(readiness).toContain("https://www.jeeneetard.com/course/436/chapter/55");
+    expect(readiness).toContain("https://www.jeeneetard.com/course/437/chapter/46");
+    expect(readiness).toContain("https://www.jeeneetard.com/course/438/chapter/17");
+    for (const videoId of [
+      "tZWyg6ewJb8", "X24X5wXFUno", "CdCL4s9L4F8",
+      "1pEXZvaack4", "6r2dj5wPfMk", "q_Yji3EdXfg",
+    ]) expect(readiness).toContain(videoId);
+    expect(readiness).toContain("44 historical rows and no row");
+    expect(readiness).toContain("audit-table coverage remains a separate operational hardening item");
   });
 });

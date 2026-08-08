@@ -2,10 +2,10 @@
 
 ## Status
 
-**PREPARED ONLY - OWNER APPROVAL REQUIRED.** This pass used the official
-YouTube Data API and read-only production queries. No production write, schema
-migration, faculty-link write, quality-review write, deployment, or `release`
-push occurred.
+**CONTENT IMPORT COMPLETED IN PRODUCTION** under owner decision
+`8de024c6-7317-4901-a91e-5006a5efcd7e`. The three courses were imported
+create-only, one at a time. No schema migration, faculty-link write,
+quality-review write, deployment, or `release` push occurred.
 
 ## Proposed owner decision
 
@@ -93,8 +93,72 @@ the anonymous dry-run immediately before each separately approved write.
 | 2 | The s-Block Elements | `PLsgHooHkqhhMRv85qlHflI5j8SoA8yZ0n` | 46 - The s-Block Elements / class-11 | Anoop Vashishtha (36) | 3 | 2 NCERT-question practice |
 | 3 | Semiconductor Electronics | `PLsgHooHkqhhNhMBc1PNiIav8Kv_O7NPIT` | 17 - Semiconductor Electronics / class-12 | Indrajeet Singh Sangtani (owner review) | 3 | 0 |
 
-Expected create-only delta if all three later pass their fresh write gates:
-**+3 playlists / +9 videos / +9 memberships / +0 chapters**, with zero reuse.
+Completed create-only delta: **+3 playlists / +9 videos / +9 memberships /
++0 chapters**, with zero reuse. Final totals after all three imports:
+**419 / 4,740 / 4,746 / 263**.
+
+## Production execution evidence
+
+PITR was freshly confirmed active with seven-day retention before the batch.
+The signed-in Supabase dashboard advertised restore availability from
+`02 Aug 2026, 00:01:09 IST` through `08 Aug 2026, 12:14:02 IST`; the latter was
+recorded as the pre-batch rollback point. Availability was refreshed before
+the later courses to `08 Aug 2026, 13:04:03 IST`, and the final check advanced
+to `08 Aug 2026, 13:10:03 IST`.
+
+The quiet-window live preflight reproduced the approved boundary exactly:
+
+- 416 playlists / 4,731 videos / 4,737 memberships / 263 chapters;
+- 92 chapter-class rows / 34 teachers / 171 playlist-teacher links / 42
+  quality reviews;
+- zero source-playlist, retained-video, and excluded-video collisions;
+- all three expected chapters present; and
+- protected original JEE unchanged at 82 courses / 1,304 memberships /
+  `30eee4a4a6842e5beeb7c97083d7f812`.
+
+Each immutable manifest passed a fresh anonymous production dry-run before its
+independent create-only write:
+
+| Order | Course ID | Dry-run | Created videos | Reused | Pre-write totals | Post-write totals |
+| ---: | ---: | --- | ---: | ---: | --- | --- |
+| 1 | 436 | 1 ok / 0 review / 0 blocked; 3 assignments | 3 (`4822`-`4824`) | 0 | 416 / 4,731 / 4,737 | 417 / 4,734 / 4,740 |
+| 2 | 437 | 1 ok / 0 review / 0 blocked; 3 assignments + 2 exclusions | 3 (`4825`-`4827`) | 0 | 417 / 4,734 / 4,740 | 418 / 4,737 / 4,743 |
+| 3 | 438 | 1 ok / 0 review / 0 blocked; 3 assignments | 3 (`4828`-`4830`) | 0 | 418 / 4,737 / 4,743 | 419 / 4,740 / 4,746 |
+
+The decisive read-only postflight at `2026-08-08T07:39:28.232027Z`
+confirmed:
+
+- all three source playlists exist exactly once as courses 436-438;
+- all nine retained YouTube video IDs exist exactly once; excluded S-Block
+  practice IDs `ihpwvwe6Y9I` and `4IMGrDbroK4` remain absent;
+- membership positions preserve official source order 1-3 for every course;
+- course 436 maps all lessons to Metallurgy (55), course 437 maps all lessons
+  to The s-Block Elements (46), and course 438 maps all lessons to
+  Semiconductor Electronics (17);
+- all nine videos have positive durations and `embeddable` status;
+- each course carries only the `neet` learning goal and its reviewed
+  `class-12`, `class-11`, or `class-12` scope;
+- normalized `playlist_teachers` and quality-review rows remain absent for
+  courses 436-438, as required by the separate later gates;
+- protected original JEE remains exactly 82 / 1,304 /
+  `30eee4a4a6842e5beeb7c97083d7f812`; and
+- rolling JEE remains exactly 212 / 2,848 /
+  `9eea2b44f0b19c08cc0907c57e091342`.
+
+Anonymous browse and first/final player verification passed for all courses:
+
+- `https://www.jeeneetard.com/course/436/chapter/55` - 3 lessons; official
+  YouTube embeds loaded for `tZWyg6ewJb8` and `X24X5wXFUno`;
+- `https://www.jeeneetard.com/course/437/chapter/46` - 3 lessons; official
+  YouTube embeds loaded for `CdCL4s9L4F8` and `1pEXZvaack4`; and
+- `https://www.jeeneetard.com/course/438/chapter/17` - 3 lessons; official
+  YouTube embeds loaded for `6r2dj5wPfMk` and `q_Yji3EdXfg`.
+
+The `playlist_import_audit` table still contains 44 historical rows and no row
+for courses 436-438 or these source playlist IDs. The current mapped importer
+path therefore did not populate that historical audit table. Direct catalogue,
+taxonomy, exclusion, public-browse, player, and fingerprint assertions all
+passed; audit-table coverage remains a separate operational hardening item.
 
 ## Immutable evidence
 
@@ -128,5 +192,5 @@ unresolved chapter, blocked embed, or fingerprint mismatch defers that course.
 - Mineral Nutrition and Transport in Plants still lack production chapter
   records; no reference-data write is proposed.
 
-No production write, normalized faculty mutation, quality-review transition,
-deployment, or `release` push is authorized by this preparation package.
+No schema migration, normalized faculty mutation, quality-review transition,
+deployment, or `release` push occurred during this production content batch.
