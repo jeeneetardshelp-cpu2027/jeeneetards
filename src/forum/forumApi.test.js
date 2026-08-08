@@ -92,6 +92,32 @@ describe("forum read API", () => {
     expect(JSON.stringify(calls)).not.toContain("author_id");
   });
 
+  it("maps closed-beta membership and admin controls onto the reviewed RPCs", async () => {
+    const calls = [];
+    const api = createForumApi(clientWith(async (name, params) => {
+      calls.push({ name, params });
+      if (name === "forum_is_beta_member") return { data: true, error: null };
+      if (name === "forum_admin_list_beta_members") {
+        return { data: [{ username: "student-one" }], error: null };
+      }
+      if (name === "forum_admin_set_beta_member") return { data: params.p_enabled, error: null };
+      if (name === "forum_admin_set_mode") return { data: params.p_mode, error: null };
+      return { data: null, error: null };
+    }));
+
+    await expect(api.getBetaMembership()).resolves.toBe(true);
+    await expect(api.listBetaMembers()).resolves.toEqual([{ username: "student-one" }]);
+    await expect(api.setBetaMember({ username: "  student-one  ", enabled: true })).resolves.toBe(true);
+    await expect(api.setMode("beta")).resolves.toBe("beta");
+
+    expect(calls).toEqual([
+      { name: "forum_is_beta_member", params: undefined },
+      { name: "forum_admin_list_beta_members", params: undefined },
+      { name: "forum_admin_set_beta_member", params: { p_username: "student-one", p_enabled: true } },
+      { name: "forum_admin_set_mode", params: { p_mode: "beta" } },
+    ]);
+  });
+
   it("uses the single-row vote RPC contract without exposing voter identity", async () => {
     const calls = [];
     const api = createForumApi(clientWith((name, params) => ({

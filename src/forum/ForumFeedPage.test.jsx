@@ -153,4 +153,27 @@ describe("signed-out forum feed", () => {
     expect(await screen.findByRole("heading", { name: "Choose your public forum username" })).toBeTruthy();
     expect(api.castVote).not.toHaveBeenCalled();
   });
+
+  it("shows beta contribution controls only to an enrolled student", async () => {
+    const memberApi = apiWith();
+    memberApi.getMode.mockResolvedValue("beta");
+    memberApi.getBetaMembership = vi.fn().mockResolvedValue(true);
+    const member = renderFeed(memberApi, "/forum", {
+      session: { user: { id: "beta-member" } }, loading: false,
+    });
+    expect(await screen.findByRole("link", { name: "Start a discussion" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Upvote this discussion" })).toBeTruthy();
+    member.unmount();
+
+    const outsiderApi = apiWith();
+    outsiderApi.getMode.mockResolvedValue("beta");
+    outsiderApi.getBetaMembership = vi.fn().mockResolvedValue(false);
+    renderFeed(outsiderApi, "/forum", {
+      session: { user: { id: "not-enrolled" } }, loading: false,
+    });
+    await screen.findByRole("heading", { name: "Question 1" });
+    await waitFor(() => expect(outsiderApi.getBetaMembership).toHaveBeenCalled());
+    expect(screen.queryByRole("link", { name: "Start a discussion" })).toBeNull();
+    expect(screen.queryByRole("button", { name: "Upvote this discussion" })).toBeNull();
+  });
 });

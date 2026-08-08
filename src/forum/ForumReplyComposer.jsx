@@ -34,7 +34,22 @@ export default function ForumReplyComposer({ postId, mode, locked, api = forumAp
       </Surface>
     );
   }
-  if (mode !== "open") return null;
+  if (mode !== "open" && mode !== "beta") return null;
+
+  if (mode === "beta" && !authLoading && (!userId || (identity.status === "ready" && !identity.betaMember))) {
+    return (
+      <Surface as="section" className="mt-8">
+        <h2 className="text-base font-semibold text-ink">Answers are in closed beta</h2>
+        <p className="mt-2 text-sm text-ink-2">
+          Only invited student testers can answer right now. Visible discussions remain readable to everyone.
+        </p>
+      </Surface>
+    );
+  }
+
+  if (mode === "beta" && (authLoading || identity.status === "loading")) {
+    return <div className="mt-8"><ForumLoading kind="thread" /></div>;
+  }
 
   const submit = async (event) => {
     event.preventDefault();
