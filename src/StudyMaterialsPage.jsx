@@ -3,7 +3,11 @@ import { useSearchParams } from "react-router";
 import { Page } from "./AppShell.jsx";
 import StudyMaterialCard from "./StudyMaterialCard.jsx";
 import { useStudyMaterialCatalog } from "./useStudyMaterialCatalog.js";
-import { STUDY_MATERIAL_TYPES, useStudyMaterials } from "./useStudyMaterials.js";
+import {
+  STUDY_MATERIAL_PAGE_SIZE,
+  STUDY_MATERIAL_TYPES,
+  useStudyMaterials,
+} from "./useStudyMaterials.js";
 
 const FALLBACK_GOALS = [
   { slug: "jee", name: "JEE" },
@@ -26,7 +30,9 @@ function Filter({ label, value, onChange, children, disabled = false }) {
 }
 
 export function StudyMaterialsDirectoryView({
-  items = [], total = 0, loading = false, error = null, unavailable = false, retry = null,
+  items = [], total = 0, loading = false, loadingMore = false,
+  error = null, loadMoreError = null, unavailable = false,
+  hasMore = false, loadMore = null, retry = null,
 }) {
   if (loading) {
     return (
@@ -82,8 +88,35 @@ export function StudyMaterialsDirectoryView({
         </div>
         <p className="text-sm text-ink-3">{total} resource{total === 1 ? "" : "s"}</p>
       </div>
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div id="study-material-results-grid" className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {items.map((material) => <StudyMaterialCard key={material.id} material={material} />)}
+      </div>
+      <div className="mt-7 flex flex-col items-center gap-3 border-t border-hairline pt-6 text-center">
+        <p aria-live="polite" className="text-sm text-ink-3">
+          Showing {items.length} of {total} resource{total === 1 ? "" : "s"}
+        </p>
+        {hasMore && loadMore && !loadMoreError && (
+          <button
+            type="button"
+            aria-controls="study-material-results-grid"
+            disabled={loadingMore}
+            onClick={loadMore}
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-accent-line bg-surface px-5 text-sm font-semibold text-accent transition-colors hover:bg-accent-soft disabled:cursor-wait disabled:opacity-60"
+          >
+            {loadingMore && <RefreshCw aria-hidden="true" className="h-4 w-4 animate-spin" />}
+            {loadingMore
+              ? "Loading more resources..."
+              : `Load ${Math.min(STUDY_MATERIAL_PAGE_SIZE, total - items.length)} more resource${total - items.length === 1 ? "" : "s"}`}
+          </button>
+        )}
+        {loadMoreError && (
+          <div role="alert" className="text-sm text-danger">
+            <p>{loadMoreError}</p>
+            <button type="button" onClick={loadMore} className="mt-2 min-h-11 rounded-lg px-4 font-semibold text-accent">
+              Try loading more again
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );
