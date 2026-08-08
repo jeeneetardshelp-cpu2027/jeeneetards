@@ -40,7 +40,10 @@ function ForumPostDataPage({ postId, api, authState }) {
   if (thread.status === "not_found") return <MissingPost />;
 
   const { post } = thread;
-  const voting = thread.mode === "open" ? {
+  const betaWriter = thread.mode === "beta"
+    && voteAccess.canVote
+    && voteAccess.identity.betaMember;
+  const voting = thread.mode === "open" || betaWriter ? {
     api,
     canVote: voteAccess.canVote,
     onBlocked: voteAccess.requestAccess,

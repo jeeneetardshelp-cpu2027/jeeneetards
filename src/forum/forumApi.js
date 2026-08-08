@@ -73,6 +73,13 @@ export function createForumApi(client = supabase) {
       return unwrap(response, "load your forum identity");
     },
 
+    async getBetaMembership() {
+      return unwrap(
+        await requireClient(client).rpc("forum_is_beta_member"),
+        "check your closed-beta access",
+      ) === true;
+    },
+
     async claimUsername(username) {
       return unwrap(await requireClient(client).rpc("forum_claim_username", {
         p_username: username,
@@ -136,6 +143,27 @@ export function createForumApi(client = supabase) {
       return unwrap(await requireClient(client).rpc("forum_admin_dismiss_report", {
         p_report_id: reportId,
       }), "dismiss that report");
+    },
+
+    async listBetaMembers() {
+      const data = unwrap(
+        await requireClient(client).rpc("forum_admin_list_beta_members"),
+        "load closed-beta members",
+      );
+      return Array.isArray(data) ? data : [];
+    },
+
+    async setBetaMember({ username, enabled }) {
+      return unwrap(await requireClient(client).rpc("forum_admin_set_beta_member", {
+        p_username: username.trim(),
+        p_enabled: enabled,
+      }), enabled ? "add that beta member" : "remove that beta member");
+    },
+
+    async setMode(mode) {
+      return unwrap(await requireClient(client).rpc("forum_admin_set_mode", {
+        p_mode: mode,
+      }), "change the forum mode");
     },
   });
 }
