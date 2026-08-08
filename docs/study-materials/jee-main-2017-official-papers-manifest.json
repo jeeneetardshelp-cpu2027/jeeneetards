@@ -1,0 +1,81 @@
+{
+  "exam": "JEE Main 2017 Paper 1",
+  "language": "English and Hindi",
+  "officialArchiveUrl": "https://www.cbse.gov.in/cbsenew/press_archive.html",
+  "officialQuestionPapersPageUrl": "https://web.archive.org/web/20170505050223id_/http://jeemain.nic.in/webinfo/QuestionPapers2017.htm",
+  "officialResultUrl": "https://www.cbse.gov.in/cbsenew/Press_Notes/2017/Press%20Release%20-%20JEE%20%28Main%29%202017%20Result.pdf",
+  "verificationDate": "2026-08-08",
+  "verification": "The archived official jeemain.nic.in question-paper page identifies all ten Paper 1 PDFs below. Every PDF was downloaded from an Internet Archive capture of that original official host, hashed, page-counted and visually rendered in full. The four 2 April offline sets each contain a complete 90-question Paper 1. For each online date, the three subject PDFs contain questions 1-30 and together form the complete 90-question Paper 1. No worked solutions or answer key are included.",
+  "papers": [
+    {
+      "title": "JEE Main 2017 - 2 April Offline Set A (English and Hindi)",
+      "sourceUrl": "https://web.archive.org/web/20170516174432id_/http://jeemain.nic.in:80/webinfo/PDF/Paper01_RBS_English_Hindi_SetA.pdf",
+      "pageCount": 44,
+      "byteLength": 881565,
+      "sha256": "CA70FF45D05D73110ADC5F1AC764CF995A9C5A490FD8D82AFFE10D7D07F55AE7"
+    },
+    {
+      "title": "JEE Main 2017 - 2 April Offline Set B (English and Hindi)",
+      "sourceUrl": "https://web.archive.org/web/20170516174442id_/http://jeemain.nic.in:80/webinfo/PDF/Paper01_RBS_English_Hindi_SetB.pdf",
+      "pageCount": 44,
+      "byteLength": 877133,
+      "sha256": "E3F175B20295F393C5F7DBB4BEF81C4D6F51C4410ECAF33118F14D208AE8CDC5"
+    },
+    {
+      "title": "JEE Main 2017 - 2 April Offline Set C (English and Hindi)",
+      "sourceUrl": "https://web.archive.org/web/20170516174448id_/http://jeemain.nic.in:80/webinfo/PDF/Paper01_RBS_English_Hindi_SetC.pdf",
+      "pageCount": 44,
+      "byteLength": 871686,
+      "sha256": "974E4F3DCFC3B6AE2DF4F18D7D09B9E1977AE12E4281B6BB052FC51EDB6BEF9A"
+    },
+    {
+      "title": "JEE Main 2017 - 2 April Offline Set D (English and Hindi)",
+      "sourceUrl": "https://web.archive.org/web/20170516174500id_/http://jeemain.nic.in:80/webinfo/PDF/Paper01_RBS_English_Hindi_SetD.pdf",
+      "pageCount": 44,
+      "byteLength": 861917,
+      "sha256": "F733983DA3AC70DC4B5799C58F3092612E4DCF687C4DCEEA182A1502A082B4EF"
+    },
+    {
+      "title": "JEE Main 2017 - 8 April Online Physics (English and Hindi)",
+      "sourceUrl": "https://web.archive.org/web/20170516174340id_/http://jeemain.nic.in:80/webinfo/PDF/01_Set_VI_Physics_E_H_8.pdf",
+      "pageCount": 18,
+      "byteLength": 340301,
+      "sha256": "D439F8A11BC37D04442F61AE07461C0378D77D49A838730FC001E2A55BBC7B69"
+    },
+    {
+      "title": "JEE Main 2017 - 8 April Online Chemistry (English and Hindi)",
+      "sourceUrl": "https://web.archive.org/web/20170516174351id_/http://jeemain.nic.in:80/webinfo/PDF/02_Set_VI_Chemistry_E_H_8.pdf",
+      "pageCount": 13,
+      "byteLength": 362044,
+      "sha256": "2206C0360BBDFE02CF10908F1F657D50786AE9C64D619BA0DB72DB0214DB078C"
+    },
+    {
+      "title": "JEE Main 2017 - 8 April Online Mathematics (English and Hindi)",
+      "sourceUrl": "https://web.archive.org/web/20170516174416id_/http://jeemain.nic.in:80/webinfo/PDF/03_Set_VI_Mathematics_E_H_8.pdf",
+      "pageCount": 14,
+      "byteLength": 241150,
+      "sha256": "BA71A7E441FA260FBCC73110DF60C8E678BA3219D69F3BFD49D2D96A1DE1798C"
+    },
+    {
+      "title": "JEE Main 2017 - 9 April Online Physics (English and Hindi)",
+      "sourceUrl": "https://web.archive.org/web/20170516174336id_/http://jeemain.nic.in:80/webinfo/PDF/01_Set_IX_Physics_E_H_9.pdf",
+      "pageCount": 20,
+      "byteLength": 424584,
+      "sha256": "FF2AB3BA53A864B0816EE826504C18025986560538414D6B1AB7C234EAC1638B"
+    },
+    {
+      "title": "JEE Main 2017 - 9 April Online Chemistry (English and Hindi)",
+      "sourceUrl": "https://web.archive.org/web/20170516174346id_/http://jeemain.nic.in:80/webinfo/PDF/02_Set_IX_Chemistry_E_H_9.pdf",
+      "pageCount": 13,
+      "byteLength": 346983,
+      "sha256": "B32ED852995633DFA4A355F7B5828901F6EE15465CF7B67B918BB4C3F3E18880"
+    },
+    {
+      "title": "JEE Main 2017 - 9 April Online Mathematics (English and Hindi)",
+      "sourceUrl": "https://web.archive.org/web/20170516174411id_/http://jeemain.nic.in:80/webinfo/PDF/03_Set_IX_Mathematics_E_H_9.pdf",
+      "pageCount": 13,
+      "byteLength": 202305,
+      "sha256": "B0F2515490910DA76ECF9A77DC195E1EDF32BDB63AECD5FCE92577C017B30BEC"
+    }
+  ]
+}
