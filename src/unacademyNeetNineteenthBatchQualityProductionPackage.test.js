@@ -281,14 +281,15 @@ const withLocalFingerprint = async (pg) => {
 };
 
 describe("Unacademy NEET nineteenth-batch quality-review package", () => {
-  it("pins the exact immutable artifact and separate approval boundary", () => {
+  it("pins the exact immutable artifact and completed production evidence", () => {
     expect(createHash("sha256").update(sql, "utf8").digest("hex")).toBe(expectedHash);
     expect(readiness).toContain(`SHA-256: \`${expectedHash}\``);
-    expect(readiness).toContain("PREPARED ONLY, NOT APPLIED");
+    expect(readiness).toContain("APPLIED TO PRODUCTION ON 8 AUGUST 2026");
     expect(readiness).toContain("39 -> 42");
-    expect(readiness).toContain("separate owner approval");
-    expect(readiness).toContain("08 Aug 2026, 11:44:01 IST");
-    expect(readiness).toContain("no production SQL or `release` push occurred");
+    expect(readiness).toContain("2026-08-08T06:37:57.125332Z");
+    expect(readiness).toContain("2026-08-08T06:39:16.227031Z");
+    expect(readiness).toContain("no `release` push occurred");
+    expect(readiness).toContain("30eee4a4a6842e5beeb7c97083d7f812");
   });
 
   it("pins the exact courses and guarded review calls", () => {

@@ -2,10 +2,9 @@
 
 ## Status
 
-**PREPARED ONLY, NOT APPLIED.** Production remains unchanged after the completed
-faculty-link gate. This package is waiting for separate owner approval naming
-the exact SHA-256 below. No quality-review SQL, deployment, or `release` push
-occurred.
+**APPLIED TO PRODUCTION ON 8 AUGUST 2026.** The owner approved the exact
+SHA-256 below. The guarded transaction completed the three reviewed quality
+transitions. No deployment or `release` push occurred.
 
 ## Reviewed scope
 
@@ -84,6 +83,31 @@ target and its immutable before/after audit row before commit.
   credentials were intentionally absent;
 - no production SQL or `release` push occurred during preparation.
 
+## Production execution evidence
+
+- exact approved artifact SHA-256 reverified immediately before execution:
+  `d7e2b9255925f1288bb1c4841b79b15d46a67baf81ca734826d1b17df0bfb0ab`;
+- PITR rechecked before the write: seven-day retention active, restore
+  availability from `02 Aug 2026, 00:01:09 IST` through
+  `08 Aug 2026, 11:50:02 IST`;
+- fresh read-only preflight at `2026-08-08T06:37:57.125332Z` matched every
+  encoded guard: catalogue `416 / 4,731 / 4,737 / 263`, chapter-class scopes
+  `92`, faculty links `171`, quality reviews `39`, exact target source/video/
+  chapter/class/teacher evidence, and no target reviews;
+- the SQL editor value was copied back and compared to the approved artifact
+  before execution; it matched exactly after newline normalization;
+- the guarded transaction committed and returned exactly courses 433-435 with
+  canonical titles and preserved source titles;
+- independent read-only postflight at `2026-08-08T06:39:16.227031Z` confirmed
+  quality reviews `39 -> 42`, exactly one immutable audit row per target, and
+  exact before/after states for title and faculty status;
+- courses 433-435 are now `approved / identified`, retain their exact
+  instructor links, and have no missing quality fields;
+- catalogue, taxonomy, registry, and faculty-link totals remained unchanged;
+- protected JEE remained exactly `82 / 1,304 /
+  30eee4a4a6842e5beeb7c97083d7f812`;
+- no `release` push occurred.
+
 ## Required approval wording
 
 `Approve applying Unacademy NEET nineteenth-batch quality-review artifact
@@ -93,5 +117,5 @@ no release push.`
 
 ## Next gate
 
-Stop here. Do not run this SQL without the exact-hash approval above. The
-completed faculty-link artifact must not be rerun.
+Stop here. The completed faculty-link and quality-review artifacts must not be
+rerun.
