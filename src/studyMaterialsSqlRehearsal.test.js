@@ -155,6 +155,10 @@ const jeeMain2022Session2PapersSeed = readFileSync(
   "docs/sql/study_materials_jee_main_2022_session2_papers_seed_2026-08-07.sql",
   "utf8",
 );
+const jeeMain2023Session2PapersSeed = readFileSync(
+  "docs/sql/study_materials_jee_main_2023_session2_papers_seed_2026-08-08.sql",
+  "utf8",
+);
 const jeeMain2025Session2PapersSeed = readFileSync(
   "docs/sql/study_materials_jee_main_2025_session2_papers_seed_2026-08-07.sql",
   "utf8",
@@ -2296,6 +2300,49 @@ describe("study materials v1 local SQL rehearsal", () => {
       expect(Number(jee.rows[0].total_count)).toBe(9);
       expect(jee.rows.every((row) => row.language === "English")).toBe(true);
       expect(jee.rows.every((row) => row.exam_year === 2022)).toBe(true);
+      expect(jee.rows.every((row) => row.source_name === "National Testing Agency (JEE Main)")).toBe(true);
+      expect(jee.rows.every((row) => row.scopes.length === 1)).toBe(true);
+      expect(jee.rows.every((row) => row.scopes[0].goal === "jee")).toBe(true);
+      expect(jee.rows.every((row) => row.scopes[0].subject === null)).toBe(true);
+      expect(jee.rows.every((row) => row.scopes[0].chapter === null)).toBe(true);
+
+      const neet = await pg.query(`select * from public.get_study_materials(
+        p_goal_slug => 'neet', p_material_type => 'previous_year_paper'
+      )`);
+      expect(neet.rows).toHaveLength(0);
+      const classSpecific = await pg.query(`select * from public.get_study_materials(
+        p_goal_slug => 'jee', p_class_slug => 'class-12',
+        p_material_type => 'previous_year_paper'
+      )`);
+      expect(classSpecific.rows).toHaveLength(0);
+    } finally {
+      await pg.close();
+    }
+  }, 30_000);
+
+  it("loads twelve verified official JEE Main 2023 Session 2 papers into JEE-only exam scopes", async () => {
+    const pg = await productionShapedDatabase();
+    try {
+      await pg.exec(jeeMain2023Session2PapersSeed);
+      await pg.exec(jeeMain2023Session2PapersSeed);
+      const counts = await pg.query(`
+        select
+          (select count(*)::integer from public.study_materials) as materials,
+          (select count(*)::integer from public.study_material_scopes) as scopes
+      `);
+      expect(counts.rows[0]).toEqual({ materials: 12, scopes: 12 });
+
+      const jee = await pg.query(`select * from public.get_study_materials(
+        p_goal_slug => 'jee', p_material_type => 'previous_year_paper'
+      )`);
+      expect(jee.rows).toHaveLength(12);
+      expect(Number(jee.rows[0].total_count)).toBe(12);
+      expect(jee.rows.every((row) => row.language === "English")).toBe(true);
+      expect(jee.rows.every((row) => row.title.includes("English & Hindi"))).toBe(true);
+      expect(jee.rows.every((row) => row.exam_year === 2023)).toBe(true);
+      expect(jee.rows.map((row) => row.page_count).sort((a, b) => a - b)).toEqual([
+        103, 105, 106, 107, 107, 108, 110, 110, 113, 114, 115, 115,
+      ]);
       expect(jee.rows.every((row) => row.source_name === "National Testing Agency (JEE Main)")).toBe(true);
       expect(jee.rows.every((row) => row.scopes.length === 1)).toBe(true);
       expect(jee.rows.every((row) => row.scopes[0].goal === "jee")).toBe(true);
