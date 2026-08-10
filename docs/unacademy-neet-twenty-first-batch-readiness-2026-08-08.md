@@ -80,6 +80,26 @@ v12, resolved its chapter as `reuse`, and performed no Supabase write:
 The importer must refresh YouTube and repeat the anonymous dry-run immediately
 before each separately approved write.
 
+## Read-only refresh - 10 August 2026
+
+A fresh, preparation-only revalidation completed at
+`2026-08-10T07:38:01.829Z`. It made no Supabase write:
+
+- Kinetic Theory of Gases still publishes 2/2 usable videos, retains source
+  SHA-256 `cc773d0df0234f01c034a7d18ada457435b00c735a0967108c539b4efebd9056`,
+  and returned **1 ok / 0 review / 0 blocked**, v12, chapter reuse, and no
+  existing source playlist.
+- Electromagnetic Waves still publishes 4/4 usable videos, retains source
+  SHA-256 `d046ae1cd01328f9e33537660e4d714e2b045dc2cd0aaffa699ad2e6faec3367`,
+  and returned **1 ok / 0 review / 0 blocked**, v12, chapter reuse, and no
+  existing source playlist.
+- Protected original JEE remained **82 courses / 1,304 memberships /
+  `30eee4a4a6842e5beeb7c97083d7f812`**.
+- Rolling JEE remained **212 courses / 2,848 memberships /
+  `9eea2b44f0b19c08cc0907c57e091342`**.
+
+This refresh does not convert the readiness package into production approval.
+
 ## Reviewed candidates
 
 | Order | Course | Official playlist | Chapter / class | Teacher | Retained |

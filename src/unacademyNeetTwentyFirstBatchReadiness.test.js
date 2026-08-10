@@ -123,6 +123,17 @@ describe("Unacademy NEET twenty-first-batch readiness", () => {
     expect(readiness).toContain("ef112fbc83d88f2a94b8ff996a26969ed41205f618bb10704bd254867235554c");
   });
 
+  it("records the read-only 10 August source and JEE-boundary refresh", () => {
+    expect(readiness).toContain("2026-08-10T07:38:01.829Z");
+    expect(readiness).toContain("2/2 usable videos");
+    expect(readiness).toContain("4/4 usable videos");
+    expect(readiness).toContain("30eee4a4a6842e5beeb7c97083d7f812");
+    expect(readiness).toContain("9eea2b44f0b19c08cc0907c57e091342");
+    expect(readiness).toContain(
+      "This refresh does not convert the readiness package into production approval.",
+    );
+  });
+
   it("keeps missing Biology chapters and later mutations outside this gate", () => {
     expect(review.deferred.some((entry) => entry.includes("Mineral Nutrition"))).toBe(true);
     expect(review.deferred.some((entry) => entry.includes("Transport in Plants"))).toBe(true);
