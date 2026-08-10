@@ -1,0 +1,59 @@
+{
+  "exam": "JEE Main 2016 Paper 1",
+  "language": "English and Hindi (offline); English, Hindi and Gujarati (online)",
+  "officialArchiveUrl": "https://www.cbse.gov.in/cbsenew/annual-report/CBSE_Annual_Report_2016_17.pdf",
+  "officialQuestionPapersPageUrl": "https://web.archive.org/web/20160419204149id_/http://jeemain.nic.in:80/webinfo/QuestionPapers2016.htm",
+  "officialDisclosureUrl": "https://www.cbse.gov.in/cbsenew/rti/disclosures/29-06-2016.pdf",
+  "verificationDate": "2026-08-10",
+  "verification": "The archived official jeemain.nic.in question-paper page identifies all six Paper 1 PDFs below: four offline sets from 3 April and one complete online paper for each of 9 and 10 April. Every PDF was downloaded from an Internet Archive capture of that original official host, hashed, page-counted and visually rendered in full. All six files contain complete 90-question Paper 1 papers covering Physics, Chemistry and Mathematics. The offline sets are in English and Hindi; the online papers are in English, Hindi and Gujarati. No worked solutions or answer key are included.",
+  "papers": [
+    {
+      "title": "JEE Main 2016 - 3 April Offline Set E (English and Hindi)",
+      "sourceUrl": "https://web.archive.org/web/20160419204149id_/http://jeemain.nic.in:80/webinfo/PDF/03-04-2016-SetE.pdf",
+      "languages": ["English", "Hindi"],
+      "pageCount": 40,
+      "byteLength": 1357492,
+      "sha256": "5ECDEAD84AE1328EB39CA6AFD5A348F878A6492B9FAE5DBA50598825442BD964"
+    },
+    {
+      "title": "JEE Main 2016 - 3 April Offline Set F (English and Hindi)",
+      "sourceUrl": "https://web.archive.org/web/20160419204149id_/http://jeemain.nic.in:80/webinfo/PDF/03-04-2016-SetF.pdf",
+      "languages": ["English", "Hindi"],
+      "pageCount": 40,
+      "byteLength": 1361090,
+      "sha256": "09927DB8B33DFDB032C4375CFB5AB8A6BC857344024C72D5FB990110E62EDD4E"
+    },
+    {
+      "title": "JEE Main 2016 - 3 April Offline Set G (English and Hindi)",
+      "sourceUrl": "https://web.archive.org/web/20160419204149id_/http://jeemain.nic.in:80/webinfo/PDF/03-04-2016-SetG.pdf",
+      "languages": ["English", "Hindi"],
+      "pageCount": 40,
+      "byteLength": 1353589,
+      "sha256": "15D617CFAFEC3F0985231505A7FE8725A510D3177412C923F9D56B1439BC22E2"
+    },
+    {
+      "title": "JEE Main 2016 - 3 April Offline Set H (English and Hindi)",
+      "sourceUrl": "https://web.archive.org/web/20160419204149id_/http://jeemain.nic.in:80/webinfo/PDF/03-04-2016-SetH.pdf",
+      "languages": ["English", "Hindi"],
+      "pageCount": 40,
+      "byteLength": 1339687,
+      "sha256": "EBA85A1A999892F48FD1F7D7C5032FD49E494286397F446DC9AC6E849ACE12F3"
+    },
+    {
+      "title": "JEE Main 2016 - 9 April Online Set 04 (English, Hindi and Gujarati)",
+      "sourceUrl": "https://web.archive.org/web/20160419204149id_/http://jeemain.nic.in:80/webinfo/PDF/09.04.2016.pdf",
+      "languages": ["English", "Hindi", "Gujarati"],
+      "pageCount": 46,
+      "byteLength": 1235781,
+      "sha256": "DD616ED25EFBCE7E5758267326E753803D13794FDA479ED818E35B0E39E8E7CB"
+    },
+    {
+      "title": "JEE Main 2016 - 10 April Online Set 03 (English, Hindi and Gujarati)",
+      "sourceUrl": "https://web.archive.org/web/20160419204149id_/http://jeemain.nic.in:80/webinfo/PDF/10.04.2016.pdf",
+      "languages": ["English", "Hindi", "Gujarati"],
+      "pageCount": 50,
+      "byteLength": 1447469,
+      "sha256": "34335CF9485505D8DB2A125C1A1BE479E91AED3C46147EC17D362322D915827C"
+    }
+  ]
+}
