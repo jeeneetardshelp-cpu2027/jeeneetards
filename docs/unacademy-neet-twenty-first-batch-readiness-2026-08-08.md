@@ -99,13 +99,13 @@ Source-snapshot SHA-256 values:
 - Electromagnetic Waves: `d046ae1cd01328f9e33537660e4d714e2b045dc2cd0aaffa699ad2e6faec3367`.
 
 Candidate-review file SHA-256:
-`f594d37a0095956b8fa501cdb54fd2a8ea878f45edaf3f618db4a8339aba9794`.
+`f9daa66102d7b3cd497d362eea7ead76855293e4f1db52a33122a22c3f7c3932`.
 
 Any playlist mutation invalidates its source hash and requires a fresh review.
 A collision, count shortfall, missing teacher evidence, unresolved chapter,
 blocked embed, or fingerprint mismatch defers that course.
 
-## Explicit deferrals and next reference-data gate
+## Explicit deferrals and current-syllabus scope review
 
 - `PLsgHooHkqhhO3MEbwFNOEjKd5LRkzW3dE` provides five usable Mineral
   Nutrition lectures by Pradeep Singh with zero reuse, but production lacks the
@@ -113,9 +113,18 @@ blocked embed, or fingerprint mismatch defers that course.
 - `PLsgHooHkqhhNzYonED_O0YBpbcsEzNQyv` provides three Transport in Plants
   lectures by Pradeep Singh with zero reuse, but production lacks the
   `Transport in Plants` chapter.
-- The next safe step for those sources is a separately reviewed additive
-  reference-data gate creating exactly those two Biology/Class 11 chapter
-  records and scopes. No such production write is included here.
+- A fresh scope review on 10 August 2026 found that the official
+  [NEET UG 2026 syllabus](https://cdnbbsr.s3waas.gov.in/s37bc1ec1d9c3426357e69acd5bf320061/uploads/2026/01/202601081066816297.pdf)
+  lists only Photosynthesis, Respiration, and Plant Growth and Development in
+  Plant Physiology. The official
+  [CBSE Biology 2026-27 curriculum](https://cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Biology_SecP2_2026-27.pdf)
+  likewise starts the current Plant Physiology sequence at Photosynthesis and
+  does not include either deferred chapter.
+- Therefore neither source belongs in the current canonical NEET syllabus.
+  Do **not** create the two chapter records and do **not** import these eight
+  videos under the present NEET taxonomy. Their exact playlist and video IDs
+  remain pinned in the candidate review for a future, separately designed and
+  owner-approved supplementary/archive taxonomy.
 - Plant Growth and Development is already covered by production course 413;
   do not duplicate it.
 - Hydrocarbons remains incomplete because Lecture 4 is absent.

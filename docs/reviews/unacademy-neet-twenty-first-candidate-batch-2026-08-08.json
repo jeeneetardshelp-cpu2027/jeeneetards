@@ -84,6 +84,46 @@
       "exclusions": []
     }
   ],
+  "current_curriculum_scope_review": {
+    "reviewed_on": "2026-08-10",
+    "status": "out_of_current_syllabus_deferred",
+    "neet_ug_2026_source_url": "https://cdnbbsr.s3waas.gov.in/s37bc1ec1d9c3426357e69acd5bf320061/uploads/2026/01/202601081066816297.pdf",
+    "cbse_2026_27_source_url": "https://cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Biology_SecP2_2026-27.pdf",
+    "included_plant_physiology_chapters": [
+      "Photosynthesis in Higher Plants",
+      "Respiration in Plants",
+      "Plant Growth and Development"
+    ],
+    "deferred_source_playlists": [
+      {
+        "youtube_playlist_id": "PLsgHooHkqhhO3MEbwFNOEjKd5LRkzW3dE",
+        "title": "Mineral Nutrition",
+        "usable_videos": 5,
+        "retained_video_ids": [
+          "L-pckEbxi7E",
+          "whcTFfsNxRE",
+          "Snou9RDzy2o",
+          "UxFwvwaEoqU",
+          "QhtyAPm4UYE"
+        ],
+        "production_source_collisions": 0,
+        "production_video_collisions": 0
+      },
+      {
+        "youtube_playlist_id": "PLsgHooHkqhhNzYonED_O0YBpbcsEzNQyv",
+        "title": "Transport in Plants",
+        "usable_videos": 3,
+        "retained_video_ids": [
+          "d0pvO7UxrSo",
+          "NgcYVEDhj-k",
+          "652mevRAcvI"
+        ],
+        "production_source_collisions": 0,
+        "production_video_collisions": 0
+      }
+    ],
+    "decision": "Do not create canonical NEET chapter rows or import either source under the current-syllabus catalogue. Preserve the exact sources for a separately designed supplementary or archive taxonomy, if the owner later approves one."
+  },
   "teacher_normalization_gate": {
     "status": "owner_review_required",
     "matching_production_teacher_records": 0,
@@ -98,8 +138,8 @@
     { "order": 2, "status": "ok", "published": 4, "usable": 4, "assignments": 4, "exclusions": 0, "review": 0, "blocked": 0 }
   ],
   "deferred": [
-    "Mineral Nutrition has a five-lecture Pradeep Singh source with zero reuse, but production has no Mineral Nutrition chapter; it remains behind a separate additive reference-data gate.",
-    "Transport in Plants has a three-lecture Pradeep Singh source with zero reuse, but production has no Transport in Plants chapter; it remains behind a separate additive reference-data gate.",
+    "Mineral Nutrition has a five-lecture Pradeep Singh source with zero reuse, but it is absent from both the current NEET UG 2026 and CBSE 2026-27 Class XI Biology scope; do not create a canonical NEET chapter or import it without a separately approved supplementary/archive taxonomy.",
+    "Transport in Plants has a three-lecture Pradeep Singh source with zero reuse, but it is absent from both the current NEET UG 2026 and CBSE 2026-27 Class XI Biology scope; do not create a canonical NEET chapter or import it without a separately approved supplementary/archive taxonomy.",
     "The reviewed Plant Growth and Development source is already present as production course 413 and must not be duplicated.",
     "Hydrocarbons remains incomplete because Lecture 4 is absent."
   ]

@@ -12,7 +12,8 @@ const manifestPaths = [
   "docs/manifests/unacademy-neet-electromagnetic-waves-class-12-reviewed.json",
 ];
 
-const review = JSON.parse(readFileSync(reviewPath, "utf8"));
+const reviewSource = readFileSync(reviewPath, "utf8");
+const review = JSON.parse(reviewSource);
 const readiness = readFileSync(readinessPath, "utf8");
 const manifests = manifestPaths.map((path) => JSON.parse(readFileSync(path, "utf8")));
 
@@ -30,6 +31,14 @@ describe("Unacademy NEET twenty-first-batch readiness", () => {
     expect(review.proposed_decision_id).toBe("9443dd70-a2c6-4747-9a5e-a9022f7012cf");
     expect(readiness).toContain("OWNER APPROVAL REQUIRED - NO PRODUCTION WRITE");
     expect(readiness).toContain("no `release` push");
+  });
+
+  it("pins the amended candidate review hash", () => {
+    const reviewHash = createHash("sha256").update(reviewSource).digest("hex");
+    expect(reviewHash).toBe(
+      "f9daa66102d7b3cd497d362eea7ead76855293e4f1db52a33122a22c3f7c3932",
+    );
+    expect(readiness).toContain(reviewHash);
   });
 
   it("pins the current catalogue and protected JEE boundaries", () => {
@@ -118,6 +127,34 @@ describe("Unacademy NEET twenty-first-batch readiness", () => {
     expect(review.deferred.some((entry) => entry.includes("Mineral Nutrition"))).toBe(true);
     expect(review.deferred.some((entry) => entry.includes("Transport in Plants"))).toBe(true);
     expect(review.deferred.some((entry) => entry.includes("course 413"))).toBe(true);
+    expect(review.current_curriculum_scope_review).toMatchObject({
+      reviewed_on: "2026-08-10",
+      status: "out_of_current_syllabus_deferred",
+      included_plant_physiology_chapters: [
+        "Photosynthesis in Higher Plants",
+        "Respiration in Plants",
+        "Plant Growth and Development",
+      ],
+    });
+    expect(review.current_curriculum_scope_review.deferred_source_playlists)
+      .toEqual([
+        expect.objectContaining({
+          youtube_playlist_id: "PLsgHooHkqhhO3MEbwFNOEjKd5LRkzW3dE",
+          title: "Mineral Nutrition",
+          usable_videos: 5,
+          production_source_collisions: 0,
+          production_video_collisions: 0,
+        }),
+        expect.objectContaining({
+          youtube_playlist_id: "PLsgHooHkqhhNzYonED_O0YBpbcsEzNQyv",
+          title: "Transport in Plants",
+          usable_videos: 3,
+          production_source_collisions: 0,
+          production_video_collisions: 0,
+        }),
+      ]);
+    expect(readiness).toContain("Do **not** create the two chapter records");
+    expect(readiness).toContain("supplementary/archive taxonomy");
     expect(readiness).toContain("+2 playlists / +6 videos / +6 memberships / +0");
     expect(readiness).toContain("No normalized faculty mutation, quality-review transition");
   });
