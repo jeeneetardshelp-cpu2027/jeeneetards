@@ -48,6 +48,36 @@ describe("forum closed-beta admin controls", () => {
     expect(screen.getByText(/current mode:/i).textContent).toContain("beta");
   });
 
+  // forum_username_is_allowed() accepts `^[A-Za-z0-9_-]{3,30}$`, so a student
+  // can claim `rohit_` or `-deep`. The panel used to require an alphanumeric
+  // first and last character and refuse to enrol them, blaming the length.
+  it("enrols usernames that start or end with an underscore or hyphen", async () => {
+    const api = apiWith();
+    renderPanel(api);
+    const field = await screen.findByLabelText("Existing forum username");
+
+    for (const username of ["rohit_", "-deep", "a_b-"]) {
+      fireEvent.change(field, { target: { value: username } });
+      fireEvent.click(screen.getByRole("button", { name: "Add tester" }));
+      await waitFor(() => expect(api.setBetaMember)
+        .toHaveBeenCalledWith({ username, enabled: true }));
+    }
+    expect(screen.queryByRole("alert")).toBeNull();
+  });
+
+  it("still refuses usernames the database would reject on length or characters", async () => {
+    const api = apiWith();
+    renderPanel(api);
+    const field = await screen.findByLabelText("Existing forum username");
+
+    for (const username of ["ab", "a", "has space", "emoji🙂"]) {
+      fireEvent.change(field, { target: { value: username } });
+      fireEvent.click(screen.getByRole("button", { name: "Add tester" }));
+      expect((await screen.findByRole("alert")).textContent).toMatch(/3 to 30/);
+    }
+    expect(api.setBetaMember).not.toHaveBeenCalled();
+  });
+
   it("removes a member and can stop beta without deleting the membership list", async () => {
     const api = apiWith({ mode: "beta", members: [member] });
     renderPanel(api);

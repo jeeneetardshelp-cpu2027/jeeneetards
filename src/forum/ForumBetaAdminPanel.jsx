@@ -4,7 +4,16 @@ import { useTheme } from "../theme.jsx";
 import { BRAND_TEAL } from "../brandColors.js";
 import { forumApi } from "./forumApi.js";
 
-const USERNAME_PATTERN = /^[a-z0-9](?:[a-z0-9_-]{1,28}[a-z0-9])?$/i;
+// Exactly the format rule forum_username_is_allowed() applies in SQL
+// (forum_username_claim_v1.sql). A stricter client pattern here previously
+// demanded an alphanumeric first AND last character, so an admin could not
+// enrol a student who had legitimately claimed `rohit_` or `-deep` -- and the
+// rejection message blamed the length, sending them looking in the wrong
+// place. The reserved-name and profanity rules stay server-side only: this
+// field takes an already-claimed username, so the database has necessarily
+// enforced them already, and duplicating a blocklist in the bundle would
+// leave two copies to drift.
+const USERNAME_PATTERN = /^[A-Za-z0-9_-]{3,30}$/;
 
 function readableDate(value) {
   const date = new Date(value);
@@ -36,7 +45,7 @@ export default function ForumBetaAdminPanel({ api = forumApi }) {
     const candidate = username.trim();
     setActionError("");
     if (!USERNAME_PATTERN.test(candidate)) {
-      setActionError("Enter an existing 3 to 30 character forum username.");
+      setActionError("Enter an existing forum username: 3 to 30 letters, numbers, hyphens or underscores.");
       return;
     }
     setBusy("add");
