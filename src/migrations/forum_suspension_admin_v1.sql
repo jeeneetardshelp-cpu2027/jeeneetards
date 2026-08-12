@@ -39,13 +39,22 @@ begin
     raise exception using errcode = '42501', message = 'not authorized';
   end if;
 
-  select p.id, p.is_admin into target_user, target_is_admin
-  from public.profiles p
-  where lower(btrim(p.username)) = lower(candidate)
-    and public.forum_username_is_allowed(p.username);
-  if target_user is null then
-    raise exception using errcode = 'P0002', message = 'student username not found';
-  end if;
+  -- STRICT so a case-insensitive collision is refused rather than resolved
+  -- arbitrarily. forum_profiles_username_ci_idx should make that impossible
+  -- and the preflight refuses to install without it, but picking one of two
+  -- students at random is the kind of failure that must never be silent.
+  begin
+    select p.id, p.is_admin into strict target_user, target_is_admin
+    from public.profiles p
+    where lower(btrim(p.username)) = lower(candidate)
+      and public.forum_username_is_allowed(p.username);
+  exception
+    when no_data_found then
+      raise exception using errcode = 'P0002', message = 'student username not found';
+    when too_many_rows then
+      raise exception using errcode = 'P0003',
+        message = 'that username matches more than one profile; resolve the collision before suspending';
+  end;
 
   -- Suspension only blocks forum contribution; it does not remove moderator
   -- rights, so suspending an admin cannot contain a compromised moderator

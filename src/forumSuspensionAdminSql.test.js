@@ -208,6 +208,74 @@ describe("forum suspension-admin SQL delta", () => {
     }
   }, 60_000);
 
+  // Both scenarios below were found by an independent review of this delta.
+  // Each one passed preflight before the guard existed.
+  it("refuses to install where a username is not single-valued", async () => {
+    const pg = await database();
+    try {
+      // The case-insensitive unique index is what makes lower(btrim(username))
+      // resolve to one student. Without it, SELECT INTO picks one arbitrarily
+      // and the wrong person is suspended.
+      await pg.exec("drop index public.forum_profiles_username_ci_idx");
+      await expect(pg.exec(preflight)).rejects.toThrow(/forum_profiles_username_ci_idx is missing/i);
+      await pg.exec("rollback");
+
+      await pg.exec(`
+        create unique index forum_profiles_username_ci_idx
+          on public.profiles (lower(btrim(username))) where username is not null;
+      `);
+      await pg.exec(preflight);
+
+      // An index present but data already colliding must also be refused.
+      await pg.exec("drop index public.forum_profiles_username_ci_idx");
+      await pg.exec(`
+        insert into auth.users (id, created_at)
+        values ('22000000-0000-4000-8000-000000000009', now() - interval '1 day');
+        insert into public.profiles (id, username) values
+          ('22000000-0000-4000-8000-000000000009', 'ROHIT_');
+        create index forum_profiles_username_ci_idx
+          on public.profiles (lower(btrim(username))) where username is not null;
+      `);
+      await expect(pg.exec(preflight)).rejects.toThrow(/not unique, or not valid/i);
+      await pg.exec("rollback");
+
+      // Defence in depth: even installed against such a database, the wrapper
+      // refuses rather than suspending an arbitrary one of the two students.
+      await pg.exec(migration);
+      await setIdentity(pg, IDS.admin);
+      await expect(pg.query(
+        "select * from public.forum_admin_set_suspension_by_username($1, $2, $3)",
+        ["rohit_", 7, "ambiguous target"],
+      )).rejects.toThrow(/matches more than one profile/i);
+    } finally {
+      await pg.exec("reset role").catch(() => {});
+      await pg.close();
+    }
+  }, 60_000);
+
+  it("refuses a moderation log that cannot record both suspend and unsuspend", async () => {
+    const pg = await database();
+    try {
+      // A missing constraint yields NULL, and `NULL not like ...` is NULL, so
+      // an inline test would silently pass here.
+      await pg.exec("alter table public.forum_moderation_log drop constraint forum_moderation_log_action_check");
+      await expect(pg.exec(preflight)).rejects.toThrow(/action constraint is missing/i);
+      await pg.exec("rollback");
+
+      // 'unsuspend' contains the substring suspend, so an unquoted match would
+      // pass on a constraint that cannot record a suspension at all.
+      await pg.exec(`
+        alter table public.forum_moderation_log
+          add constraint forum_moderation_log_action_check check (action in ('unsuspend'));
+      `);
+      await expect(pg.exec(preflight)).rejects.toThrow(/does not permit the suspend action/i);
+      await pg.exec("rollback");
+    } finally {
+      await pg.exec("reset role").catch(() => {});
+      await pg.close();
+    }
+  }, 60_000);
+
   it("removes only its own wrappers on guarded rollback and keeps suspension history", async () => {
     const pg = await database();
     try {
