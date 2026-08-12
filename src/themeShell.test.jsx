@@ -33,7 +33,9 @@ describe("shared shell accessibility and theme", () => {
     expect(screen.queryByRole("button", { name: "Relative motion" })).toBeNull();
     expect(screen.getByText("Relative motion").getAttribute("aria-current")).toBe("page");
     expect(screen.getAllByRole("navigation", { name: "Primary navigation" })).toHaveLength(2);
-    expect(screen.getAllByRole("link", { name: "Forum" })).toHaveLength(2);
+    // The Forum nav item is gone while RELEASE_FEATURES.forum is false (both
+    // the desktop and mobile navs render, hence the previous length of 2).
+    expect(screen.queryAllByRole("link", { name: "Forum" })).toHaveLength(0);
   });
 
   // Dark is the product default, not a mirror of prefers-color-scheme: it is

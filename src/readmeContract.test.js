@@ -45,7 +45,7 @@ describe("repository onboarding contract", () => {
 
   it("documents which public write features are enabled and which remain disabled", () => {
     expect(RELEASE_FEATURES).toEqual({
-      forum: true,
+      forum: false,
       studentAccounts: true,
       courseRatingSubmission: true,
       reviewDisplay: true,
@@ -53,10 +53,14 @@ describe("repository onboarding contract", () => {
     });
     for (const label of [
       "Public student accounts", "Rating submission", "Review display", "Content reporting",
-      "Student forum",
     ]) {
       expect(readme).toMatch(new RegExp(`\\| ${label} \\| Enabled \\|`));
     }
+    // The forum row must say Disabled and say WHY, so the next reader does not
+    // flip the flag back on the strength of the code existing. The database mode
+    // is the thing that was never opened.
+    expect(readme).toMatch(/\| Student forum \| Disabled[^|]*\|/);
+    expect(readme).toMatch(/Student forum \| Disabled.*mode still/);
   });
 
   it("keeps privileged keys out of frontend guidance", () => {
