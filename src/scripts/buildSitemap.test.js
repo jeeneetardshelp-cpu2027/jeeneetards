@@ -115,7 +115,10 @@ describe("sitemap generation", () => {
     expect(result.outcome).toBe("static");
     expect(xml).toContain("<loc>https://www.jeeneetard.com/</loc>");
     expect(xml).toContain("<loc>https://www.jeeneetard.com/explore</loc>");
-    expect(xml).toContain("<loc>https://www.jeeneetard.com/forum</loc>");
+    // /forum is out of the sitemap while RELEASE_FEATURES.forum is false.
+    // Submitting it while production forum_mode() returns "off" asked Google to
+    // crawl and rank "Discussions are temporarily unavailable".
+    expect(xml).not.toContain("<loc>https://www.jeeneetard.com/forum</loc>");
     expect(xml).not.toContain("/course/");
   });
 });

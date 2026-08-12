@@ -23,7 +23,14 @@ describe("current production capability contract", () => {
       studyMaterials: true,
     });
     expect(RELEASE_FEATURES).toEqual({
-      forum: true,
+      // Off: this flag reached `release` as true from a build that was never
+      // reviewed alongside the actual forum SQL/UI packages. Production
+      // forum_mode() was confirmed "off" throughout (empty feed, empty
+      // topics, one profile in the database), so no real forum content or
+      // student activity was ever exposed — but the flag being true still
+      // pointed the nav/footer/sitemap at a dead "temporarily unavailable"
+      // page. See the comment above `forum: false` in releaseCapabilities.js.
+      forum: false,
       studentAccounts: true,
       courseRatingSubmission: true,
       reviewDisplay: true,

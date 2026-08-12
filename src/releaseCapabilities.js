@@ -25,11 +25,27 @@ export const RELEASE_CAPABILITIES = Object.freeze({
 // particular, the presence of a writable table does not make an anonymous
 // submission feature safe to expose without throttling and abuse controls.
 export const RELEASE_FEATURES = Object.freeze({
-  // Forum release approved after the production schema was installed in mode
-  // `off`, its atomic postflight passed, and anonymous production calls proved
-  // the fail-closed surface. Opening the database mode remains a separate
-  // operational decision after the flagged frontend is deployed and checked.
-  forum: true,
+  // TURNED BACK OFF on 2026-08-12. This flag reached `release` as `true` via
+  // a separate build of the forum work that was never reviewed in the thread
+  // that reviewed and approved the actual forum SQL/UI packages -- `main`
+  // caught and reverted the same mistake on 2026-08-12 (see its history for
+  // src/releaseCapabilities.js), but that fix was never brought to `release`.
+  //
+  // Production `forum_mode()` was confirmed "off" throughout: get_forum_topics
+  // and get_forum_feed both returned [], and there was one profile in the
+  // whole database, so no real forum content or student activity was ever
+  // exposed. The live-site impact was limited to a dead nav/footer/sitemap
+  // link landing on "Discussions are temporarily unavailable", which Google
+  // was also being asked to index.
+  //
+  // Before flipping this back to true: reconcile this file with `main`'s
+  // version so the two branches carry the same reviewed decision, publish
+  // forum rules in the Terms (report reasons abuse_or_bullying, sexual_content
+  // and self_harm exist in the schema but the Terms say nothing about
+  // discussion/conduct), wire forum_admin_set_suspension to a UI, and open
+  // the database mode as an explicit, separate operational decision. Users
+  // are 14-18.
+  forum: false,
   // Ratings launch (2026-07-30): the site owner reviewed the under-18
   // consent/age-assurance question and chose to proceed. Enabling ratings
   // requires accounts (rating.jsx gates submission on a signed-in user), so

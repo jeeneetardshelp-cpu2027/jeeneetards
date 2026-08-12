@@ -6,8 +6,13 @@ const fixture = readFileSync("src/forum/ForumReleaseCandidateBrowserFixture.jsx"
 const verifier = readFileSync("src/scripts/verifyForumReleaseCandidateBrowser.js", "utf8");
 
 describe("forum release-candidate browser gate source", () => {
-  it("retains the pre-release browser gate after the approved flag flip", () => {
-    expect(RELEASE_FEATURES.forum).toBe(true);
+  it("keeps the pre-release browser gate live while the forum is unreleased", () => {
+    // The flag is false: the database mode was never opened, so the shipped
+    // nav item led to "Discussions are temporarily unavailable".
+    // verifyForumReleaseCandidateBrowser.js throws unless the flag is false,
+    // so with the forum unreleased this RC gate is runnable again rather than
+    // inert -- which is what should be true of a feature that is not yet live.
+    expect(RELEASE_FEATURES.forum).toBe(false);
     expect(verifier).toContain('const screenNames = ["feed", "thread", "submit", "admin"]');
     expect(verifier).toContain('await visit(screen, "light")');
     expect(verifier).toContain('await visit(screen, "dark")');
