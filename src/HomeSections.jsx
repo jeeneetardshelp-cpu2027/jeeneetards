@@ -8,9 +8,9 @@
 
 import { Link } from "react-router";
 import {
-  ArrowRight, ArrowUpRight, Ban, BadgeCheck, Check, Columns3,
-  Compass, Gauge, GraduationCap, IndianRupee, Languages, Layers, ListFilter,
-  MonitorPlay, Search, ShieldCheck, Smartphone, Sparkles, Star, Target,
+  ArrowRight, ArrowUpRight, BadgeCheck, Columns3,
+  Gauge, GraduationCap, Languages, Layers, ListFilter,
+  MonitorPlay, Search, Sparkles, Star,
 } from "lucide-react";
 import { PlaylistCard, ratingDisplay } from "./PlaylistBrowse.jsx";
 import { Container } from "./AppShell.jsx";
@@ -242,7 +242,12 @@ const FEATURES = [
   {
     icon: Columns3,
     title: "Compare before you commit",
-    body: "Put up to four courses side by side on seventeen attributes — coverage, pacing, theory focus, prerequisites, duration — with the differences highlighted.",
+    // Names only attributes the comparison table actually populates. The old
+    // copy claimed "seventeen attributes — coverage, pacing, theory focus,
+    // prerequisites, duration", but pacing, theory-focus and prerequisites are
+    // null on every course in the catalogue. No count is cited so the line
+    // cannot drift back out of true as fields are added or removed.
+    body: "Put up to four courses side by side — faculty, institute, language, course type, difficulty, lecture count and chapter duration — with the differences highlighted.",
     span: "lg:col-span-2",
   },
   {
@@ -279,152 +284,6 @@ export function Features() {
             </Surface>
           </Reveal>
         ))}
-      </div>
-    </Section>
-  );
-}
-
-/* ============================================================== benefits */
-
-const BENEFITS = [
-  {
-    icon: Ban,
-    title: "Independent rankings. No rabbit holes.",
-    before: "Twenty minutes of Shorts before the lesson starts",
-    after: "The lesson starts",
-  },
-  {
-    icon: Target,
-    title: "No more guessing which course",
-    before: "Forty thumbnails, all promising the full chapter",
-    after: "Real coverage, pacing and rating side by side",
-  },
-  {
-    icon: Smartphone,
-    title: "Nothing to sign up for",
-    before: "Create an account to see the syllabus",
-    after: "Open it and browse — progress saves on your device",
-  },
-];
-
-export function Benefits() {
-  return (
-    <Section id="benefits">
-      <SectionHead
-        eyebrow="Why students stay"
-        title="The same free lectures, minus everything that wastes your time."
-        lead="Nothing here is paywalled or gated. The value is in what has been removed."
-      />
-
-      <div className="mt-16 grid gap-4 md:grid-cols-3">
-        {BENEFITS.map((b, i) => (
-          <Reveal key={b.title} delay={i}>
-            <Surface lift className="flex h-full flex-col">
-              <IconTile icon={b.icon} />
-              <h3 className="text-h3 mt-6 text-ink">{b.title}</h3>
-              <dl className="mt-6 space-y-4 text-sm">
-                <div>
-                  <dt className="text-xs font-semibold uppercase tracking-wider text-ink-3">
-                    Before
-                  </dt>
-                  <dd className="mt-1.5 flex items-start gap-2 text-ink-3 line-through decoration-hairline-strong">
-                    {b.before}
-                  </dd>
-                </div>
-                <div>
-                  <dt className="text-xs font-semibold uppercase tracking-wider text-accent">
-                    Here
-                  </dt>
-                  <dd className="mt-1.5 flex items-start gap-2 text-ink">
-                    <Check
-                      aria-hidden="true"
-                      className="mt-0.5 h-4 w-4 shrink-0 text-accent"
-                    />
-                    {b.after}
-                  </dd>
-                </div>
-              </dl>
-            </Surface>
-          </Reveal>
-        ))}
-      </div>
-    </Section>
-  );
-}
-
-/* =============================================================== process */
-
-const STEPS = [
-  {
-    icon: Compass,
-    title: "Pick your exam and chapter",
-    body: "JEE, NEET or your board. Then class, subject, chapter — four taps, and every option shows how many courses sit behind it.",
-    to: "/explore",
-    cta: "Start the guided path",
-  },
-  {
-    icon: Columns3,
-    title: "Compare what's available",
-    body: "See every teacher who covers that chapter, with syllabus coverage, lecture count, language and rating. Select up to four and put them side by side.",
-    to: "/browse",
-    cta: "Open the catalogue",
-  },
-  {
-    icon: MonitorPlay,
-    title: "Watch, in order, without the noise",
-    body: "The full lesson sequence sits beside the player. Watched lessons get ticked, and where you stopped is remembered on your device.",
-    to: null,
-    cta: null,
-  },
-];
-
-export function Process() {
-  return (
-    <Section id="process" band>
-      <SectionHead
-        align="center"
-        eyebrow="How it works"
-        title="Three steps, about ninety seconds."
-        lead="No account, no card, no onboarding flow. You are browsing on the first tap."
-      />
-
-      <div className="relative mt-16">
-        {/* The connector: a hairline that fades in from the accent at both
-            ends. Desktop only — stacked cards on mobile need no rail. */}
-        <span
-          aria-hidden="true"
-          className="pointer-events-none absolute left-0 right-0 top-12 hidden h-px lg:block"
-          style={{
-            background:
-              "linear-gradient(90deg, transparent, var(--accent-line) 12%, var(--accent-line) 88%, transparent)",
-          }}
-        />
-
-        <ol className="grid gap-4 lg:grid-cols-3">
-          {STEPS.map((s, i) => (
-            <Reveal key={s.title} as="li" delay={i}>
-              <Surface lift glow className="flex h-full flex-col">
-                <div className="flex items-center gap-4">
-                  <span
-                    aria-hidden="true"
-                    className="text-num grid h-12 w-12 shrink-0 place-items-center rounded-md border border-accent-line bg-canvas text-base font-semibold text-accent"
-                  >
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <IconTile icon={s.icon} />
-                </div>
-                <h3 className="text-h3 mt-6 text-ink">{s.title}</h3>
-                <p className="mt-3 flex-1 text-sm leading-relaxed text-ink-2">{s.body}</p>
-                {s.to && (
-                  <Button variant="quiet" size="sm" to={s.to} className="mt-6 -ml-4 self-start">
-                    {s.cta}
-                    <ArrowRight aria-hidden="true" className="h-4 w-4" />
-                  </Button>
-                )}
-              </Surface>
-            </Reveal>
-          ))}
-        </ol>
       </div>
     </Section>
   );
@@ -566,126 +425,6 @@ export function TopRated({ courses, loading }) {
   );
 }
 
-/* ============================================================ statistics */
-
-export function Statistics({ stats }) {
-  if (!stats?.length) return null;
-  return (
-    <Section id="numbers" tight>
-      <Reveal anim="scale">
-        <Surface
-          glow
-          sheen
-          padded={false}
-          className="relative isolate overflow-hidden p-10 sm:p-14"
-        >
-          <Ambience grid={false} parallax={0.03} />
-          <div className="relative grid grid-cols-2 gap-x-8 gap-y-12 lg:grid-cols-4">
-            {stats.map((s, i) => (
-              <Reveal key={s.label} delay={i}>
-                <Stat {...s} />
-              </Reveal>
-            ))}
-          </div>
-        </Surface>
-      </Reveal>
-    </Section>
-  );
-}
-
-/* =============================================================== pricing */
-
-const INCLUDED = [
-  "Every course, chapter and lecture in the library",
-  "Side-by-side comparison on 17 attributes",
-  "Full-library search across chapters, teachers and lectures",
-  "Official YouTube player; YouTube may show advertisements and same-channel recommendations",
-  "Watch progress and resume — on this device, or across devices if you sign in",
-  "Light and dark themes, and it works on a slow connection",
-];
-
-const NEVER = [
-  "No advertisements or sponsored rankings from JEENEETARD.",
-  "No account required to browse, search, compare or watch",
-  "No selling or sharing of personal data",
-  "No cross-site tracking cookies",
-];
-
-export function Pricing() {
-  return (
-    <Section id="pricing" band>
-      <SectionHead
-        align="center"
-        eyebrow="Pricing"
-        title="It is free. That is the whole model."
-        lead="Not a trial, not a freemium tier, not free-for-now. There is nothing to buy on this site."
-      />
-
-      <Reveal anim="scale" className="mt-16">
-        <Surface
-          glow
-          sheen
-          className="relative isolate mx-auto max-w-4xl overflow-hidden border-accent-line"
-        >
-          <div className="grid gap-10 lg:grid-cols-[1fr_1px_1fr] lg:gap-12">
-            <div>
-              <div className="flex items-end gap-3">
-                <IndianRupee aria-hidden="true" className="mb-3 h-8 w-8 text-accent" />
-                <span className="text-num text-display-sm text-ink">0</span>
-                <span className="mb-3 text-sm text-ink-3">/ forever</span>
-              </div>
-              <p className="mt-6 text-sm leading-relaxed text-ink-2">
-                Lectures are hosted on YouTube by the teachers who made them and stay
-                their property. This site is the index on top — curriculum tagging,
-                comparison and search. Indexing costs almost nothing to run, so there
-                is nothing to charge for.
-              </p>
-              {/* md, not lg: at this column width two lg buttons wrap onto
-                  separate lines at different widths, which reads as a mistake. */}
-              <div className="mt-8 flex flex-wrap gap-3">
-                <Button size="md" to="/explore">
-                  Start browsing
-                  <ArrowRight aria-hidden="true" className="h-4 w-4" />
-                </Button>
-                <Button variant="secondary" size="md" to="/search">
-                  Search the library
-                </Button>
-              </div>
-              <p className="mt-5 text-xs text-ink-3">
-                No card. No email. No account.
-              </p>
-            </div>
-
-            <span aria-hidden="true" className="hidden bg-hairline lg:block" />
-
-            <div>
-              <p className="text-eyebrow text-ink-3">What&apos;s included</p>
-              <ul className="mt-5 space-y-3">
-                {INCLUDED.map((item) => (
-                  <li key={item} className="flex gap-3 text-sm text-ink-2">
-                    <Check aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-
-              <p className="text-eyebrow mt-10 text-ink-3">What we will never do</p>
-              <ul className="mt-5 space-y-3">
-                {NEVER.map((item) => (
-                  <li key={item} className="flex gap-3 text-sm text-ink-2">
-                    <Ban aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0 text-ink-3" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </Surface>
-      </Reveal>
-    </Section>
-  );
-}
-
 /* =================================================================== faq */
 
 const FAQS = [
@@ -753,60 +492,6 @@ export function Faq() {
         </Reveal>
       </div>
     </Section>
-  );
-}
-
-/* ============================================================ final CTA */
-
-export function FinalCta() {
-  const ref = useReveal();
-  return (
-    <section ref={ref} className="relative pb-24 sm:pb-32">
-      <Container>
-        <Reveal anim="scale">
-          <Surface
-            glow
-            sheen
-            padded={false}
-            className="relative isolate overflow-hidden border-accent-line px-8 py-20 text-center sm:px-16 sm:py-24"
-          >
-            <Ambience parallax={0.04} />
-            <div className="relative mx-auto max-w-2xl">
-              <Eyebrow className="mb-6">Ready when you are</Eyebrow>
-              <h2 className="text-h2 text-ink">
-                Your next lecture is two taps away.
-              </h2>
-              <p className="text-lead mx-auto mt-6 max-w-xl text-ink-2">
-                Pick a chapter, see who teaches it best, and start. No sign-up, no
-                card — just the lesson. YouTube may show advertisements and
-                same-channel recommendations inside its official player.
-              </p>
-              <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
-                <Button size="lg" to="/explore">
-                  Find a course
-                  <ArrowRight aria-hidden="true" className="h-4 w-4" />
-                </Button>
-                <Button variant="secondary" size="lg" to="/browse">
-                  Browse all courses
-                </Button>
-              </div>
-              <ul className="mt-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-xs text-ink-3">
-                {[
-                  [ShieldCheck, "No sponsored rankings or trackers"],
-                  [Smartphone, "Works on any phone"],
-                  [IndianRupee, "Free forever"],
-                ].map(([Icon, label]) => (
-                  <li key={label} className="inline-flex items-center gap-2">
-                    <Icon aria-hidden="true" className="h-3.5 w-3.5 text-accent" />
-                    {label}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </Surface>
-        </Reveal>
-      </Container>
-    </section>
   );
 }
 

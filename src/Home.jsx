@@ -44,19 +44,12 @@ import { useStructuredData } from "./PageMetadata.jsx";
 import { organizationSchema, websiteSchema } from "./structuredData.js";
 import { Button, EmptyState, Pill, Skeleton, Surface } from "./ui.jsx";
 import {
-  Benefits, ContinueWatching, ExamGrid, Faq, Features, FinalCta, Hero,
-  Pricing, Process, SocialProof, Statistics, TopRated,
-  pickTopRated,
+  ContinueWatching, ExamGrid, Faq, Features, Hero,
+  SocialProof, TopRated, pickTopRated,
 } from "./HomeSections.jsx";
 import YouTubeThumbnail from "./YouTubeThumbnail.jsx";
 import ChannelAvatar from "./ChannelAvatar.jsx";
 import { useHomepageChannels } from "./useHomepageChannels.js";
-
-// The comparison table's attribute count, and the languages the catalogue
-// classifies. Both are real product facts, stated once here so the numbers
-// on the page cannot drift from the pages they describe.
-const COMPARED_ATTRIBUTES = 17;
-const LANGUAGES = 3;
 
 export function homeTagline(capabilities = RELEASE_CAPABILITIES) {
   return capabilities.comparison
@@ -188,8 +181,6 @@ export default function Home() {
             channelsLoading={channelsLoading}
             topRated={topRated}
             catalogueLoading={catalogueLoading}
-            courseCount={courseCount}
-            liveTracks={liveTracks}
           />
         )}
       </main>
@@ -274,66 +265,43 @@ function TrustChips() {
 }
 
 // ---------------------------------------------------------------------
-//  Default landing (no query). Order is deliberate: a returning student's
-//  own progress first, then the exam entry points, then the argument.
+//  Default landing (no query).
+//
+//  Trimmed on 2026-08-10, from eleven sections to six. The page was 14.8
+//  phone-screens tall and led with marketing; the audit's finding was that a
+//  student wanting a Thermodynamics lecture had to scroll past a value
+//  proposition, a before/after table, a three-step explainer, a pricing tier
+//  and a stat band to reach the tool. Removed: Benefits (why-students-stay),
+//  Process (how-it-works), the Statistics band (which also carried a false
+//  "17 attributes" figure), Pricing (the hero already says "Free forever"),
+//  and the Final CTA (it repeated the hero). Those components are gone from
+//  HomeSections.jsx too, not just unrendered.
+//
+//  What stays is the tool and one honest explainer, in a deliberate order:
+//  a returning student's own progress, then the exam entry grid (the actual
+//  product), then the trust strip, then one compact "what it does", the real
+//  student ratings, and the FAQ that answers genuine first-visit questions.
+//  The search box itself is at the very top, in the hero.
 // ---------------------------------------------------------------------
 function Landing({
   continueWatching, exams, institutes, topRated, catalogueLoading,
-  channelsLoading, courseCount, liveTracks,
+  channelsLoading,
 }) {
   return (
     <>
       <ContinueWatching entries={continueWatching} />
 
-      <SocialProof institutes={institutes} loading={channelsLoading} />
-
+      {/* The tool comes before any argument for it. */}
       <ExamGrid exams={exams} />
+
+      <SocialProof institutes={institutes} loading={channelsLoading} />
 
       <Features />
 
+      {/* Real ratings, and it hides itself when there are none. */}
       <TopRated courses={topRated} loading={catalogueLoading} />
 
-      <Benefits />
-
-      <Process />
-
-      {/* Counts that come from a live query are dropped when that query hasn't
-          produced a real number, rather than rendered as a confident "0". With
-          a literal array here, a failed catalogue request made the homepage
-          state "0 — Courses in the library" and "0 — Exam tracks live" as
-          statistics, while the hero rail above (already guarded on
-          courseCount > 0) correctly hid itself. The last two are constants
-          describing the product, not measurements, so they always hold. */}
-      <Statistics
-        stats={[
-          courseCount > 0 && {
-            value: courseCount,
-            label: "Courses in the library",
-            note: "Curriculum-tagged, chapter by chapter",
-          },
-          liveTracks > 0 && {
-            value: liveTracks,
-            label: "Exam tracks live",
-            note: "JEE, NEET and school boards",
-          },
-          {
-            value: COMPARED_ATTRIBUTES,
-            label: "Attributes compared",
-            note: "Coverage, pacing, prerequisites and more",
-          },
-          {
-            value: LANGUAGES,
-            label: "Languages classified",
-            note: "Hindi, English and Hinglish",
-          },
-        ].filter(Boolean)}
-      />
-
-      <Pricing />
-
       <Faq />
-
-      <FinalCta />
     </>
   );
 }
