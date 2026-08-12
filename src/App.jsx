@@ -32,6 +32,7 @@ import Footer from "./Footer.jsx";
 import LegalPage from "./LegalPage.jsx";
 import PrivacyPolicy from "./PrivacyPolicy.jsx";
 import PasswordReset from "./PasswordReset.jsx";
+import SignInPage from "./SignInPage.jsx";
 import FeatureUnavailable from "./FeatureUnavailable.jsx";
 import NotFound from "./NotFound.jsx";
 import AppErrorBoundary from "./AppErrorBoundary.jsx";
@@ -360,6 +361,7 @@ export default function App() {
           <Route path="/terms" element={<TermsPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
           <Route path="/reset" element={<PasswordReset />} />
+          <Route path="/signin" element={<SignInPage />} />
           {/* Anything else is honestly a 404 — silently redirecting to Home
               made every mistyped or stale link a soft-404 for crawlers and a
               mystery for students. */}

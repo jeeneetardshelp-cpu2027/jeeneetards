@@ -59,7 +59,13 @@ describe("signed-out forum feed", () => {
     const { container } = renderFeed(apiWith());
     expect(await screen.findByRole("heading", { name: "Question 1" })).toBeTruthy();
     expect(screen.getByText("Solved")).toBeTruthy();
-    expect(screen.queryByText(/email|sign in|submit a post/i)).toBeNull();
+    // The inline auth form must not be mounted in the FEED. Checked by the
+    // form's own fields, not by the word "sign in" — the GlobalHeader now
+    // carries a global "Sign in" nav link on every signed-out page, which is
+    // navigation, not the auth surface this test guards against.
+    expect(screen.queryByLabelText("Email")).toBeNull();
+    expect(screen.queryByLabelText("Password")).toBeNull();
+    expect(screen.queryByText(/submit a post/i)).toBeNull();
     expect(container.querySelector(".reveal")).toBeNull();
   });
 
