@@ -54,17 +54,23 @@ describe("public page metadata", () => {
     expect(metadataForLocation("/browse").robots).toBe("index, follow");
   });
 
-  it("keeps restricted routes out while exposing the released forum metadata", () => {
+  it("keeps restricted routes out, and keeps the unreleased forum unindexed", () => {
     expect(metadataForLocation("/admin").robots).toBe("noindex, nofollow");
     expect(metadataForLocation("/admin/").robots).toBe("noindex, nofollow");
     expect(metadataForLocation("/reset").robots).toBe("noindex, nofollow");
     expect(metadataForLocation("/compare").robots).toBe("noindex, follow");
-    const forum = metadataForLocation("/forum/post/42");
-    expect(forum.robots).toBe("index, follow");
-    expect(forum.canonicalPath).toBe("/forum/post/42");
-    expect(forum.title).toBe("Student preparation forum | JEENEETARD");
-    expect(metadataForLocation("/forum", "?q=rotation").robots).toBe("noindex, follow");
-    expect(metadataForLocation("/forum/submit").robots).toBe("noindex, follow");
+
+    // RELEASE_FEATURES.forum is false since 2026-08-10, so every forum path
+    // collapses to the "coming soon" metadata and is withheld from the index.
+    // Indexing it while production forum_mode() returns "off" was asking Google
+    // to rank "Discussions are temporarily unavailable", and a canonical
+    // /forum/post/42 for a post that cannot be read.
+    for (const path of ["/forum", "/forum/submit", "/forum/post/42"]) {
+      const page = metadataForLocation(path);
+      expect(page.robots, path).toBe("noindex, follow");
+      expect(page.canonicalPath, path).toBe("/forum");
+      expect(page.title, path).toBe("Feature coming soon | JEENEETARD");
+    }
   });
 
   it("treats the legacy /chapter redirect as supported, not as a 404", () => {

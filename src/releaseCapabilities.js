@@ -25,11 +25,25 @@ export const RELEASE_CAPABILITIES = Object.freeze({
 // particular, the presence of a writable table does not make an anonymous
 // submission feature safe to expose without throttling and abuse controls.
 export const RELEASE_FEATURES = Object.freeze({
-  // Forum release approved after the production schema was installed in mode
-  // `off`, its atomic postflight passed, and anonymous production calls proved
-  // the fail-closed surface. Opening the database mode remains a separate
-  // operational decision after the flagged frontend is deployed and checked.
-  forum: true,
+  // TURNED BACK OFF on 2026-08-10. The frontend was released, but the database
+  // mode was never opened, so production `forum_mode()` returns "off" and every
+  // click on the nav item landed on "Discussions are temporarily unavailable".
+  // The link was also in the footer and in the sitemap, so Google was being
+  // asked to index a dead end. Verified against production the same day:
+  // forum_mode -> "off", get_forum_topics -> [], get_forum_feed -> [],
+  // and one profile in the whole database.
+  //
+  // This flag is the honest state until the mode is actually opened. Nothing is
+  // deleted -- the ~40 forum files and their tests stay, and the routes still
+  // resolve to ForumFeatureUnavailable so a shared link explains itself instead
+  // of 404ing.
+  //
+  // Before flipping this back to true: publish forum rules in the Terms (they
+  // currently say nothing about discussion, conduct, harassment or abuse, while
+  // the schema defines report reasons for abuse_or_bullying, sexual_content and
+  // self_harm), wire forum_admin_set_suspension to a UI (no component calls it
+  // today), and open the database mode. Users are 14-18.
+  forum: false,
   // Ratings launch (2026-07-30): the site owner reviewed the under-18
   // consent/age-assurance question and chose to proceed. Enabling ratings
   // requires accounts (rating.jsx gates submission on a signed-in user), so
