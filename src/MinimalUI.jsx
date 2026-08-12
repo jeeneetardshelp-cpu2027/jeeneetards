@@ -320,6 +320,8 @@ export function VideoView({
   ratingPanel = null,
   reportSlot = null,
   materialsPanel = null,
+  // "Who else teaches this chapter" — a strip directly under the player nav.
+  moreTeachers = null,
   overview = null,
   onSelectLesson = () => {},
   onLessonPlay = () => {},
@@ -608,6 +610,11 @@ export function VideoView({
                 </button>
               </nav>
             )}
+
+            {/* Other institutes teaching this chapter — the site's one real
+                advantage over YouTube, placed where a student decides they want
+                a different teacher. Hides itself when there is no other one. */}
+            {moreTeachers}
 
             {materialsPanel}
             {reportSlot}
