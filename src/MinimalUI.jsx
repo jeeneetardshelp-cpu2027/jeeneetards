@@ -312,6 +312,9 @@ export function VideoView({
   videoId,
   videoTitle = "Lesson",
   lessons = [],
+  // The full course sequence, when `lessons` is only a chapter's slice of it.
+  // Defaults to `lessons`, so the unscoped /course/:id route is unchanged.
+  courseLessons = null,
   activeLessonId = null,
   watchedIds = [],
   ratingPanel = null,
@@ -337,14 +340,27 @@ export function VideoView({
     { label: chapter || "Course" },
     { label: videoTitle },
   ];
-  const activeIndex = lessons.findIndex((lesson) => lesson.id === activeLessonId);
-  const previousLesson = activeIndex > 0 ? lessons[activeIndex - 1] : null;
-  const nextLesson = activeIndex >= 0 && activeIndex < lessons.length - 1
-    ? lessons[activeIndex + 1]
+  // `lessons` is what the student SEES in the list. On /course/:id/chapter/:id
+  // that is one chapter's slice, which is the point of that route. `sequence` is
+  // the whole course, and it is what "next" must walk.
+  //
+  // Keeping these separate is the fix for a real defect: 672 of 1,217
+  // (course, chapter) pairs hold exactly one lesson — 55.2%, median 1 — so
+  // deriving `nextLesson` from the slice meant that on the majority of watch
+  // pages the first video ended with "Course complete", "You watched 1 of 1
+  // lesson in this course", and the prev/next nav hidden entirely. A student one
+  // video into a 68-lesson course was congratulated and given nowhere to go.
+  const sequence = courseLessons?.length ? courseLessons : lessons;
+  const scoped = sequence !== lessons;
+
+  const seqIndex = sequence.findIndex((lesson) => lesson.id === activeLessonId);
+  const previousLesson = seqIndex > 0 ? sequence[seqIndex - 1] : null;
+  const nextLesson = seqIndex >= 0 && seqIndex < sequence.length - 1
+    ? sequence[seqIndex + 1]
     : null;
 
   // End-of-lesson overlay: "next" counts down to the next lesson, "complete"
-  // marks the end of the course. null = no overlay showing.
+  // marks the end of the COURSE — never merely the end of the visible slice.
   const [overlay, setOverlay] = useState(null);
   const [countdown, setCountdown] = useState(UP_NEXT_SECONDS);
   // The overlay auto-navigates on a timer, so keyboard users must land ON its
@@ -417,7 +433,10 @@ export function VideoView({
     setOverlay(null);
   };
 
-  const watchedCount = lessons.filter((lesson) => watchedIds.includes(lesson.videoId)).length;
+  // Over the whole course, because the completion overlay claims the course.
+  // There is deliberately no chapter-slice count here any more: the slice count
+  // is what produced "You watched 1 of 1 lesson in this course."
+  const courseWatchedCount = sequence.filter((lesson) => watchedIds.includes(lesson.videoId)).length;
 
   return (
     <div className={`min-h-screen ${t.page}`}>
@@ -515,9 +534,15 @@ export function VideoView({
                     <p className={`text-base font-semibold ${t.text}`} style={{ fontFamily: BRAND_SERIF }}>
                       Course complete
                     </p>
-                    {lessons.length > 0 && (
+                    {/* Counted over the whole course, because that is what this
+                        overlay claims. Counting the visible chapter slice is how
+                        "You watched 1 of 1 lesson in this course" reached a
+                        student sitting on lesson 1 of 68. This overlay is now
+                        only reachable when the course really has no next
+                        lesson. */}
+                    {sequence.length > 0 && (
                       <p className={`mt-2 text-sm ${t.muted}`}>
-                        You watched {watchedCount} of {lessons.length} lesson{lessons.length === 1 ? "" : "s"} in this course.
+                        You watched {courseWatchedCount} of {sequence.length} lesson{sequence.length === 1 ? "" : "s"} in this course.
                       </p>
                     )}
                   </div>
@@ -546,14 +571,24 @@ export function VideoView({
             </div>
             <h2 className={`mt-5 text-2xl font-semibold leading-snug ${t.text}`} style={{ fontFamily: BRAND_SERIF }}>{videoTitle}</h2>
             <p className={`mt-1 text-sm ${t.muted}`}>
+              {/* On a chapter-scoped page the slice position alone reads as
+                  "Lesson 1 of 1" on 55% of pages, which looks like a
+                  one-lesson course. Name the chapter it counts within, and give
+                  the course position alongside it. */}
               {lessons.length > 0
-                ? `Lesson ${
-                    lessons.find((l) => l.id === activeLessonId)?.position ?? 1
-                  } of ${lessons.length}`
+                ? scoped
+                  ? `Lesson ${
+                      lessons.find((l) => l.id === activeLessonId)?.position ?? 1
+                    } of ${lessons.length} in this chapter · ${
+                      seqIndex >= 0 ? seqIndex + 1 : 1
+                    } of ${sequence.length} in the course`
+                  : `Lesson ${
+                      lessons.find((l) => l.id === activeLessonId)?.position ?? 1
+                    } of ${lessons.length}`
                 : `Lesson 1 of ${course.lectures}`}
             </p>
 
-            {lessons.length > 1 && (
+            {sequence.length > 1 && (
               <nav className="mt-4 flex gap-2" aria-label="Lesson navigation">
                 <button
                   type="button"
