@@ -11,7 +11,7 @@
 //      assessed". A legacy free-text teacher is shown as a plain name and is
 //      NOT presented as a resolved faculty identity.
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useSearchParams, useNavigate, useLocation } from "react-router";
 import {
   Star, Clock, Layers, SlidersHorizontal, X, AlertTriangle,
@@ -27,6 +27,7 @@ import { useStructuredData } from "./PageMetadata.jsx";
 import { itemListSchema } from "./structuredData.js";
 import { subjectColor } from "./brandColors.js";
 import { useRatingsAvailability } from "./useRatingsAvailability.js";
+import { usePopularityAvailability } from "./usePopularityAvailability.js";
 import YouTubeThumbnail from "./YouTubeThumbnail.jsx";
 import ChannelAvatar from "./ChannelAvatar.jsx";
 
@@ -235,6 +236,7 @@ export default function PlaylistBrowse({
   const location = useLocation();
   const [sheetOpen, setSheetOpen] = useState(false);
   const ratingsAvailable = useRatingsAvailability();
+  const popularityAvailable = usePopularityAvailability();
   const filterButtonRef = useRef(null);
   const sheetRef = useRef(null);
   const closeButtonRef = useRef(null);
@@ -283,16 +285,31 @@ export default function PlaylistBrowse({
       return next;
     });
 
+  // A sort that cannot change the order is worse than not offering it: the
+  // student picks "Most viewed", nothing moves, and the control reads as broken.
+  // Three sorts are data-dependent -- "Highest rated" (ratings), "Most popular"
+  // (popularity_score) and "Most viewed" (view_count_total) -- and each is
+  // suppressed only once the catalogue POSITIVELY confirms its column is empty.
+  // "unknown" (the check hasn't resolved, or failed) keeps every control.
+  const unavailableSorts = useMemo(() => {
+    const dead = new Set();
+    if (ratingsAvailable === false) dead.add("rating");
+    if (popularityAvailable && popularityAvailable.popular === false) dead.add("popular");
+    if (popularityAvailable && popularityAvailable.views === false) dead.add("most_viewed");
+    return dead;
+  }, [ratingsAvailable, popularityAvailable]);
+
   // Sort is a view preference in the URL (?sort=). Validated against SORTS so a
   // junk value falls back to the default rather than producing an empty order.
   const sortRaw = params.get("sort");
-  const ratingSortUnavailable = ratingsAvailable === false && sortRaw === "rating";
-  const sort = !ratingSortUnavailable && SORTS.some((s) => s.id === sortRaw)
+  const sortUnavailable = unavailableSorts.has(sortRaw);
+  const sort = !sortUnavailable && SORTS.some((s) => s.id === sortRaw)
     ? sortRaw
     : DEFAULT_SORT;
-  const sortOptions = ratingsAvailable === false
-    ? SORTS.filter((option) => option.id !== "rating")
-    : SORTS;
+  const sortOptions = useMemo(
+    () => SORTS.filter((option) => !unavailableSorts.has(option.id)),
+    [unavailableSorts],
+  );
   const setSort = useCallback((value, { replace = false } = {}) =>
     setParams((prev) => {
       const next = new URLSearchParams(prev);
@@ -301,17 +318,18 @@ export default function PlaylistBrowse({
       return next;
     }, { replace }), [setParams]);
 
-  // A shared URL may still carry ?sort=rating from before ratings existed.
-  // Remove that now-meaningless preference once the catalogue confirms zero
-  // rated courses, keeping URL, control and database ordering in agreement.
+  // A shared URL may still carry ?sort=most_viewed (or rating/popular) from
+  // before that data existed. Remove the now-meaningless preference once the
+  // catalogue confirms the column is empty, keeping URL, control and database
+  // ordering in agreement.
   //
   // REPLACE, not push: this is automatic cleanup the student never asked for.
-  // Pushing trapped the Back button -- going back to a ?sort=rating URL re-ran
+  // Pushing trapped the Back button -- going back to the stale-sort URL re-ran
   // this effect and immediately pushed /browse again, so they could never get
   // past it. A sort the student picks themselves still pushes, so they can undo it.
   useEffect(() => {
-    if (ratingSortUnavailable) setSort(DEFAULT_SORT, { replace: true });
-  }, [ratingSortUnavailable, setSort]);
+    if (sortUnavailable) setSort(DEFAULT_SORT, { replace: true });
+  }, [sortUnavailable, setSort]);
 
   const { items, total, loading, error, hasMore, reload } = usePlaylistBrowse({
     // goalId was the defect: accepted by the hook, never supplied by the page.

@@ -57,6 +57,10 @@ vi.mock("./supabaseClient", () => ({
 vi.mock("./useRatingsAvailability.js", () => ({
   useRatingsAvailability: () => ratingsMock.available,
 }));
+const popularityMock = vi.hoisted(() => ({ available: null }));
+vi.mock("./usePopularityAvailability.js", () => ({
+  usePopularityAvailability: () => popularityMock.available,
+}));
 
 import {
   usePlaylistBrowse, PAGE_SIZE, formatDuration, isMissingBrowseStatsColumn,
@@ -95,6 +99,7 @@ beforeEach(() => {
   ROWS = [];
   COUNT = 0;
   ratingsMock.available = null;
+  popularityMock.available = null;
 });
 
 describe("playlist card channel navigation", () => {
@@ -369,6 +374,54 @@ describe("rating sort truthfulness", () => {
 
     const sort = await screen.findByRole("combobox", { name: "Sort courses" });
     expect([...sort.options].map((option) => option.text)).toContain("Highest rated");
+  });
+});
+
+describe("popularity sort truthfulness", () => {
+  const optionTexts = async () => {
+    const sort = await screen.findByRole("combobox", { name: "Sort courses" });
+    return [...sort.options].map((option) => option.text);
+  };
+
+  it("hides Most popular and Most viewed when both columns are empty", async () => {
+    popularityMock.available = { popular: false, views: false };
+    renderBrowse({ subject: null, chapter: null, search: "" });
+
+    const texts = await optionTexts();
+    expect(texts).not.toContain("Most popular");
+    expect(texts).not.toContain("Most viewed");
+    // The tool the student came for is still there.
+    expect(texts).toContain("Recommended");
+    expect(texts).toContain("Recently added");
+  });
+
+  it("hides each sort independently when only its own column is empty", async () => {
+    popularityMock.available = { popular: true, views: false };
+    renderBrowse({ subject: null, chapter: null, search: "" });
+
+    const texts = await optionTexts();
+    expect(texts).toContain("Most popular");
+    expect(texts).not.toContain("Most viewed");
+  });
+
+  it("keeps both while the availability check is unknown", async () => {
+    popularityMock.available = null;
+    renderBrowse({ subject: null, chapter: null, search: "" });
+
+    const texts = await optionTexts();
+    expect(texts).toContain("Most popular");
+    expect(texts).toContain("Most viewed");
+  });
+
+  it("removes a stale most_viewed sort URL when no course has views", async () => {
+    popularityMock.available = { popular: false, views: false };
+    renderBrowse(
+      { subject: null, chapter: null, search: "" },
+      "/browse?sort=most_viewed&page=2",
+    );
+
+    await waitFor(() => expect(screen.getByTestId("loc").textContent).toBe("/browse"));
+    expect(screen.getByRole("combobox", { name: "Sort courses" }).value).toBe("recommended");
   });
 });
 
