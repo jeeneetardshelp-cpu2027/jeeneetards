@@ -69,8 +69,30 @@ describe("the migration keeps the parts that make it safe", () => {
     //                       "clas", which is in no list, so it survived and
     //                       broke "gravitation class 11"
     // Both checks are required. Removing either reintroduces a measured failure.
-    expect(sql).toMatch(/not \(tok\s+= any \(public\.search_filler_tokens\(\)\)\)/);
-    expect(sql).toMatch(/not \(tok_s = any \(public\.search_filler_tokens\(\)\)\)/);
+    expect(sql).toMatch(/not \(tok = any \(public\.search_filler_tokens\(\)\)\)/);
+    expect(sql).toMatch(/not \(public\.search_singular\(tok\) = any \(public\.search_filler_tokens\(\)\)\)/);
+  });
+
+  it("widens the MATCH TIERS to typed-or-singular instead of rewriting tokens", () => {
+    // The first deploy rewrote tokens ("kinamatics" -> "kinamatic") and a typo
+    // query that had worked went from 14 rows to ZERO: the stripped form lost
+    // the 'ics' trigrams it shared with "kinematics" and fell below the fuzzy
+    // tier's 0.5 threshold. Caught by replaying the measured baseline corpus
+    // after deploy. The typed form must always still be tried as-is.
+    expect(sql).toContain("create or replace function public.search_singular(p_tok text)");
+    // tier 4: substring check tries both forms
+    expect(sql).toMatch(/position\(tok in p_haystack\) = 0\s*\n\s*and position\(public\.search_singular\(tok\) in p_haystack\) = 0/);
+    // tier 5: fuzzy check tries both forms
+    expect(sql).toMatch(/catalog_word_similarity\(tok, p_haystack\) < 0\.5\s*\n\s*and public\.catalog_word_similarity\(public\.search_singular\(tok\), p_haystack\) < 0\.5/);
+    // and the tokenisation keeps what the student typed -- no tok_s projection
+    const qContent = sql.match(/q_content := array\(([\s\S]*?)\);/);
+    expect(qContent).toBeTruthy();
+    expect(qContent[1]).toMatch(/select tok\b/);
+    expect(qContent[1]).not.toMatch(/tok_s|left\(tok/);
+    // helper granted to anon: called from SECURITY INVOKER universal_search
+    expect(sql).toMatch(/grant execute on function public\.search_singular\(text\)[\s\S]{0,60}anon/);
+    // the self-test names the query the first deploy broke
+    expect(sql).toContain("kinamatics");
   });
 
   it("keeps the empty-token fallback", () => {

@@ -31,21 +31,29 @@
 -- does NOT loosen the tiers. It removes the words that should never have been
 -- part of the AND in the first place.
 --
--- WHAT CHANGES. Exactly two things, both inside universal_search's tokenisation:
+-- WHAT CHANGES. Exactly two things:
 --
---   1. Study-intent words and bare 1-2 digit numbers are dropped from the token
---      list. A lesson title says "Maxima and Minima"; it never says "how to
---      find maxima". The needle q is UNCHANGED, so tier 1 (exact) and tier 3
---      (prefix) still match on the full string the student typed -- "Rotational
---      Motion" keeps ranking as an exact match.
+--   1. In universal_search's tokenisation: study-intent words and bare 1-2
+--      digit numbers are dropped from the token list. A lesson title says
+--      "Maxima and Minima"; it never says "how to find maxima". The needle q is
+--      UNCHANGED, so tier 1 (exact) and tier 3 (prefix) still match on the full
+--      string the student typed -- "Rotational Motion" keeps ranking as an
+--      exact match. Surviving tokens are NOT rewritten.
 --
---   2. One trailing 's' is stripped from tokens longer than four characters, so
---      "problems" reaches a title that says "Problem". This only ever widens:
---      when a word genuinely ends in s, "physics" -> "physic" is still a
---      substring of "physics".
+--   2. In search_rank_tokens' tiers 4 and 5: each token matches if its typed
+--      form OR its singular form (one trailing 's' off a 5+ character word)
+--      matches, so "problems" reaches a title that says "Problem".
 --
--- Both transforms only ADD matches. Nothing that matched before can stop
--- matching, which is why the exact-name and typo groups cannot regress.
+-- Both changes only ADD matches -- the typed form alone passing is exactly the
+-- old behaviour -- which is why the exact-name and typo groups cannot regress.
+--
+-- WHY THE PLURAL HANDLING LIVES IN THE TIERS AND NOT THE TOKENS: the first
+-- deploy of this file singularised the tokens themselves, and the typo query
+-- "kinamatics" -- which had worked, 14 rows -- went to ZERO: the rewritten
+-- "kinamatic" no longer shared the 'ics' trigram tail with "kinematics" and
+-- fell below the fuzzy tier's 0.5 threshold. Caught by replaying the measured
+-- baseline corpus after deploy. Trying both forms per tier cannot do that,
+-- because the typed form is always still tried as-is.
 --
 -- THE GUARD THAT MATTERS. If filtering would leave no tokens at all -- a query
 -- of pure filler such as "how to" -- the original token list is kept. Without
@@ -125,6 +133,79 @@ comment on function public.search_filler_tokens() is
 revoke all on function public.search_filler_tokens() from public;
 grant execute on function public.search_filler_tokens() to anon, authenticated, service_role;
 
+-- ------------------------------------------------------------
+-- One trailing 's' off a token longer than four characters, else unchanged.
+-- Used in two places: the filler test above ("problems" is filler because
+-- "problem" is listed) and search_rank_tokens' tiers ("problems" matches a
+-- title that says "Problem"). It is deliberately NOT applied to the tokens
+-- themselves: the first deploy did that, and "kinamatics" -> "kinamatic" lost
+-- the trigrams it shared with "kinematics", killing a typo query that worked
+-- (14 rows -> 0). The tiers try BOTH forms instead, which can only widen.
+-- ------------------------------------------------------------
+create or replace function public.search_singular(p_tok text)
+returns text language sql immutable parallel safe as $$
+  select case when length(p_tok) > 4 and right(p_tok, 1) = 's'
+              then left(p_tok, length(p_tok) - 1)
+              else p_tok end;
+$$;
+
+comment on function public.search_singular(text) is
+  'One trailing s off a 5+ character token. Lets plural queries reach singular titles without rewriting what the student typed.';
+
+revoke all on function public.search_singular(text) from public;
+-- anon is required: search_rank_tokens is called from SECURITY INVOKER
+-- universal_search, so a logged-out student resolves this function as anon.
+grant execute on function public.search_singular(text) to anon, authenticated, service_role;
+
+create or replace function public.search_rank_tokens(
+    p_haystack text,
+    p_tokens   text[],
+    p_needle   text)
+returns int language sql immutable as $$
+  select case
+    when p_needle is null or p_haystack is null                            then null
+    when p_haystack = p_needle                                            then 1
+    when length(p_needle) >= 2 and p_haystack like p_needle || '%'         then 3
+    -- Tier 4: EVERY token present. This is what makes "motion gravity"
+    -- work, and for a single-token query it reduces to the old 'partial' tier.
+    when length(p_needle) >= 3
+         and p_tokens is not null
+         and cardinality(p_tokens) > 0
+         and not exists (
+               select 1
+                 from unnest(p_tokens) as tok
+                where tok <> ''
+                  -- typed OR singular: "problems" must reach a title that says
+                  -- "Problem". Widening only -- the typed form alone passing is
+                  -- exactly the old behaviour.
+                  and position(tok in p_haystack) = 0
+                  and position(public.search_singular(tok) in p_haystack) = 0
+             )                                                            then 4
+    -- Fuzzy is the only tier that can be wrong in a surprising way, so it is
+    -- both length-guarded and threshold-guarded. word_similarity(needle,
+    -- haystack) — NOT similarity() — because the haystack is a 90-character
+    -- lecture title and whole-string similarity drowns in it (P2).
+    -- EVERY token must clear the threshold, not just the needle as a whole.
+    -- word_similarity maximises over ONE contiguous extent, so 'class 12' was
+    -- satisfied by matching only 'class' and dragged 253 Class-11 lectures in.
+    -- group_total is a contract column the UI renders, so this has to be tight.
+    when length(p_needle) >= 4
+         and not exists (
+           select 1 from unnest(p_tokens) as tok
+            where tok <> ''
+              -- typed OR singular, same as tier 4. The typed form is tried
+              -- as-is, which is what keeps typo queries like "kinamatics"
+              -- working -- rewriting the token broke them once already.
+              and public.catalog_word_similarity(tok, p_haystack) < 0.5
+              and public.catalog_word_similarity(public.search_singular(tok), p_haystack) < 0.5
+         )                                                              then 5
+    else null
+  end;
+$$;
+
+comment on function public.search_rank_tokens(text, text[], text) is
+  'Match tier for universal_search: 1 exact, 3 prefix, 4 all tokens present, 5 word-similarity fuzzy, null no match.';
+
 create or replace function public.universal_search(
     p_query  text,
     p_types  text[] default null,   -- null/empty = every group
@@ -183,38 +264,31 @@ begin
   -- "Pulley Problem - Newton's Laws of Motion" sat in the catalogue, and
   -- "friction problems" while 5 Friction lectures did.
   --
-  -- Two transforms, both of which only ever WIDEN the match set:
-  --   * drop study-intent words and bare 1-2 digit numbers, which express what
-  --     the student wants DONE, not what the lesson is about. A title says
-  --     "Maxima and Minima", never "how to find maxima".
-  --   * strip one trailing 's' from tokens longer than four characters, so
-  --     "problems" reaches "Problem". Safe even when the word genuinely ends in
-  --     s: "physics" becomes "physic", which is still a substring of "physics".
+  -- Tokens are FILTERED, never rewritten. The first deploy also singularised
+  -- the surviving tokens here ("problems" -> "problem"), and that broke the
+  -- typo tier: "kinamatics" became "kinamatic", whose trigrams lost the shared
+  -- 'ics' tail with "kinematics" and fell below the 0.5 fuzzy threshold --
+  -- 14 rows -> 0, a measured regression. Plural-widening now lives inside
+  -- search_rank_tokens, where each tier accepts a token's typed OR singular
+  -- form; the tokens themselves stay exactly as the student typed them, so the
+  -- fuzzy tier sees the same strings it always did.
+  --
+  -- A token is filler if EITHER its typed or its singular form is in the list;
+  -- both directions are needed. Typed-only lets "problems" through (the list
+  -- holds "problem"); singular-only lets "class" through, because "class"
+  -- singularises to "clas", which no list holds.
   --
   -- If filtering would leave nothing, keep the original tokens. Without that
   -- guard a query of pure filler ("how to") empties q_tokens, and tier 5's
   -- "not exists (unnest(empty))" is vacuously true, which would match every
   -- row in the catalogue.
-  -- A token is filler if EITHER its typed form or its singular form is in the
-  -- list, and both directions are needed. Testing only the typed form lets
-  -- "problems" through, because the list holds "problem" -- that is why
-  -- "friction problems" still found nothing in the first draft. Testing only the
-  -- singular form lets "class" through, because "class" is five characters
-  -- ending in s and singularises to "clas", which is in no list -- that broke
-  -- "gravitation class 11" in the second draft. Checking both fixes both.
   q_content := array(
-    select tok_s
-      from (
-        select tok,
-               case when length(tok) > 4 and right(tok, 1) = 's'
-                    then left(tok, length(tok) - 1)
-                    else tok end as tok_s
-          from unnest(q_tokens) as tok
-         where tok <> ''
-      ) singular
-     where not (tok   = any (public.search_filler_tokens()))
-       and not (tok_s = any (public.search_filler_tokens()))
-       and tok_s !~ '^[0-9]{1,2}$'
+    select tok
+      from unnest(q_tokens) as tok
+     where tok <> ''
+       and not (tok = any (public.search_filler_tokens()))
+       and not (public.search_singular(tok) = any (public.search_filler_tokens()))
+       and tok !~ '^[0-9]{1,2}$'
   );
   if cardinality(q_content) > 0 then
     q_tokens := q_content;
@@ -501,18 +575,38 @@ begin
     raise exception 'REGRESSION - these used to work: %', array_to_string(v_fail, ' | ');
   end if;
 
-  -- 4. Typo tolerance intact.
+  -- 4. Typo tolerance intact. 'kinamatics' is here by name because it is the
+  --    query the first deploy of this file broke: singularising the tokens
+  --    turned it into 'kinamatic', which fell below the fuzzy threshold.
   select count(*) into v_n from public.universal_search('rotatinal motion', null, 10, 0);
   if v_n = 0 then raise exception 'typo tolerance regressed'; end if;
+  select count(*) into v_n from public.universal_search('kinamatics', null, 10, 0);
+  if v_n = 0 then raise exception 'typo tolerance regressed on kinamatics - tokens are being rewritten again'; end if;
 
-  -- 5. THE DANGEROUS CASE: a query of pure filler must not match the catalogue.
-  --    Without the fallback guard, empty tokens make tier 5 vacuously true.
-  select count(*) into v_n from public.universal_search('how to', null, 50, 0);
-  if v_n > 20 then
+  -- 5. THE DANGEROUS CASE: with the fallback guard missing, all-filler queries
+  --    empty q_tokens and tier 5's not-exists over unnest(empty) is vacuously
+  --    TRUE, so every group fills to its cap -- a flood of 150+ rows.
+  --
+  --    The probes are filler words that are NOT substrings of real titles.
+  --    An earlier draft probed 'the of and' with a threshold of 20 and raised on
+  --    22 rows -- but those were LEGITIMATE tier-4 matches ("Theory of
+  --    Indicators and Equivalence Point" contains 'the', 'of' and 'and' as
+  --    substrings), pre-existing behaviour the fallback deliberately preserves.
+  --    That deploy was correct and the assertion was wrong. Measured after it:
+  --    'please help' and 'need want' return 0 today, so a bound of 10 leaves
+  --    room for future titles while still being far below a vacuous flood.
+  select count(*) into v_n from public.universal_search('please help', null, 50, 0);
+  if v_n > 10 then
     raise exception 'a pure-filler query returned % rows - the empty-token guard is not working', v_n;
   end if;
+  select count(*) into v_n from public.universal_search('need want', null, 50, 0);
+  if v_n > 10 then
+    raise exception 'a pure-filler query returned % rows - the empty-token guard is not working', v_n;
+  end if;
+  -- Common-substring filler must stay BOUNDED (not zero): the flood signature is
+  -- every group at its cap, so anything under 100 of a possible 250 is sane.
   select count(*) into v_n from public.universal_search('the of and', null, 50, 0);
-  if v_n > 20 then
+  if v_n > 100 then
     raise exception 'a pure-filler query returned % rows - the empty-token guard is not working', v_n;
   end if;
 
