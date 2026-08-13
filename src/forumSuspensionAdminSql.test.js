@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 
 const forumV1 = readFileSync("src/migrations/forum_v1.sql", "utf8");
 const usernameClaim = readFileSync("src/migrations/forum_username_claim_v1.sql", "utf8");
+const closedBeta = readFileSync("src/migrations/forum_closed_beta_v1.sql", "utf8");
 const preflight = readFileSync("src/migrations/forum_suspension_admin_v1_preflight.sql", "utf8");
 const audit = readFileSync("src/migrations/forum_suspension_admin_v1_audit.sql", "utf8");
 const migration = readFileSync("src/migrations/forum_suspension_admin_v1.sql", "utf8");
@@ -208,6 +209,38 @@ describe("forum suspension-admin SQL delta", () => {
     }
   }, 60_000);
 
+  it("allows an existing suspension to be lifted after the student becomes a moderator", async () => {
+    const pg = await database();
+    try {
+      await pg.exec(migration);
+      await openForum(pg);
+      await setIdentity(pg, IDS.admin);
+      await pg.query(
+        "select * from public.forum_admin_set_suspension_by_username($1, $2, $3)",
+        ["rohit_", 7, "Suspended before promotion"],
+      );
+
+      // Promotion can happen after the suspension was recorded. The browser
+      // has only the username, so refusing this lift would strand the row from
+      // the eventual admin UI even though the UUID RPC can remove it.
+      await pg.exec("reset role");
+      await pg.exec(`update public.profiles set is_admin = true where id = '${IDS.author}'`);
+      await setIdentity(pg, IDS.admin);
+      const lifted = await pg.query(
+        "select * from public.forum_admin_set_suspension_by_username($1, $2, $3)",
+        ["rohit_", null, "Lifted after moderator promotion"],
+      );
+      expect(lifted.rows[0]).toMatchObject({
+        username: "rohit_", suspended_until: null, reason: null,
+      });
+      expect((await pg.query("select * from public.forum_admin_list_suspensions()")).rows)
+        .toHaveLength(0);
+    } finally {
+      await pg.exec("reset role").catch(() => {});
+      await pg.close();
+    }
+  }, 60_000);
+
   // Both scenarios below were found by an independent review of this delta.
   // Each one passed preflight before the guard existed.
   it("refuses to install where a username is not single-valued", async () => {
@@ -270,6 +303,30 @@ describe("forum suspension-admin SQL delta", () => {
       `);
       await expect(pg.exec(preflight)).rejects.toThrow(/does not permit the suspend action/i);
       await pg.exec("rollback");
+
+      // Merely mentioning both literals is not proof that both are allowed.
+      // This constraint rejects suspend while containing both quoted words.
+      await pg.exec(`
+        alter table public.forum_moderation_log
+          drop constraint forum_moderation_log_action_check;
+        alter table public.forum_moderation_log
+          add constraint forum_moderation_log_action_check
+          check (action <> 'suspend' or action = 'unsuspend');
+      `);
+      await expect(pg.exec(preflight)).rejects.toThrow(/not the reviewed positive allow-list shape/i);
+      await pg.exec("rollback");
+    } finally {
+      await pg.exec("reset role").catch(() => {});
+      await pg.close();
+    }
+  }, 60_000);
+
+  it("accepts both reviewed forum-v1 and closed-beta action allow-lists", async () => {
+    const pg = await database();
+    try {
+      await pg.exec(preflight);
+      await pg.exec(closedBeta);
+      await pg.exec(preflight);
     } finally {
       await pg.exec("reset role").catch(() => {});
       await pg.close();
@@ -287,6 +344,19 @@ describe("forum suspension-admin SQL delta", () => {
         ["rohit_", 3, "Retained across rollback"],
       );
       await pg.exec("reset role");
+
+      // A present-but-empty marker table is unmarked. SQL NULL semantics must
+      // not let the staging/test-only rollback run there.
+      await pg.exec("delete from public.app_environment");
+      await expect(pg.exec(rollback)).rejects.toThrow(/environment unmarked/i);
+      await pg.exec("rollback");
+      expect((await pg.query(`
+        select to_regprocedure(
+          'public.forum_admin_set_suspension_by_username(text,integer,text)'
+        ) is not null as wrapper_retained
+      `)).rows[0].wrapper_retained).toBe(true);
+
+      await pg.exec("insert into public.app_environment (id, name) values (true, 'test')");
       await pg.exec(rollback);
 
       const state = await pg.query(`

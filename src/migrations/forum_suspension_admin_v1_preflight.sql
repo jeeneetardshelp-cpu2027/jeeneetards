@@ -76,11 +76,19 @@ begin
   if action_contract is null then
     raise exception 'suspension admin preflight: the moderation-log action constraint is missing';
   end if;
-  if action_contract not like '%''suspend''%' then
+  -- Literal presence alone is not enough: a drifted constraint such as
+  -- `action <> 'suspend' or action = 'unsuspend'` mentions both words while
+  -- still rejecting every suspension. Forum v1 and the closed-beta delta both
+  -- use one positive action = ANY(ARRAY[...]) allow-list, so require that
+  -- canonical shape before checking its members.
+  if action_contract not like '%''suspend''::text%' then
     raise exception 'suspension admin preflight: the moderation log does not permit the suspend action';
   end if;
-  if action_contract not like '%''unsuspend''%' then
+  if action_contract not like '%''unsuspend''::text%' then
     raise exception 'suspension admin preflight: the moderation log does not permit the unsuspend action';
+  end if;
+  if action_contract !~ '^CHECK \(\(action = ANY \(ARRAY\[.*\]\)\)\)$' then
+    raise exception 'suspension admin preflight: the moderation-log action constraint is not the reviewed positive allow-list shape';
   end if;
 end;
 $$;
