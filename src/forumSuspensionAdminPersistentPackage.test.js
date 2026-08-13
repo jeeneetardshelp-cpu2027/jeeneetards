@@ -6,6 +6,13 @@ import { describe, expect, it } from "vitest";
 const directory = "staging/forum_suspension_admin_v1_persistent";
 const install = readFileSync(`${directory}/install.sql`, "utf8");
 const rollback = readFileSync(`${directory}/rollback.sql`, "utf8");
+const helper = readFileSync(`${directory}/http_fixture_helper.sql`, "utf8");
+const helperRollback = readFileSync(
+  `${directory}/http_fixture_helper_rollback.sql`, "utf8",
+);
+const verifier = readFileSync(
+  "src/scripts/verifyForumSuspensionAdminJwtStaging.js", "utf8",
+);
 const hashLines = readFileSync(`${directory}/artifacts.sha256.txt`, "utf8")
   .trim().split("\n");
 const manifest = JSON.parse(readFileSync(`${directory}/source_manifest.json`, "utf8"));
@@ -55,12 +62,49 @@ describe("forum suspension-admin persistent staging package", () => {
     expect(hashLines).toEqual([
       `${sha256(install)}  install.sql`,
       `${sha256(rollback)}  rollback.sql`,
+      `${sha256(helper)}  http_fixture_helper.sql`,
+      `${sha256(helperRollback)}  http_fixture_helper_rollback.sql`,
     ]);
     for (const [name, source] of Object.entries(manifest.sources)) {
       expect(sha256(readFileSync(source.path, "utf8")), name).toBe(source.sha256);
     }
     expect(manifest.artifacts["install.sql"].sha256).toBe(sha256(install));
     expect(manifest.artifacts["rollback.sql"].sha256).toBe(sha256(rollback));
+    expect(manifest.artifacts["http_fixture_helper.sql"].sha256).toBe(sha256(helper));
+    expect(manifest.artifacts["http_fixture_helper_rollback.sql"].sha256)
+      .toBe(sha256(helperRollback));
+  });
+
+  it("keeps the JWT fixture helper staging-only, service-only, and removable", () => {
+    const guard = helper.indexOf("requires exactly one staging marker");
+    const create = helper.indexOf(
+      "create function public.forum_stage_prepare_suspension_admin_fixtures",
+    );
+    expect(guard).toBeGreaterThan(-1);
+    expect(create).toBeGreaterThan(guard);
+    expect(helper).toContain("auth.role() <> 'service_role'");
+    expect(helper).toContain("exactly two distinct fixture user ids are required");
+    expect(helper).toContain("@staging.invalid");
+    expect(helper).toContain("to service_role;");
+    expect(helperRollback).toContain(
+      "drop function if exists public.forum_stage_prepare_suspension_admin_fixtures",
+    );
+  });
+
+  it("requires real JWTs, records response shapes, and proves complete cleanup", () => {
+    expect(verifier).toContain("auth.admin.createUser");
+    expect(verifier).toContain("auth.signInWithPassword");
+    expect(verifier).toContain("decodeJwtPayload");
+    expect(verifier).toContain("forum_admin_set_suspension_by_username");
+    expect(verifier).toContain("forum_admin_list_suspensions");
+    expect(verifier).toContain("temporarily suspended");
+    expect(verifier).toContain("nested security-definer delegation records the real admin actor");
+    expect(verifier).toContain("raw_response_shape");
+    expect(verifier).toContain("cleanup.completed");
+    expect(verifier).toContain("forum-suspension-");
+    expect(verifier).toContain("@staging.invalid");
+    expect(verifier).not.toMatch(/eyJ[A-Za-z0-9_-]{20,}/);
+    expect(verifier).not.toMatch(/postgres(?:ql)?:\/\//i);
   });
 
   it("places the staging and forum-off guard inside the DDL transaction", () => {
@@ -93,17 +137,24 @@ describe("forum suspension-admin persistent staging package", () => {
     const pg = await baseline();
     try {
       await pg.exec(install);
+      await pg.exec(helper);
       let state = await pg.query(`
         select
           to_regprocedure(
             'public.forum_admin_set_suspension_by_username(text,integer,text)'
           ) is not null as setter,
           to_regprocedure('public.forum_admin_list_suspensions()') is not null as lister,
+          to_regprocedure(
+            'public.forum_stage_prepare_suspension_admin_fixtures(text,uuid[])'
+          ) is not null as helper,
           (select mode from public.forum_settings where id = true) as mode,
           (select count(*)::integer from public.forum_suspensions) as rows
       `);
-      expect(state.rows[0]).toEqual({ setter: true, lister: true, mode: "off", rows: 0 });
+      expect(state.rows[0]).toEqual({
+        setter: true, lister: true, helper: true, mode: "off", rows: 0,
+      });
 
+      await pg.exec(helperRollback);
       await pg.exec(rollback);
       state = await pg.query(`
         select

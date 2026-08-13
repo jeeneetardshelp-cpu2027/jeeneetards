@@ -17,7 +17,7 @@ The single install buffer contains the reviewed operations in this order:
 - Confirm the project ref is the disposable staging project, not production
   `kezelafqhgqrprpadmlf`.
 - Confirm the clone contains no real production user data.
-- Recompute both hashes in `artifacts.sha256.txt`.
+- Recompute every hash in `artifacts.sha256.txt`.
 - Paste and run the complete `install.sql` buffer once; do not run fragments.
 - If any assertion errors, stop and report it before changing or retrying SQL.
 
@@ -37,6 +37,15 @@ The unchanged fields compare against a session-local baseline captured after
 the staging guard and inside the migration transaction. The later JWT proof
 must create a temporary suspension, verify it, lift it, and prove no fixture
 residue remains.
+
+After an approved persistent staging install, run
+`http_fixture_helper.sql`, then execute the guarded verifier with
+`npm run verify:forum-suspension-admin-jwt-staging -- --confirm-forum-suspension-admin-jwt-staging`.
+Regardless of the verifier
+result, run `http_fixture_helper_rollback.sql` and confirm
+`fixture_helper_removed = true`. The verifier refuses any non-empty profile
+or forum-content baseline and writes only type-shaped, credential-redacted
+evidence outside the repository.
 
 `rollback.sql` is the exact reviewed staging/test-only rollback. It removes
 only these two wrappers and deliberately retains moderation history.
