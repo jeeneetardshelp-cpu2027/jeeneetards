@@ -1,0 +1,35 @@
+{
+  "status": "prepared-local-only-not-authorized-for-execution",
+  "sources": {
+    "preflight": {
+      "path": "src/migrations/forum_suspension_admin_v1_preflight.sql",
+      "sha256": "f72b8b986c51b7d4e9d8152c8fb7c7be90b74efb17c81c393daedb3463eb4860"
+    },
+    "audit": {
+      "path": "src/migrations/forum_suspension_admin_v1_audit.sql",
+      "sha256": "ee05eef1cddaf809a4243e42f2037ac0ccd41797f55b2c13f40096549192f6f5"
+    },
+    "migration": {
+      "path": "src/migrations/forum_suspension_admin_v1.sql",
+      "sha256": "b3aedd53e5277a61d65ceff6f2b726d284dc0b28b9891af87af86230b13da49c"
+    },
+    "postflight": {
+      "path": "src/migrations/forum_suspension_admin_v1_postflight.sql",
+      "sha256": "3bbb66f082dca359a8133605536baaf112d7f464cb20f8f03bb2fe80ca5bb3d1"
+    },
+    "rollback": {
+      "path": "src/migrations/forum_suspension_admin_v1_rollback.sql",
+      "sha256": "bdbb1e893ea28530254e847e0e8b15889e54ae714e9bc82035fc89e94b073b4c"
+    }
+  },
+  "artifacts": {
+    "install.sql": {
+      "path": "staging/forum_suspension_admin_v1_persistent/install.sql",
+      "sha256": "37aa6382c310c3a6409b5aeb51405ba59fead6fd6f1850dd0d8152d7e348d222"
+    },
+    "rollback.sql": {
+      "path": "staging/forum_suspension_admin_v1_persistent/rollback.sql",
+      "sha256": "bdbb1e893ea28530254e847e0e8b15889e54ae714e9bc82035fc89e94b073b4c"
+    }
+  }
+}
