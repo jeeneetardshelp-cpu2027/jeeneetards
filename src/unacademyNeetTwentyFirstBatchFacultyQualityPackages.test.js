@@ -27,7 +27,7 @@ describe("Unacademy NEET twenty-first-batch faculty and quality packages", () =>
     expect(createHash("sha256").update(quality).digest("hex")).toBe(qualityHash);
     expect(facultyReadiness).toContain(`SHA-256: \`${facultyHash}\``);
     expect(qualityReadiness).toContain(`SHA-256: \`${qualityHash}\``);
-    expect(facultyReadiness).toContain("OWNER APPROVAL REQUIRED - NOT APPLIED");
+    expect(facultyReadiness).toContain("APPLIED SUCCESSFULLY TO PRODUCTION");
     expect(qualityReadiness).toContain("OWNER APPROVAL REQUIRED - NOT APPLIED");
   });
 
