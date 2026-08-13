@@ -22,13 +22,18 @@ const qualityHash =
   "f2c594264c01e03c8828a430bb81f206053b915eac51b9b0f7417da0de755736";
 
 describe("Unacademy NEET twenty-first-batch faculty and quality packages", () => {
-  it("pins the immutable hashes and keeps both gates unapplied", () => {
+  it("pins the immutable hashes and records the production gate outcomes", () => {
     expect(createHash("sha256").update(faculty).digest("hex")).toBe(facultyHash);
     expect(createHash("sha256").update(quality).digest("hex")).toBe(qualityHash);
     expect(facultyReadiness).toContain(`SHA-256: \`${facultyHash}\``);
     expect(qualityReadiness).toContain(`SHA-256: \`${qualityHash}\``);
     expect(facultyReadiness).toContain("APPLIED SUCCESSFULLY TO PRODUCTION");
-    expect(qualityReadiness).toContain("OWNER APPROVAL REQUIRED - NOT APPLIED");
+    expect(qualityReadiness).toContain(
+      "OWNER-APPROVED BUT STOPPED FAIL-CLOSED - NOT APPLIED",
+    );
+    expect(qualityReadiness).toContain(
+      "public.catalog_management_capabilities()",
+    );
   });
 
   it("pins the exact owner decision, sources, courses, and lesson IDs", () => {

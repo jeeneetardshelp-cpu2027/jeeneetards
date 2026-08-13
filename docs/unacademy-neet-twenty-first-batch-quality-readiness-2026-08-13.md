@@ -2,10 +2,34 @@
 
 ## Status
 
-**OWNER APPROVAL REQUIRED - NOT APPLIED.** This later gate is prepared only.
-It must not run before the separately approved faculty-link artifact succeeds
-and its exact postflight is verified. No production write or `release` push
-occurred during preparation.
+**OWNER-APPROVED BUT STOPPED FAIL-CLOSED - NOT APPLIED.** The exact artifact was
+submitted to production on 13 August 2026 only after the separately approved
+faculty-link artifact, fresh PITR confirmation, and exact-baseline verification.
+Its capability guard failed before any mutation because production does not
+expose `public.catalog_management_capabilities()`. The transaction was not
+modified or retried, and no `release` push occurred.
+
+## Production execution evidence
+
+- Exact SHA-256 reverified locally and after the SQL-editor clipboard roundtrip:
+  `f2c594264c01e03c8828a430bb81f206053b915eac51b9b0f7417da0de755736`.
+- PITR was active with seven-day retention; the dashboard showed a latest
+  available restore point of `13 Aug 2026, 10:13:57 IST`.
+- Fresh read-only preflight at `2026-08-13T04:59:58.332227Z` matched the
+  required catalogue, faculty, target-course, review, and protected-JEE state
+  exactly.
+- An interrupted browser action was independently audited before retrying; at
+  `2026-08-13T06:06:10.769225Z`, production still had 45 quality reviews and
+  both target courses remained pending with zero target review rows.
+- The hash-verified retry stopped in the first preflight block with PostgreSQL
+  error `42883`: `public.catalog_management_capabilities()` does not exist.
+  This was a capability mismatch, so the artifact was not weakened or retried.
+- Independent no-write postflight at `2026-08-13T06:07:31.484574Z` confirmed
+  catalogue 421 / 4,746 / 4,752 / 263, faculty totals 37 / 60 / 38 / 38 / 37 /
+  176, and 45 quality reviews, all unchanged. Courses 439 and 440 remain
+  `pending / pending`, with null source titles and zero quality-review rows.
+- Protected JEE remained exactly 82 / 1,304 /
+  `30eee4a4a6842e5beeb7c97083d7f812`.
 
 ## Exact artifact
 
