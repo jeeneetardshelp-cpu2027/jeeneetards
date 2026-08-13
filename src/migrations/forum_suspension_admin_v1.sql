@@ -57,10 +57,11 @@ begin
   end;
 
   -- Suspension only blocks forum contribution; it does not remove moderator
-  -- rights, so suspending an admin cannot contain a compromised moderator
-  -- anyway. All it can realistically do is lock the person running the beta
-  -- out of posting, by a typo, so it is refused.
-  if target_is_admin then
+  -- rights, so creating or extending one cannot contain a compromised
+  -- moderator. Lifting must remain possible, though: a student may have been
+  -- suspended before being promoted, and this username wrapper is the only
+  -- browser-safe path that can identify that account without exposing UUIDs.
+  if target_is_admin and p_days is not null and p_days > 0 then
     raise exception using errcode = '42501',
       message = 'moderator accounts cannot be suspended here';
   end if;

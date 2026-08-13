@@ -15,7 +15,10 @@ begin
   end if;
   execute 'select name from public.app_environment where id = true limit 1'
     into environment_name;
-  if environment_name not in ('staging', 'test') then
+  -- NULL NOT IN (...) is NULL rather than true. Reject a missing marker row
+  -- explicitly so an unmarked database cannot pass this destructive guard.
+  if environment_name is null
+     or environment_name not in ('staging', 'test') then
     raise exception 'suspension admin rollback refused for environment %',
       coalesce(environment_name, 'unmarked');
   end if;
