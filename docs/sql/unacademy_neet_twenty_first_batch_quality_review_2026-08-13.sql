@@ -10,7 +10,7 @@ begin
   if exists (select 1 from public.app_environment) then
     raise exception 'refusing Unacademy twenty-first-batch quality review: target is not production-empty';
   end if;
-  if public.catalog_management_capabilities()->>'version' is distinct from '11' then
+  if public.catalog_manage_capability()->>'version' is distinct from '11' then
     raise exception 'refusing Unacademy twenty-first-batch quality review: catalogue capability differs';
   end if;
   if (select count(*) from public.playlists) <> 421

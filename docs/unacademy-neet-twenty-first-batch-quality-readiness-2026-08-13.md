@@ -2,12 +2,11 @@
 
 ## Status
 
-**OWNER-APPROVED BUT STOPPED FAIL-CLOSED - NOT APPLIED.** The exact artifact was
-submitted to production on 13 August 2026 only after the separately approved
-faculty-link artifact, fresh PITR confirmation, and exact-baseline verification.
-Its capability guard failed before any mutation because production does not
-expose `public.catalog_management_capabilities()`. The transaction was not
-modified or retried, and no `release` push occurred.
+**CORRECTED ARTIFACT PREPARED - OWNER APPROVAL REQUIRED - NOT APPLIED.** The
+previously approved artifact stopped fail-closed before any mutation. Read-only
+diagnosis confirmed that its capability guard used the wrong function name.
+The corrected artifact changes only that name and has a new immutable hash. It
+has not been submitted to production. No `release` push occurred.
 
 ## Production execution evidence
 
@@ -30,18 +29,27 @@ modified or retried, and no `release` push occurred.
   `pending / pending`, with null source titles and zero quality-review rows.
 - Protected JEE remained exactly 82 / 1,304 /
   `30eee4a4a6842e5beeb7c97083d7f812`.
+- Read-only capability evidence at `2026-08-13T06:41:25.654995Z` confirmed
+  `public.catalog_manage_capability()` exists and advertises version 11, while
+  `public.catalog_management_capabilities()` does not exist. Production still
+  had 45 quality reviews and zero target review rows.
 
 ## Exact artifact
 
 - SQL: `docs/sql/unacademy_neet_twenty_first_batch_quality_review_2026-08-13.sql`
-- SHA-256: `f2c594264c01e03c8828a430bb81f206053b915eac51b9b0f7417da0de755736`
+- SHA-256: `82d7f70e203ecba2a254d232c362ed3ef5ad181778778f89e42832721dfdbc9a`
 - Evidence decision: `9443dd70-a2c6-4747-9a5e-a9022f7012cf`
+
+The superseded attempted artifact had SHA-256
+`f2c594264c01e03c8828a430bb81f206053b915eac51b9b0f7417da0de755736`.
+The only executable change is
+`catalog_management_capabilities()` -> `catalog_manage_capability()`.
 
 This hash should be approved only after the faculty-link gate is applied and
 verified. Approval wording for that later point:
 
 > Approve applying Unacademy NEET twenty-first-batch quality-review artifact
-> SHA-256 `f2c594264c01e03c8828a430bb81f206053b915eac51b9b0f7417da0de755736`
+> SHA-256 `82d7f70e203ecba2a254d232c362ed3ef5ad181778778f89e42832721dfdbc9a`
 > to production, after a fresh PITR and exact-baseline check; stop on any
 > mismatch; no release push.
 

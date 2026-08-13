@@ -19,7 +19,7 @@ const qualityReadiness = readFileSync(qualityReadinessPath, "utf8");
 const facultyHash =
   "51631e50339e5c687f6cf77bb359ec33f05ce839df78c5fa520f5ef6403e8a1e";
 const qualityHash =
-  "f2c594264c01e03c8828a430bb81f206053b915eac51b9b0f7417da0de755736";
+  "82d7f70e203ecba2a254d232c362ed3ef5ad181778778f89e42832721dfdbc9a";
 
 describe("Unacademy NEET twenty-first-batch faculty and quality packages", () => {
   it("pins the immutable hashes and records the production gate outcomes", () => {
@@ -29,10 +29,10 @@ describe("Unacademy NEET twenty-first-batch faculty and quality packages", () =>
     expect(qualityReadiness).toContain(`SHA-256: \`${qualityHash}\``);
     expect(facultyReadiness).toContain("APPLIED SUCCESSFULLY TO PRODUCTION");
     expect(qualityReadiness).toContain(
-      "OWNER-APPROVED BUT STOPPED FAIL-CLOSED - NOT APPLIED",
+      "CORRECTED ARTIFACT PREPARED - OWNER APPROVAL REQUIRED - NOT APPLIED",
     );
     expect(qualityReadiness).toContain(
-      "public.catalog_management_capabilities()",
+      "public.catalog_manage_capability()",
     );
   });
 
@@ -92,10 +92,12 @@ describe("Unacademy NEET twenty-first-batch faculty and quality packages", () =>
       "count(*) from public.playlist_teachers) <> 176",
       "count(*) from public.playlist_quality_reviews) <> 45",
       "count(*) from public.playlist_quality_reviews)<>47",
+      "public.catalog_manage_capability()->>'version' is distinct from '11'",
       "review_playlist_quality(439",
       "review_playlist_quality(440",
       "target already reviewed",
     ]) expect(quality).toContain(fragment);
+    expect(quality).not.toContain("catalog_management_capabilities");
     expect(quality.trimEnd().endsWith("commit;")).toBe(true);
     expect(quality.match(/protected_courses\s*<>\s*82/g)).toHaveLength(2);
     expect(quality.match(/protected_memberships\s*<>\s*1304/g)).toHaveLength(2);
