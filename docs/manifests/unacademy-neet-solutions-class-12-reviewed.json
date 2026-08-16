@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "request_id": "d9d1bc22-5d2d-4a68-8e2a-2f35bcff12d5",
+  "youtube_playlist_id": "PLsgHooHkqhhOkrbz6-7e8cnZ5bvtre4pk",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "fbf7b3a1-0a19-4dae-b5fe-d967b94f3a7c",
+    "youtube_playlist_id": "PLsgHooHkqhhOkrbz6-7e8cnZ5bvtre4pk",
+    "teacher": "Anoop Vashishtha",
+    "source_url": "https://www.youtube.com/playlist?list=PLsgHooHkqhhOkrbz6-7e8cnZ5bvtre4pk",
+    "source_label": "Official Unacademy NEET channel-owned Solutions playlist; every retained lecture title names Anoop Sir.",
+    "reviewed_by": "Owner",
+    "reviewed_on": "2026-08-16",
+    "youtube_video_ids": [
+      "2i9pWHtw_Uk", "N5BKG69t17I", "yJuRUNWok54", "mMCKg3YVBL0", "z3nnduK6K3w", "tySjtCF7YQI"
+    ]
+  },
+  "assignments": [
+    { "position": 1, "youtube_video_id": "2i9pWHtw_Uk", "chapter": "Solutions", "lesson_number": 1 },
+    { "position": 2, "youtube_video_id": "N5BKG69t17I", "chapter": "Solutions", "lesson_number": 2 },
+    { "position": 3, "youtube_video_id": "yJuRUNWok54", "chapter": "Solutions", "lesson_number": 3 },
+    { "position": 4, "youtube_video_id": "mMCKg3YVBL0", "chapter": "Solutions", "lesson_number": 4 },
+    { "position": 5, "youtube_video_id": "z3nnduK6K3w", "chapter": "Solutions", "lesson_number": 5 },
+    { "position": 6, "youtube_video_id": "tySjtCF7YQI", "chapter": "Solutions", "lesson_number": 6 }
+  ],
+  "exclusions": [
+    { "position": 7, "youtube_video_id": "xhfoUEq7Sbo", "reason": "Menti quiz; keep practice separate from the lecture catalogue." },
+    { "position": 8, "youtube_video_id": "0Ern9SeoFkI", "reason": "Paper discussion; keep practice and paper review separate from the lecture catalogue." },
+    { "position": 9, "youtube_video_id": "C5qU_JxlRYA", "reason": "Paper discussion; keep practice and paper review separate from the lecture catalogue." },
+    { "position": 10, "youtube_video_id": "ahShHvQE81s", "reason": "Mega Menti quiz spanning Physical Chemistry; not a chapter lecture." }
+  ]
+}

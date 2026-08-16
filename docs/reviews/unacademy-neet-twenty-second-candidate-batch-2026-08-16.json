@@ -1,0 +1,157 @@
+{
+  "reviewed_on": "2026-08-16",
+  "review_status": "owner_approval_required",
+  "proposed_decision_id": "fbf7b3a1-0a19-4dae-b5fe-d967b94f3a7c",
+  "channel": {
+    "name": "Unacademy NEET",
+    "handle": "@UnacademyNEET",
+    "youtube_channel_id": "UCdQwYksctqqiRwqp3PiJMWA",
+    "production_institute_id": 147,
+    "playlist_count": 736
+  },
+  "preflight": {
+    "captured_at": "2026-08-16T05:04:34.289Z",
+    "playlists": 421,
+    "videos": 4746,
+    "memberships": 4752,
+    "chapters": 263,
+    "chapter_class_levels": 92,
+    "teachers": 37,
+    "teacher_aliases": 60,
+    "teacher_institutes": 38,
+    "teacher_subjects": 38,
+    "teacher_learning_goals": 37,
+    "faculty_links": 176,
+    "quality_reviews": 47,
+    "source_collision_count": 0,
+    "retained_video_collision_count": 0,
+    "title_collision_count": 0,
+    "protected_jee_courses": 82,
+    "protected_jee_memberships": 1304,
+    "protected_jee_fingerprint": "30eee4a4a6842e5beeb7c97083d7f812"
+  },
+  "candidates": [
+    {
+      "order": 1,
+      "youtube_playlist_id": "PLsgHooHkqhhOHzoncmAMTU9UgJiN1gtcp",
+      "source_title": "NEET: Work Energy & Power | Unacademy NEET | Mahendra Singh",
+      "course_title": "Work, Energy and Power",
+      "source_snapshot_sha256": "98de0d309f7a62c295239e01315ff8d13e50fed5bb3f7327a8f4d76bf23fc908",
+      "source_item_count": 13,
+      "subject_id": 1,
+      "chapter_id": 21,
+      "chapter": "Work, Energy and Power",
+      "class_level_id": 2,
+      "class_level": "class-11",
+      "teacher_id": 34,
+      "teacher": "Mahendra Singh",
+      "teacher_verified": true,
+      "source_collision_count": 0,
+      "video_collision_count": 0,
+      "title_collision_count": 0,
+      "retained_source_positions": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+      "excluded_source_positions": [12, 13],
+      "videos": [
+        { "source_position": 1, "youtube_video_id": "nNfVSQK__qo", "title": "Work Energy and Power - L1 | Unacademy NEET | LIVE DAILY | NEET Physics | Mahendra S.", "duration_seconds": 2895, "embedding_status": "embeddable" },
+        { "source_position": 2, "youtube_video_id": "tpTtsf8bUT0", "title": "NEET 2020: Work Energy and Power - L2 | Unacademy NEET | LIVE DAILY | NEET Physics | Mahendra S.", "duration_seconds": 3581, "embedding_status": "embeddable" },
+        { "source_position": 3, "youtube_video_id": "1YBTvWxbyFU", "title": "NEET 2020: Work Energy and Power - L3 | Unacademy NEET | LIVE DAILY | NEET Physics | Mahendra S.", "duration_seconds": 3815, "embedding_status": "embeddable" },
+        { "source_position": 4, "youtube_video_id": "A5qKIJCC_z4", "title": "NEET 2020: Work Energy and Power - L4 | Unacademy NEET | LIVE DAILY | NEET Physics | Mahendra S.", "duration_seconds": 3550, "embedding_status": "embeddable" },
+        { "source_position": 5, "youtube_video_id": "0Ffb8pVnssg", "title": "NEET 2020: Work Energy and Power - L5 | Unacademy NEET | LIVE DAILY | NEET Physics | Mahendra S.", "duration_seconds": 2557, "embedding_status": "embeddable" },
+        { "source_position": 6, "youtube_video_id": "4D3YA2WwMpY", "title": "NEET 2020: Work Energy and Power - L6 | Unacademy NEET | LIVE DAILY | NEET Physics | Mahendra S.", "duration_seconds": 3640, "embedding_status": "embeddable" },
+        { "source_position": 7, "youtube_video_id": "M6gBk4ItYXs", "title": "NEET 2020: Work Energy and Power - L7 | Unacademy NEET | LIVE DAILY | NEET Physics | Mahendra S.", "duration_seconds": 4051, "embedding_status": "embeddable" },
+        { "source_position": 8, "youtube_video_id": "IlVdc4mNfoE", "title": "NEET 2020: Work Energy and Power - L8 | Unacademy NEET | LIVE DAILY | NEET Physics | Mahendra S.", "duration_seconds": 2261, "embedding_status": "embeddable" },
+        { "source_position": 9, "youtube_video_id": "gSPbfLfBuu8", "title": "NEET 2020: Work Energy and Power - L9 | Unacademy NEET | LIVE DAILY | NEET Physics | Mahendra S.", "duration_seconds": 3606, "embedding_status": "embeddable" },
+        { "source_position": 10, "youtube_video_id": "h-lynBmTHN0", "title": "NEET 2020: Work Energy and Power - L10 | Unacademy NEET | LIVE DAILY | NEET Physics | Mahendra S.", "duration_seconds": 3975, "embedding_status": "embeddable" },
+        { "source_position": 11, "youtube_video_id": "eI8iO8Ljqrk", "title": "NEET 2020: Work Energy and Power - L11 | Unacademy NEET | LIVE DAILY | NEET Physics | Mahendra S.", "duration_seconds": 3790, "embedding_status": "embeddable" }
+      ],
+      "exclusions": [
+        { "source_position": 12, "youtube_video_id": "2ERQpt8VNCM", "title": "Unacademy NEET Quiz: Work Energy & Power | DPP-2 | Physics quiz | Mahendra Singh", "duration_seconds": 3306, "embedding_status": "embeddable", "reason": "DPP quiz; keep practice separate from the lecture catalogue." },
+        { "source_position": 13, "youtube_video_id": "5D0cPlbC-GM", "title": "Unacademy NEET: Work Energy & Power | DPP-4 | Physics quiz | Mahendra Singh", "duration_seconds": 3790, "embedding_status": "embeddable", "reason": "DPP quiz; keep practice separate from the lecture catalogue." }
+      ]
+    },
+    {
+      "order": 2,
+      "youtube_playlist_id": "PLsgHooHkqhhOkrbz6-7e8cnZ5bvtre4pk",
+      "source_title": "NEET: Solutions - Playlist | Class 12 | Unacademy NEET | Live Daily | NEET Chemistry | Anoop Vashishtha",
+      "course_title": "Solutions",
+      "source_snapshot_sha256": "f99e2fe3494ca581b987d1d2310dc696686eb3a74e2872c5d4b22645cf4e6948",
+      "source_item_count": 10,
+      "subject_id": 2,
+      "chapter_id": 33,
+      "chapter": "Solutions",
+      "class_level_id": 3,
+      "class_level": "class-12",
+      "teacher_id": 36,
+      "teacher": "Anoop Vashishtha",
+      "teacher_verified": true,
+      "source_collision_count": 0,
+      "video_collision_count": 0,
+      "title_collision_count": 0,
+      "retained_source_positions": [1, 2, 3, 4, 5, 6],
+      "excluded_source_positions": [7, 8, 9, 10],
+      "videos": [
+        { "source_position": 1, "youtube_video_id": "2i9pWHtw_Uk", "title": "NEET Chemistry: Solutions - L1 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3106, "embedding_status": "embeddable" },
+        { "source_position": 2, "youtube_video_id": "N5BKG69t17I", "title": "NEET Chemistry: Solutions - L2 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3540, "embedding_status": "embeddable" },
+        { "source_position": 3, "youtube_video_id": "yJuRUNWok54", "title": "NEET Chemistry: Solutions - L3 | Raoult's Law | Live Daily 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3614, "embedding_status": "embeddable" },
+        { "source_position": 4, "youtube_video_id": "mMCKg3YVBL0", "title": "NEET Chemistry: Solutions L4 | Colligative Properties | Live Daily 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3277, "embedding_status": "embeddable" },
+        { "source_position": 5, "youtube_video_id": "z3nnduK6K3w", "title": "NEET Chemistry: Solutions L5 | Colligative Properties | Live Daily 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3581, "embedding_status": "embeddable" },
+        { "source_position": 6, "youtube_video_id": "tySjtCF7YQI", "title": "NEET Chemistry: Solutions - L6 | Abnormal Molar Mass | Live Daily 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3337, "embedding_status": "embeddable" }
+      ],
+      "exclusions": [
+        { "source_position": 7, "youtube_video_id": "xhfoUEq7Sbo", "title": "NEET: Solutions - Menti Quiz 1 | Live Quiz 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 2920, "embedding_status": "embeddable", "reason": "Menti quiz; keep practice separate from the lecture catalogue." },
+        { "source_position": 8, "youtube_video_id": "0Ern9SeoFkI", "title": "NEET Chemistry: Paper Discussion 1 | Solutions - 1 | Unacademy NEET | Anoop Sir", "duration_seconds": 3193, "embedding_status": "embeddable", "reason": "Paper discussion; keep practice and paper review separate from the lecture catalogue." },
+        { "source_position": 9, "youtube_video_id": "C5qU_JxlRYA", "title": "NEET Chemistry: Paper Discussion 2 | Solutions - 2 | Unacademy NEET | Anoop Sir", "duration_seconds": 2730, "embedding_status": "embeddable", "reason": "Paper discussion; keep practice and paper review separate from the lecture catalogue." },
+        { "source_position": 10, "youtube_video_id": "ahShHvQE81s", "title": "Physical Chemistry - Mega Menti Quiz 1 | Class 12 | Live Quiz 2.0 | Unacademy NEET | Anoop Sir", "duration_seconds": 3506, "embedding_status": "embeddable", "reason": "Mega Menti quiz spanning Physical Chemistry; not a chapter lecture." }
+      ]
+    },
+    {
+      "order": 3,
+      "youtube_playlist_id": "PLsgHooHkqhhO9QF6HRyQYvV20hrDtCdKL",
+      "source_title": "NEET: Periodic Table | Class 11 | Unacademy NEET | Anoop V.",
+      "course_title": "Periodic Table",
+      "source_snapshot_sha256": "94e242c2e5c4c876568cfdeec12cabc06831331e757538ef749e3e7a224a0431",
+      "source_item_count": 5,
+      "subject_id": 2,
+      "chapter_id": 41,
+      "chapter": "Periodic Table",
+      "class_level_id": 2,
+      "class_level": "class-11",
+      "teacher_id": 36,
+      "teacher": "Anoop Vashishtha",
+      "teacher_verified": true,
+      "source_collision_count": 0,
+      "video_collision_count": 0,
+      "title_collision_count": 0,
+      "retained_source_positions": [1, 2, 3, 4, 5],
+      "excluded_source_positions": [],
+      "natural_lesson_order_source_positions": [1, 2, 3, 5, 4],
+      "videos": [
+        { "source_position": 1, "youtube_video_id": "ZmBBuu4-rKU", "title": "NEET: Periodic Table | Class 11 | Live Daily 2.0 | Unacademy NEET | Anoop V.", "duration_seconds": 3536, "embedding_status": "embeddable" },
+        { "source_position": 2, "youtube_video_id": "DjU7kQNy1lM", "title": "NEET: Periodic Table - L2 | Class 11 | Live Daily 2.0 | Unacademy NEET | Anoop V.", "duration_seconds": 2979, "embedding_status": "embeddable" },
+        { "source_position": 3, "youtube_video_id": "ZVapFLksVjo", "title": "NEET: Periodic Table - L3 | Class 11 | Live Daily 2.0 | Unacademy NEET | Anoop V.", "duration_seconds": 3189, "embedding_status": "embeddable" },
+        { "source_position": 4, "youtube_video_id": "u7LCnFAbQDw", "title": "NEET: Periodic Table - L5 | Class 11 | Live Daily 2.0 | Unacademy NEET | Anoop V.", "duration_seconds": 3356, "embedding_status": "embeddable" },
+        { "source_position": 5, "youtube_video_id": "l01Idjq4TeM", "title": "NEET: Periodic Table - L4 | Class 11 | Live Daily 2.0 | Unacademy NEET | Anoop V.", "duration_seconds": 2927, "embedding_status": "embeddable" }
+      ],
+      "exclusions": []
+    }
+  ],
+  "teacher_normalization_gate": {
+    "status": "existing_verified_records",
+    "teachers": [
+      { "teacher_id": 34, "teacher_slug": "mahendra-singh", "teacher_verified": true },
+      { "teacher_id": 36, "teacher_slug": "anoop-vashishtha", "teacher_verified": true }
+    ],
+    "note": "The playlists and retained source titles identify these already-verified production teachers. Owner approval must still bind this exact playlist-specific evidence to the proposed decision."
+  },
+  "anonymous_dry_runs": [
+    { "order": 1, "status": "ok", "published": 13, "usable": 13, "assignments": 11, "exclusions": 2, "review": 0, "blocked": 0, "manifest_sha256": "688701da0839e53508f99156e684e218e9eca34d93b4e36feaa67caf9b0ab8cc", "output_sha256": "e1a404ad30945a253105c67bf9a1a6fef37d6c88bfe21e0e469efafb5712a486" },
+    { "order": 2, "status": "ok", "published": 10, "usable": 10, "assignments": 6, "exclusions": 4, "review": 0, "blocked": 0, "manifest_sha256": "b68eea8c856a2c4c03381a854a4e68adbb1f3142aac7616db92f7bb42e93f304", "output_sha256": "a2a8e66828a5de8891e46b8e2ebbdbda75f59dbe289c6c98a68f760b2a4486ac7" },
+    { "order": 3, "status": "ok", "published": 5, "usable": 5, "assignments": 5, "exclusions": 0, "review": 0, "blocked": 0, "manifest_sha256": "8013d99663e0dfebb28f1479c69d4e8959e66923e31b6e91c396fd68fec3619f", "output_sha256": "cf4026c9b3081704b46c1831537554db7948615581d8b25a41397f6902ae28d1" }
+  ],
+  "deferred": [
+    "Solid State publishes a clean eight-lecture Anoop Vashishtha sequence with zero source or video reuse, but production chapter 34 has no chapter_class_levels row. Keep it outside this content-only gate until a separate additive reference-data decision scopes the chapter to Class 12.",
+    "Electrostatics and Units and Measurements still substitute a generic Phoenix 2.0 row for Lecture 1 and remain incomplete.",
+    "Gaseous State still lacks Lectures 3 and 8.",
+    "The refreshed Human Reproduction, Animal Kingdom, Biological Classification, Locomotion and Movement, and Biomolecules sources retain their previously recorded missing-lecture or Phoenix contamination blockers."
+  ]
+}
