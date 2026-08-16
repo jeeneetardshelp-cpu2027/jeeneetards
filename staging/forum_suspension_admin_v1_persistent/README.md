@@ -17,6 +17,9 @@ The single install buffer contains the reviewed operations in this order:
 - Confirm the project ref is the disposable staging project, not production
   `kezelafqhgqrprpadmlf`.
 - Confirm the clone contains no real production user data.
+- Run the separately reviewed read-only checker:
+  `npm run check:forum-suspension-admin-staging-readiness -- --confirm-forum-suspension-staging-readonly`.
+  It must report `passed: true` before any SQL is pasted.
 - Recompute every hash in `artifacts.sha256.txt`.
 - Paste and run the complete `install.sql` buffer once; do not run fragments.
 - If any assertion errors, stop and report it before changing or retrying SQL.
