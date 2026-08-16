@@ -16,7 +16,8 @@ const manifestPaths = [
 const reviewSource = readFileSync(reviewPath, "utf8");
 const review = JSON.parse(reviewSource);
 const readiness = readFileSync(readinessPath, "utf8");
-const manifests = manifestPaths.map((path) => JSON.parse(readFileSync(path, "utf8")));
+const manifestSources = manifestPaths.map((path) => readFileSync(path, "utf8"));
+const manifests = manifestSources.map((source) => JSON.parse(source));
 
 function snapshotHash(candidate) {
   const rows = [...candidate.videos, ...candidate.exclusions]
@@ -37,7 +38,7 @@ describe("Unacademy NEET twenty-second-batch readiness", () => {
   it("pins the candidate review hash", () => {
     const reviewHash = createHash("sha256").update(reviewSource).digest("hex");
     expect(reviewHash).toBe(
-      "1b5eccd53cd455689e192de604a4aeb0ca09ee1b4273ac745160d83ed96ead22",
+      "fdf0f8cb6a1584c31b82624611b8bb00d6f2f37659820eface75734655ceafeb",
     );
     expect(readiness).toContain(reviewHash);
   });
@@ -96,6 +97,20 @@ describe("Unacademy NEET twenty-second-batch readiness", () => {
     expect(review.teacher_normalization_gate.status).toBe("existing_verified_records");
   });
 
+  it("pins the approved reviewed course titles and their exact manifests", () => {
+    expect(review.reviewed_course_title_support).toMatchObject({
+      approved_on: "2026-08-16",
+      status: "validated",
+      course_titles: ["Work, Energy and Power", "Solutions", "Periodic Table"],
+    });
+    expect(manifests.map((manifest) => manifest.course_title)).toEqual(
+      review.candidates.map((candidate) => candidate.course_title),
+    );
+    expect(manifestSources.map((source) =>
+      createHash("sha256").update(source).digest("hex")))
+      .toEqual(review.anonymous_dry_runs.map((run) => run.manifest_sha256));
+  });
+
   it("maps every retained and excluded row exhaustively", () => {
     review.candidates.forEach((candidate, index) => {
       const manifest = manifests[index];
@@ -145,9 +160,9 @@ describe("Unacademy NEET twenty-second-batch readiness", () => {
     expect(review.anonymous_dry_runs.map((run) => run.assignments)).toEqual([11, 6, 5]);
     expect(review.anonymous_dry_runs.map((run) => run.exclusions)).toEqual([2, 4, 0]);
     expect(readiness).toContain("1 ok / 0 review / 0 blocked");
-    expect(readiness).toContain("688701da0839e53508f99156e684e218e9eca34d93b4e36feaa67caf9b0ab8cc");
-    expect(readiness).toContain("b68eea8c856a2c4c03381a854a4e68adbb1f3142aac7616db92f7bb42e93f304");
-    expect(readiness).toContain("8013d99663e0dfebb28f1479c69d4e8959e66923e31b6e91c396fd68fec3619f");
+    expect(readiness).toContain("5359ca045ea084d6d53c058aee2a849c353b9f8a632eedc0835247955c85f896");
+    expect(readiness).toContain("168b1c1b67e09dff873df557d981e0e48525fd2ed4ffdc48d0b34b52eb0620a2");
+    expect(readiness).toContain("38b76f705d97406203d7c722fda9cc230875e98ea645af55950be787fc537da0");
   });
 
   it("keeps out-of-syllabus Solid State and incomplete sources outside this gate", () => {

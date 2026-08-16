@@ -406,6 +406,7 @@ async function main() {
       entries.push({
         youtube_playlist_id: plan.playlist.id,
         title: plan.playlist.title,
+        import_title: mapped?.courseTitle ?? plan.playlist.title,
         published_video_count: Number(plan.playlist.videoCount),
         usable_video_count: ytVideos.length,
         video_validation: {
@@ -434,6 +435,7 @@ async function main() {
               version: plan.chapterManifest.version,
               request_id: mapped.requestId,
               exact_source_mapping: true,
+              reviewed_course_title: mapped.courseTitle ?? null,
               path: plan.chapterManifestPath,
               manifest_sha256: plan.chapterManifestSha256,
               source_snapshot_sha256: sourceSnapshotSha256(ytVideos),
@@ -558,6 +560,12 @@ async function main() {
         teacher: plan.teacher,
         videos: ytVideos,
       });
+      if (mapped.courseTitle) {
+        importPlan = {
+          ...plan,
+          playlist: { ...plan.playlist, title: mapped.courseTitle },
+        };
+      }
       if (
         mapped.teacherEvidence
         && args.reviewedTeacherEvidenceDecision !== mapped.teacherEvidence.decisionId
@@ -631,7 +639,7 @@ async function main() {
         chapterId = chapterRows[0].chapter.id;
         importVideos = mapped.videos;
         importPayload = buildImportPayload({
-          plan,
+          plan: importPlan,
           channel,
           channelId,
           chapterId,
@@ -652,7 +660,7 @@ async function main() {
         chapterId: chapterByName.get(video.chapterName),
       }));
       importPlan = {
-        ...plan,
+        ...importPlan,
         requestId: mapped.requestId,
         manifestSha256: plan.chapterManifestSha256,
         sourceSnapshotSha256: sourceSnapshotSha256(ytVideos),

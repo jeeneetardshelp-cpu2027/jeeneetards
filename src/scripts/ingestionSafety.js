@@ -194,6 +194,18 @@ export function validateChapterManifest({ manifest, playlistId, teacher, videos 
   if (manifest.youtube_playlist_id !== playlistId) {
     throw new Error("Chapter manifest playlist ID does not match the selected playlist.");
   }
+  let courseTitle = null;
+  if (Object.hasOwn(manifest, "course_title")) {
+    courseTitle = String(manifest.course_title ?? "").trim();
+    if (!courseTitle) {
+      throw new Error("Chapter manifest course_title must be a non-empty string.");
+    }
+    if (courseTitle.length > 160 || /[\u0000-\u001f\u007f]/.test(courseTitle)) {
+      throw new Error(
+        "Chapter manifest course_title must be at most 160 characters and contain no control characters.",
+      );
+    }
+  }
   if (!Array.isArray(manifest.assignments)) {
     throw new Error("Chapter manifest assignments must be an array.");
   }
@@ -328,6 +340,7 @@ export function validateChapterManifest({ manifest, playlistId, teacher, videos 
     excludedVideos: excluded,
     chapterNames: [...chapters],
     requestId: manifest.request_id,
+    ...(courseTitle ? { courseTitle } : {}),
     ...(teacherEvidence ? { teacherEvidence } : {}),
   };
 }

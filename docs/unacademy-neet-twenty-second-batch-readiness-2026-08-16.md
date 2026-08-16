@@ -73,15 +73,22 @@ All three exact reviewed manifests passed independent anonymous production
 dry-runs. Each returned **1 ok / 0 review / 0 blocked**, advertised capability
 v12, resolved its chapter as `reuse`, and performed no Supabase write:
 
+The owner separately approved reviewed `course_title` support on 16 August.
+The importer now validates the manifest title while continuing to bind source
+ownership and every video decision to the official YouTube playlist. The fresh
+dry-runs explicitly reported the approved import titles `Work, Energy and
+Power`, `Solutions`, and `Periodic Table` rather than the longer promotional
+source titles.
+
 - Work, Energy and Power: 13 published / 13 usable / 11 assignments / 2
   exclusions; manifest SHA-256
-  `688701da0839e53508f99156e684e218e9eca34d93b4e36feaa67caf9b0ab8cc`;
+  `5359ca045ea084d6d53c058aee2a849c353b9f8a632eedc0835247955c85f896`;
 - Solutions: 10 published / 10 usable / 6 assignments / 4 exclusions;
   manifest SHA-256
-  `b68eea8c856a2c4c03381a854a4e68adbb1f3142aac7616db92f7bb42e93f304`;
+  `168b1c1b67e09dff873df557d981e0e48525fd2ed4ffdc48d0b34b52eb0620a2`;
 - Periodic Table: 5 published / 5 usable / 5 assignments / 0 exclusions;
   manifest SHA-256
-  `8013d99663e0dfebb28f1479c69d4e8959e66923e31b6e91c396fd68fec3619f`.
+  `38b76f705d97406203d7c722fda9cc230875e98ea645af55950be787fc537da0`.
 
 The importer must refresh each YouTube source and repeat the anonymous dry-run
 immediately before any separately approved write.
@@ -110,7 +117,7 @@ Source-snapshot SHA-256 values:
   `94e242c2e5c4c876568cfdeec12cabc06831331e757538ef749e3e7a224a0431`.
 
 Candidate-review file SHA-256:
-`1b5eccd53cd455689e192de604a4aeb0ca09ee1b4273ac745160d83ed96ead22`.
+`fdf0f8cb6a1584c31b82624611b8bb00d6f2f37659820eface75734655ceafeb`.
 
 Any playlist mutation invalidates its source hash and requires a fresh review.
 A collision, count shortfall, missing teacher evidence, unresolved chapter,

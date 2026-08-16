@@ -143,10 +143,20 @@
     ],
     "note": "The playlists and retained source titles identify these already-verified production teachers. Owner approval must still bind this exact playlist-specific evidence to the proposed decision."
   },
+  "reviewed_course_title_support": {
+    "approved_on": "2026-08-16",
+    "status": "validated",
+    "course_titles": [
+      "Work, Energy and Power",
+      "Solutions",
+      "Periodic Table"
+    ],
+    "note": "The local importer validates manifest course_title and uses it only for the created catalogue title; playlist ownership and source-video validation remain bound to the official YouTube source."
+  },
   "anonymous_dry_runs": [
-    { "order": 1, "status": "ok", "published": 13, "usable": 13, "assignments": 11, "exclusions": 2, "review": 0, "blocked": 0, "manifest_sha256": "688701da0839e53508f99156e684e218e9eca34d93b4e36feaa67caf9b0ab8cc", "output_sha256": "e1a404ad30945a253105c67bf9a1a6fef37d6c88bfe21e0e469efafb5712a486" },
-    { "order": 2, "status": "ok", "published": 10, "usable": 10, "assignments": 6, "exclusions": 4, "review": 0, "blocked": 0, "manifest_sha256": "b68eea8c856a2c4c03381a854a4e68adbb1f3142aac7616db92f7bb42e93f304", "output_sha256": "a2a8e66828a5de8891e46b8e2ebbdbda75f59dbe289c6c98a68f760b2a4486ac7" },
-    { "order": 3, "status": "ok", "published": 5, "usable": 5, "assignments": 5, "exclusions": 0, "review": 0, "blocked": 0, "manifest_sha256": "8013d99663e0dfebb28f1479c69d4e8959e66923e31b6e91c396fd68fec3619f", "output_sha256": "cf4026c9b3081704b46c1831537554db7948615581d8b25a41397f6902ae28d1" }
+    { "order": 1, "status": "ok", "published": 13, "usable": 13, "assignments": 11, "exclusions": 2, "review": 0, "blocked": 0, "manifest_sha256": "5359ca045ea084d6d53c058aee2a849c353b9f8a632eedc0835247955c85f896", "output_sha256": "57ab050c5707dc74706ced94de83e46e77d9973651b53295c8780305acae0264" },
+    { "order": 2, "status": "ok", "published": 10, "usable": 10, "assignments": 6, "exclusions": 4, "review": 0, "blocked": 0, "manifest_sha256": "168b1c1b67e09dff873df557d981e0e48525fd2ed4ffdc48d0b34b52eb0620a2", "output_sha256": "a308f774ddfbfc2e5646d8059483464ebf20cbab3c5da9983872ce83399b307b" },
+    { "order": 3, "status": "ok", "published": 5, "usable": 5, "assignments": 5, "exclusions": 0, "review": 0, "blocked": 0, "manifest_sha256": "38b76f705d97406203d7c722fda9cc230875e98ea645af55950be787fc537da0", "output_sha256": "445898e46f772d0ec1acc70362ea86838ca46fcd3b0330083af60f2a31e6d459" }
   ],
   "current_curriculum_scope_review": {
     "reviewed_on": "2026-08-16",

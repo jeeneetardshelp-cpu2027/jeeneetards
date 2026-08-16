@@ -299,6 +299,7 @@ describe("channel ingestion metadata", () => {
       version: 1,
       request_id: "018f7e3b-39b0-4f3e-8ee4-7a8d4d5a6b7c",
       youtube_playlist_id: "PL_real",
+      course_title: "Reviewed Functions Course",
       assignments: [
         { position: 1, youtube_video_id: "video-one01", chapter: "Functions" },
         { position: 2, youtube_video_id: "video-two02", chapter: "Inverse Trigonometric Functions" },
@@ -314,7 +315,18 @@ describe("channel ingestion metadata", () => {
       excludedVideos: [],
       chapterNames: ["Functions", "Inverse Trigonometric Functions"],
       requestId: "018f7e3b-39b0-4f3e-8ee4-7a8d4d5a6b7c",
+      courseTitle: "Reviewed Functions Course",
     });
+    expect(() => validateChapterManifest({
+      manifest: { ...manifest, course_title: "\n" },
+      playlistId: "PL_real",
+      videos,
+    })).toThrow(/course_title.*non-empty/i);
+    expect(() => validateChapterManifest({
+      manifest: { ...manifest, course_title: "x".repeat(161) },
+      playlistId: "PL_real",
+      videos,
+    })).toThrow(/course_title.*160/i);
     expect(() => validateChapterManifest({
       manifest: { ...manifest, request_id: "not-a-uuid" },
       playlistId: "PL_real",
