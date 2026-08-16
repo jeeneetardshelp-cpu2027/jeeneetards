@@ -43,6 +43,7 @@
     "verify:forum-jwt-staging": "node src/scripts/verifyForumV1JwtStaging.js",
     "verify:forum-beta-jwt-staging": "node src/scripts/verifyForumClosedBetaJwtStaging.js",
     "verify:forum-suspension-admin-jwt-staging": "node src/scripts/verifyForumSuspensionAdminJwtStaging.js",
+    "check:forum-suspension-admin-staging-readiness": "node --use-system-ca src/scripts/checkForumSuspensionAdminStagingReadiness.js",
     "verify:forum-renderer-browser": "node src/scripts/verifyForumRendererBrowser.js",
     "verify:forum-read-only-browser": "node src/scripts/verifyForumReadOnlyBrowser.js",
     "verify:forum-auth-drafts-browser": "node src/scripts/verifyForumAuthDraftBrowser.js",

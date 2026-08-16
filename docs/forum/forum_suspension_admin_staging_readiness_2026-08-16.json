@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "checked_at": "2026-08-16T06:28:56.647Z",
+  "project_ref": "essmxonestbrgmgrtywn",
+  "operation": "read-only staging readiness",
+  "writes_attempted": false,
+  "environment": "staging",
+  "forum_mode": "off",
+  "counts": {
+    "profiles": 0,
+    "forum_posts": 0,
+    "forum_comments": 0,
+    "forum_reports": 0,
+    "forum_suspensions": 0,
+    "forum_moderation_log": 0,
+    "forum_rate_events": 0,
+    "auth_users": 0
+  },
+  "rpc_absence": {
+    "forum_admin_list_suspensions": "PGRST202",
+    "forum_stage_prepare_suspension_admin_fixtures": "PGRST202"
+  },
+  "passed": true,
+  "fatal": null
+}
