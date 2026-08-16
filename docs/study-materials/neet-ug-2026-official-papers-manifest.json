@@ -1,0 +1,43 @@
+{
+  "exam": "NEET UG 2026 Re-Examination",
+  "sourceName": "National Testing Agency (NEET UG)",
+  "officialApiUrl": "https://www.nta.ac.in/downloads/getlist",
+  "officialNoticeUrl": "https://neet.nta.nic.in/public-notices/",
+  "verifiedOn": "2026-08-16",
+  "distribution": "Linked from the official NTA host; not mirrored by JEENEETARD.",
+  "coverageNote": "Includes the four English Sushrut booklet sets exposed by the official NTA download API for the NEET UG 2026 re-examination held on 21 June 2026. The superseded 3 May examination is deliberately not represented. Each accepted PDF contains questions 1-180; pages 2-3 and 31-32 are intentional rough-work pages.",
+  "papers": [
+    {
+      "title": "NEET UG 2026 Re-Examination - Set 50 (English)",
+      "setCode": "50",
+      "examDate": "2026-06-21",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20260623154909.pdf",
+      "pageCount": 32,
+      "sha256": "D6E65BF546B204F31467299A08E62D98E05BB39F7D0E347DDB69337FB7F3B031"
+    },
+    {
+      "title": "NEET UG 2026 Re-Examination - Set 60 (English)",
+      "setCode": "60",
+      "examDate": "2026-06-21",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20260623155400.pdf",
+      "pageCount": 32,
+      "sha256": "A5B66420054EBB1541A8CC3FEE0258C6AD96DA94AFEDDF3F52E8E0A85CA203F8"
+    },
+    {
+      "title": "NEET UG 2026 Re-Examination - Set 70 (English)",
+      "setCode": "70",
+      "examDate": "2026-06-21",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20260623155453.pdf",
+      "pageCount": 32,
+      "sha256": "2FF7CDEFE92D043587554E0FB84B128012B9A3876CFBBB4186A5DEE997D7358F"
+    },
+    {
+      "title": "NEET UG 2026 Re-Examination - Set 80 (English)",
+      "setCode": "80",
+      "examDate": "2026-06-21",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20260623155537.pdf",
+      "pageCount": 32,
+      "sha256": "31EB21A95D4C238F787D4BB62E4EAAEC355F2DA73903E3E37B34DEE362075454"
+    }
+  ]
+}
