@@ -29,7 +29,7 @@ describe("Unacademy NEET twenty-first-batch faculty and quality packages", () =>
     expect(qualityReadiness).toContain(`SHA-256: \`${qualityHash}\``);
     expect(facultyReadiness).toContain("APPLIED SUCCESSFULLY TO PRODUCTION");
     expect(qualityReadiness).toContain(
-      "CORRECTED ARTIFACT PREPARED - OWNER APPROVAL REQUIRED - NOT APPLIED",
+      "APPLIED SUCCESSFULLY TO PRODUCTION ON 16 AUGUST 2026",
     );
     expect(qualityReadiness).toContain(
       "public.catalog_manage_capability()",

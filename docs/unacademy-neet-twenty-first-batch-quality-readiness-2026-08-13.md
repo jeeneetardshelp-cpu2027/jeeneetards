@@ -2,13 +2,33 @@
 
 ## Status
 
-**CORRECTED ARTIFACT PREPARED - OWNER APPROVAL REQUIRED - NOT APPLIED.** The
-previously approved artifact stopped fail-closed before any mutation. Read-only
-diagnosis confirmed that its capability guard used the wrong function name.
-The corrected artifact changes only that name and has a new immutable hash. It
-has not been submitted to production. No `release` push occurred.
+**APPLIED SUCCESSFULLY TO PRODUCTION ON 16 AUGUST 2026.** The exact corrected
+artifact committed only after fresh PITR confirmation, an exact production
+preflight, and an SQL-editor clipboard hash roundtrip. Independent postflight
+verification passed. No `release` push occurred.
 
-## Production execution evidence
+## Successful production execution evidence
+
+- Exact approved SHA-256 reverified locally and after the SQL-editor clipboard
+  roundtrip:
+  `82d7f70e203ecba2a254d232c362ed3ef5ad181778778f89e42832721dfdbc9a`.
+- PITR was active with seven-day retention; the fresh rollback point was
+  `16 Aug 2026, 00:07:13 IST`.
+- Exact read-only preflight at `2026-08-16T04:49:35.410505Z` matched catalogue
+  421 / 4,746 / 4,752 / 263, 92 chapter-class rows, faculty totals 37 / 60 / 38
+  / 38 / 37 / 176, and 45 quality reviews. Both targets were pending with the
+  exact verified teacher links and zero review rows.
+- The transaction returned two rows: course 439 `Kinetic Theory of Gases` and
+  course 440 `Electromagnetic Waves`, both title-approved, faculty-identified,
+  and quality-ready with no missing fields.
+- Independent postflight at `2026-08-16T04:50:23.812346Z` confirmed catalogue,
+  chapter-class, and faculty totals unchanged; quality reviews increased only
+  from 45 to 47. Each target has exactly one review row, its unchanged source
+  title, the expected teacher ID, and `source_title_changed = false`.
+- Protected JEE remained exactly 82 / 1,304 /
+  `30eee4a4a6842e5beeb7c97083d7f812`.
+
+## Superseded attempt evidence
 
 - Exact SHA-256 reverified locally and after the SQL-editor clipboard roundtrip:
   `f2c594264c01e03c8828a430bb81f206053b915eac51b9b0f7417da0de755736`.
