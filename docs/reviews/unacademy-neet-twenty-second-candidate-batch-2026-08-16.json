@@ -148,8 +148,24 @@
     { "order": 2, "status": "ok", "published": 10, "usable": 10, "assignments": 6, "exclusions": 4, "review": 0, "blocked": 0, "manifest_sha256": "b68eea8c856a2c4c03381a854a4e68adbb1f3142aac7616db92f7bb42e93f304", "output_sha256": "a2a8e66828a5de8891e46b8e2ebbdbda75f59dbe289c6c98a68f760b2a4486ac7" },
     { "order": 3, "status": "ok", "published": 5, "usable": 5, "assignments": 5, "exclusions": 0, "review": 0, "blocked": 0, "manifest_sha256": "8013d99663e0dfebb28f1479c69d4e8959e66923e31b6e91c396fd68fec3619f", "output_sha256": "cf4026c9b3081704b46c1831537554db7948615581d8b25a41397f6902ae28d1" }
   ],
+  "current_curriculum_scope_review": {
+    "reviewed_on": "2026-08-16",
+    "status": "out_of_current_syllabus_deferred",
+    "official_neet_2026_syllabus_url": "https://cdnbbsr.s3waas.gov.in/s37bc1ec1d9c3426357e69acd5bf320061/uploads/2026/01/202601081066816297.pdf",
+    "official_cbse_2026_27_chemistry_url": "https://cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Chemistry_SecP2_2026-27.pdf",
+    "solid_state_present_in_neet_2026": false,
+    "solid_state_present_in_cbse_2026_27_theory": false,
+    "deferred_source_playlist": {
+      "youtube_playlist_id": "PLsgHooHkqhhPosUFvFYWQvl8WobRKF3t3",
+      "title": "NEET: Solid State - Playlist | Class 12 | Unacademy NEET | Live Daily | NEET Chemistry | Anoop Vashishtha",
+      "usable_videos": 8,
+      "production_source_collisions": 0,
+      "production_video_collisions": 0
+    },
+    "decision": "Do not create a canonical Class 12 scope row and do not import this source into the current NEET catalogue. Preserve it for a separately designed and owner-approved supplementary or archive taxonomy."
+  },
   "deferred": [
-    "Solid State publishes a clean eight-lecture Anoop Vashishtha sequence with zero source or video reuse, but production chapter 34 has no chapter_class_levels row. Keep it outside this content-only gate until a separate additive reference-data decision scopes the chapter to Class 12.",
+    "Solid State publishes a clean eight-lecture Anoop Vashishtha sequence with zero source or video reuse, but it is absent from both the official NEET 2026 syllabus and the CBSE 2026-27 Class 12 Chemistry theory syllabus. Do not create a canonical chapter_class_levels row or import it into the current NEET catalogue; preserve it for a separately approved supplementary or archive taxonomy.",
     "Electrostatics and Units and Measurements still substitute a generic Phoenix 2.0 row for Lecture 1 and remain incomplete.",
     "Gaseous State still lacks Lectures 3 and 8.",
     "The refreshed Human Reproduction, Animal Kingdom, Biological Classification, Locomotion and Movement, and Biomolecules sources retain their previously recorded missing-lecture or Phoenix contamination blockers."

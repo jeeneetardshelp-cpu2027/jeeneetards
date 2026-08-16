@@ -110,7 +110,7 @@ Source-snapshot SHA-256 values:
   `94e242c2e5c4c876568cfdeec12cabc06831331e757538ef749e3e7a224a0431`.
 
 Candidate-review file SHA-256:
-`1a270aea236dbccbecd556a7f3d3538d86cab30cecfd06d95129bee3b5ad4b6d`.
+`1b5eccd53cd455689e192de604a4aeb0ca09ee1b4273ac745160d83ed96ead22`.
 
 Any playlist mutation invalidates its source hash and requires a fresh review.
 A collision, count shortfall, missing teacher evidence, unresolved chapter,
@@ -119,9 +119,16 @@ blocked embed, or fingerprint mismatch defers that course.
 ## Explicit deferrals
 
 - Solid State provides a clean eight-lecture Anoop Vashishtha sequence with
-  zero source or video reuse, but chapter 34 has no `chapter_class_levels` row.
-  It remains outside this content-only gate until a separate additive
-  reference-data decision scopes that chapter to Class 12.
+  zero source or video reuse. A 16 August curriculum refresh confirmed that
+  `Solid State` is absent from both the official
+  [NEET UG 2026 syllabus](https://cdnbbsr.s3waas.gov.in/s37bc1ec1d9c3426357e69acd5bf320061/uploads/2026/01/202601081066816297.pdf)
+  and the official
+  [CBSE 2026-27 Class 12 Chemistry theory syllabus](https://cbseacademic.nic.in/web_material/CurriculumMain27/SecPart2/Chemistry_SecP2_2026-27.pdf).
+  The missing `chapter_class_levels` row is therefore an intentional canonical
+  scope exclusion, not reference-data drift. Do **not** create that row and do
+  **not** import playlist `PLsgHooHkqhhPosUFvFYWQvl8WobRKF3t3` into the current
+  NEET catalogue. Preserve it for a separately designed and owner-approved
+  supplementary/archive taxonomy.
 - Electrostatics and Units and Measurements still substitute a generic Phoenix
   2.0 row for Lecture 1 and remain incomplete.
 - Gaseous State still lacks Lectures 3 and 8.

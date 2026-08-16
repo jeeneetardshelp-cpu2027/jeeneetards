@@ -37,7 +37,7 @@ describe("Unacademy NEET twenty-second-batch readiness", () => {
   it("pins the candidate review hash", () => {
     const reviewHash = createHash("sha256").update(reviewSource).digest("hex");
     expect(reviewHash).toBe(
-      "1a270aea236dbccbecd556a7f3d3538d86cab30cecfd06d95129bee3b5ad4b6d",
+      "1b5eccd53cd455689e192de604a4aeb0ca09ee1b4273ac745160d83ed96ead22",
     );
     expect(readiness).toContain(reviewHash);
   });
@@ -150,11 +150,25 @@ describe("Unacademy NEET twenty-second-batch readiness", () => {
     expect(readiness).toContain("8013d99663e0dfebb28f1479c69d4e8959e66923e31b6e91c396fd68fec3619f");
   });
 
-  it("keeps Solid State and incomplete sources outside this content gate", () => {
+  it("keeps out-of-syllabus Solid State and incomplete sources outside this gate", () => {
     expect(review.deferred.some((entry) => entry.includes("Solid State"))).toBe(true);
     expect(review.deferred.some((entry) => entry.includes("chapter_class_levels"))).toBe(true);
     expect(review.deferred.some((entry) => entry.includes("Gaseous State"))).toBe(true);
     expect(review.deferred.some((entry) => entry.includes("Phoenix"))).toBe(true);
+    expect(review.current_curriculum_scope_review).toMatchObject({
+      reviewed_on: "2026-08-16",
+      status: "out_of_current_syllabus_deferred",
+      solid_state_present_in_neet_2026: false,
+      solid_state_present_in_cbse_2026_27_theory: false,
+      deferred_source_playlist: {
+        youtube_playlist_id: "PLsgHooHkqhhPosUFvFYWQvl8WobRKF3t3",
+        usable_videos: 8,
+        production_source_collisions: 0,
+        production_video_collisions: 0,
+      },
+    });
+    expect(readiness).toContain("Do **not** create that row");
+    expect(readiness).toContain("supplementary/archive taxonomy");
     expect(readiness).toContain("+3 playlists / +22 videos / +22 memberships / +0");
     expect(readiness).toContain("No faculty mutation, quality-review transition");
   });
