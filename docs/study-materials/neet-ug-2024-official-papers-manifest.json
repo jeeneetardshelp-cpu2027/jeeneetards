@@ -1,0 +1,43 @@
+{
+  "exam": "NEET UG 2024",
+  "sourceName": "National Testing Agency (NEET UG)",
+  "officialApiUrl": "https://www.nta.ac.in/downloads/getlist",
+  "officialNoticeUrl": "https://exams.nta.ac.in/NEET/",
+  "sourceQuery": {
+    "Year": "2024",
+    "ExamType": "3",
+    "PaperType": "0"
+  },
+  "verifiedOn": "2026-08-16",
+  "distribution": "Linked from the official NTA host; not mirrored by JEENEETARD.",
+  "coverageNote": "The NTA catalogue exposes eight unique NEET UG 2024 files: one final answer key, four entries labelled Hindi + English, and three entries labelled English. Full-page visual review found that the file labelled English_2 is actually the 48-page Hindi-English T6 booklet, so it is excluded from this English-only batch. The two accepted English-only booklets are T1 and R1 from the examination held on 5 May 2024. Each accepted PDF contains questions 1-200; pages 31-32 are intentional rough-work pages. Other language editions remain outside this batch and are not replaced with third-party copies.",
+  "excludedFiles": [
+    {
+      "catalogName": "English_2",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20250124133115.pdf",
+      "pageCount": 48,
+      "sha256": "B69D582FF457C62EC07E83298EC42C4041D7048293E39E58D05F93307E7B6DD1",
+      "reason": "Visual inspection shows Hindi and English side by side on every question page and identifies the booklet as T6_Hindi+English, so the NTA catalogue label is not reliable enough for an English-only release."
+    }
+  ],
+  "papers": [
+    {
+      "title": "NEET UG 2024 - Set T1 (English)",
+      "setCode": "T1",
+      "catalogName": "English_1",
+      "examDate": "2024-05-05",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20250124132822.pdf",
+      "pageCount": 32,
+      "sha256": "1D6B4BE1305CE0BE6D3423CE2240916F9F4F210E8F18C61149D94281D9CEE5E3"
+    },
+    {
+      "title": "NEET UG 2024 - Set R1 (English)",
+      "setCode": "R1",
+      "catalogName": "English_3",
+      "examDate": "2024-05-05",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20250124133206.pdf",
+      "pageCount": 32,
+      "sha256": "CD4583CE844D9F5C55C9D2998710CF2915D41BC2E40BF76997178056D3A5044F"
+    }
+  ]
+}
