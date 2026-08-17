@@ -2,9 +2,9 @@
 
 ## Status
 
-**PREPARED LOCALLY - OWNER APPROVAL REQUIRED FOR PRODUCTION.** No database
-write, migration, deployment, or `release` push occurred while preparing this
-artifact.
+**APPLIED SUCCESSFULLY TO PRODUCTION ON 17 AUGUST 2026.** The exact approved
+artifact was applied once to production. No migration, deployment, quality
+transition, or `release` push occurred.
 
 ## Exact artifact
 
@@ -56,3 +56,26 @@ Expected post-state is 179 course-teacher links, with all other registry,
 catalogue, and quality-review totals unchanged. The transaction aborts on any
 baseline, course, lesson, chapter, scope, identity, review-state, or protected
 JEE mismatch. Quality transition remains a later, separately approved gate.
+
+## Production execution evidence - 17 August 2026
+
+- The artifact was re-hashed immediately before execution and matched the
+  approved SHA-256 exactly.
+- A fresh PITR check showed a 7-day recovery window and latest available restore
+  point `17 Aug 2026, 00:06:28` IST.
+- The fresh preflight matched the guarded baseline exactly: 424 playlists / 4,768
+  videos / 4,774 memberships / 263 chapters / 92 chapter-class rows; faculty
+  totals 37 teachers / 60 aliases / 38 institute links / 38 subject links / 37
+  learning-goal links / 176 course-teacher links; 47 quality reviews; empty
+  `app_environment`.
+- The transaction returned exactly three links: course 441 -> teacher 34
+  (`Mahendra Singh`), course 442 -> teacher 36 (`Anoop Vashishtha`), and course
+  443 -> teacher 36 (`Anoop Vashishtha`), each verified and at instructor
+  position 1.
+- Independent service-role postflight at `2026-08-17T05:57:41.899Z` confirmed
+  `playlist_teachers` increased exactly 176 -> 179. Every other guarded count
+  was unchanged, the three courses remained pending for the separately gated
+  quality review, and none had a quality-review row.
+- Protected original JEE remained exactly 82 courses / 1,304 memberships /
+  fingerprint `30eee4a4a6842e5beeb7c97083d7f812`.
+- No `release` push occurred.

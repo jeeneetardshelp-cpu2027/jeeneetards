@@ -22,16 +22,19 @@ const qualityHash =
   "ea8c707a5a1c7ae4899bb0bd1617a0d04369e1748582197afa05cd1bf22cf39d";
 
 describe("Unacademy NEET twenty-second-batch faculty and quality packages", () => {
-  it("pins both immutable artifacts without claiming production execution", () => {
+  it("pins both immutable artifacts and records only the faculty production gate", () => {
     expect(createHash("sha256").update(faculty).digest("hex")).toBe(facultyHash);
     expect(createHash("sha256").update(quality).digest("hex")).toBe(qualityHash);
     expect(facultyReadiness).toContain(`SHA-256: \`${facultyHash}\``);
     expect(qualityReadiness).toContain(`SHA-256: \`${qualityHash}\``);
-    for (const readiness of [facultyReadiness, qualityReadiness]) {
-      expect(readiness).toContain("OWNER APPROVAL REQUIRED FOR PRODUCTION");
-      expect(readiness).not.toContain("APPLIED SUCCESSFULLY TO PRODUCTION");
+    expect(facultyReadiness).toContain("APPLIED SUCCESSFULLY TO PRODUCTION");
+    expect(facultyReadiness).toContain("176 -> 179");
+    expect(facultyReadiness).toContain("2026-08-17T05:57:41.899Z");
+    expect(facultyReadiness).not.toContain("OWNER APPROVAL REQUIRED FOR PRODUCTION");
+    expect(qualityReadiness).toContain("OWNER APPROVAL REQUIRED FOR PRODUCTION");
+    expect(qualityReadiness).not.toContain("APPLIED SUCCESSFULLY TO PRODUCTION");
+    for (const readiness of [facultyReadiness, qualityReadiness])
       expect(readiness).toContain("`release` push");
-    }
   });
 
   it("pins the owner decision, exact courses, sources, and all 22 lessons", () => {
