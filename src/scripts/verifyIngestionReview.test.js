@@ -7,8 +7,11 @@ import { parseVerifyArgs, verifyReviewBundle } from "./verifyIngestionReview.js"
 const projectRef = "abcdefghijklmnopqrst";
 const taxonomy = {
   marker: null,
+  categories: [{ id: 20, name: "JEE", slug: "jee" }],
   subjects: [{ id: 1, name: "Physics", slug: "physics" }],
   learningGoals: [{ id: 10, name: "JEE", slug: "jee" }],
+  categoryLearningGoals: [{ category_id: 20, learning_goal_id: 10 }],
+  boards: [{ id: 30, name: "CBSE", slug: "cbse" }],
   chapters: [{ id: 101, subject_id: 1, name: "Kinematics", slug: "kinematics" }],
   teachers: [{
     id: 34,

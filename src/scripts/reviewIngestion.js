@@ -125,22 +125,50 @@ export function loadRunnerEnvironment({
   return { databaseUrl, anonKey, youtubeKey };
 }
 
-function selectAllExact(db, table, columns, configure = (query) => query) {
+function selectAllExact(
+  db,
+  table,
+  columns,
+  configure = (query) => query,
+  orderColumns = ["id"],
+  stableKey = (row) => row?.id,
+) {
   return allExact(
     table,
-    (countMode) => configure(
-      db.from(table)
-        .select(columns, countMode ? { count: countMode } : {})
-        .order("id"),
-    ),
+    (countMode) => {
+      let query = db.from(table).select(columns, countMode ? { count: countMode } : {});
+      for (const column of orderColumns) query = query.order(column);
+      return configure(query);
+    },
+    { key: stableKey },
   );
 }
 
 export async function loadLiveTaxonomy(db) {
-  const [markerResponse, subjects, learningGoals, chapters, teachers, aliases] = await Promise.all([
+  const [
+    markerResponse,
+    categories,
+    subjects,
+    learningGoals,
+    categoryLearningGoals,
+    boards,
+    chapters,
+    teachers,
+    aliases,
+  ] = await Promise.all([
     db.from("app_environment").select("name").maybeSingle(),
+    selectAllExact(db, "categories", "id,name,slug,display_order"),
     selectAllExact(db, "subjects", "id,name,slug"),
     selectAllExact(db, "learning_goals", "id,name,slug"),
+    selectAllExact(
+      db,
+      "category_learning_goals",
+      "category_id,learning_goal_id",
+      (query) => query,
+      ["category_id", "learning_goal_id"],
+      (row) => `${row?.category_id}:${row?.learning_goal_id}`,
+    ),
+    selectAllExact(db, "boards", "id,name,slug,display_order"),
     selectAllExact(db, "chapters", "id,subject_id,name,slug,display_order"),
     selectAllExact(db, "teachers", "id,display_name,verified"),
     selectAllExact(
@@ -162,8 +190,11 @@ export async function loadLiveTaxonomy(db) {
 
   return {
     marker,
+    categories,
     subjects,
     learningGoals,
+    categoryLearningGoals,
+    boards,
     chapters,
     teachers: [...teachersById.values()],
   };
@@ -356,13 +387,16 @@ export function buildReviewBundle({
 
   const sourceSnapshot = { owner, videos: sourceVideos };
   const taxonomySnapshot = {
+    categories: taxonomy.categories,
     subjects: taxonomy.subjects,
     learningGoals: taxonomy.learningGoals,
+    categoryLearningGoals: taxonomy.categoryLearningGoals,
+    boards: taxonomy.boards,
     chapters: taxonomy.chapters,
     teachers: taxonomy.teachers,
   };
   return {
-    schema_version: 2,
+    schema_version: 3,
     kind: "ingestion-human-review",
     generated_at: generatedAt,
     safety: {
@@ -379,8 +413,11 @@ export function buildReviewBundle({
       marker: taxonomy.marker,
       read_tables: [
         "app_environment",
+        "categories",
         "subjects",
         "learning_goals",
+        "category_learning_goals",
+        "boards",
         "chapters",
         "teachers",
         "teacher_aliases",

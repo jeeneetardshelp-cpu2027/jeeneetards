@@ -359,8 +359,9 @@ npm.cmd run review:ingestion -- --playlist=<PLAYLIST_ID> --env=production --expe
 ```
 
 The runner uses only `YOUTUBE_API_KEY` and the Supabase anonymous key. It reads
-the playlist owner, description, ordered usable videos, subjects, learning
-goals, chapters, verified teachers, and verified aliases. It then calls
+the playlist owner, description, ordered usable videos, categories, subjects,
+learning goals, legal category-goal mappings, boards, chapters, verified
+teachers, and verified aliases. It then calls
 `proposeTaxonomy()`, runs the rules-only per-video chapter mapper when the
 subject is safely resolved, and writes a snapshot-hashed review bundle under
 `../outputs/ingestion-review/` by default.
@@ -379,6 +380,11 @@ chapter list. If the subject needs review, every per-video chapter stays manual;
 ambiguous and unmatched chapter rows are surfaced instead of guessed.
 The proposal deliberately has no singular top-level `chapter_id`: the v12
 mapped importer forbids it and requires one reviewed chapter ID per video.
+`category_id` is automatic only when the resolved learning goal has exactly one
+legal category in `category_learning_goals`; zero or multiple matches stay in
+review. `board_ids` is automatically empty for non-School goals because the
+database forbids boards there. School goals always keep board selection under
+human review using the embedded live board list.
 The runner refuses repository-local output and refuses to overwrite an existing
 bundle unless `--overwrite` is supplied.
 

@@ -12,8 +12,11 @@ import { sha256Json } from "./reviewIngestion.js";
 const PROJECT_REF = /^[a-z0-9]{20}$/u;
 const REQUIRED_READ_TABLES = [
   "app_environment",
+  "categories",
   "subjects",
   "learning_goals",
+  "category_learning_goals",
+  "boards",
   "chapters",
   "teachers",
   "teacher_aliases",
@@ -59,7 +62,7 @@ export function verifyReviewBundle(bundle) {
     return { valid: false, errors: ["bundle must be a JSON object."], summary: null };
   }
 
-  if (bundle.schema_version !== 2) fail("schema_version must equal 2.");
+  if (bundle.schema_version !== 3) fail("schema_version must equal 3.");
   if (bundle.kind !== "ingestion-human-review") fail("kind must be ingestion-human-review.");
   const safety = bundle.safety ?? {};
   if (safety.runner_mode !== "read-only") fail("runner_mode must be read-only.");
@@ -101,23 +104,40 @@ export function verifyReviewBundle(bundle) {
   }
 
   const taxonomy = bundle.taxonomy ?? {};
+  const categories = Array.isArray(taxonomy.categories) ? taxonomy.categories : [];
   const subjects = Array.isArray(taxonomy.subjects) ? taxonomy.subjects : [];
   const learningGoals = Array.isArray(taxonomy.learningGoals) ? taxonomy.learningGoals : [];
+  const categoryLearningGoals = Array.isArray(taxonomy.categoryLearningGoals)
+    ? taxonomy.categoryLearningGoals
+    : [];
+  const boards = Array.isArray(taxonomy.boards) ? taxonomy.boards : [];
   const chapters = Array.isArray(taxonomy.chapters) ? taxonomy.chapters : [];
   const teachers = Array.isArray(taxonomy.teachers) ? taxonomy.teachers : [];
-  if (taxonomy.sha256 !== sha256Json({ subjects, learningGoals, chapters, teachers })) {
+  if (taxonomy.sha256 !== sha256Json({
+    categories,
+    subjects,
+    learningGoals,
+    categoryLearningGoals,
+    boards,
+    chapters,
+    teachers,
+  })) {
     fail("taxonomy snapshot SHA-256 mismatch.");
   }
   const byId = (rows) => new Map(
     rows.filter((row) => row && typeof row === "object").map((row) => [row.id, row]),
   );
+  const categoryById = byId(categories);
   const subjectById = byId(subjects);
   const goalById = byId(learningGoals);
+  const boardById = byId(boards);
   const chapterById = byId(chapters);
   const teacherById = byId(teachers);
   for (const [label, rows] of [
+    ["category", categories],
     ["subject", subjects],
     ["learning goal", learningGoals],
+    ["board", boards],
     ["chapter", chapters],
     ["teacher", teachers],
   ]) {
@@ -128,9 +148,19 @@ export function verifyReviewBundle(bundle) {
       fail(`duplicate ${label} id: ${duplicate}.`);
     }
   }
+  const mappingKeys = new Set();
+  for (const mapping of categoryLearningGoals) {
+    const key = `${mapping?.category_id}:${mapping?.learning_goal_id}`;
+    if (mappingKeys.has(key)) fail(`duplicate category-learning-goal mapping: ${key}.`);
+    mappingKeys.add(key);
+    if (!categoryById.has(mapping?.category_id) || !goalById.has(mapping?.learning_goal_id)) {
+      fail(`category-learning-goal mapping references missing taxonomy: ${key}.`);
+    }
+  }
 
   const decisions = bundle.proposal?.decisions ?? {};
   const taxonomyDecisions = [
+    ["category_id", categoryById],
     ["subject_id", subjectById],
     ["learning_goal_id", goalById],
     ["teacher_id", teacherById],
@@ -138,6 +168,27 @@ export function verifyReviewBundle(bundle) {
   for (const [field, registry] of taxonomyDecisions) {
     const value = decisions[field]?.value;
     if (value != null && !registry.has(value)) fail(`${field} value ${value} is absent from taxonomy.`);
+  }
+  const categoryId = decisions.category_id?.value;
+  const learningGoalId = decisions.learning_goal_id?.value;
+  if (categoryId != null && learningGoalId != null
+      && !mappingKeys.has(`${categoryId}:${learningGoalId}`)) {
+    fail("category_id is not legal for the proposed learning_goal_id.");
+  }
+  const boardIds = decisions.board_ids?.value;
+  if (!Array.isArray(boardIds)) {
+    fail("board_ids proposal must be an array.");
+  } else {
+    for (const boardId of boardIds) {
+      if (!boardById.has(boardId)) fail(`board_ids value ${boardId} is absent from taxonomy.`);
+    }
+    const goal = goalById.get(learningGoalId);
+    if (goal?.slug !== "school" && boardIds.length) {
+      fail("non-School learning goals must not propose board ids.");
+    }
+    if (goal?.slug === "school" && decisions.board_ids?.status === "auto" && !boardIds.length) {
+      fail("automatic School board decisions require at least one board id.");
+    }
   }
   const decisionEntries = Object.entries(decisions).map(([field, decision]) => ({ field, ...decision }));
   const decisionCounts = countStatuses(decisionEntries);

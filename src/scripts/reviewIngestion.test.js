@@ -9,6 +9,7 @@ import {
   buildChapterReview,
   buildReviewBundle,
   collectIngestionReview,
+  loadLiveTaxonomy,
   loadRunnerEnvironment,
   parseArgs,
   resolveReviewOutputPath,
@@ -20,8 +21,11 @@ const databaseUrl = `https://${projectRef}.supabase.co`;
 
 const taxonomy = {
   marker: null,
+  categories: [{ id: 20, name: "JEE", slug: "jee", display_order: 1 }],
   subjects: [{ id: 1, name: "Physics", slug: "physics" }],
   learningGoals: [{ id: 10, name: "JEE", slug: "jee" }],
+  categoryLearningGoals: [{ category_id: 20, learning_goal_id: 10 }],
+  boards: [{ id: 30, name: "CBSE", slug: "cbse", display_order: 1 }],
   chapters: [
     { id: 101, subject_id: 1, name: "Kinematics", slug: "kinematics", display_order: 1 },
     { id: 102, subject_id: 1, name: "Laws of Motion", slug: "laws-of-motion", display_order: 2 },
@@ -130,6 +134,54 @@ describe("read-only ingestion review CLI", () => {
 });
 
 describe("human-review bundle", () => {
+  it("loads composite-key category mappings with exact public taxonomy reads", async () => {
+    const rowsByTable = {
+      categories: taxonomy.categories,
+      subjects: taxonomy.subjects,
+      learning_goals: taxonomy.learningGoals,
+      category_learning_goals: taxonomy.categoryLearningGoals,
+      boards: taxonomy.boards,
+      chapters: taxonomy.chapters,
+      teachers: taxonomy.teachers.map((teacher) => ({
+        id: teacher.id,
+        display_name: teacher.display_name,
+        verified: teacher.verified,
+      })),
+      teacher_aliases: [{ id: 40, teacher_id: 34, alias: "ALK", status: "verified" }],
+    };
+    const db = {
+      from(table) {
+        const rows = rowsByTable[table] ?? [];
+        let exactCount = false;
+        return {
+          select(_columns, options = {}) {
+            exactCount = options.count === "exact";
+            return this;
+          },
+          order() { return this; },
+          eq() { return this; },
+          maybeSingle() {
+            return Promise.resolve({ data: { name: null }, error: null });
+          },
+          range(from, to) {
+            return Promise.resolve({
+              data: rows.slice(from, to + 1),
+              count: exactCount ? rows.length : null,
+              error: null,
+            });
+          },
+        };
+      },
+    };
+
+    const live = await loadLiveTaxonomy(db);
+    expect(live.categoryLearningGoals).toEqual([
+      { category_id: 20, learning_goal_id: 10 },
+    ]);
+    expect(live.boards).toEqual(taxonomy.boards);
+    expect(live.teachers[0].aliases).toEqual([{ alias: "ALK", status: "verified" }]);
+  });
+
   it("connects real-shaped source metadata and taxonomy to proposeTaxonomy", () => {
     const bundle = buildReviewBundle({
       environment: "production",
@@ -142,7 +194,7 @@ describe("human-review bundle", () => {
     });
 
     expect(bundle).toMatchObject({
-      schema_version: 2,
+      schema_version: 3,
       kind: "ingestion-human-review",
       safety: {
         runner_mode: "read-only",
@@ -163,6 +215,8 @@ describe("human-review bundle", () => {
       status: "review",
       requiresReview: true,
     });
+    expect(bundle.proposal.decisions.category_id).toMatchObject({ value: 20, status: "auto" });
+    expect(bundle.proposal.decisions.board_ids).toMatchObject({ value: [], status: "auto" });
     expect(bundle.human_review.items.map((item) => item.field)).toContain("teacher_id");
     expect(bundle.chapter_review).toMatchObject({
       eligible: true,
