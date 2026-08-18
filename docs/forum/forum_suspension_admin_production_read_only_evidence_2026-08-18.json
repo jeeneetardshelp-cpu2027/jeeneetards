@@ -1,0 +1,66 @@
+{
+  "status": "passed-read-only",
+  "targetProjectRef": "kezelafqhgqrprpadmlf",
+  "dashboardProjectLabel": "main Production",
+  "executedAtUtc": "2026-08-18T12:19:33.719Z",
+  "package": {
+    "pullRequest": "https://github.com/jeeneetardshelp-cpu2027/jeeneetards/pull/90",
+    "mergeCommit": "8fb99c99e71e291db3ff04fd716828dfa3c9ebe7",
+    "preflightSha256": "bf9d3252959ab7581791fdddd2131f422c883b9f6da34e9aaa7eafbe6cf5363a",
+    "auditSha256": "9f3605335ca53dc365132389ba76bbcc0f53aa45ad790a65a7cd8bb2cdef26de",
+    "installSha256": "0f7ecfa2a9fed99a3be11a0bd67fb59f31d3acba2421fe22bd4fadf71b90a24d"
+  },
+  "bufferVerification": {
+    "preflightNormalizedSha256Matched": true,
+    "auditNormalizedSha256Matched": true,
+    "normalization": "Supabase editor clipboard CRLF converted to LF before comparison",
+    "preflightCopiedBackExactlyAfterNormalization": true,
+    "auditCopiedBackExactlyAfterNormalization": true
+  },
+  "preflight": {
+    "passed": true,
+    "result": {
+      "database_name": "postgres",
+      "existing_suspension_rows": 0,
+      "database_changed": false
+    },
+    "guardAssertionsPassed": {
+      "productionEnvironmentMarkerIsEmpty": true,
+      "forumV1BaselineStatePresent": true,
+      "forumModeIsOff": true,
+      "stagingFixtureHelperAbsent": true,
+      "setSuspensionByUsernameWrapperAbsent": true,
+      "listSuspensionsWrapperAbsent": true,
+      "caseInsensitiveUsernameIndexUsable": true,
+      "noCaseInsensitiveUsernameCollisions": true,
+      "reviewedSuspensionRpcPresent": true,
+      "moderationLogActionConstraintReviewedShape": true
+    }
+  },
+  "audit": {
+    "passed": true,
+    "countsOnly": true,
+    "suspensionCounts": {
+      "suspension_rows": 0,
+      "active_suspensions": 0,
+      "expired_rows_not_yet_lifted": 0,
+      "suspensions_beyond_the_wrapper_limit": 0,
+      "rows_with_no_recorded_moderator": 0,
+      "basis": "The exact audit ran successfully; the preflight independently returned zero total suspension rows."
+    },
+    "moderationLogCounts": {
+      "suspend_log_entries": 0,
+      "unsuspend_log_entries": 0
+    },
+    "database_changed": false
+  },
+  "mutationBoundary": {
+    "databaseWritesAttempted": false,
+    "installSqlOpened": false,
+    "installSqlPasted": false,
+    "installSqlExecuted": false,
+    "postflightSqlExecuted": false,
+    "rollbackSqlExecuted": false
+  },
+  "credentialsRecorded": false
+}
