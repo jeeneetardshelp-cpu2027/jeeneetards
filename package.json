@@ -40,6 +40,7 @@
     "build:forum-beta-staging": "node src/scripts/buildForumClosedBetaStagingRehearsal.js",
     "build:forum-beta-persistent-staging": "node src/scripts/buildForumClosedBetaPersistentStaging.js",
     "build:forum-suspension-admin-persistent-staging": "node src/scripts/buildForumSuspensionAdminPersistentStaging.js",
+    "build:forum-suspension-admin-production": "node src/scripts/buildForumSuspensionAdminProductionPackage.js",
     "verify:forum-jwt-staging": "node src/scripts/verifyForumV1JwtStaging.js",
     "verify:forum-beta-jwt-staging": "node src/scripts/verifyForumClosedBetaJwtStaging.js",
     "verify:forum-suspension-admin-jwt-staging": "node src/scripts/verifyForumSuspensionAdminJwtStaging.js",
