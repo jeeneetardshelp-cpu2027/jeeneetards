@@ -118,6 +118,7 @@ the local `.env` file or any privileged credential.
 | `npm run verify:ingestion-review -- --bundle=<FILE>` | Offline integrity check for a generated ingestion human-review bundle |
 | `npm run prepare:ingestion-decisions -- --bundle=<FILE>` | Create a hash-bound, non-importable human decision worksheet outside the repository |
 | `npm run verify:ingestion-decisions -- --bundle=<REVIEW> --decisions=<DECISIONS>` | Offline integrity and human-completion check for an ingestion decision worksheet |
+| `npm run render:ingestion-review -- --bundle=<REVIEW> --decisions=<DECISIONS>` | Render a hash-bound, evidence-only Markdown packet for the human reviewer |
 | `npm run ui:audit` | Run the responsive browser audit and fail on objective layout/accessibility regressions |
 | `npm run pack:review` | Build a review archive outside the repository |
 
