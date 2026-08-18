@@ -117,6 +117,7 @@ the local `.env` file or any privileged credential.
 | `npm run review:ingestion -- --playlist=<ID> --expected-project-ref=<REF>` | Build an outside-repository, read-only human-review bundle from real YouTube metadata and live public taxonomy |
 | `npm run verify:ingestion-review -- --bundle=<FILE>` | Offline integrity check for a generated ingestion human-review bundle |
 | `npm run prepare:ingestion-decisions -- --bundle=<FILE>` | Create a hash-bound, non-importable human decision worksheet outside the repository |
+| `npm run verify:ingestion-decisions -- --bundle=<REVIEW> --decisions=<DECISIONS>` | Offline integrity and human-completion check for an ingestion decision worksheet |
 | `npm run ui:audit` | Run the responsive browser audit and fail on objective layout/accessibility regressions |
 | `npm run pack:review` | Build a review archive outside the repository |
 

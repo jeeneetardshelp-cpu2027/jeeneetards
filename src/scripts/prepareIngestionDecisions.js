@@ -7,6 +7,11 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { basename, dirname, isAbsolute, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import {
+  automaticContext,
+  chapterDecision,
+  proposalDecision,
+} from "./ingestionDecisionContract.js";
 import { sha256Json } from "./reviewIngestion.js";
 import { verifyReviewBundle } from "./verifyIngestionReview.js";
 
@@ -69,35 +74,6 @@ export function assertDecisionOutputAvailable(
   }
 }
 
-function proposalDecision(item) {
-  return {
-    field: item.field,
-    proposed_value: item.value ?? null,
-    confidence: item.confidence ?? null,
-    evidence: item.evidence ?? null,
-    candidates: Array.isArray(item.candidates) ? item.candidates : [],
-    reviewer_action: null,
-    reviewer_value: null,
-    reviewer_notes: null,
-  };
-}
-
-function chapterDecision(row) {
-  return {
-    position: row.position,
-    youtube_video_id: row.youtube_video_id,
-    title: row.title,
-    proposed_chapter_id: row.chapter_id ?? null,
-    proposed_chapter_name: row.chapter_name ?? null,
-    confidence: row.confidence ?? null,
-    evidence: row.reason ?? null,
-    alternatives: Array.isArray(row.alternatives) ? row.alternatives : [],
-    reviewer_action: null,
-    reviewer_chapter_id: null,
-    reviewer_notes: null,
-  };
-}
-
 export function buildDecisionWorksheet(
   bundle,
   { generatedAt = new Date().toISOString() } = {},
@@ -110,14 +86,6 @@ export function buildDecisionWorksheet(
   const chapterDecisions = bundle.chapter_review.rows
     .filter((row) => row.status !== "auto")
     .map(chapterDecision);
-  const automaticFields = Object.entries(bundle.proposal.decisions)
-    .filter(([, decision]) => decision.status === "auto")
-    .map(([field, decision]) => ({
-      field,
-      value: decision.value,
-      confidence: decision.confidence,
-      evidence: decision.evidence,
-    }));
   return {
     schema_version: 1,
     kind: "ingestion-human-decisions",
@@ -145,10 +113,7 @@ export function buildDecisionWorksheet(
     allowed_reviewer_actions: ["accept", "replace", "reject"],
     proposal_decisions: proposalDecisions,
     chapter_decisions: chapterDecisions,
-    automatic_context: {
-      proposal_fields: automaticFields,
-      chapter_rows: bundle.chapter_review.rows.filter((row) => row.status === "auto").length,
-    },
+    automatic_context: automaticContext(bundle),
     completion: {
       status: "pending",
       required_proposal_decisions: proposalDecisions.length,

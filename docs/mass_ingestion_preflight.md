@@ -418,6 +418,20 @@ and chapter row, and records automatic results only as context. It remains
 `--overwrite` is explicit. Creating or completing it does not authorize an
 import.
 
+Validate the worksheet against its exact review bundle:
+
+```powershell
+npm.cmd run verify:ingestion-decisions -- --bundle=<REVIEW_JSON_PATH> --decisions=<DECISIONS_JSON_PATH>
+```
+
+The validator is offline and write-free. It rejects altered bindings, proposal
+context, automatic context, invalid reviewer actions, incorrect counts, and
+replacement chapters outside the embedded subject taxonomy. A blank worksheet
+is structurally valid but exits as incomplete; `--allow-pending` is available
+only when checking the integrity of an intentionally unfinished worksheet.
+Completion still leaves `importable: false` and does not authorize a database
+write.
+
 Use `--env=staging` only when the staging environment file points to the
 intended read-only comparison target. This command performs no database write,
 RPC, migration, fixture creation, import, or deployment. A reviewed bundle does
