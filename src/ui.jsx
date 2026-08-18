@@ -19,7 +19,7 @@
 import { forwardRef, useCallback, useEffect, useId, useRef, useState } from "react";
 import { Link } from "react-router";
 import { AlertTriangle, ChevronDown, X } from "lucide-react";
-import { useMagnetic, usePointerGlow, useCountUp, useInView } from "./motion.jsx";
+import { useMagnetic, usePointerGlow } from "./motion.jsx";
 
 /* ------------------------------------------------------------------ text */
 
@@ -222,15 +222,19 @@ export function Pill({ tone = "neutral", className = "", children }) {
 export function Stat({
   value, prefix = "", suffix = "", label, note, numeric = true, to = null,
 }) {
-  const [ref, inView] = useInView({ threshold: 0.4 });
-  const counted = useCountUp(numeric ? value : 0, inView);
-  const shown = numeric ? counted.toLocaleString("en-IN") : value;
-  const accessibleValue = numeric ? Number(value).toLocaleString("en-IN") : value;
+  // A known measurement must be truthful on the first render. The old
+  // count-up animation started every number at zero and waited for an
+  // IntersectionObserver. Background tabs, crawlers, and browsers where the
+  // observer never fired therefore saw confident but false zeroes forever.
+  const numericValue = Number(value);
+  const shown = numeric
+    ? (Number.isFinite(numericValue) ? numericValue.toLocaleString("en-IN") : "—")
+    : value;
+  const accessibleValue = shown;
   const Component = to ? Link : "div";
 
   return (
     <Component
-      ref={ref}
       {...(to ? { to, "aria-label": `${accessibleValue} ${label}. ${note ?? ""}`.trim() } : {})}
       className={`text-center sm:text-left ${
         to
