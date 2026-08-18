@@ -26,6 +26,17 @@ const taxonomy = {
   learningGoals: [{ id: 10, name: "JEE", slug: "jee" }],
   categoryLearningGoals: [{ category_id: 20, learning_goal_id: 10 }],
   boards: [{ id: 30, name: "CBSE", slug: "cbse", display_order: 1 }],
+  classLevels: [
+    { id: 39, name: "Class 10", slug: "class-10", display_order: 1 },
+    { id: 40, name: "Class 11", slug: "class-11", display_order: 2 },
+    { id: 41, name: "Class 12", slug: "class-12", display_order: 3 },
+    { id: 42, name: "Dropper", slug: "dropper", display_order: 4 },
+  ],
+  learningGoalClassLevels: [
+    { learning_goal_id: 10, class_level_id: 40 },
+    { learning_goal_id: 10, class_level_id: 41 },
+    { learning_goal_id: 10, class_level_id: 42 },
+  ],
   chapters: [
     { id: 101, subject_id: 1, name: "Kinematics", slug: "kinematics", display_order: 1 },
     { id: 102, subject_id: 1, name: "Laws of Motion", slug: "laws-of-motion", display_order: 2 },
@@ -141,6 +152,8 @@ describe("human-review bundle", () => {
       learning_goals: taxonomy.learningGoals,
       category_learning_goals: taxonomy.categoryLearningGoals,
       boards: taxonomy.boards,
+      class_levels: taxonomy.classLevels,
+      learning_goal_class_levels: taxonomy.learningGoalClassLevels,
       chapters: taxonomy.chapters,
       teachers: taxonomy.teachers.map((teacher) => ({
         id: teacher.id,
@@ -179,6 +192,7 @@ describe("human-review bundle", () => {
       { category_id: 20, learning_goal_id: 10 },
     ]);
     expect(live.boards).toEqual(taxonomy.boards);
+    expect(live.learningGoalClassLevels).toEqual(taxonomy.learningGoalClassLevels);
     expect(live.teachers[0].aliases).toEqual([{ alias: "ALK", status: "verified" }]);
   });
 
@@ -194,7 +208,7 @@ describe("human-review bundle", () => {
     });
 
     expect(bundle).toMatchObject({
-      schema_version: 3,
+      schema_version: 4,
       kind: "ingestion-human-review",
       safety: {
         runner_mode: "read-only",

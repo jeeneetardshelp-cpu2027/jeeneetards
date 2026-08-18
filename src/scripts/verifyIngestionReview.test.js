@@ -12,6 +12,17 @@ const taxonomy = {
   learningGoals: [{ id: 10, name: "JEE", slug: "jee" }],
   categoryLearningGoals: [{ category_id: 20, learning_goal_id: 10 }],
   boards: [{ id: 30, name: "CBSE", slug: "cbse" }],
+  classLevels: [
+    { id: 39, name: "Class 10", slug: "class-10" },
+    { id: 40, name: "Class 11", slug: "class-11" },
+    { id: 41, name: "Class 12", slug: "class-12" },
+    { id: 42, name: "Dropper", slug: "dropper" },
+  ],
+  learningGoalClassLevels: [
+    { learning_goal_id: 10, class_level_id: 40 },
+    { learning_goal_id: 10, class_level_id: 41 },
+    { learning_goal_id: 10, class_level_id: 42 },
+  ],
   chapters: [{ id: 101, subject_id: 1, name: "Kinematics", slug: "kinematics" }],
   teachers: [{
     id: 34,
@@ -84,6 +95,16 @@ describe("offline ingestion-review verifier", () => {
     const result = verifyReviewBundle(bundle);
     expect(result.valid).toBe(false);
     expect(result.errors).toContain("chapter row 1 uses unknown chapter id.");
+  });
+
+  it("rejects a class label that is incompatible with the proposed learning goal", () => {
+    const bundle = sampleBundle();
+    bundle.proposal.decisions.class_labels.value = ["10th"];
+    const result = verifyReviewBundle(bundle);
+    expect(result.valid).toBe(false);
+    expect(result.errors).toContain(
+      "class label 10th is incompatible with the proposed learning goal.",
+    );
   });
 
   it("rejects a weakened read-only contract or missing review item", () => {

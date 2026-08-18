@@ -10,7 +10,12 @@
 // It NEVER writes anything and NEVER invents a value outside the live taxonomy
 // it is given. Network/DB access is the caller's job — this stays pure.
 
-import { CONFIDENCE, isAutoAcceptable, proposePlaylistTags } from "./rules.js";
+import {
+  CONFIDENCE,
+  deriveAudienceFocus,
+  isAutoAcceptable,
+  proposePlaylistTags,
+} from "./rules.js";
 import { proposeTeacher } from "./proposeTeacher.js";
 
 function decide(fieldStatus) {
@@ -79,8 +84,73 @@ export function proposeBoards(learningGoal, boards = []) {
   };
 }
 
+const CLASS_LABEL_BY_SLUG = Object.freeze({
+  "class-10": "10th",
+  "class-11": "11th",
+  "class-12": "12th",
+  dropper: "Dropper",
+});
+
+export function validateClassLabelsAgainstTaxonomy(
+  proposal,
+  learningGoal,
+  classLevels = [],
+  learningGoalClassLevels = [],
+) {
+  const classById = new Map(classLevels.map((classLevel) => [classLevel.id, classLevel]));
+  const candidates = learningGoal?.value == null
+    ? []
+    : learningGoalClassLevels
+      .filter((mapping) => mapping.learning_goal_id === learningGoal.value)
+      .map((mapping) => classById.get(mapping.class_level_id))
+      .filter(Boolean)
+      .map((classLevel) => ({
+        id: classLevel.id,
+        name: classLevel.name,
+        slug: classLevel.slug,
+        label: CLASS_LABEL_BY_SLUG[classLevel.slug] ?? null,
+      }))
+      .filter((classLevel) => classLevel.label);
+  const proposedLabels = Array.isArray(proposal?.value) ? proposal.value : [];
+  if (learningGoal?.value == null) {
+    return {
+      value: [],
+      confidence: CONFIDENCE.NONE,
+      evidence: "learning goal must be resolved before class compatibility",
+      candidates,
+      requiresReview: true,
+    };
+  }
+  if (!proposedLabels.length) {
+    return {
+      ...proposal,
+      value: [],
+      candidates,
+      evidence: `${proposal?.evidence ?? "no class-level signal"}; choose from live-compatible classes`,
+      requiresReview: true,
+    };
+  }
+  const allowedLabels = new Set(candidates.map((candidate) => candidate.label));
+  const incompatible = proposedLabels.filter((label) => !allowedLabels.has(label));
+  if (incompatible.length) {
+    return {
+      value: [],
+      confidence: CONFIDENCE.NONE,
+      evidence: `incompatible class signal for learning goal: ${incompatible.join(", ")}`,
+      candidates,
+      requiresReview: true,
+    };
+  }
+  return {
+    ...proposal,
+    candidates,
+    evidence: `${proposal.evidence}; confirmed by live goal-class mapping`,
+  };
+}
+
 // liveTaxonomy: { subjects, learningGoals, categories, categoryLearningGoals,
-// boards, teachers:[{id,display_name,aliases}] }.
+// boards, classLevels, learningGoalClassLevels,
+// teachers:[{id,display_name,aliases}] }.
 // Only ids present here can ever be proposed.
 export function proposeTaxonomy(metadata, liveTaxonomy = {}) {
   const {
@@ -89,6 +159,8 @@ export function proposeTaxonomy(metadata, liveTaxonomy = {}) {
     categories = [],
     categoryLearningGoals = [],
     boards = [],
+    classLevels = [],
+    learningGoalClassLevels = [],
     teachers = [],
   } = liveTaxonomy;
   const p = proposePlaylistTags({ ...metadata, subjects });
@@ -104,16 +176,23 @@ export function proposeTaxonomy(metadata, liveTaxonomy = {}) {
         ? `goal "${p.learningGoal.value}" not in live taxonomy` : p.learningGoal.evidence };
   const category = proposeCategory(learningGoal, categories, categoryLearningGoals);
   const boardIds = proposeBoards(learningGoal, boards);
+  const classLabels = validateClassLabelsAgainstTaxonomy(
+    p.classLabels,
+    learningGoal,
+    classLevels,
+    learningGoalClassLevels,
+  );
+  const audienceFocus = deriveAudienceFocus(classLabels.value);
 
   const fields = {
     subject_id: p.subject,
     learning_goal_id: learningGoal,
     category_id: category,
     board_ids: boardIds,
-    class_labels: p.classLabels,
+    class_labels: classLabels,
     content_type: p.contentType,
     language: p.language,
-    audience_focus: p.audienceFocus,
+    audience_focus: audienceFocus,
     difficulty: p.difficulty,
     teacher_id: teacher,
   };

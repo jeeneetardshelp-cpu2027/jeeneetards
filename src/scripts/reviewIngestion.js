@@ -152,6 +152,8 @@ export async function loadLiveTaxonomy(db) {
     learningGoals,
     categoryLearningGoals,
     boards,
+    classLevels,
+    learningGoalClassLevels,
     chapters,
     teachers,
     aliases,
@@ -169,6 +171,15 @@ export async function loadLiveTaxonomy(db) {
       (row) => `${row?.category_id}:${row?.learning_goal_id}`,
     ),
     selectAllExact(db, "boards", "id,name,slug,display_order"),
+    selectAllExact(db, "class_levels", "id,name,slug,display_order"),
+    selectAllExact(
+      db,
+      "learning_goal_class_levels",
+      "learning_goal_id,class_level_id",
+      (query) => query,
+      ["learning_goal_id", "class_level_id"],
+      (row) => `${row?.learning_goal_id}:${row?.class_level_id}`,
+    ),
     selectAllExact(db, "chapters", "id,subject_id,name,slug,display_order"),
     selectAllExact(db, "teachers", "id,display_name,verified"),
     selectAllExact(
@@ -195,6 +206,8 @@ export async function loadLiveTaxonomy(db) {
     learningGoals,
     categoryLearningGoals,
     boards,
+    classLevels,
+    learningGoalClassLevels,
     chapters,
     teachers: [...teachersById.values()],
   };
@@ -392,11 +405,13 @@ export function buildReviewBundle({
     learningGoals: taxonomy.learningGoals,
     categoryLearningGoals: taxonomy.categoryLearningGoals,
     boards: taxonomy.boards,
+    classLevels: taxonomy.classLevels,
+    learningGoalClassLevels: taxonomy.learningGoalClassLevels,
     chapters: taxonomy.chapters,
     teachers: taxonomy.teachers,
   };
   return {
-    schema_version: 3,
+    schema_version: 4,
     kind: "ingestion-human-review",
     generated_at: generatedAt,
     safety: {
@@ -418,6 +433,8 @@ export function buildReviewBundle({
         "learning_goals",
         "category_learning_goals",
         "boards",
+        "class_levels",
+        "learning_goal_class_levels",
         "chapters",
         "teachers",
         "teacher_aliases",

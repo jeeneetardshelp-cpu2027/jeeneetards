@@ -385,6 +385,10 @@ legal category in `category_learning_goals`; zero or multiple matches stay in
 review. `board_ids` is automatically empty for non-School goals because the
 database forbids boards there. School goals always keep board selection under
 human review using the embedded live board list.
+Metadata-derived class labels are checked against `class_levels` and
+`learning_goal_class_levels`. An incompatible label is discarded and returned
+to review; an absent signal stays in review with only the live-compatible class
+candidates. `audience_focus` is recomputed from that validated label set.
 The runner refuses repository-local output and refuses to overwrite an existing
 bundle unless `--overwrite` is supplied.
 

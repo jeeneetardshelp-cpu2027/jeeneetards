@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { proposeBoards, proposeCategory, proposeTaxonomy } from "./proposeTaxonomy.js";
+import {
+  proposeBoards,
+  proposeCategory,
+  proposeTaxonomy,
+  validateClassLabelsAgainstTaxonomy,
+} from "./proposeTaxonomy.js";
 
 const taxonomy = {
   subjects: [{ id: 1, name: "Physics", slug: "physics" }],
@@ -7,6 +12,17 @@ const taxonomy = {
   categories: [{ id: 20, name: "JEE", slug: "jee" }],
   categoryLearningGoals: [{ category_id: 20, learning_goal_id: 10 }],
   boards: [{ id: 30, name: "CBSE", slug: "cbse" }],
+  classLevels: [
+    { id: 39, name: "Class 10", slug: "class-10" },
+    { id: 40, name: "Class 11", slug: "class-11" },
+    { id: 41, name: "Class 12", slug: "class-12" },
+    { id: 42, name: "Dropper", slug: "dropper" },
+  ],
+  learningGoalClassLevels: [
+    { learning_goal_id: 10, class_level_id: 40 },
+    { learning_goal_id: 10, class_level_id: 41 },
+    { learning_goal_id: 10, class_level_id: 42 },
+  ],
   teachers: [{
     id: 34,
     display_name: "Alakh Pandey",
@@ -75,5 +91,41 @@ describe("live category and board taxonomy", () => {
       requiresReview: true,
       candidates: boards,
     });
+  });
+});
+
+describe("live class-level compatibility", () => {
+  it("keeps no-signal class selection in review with only legal candidates", () => {
+    const proposal = validateClassLabelsAgainstTaxonomy(
+      { value: [], confidence: 0, evidence: "no class-level signal" },
+      { value: 10, slug: "jee" },
+      taxonomy.classLevels,
+      taxonomy.learningGoalClassLevels,
+    );
+    expect(proposal).toMatchObject({ value: [], requiresReview: true });
+    expect(proposal.candidates.map((candidate) => candidate.label))
+      .toEqual(["11th", "12th", "Dropper"]);
+  });
+
+  it("rejects a metadata class that is illegal for the resolved goal", () => {
+    const proposal = validateClassLabelsAgainstTaxonomy(
+      { value: ["10th"], confidence: 0.9, evidence: "matched 10th" },
+      { value: 10, slug: "jee" },
+      taxonomy.classLevels,
+      taxonomy.learningGoalClassLevels,
+    );
+    expect(proposal).toMatchObject({ value: [], confidence: 0, requiresReview: true });
+    expect(proposal.evidence).toContain("incompatible");
+  });
+
+  it("preserves a high-confidence class only when live compatibility confirms it", () => {
+    const proposal = validateClassLabelsAgainstTaxonomy(
+      { value: ["11th"], confidence: 0.9, evidence: "matched 11th" },
+      { value: 10, slug: "jee" },
+      taxonomy.classLevels,
+      taxonomy.learningGoalClassLevels,
+    );
+    expect(proposal).toMatchObject({ value: ["11th"], confidence: 0.9 });
+    expect(proposal).not.toHaveProperty("requiresReview");
   });
 });

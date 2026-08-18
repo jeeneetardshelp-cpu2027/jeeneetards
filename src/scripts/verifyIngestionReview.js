@@ -17,10 +17,18 @@ const REQUIRED_READ_TABLES = [
   "learning_goals",
   "category_learning_goals",
   "boards",
+  "class_levels",
+  "learning_goal_class_levels",
   "chapters",
   "teachers",
   "teacher_aliases",
 ];
+const CLASS_SLUG_BY_LABEL = Object.freeze({
+  "10th": "class-10",
+  "11th": "class-11",
+  "12th": "class-12",
+  Dropper: "dropper",
+});
 
 export function parseVerifyArgs(argv = []) {
   const args = {};
@@ -62,7 +70,7 @@ export function verifyReviewBundle(bundle) {
     return { valid: false, errors: ["bundle must be a JSON object."], summary: null };
   }
 
-  if (bundle.schema_version !== 3) fail("schema_version must equal 3.");
+  if (bundle.schema_version !== 4) fail("schema_version must equal 4.");
   if (bundle.kind !== "ingestion-human-review") fail("kind must be ingestion-human-review.");
   const safety = bundle.safety ?? {};
   if (safety.runner_mode !== "read-only") fail("runner_mode must be read-only.");
@@ -111,6 +119,10 @@ export function verifyReviewBundle(bundle) {
     ? taxonomy.categoryLearningGoals
     : [];
   const boards = Array.isArray(taxonomy.boards) ? taxonomy.boards : [];
+  const classLevels = Array.isArray(taxonomy.classLevels) ? taxonomy.classLevels : [];
+  const learningGoalClassLevels = Array.isArray(taxonomy.learningGoalClassLevels)
+    ? taxonomy.learningGoalClassLevels
+    : [];
   const chapters = Array.isArray(taxonomy.chapters) ? taxonomy.chapters : [];
   const teachers = Array.isArray(taxonomy.teachers) ? taxonomy.teachers : [];
   if (taxonomy.sha256 !== sha256Json({
@@ -119,6 +131,8 @@ export function verifyReviewBundle(bundle) {
     learningGoals,
     categoryLearningGoals,
     boards,
+    classLevels,
+    learningGoalClassLevels,
     chapters,
     teachers,
   })) {
@@ -131,6 +145,7 @@ export function verifyReviewBundle(bundle) {
   const subjectById = byId(subjects);
   const goalById = byId(learningGoals);
   const boardById = byId(boards);
+  const classById = byId(classLevels);
   const chapterById = byId(chapters);
   const teacherById = byId(teachers);
   for (const [label, rows] of [
@@ -138,6 +153,7 @@ export function verifyReviewBundle(bundle) {
     ["subject", subjects],
     ["learning goal", learningGoals],
     ["board", boards],
+    ["class level", classLevels],
     ["chapter", chapters],
     ["teacher", teachers],
   ]) {
@@ -155,6 +171,15 @@ export function verifyReviewBundle(bundle) {
     mappingKeys.add(key);
     if (!categoryById.has(mapping?.category_id) || !goalById.has(mapping?.learning_goal_id)) {
       fail(`category-learning-goal mapping references missing taxonomy: ${key}.`);
+    }
+  }
+  const goalClassMappingKeys = new Set();
+  for (const mapping of learningGoalClassLevels) {
+    const key = `${mapping?.learning_goal_id}:${mapping?.class_level_id}`;
+    if (goalClassMappingKeys.has(key)) fail(`duplicate learning-goal-class mapping: ${key}.`);
+    goalClassMappingKeys.add(key);
+    if (!goalById.has(mapping?.learning_goal_id) || !classById.has(mapping?.class_level_id)) {
+      fail(`learning-goal-class mapping references missing taxonomy: ${key}.`);
     }
   }
 
@@ -188,6 +213,31 @@ export function verifyReviewBundle(bundle) {
     }
     if (goal?.slug === "school" && decisions.board_ids?.status === "auto" && !boardIds.length) {
       fail("automatic School board decisions require at least one board id.");
+    }
+  }
+  const classLabels = decisions.class_labels?.value;
+  if (!Array.isArray(classLabels)) {
+    fail("class_labels proposal must be an array.");
+  } else {
+    for (const duplicate of duplicateValues(classLabels, (label) => label)) {
+      fail(`duplicate class label: ${duplicate}.`);
+    }
+    const classBySlug = new Map(classLevels.map((classLevel) => [classLevel.slug, classLevel]));
+    for (const label of classLabels) {
+      const classLevel = classBySlug.get(CLASS_SLUG_BY_LABEL[label]);
+      if (!classLevel) {
+        fail(`class label ${label} is absent from taxonomy.`);
+      } else if (learningGoalId != null
+          && !goalClassMappingKeys.has(`${learningGoalId}:${classLevel.id}`)) {
+        fail(`class label ${label} is incompatible with the proposed learning goal.`);
+      }
+    }
+    if (decisions.class_labels?.status === "auto" && !classLabels.length) {
+      fail("automatic class_labels decision must not be empty.");
+    }
+    const audienceFocus = decisions.audience_focus?.value;
+    if (audienceFocus != null && !classLabels.includes(audienceFocus)) {
+      fail("audience_focus must be one of the proposed class_labels.");
     }
   }
   const decisionEntries = Object.entries(decisions).map(([field, decision]) => ({ field, ...decision }));
