@@ -1,0 +1,57 @@
+{
+  "status": "prepared-only-not-authorized-for-production-execution",
+  "targetProjectRef": "kezelafqhgqrprpadmlf",
+  "sourcePolicy": "exact reviewed sources; production guards and transaction framing are generated locally",
+  "generator": {
+    "path": "src/scripts/buildForumSuspensionAdminProductionPackage.js",
+    "sha256": "d236010f89c804a75a85b736aadf8c488651084f10195f0d840835846dc54968"
+  },
+  "sources": {
+    "preflight": {
+      "path": "src/migrations/forum_suspension_admin_v1_preflight.sql",
+      "sha256": "f72b8b986c51b7d4e9d8152c8fb7c7be90b74efb17c81c393daedb3463eb4860"
+    },
+    "audit": {
+      "path": "src/migrations/forum_suspension_admin_v1_audit.sql",
+      "sha256": "ee05eef1cddaf809a4243e42f2037ac0ccd41797f55b2c13f40096549192f6f5"
+    },
+    "migration": {
+      "path": "src/migrations/forum_suspension_admin_v1.sql",
+      "sha256": "b3aedd53e5277a61d65ceff6f2b726d284dc0b28b9891af87af86230b13da49c"
+    },
+    "postflight": {
+      "path": "src/migrations/forum_suspension_admin_v1_postflight.sql",
+      "sha256": "3bbb66f082dca359a8133605536baaf112d7f464cb20f8f03bb2fe80ca5bb3d1"
+    },
+    "rollback": {
+      "path": "src/migrations/forum_suspension_admin_v1_rollback.sql",
+      "sha256": "bdbb1e893ea28530254e847e0e8b15889e54ae714e9bc82035fc89e94b073b4c"
+    }
+  },
+  "artifacts": {
+    "preflight.sql": {
+      "path": "production/forum_suspension_admin_v1_release/preflight.sql",
+      "sha256": "bf9d3252959ab7581791fdddd2131f422c883b9f6da34e9aaa7eafbe6cf5363a"
+    },
+    "audit.sql": {
+      "path": "production/forum_suspension_admin_v1_release/audit.sql",
+      "sha256": "9f3605335ca53dc365132389ba76bbcc0f53aa45ad790a65a7cd8bb2cdef26de"
+    },
+    "install.sql": {
+      "path": "production/forum_suspension_admin_v1_release/install.sql",
+      "sha256": "0f7ecfa2a9fed99a3be11a0bd67fb59f31d3acba2421fe22bd4fadf71b90a24d"
+    },
+    "postflight.sql": {
+      "path": "production/forum_suspension_admin_v1_release/postflight.sql",
+      "sha256": "90e41614547d32671b06b70471fbccdcdc84214f27434a7f7276edb2da1499e0"
+    },
+    "rollback.sql": {
+      "path": "production/forum_suspension_admin_v1_release/rollback.sql",
+      "sha256": "9f425b46bfff0140e2b01b9cc57b4fee4da35a5dbf4d53de61c67226b843b48d"
+    },
+    "README.md": {
+      "path": "production/forum_suspension_admin_v1_release/README.md",
+      "sha256": "d90ce495a9aaeb748ff6cf4ea2efb2558433fcb72af2f14419c65bec85aa2770"
+    }
+  }
+}
