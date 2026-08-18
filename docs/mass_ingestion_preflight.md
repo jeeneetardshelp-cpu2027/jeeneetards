@@ -377,6 +377,8 @@ candidate remains a human-review item; ambiguity is never broken automatically.
 Chapter candidates are restricted to IDs from the resolved subject's live
 chapter list. If the subject needs review, every per-video chapter stays manual;
 ambiguous and unmatched chapter rows are surfaced instead of guessed.
+The proposal deliberately has no singular top-level `chapter_id`: the v12
+mapped importer forbids it and requires one reviewed chapter ID per video.
 The runner refuses repository-local output and refuses to overwrite an existing
 bundle unless `--overwrite` is supplied.
 

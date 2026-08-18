@@ -40,6 +40,7 @@ describe("proposeTaxonomy teacher integration", () => {
       status: "review",
       candidates: [],
     });
-    expect(result.summary.manualFields).toEqual(["chapter_id", "category_id", "board_ids"]);
+    expect(result.summary.manualFields).toEqual(["category_id", "board_ids"]);
+    expect(result.decisions).not.toHaveProperty("chapter_id");
   });
 });

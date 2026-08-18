@@ -15,7 +15,6 @@ import { proposeTeacher } from "./proposeTeacher.js";
 
 // Fields the current pipeline does not attempt. They stay the operator's job.
 const MANUAL_FIELDS = Object.freeze({
-  chapter_id: "per-video LLM mapping (Phase 2)",
   category_id: "no reliable title signal — map from learning goal by hand",
   board_ids: "empty for JEE/NEET; set only in the School journey",
 });
