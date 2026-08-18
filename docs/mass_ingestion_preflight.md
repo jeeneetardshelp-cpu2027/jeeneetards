@@ -380,6 +380,18 @@ ambiguous and unmatched chapter rows are surfaced instead of guessed.
 The runner refuses repository-local output and refuses to overwrite an existing
 bundle unless `--overwrite` is supplied.
 
+Verify a bundle again before asking a human to review it or using it as evidence:
+
+```powershell
+npm.cmd run verify:ingestion-review -- --bundle=<REVIEW_JSON_PATH>
+```
+
+This verifier is offline: it reads one local file and writes nothing. It
+recomputes the embedded source and taxonomy hashes, checks project identity and
+the read-only safety flags, confirms every proposed ID exists in the embedded
+taxonomy, and requires one chapter row for every source video. It exits nonzero
+if the bundle was altered or its internal review coverage is inconsistent.
+
 Use `--env=staging` only when the staging environment file points to the
 intended read-only comparison target. This command performs no database write,
 RPC, migration, fixture creation, import, or deployment. A reviewed bundle does

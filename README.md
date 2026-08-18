@@ -115,6 +115,7 @@ the local `.env` file or any privileged credential.
 | `npm run verify:production-capabilities` | Read-only check that production API capabilities match the frontend flags |
 | `npm run audit:production-catalog` | Read-only anonymous inventory of live catalogue metadata and coverage |
 | `npm run review:ingestion -- --playlist=<ID> --expected-project-ref=<REF>` | Build an outside-repository, read-only human-review bundle from real YouTube metadata and live public taxonomy |
+| `npm run verify:ingestion-review -- --bundle=<FILE>` | Offline integrity check for a generated ingestion human-review bundle |
 | `npm run ui:audit` | Run the responsive browser audit and fail on objective layout/accessibility regressions |
 | `npm run pack:review` | Build a review archive outside the repository |
 
