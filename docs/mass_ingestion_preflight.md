@@ -360,8 +360,9 @@ npm.cmd run review:ingestion -- --playlist=<PLAYLIST_ID> --env=production --expe
 
 The runner uses only `YOUTUBE_API_KEY` and the Supabase anonymous key. It reads
 the playlist owner, description, ordered usable videos, subjects, learning
-goals, verified teachers, and verified aliases. It then calls
-`proposeTaxonomy()` and writes a snapshot-hashed review bundle under
+goals, chapters, verified teachers, and verified aliases. It then calls
+`proposeTaxonomy()`, runs the rules-only per-video chapter mapper when the
+subject is safely resolved, and writes a snapshot-hashed review bundle under
 `../outputs/ingestion-review/` by default.
 
 `--expected-project-ref` is mandatory. Before making any network read, the
@@ -373,6 +374,9 @@ The bundle is deliberately not an import manifest. It records
 `writes_attempted: false`, `importable: false`, every non-automatic decision,
 source/taxonomy SHA-256 values, and metadata warnings. Even one verified faculty
 candidate remains a human-review item; ambiguity is never broken automatically.
+Chapter candidates are restricted to IDs from the resolved subject's live
+chapter list. If the subject needs review, every per-video chapter stays manual;
+ambiguous and unmatched chapter rows are surfaced instead of guessed.
 The runner refuses repository-local output and refuses to overwrite an existing
 bundle unless `--overwrite` is supplied.
 

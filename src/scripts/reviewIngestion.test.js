@@ -6,6 +6,7 @@ import {
   assertDatabaseProject,
   assertEnvironmentMarker,
   assertReviewOutputAvailable,
+  buildChapterReview,
   buildReviewBundle,
   collectIngestionReview,
   loadRunnerEnvironment,
@@ -21,6 +22,10 @@ const taxonomy = {
   marker: null,
   subjects: [{ id: 1, name: "Physics", slug: "physics" }],
   learningGoals: [{ id: 10, name: "JEE", slug: "jee" }],
+  chapters: [
+    { id: 101, subject_id: 1, name: "Kinematics", slug: "kinematics", display_order: 1 },
+    { id: 102, subject_id: 1, name: "Laws of Motion", slug: "laws-of-motion", display_order: 2 },
+  ],
   teachers: [{
     id: 34,
     display_name: "Alakh Pandey",
@@ -137,7 +142,7 @@ describe("human-review bundle", () => {
     });
 
     expect(bundle).toMatchObject({
-      schema_version: 1,
+      schema_version: 2,
       kind: "ingestion-human-review",
       safety: {
         runner_mode: "read-only",
@@ -159,9 +164,46 @@ describe("human-review bundle", () => {
       requiresReview: true,
     });
     expect(bundle.human_review.items.map((item) => item.field)).toContain("teacher_id");
+    expect(bundle.chapter_review).toMatchObject({
+      eligible: true,
+      subject_id: 1,
+      subject_name: "Physics",
+      taxonomy_chapter_count: 2,
+      summary: { total: 1, auto: 1, review: 0, unmatched: 0, manual: 0 },
+    });
+    expect(bundle.chapter_review.rows[0]).toMatchObject({
+      youtube_video_id: "abcdefghijk",
+      chapter_id: 101,
+      chapter_name: "Kinematics",
+      status: "auto",
+    });
     expect(bundle.source.sha256).toMatch(/^[0-9a-f]{64}$/u);
     expect(bundle.taxonomy.sha256).toMatch(/^[0-9a-f]{64}$/u);
     expect(bundle).not.toHaveProperty("assignments");
+  });
+
+  it("keeps every chapter manual until the subject is safely resolved", () => {
+    const chapterReview = buildChapterReview({
+      sourceVideos: [{ position: 1, youtube_video_id: "abcdefghijk", title: "Kinematics" }],
+      taxonomy,
+      subjectDecision: { value: 1, subjectName: "Physics", status: "review" },
+    });
+    expect(chapterReview).toMatchObject({
+      eligible: false,
+      summary: { total: 1, auto: 0, review: 0, unmatched: 0, manual: 1 },
+      rows: [{ chapter_id: null, status: "manual" }],
+    });
+  });
+
+  it("fails closed if the live subject has duplicate chapter names", () => {
+    expect(() => buildChapterReview({
+      sourceVideos: [{ position: 1, youtube_video_id: "abcdefghijk", title: "Kinematics" }],
+      taxonomy: {
+        ...taxonomy,
+        chapters: [...taxonomy.chapters, { id: 103, subject_id: 1, name: "Kinematics" }],
+      },
+      subjectDecision: { value: 1, subjectName: "Physics", status: "auto" },
+    })).toThrow("duplicate chapter name");
   });
 
   it("orchestrates YouTube and taxonomy reads without accepting mismatched source identity", async () => {

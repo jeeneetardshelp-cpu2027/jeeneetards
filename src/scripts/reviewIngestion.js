@@ -11,6 +11,7 @@ import { dirname, isAbsolute, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { allExact, client, must, readEnv } from "./dbProbe.js";
 import { getPlaylistOwner, getPlaylistVideos } from "./youtubeNode.js";
+import { draftAssignments } from "./classify/mapChapters.js";
 import { proposeTaxonomy } from "./classify/proposeTaxonomy.js";
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -136,10 +137,11 @@ function selectAllExact(db, table, columns, configure = (query) => query) {
 }
 
 export async function loadLiveTaxonomy(db) {
-  const [markerResponse, subjects, learningGoals, teachers, aliases] = await Promise.all([
+  const [markerResponse, subjects, learningGoals, chapters, teachers, aliases] = await Promise.all([
     db.from("app_environment").select("name").maybeSingle(),
     selectAllExact(db, "subjects", "id,name,slug"),
     selectAllExact(db, "learning_goals", "id,name,slug"),
+    selectAllExact(db, "chapters", "id,subject_id,name,slug,display_order"),
     selectAllExact(db, "teachers", "id,display_name,verified"),
     selectAllExact(
       db,
@@ -162,6 +164,7 @@ export async function loadLiveTaxonomy(db) {
     marker,
     subjects,
     learningGoals,
+    chapters,
     teachers: [...teachersById.values()],
   };
 }
@@ -227,6 +230,86 @@ function sourceVideo(video, index) {
   };
 }
 
+function manualChapterRows(sourceVideos, reason) {
+  return sourceVideos.map((video) => ({
+    position: video.position,
+    youtube_video_id: video.youtube_video_id,
+    title: video.title,
+    chapter_id: null,
+    chapter_name: null,
+    confidence: 0,
+    status: "manual",
+    reason,
+    alternatives: [],
+  }));
+}
+
+export function buildChapterReview({ sourceVideos, taxonomy, subjectDecision } = {}) {
+  const videos = Array.isArray(sourceVideos) ? sourceVideos : [];
+  const unavailable = (reason) => ({
+    eligible: false,
+    subject_id: subjectDecision?.value ?? null,
+    subject_name: subjectDecision?.subjectName ?? null,
+    taxonomy_chapter_count: 0,
+    reason,
+    summary: { total: videos.length, auto: 0, review: 0, unmatched: 0, manual: videos.length },
+    rows: manualChapterRows(videos, reason),
+  });
+
+  if (subjectDecision?.status !== "auto" || subjectDecision.value == null) {
+    return unavailable("subject must be auto-resolved before chapter matching");
+  }
+  const subject = (taxonomy?.subjects ?? []).find((row) => row.id === subjectDecision.value);
+  if (!subject) throw new Error(`proposed subject ${subjectDecision.value} is absent from taxonomy.`);
+  const chapters = (taxonomy?.chapters ?? []).filter((row) => row.subject_id === subject.id);
+  if (!chapters.length) return unavailable(`subject "${subject.name}" has no live chapters`);
+
+  const chaptersByName = new Map();
+  for (const chapter of chapters) {
+    if (chaptersByName.has(chapter.name)) {
+      throw new Error(`subject "${subject.name}" has duplicate chapter name "${chapter.name}".`);
+    }
+    chaptersByName.set(chapter.name, chapter);
+  }
+  const mapped = draftAssignments(
+    videos.map((video) => ({
+      videoId: video.youtube_video_id,
+      title: video.title,
+      position: video.position,
+    })),
+    chapters.map((chapter) => chapter.name),
+  );
+  const rows = mapped.rows.map((row) => {
+    const chapter = row.chapter ? chaptersByName.get(row.chapter) : null;
+    if (row.chapter && !chapter) {
+      throw new Error(`chapter mapper returned non-taxonomy value "${row.chapter}".`);
+    }
+    return {
+      position: row.position,
+      youtube_video_id: row.youtube_video_id,
+      title: row.title,
+      chapter_id: chapter?.id ?? null,
+      chapter_name: chapter?.name ?? null,
+      confidence: row.confidence,
+      status: !chapter ? "unmatched" : row.review ? "review" : "auto",
+      reason: row.reason,
+      alternatives: row.alternatives.map((name) => ({
+        chapter_id: chaptersByName.get(name)?.id ?? null,
+        chapter_name: name,
+      })),
+    };
+  });
+  return {
+    eligible: true,
+    subject_id: subject.id,
+    subject_name: subject.name,
+    taxonomy_chapter_count: chapters.length,
+    reason: "rules-only mapping against live chapters",
+    summary: { ...mapped.summary, manual: 0 },
+    rows,
+  };
+}
+
 export function buildReviewBundle({
   environment,
   expectedProjectRef,
@@ -252,6 +335,11 @@ export function buildReviewBundle({
     videoTags: sourceVideos.map((video) => video.tags),
   };
   const proposal = proposeTaxonomy(classifierMetadata, taxonomy);
+  const chapterReview = buildChapterReview({
+    sourceVideos,
+    taxonomy,
+    subjectDecision: proposal.decisions.subject_id,
+  });
   const reviewItems = Object.entries(proposal.decisions)
     .filter(([, decision]) => decision.status !== "auto")
     .map(([field, decision]) => ({ field, ...decision }));
@@ -270,10 +358,11 @@ export function buildReviewBundle({
   const taxonomySnapshot = {
     subjects: taxonomy.subjects,
     learningGoals: taxonomy.learningGoals,
+    chapters: taxonomy.chapters,
     teachers: taxonomy.teachers,
   };
   return {
-    schema_version: 1,
+    schema_version: 2,
     kind: "ingestion-human-review",
     generated_at: generatedAt,
     safety: {
@@ -288,7 +377,14 @@ export function buildReviewBundle({
       expected_project_ref: expectedProjectRef,
       project_ref: actualProjectRef,
       marker: taxonomy.marker,
-      read_tables: ["app_environment", "subjects", "learning_goals", "teachers", "teacher_aliases"],
+      read_tables: [
+        "app_environment",
+        "subjects",
+        "learning_goals",
+        "chapters",
+        "teachers",
+        "teacher_aliases",
+      ],
     },
     source: {
       ...sourceSnapshot,
@@ -299,6 +395,7 @@ export function buildReviewBundle({
       sha256: sha256Json(taxonomySnapshot),
     },
     proposal,
+    chapter_review: chapterReview,
     human_review: {
       warnings,
       items: reviewItems,
@@ -373,6 +470,10 @@ export async function main(argv = process.argv.slice(2)) {
     auto_fields: bundle.proposal.summary.auto,
     review_fields: bundle.proposal.summary.review,
     manual_fields: bundle.proposal.summary.manual,
+    chapter_auto: bundle.chapter_review.summary.auto,
+    chapter_review: bundle.chapter_review.summary.review,
+    chapter_unmatched: bundle.chapter_review.summary.unmatched,
+    chapter_manual: bundle.chapter_review.summary.manual,
     warnings: bundle.human_review.warnings.length,
     writes_attempted: false,
   }, null, 2));
