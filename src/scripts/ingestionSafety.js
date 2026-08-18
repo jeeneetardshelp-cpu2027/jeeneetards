@@ -200,7 +200,11 @@ export function validateChapterManifest({ manifest, playlistId, teacher, videos 
     if (!courseTitle) {
       throw new Error("Chapter manifest course_title must be a non-empty string.");
     }
-    if (courseTitle.length > 160 || /[\u0000-\u001f\u007f]/.test(courseTitle)) {
+    const hasControlCharacter = [...courseTitle].some((character) => {
+      const codePoint = character.codePointAt(0);
+      return codePoint <= 0x1f || codePoint === 0x7f;
+    });
+    if (courseTitle.length > 160 || hasControlCharacter) {
       throw new Error(
         "Chapter manifest course_title must be at most 160 characters and contain no control characters.",
       );
