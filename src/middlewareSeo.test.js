@@ -18,7 +18,6 @@ describe("edge-rendered discovery landings", () => {
   it("matches application paths while excluding built and public assets", () => {
     expect(config.matcher).toHaveLength(1);
     expect(config.matcher[0]).toContain("assets/");
-    expect(config.matcher[0]).toContain("study-materials/");
     expect(config.matcher[0]).toContain("robots\\.txt");
   });
 

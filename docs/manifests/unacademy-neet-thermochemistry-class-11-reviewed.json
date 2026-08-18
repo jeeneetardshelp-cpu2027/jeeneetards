@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "request_id": "148deabc-045a-48a3-8da2-db1fda589d1e",
+  "youtube_playlist_id": "PLsgHooHkqhhMSvDuuO5dL3-iba7hfWB6F",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "e6539ac8-512b-4e76-8bd1-774c1a3c4bdc",
+    "youtube_playlist_id": "PLsgHooHkqhhMSvDuuO5dL3-iba7hfWB6F",
+    "teacher": "Ashwani Tyagi",
+    "source_url": "https://www.youtube.com/playlist?list=PLsgHooHkqhhMSvDuuO5dL3-iba7hfWB6F",
+    "source_label": "Official Unacademy NEET channel-owned Thermochemistry playlist naming Ashwani Tyagi; all three retained lecture titles name Ashwani Sir",
+    "reviewed_by": "Owner",
+    "reviewed_on": "2026-08-07",
+    "youtube_video_ids": ["xpTqTM1fk1c", "iQ-a7mYRBEk", "7_lzRbhRJYA"]
+  },
+  "assignments": [
+    { "position": 1, "youtube_video_id": "xpTqTM1fk1c", "chapter": "Thermochemistry", "lesson_number": 1 },
+    { "position": 2, "youtube_video_id": "iQ-a7mYRBEk", "chapter": "Thermochemistry", "lesson_number": 2 },
+    { "position": 3, "youtube_video_id": "7_lzRbhRJYA", "chapter": "Thermochemistry", "lesson_number": 3 }
+  ],
+  "exclusions": [
+    { "position": 4, "youtube_video_id": "cv6mAJ4wd3Q", "reason": "quiz" }
+  ]
+}

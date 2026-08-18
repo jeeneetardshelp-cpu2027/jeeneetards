@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "request_id": "b1becadf-8fa9-4106-a1ec-8d94eb00c4cd",
+  "youtube_playlist_id": "PLsgHooHkqhhOkppPbQFJ1cbTT_IRK2zY9",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "a6ed2229-85bd-4f4a-afea-fd7f3a166199",
+    "youtube_playlist_id": "PLsgHooHkqhhOkppPbQFJ1cbTT_IRK2zY9",
+    "teacher": "Pradeep Singh",
+    "source_url": "https://www.youtube.com/playlist?list=PLsgHooHkqhhOkppPbQFJ1cbTT_IRK2zY9",
+    "source_label": "Official Unacademy NEET channel-owned Plant Morphology playlist naming Pradeep Singh and every retained lecture title naming Pradeep Sir or Pradeep Singh",
+    "reviewed_by": "Owner",
+    "reviewed_on": "2026-08-04",
+    "youtube_video_ids": [
+      "2XXIvQpy2EM", "7Ss55Hha0yQ", "UGB1_IooYLw", "2gP_oL1p0Vo", "KN_fJ5HsY6c", "-pgrAyOatgc",
+      "3n8iLdXDks8", "SB55qQ8eBkQ", "_7p5IIMYazQ", "iv6MNkTqt7A", "oPDkjsuEWQc", "nmrIXEzlFOk",
+      "hVkNqDChxl0", "CpraMAJaW2I", "3JEkDFUNYMM", "ekEIsC6m0Ng", "44GQ7jpC6uc", "WeA56qt_0Fc"
+    ]
+  },
+  "assignments": [
+    { "position": 1, "youtube_video_id": "2XXIvQpy2EM", "chapter": "Morphology of Flowering Plants", "lesson_number": 1 },
+    { "position": 2, "youtube_video_id": "7Ss55Hha0yQ", "chapter": "Morphology of Flowering Plants", "lesson_number": 2 },
+    { "position": 3, "youtube_video_id": "UGB1_IooYLw", "chapter": "Morphology of Flowering Plants", "lesson_number": 3 },
+    { "position": 4, "youtube_video_id": "2gP_oL1p0Vo", "chapter": "Morphology of Flowering Plants", "lesson_number": 4 },
+    { "position": 5, "youtube_video_id": "KN_fJ5HsY6c", "chapter": "Morphology of Flowering Plants", "lesson_number": 5 },
+    { "position": 6, "youtube_video_id": "-pgrAyOatgc", "chapter": "Morphology of Flowering Plants", "lesson_number": 6 },
+    { "position": 7, "youtube_video_id": "3n8iLdXDks8", "chapter": "Morphology of Flowering Plants", "lesson_number": 7 },
+    { "position": 8, "youtube_video_id": "SB55qQ8eBkQ", "chapter": "Morphology of Flowering Plants", "lesson_number": 8 },
+    { "position": 9, "youtube_video_id": "_7p5IIMYazQ", "chapter": "Morphology of Flowering Plants", "lesson_number": 9 },
+    { "position": 10, "youtube_video_id": "iv6MNkTqt7A", "chapter": "Morphology of Flowering Plants", "lesson_number": 10 },
+    { "position": 11, "youtube_video_id": "oPDkjsuEWQc", "chapter": "Morphology of Flowering Plants", "lesson_number": 11 },
+    { "position": 12, "youtube_video_id": "nmrIXEzlFOk", "chapter": "Morphology of Flowering Plants", "lesson_number": 12 },
+    { "position": 13, "youtube_video_id": "hVkNqDChxl0", "chapter": "Morphology of Flowering Plants", "lesson_number": 13 },
+    { "position": 14, "youtube_video_id": "CpraMAJaW2I", "chapter": "Morphology of Flowering Plants", "lesson_number": 14 },
+    { "position": 15, "youtube_video_id": "3JEkDFUNYMM", "chapter": "Morphology of Flowering Plants", "lesson_number": 15 },
+    { "position": 19, "youtube_video_id": "ekEIsC6m0Ng", "chapter": "Morphology of Flowering Plants", "lesson_number": 16 },
+    { "position": 20, "youtube_video_id": "44GQ7jpC6uc", "chapter": "Morphology of Flowering Plants", "lesson_number": 17 },
+    { "position": 21, "youtube_video_id": "WeA56qt_0Fc", "chapter": "Morphology of Flowering Plants", "lesson_number": 18 }
+  ],
+  "exclusions": [
+    { "position": 16, "youtube_video_id": "MYV1cdavKlc", "reason": "Menti quiz; keep practice separate from the lecture catalogue." },
+    { "position": 17, "youtube_video_id": "WSk1g5XYblU", "reason": "Menti quiz; keep practice separate from the lecture catalogue." },
+    { "position": 18, "youtube_video_id": "lzMEDD_1CRU", "reason": "Menti quiz; keep practice separate from the lecture catalogue." }
+  ]
+}

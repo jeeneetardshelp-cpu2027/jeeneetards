@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
+import { MemoryRouter } from "react-router";
 import { ThemeProvider } from "./theme.jsx";
 import CourseOverview from "./CourseOverview.jsx";
 import { mapCourseDetail } from "./usePlaylistVideos.js";
@@ -16,7 +17,11 @@ const playlist = (overrides = {}) => ({
   difficulty: "advanced",
   class_levels: [],
   last_verified_at: "2026-07-20T00:00:00Z",
-  institutes_channels: { name: "Competishun" },
+  institutes_channels: {
+    id: 81,
+    name: "Competishun",
+    logo_url: "https://yt3.ggpht.com/competishun=s88",
+  },
   subjects: { name: "Physics" },
   playlist_learning_goals: [{ learning_goals: { name: "JEE", slug: "jee" } }],
   playlist_class_levels: [{ class_levels: { name: "Class 11", slug: "class-11" } }],
@@ -48,6 +53,8 @@ describe("course detail mapping", () => {
     expect(mapped.course.totalDurationSeconds).toBe(3600);
     expect(mapped.course.classLevels).toEqual(["Class 11"]);
     expect(mapped.course.learningGoals).toEqual(["JEE"]);
+    expect(mapped.course.instituteId).toBe(81);
+    expect(mapped.course.instituteLogoUrl).toBe("https://yt3.ggpht.com/competishun=s88");
   });
 
   it("never turns incomplete duration or availability into a plausible zero", () => {
@@ -71,20 +78,25 @@ describe("course overview truthfulness", () => {
     const { course } = mapCourseDetail(playlist(), [
       row(1, 1), row(2, 2, { embedding_status: "blocked" }),
     ]);
-    render(
-      <ThemeProvider>
-        <CourseOverview
-          course={course}
-          lessons={lessons}
-          watchedIds={["video-1"]}
-          continueLesson={lessons[1]}
-          onStart={onStart}
-        />
-      </ThemeProvider>,
+    const { container } = render(
+      <MemoryRouter>
+        <ThemeProvider>
+          <CourseOverview
+            course={course}
+            lessons={lessons}
+            watchedIds={["video-1"]}
+            continueLesson={lessons[1]}
+            onStart={onStart}
+          />
+        </ThemeProvider>
+      </MemoryRouter>,
     );
 
     expect(screen.getByRole("heading", { name: "Complete Kinematics" })).toBeTruthy();
     expect(screen.getByText("ABJ Sir")).toBeTruthy();
+    expect(container.querySelector('img[src="https://yt3.ggpht.com/competishun=s88"]')).toBeTruthy();
+    expect(screen.getByRole("link", { name: "View all courses from Competishun" })
+      .getAttribute("href")).toBe("/browse?channel=81");
     expect(screen.getByText("1h 0m")).toBeTruthy();
     expect(screen.getByText("Kinematics")).toBeTruthy();
     expect(screen.getByText(/not a claim of complete syllabus coverage/i)).toBeTruthy();
@@ -96,9 +108,11 @@ describe("course overview truthfulness", () => {
   it("shows one rating as a count, never as a comparative score", () => {
     const { course } = mapCourseDetail(playlist({ average_rating: 5, ratings_count: 1 }), [row(1, 1)]);
     render(
-      <ThemeProvider>
-        <CourseOverview course={course} lessons={[lessons[0]]} onStart={() => {}} />
-      </ThemeProvider>,
+      <MemoryRouter>
+        <ThemeProvider>
+          <CourseOverview course={course} lessons={[lessons[0]]} onStart={() => {}} />
+        </ThemeProvider>
+      </MemoryRouter>,
     );
     expect(screen.getByText("1 student rating")).toBeTruthy();
     expect(screen.queryByText("5.0")).toBeNull();
@@ -109,9 +123,11 @@ describe("course overview truthfulness", () => {
       row(1, 1, { duration_seconds: null }),
     ]);
     render(
-      <ThemeProvider>
-        <CourseOverview course={course} lessons={[lessons[0]]} onStart={() => {}} />
-      </ThemeProvider>,
+      <MemoryRouter>
+        <ThemeProvider>
+          <CourseOverview course={course} lessons={[lessons[0]]} onStart={() => {}} />
+        </ThemeProvider>
+      </MemoryRouter>,
     );
     expect(screen.queryByText("0m")).toBeNull();
     expect(screen.queryByText(/% coverage/i)).toBeNull();

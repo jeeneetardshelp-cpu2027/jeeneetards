@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "request_id": "9d84d0e0-1045-446d-85bd-3d9a3ecc1b38",
+  "youtube_playlist_id": "PLsgHooHkqhhPG_PVhW2TE7Ll_Rw2QUdu5",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "8f19ac66-a1b4-4304-8a6f-468131f63732",
+    "youtube_playlist_id": "PLsgHooHkqhhPG_PVhW2TE7Ll_Rw2QUdu5",
+    "teacher": "Dr. Sachin Kapur",
+    "source_url": "https://www.youtube.com/playlist?list=PLsgHooHkqhhPG_PVhW2TE7Ll_Rw2QUdu5",
+    "source_label": "Official Unacademy NEET channel-owned Excretory Products playlist naming Dr. Sachin Kapur; every retained Lecture 1-7 title names Dr. Sachin Kapur and all five excluded rows are quizzes",
+    "reviewed_by": "Owner",
+    "reviewed_on": "2026-08-07",
+    "youtube_video_ids": ["1u3F_NiQ7WY", "bzI9ss05Rms", "FD-DbUnla_o", "M_BaySNiTfY", "TjuciK33QmU", "m7KXt6x_-PM", "gTlmFUV9mhA"]
+  },
+  "assignments": [
+    { "position": 1, "youtube_video_id": "1u3F_NiQ7WY", "chapter": "Excretory Products and Their Elimination", "lesson_number": 1 },
+    { "position": 2, "youtube_video_id": "bzI9ss05Rms", "chapter": "Excretory Products and Their Elimination", "lesson_number": 2 },
+    { "position": 3, "youtube_video_id": "FD-DbUnla_o", "chapter": "Excretory Products and Their Elimination", "lesson_number": 3 },
+    { "position": 4, "youtube_video_id": "M_BaySNiTfY", "chapter": "Excretory Products and Their Elimination", "lesson_number": 4 },
+    { "position": 5, "youtube_video_id": "TjuciK33QmU", "chapter": "Excretory Products and Their Elimination", "lesson_number": 5 },
+    { "position": 6, "youtube_video_id": "m7KXt6x_-PM", "chapter": "Excretory Products and Their Elimination", "lesson_number": 6 },
+    { "position": 7, "youtube_video_id": "gTlmFUV9mhA", "chapter": "Excretory Products and Their Elimination", "lesson_number": 7 }
+  ],
+  "exclusions": [
+    { "position": 8, "youtube_video_id": "PsE8SKOiPjI", "reason": "quiz" },
+    { "position": 9, "youtube_video_id": "ksg_G4wspoo", "reason": "quiz" },
+    { "position": 10, "youtube_video_id": "or_vWBmX8zw", "reason": "quiz" },
+    { "position": 11, "youtube_video_id": "XCHhq6G4RIE", "reason": "mixed_chapter_quiz" },
+    { "position": 12, "youtube_video_id": "F4WCVEiZr_8", "reason": "mixed_chapter_quiz" }
+  ]
+}

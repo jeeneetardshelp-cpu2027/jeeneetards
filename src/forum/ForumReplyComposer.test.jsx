@@ -35,4 +35,31 @@ describe("forum answer composer", () => {
     expect([...Array(localStorage.length)].some((_, index) => localStorage.getItem(localStorage.key(index))?.includes("L_i=L_f")))
       .toBe(true);
   });
+
+  it("shows the answer composer to a beta member and a read-only notice to a non-member", async () => {
+    const memberApi = {
+      getMyIdentity: vi.fn().mockResolvedValue({ username: "answerer", needs_username: false }),
+      getBetaMembership: vi.fn().mockResolvedValue(true),
+      createComment: vi.fn().mockResolvedValue(1),
+    };
+    const member = render(
+      <ThemeProvider><MemoryRouter>
+        <ForumReplyComposer postId={42} mode="beta" locked={false} api={memberApi} />
+      </MemoryRouter></ThemeProvider>,
+    );
+    expect(await screen.findByRole("button", { name: "Publish answer" })).toBeTruthy();
+    member.unmount();
+
+    const outsiderApi = {
+      getMyIdentity: vi.fn().mockResolvedValue({ username: "outsider", needs_username: false }),
+      getBetaMembership: vi.fn().mockResolvedValue(false),
+    };
+    render(
+      <ThemeProvider><MemoryRouter>
+        <ForumReplyComposer postId={42} mode="beta" locked={false} api={outsiderApi} />
+      </MemoryRouter></ThemeProvider>,
+    );
+    expect(await screen.findByRole("heading", { name: "Answers are in closed beta" })).toBeTruthy();
+    expect(screen.queryByRole("button", { name: "Publish answer" })).toBeNull();
+  });
 });

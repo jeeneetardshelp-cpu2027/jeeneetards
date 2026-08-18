@@ -199,6 +199,15 @@ export function metadataForLocation(pathname = "/", search = "") {
     };
   }
 
+  if (path === "/signin") {
+    return {
+      ...base,
+      title: `Sign in | ${SITE_NAME}`,
+      description: "Sign in to carry your watch progress across devices and rate courses. Browsing needs no account.",
+      robots: "noindex, nofollow",
+    };
+  }
+
   if (path === "/admin") {
     return {
       ...base,

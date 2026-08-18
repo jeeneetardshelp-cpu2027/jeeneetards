@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "request_id": "46412e32-1706-4ca2-8c52-ba1736dbacf8",
+  "youtube_playlist_id": "PLsgHooHkqhhNIEDFQnuZzTGUq9Nl2BANa",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "b988e5f2-fbf5-4cba-bb7a-54d3dd35a3a6",
+    "youtube_playlist_id": "PLsgHooHkqhhNIEDFQnuZzTGUq9Nl2BANa",
+    "teacher": "Pradeep Singh",
+    "source_url": "https://www.youtube.com/playlist?list=PLsgHooHkqhhNIEDFQnuZzTGUq9Nl2BANa",
+    "source_label": "Official Unacademy NEET channel-owned Sexual Reproduction in Flowering Plants playlist naming Pradeep Singh; every retained lecture title names Pradeep Sir",
+    "reviewed_by": "Owner",
+    "reviewed_on": "2026-08-05",
+    "youtube_video_ids": [
+      "Pcl8HPH1GO8", "zSexGJHIJRg", "BExnSdrqDC8", "ob9op2oduPE", "v2-RdAN7MlA", "rmhgK7vpqwI",
+      "Ou2VMCl92fs", "C5j-8Cu6MM4", "eesPE96soRQ", "Rfr_q0u6PBQ", "FwBhodGRxGU", "97jlP53_YLQ"
+    ]
+  },
+  "assignments": [
+    { "position": 1, "youtube_video_id": "Pcl8HPH1GO8", "chapter": "Sexual Reproduction in Flowering Plants", "lesson_number": 1 },
+    { "position": 2, "youtube_video_id": "zSexGJHIJRg", "chapter": "Sexual Reproduction in Flowering Plants", "lesson_number": 2 },
+    { "position": 3, "youtube_video_id": "BExnSdrqDC8", "chapter": "Sexual Reproduction in Flowering Plants", "lesson_number": 3 },
+    { "position": 4, "youtube_video_id": "ob9op2oduPE", "chapter": "Sexual Reproduction in Flowering Plants", "lesson_number": 4 },
+    { "position": 5, "youtube_video_id": "v2-RdAN7MlA", "chapter": "Sexual Reproduction in Flowering Plants", "lesson_number": 5 },
+    { "position": 6, "youtube_video_id": "rmhgK7vpqwI", "chapter": "Sexual Reproduction in Flowering Plants", "lesson_number": 6 },
+    { "position": 7, "youtube_video_id": "Ou2VMCl92fs", "chapter": "Sexual Reproduction in Flowering Plants", "lesson_number": 7 },
+    { "position": 8, "youtube_video_id": "C5j-8Cu6MM4", "chapter": "Sexual Reproduction in Flowering Plants", "lesson_number": 8 },
+    { "position": 9, "youtube_video_id": "eesPE96soRQ", "chapter": "Sexual Reproduction in Flowering Plants", "lesson_number": 9 },
+    { "position": 10, "youtube_video_id": "Rfr_q0u6PBQ", "chapter": "Sexual Reproduction in Flowering Plants", "lesson_number": 10 },
+    { "position": 12, "youtube_video_id": "FwBhodGRxGU", "chapter": "Sexual Reproduction in Flowering Plants", "lesson_number": 11 },
+    { "position": 15, "youtube_video_id": "97jlP53_YLQ", "chapter": "Sexual Reproduction in Flowering Plants", "lesson_number": 12 }
+  ],
+  "exclusions": [
+    { "position": 11, "youtube_video_id": "OcFOLqDQuzg", "reason": "Menti quiz; keep practice separate from the lecture catalogue." },
+    { "position": 13, "youtube_video_id": "3cC30gC9m84", "reason": "Broad reproduction mega quiz; keep practice separate from the lecture catalogue." },
+    { "position": 14, "youtube_video_id": "LEC7jujH9lM", "reason": "Broad reproduction mega quiz; keep practice separate from the lecture catalogue." }
+  ]
+}

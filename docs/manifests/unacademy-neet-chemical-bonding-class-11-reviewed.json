@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "request_id": "01d5573e-11ab-4469-9270-82782a5ecd6b",
+  "youtube_playlist_id": "PLsgHooHkqhhOpvf0vvBRLS91fUm9T_eE1",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "6579f542-da9b-499f-bd46-3aa796ea4f27",
+    "youtube_playlist_id": "PLsgHooHkqhhOpvf0vvBRLS91fUm9T_eE1",
+    "teacher": "Ashwani Tyagi",
+    "source_url": "https://www.youtube.com/@UnacademyNEET",
+    "source_label": "Official Unacademy NEET channel-owned playlist and retained source titles naming Ashwani Tyagi or Ashwani Sir",
+    "reviewed_by": "Owner",
+    "reviewed_on": "2026-08-03",
+    "youtube_video_ids": [
+      "N1k3LoYa4bE", "UNzwGiPpteU", "3LwjZsrfOho", "dFTeu7KYHOc", "F81MaW4RqhA",
+      "4Cr6aXYk8Zs", "n0qgNURS19A", "bj9wWyjyZyM", "tUUkbs5JQjY", "LIYSWqHPx34",
+      "9wM-gBUPIvc", "XiOFrKEv-xY", "FLZtwhXRw2Q", "EFsI3htgU9U", "pwi2MXNC1ZU"
+    ]
+  },
+  "assignments": [
+    { "position": 1, "youtube_video_id": "N1k3LoYa4bE", "chapter": "Chemical Bonding and Molecular Structure", "lesson_number": 1 },
+    { "position": 2, "youtube_video_id": "UNzwGiPpteU", "chapter": "Chemical Bonding and Molecular Structure", "lesson_number": 2 },
+    { "position": 3, "youtube_video_id": "3LwjZsrfOho", "chapter": "Chemical Bonding and Molecular Structure", "lesson_number": 3 },
+    { "position": 4, "youtube_video_id": "dFTeu7KYHOc", "chapter": "Chemical Bonding and Molecular Structure", "lesson_number": 4 },
+    { "position": 5, "youtube_video_id": "F81MaW4RqhA", "chapter": "Chemical Bonding and Molecular Structure", "lesson_number": 5 },
+    { "position": 6, "youtube_video_id": "4Cr6aXYk8Zs", "chapter": "Chemical Bonding and Molecular Structure", "lesson_number": 6 },
+    { "position": 7, "youtube_video_id": "n0qgNURS19A", "chapter": "Chemical Bonding and Molecular Structure", "lesson_number": 7 },
+    { "position": 8, "youtube_video_id": "bj9wWyjyZyM", "chapter": "Chemical Bonding and Molecular Structure", "lesson_number": 8 },
+    { "position": 9, "youtube_video_id": "tUUkbs5JQjY", "chapter": "Chemical Bonding and Molecular Structure", "lesson_number": 9 },
+    { "position": 10, "youtube_video_id": "LIYSWqHPx34", "chapter": "Chemical Bonding and Molecular Structure", "lesson_number": 10 },
+    { "position": 11, "youtube_video_id": "9wM-gBUPIvc", "chapter": "Chemical Bonding and Molecular Structure", "lesson_number": 11 },
+    { "position": 12, "youtube_video_id": "XiOFrKEv-xY", "chapter": "Chemical Bonding and Molecular Structure", "lesson_number": 12 },
+    { "position": 13, "youtube_video_id": "FLZtwhXRw2Q", "chapter": "Chemical Bonding and Molecular Structure", "lesson_number": 13 },
+    { "position": 14, "youtube_video_id": "EFsI3htgU9U", "chapter": "Chemical Bonding and Molecular Structure", "lesson_number": 14 },
+    { "position": 15, "youtube_video_id": "pwi2MXNC1ZU", "chapter": "Chemical Bonding and Molecular Structure", "lesson_number": 15 }
+  ],
+  "exclusions": [
+    { "position": 16, "youtube_video_id": "KWk1DYOqPHM", "reason": "Quick recap; keep revision separate from the lecture catalogue." },
+    { "position": 17, "youtube_video_id": "Ts0htT-sFvQ", "reason": "Quick recap; keep revision separate from the lecture catalogue." },
+    { "position": 18, "youtube_video_id": "WRv6-y1CnIA", "reason": "Quick recap; keep revision separate from the lecture catalogue." },
+    { "position": 19, "youtube_video_id": "P1cxrzJ785M", "reason": "Quick recap; keep revision separate from the lecture catalogue." },
+    { "position": 20, "youtube_video_id": "67cHi3TTWyo", "reason": "Live quiz; keep practice separate from the lecture catalogue." },
+    { "position": 21, "youtube_video_id": "Y-fs5E9Xj_0", "reason": "Live quiz; keep practice separate from the lecture catalogue." },
+    { "position": 22, "youtube_video_id": "S13aSamu7Yo", "reason": "Live quiz; keep practice separate from the lecture catalogue." },
+    { "position": 23, "youtube_video_id": "vB-zuVV3nWQ", "reason": "Live quiz; keep practice separate from the lecture catalogue." }
+  ]
+}

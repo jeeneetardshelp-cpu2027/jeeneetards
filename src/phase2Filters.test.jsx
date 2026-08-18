@@ -17,7 +17,10 @@ function makeBuilder(table) {
   const rec = { table, cols: null, eq: {}, in: {}, ilike: null, range: null, opts: null, order: [] };
   const b = {
     select(cols, opts) { rec.cols = cols; rec.opts = opts; return b; },
-    order(c, o) { rec.order.push(o?.ascending === false ? `${c} desc` : c); return b; },
+    order(c, o) {
+      if (!o?.referencedTable) rec.order.push(o?.ascending === false ? `${c} desc` : c);
+      return b;
+    },
     range(a, z) { rec.range = [a, z]; return b; },
     eq(k, v) { rec.eq[k] = v; return b; },
     ilike(k, v) { rec.ilike = [k, v]; return b; },

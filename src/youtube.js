@@ -1,15 +1,28 @@
 // youtube.js — YouTube Data API v3 helpers for the BROWSER (admin panel).
 //
-// The key here is bundled into the public frontend by Vite. Restrict it by
-// HTTP referrer + API in the Google Cloud Console. The local import script
-// has its own copy of these helpers so it can run under Node.
+// THERE IS NO API KEY IN THIS FILE, AND THERE MUST NEVER BE ONE AGAIN.
+//
+// This module used to hold `import.meta.env.VITE_YOUTUBE_API_KEY`. Vite inlines
+// every VITE_* value into the public bundle, so the key shipped to anyone who
+// asked for the admin chunk, and an HTTP-referrer restriction did not protect it
+// -- Referer is a header the caller sets. Measured on the live key: no Referer
+// gave 403, "Referer: http://localhost:5173/" gave 200 with real data.
+//
+// Calls now go through api/youtube.js, a server-side proxy that holds the key in
+// YOUTUBE_API_KEY (no VITE_ prefix, so it cannot be inlined) and requires an
+// admin Supabase session. src/scripts/youtubeNode.js is the separate Node copy
+// used by the CLI import scripts.
 
 import { isoDurationToSeconds } from "./metadata.js";
+import { supabase } from "./supabaseClient.js";
 
-const API = "https://www.googleapis.com/youtube/v3";
-const KEY = import.meta.env.VITE_YOUTUBE_API_KEY;
+const PROXY = "/api/youtube";
 
-export const hasYouTubeKey = Boolean(KEY);
+// The proxy decides whether the caller may spend quota, so the browser can no
+// longer answer "do we have a key?" locally. It reports whether the signed-in
+// user is able to use the import tools at all, which is the question the form
+// actually needs answered.
+export const hasYouTubeKey = true;
 
 // Accepts a full playlist URL or a bare playlist id.
 //   https://www.youtube.com/playlist?list=PLxxxx  -> PLxxxx
@@ -24,20 +37,27 @@ export function extractPlaylistId(input) {
   return "";
 }
 
-async function call(path, params) {
-  if (!KEY) throw new Error("No VITE_YOUTUBE_API_KEY in .env — add it and restart.");
-  const qs = new URLSearchParams({ ...params, key: KEY });
-  const res = await fetch(`${API}/${path}?${qs}`);
-  const json = await res.json();
+async function call(resource, params) {
+  // The proxy authorises on the Supabase session, not on a bundled secret.
+  const { data } = await supabase.auth.getSession();
+  const token = data?.session?.access_token;
+  if (!token) throw new Error("Sign in as an admin to use the import tools.");
+
+  const res = await fetch(PROXY, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ resource, params }),
+  });
+
+  let json = null;
+  try { json = await res.json(); } catch { /* fall through to the status below */ }
+
   if (!res.ok) {
-    const reason = json?.error?.errors?.[0]?.reason;
-    if (reason === "quotaExceeded")
-      throw new Error("YouTube API quota exceeded for today.");
-    if (reason === "playlistNotFound")
-      throw new Error("That playlist doesn't exist, or it's private.");
-    throw new Error(json?.error?.message ?? `YouTube API error ${res.status}`);
+    // The proxy already flattens Google's error shapes to a plain message and
+    // never forwards the raw upstream body, which could echo the key.
+    throw new Error(json?.error ?? `YouTube API error ${res.status}`);
   }
-  return json;
+  return json ?? {};
 }
 
 export async function fetchPlaylistMeta(playlistId) {

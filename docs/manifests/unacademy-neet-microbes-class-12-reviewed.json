@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "request_id": "f0ea1cf3-f463-4193-950d-f5bd7f6b2715",
+  "youtube_playlist_id": "PLsgHooHkqhhMeV7vEcqRc91GnmR15_eHw",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "cf45d7d5-43ef-4311-abd7-5297ec2ea3b6",
+    "youtube_playlist_id": "PLsgHooHkqhhMeV7vEcqRc91GnmR15_eHw",
+    "teacher": "Pradeep Singh",
+    "source_url": "https://www.youtube.com/playlist?list=PLsgHooHkqhhMeV7vEcqRc91GnmR15_eHw",
+    "source_label": "Official Unacademy NEET channel-owned Microbes in Human Welfare playlist naming Pradeep Singh; every retained lecture title names Pradeep Singh",
+    "reviewed_by": "Owner",
+    "reviewed_on": "2026-08-04",
+    "youtube_video_ids": [
+      "GcoZXsGWyZw", "5440o7hZyyc", "03tPty_spOc", "oBl8JwQAwRA"
+    ]
+  },
+  "assignments": [
+    { "position": 1, "youtube_video_id": "GcoZXsGWyZw", "chapter": "Microbes in Human Welfare", "lesson_number": 1 },
+    { "position": 2, "youtube_video_id": "5440o7hZyyc", "chapter": "Microbes in Human Welfare", "lesson_number": 2 },
+    { "position": 3, "youtube_video_id": "03tPty_spOc", "chapter": "Microbes in Human Welfare", "lesson_number": 3 },
+    { "position": 4, "youtube_video_id": "oBl8JwQAwRA", "chapter": "Microbes in Human Welfare", "lesson_number": 4 }
+  ],
+  "exclusions": []
+}

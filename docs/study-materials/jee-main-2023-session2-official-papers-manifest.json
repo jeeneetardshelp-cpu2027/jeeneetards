@@ -1,0 +1,97 @@
+{
+  "exam": "JEE Main 2023 Session 2 Paper 1 (B.E./B.Tech.)",
+  "language": "English and Hindi",
+  "databaseLanguageFacet": "English",
+  "officialIndexUrl": "https://www.nta.ac.in/Downloads",
+  "officialApiUrl": "https://www.nta.ac.in/downloads/getlist",
+  "officialNoticeUrl": "https://www.nta.ac.in/Download/Notice/Notice_20230419201035.pdf",
+  "verificationDate": "2026-08-08",
+  "coverageNote": "Includes all twelve bilingual Paper 1 PDFs exposed by the official NTA archive for 6, 8, 10, 11, 12, 13 and 15 April 2023. The official archive contains no Session 1 B.E./B.Tech. Paper 1 PDFs, so no third-party substitute is included.",
+  "verification": "Every included live NTA PDF was checked for Paper 1 identity, official archive date and shift metadata, English and Hindi question versions, all 90 unique questions, all Mathematics, Physics and Chemistry sections, page count, byte length, SHA-256 and complete visual rendering of all 1,313 pages. The NTA exports expose possible-answer fields for numerical-response questions but contain no worked solutions.",
+  "papers": [
+    {
+      "title": "JEE Main 2023 Session 2 - 6 April Shift 1 (English & Hindi)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20230926123659.pdf",
+      "pageCount": 107,
+      "byteLength": 5222762,
+      "sha256": "0031E71A56DE6B1D732E156EAC90E1869767EF69496FDC8BE336A3DF9B16CACD"
+    },
+    {
+      "title": "JEE Main 2023 Session 2 - 6 April Shift 2 (English & Hindi)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20230926123934.pdf",
+      "pageCount": 114,
+      "byteLength": 9963561,
+      "sha256": "2568EB16C36247F499A41F268F6488B20A103CC1D563DEB3DE7ECD9E7041E2FD"
+    },
+    {
+      "title": "JEE Main 2023 Session 2 - 8 April Shift 1 (English & Hindi)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20230926123456.pdf",
+      "pageCount": 115,
+      "byteLength": 9774016,
+      "sha256": "57B98A6CADE038BD99149AA4DB5E4F1947A5FC8F5179A1A38BF055188E642304"
+    },
+    {
+      "title": "JEE Main 2023 Session 2 - 8 April Shift 2 (English & Hindi)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20230926123626.pdf",
+      "pageCount": 105,
+      "byteLength": 5086144,
+      "sha256": "190B720429A1854CE547E1EE4202E9D5B2F233C2A630707384D0BA0A1B188A27"
+    },
+    {
+      "title": "JEE Main 2023 Session 2 - 10 April Shift 1 (English & Hindi)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20230926122347.pdf",
+      "pageCount": 113,
+      "byteLength": 9870899,
+      "sha256": "D83BF2820B840140BBA53FBE2E74ABC0AC4C3713362BD1A4BACFD21DEC57D380"
+    },
+    {
+      "title": "JEE Main 2023 Session 2 - 10 April Shift 2 (English & Hindi)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20230926122409.pdf",
+      "pageCount": 107,
+      "byteLength": 5267057,
+      "sha256": "24F25EC0DBDE1CC008A1AA21CE90C539F4A8FCF2D231B539BB7C4ED709ED9A6C"
+    },
+    {
+      "title": "JEE Main 2023 Session 2 - 11 April Shift 1 (English & Hindi)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20230926122615.pdf",
+      "pageCount": 110,
+      "byteLength": 5838475,
+      "sha256": "FEF78E1A00A8D9CD70B8EDCFB44E2F831A03D43F3C2CDA6F32B1B4DE29E6981F"
+    },
+    {
+      "title": "JEE Main 2023 Session 2 - 11 April Shift 2 (English & Hindi)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20230926122544.pdf",
+      "pageCount": 106,
+      "byteLength": 5142325,
+      "sha256": "1DCD97008CCC6AF1BA248A54231623EA3BD7AEFCA51D78780689969D5611CCCD"
+    },
+    {
+      "title": "JEE Main 2023 Session 2 - 12 April Shift 1 (English & Hindi)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20230926123104.pdf",
+      "pageCount": 108,
+      "byteLength": 5379023,
+      "sha256": "743F695575E5E1D942979A138FACC52C87F7930FE3B0A4EB8EFF5CC9985C397B"
+    },
+    {
+      "title": "JEE Main 2023 Session 2 - 13 April Shift 1 (English & Hindi)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20230926123157.pdf",
+      "pageCount": 110,
+      "byteLength": 7412715,
+      "sha256": "FD2F73F4E11664F2FD3842198635050D36B8E63E44617D06ED2881410A93CB59"
+    },
+    {
+      "title": "JEE Main 2023 Session 2 - 13 April Shift 2 (English & Hindi)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20230926123348.pdf",
+      "pageCount": 103,
+      "byteLength": 5230748,
+      "sha256": "94D8D14FA765D8941623F54833AAEFE56E660E7FD00BEE69139247531D4FA32C"
+    },
+    {
+      "title": "JEE Main 2023 Session 2 - 15 April Shift 1 (English & Hindi)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20230926124011.pdf",
+      "pageCount": 115,
+      "byteLength": 9744653,
+      "sha256": "8B2B3BFF0CE2CD7CEA58D4757AE29A0C4198F5F7C919B46DF319B82F45FF1AE1"
+    }
+  ]
+}

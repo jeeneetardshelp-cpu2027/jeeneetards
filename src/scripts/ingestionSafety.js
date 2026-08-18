@@ -194,6 +194,22 @@ export function validateChapterManifest({ manifest, playlistId, teacher, videos 
   if (manifest.youtube_playlist_id !== playlistId) {
     throw new Error("Chapter manifest playlist ID does not match the selected playlist.");
   }
+  let courseTitle = null;
+  if (Object.hasOwn(manifest, "course_title")) {
+    courseTitle = String(manifest.course_title ?? "").trim();
+    if (!courseTitle) {
+      throw new Error("Chapter manifest course_title must be a non-empty string.");
+    }
+    const hasControlCharacter = [...courseTitle].some((character) => {
+      const codePoint = character.codePointAt(0);
+      return codePoint <= 0x1f || codePoint === 0x7f;
+    });
+    if (courseTitle.length > 160 || hasControlCharacter) {
+      throw new Error(
+        "Chapter manifest course_title must be at most 160 characters and contain no control characters.",
+      );
+    }
+  }
   if (!Array.isArray(manifest.assignments)) {
     throw new Error("Chapter manifest assignments must be an array.");
   }
@@ -328,8 +344,18 @@ export function validateChapterManifest({ manifest, playlistId, teacher, videos 
     excludedVideos: excluded,
     chapterNames: [...chapters],
     requestId: manifest.request_id,
+    ...(courseTitle ? { courseTitle } : {}),
     ...(teacherEvidence ? { teacherEvidence } : {}),
   };
+}
+
+export function isReviewedSingleChapterOrder(mapped) {
+  return mapped?.chapterNames?.length === 1
+    && Array.isArray(mapped.videos)
+    && mapped.videos.length > 0
+    && mapped.videos.every(
+      (video) => Number.isSafeInteger(video.lessonNumber) && video.lessonNumber > 0,
+    );
 }
 
 export function buildImportPayload({

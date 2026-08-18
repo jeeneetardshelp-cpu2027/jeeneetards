@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "request_id": "e78cee3e-a81c-414f-a809-46784dc58775",
+  "youtube_playlist_id": "PLsgHooHkqhhNmUjrOF64b49WSKp93PsKZ",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "4555712a-b4ea-446c-8f57-04d2257562f9",
+    "youtube_playlist_id": "PLsgHooHkqhhNmUjrOF64b49WSKp93PsKZ",
+    "teacher": "Anu Gupta",
+    "source_url": "https://www.youtube.com/@UnacademyNEET",
+    "source_label": "Official Unacademy NEET channel-owned playlist naming Anu Gupta and retained lecture titles naming Anu Gupta Sir",
+    "reviewed_by": "Owner",
+    "reviewed_on": "2026-08-04",
+    "youtube_video_ids": [
+      "w9VNEojhlFQ", "cUmYsRu3C9E", "jIDssu7BD1Y", "LiZMB9K1bQg", "WA-fO5epJIU",
+      "OHWRnciy1JI", "ShZ-6rysS2I", "1e4E9M4sOvs", "c4GAhQJ-Mlo", "I25LoGcKkp8",
+      "r-Q61QeQDUw"
+    ]
+  },
+  "assignments": [
+    { "position": 1, "youtube_video_id": "w9VNEojhlFQ", "chapter": "Current Electricity", "lesson_number": 1 },
+    { "position": 2, "youtube_video_id": "cUmYsRu3C9E", "chapter": "Current Electricity", "lesson_number": 2 },
+    { "position": 3, "youtube_video_id": "jIDssu7BD1Y", "chapter": "Current Electricity", "lesson_number": 3 },
+    { "position": 4, "youtube_video_id": "LiZMB9K1bQg", "chapter": "Current Electricity", "lesson_number": 4 },
+    { "position": 5, "youtube_video_id": "WA-fO5epJIU", "chapter": "Current Electricity", "lesson_number": 5 },
+    { "position": 6, "youtube_video_id": "OHWRnciy1JI", "chapter": "Current Electricity", "lesson_number": 6 },
+    { "position": 7, "youtube_video_id": "ShZ-6rysS2I", "chapter": "Current Electricity", "lesson_number": 7 },
+    { "position": 8, "youtube_video_id": "1e4E9M4sOvs", "chapter": "Current Electricity", "lesson_number": 8 },
+    { "position": 9, "youtube_video_id": "c4GAhQJ-Mlo", "chapter": "Current Electricity", "lesson_number": 9 },
+    { "position": 16, "youtube_video_id": "I25LoGcKkp8", "chapter": "Current Electricity", "lesson_number": 10 },
+    { "position": 17, "youtube_video_id": "r-Q61QeQDUw", "chapter": "Current Electricity", "lesson_number": 11 }
+  ],
+  "exclusions": [
+    { "position": 10, "youtube_video_id": "rsJZDzfFJ_o", "reason": "DPP quiz; keep practice separate from the lecture catalogue." },
+    { "position": 11, "youtube_video_id": "dTiFRXSBBzs", "reason": "DPP quiz; keep practice separate from the lecture catalogue." },
+    { "position": 12, "youtube_video_id": "yTz6EiCl0h8", "reason": "DPP quiz; keep practice separate from the lecture catalogue." },
+    { "position": 13, "youtube_video_id": "KOBcomDVUB8", "reason": "DPP quiz; keep practice separate from the lecture catalogue." },
+    { "position": 14, "youtube_video_id": "BUDUeyKOqZU", "reason": "DPP quiz; keep practice separate from the lecture catalogue." },
+    { "position": 15, "youtube_video_id": "i73c5EPvqe0", "reason": "DPP quiz; keep practice separate from the lecture catalogue." },
+    { "position": 18, "youtube_video_id": "JfODzETE-vs", "reason": "Mega DPP/Menti quiz; keep practice separate from the lecture catalogue." },
+    { "position": 19, "youtube_video_id": "4tGGUr_4J6c", "reason": "Mega DPP/Menti quiz; keep practice separate from the lecture catalogue." }
+  ]
+}

@@ -1,0 +1,136 @@
+{
+  "reviewed_on": "2026-08-08",
+  "review_status": "owner_approval_required",
+  "proposed_decision_id": "8de024c6-7317-4901-a91e-5006a5efcd7e",
+  "channel": {
+    "name": "Unacademy NEET",
+    "handle": "@UnacademyNEET",
+    "youtube_channel_id": "UCdQwYksctqqiRwqp3PiJMWA",
+    "production_institute_id": 147,
+    "playlist_count": 736
+  },
+  "preflight": {
+    "captured_at": "2026-08-08T07:03:47.173Z",
+    "playlists": 416,
+    "videos": 4731,
+    "memberships": 4737,
+    "chapters": 263,
+    "chapter_class_levels": 92,
+    "teachers": 34,
+    "faculty_links": 171,
+    "quality_reviews": 42,
+    "source_collision_count": 0,
+    "retained_video_collision_count": 0,
+    "excluded_video_collision_count": 0,
+    "protected_jee_courses": 82,
+    "protected_jee_memberships": 1304,
+    "protected_jee_fingerprint": "30eee4a4a6842e5beeb7c97083d7f812",
+    "rolling_jee_courses": 212,
+    "rolling_jee_memberships": 2848,
+    "rolling_jee_fingerprint": "9eea2b44f0b19c08cc0907c57e091342"
+  },
+  "candidates": [
+    {
+      "order": 1,
+      "youtube_playlist_id": "PLsgHooHkqhhMzQKgCZ2vyX2bh3ejb1eIQ",
+      "source_title": "Metallurgy - Playlist | Class 12 | Unacademy NEET | NEET Live Daily | NEET Chemistry | Anoop Sir",
+      "source_snapshot_sha256": "50f4f4c5731cb423e0830b600ceb6dad4568b8b650000b122e5cb70aba846aed",
+      "source_item_count": 3,
+      "subject_id": 2,
+      "chapter_id": 55,
+      "chapter": "Metallurgy",
+      "mapping_rationale": "The official playlist is a complete L1-L3 chapter sequence covering concentration and extraction of metals.",
+      "class_level_id": 3,
+      "class_level": "class-12",
+      "teacher_id": 36,
+      "teacher": "Anoop Vashishtha",
+      "teacher_verified": true,
+      "source_collision_count": 0,
+      "video_collision_count": 0,
+      "retained_source_positions": [1, 2, 3],
+      "excluded_source_positions": [],
+      "videos": [
+        { "source_position": 1, "youtube_video_id": "tZWyg6ewJb8", "title": "Metallurgy - L 1 | Concentration of Ores | Class 12 | Unacademy NEET | NEET Chemistry | Anoop Sir", "duration_seconds": 3404, "embedding_status": "embeddable" },
+        { "source_position": 2, "youtube_video_id": "inlxrwae1Ys", "title": "Metallurgy - L 2 | Extraction of Metal | Class 12 | Unacademy NEET | NEET Chemistry | Anoop Sir", "duration_seconds": 3483, "embedding_status": "embeddable" },
+        { "source_position": 3, "youtube_video_id": "X24X5wXFUno", "title": "Metallurgy - L 3 | Extraction of Metal | Class 12 | Unacademy NEET | NEET Chemistry | Anoop Sir", "duration_seconds": 3365, "embedding_status": "embeddable" }
+      ],
+      "exclusions": []
+    },
+    {
+      "order": 2,
+      "youtube_playlist_id": "PLsgHooHkqhhMRv85qlHflI5j8SoA8yZ0n",
+      "source_title": "S Block Elements - Playlist | Class 11 | Unacademy NEET | Chemistry | Anoop Sir",
+      "source_snapshot_sha256": "c474ede883cfe5ddac403a97f1d8c5e998a4eb0cd3e6f5164d61d26c62ef21da",
+      "source_item_count": 5,
+      "subject_id": 2,
+      "chapter_id": 46,
+      "chapter": "The s-Block Elements",
+      "mapping_rationale": "Retain the complete L1-L3 concept sequence and exclude two later NCERT-question practice sessions from the lecture-only course.",
+      "class_level_id": 2,
+      "class_level": "class-11",
+      "teacher_id": 36,
+      "teacher": "Anoop Vashishtha",
+      "teacher_verified": true,
+      "source_collision_count": 0,
+      "video_collision_count": 0,
+      "retained_source_positions": [1, 2, 3],
+      "excluded_source_positions": [4, 5],
+      "videos": [
+        { "source_position": 1, "youtube_video_id": "CdCL4s9L4F8", "title": "S Block Elements - L 1 | Preparation & Physical Properties | Unacademy NEET | Chemistry | Anoop Sir", "duration_seconds": 3419, "embedding_status": "embeddable" },
+        { "source_position": 2, "youtube_video_id": "4-LZNHTDJaE", "title": "S Block Elements - L 2 | Alkaline Earth Metals | Class 11 | Unacademy NEET | Chemistry | Anoop Sir", "duration_seconds": 3190, "embedding_status": "embeddable" },
+        { "source_position": 3, "youtube_video_id": "1pEXZvaack4", "title": "S Block Elements - L 3 | Second Group Elements | Class 11 | Unacademy NEET | Chemistry | Anoop Sir", "duration_seconds": 3267, "embedding_status": "embeddable" }
+      ],
+      "exclusions": [
+        { "source_position": 4, "youtube_video_id": "ihpwvwe6Y9I", "title": "NEET: NCERT Questions | s-Block Elements | L2 | Chemistry | Unacademy NEET | Anoop V.", "duration_seconds": 3355, "embedding_status": "embeddable", "reason": "ncert_question_practice" },
+        { "source_position": 5, "youtube_video_id": "4IMGrDbroK4", "title": "NEET: NCERT Questions | s-Block Elements | L1 | Chemistry | Unacademy NEET | Anoop V.", "duration_seconds": 3265, "embedding_status": "embeddable", "reason": "ncert_question_practice" }
+      ]
+    },
+    {
+      "order": 3,
+      "youtube_playlist_id": "PLsgHooHkqhhNhMBc1PNiIav8Kv_O7NPIT",
+      "source_title": "Semiconductors - Playlist | Class 12 |  Unacademy NEET | LIVE DAILY | NEET Physics | Indrajeet Sir",
+      "source_snapshot_sha256": "4ec4677ad6ba42efae0d0924fc3e130bd4e0c61888912e045e250ec815c51522",
+      "source_item_count": 3,
+      "subject_id": 1,
+      "chapter_id": 17,
+      "chapter": "Semiconductor Electronics",
+      "mapping_rationale": "The official playlist is an uninterrupted L1-L3 sequence covering fundamentals, diodes, and transistor theory.",
+      "class_level_id": 3,
+      "class_level": "class-12",
+      "teacher_id": null,
+      "teacher": "Indrajeet Singh Sangtani",
+      "teacher_verified": false,
+      "source_collision_count": 0,
+      "video_collision_count": 0,
+      "retained_source_positions": [1, 2, 3],
+      "excluded_source_positions": [],
+      "videos": [
+        { "source_position": 1, "youtube_video_id": "6r2dj5wPfMk", "title": "Semiconductors - L 1 | Fundamentals | Unacademy NEET | LIVE DAILY | NEET Physics | Indrajeet Sir", "duration_seconds": 3031, "embedding_status": "embeddable" },
+        { "source_position": 2, "youtube_video_id": "OLymGXjoLUQ", "title": "Semiconductors - L 2 | Diodes | Unacademy NEET | LIVE DAILY | NEET Physics | Indrajeet Sir", "duration_seconds": 3370, "embedding_status": "embeddable" },
+        { "source_position": 3, "youtube_video_id": "q_Yji3EdXfg", "title": "Semiconductors - L 3 | Transistor | Unacademy NEET | LIVE DAILY | NEET Physics | Indrajeet Sir", "duration_seconds": 3293, "embedding_status": "embeddable" }
+      ],
+      "exclusions": []
+    }
+  ],
+  "teacher_normalization_gate": {
+    "status": "owner_review_required",
+    "matching_production_teacher_records": 1,
+    "teachers": [
+      { "teacher_id": 36, "teacher_slug": "anoop-vashishtha", "teacher_verified": true },
+      { "teacher_id": null, "teacher_slug": "indrajeet-singh-sangtani", "teacher_verified": false }
+    ],
+    "note": "Anoop Vashishtha already has a normalized verified production record. Indrajeet Singh Sangtani is absent; the official Unacademy educator page resolves the playlist label Indrajeet Sir, but owner approval is required before this exact playlist-specific attribution may be used. Normalized faculty creation/linking remains a separate later gate."
+  },
+  "anonymous_dry_runs": [
+    { "order": 1, "status": "ok", "published": 3, "usable": 3, "assignments": 3, "exclusions": 0, "review": 0, "blocked": 0 },
+    { "order": 2, "status": "ok", "published": 5, "usable": 5, "assignments": 3, "exclusions": 2, "review": 0, "blocked": 0 },
+    { "order": 3, "status": "ok", "published": 3, "usable": 3, "assignments": 3, "exclusions": 0, "review": 0, "blocked": 0 }
+  ],
+  "deferred": [
+    "Kinetic Theory of Gases is mechanically clean but does not identify its teacher in the playlist or video titles and remains deferred for attribution review.",
+    "Electromagnetic Waves remains mechanically clean but its teacher evidence names only Samip and still requires identity review.",
+    "Plant Growth and Development is mechanically clean but the playlist and video titles do not identify the educator.",
+    "Hydrocarbons remains incomplete because Lecture 4 is absent.",
+    "Mineral Nutrition and Transport in Plants have no current production chapter records; no reference-data write is proposed."
+  ]
+}

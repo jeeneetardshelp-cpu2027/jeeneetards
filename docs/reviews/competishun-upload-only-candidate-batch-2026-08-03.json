@@ -1,0 +1,146 @@
+{
+  "version": 1,
+  "status": "review-ready-not-authorized",
+  "generated_at": "2026-08-03T08:50:16Z",
+  "read_only": true,
+  "source": {
+    "channel_id": "UC6ieIswHA9WInRsa2r88hRw",
+    "channel_title": "Competishun+",
+    "public_playlists_scanned": 78,
+    "candidate_videos_in_public_playlists": 0
+  },
+  "attribution": {
+    "display_name": "Competishun+",
+    "decision_id": "1c06eb34-fbdc-4d3b-a239-39f256f889e8",
+    "requires_owner_reaffirmation_for_this_batch": true,
+    "named_teacher_record_required": false,
+    "note": "The source titles credit Riya Ma'am, but production has no exact Riya teacher record. Keep channel attribution unless a separately reviewed named-teacher decision is supplied."
+  },
+  "baseline": {
+    "playlists": 292,
+    "videos": 3088,
+    "memberships": 3094,
+    "chapters": 241,
+    "protected_jee_courses": 83,
+    "protected_jee_memberships": 1307,
+    "protected_jee_fingerprint": "c742fabf93ff8dd33d6ecd5eb4793db0",
+    "rolling_jee_courses": 167,
+    "rolling_jee_memberships": 1894,
+    "rolling_jee_fingerprint": "4606d06923f3adc1ac1becd6b95ddf0d"
+  },
+  "courses": [
+    {
+      "key": "competishun-upload-only-jahn-teller-distortion",
+      "proposed_title": "Jahn–Teller Distortion",
+      "youtube_playlist_id": null,
+      "ordering_basis": "Natural part numbering, then publication time",
+      "goal": "jee",
+      "subject": "Chemistry",
+      "chapter": {
+        "id": 87,
+        "name": "Coordination Compounds"
+      },
+      "class_levels": [
+        "class-12"
+      ],
+      "content_type": "full-course",
+      "language": "hinglish",
+      "difficulty": "advanced",
+      "visual_review": {
+        "video_id": "NW0wDF6acgQ",
+        "result": "Official YouTube page played the classroom lesson and visibly displayed Jahn Teller Distortion."
+      },
+      "videos": [
+        {
+          "position": 1,
+          "youtube_video_id": "NW0wDF6acgQ",
+          "source_title": "jahn teller distortion(JTD) part-1 | Coordination |  RIYA MA'AM",
+          "published_at": "2022-09-20T12:18:15Z",
+          "duration_seconds": 2211,
+          "privacy_status": "public",
+          "embedding_status": "allowed",
+          "definition": "hd",
+          "captions": false
+        },
+        {
+          "position": 2,
+          "youtube_video_id": "BJlj2EAGLw8",
+          "source_title": "Jahn teller distortion part-2 | Coordination compounds | Riya Ma'am",
+          "published_at": "2022-09-23T12:40:36Z",
+          "duration_seconds": 2937,
+          "privacy_status": "public",
+          "embedding_status": "allowed",
+          "definition": "hd",
+          "captions": false
+        }
+      ],
+      "projected_delta": {
+        "playlists": 1,
+        "videos": 2,
+        "memberships": 2,
+        "chapters": 0
+      }
+    },
+    {
+      "key": "competishun-upload-only-ioqc-2021-2022-solutions",
+      "proposed_title": "IOQC 2021–2022 Solutions",
+      "youtube_playlist_id": null,
+      "ordering_basis": "Part 1, then Part 2 problems 1 and 2",
+      "goal": "olympiad",
+      "subject": "Chemistry",
+      "chapter": {
+        "id": 295,
+        "name": "IOQC Solutions"
+      },
+      "class_levels": [
+        "class-11",
+        "class-12",
+        "dropper"
+      ],
+      "content_type": "pyq",
+      "language": "hinglish",
+      "difficulty": "advanced",
+      "videos": [
+        {
+          "position": 1,
+          "youtube_video_id": "lAwzadMpkSE",
+          "source_title": "IOQC 2021-2022 PART-1 SOLUTION|CHEMISTRY OLYMPIADS|INCHO|ACT|IAPT|HBSCE|ICHO|RIYA MA'AM",
+          "published_at": "2022-03-21T12:55:16Z",
+          "duration_seconds": 3294,
+          "privacy_status": "public",
+          "embedding_status": "allowed",
+          "definition": "hd",
+          "captions": false
+        },
+        {
+          "position": 2,
+          "youtube_video_id": "0DopkpuIfC0",
+          "source_title": "IOQC 2021-2022 PART-2 SOLUTION | PROBLEM-1 | RIYA MA'AM",
+          "published_at": "2022-09-08T14:58:05Z",
+          "duration_seconds": 1924,
+          "privacy_status": "public",
+          "embedding_status": "allowed",
+          "definition": "hd",
+          "captions": false
+        },
+        {
+          "position": 3,
+          "youtube_video_id": "xnnuW1XaSEg",
+          "source_title": "IOQC 2021-2022 PART-2 SOLUTION|PROBLEM-2|CHEMISTRY OLYMPIADS|INCHO|ACT|IAPT|HBSCE|ICHO|RIYA MA'AM",
+          "published_at": "2022-11-06T10:22:16Z",
+          "duration_seconds": 2215,
+          "privacy_status": "public",
+          "embedding_status": "allowed",
+          "definition": "hd",
+          "captions": false
+        }
+      ],
+      "projected_delta": {
+        "playlists": 1,
+        "videos": 3,
+        "memberships": 3,
+        "chapters": 0
+      }
+    }
+  ]
+}

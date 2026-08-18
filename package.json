@@ -36,7 +36,15 @@
     "build:forum-staging": "node src/scripts/buildForumV1StagingRehearsal.js",
     "build:forum-persistent-staging": "node src/scripts/buildForumV1PersistentStaging.js",
     "build:forum-production": "node src/scripts/buildForumV1ProductionPackage.js",
+    "build:forum-beta-production": "node src/scripts/buildForumClosedBetaProductionPackage.js",
+    "build:forum-beta-staging": "node src/scripts/buildForumClosedBetaStagingRehearsal.js",
+    "build:forum-beta-persistent-staging": "node src/scripts/buildForumClosedBetaPersistentStaging.js",
+    "build:forum-suspension-admin-persistent-staging": "node src/scripts/buildForumSuspensionAdminPersistentStaging.js",
+    "build:forum-suspension-admin-production": "node src/scripts/buildForumSuspensionAdminProductionPackage.js",
     "verify:forum-jwt-staging": "node src/scripts/verifyForumV1JwtStaging.js",
+    "verify:forum-beta-jwt-staging": "node src/scripts/verifyForumClosedBetaJwtStaging.js",
+    "verify:forum-suspension-admin-jwt-staging": "node src/scripts/verifyForumSuspensionAdminJwtStaging.js",
+    "check:forum-suspension-admin-staging-readiness": "node --use-system-ca src/scripts/checkForumSuspensionAdminStagingReadiness.js",
     "verify:forum-renderer-browser": "node src/scripts/verifyForumRendererBrowser.js",
     "verify:forum-read-only-browser": "node src/scripts/verifyForumReadOnlyBrowser.js",
     "verify:forum-auth-drafts-browser": "node src/scripts/verifyForumAuthDraftBrowser.js",
@@ -74,6 +82,7 @@
     "demo:classify": "node src/scripts/classify/demoClassify.js",
     "demo:quality": "node src/scripts/classify/demoQualityGate.js",
     "refresh:stats": "node src/scripts/refreshVideoStats.js",
+    "refresh:channel-logos": "node src/scripts/refreshChannelLogos.js",
     "verify:course": "node src/scripts/verifyImportedCourse.js"
   },
   "dependencies": {

@@ -1,0 +1,115 @@
+{
+  "version": 1,
+  "checked_at": "2026-08-08T08:15:41.216Z",
+  "scope": "local credential-free closed-beta activation fixture",
+  "production_contacted": false,
+  "viewport": {
+    "width": 360,
+    "height": 800,
+    "method": "same-origin fixed-size iframe"
+  },
+  "themes_checked": [
+    "light",
+    "dark"
+  ],
+  "checks": [
+    {
+      "name": "admin light theme has no horizontal page scroll",
+      "passed": true,
+      "detail": {
+        "viewport_width": 360,
+        "document_scroll_width": 350
+      }
+    },
+    {
+      "name": "admin visible interactive targets are at least 44 pixels",
+      "passed": true,
+      "detail": {
+        "undersized_targets": 0
+      }
+    },
+    {
+      "name": "activation stays disabled without exact BETA confirmation",
+      "passed": true,
+      "detail": {
+        "empty_enabled": false,
+        "partial_enabled": false,
+        "exact_enabled": true
+      }
+    },
+    {
+      "name": "admin fixture transitions from off to beta and back to off",
+      "passed": true,
+      "detail": {
+        "beta_visible": true,
+        "emergency_stop_restored_off": true
+      }
+    },
+    {
+      "name": "admin panel exposes no public open control",
+      "passed": true,
+      "detail": {
+        "matching_controls": 0
+      }
+    },
+    {
+      "name": "enrolled member receives beta discussion and vote controls",
+      "passed": true,
+      "detail": {
+        "start_discussion_controls": 1,
+        "upvote_controls": 1
+      }
+    },
+    {
+      "name": "member dark theme has no horizontal page scroll or undersized targets",
+      "passed": true,
+      "detail": {
+        "viewport_width": 360,
+        "document_scroll_width": 350,
+        "undersized_targets": 0
+      }
+    },
+    {
+      "name": "non-member receives no beta discussion or vote controls",
+      "passed": true,
+      "detail": {
+        "start_discussion_controls": 0,
+        "upvote_controls": 0
+      }
+    },
+    {
+      "name": "non-member feed has no horizontal page scroll",
+      "passed": true,
+      "detail": {
+        "viewport_width": 360,
+        "document_scroll_width": 350
+      }
+    },
+    {
+      "name": "direct non-member submit preserves the complete draft after denial",
+      "passed": true,
+      "detail": {
+        "draft_preserved": true,
+        "student_safe_error": true,
+        "undersized_targets": 0,
+        "horizontal_page_scroll": false
+      }
+    },
+    {
+      "name": "direct fixture route produces no product console errors",
+      "passed": true,
+      "detail": {
+        "console_errors": 0
+      }
+    }
+  ],
+  "summary": {
+    "passed": 11,
+    "failed": 0
+  },
+  "harness_notes": [
+    "The fixed-size iframe gives the application a real 360 pixel layout viewport while the host browser remains wider.",
+    "Browser-control iframe instrumentation emitted its own MutationObserver type error. The same fixture loaded directly produced zero console errors, so this was recorded as harness noise rather than a product error.",
+    "All identities, posts and mutations in this fixture are static local test values. No Supabase URL, JWT, email address, service-role key or production RPC was used."
+  ]
+}

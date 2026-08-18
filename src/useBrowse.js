@@ -76,7 +76,7 @@ export function useVideos({
       classSlugs || languageValues.length || contentTypeValues.length || difficultyValues.length || teacherId,
     );
     const cols =
-      "id, youtube_video_id, title, institutes_channels(name), subjects(name), chapters(name)" +
+      "id, youtube_video_id, title, institutes_channels(id, name, logo_url), subjects(name), chapters(name)" +
       (goalId ? ", video_learning_goals!inner(learning_goal_id)" : "") +
       (needsPlaylistContext
         ? ", membership:playlist_videos!inner(playlists!inner(language, content_type, difficulty" +
@@ -120,7 +120,9 @@ export function useVideos({
         id: r.id,
         youtubeVideoId: r.youtube_video_id,
         title: r.title,
+        instituteId: r.institutes_channels?.id ?? null,
         institute: r.institutes_channels?.name ?? "—",
+        instituteLogoUrl: r.institutes_channels?.logo_url ?? null,
         subject: r.subjects?.name ?? "—",
         chapter: r.chapters?.name ?? "—",
       }));

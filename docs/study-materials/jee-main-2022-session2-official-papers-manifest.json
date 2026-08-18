@@ -1,0 +1,74 @@
+{
+  "exam": "JEE Main 2022 Session 2 Paper 1 (B.E./B.Tech.)",
+  "language": "English",
+  "officialArchiveUrl": "https://www.nta.ac.in/NoticeBoardArchive",
+  "officialNoticeUrl": "https://www.nta.ac.in/Download/Notice/Notice_20220803205533.pdf",
+  "verificationDate": "2026-08-07",
+  "coverageNote": "Includes the nine unique English Paper 1 PDFs located on the official NTA domain for 26-30 July 2022. Direct official question-paper PDFs for the two 25 July shifts were not located, so no third-party substitutes are included.",
+  "verification": "Each live NTA PDF was checked for Paper 1 identity, date, shift, English language, 90 unique questions, 30 questions each in Mathematics, Physics and Chemistry, absence of an answer key, page count, SHA-256 and complete visual rendering.",
+  "papers": [
+    {
+      "title": "JEE Main 2022 Session 2 - 26 July Shift 1 (English)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20230323113530.pdf",
+      "pageCount": 39,
+      "byteLength": 3091219,
+      "sha256": "DBA0561D2890EEF6E832DFBDE6A517DD303432418150DB7664A8C19FDA8EF078"
+    },
+    {
+      "title": "JEE Main 2022 Session 2 - 26 July Shift 2 (English)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20230323115506.pdf",
+      "pageCount": 30,
+      "byteLength": 2589667,
+      "sha256": "295C3194A9BEDBAED7DB94A933C28748BEB6F67EAD061B62EEF479DA0922927B"
+    },
+    {
+      "title": "JEE Main 2022 Session 2 - 27 July Shift 1 (English)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20230323120502.pdf",
+      "pageCount": 32,
+      "byteLength": 2899961,
+      "sha256": "8458AF45FBD5A66421ED9F42D9BA0D8BAB962D42060E9DF8FACAC965177291F0"
+    },
+    {
+      "title": "JEE Main 2022 Session 2 - 27 July Shift 2 (English)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20230323121459.pdf",
+      "pageCount": 43,
+      "byteLength": 3648507,
+      "sha256": "039420B0FAEAEE390EF3455D53891D01BA2318C130938D2B029EFA820EC125DC"
+    },
+    {
+      "title": "JEE Main 2022 Session 2 - 28 July Shift 1 (English)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20230323122245.pdf",
+      "pageCount": 40,
+      "byteLength": 3305439,
+      "sha256": "15070C31D2A95AE65EB9430F66449403DC815C04F12C0AA9E9BF42CB63B1E7CB"
+    },
+    {
+      "title": "JEE Main 2022 Session 2 - 28 July Shift 2 (English)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20230323123259.pdf",
+      "pageCount": 33,
+      "byteLength": 2715194,
+      "sha256": "E7DDB17E3C0483DE3688D906412DE2E8232FC6D64587FC5080F1116DC374F666"
+    },
+    {
+      "title": "JEE Main 2022 Session 2 - 29 July Shift 1 (English)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20230323132111.pdf",
+      "pageCount": 42,
+      "byteLength": 3150792,
+      "sha256": "55B4AF6D4BF8EDF47025B3F97A56D05D9CA8CBA4D05ACDCB80AEACCAA22B902E"
+    },
+    {
+      "title": "JEE Main 2022 Session 2 - 29 July Shift 2 (English)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20230323134838.pdf",
+      "pageCount": 30,
+      "byteLength": 2523829,
+      "sha256": "6C3F36D91E1101354FAA81EC09542316A0843F26522EF3DD56E7E0CD8EA99C6C"
+    },
+    {
+      "title": "JEE Main 2022 Session 2 - 30 July Shift 2 (English)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20230323144758.pdf",
+      "pageCount": 31,
+      "byteLength": 2392588,
+      "sha256": "6B7C186438802C4AB2DD3C17970114FDD3F86965E7E824A5D855D127607BE4D5"
+    }
+  ]
+}

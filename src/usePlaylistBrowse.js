@@ -23,9 +23,12 @@ function toCard(row) {
     id: row.id,
     title: row.title,                       // curated title — dominates the card
     teacher: row.teacher ?? null,           // LEGACY free text. Not a resolved identity.
+    instituteId: row.institutes_channels?.id ?? null,
     institute: row.institutes_channels?.name ?? null,
+    instituteLogoUrl: row.institutes_channels?.logo_url ?? null,
     subject: row.subjects?.name ?? null,
     lectures,
+    coverVideoId: row.cover?.[0]?.videos?.youtube_video_id ?? null,
     // NOTE: total duration is NOT a column on playlists — it is computed inside
     // get_chapter_courses(). Rather than invent a number here, it stays null and
     // the card omits the field. A database-side aggregate view is the correct
@@ -151,8 +154,8 @@ export function usePlaylistBrowse({
     // videos from the unfiltered view.
     const cols =
       "id, title, display_order, teacher, average_rating, ratings_count, language, content_type," +
-      " difficulty, class_levels, view_count_total, stats_fetched_at, institutes_channels(name), subjects(name)," +
-      " playlist_videos(count)" +
+      " difficulty, class_levels, view_count_total, stats_fetched_at, institutes_channels(id, name, logo_url), subjects(name)," +
+      " playlist_videos(count), cover:playlist_videos(id, position, videos(youtube_video_id))" +
       (goalId ? ", playlist_learning_goals!inner(learning_goal_id)" : "") +
       // Board scoping lives in the QUERY, not in a post-filter. CBSE and ICSE
       // must never bleed into each other, and filtering after paging would
@@ -184,6 +187,12 @@ export function usePlaylistBrowse({
       const applyOrder = orderMap[sort] ?? orderMap.recommended;
       let q = applyOrder(supabase.from("playlists").select(selectedColumns, { count: "exact" }))
         .order("id")
+        // One representative image per course, chosen deterministically from
+        // the first lesson. The nested range prevents a 100-lesson course from
+        // turning the browse page into a large thumbnail payload.
+        .order("position", { ascending: true, referencedTable: "cover" })
+        .order("id", { ascending: true, referencedTable: "cover" })
+        .range(0, 0, { referencedTable: "cover" })
         .range(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE - 1);
 
       // Learning goal was accepted as a prop and never applied, so a JEE view
@@ -245,9 +254,12 @@ export function usePlaylistBrowse({
 
 // "1h 40m" / "45m". Returns null when unknown so the caller can omit the field
 // entirely rather than printing "0m".
+// Rounds to whole minutes before splitting -- see the note on the copy in
+// src/metadata.js. Splitting first prints "6h 60m".
 export function formatDuration(seconds) {
   if (!seconds || seconds <= 0) return null;
-  const h = Math.floor(seconds / 3600);
-  const m = Math.round((seconds % 3600) / 60);
+  const totalMinutes = Math.round(seconds / 60);
+  const h = Math.floor(totalMinutes / 60);
+  const m = totalMinutes % 60;
   return h > 0 ? `${h}h ${m}m` : `${m}m`;
 }

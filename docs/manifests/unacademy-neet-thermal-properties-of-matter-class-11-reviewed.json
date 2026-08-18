@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "request_id": "f8091d84-763c-456f-b919-e18a0c34a458",
+  "youtube_playlist_id": "PLsgHooHkqhhNB7vXo5H5J-QsBotPAPYUR",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "0fab6ecf-934f-46ae-bb8a-05cbd6b9cea1",
+    "youtube_playlist_id": "PLsgHooHkqhhNB7vXo5H5J-QsBotPAPYUR",
+    "teacher": "Mahendra Singh",
+    "source_url": "https://www.youtube.com/playlist?list=PLsgHooHkqhhNB7vXo5H5J-QsBotPAPYUR",
+    "source_label": "Official Unacademy NEET channel-owned Thermal Properties of Matter playlist naming Mahendra S.; every retained lecture title names Mahendra S., reviewed as Mahendra Singh",
+    "reviewed_by": "Owner",
+    "reviewed_on": "2026-08-05",
+    "youtube_video_ids": [
+      "XBUSd2BRaXs", "duHBs2i4-K4", "Fl6WSiPMkXM", "3YwDg7UeTcQ"
+    ]
+  },
+  "assignments": [
+    { "position": 1, "youtube_video_id": "XBUSd2BRaXs", "chapter": "Thermal Properties of Matter", "lesson_number": 1 },
+    { "position": 2, "youtube_video_id": "duHBs2i4-K4", "chapter": "Thermal Properties of Matter", "lesson_number": 2 },
+    { "position": 3, "youtube_video_id": "Fl6WSiPMkXM", "chapter": "Thermal Properties of Matter", "lesson_number": 3 },
+    { "position": 4, "youtube_video_id": "3YwDg7UeTcQ", "chapter": "Thermal Properties of Matter", "lesson_number": 4 }
+  ],
+  "exclusions": []
+}

@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "request_id": "24c74a76-22fa-4bcc-8d31-5fbd688a9045",
+  "youtube_playlist_id": "PLsgHooHkqhhM5-Ujy03Tn7YjofINdftRM",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "b98191cb-c0be-4d3c-9e15-95905da4fffc",
+    "youtube_playlist_id": "PLsgHooHkqhhM5-Ujy03Tn7YjofINdftRM",
+    "teacher": "Mahendra Singh",
+    "source_url": "https://www.youtube.com/playlist?list=PLsgHooHkqhhM5-Ujy03Tn7YjofINdftRM",
+    "source_label": "Official Unacademy NEET channel-owned Friction playlist; every retained lecture names Mahendra Sir",
+    "reviewed_by": "Owner",
+    "reviewed_on": "2026-08-06",
+    "youtube_video_ids": ["hgPD1d2C1aE", "j6Mkm64845o", "EMpTL5lkSyU", "JODjqGrjIsw"]
+  },
+  "assignments": [
+    { "position": 1, "youtube_video_id": "hgPD1d2C1aE", "chapter": "Friction", "lesson_number": 1 },
+    { "position": 2, "youtube_video_id": "j6Mkm64845o", "chapter": "Friction", "lesson_number": 2 },
+    { "position": 3, "youtube_video_id": "EMpTL5lkSyU", "chapter": "Friction", "lesson_number": 3 },
+    { "position": 4, "youtube_video_id": "JODjqGrjIsw", "chapter": "Friction", "lesson_number": 4 }
+  ],
+  "exclusions": [
+    { "position": 5, "youtube_video_id": "unq2Wpi3HKE", "reason": "quiz" }
+  ]
+}

@@ -58,12 +58,15 @@ describe("public page metadata", () => {
     expect(metadataForLocation("/admin").robots).toBe("noindex, nofollow");
     expect(metadataForLocation("/admin/").robots).toBe("noindex, nofollow");
     expect(metadataForLocation("/reset").robots).toBe("noindex, nofollow");
+    // The sign-in page is an auth surface, kept out of the index like /reset.
+    expect(metadataForLocation("/signin").robots).toBe("noindex, nofollow");
+    expect(metadataForLocation("/signin").title).toBe("Sign in | JEENEETARD");
     expect(metadataForLocation("/compare").robots).toBe("noindex, follow");
 
-    // RELEASE_FEATURES.forum is false, so every forum path collapses to the
-    // "coming soon" metadata and is withheld from the index. Indexing it while
-    // production forum_mode() returns "off" was asking Google to rank
-    // "Discussions are temporarily unavailable", and a canonical
+    // RELEASE_FEATURES.forum is false since 2026-08-10, so every forum path
+    // collapses to the "coming soon" metadata and is withheld from the index.
+    // Indexing it while production forum_mode() returns "off" was asking Google
+    // to rank "Discussions are temporarily unavailable", and a canonical
     // /forum/post/42 for a post that cannot be read.
     for (const path of ["/forum", "/forum/submit", "/forum/post/42"]) {
       const page = metadataForLocation(path);

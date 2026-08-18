@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "request_id": "1a74bd94-0734-412b-bbbc-97b30a247080",
+  "youtube_playlist_id": "PLsgHooHkqhhMQWo55rneDci-gmYynS9Za",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "1d0ea7b9-8cac-4f3b-968d-82b4307f264a",
+    "youtube_playlist_id": "PLsgHooHkqhhMQWo55rneDci-gmYynS9Za",
+    "teacher": "Anu Gupta",
+    "source_url": "https://www.youtube.com/playlist?list=PLsgHooHkqhhMQWo55rneDci-gmYynS9Za",
+    "source_label": "Official Unacademy NEET channel-owned Modern Physics playlist naming Anu Gupta; every retained lecture title names Anu Gupta",
+    "reviewed_by": "Owner",
+    "reviewed_on": "2026-08-04",
+    "youtube_video_ids": [
+      "teNEjXhsviw", "1hQiBNBREyc", "MfP1lAjfE4s", "mch8Gs9vaG4", "vZcS87xwtJE", "3gUXPVvO5cc",
+      "E-IGfQD5mXk", "acfZoOM90Cw", "wAHMJEppbyA", "2h_fOhJBqas", "U5nIKa_wP4g"
+    ]
+  },
+  "assignments": [
+    { "position": 1, "youtube_video_id": "teNEjXhsviw", "chapter": "Modern Physics", "lesson_number": 1 },
+    { "position": 2, "youtube_video_id": "1hQiBNBREyc", "chapter": "Modern Physics", "lesson_number": 2 },
+    { "position": 3, "youtube_video_id": "MfP1lAjfE4s", "chapter": "Modern Physics", "lesson_number": 3 },
+    { "position": 4, "youtube_video_id": "mch8Gs9vaG4", "chapter": "Modern Physics", "lesson_number": 4 },
+    { "position": 5, "youtube_video_id": "vZcS87xwtJE", "chapter": "Modern Physics", "lesson_number": 5 },
+    { "position": 6, "youtube_video_id": "3gUXPVvO5cc", "chapter": "Modern Physics", "lesson_number": 6 },
+    { "position": 7, "youtube_video_id": "E-IGfQD5mXk", "chapter": "Modern Physics", "lesson_number": 7 },
+    { "position": 8, "youtube_video_id": "acfZoOM90Cw", "chapter": "Modern Physics", "lesson_number": 8 },
+    { "position": 9, "youtube_video_id": "wAHMJEppbyA", "chapter": "Modern Physics", "lesson_number": 9 },
+    { "position": 10, "youtube_video_id": "2h_fOhJBqas", "chapter": "Modern Physics", "lesson_number": 10 },
+    { "position": 11, "youtube_video_id": "U5nIKa_wP4g", "chapter": "Modern Physics", "lesson_number": 11 }
+  ],
+  "exclusions": [
+    { "position": 12, "youtube_video_id": "ExLH4LSDyac", "reason": "Practice session; keep practice separate from the lecture catalogue." }
+  ]
+}

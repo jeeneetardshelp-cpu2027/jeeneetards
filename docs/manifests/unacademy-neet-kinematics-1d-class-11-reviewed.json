@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "request_id": "95f7b00e-0946-46b9-a7e6-b5b16d555c51",
+  "youtube_playlist_id": "PLsgHooHkqhhM5m3xbTdZ2cDX8S_22jdSX",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "5b4b1d41-b7dc-4f12-80cf-b490e72edd96",
+    "youtube_playlist_id": "PLsgHooHkqhhM5m3xbTdZ2cDX8S_22jdSX",
+    "teacher": "Mahendra Singh",
+    "source_url": "https://www.youtube.com/playlist?list=PLsgHooHkqhhM5m3xbTdZ2cDX8S_22jdSX",
+    "source_label": "Official Unacademy NEET channel-owned Kinematics 1D playlist; every retained lecture names Mahendra Sir",
+    "reviewed_by": "Owner",
+    "reviewed_on": "2026-08-06",
+    "youtube_video_ids": ["Fj1H3ZEogxk", "PozfdhfpMg8", "EeGVNt_3c2k", "M-S7sv3rI94", "_2FUWa-A19o", "LEJFHcenR_A"]
+  },
+  "assignments": [
+    { "position": 1, "youtube_video_id": "Fj1H3ZEogxk", "chapter": "Kinematics", "lesson_number": 1 },
+    { "position": 2, "youtube_video_id": "PozfdhfpMg8", "chapter": "Kinematics", "lesson_number": 2 },
+    { "position": 3, "youtube_video_id": "EeGVNt_3c2k", "chapter": "Kinematics", "lesson_number": 3 },
+    { "position": 4, "youtube_video_id": "M-S7sv3rI94", "chapter": "Kinematics", "lesson_number": 4 },
+    { "position": 5, "youtube_video_id": "_2FUWa-A19o", "chapter": "Kinematics", "lesson_number": 5 },
+    { "position": 6, "youtube_video_id": "LEJFHcenR_A", "chapter": "Kinematics", "lesson_number": 6 }
+  ],
+  "exclusions": [
+    { "position": 7, "youtube_video_id": "qu9IjRQT4CQ", "reason": "quiz" },
+    { "position": 8, "youtube_video_id": "SFAS1wctyHA", "reason": "quiz" },
+    { "position": 9, "youtube_video_id": "_KRr5ZqwDbA", "reason": "quiz" }
+  ]
+}

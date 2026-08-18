@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "request_id": "cdb7bec1-1ec6-48e2-9bd6-7e6483e09819",
+  "youtube_playlist_id": "PLsgHooHkqhhMzQKgCZ2vyX2bh3ejb1eIQ",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "8de024c6-7317-4901-a91e-5006a5efcd7e",
+    "youtube_playlist_id": "PLsgHooHkqhhMzQKgCZ2vyX2bh3ejb1eIQ",
+    "teacher": "Anoop Vashishtha",
+    "source_url": "https://www.youtube.com/playlist?list=PLsgHooHkqhhMzQKgCZ2vyX2bh3ejb1eIQ",
+    "source_label": "Official Unacademy NEET channel-owned Metallurgy playlist naming Anoop Sir; every retained lecture title names Anoop Sir",
+    "reviewed_by": "Owner",
+    "reviewed_on": "2026-08-08",
+    "youtube_video_ids": ["tZWyg6ewJb8", "inlxrwae1Ys", "X24X5wXFUno"]
+  },
+  "assignments": [
+    { "position": 1, "youtube_video_id": "tZWyg6ewJb8", "chapter": "Metallurgy", "lesson_number": 1 },
+    { "position": 2, "youtube_video_id": "inlxrwae1Ys", "chapter": "Metallurgy", "lesson_number": 2 },
+    { "position": 3, "youtube_video_id": "X24X5wXFUno", "chapter": "Metallurgy", "lesson_number": 3 }
+  ],
+  "exclusions": []
+}

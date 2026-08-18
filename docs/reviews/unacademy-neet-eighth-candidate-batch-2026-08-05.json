@@ -1,0 +1,99 @@
+{
+  "reviewed_on": "2026-08-05",
+  "decision_id": "809b153c-b5ff-48e0-a869-02faa49b0e8f",
+  "channel": {
+    "name": "Unacademy NEET",
+    "handle": "@UnacademyNEET",
+    "youtube_channel_id": "UCdQwYksctqqiRwqp3PiJMWA",
+    "production_institute_id": 147
+  },
+  "preflight": {
+    "playlists": 385,
+    "videos": 4514,
+    "memberships": 4520,
+    "chapters": 247,
+    "source_collision_count": 0,
+    "retained_video_collision_count": 0,
+    "protected_jee_courses": 82,
+    "protected_jee_memberships": 1304,
+    "protected_jee_fingerprint": "30eee4a4a6842e5beeb7c97083d7f812"
+  },
+  "candidates": [
+    {
+      "course_id": 405,
+      "youtube_playlist_id": "PLsgHooHkqhhPnLRiFEOjuIGraO0odfi1I",
+      "source_title": "Redox Reactions | Class 11 | Unacademy NEET | Anoop Vashishtha",
+      "source_snapshot_sha256": "398f1f2a3d4e1808b7e225e2416c4f01ffe0600022303629b3687aa995f22547",
+      "subject_id": 2,
+      "chapter_id": 95,
+      "chapter": "Redox Reactions",
+      "class_level_id": 2,
+      "class_level": "class-11",
+      "teacher_id": 36,
+      "teacher": "Anoop Vashishtha",
+      "source_collision_count": 0,
+      "video_collision_count": 0,
+      "videos": [
+        { "position": 1, "youtube_video_id": "DvToaD9FW8A", "title": "NEET: Redox Reactions - L1 | Class 11 | Live Daily 2.0 | Unacademy NEET | Anoop Vashishtha", "duration_seconds": 3205, "embedding_status": "embeddable" },
+        { "position": 2, "youtube_video_id": "p3oZQIeg4kk", "title": "NEET: Redox Reactions - L2 | Class 11 | Live Daily 2.0 | Unacademy NEET | Anoop Vashishtha", "duration_seconds": 3610, "embedding_status": "embeddable" },
+        { "position": 3, "youtube_video_id": "x_QIegDKLz8", "title": "NEET: Redox Reactions - L3 | Class 11 | Live Daily 2.0 | Unacademy NEET | Anoop Vashishtha", "duration_seconds": 3790, "embedding_status": "embeddable" },
+        { "position": 4, "youtube_video_id": "_lNpzK29YlA", "title": "NEET: Redox Reactions - L4 | Class 11 | Live Daily 2.0 | Unacademy NEET | Anoop Vashishtha", "duration_seconds": 3520, "embedding_status": "embeddable" },
+        { "position": 5, "youtube_video_id": "UBfI77x0Xi0", "title": "NEET: Redox Reactions - L5 | Class 11 | Live Daily 2.0 | Unacademy NEET | Anoop Vashishtha", "duration_seconds": 3652, "embedding_status": "embeddable" },
+        { "position": 6, "youtube_video_id": "ePR6EEnG6rQ", "title": "NEET: Redox Reactions - L6 | Class 11 | Live Daily 2.0 | Unacademy NEET | Anoop Vashishtha", "duration_seconds": 3374, "embedding_status": "embeddable" },
+        { "position": 7, "youtube_video_id": "K81lTRYjmTA", "title": "NEET: Redox Reactions - L7 | Class 11 | Live Daily 2.0 | Unacademy NEET | Anoop Vashishtha", "duration_seconds": 3028, "embedding_status": "embeddable" }
+      ]
+    },
+    {
+      "course_id": 406,
+      "youtube_playlist_id": "PLsgHooHkqhhNW-QJ3H58FESiVXdxHYoqw",
+      "source_title": "NEET: Cell Organelles Playlist | Class 11 | Unacademy NEET | Live Daily 2.0 | Pradeep Singh",
+      "source_snapshot_sha256": "13d6a11104f4900f7134095c884b8d76277d02cc49db012a0b3dce41b0bb9f5e",
+      "subject_id": 4,
+      "chapter_id": 107,
+      "chapter": "Cell: The Unit of Life",
+      "class_level_id": 2,
+      "class_level": "class-11",
+      "teacher_id": 33,
+      "teacher": "Pradeep Singh",
+      "source_collision_count": 0,
+      "video_collision_count": 0,
+      "videos": [
+        { "position": 1, "youtube_video_id": "SA-VDgxikVU", "title": "NEET: Cell Organelles - L1 | Class 11 | Live Daily 2.0 | Unacademy NEET | Pradeep Sir", "duration_seconds": 3365, "embedding_status": "embeddable" },
+        { "position": 2, "youtube_video_id": "-cY0aGFIleA", "title": "NEET: Cell Organelles - L2 | Class 11 | Live Daily 2.0 | Unacademy NEET | Pradeep S", "duration_seconds": 3036, "embedding_status": "embeddable" },
+        { "position": 3, "youtube_video_id": "CT29ns9Lp_I", "title": "NEET: Cell Organelles - L3 | Class 11 | Live Daily 2.0 | Unacademy NEET | Pradeep Sir", "duration_seconds": 2464, "embedding_status": "embeddable" },
+        { "position": 4, "youtube_video_id": "qdoM0XabVWY", "title": "NEET: Cell Organelles - L4 | Class 11 | Live Daily 2.0 | Unacademy NEET | Pradeep Sir", "duration_seconds": 2650, "embedding_status": "embeddable" },
+        { "position": 5, "youtube_video_id": "1MsRAN8ZZUA", "title": "NEET: Cell Organelles - L5 | Class 11 | Live Daily 2.0 | Unacademy NEET | Pradeep Sir", "duration_seconds": 3125, "embedding_status": "embeddable" },
+        { "position": 6, "youtube_video_id": "qnKkZGbOIrM", "title": "NEET: Cell Organelles - L6 | Class 11 | Live Daily 2.0 | Unacademy NEET | Pradeep Sir", "duration_seconds": 3460, "embedding_status": "embeddable" },
+        { "position": 7, "youtube_video_id": "FFoa5prYpwk", "title": "NEET: Cell Organelles - L7 | Class 11 | Live Daily 2.0 | Unacademy NEET | Pradeep Sir", "duration_seconds": 2520, "embedding_status": "embeddable" },
+        { "position": 8, "youtube_video_id": "BsOhx_ygvBU", "title": "NEET: Cell Organelles - L8 | Class 11 | Live Daily 2.0 | Unacademy NEET | Pradeep Sir", "duration_seconds": 2975, "embedding_status": "embeddable" },
+        { "position": 9, "youtube_video_id": "V3bXbo67wt4", "title": "NEET: Cell Organelles - L9 | Class 11 | Live Daily 2.0 | Unacademy NEET | Pradeep Sir", "duration_seconds": 2610, "embedding_status": "embeddable" }
+      ]
+    },
+    {
+      "course_id": 407,
+      "youtube_playlist_id": "PLsgHooHkqhhOO8a8vMQLe_CVVzttQd_Dh",
+      "source_title": "NEET: Molecular Basis of Inheritance - Playlist | Class 12 | Unacademy NEET | Live Daily 2.0 | NEET Biology | Pradeep Singh",
+      "source_snapshot_sha256": "cbb16e1decea07651cfafce935edcc102310968106ea33a88ca9d8808c71d9e5",
+      "subject_id": 4,
+      "chapter_id": 128,
+      "chapter": "Molecular Basis of Inheritance",
+      "class_level_id": 3,
+      "class_level": "class-12",
+      "teacher_id": 33,
+      "teacher": "Pradeep Singh",
+      "source_collision_count": 0,
+      "video_collision_count": 0,
+      "videos": [
+        { "position": 1, "youtube_video_id": "bT1j3zHxBpA", "title": "NEET: Molecular Basis of Inheritance - L1 | Live Daily 2.0 | Unacademy NEET | Pradeep Sir", "duration_seconds": 3046, "embedding_status": "embeddable" },
+        { "position": 2, "youtube_video_id": "sRQzVH0kAco", "title": "NEET: Molecular Basis of Inheritance - L2 | Live Daily 2.0 | Unacademy NEET | Pradeep Sir", "duration_seconds": 2880, "embedding_status": "embeddable" },
+        { "position": 3, "youtube_video_id": "yEt6LEeXmyQ", "title": "NEET: Molecular Basis of Inheritance - L3 | Live Daily 2.0 | Unacademy NEET | Pradeep Sir", "duration_seconds": 3255, "embedding_status": "embeddable" },
+        { "position": 4, "youtube_video_id": "JgYuIUe-zzg", "title": "NEET: Molecular Basis of Inheritance - L4 | Live Daily 2.0 | Unacademy NEET | Pradeep Sir", "duration_seconds": 2806, "embedding_status": "embeddable" },
+        { "position": 5, "youtube_video_id": "vjulaLD6NCk", "title": "NEET: Molecular Basis of Inheritance - L5 | Live Daily 2.0 | Unacademy NEET | Pradeep Sir", "duration_seconds": 3116, "embedding_status": "embeddable" },
+        { "position": 6, "youtube_video_id": "vu8552PnZDQ", "title": "NEET: Molecular Basis of Inheritance - L6 | Live Daily 2.0 | Unacademy NEET | Pradeep Sir", "duration_seconds": 2920, "embedding_status": "embeddable" },
+        { "position": 7, "youtube_video_id": "1UWWfBUqshU", "title": "NEET: Molecular Basis of Inheritance - L7 | Live Daily 2.0 | Unacademy NEET | Pradeep Sir", "duration_seconds": 2826, "embedding_status": "embeddable" },
+        { "position": 8, "youtube_video_id": "TXtKhWCf95Y", "title": "NEET: Molecular Basis of Inheritance - L8 | Live Daily 2.0 | Unacademy NEET | Pradeep Sir", "duration_seconds": 2326, "embedding_status": "embeddable" },
+        { "position": 9, "youtube_video_id": "ENBnbG36D-c", "title": "NEET: Molecular Basis of Inheritance - L9 | Live Daily 2.0 | Unacademy NEET | Pradeep Sir", "duration_seconds": 2895, "embedding_status": "embeddable" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1944 @@
+{
+  "version": 1,
+  "run_id": "89b64b8b",
+  "started_at": "2026-08-07T10:59:08.526Z",
+  "project_ref": "essmxonestbrgmgrtywn",
+  "environment": "staging",
+  "transport": "Supabase Auth password JWT plus PostgREST HTTP RPC",
+  "tests": [
+    {
+      "name": "three marked Auth Admin fixtures created",
+      "passed": true,
+      "detail": {
+        "raw_response_shape": {
+          "type": "array",
+          "length": 3,
+          "item": {
+            "type": "object",
+            "keys": [
+              "data",
+              "error"
+            ],
+            "fields": {
+              "data": {
+                "type": "object",
+                "keys": [
+                  "user"
+                ],
+                "fields": {
+                  "user": {
+                    "type": "object",
+                    "keys": [
+                      "app_metadata",
+                      "aud",
+                      "created_at",
+                      "email",
+                      "email_confirmed_at",
+                      "id",
+                      "identities",
+                      "is_anonymous",
+                      "phone",
+                      "role",
+                      "updated_at",
+                      "user_metadata"
+                    ],
+                    "fields": null
+                  }
+                }
+              },
+              "error": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        "count": 3
+      }
+    },
+    {
+      "name": "fixture helper prepared exact beta users",
+      "passed": true,
+      "detail": {
+        "raw_response_shape": {
+          "type": "object",
+          "keys": [
+            "count",
+            "data",
+            "error",
+            "status",
+            "statusText",
+            "success"
+          ],
+          "fields": {
+            "count": {
+              "type": "null"
+            },
+            "data": {
+              "type": "object",
+              "keys": [
+                "admins_prepared",
+                "cooldown_satisfied",
+                "environment",
+                "profiles_prepared",
+                "users_prepared"
+              ],
+              "fields": {
+                "admins_prepared": {
+                  "type": "number"
+                },
+                "cooldown_satisfied": {
+                  "type": "boolean"
+                },
+                "environment": {
+                  "type": "string"
+                },
+                "profiles_prepared": {
+                  "type": "number"
+                },
+                "users_prepared": {
+                  "type": "number"
+                }
+              }
+            },
+            "error": {
+              "type": "null"
+            },
+            "status": {
+              "type": "number"
+            },
+            "statusText": {
+              "type": "string"
+            },
+            "success": {
+              "type": "boolean"
+            }
+          }
+        },
+        "users_prepared": 3,
+        "profiles_prepared": 3,
+        "admins_prepared": 1,
+        "cooldown_satisfied": true
+      }
+    },
+    {
+      "name": "admin received genuine authenticated JWT",
+      "passed": true,
+      "detail": {
+        "raw_response_shape": {
+          "type": "object",
+          "keys": [
+            "data",
+            "error"
+          ],
+          "fields": {
+            "data": {
+              "type": "object",
+              "keys": [
+                "session",
+                "user"
+              ],
+              "fields": {
+                "session": {
+                  "type": "object",
+                  "keys": [
+                    "access_token",
+                    "expires_at",
+                    "expires_in",
+                    "refresh_token",
+                    "token_type",
+                    "user",
+                    "weak_password"
+                  ],
+                  "fields": {
+                    "access_token": {
+                      "type": "string"
+                    },
+                    "expires_at": {
+                      "type": "number"
+                    },
+                    "expires_in": {
+                      "type": "number"
+                    },
+                    "refresh_token": {
+                      "type": "string"
+                    },
+                    "token_type": {
+                      "type": "string"
+                    },
+                    "user": {
+                      "type": "object",
+                      "keys": [
+                        "app_metadata",
+                        "aud",
+                        "confirmed_at",
+                        "created_at",
+                        "email",
+                        "email_confirmed_at",
+                        "id",
+                        "identities",
+                        "is_anonymous",
+                        "last_sign_in_at",
+                        "phone",
+                        "role",
+                        "updated_at",
+                        "user_metadata"
+                      ],
+                      "fields": null
+                    },
+                    "weak_password": {
+                      "type": "null"
+                    }
+                  }
+                },
+                "user": {
+                  "type": "object",
+                  "keys": [
+                    "app_metadata",
+                    "aud",
+                    "confirmed_at",
+                    "created_at",
+                    "email",
+                    "email_confirmed_at",
+                    "id",
+                    "identities",
+                    "is_anonymous",
+                    "last_sign_in_at",
+                    "phone",
+                    "role",
+                    "updated_at",
+                    "user_metadata"
+                  ],
+                  "fields": {
+                    "app_metadata": {
+                      "type": "object",
+                      "keys": [
+                        "forum_beta_http_fixture",
+                        "provider",
+                        "providers"
+                      ],
+                      "fields": null
+                    },
+                    "aud": {
+                      "type": "string"
+                    },
+                    "confirmed_at": {
+                      "type": "string"
+                    },
+                    "created_at": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "email_confirmed_at": {
+                      "type": "string"
+                    },
+                    "id": {
+                      "type": "string"
+                    },
+                    "identities": {
+                      "type": "array",
+                      "length": 1,
+                      "item": null
+                    },
+                    "is_anonymous": {
+                      "type": "boolean"
+                    },
+                    "last_sign_in_at": {
+                      "type": "string"
+                    },
+                    "phone": {
+                      "type": "string"
+                    },
+                    "role": {
+                      "type": "string"
+                    },
+                    "updated_at": {
+                      "type": "string"
+                    },
+                    "user_metadata": {
+                      "type": "object",
+                      "keys": [
+                        "email_verified",
+                        "full_name"
+                      ],
+                      "fields": null
+                    }
+                  }
+                }
+              }
+            },
+            "error": {
+              "type": "null"
+            }
+          }
+        },
+        "subject_matches": true,
+        "role": "authenticated"
+      }
+    },
+    {
+      "name": "member received genuine authenticated JWT",
+      "passed": true,
+      "detail": {
+        "raw_response_shape": {
+          "type": "object",
+          "keys": [
+            "data",
+            "error"
+          ],
+          "fields": {
+            "data": {
+              "type": "object",
+              "keys": [
+                "session",
+                "user"
+              ],
+              "fields": {
+                "session": {
+                  "type": "object",
+                  "keys": [
+                    "access_token",
+                    "expires_at",
+                    "expires_in",
+                    "refresh_token",
+                    "token_type",
+                    "user",
+                    "weak_password"
+                  ],
+                  "fields": {
+                    "access_token": {
+                      "type": "string"
+                    },
+                    "expires_at": {
+                      "type": "number"
+                    },
+                    "expires_in": {
+                      "type": "number"
+                    },
+                    "refresh_token": {
+                      "type": "string"
+                    },
+                    "token_type": {
+                      "type": "string"
+                    },
+                    "user": {
+                      "type": "object",
+                      "keys": [
+                        "app_metadata",
+                        "aud",
+                        "confirmed_at",
+                        "created_at",
+                        "email",
+                        "email_confirmed_at",
+                        "id",
+                        "identities",
+                        "is_anonymous",
+                        "last_sign_in_at",
+                        "phone",
+                        "role",
+                        "updated_at",
+                        "user_metadata"
+                      ],
+                      "fields": null
+                    },
+                    "weak_password": {
+                      "type": "null"
+                    }
+                  }
+                },
+                "user": {
+                  "type": "object",
+                  "keys": [
+                    "app_metadata",
+                    "aud",
+                    "confirmed_at",
+                    "created_at",
+                    "email",
+                    "email_confirmed_at",
+                    "id",
+                    "identities",
+                    "is_anonymous",
+                    "last_sign_in_at",
+                    "phone",
+                    "role",
+                    "updated_at",
+                    "user_metadata"
+                  ],
+                  "fields": {
+                    "app_metadata": {
+                      "type": "object",
+                      "keys": [
+                        "forum_beta_http_fixture",
+                        "provider",
+                        "providers"
+                      ],
+                      "fields": null
+                    },
+                    "aud": {
+                      "type": "string"
+                    },
+                    "confirmed_at": {
+                      "type": "string"
+                    },
+                    "created_at": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "email_confirmed_at": {
+                      "type": "string"
+                    },
+                    "id": {
+                      "type": "string"
+                    },
+                    "identities": {
+                      "type": "array",
+                      "length": 1,
+                      "item": null
+                    },
+                    "is_anonymous": {
+                      "type": "boolean"
+                    },
+                    "last_sign_in_at": {
+                      "type": "string"
+                    },
+                    "phone": {
+                      "type": "string"
+                    },
+                    "role": {
+                      "type": "string"
+                    },
+                    "updated_at": {
+                      "type": "string"
+                    },
+                    "user_metadata": {
+                      "type": "object",
+                      "keys": [
+                        "email_verified",
+                        "full_name"
+                      ],
+                      "fields": null
+                    }
+                  }
+                }
+              }
+            },
+            "error": {
+              "type": "null"
+            }
+          }
+        },
+        "subject_matches": true,
+        "role": "authenticated"
+      }
+    },
+    {
+      "name": "outsider received genuine authenticated JWT",
+      "passed": true,
+      "detail": {
+        "raw_response_shape": {
+          "type": "object",
+          "keys": [
+            "data",
+            "error"
+          ],
+          "fields": {
+            "data": {
+              "type": "object",
+              "keys": [
+                "session",
+                "user"
+              ],
+              "fields": {
+                "session": {
+                  "type": "object",
+                  "keys": [
+                    "access_token",
+                    "expires_at",
+                    "expires_in",
+                    "refresh_token",
+                    "token_type",
+                    "user",
+                    "weak_password"
+                  ],
+                  "fields": {
+                    "access_token": {
+                      "type": "string"
+                    },
+                    "expires_at": {
+                      "type": "number"
+                    },
+                    "expires_in": {
+                      "type": "number"
+                    },
+                    "refresh_token": {
+                      "type": "string"
+                    },
+                    "token_type": {
+                      "type": "string"
+                    },
+                    "user": {
+                      "type": "object",
+                      "keys": [
+                        "app_metadata",
+                        "aud",
+                        "confirmed_at",
+                        "created_at",
+                        "email",
+                        "email_confirmed_at",
+                        "id",
+                        "identities",
+                        "is_anonymous",
+                        "last_sign_in_at",
+                        "phone",
+                        "role",
+                        "updated_at",
+                        "user_metadata"
+                      ],
+                      "fields": null
+                    },
+                    "weak_password": {
+                      "type": "null"
+                    }
+                  }
+                },
+                "user": {
+                  "type": "object",
+                  "keys": [
+                    "app_metadata",
+                    "aud",
+                    "confirmed_at",
+                    "created_at",
+                    "email",
+                    "email_confirmed_at",
+                    "id",
+                    "identities",
+                    "is_anonymous",
+                    "last_sign_in_at",
+                    "phone",
+                    "role",
+                    "updated_at",
+                    "user_metadata"
+                  ],
+                  "fields": {
+                    "app_metadata": {
+                      "type": "object",
+                      "keys": [
+                        "forum_beta_http_fixture",
+                        "provider",
+                        "providers"
+                      ],
+                      "fields": null
+                    },
+                    "aud": {
+                      "type": "string"
+                    },
+                    "confirmed_at": {
+                      "type": "string"
+                    },
+                    "created_at": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "email_confirmed_at": {
+                      "type": "string"
+                    },
+                    "id": {
+                      "type": "string"
+                    },
+                    "identities": {
+                      "type": "array",
+                      "length": 1,
+                      "item": null
+                    },
+                    "is_anonymous": {
+                      "type": "boolean"
+                    },
+                    "last_sign_in_at": {
+                      "type": "string"
+                    },
+                    "phone": {
+                      "type": "string"
+                    },
+                    "role": {
+                      "type": "string"
+                    },
+                    "updated_at": {
+                      "type": "string"
+                    },
+                    "user_metadata": {
+                      "type": "object",
+                      "keys": [
+                        "email_verified",
+                        "full_name"
+                      ],
+                      "fields": null
+                    }
+                  }
+                }
+              }
+            },
+            "error": {
+              "type": "null"
+            }
+          }
+        },
+        "subject_matches": true,
+        "role": "authenticated"
+      }
+    },
+    {
+      "name": "anonymous mode RPC starts off",
+      "passed": true,
+      "detail": {
+        "raw_response_shape": {
+          "type": "object",
+          "keys": [
+            "count",
+            "data",
+            "error",
+            "status",
+            "statusText",
+            "success"
+          ],
+          "fields": {
+            "count": {
+              "type": "null"
+            },
+            "data": {
+              "type": "string"
+            },
+            "error": {
+              "type": "null"
+            },
+            "status": {
+              "type": "number"
+            },
+            "statusText": {
+              "type": "string"
+            },
+            "success": {
+              "type": "boolean"
+            }
+          }
+        },
+        "value": "off"
+      }
+    },
+    {
+      "name": "off mode hides public topics",
+      "passed": true,
+      "detail": {
+        "raw_response_shape": {
+          "type": "object",
+          "keys": [
+            "count",
+            "data",
+            "error",
+            "status",
+            "statusText",
+            "success"
+          ],
+          "fields": {
+            "count": {
+              "type": "null"
+            },
+            "data": {
+              "type": "array",
+              "length": 0,
+              "item": null
+            },
+            "error": {
+              "type": "null"
+            },
+            "status": {
+              "type": "number"
+            },
+            "statusText": {
+              "type": "string"
+            },
+            "success": {
+              "type": "boolean"
+            }
+          }
+        },
+        "count": 0
+      }
+    },
+    {
+      "name": "anonymous cannot call private membership check",
+      "passed": true,
+      "detail": {
+        "raw_response_shape": {
+          "type": "object",
+          "keys": [
+            "count",
+            "data",
+            "error",
+            "status",
+            "statusText",
+            "success"
+          ],
+          "fields": {
+            "count": {
+              "type": "null"
+            },
+            "data": {
+              "type": "null"
+            },
+            "error": {
+              "type": "object",
+              "keys": [
+                "code",
+                "details",
+                "hint",
+                "message"
+              ],
+              "fields": {
+                "code": {
+                  "type": "string"
+                },
+                "details": {
+                  "type": "null"
+                },
+                "hint": {
+                  "type": "null"
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            },
+            "status": {
+              "type": "number"
+            },
+            "statusText": {
+              "type": "string"
+            },
+            "success": {
+              "type": "boolean"
+            }
+          }
+        },
+        "code": "42501",
+        "message": "permission denied for function forum_is_beta_member",
+        "expected_message_matched": true
+      }
+    },
+    {
+      "name": "non-member self-check starts false",
+      "passed": true,
+      "detail": {
+        "raw_response_shape": {
+          "type": "object",
+          "keys": [
+            "count",
+            "data",
+            "error",
+            "status",
+            "statusText",
+            "success"
+          ],
+          "fields": {
+            "count": {
+              "type": "null"
+            },
+            "data": {
+              "type": "boolean"
+            },
+            "error": {
+              "type": "null"
+            },
+            "status": {
+              "type": "number"
+            },
+            "statusText": {
+              "type": "string"
+            },
+            "success": {
+              "type": "boolean"
+            }
+          }
+        },
+        "value": false
+      }
+    },
+    {
+      "name": "non-admin cannot enroll beta members",
+      "passed": true,
+      "detail": {
+        "raw_response_shape": {
+          "type": "object",
+          "keys": [
+            "count",
+            "data",
+            "error",
+            "status",
+            "statusText",
+            "success"
+          ],
+          "fields": {
+            "count": {
+              "type": "null"
+            },
+            "data": {
+              "type": "null"
+            },
+            "error": {
+              "type": "object",
+              "keys": [
+                "code",
+                "details",
+                "hint",
+                "message"
+              ],
+              "fields": {
+                "code": {
+                  "type": "string"
+                },
+                "details": {
+                  "type": "null"
+                },
+                "hint": {
+                  "type": "null"
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            },
+            "status": {
+              "type": "number"
+            },
+            "statusText": {
+              "type": "string"
+            },
+            "success": {
+              "type": "boolean"
+            }
+          }
+        },
+        "code": "42501",
+        "message": "not authorized",
+        "expected_message_matched": true
+      }
+    },
+    {
+      "name": "authenticated JWT cannot read private beta table",
+      "passed": true,
+      "detail": {
+        "raw_response_shape": {
+          "type": "object",
+          "keys": [
+            "count",
+            "data",
+            "error",
+            "status",
+            "statusText",
+            "success"
+          ],
+          "fields": {
+            "count": {
+              "type": "null"
+            },
+            "data": {
+              "type": "null"
+            },
+            "error": {
+              "type": "object",
+              "keys": [
+                "code",
+                "details",
+                "hint",
+                "message"
+              ],
+              "fields": {
+                "code": {
+                  "type": "string"
+                },
+                "details": {
+                  "type": "null"
+                },
+                "hint": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            },
+            "status": {
+              "type": "number"
+            },
+            "statusText": {
+              "type": "string"
+            },
+            "success": {
+              "type": "boolean"
+            }
+          }
+        },
+        "code": "42501",
+        "message": "permission denied for table forum_beta_members",
+        "expected_message_matched": true
+      }
+    },
+    {
+      "name": "admin enrolls one member",
+      "passed": true,
+      "detail": {
+        "raw_response_shape": {
+          "type": "object",
+          "keys": [
+            "count",
+            "data",
+            "error",
+            "status",
+            "statusText",
+            "success"
+          ],
+          "fields": {
+            "count": {
+              "type": "null"
+            },
+            "data": {
+              "type": "boolean"
+            },
+            "error": {
+              "type": "null"
+            },
+            "status": {
+              "type": "number"
+            },
+            "statusText": {
+              "type": "string"
+            },
+            "success": {
+              "type": "boolean"
+            }
+          }
+        },
+        "value": true
+      }
+    },
+    {
+      "name": "admin list returns exact enrolled member and adder",
+      "passed": true,
+      "detail": {
+        "raw_response_shape": {
+          "type": "object",
+          "keys": [
+            "count",
+            "data",
+            "error",
+            "status",
+            "statusText",
+            "success"
+          ],
+          "fields": {
+            "count": {
+              "type": "null"
+            },
+            "data": {
+              "type": "array",
+              "length": 1,
+              "item": {
+                "type": "object",
+                "keys": [
+                  "added_at",
+                  "added_by_username",
+                  "username"
+                ],
+                "fields": {
+                  "added_at": {
+                    "type": "string"
+                  },
+                  "added_by_username": {
+                    "type": "string"
+                  },
+                  "username": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "error": {
+              "type": "null"
+            },
+            "status": {
+              "type": "number"
+            },
+            "statusText": {
+              "type": "string"
+            },
+            "success": {
+              "type": "boolean"
+            }
+          }
+        },
+        "count": 1,
+        "username_matches": true,
+        "adder_matches": true
+      }
+    },
+    {
+      "name": "enrolled member self-check is true",
+      "passed": true,
+      "detail": {
+        "raw_response_shape": {
+          "type": "object",
+          "keys": [
+            "count",
+            "data",
+            "error",
+            "status",
+            "statusText",
+            "success"
+          ],
+          "fields": {
+            "count": {
+              "type": "null"
+            },
+            "data": {
+              "type": "boolean"
+            },
+            "error": {
+              "type": "null"
+            },
+            "status": {
+              "type": "number"
+            },
+            "statusText": {
+              "type": "string"
+            },
+            "success": {
+              "type": "boolean"
+            }
+          }
+        },
+        "value": true
+      }
+    },
+    {
+      "name": "admin JWT opens closed beta",
+      "passed": true,
+      "detail": {
+        "raw_response_shape": {
+          "type": "object",
+          "keys": [
+            "count",
+            "data",
+            "error",
+            "status",
+            "statusText",
+            "success"
+          ],
+          "fields": {
+            "count": {
+              "type": "null"
+            },
+            "data": {
+              "type": "string"
+            },
+            "error": {
+              "type": "null"
+            },
+            "status": {
+              "type": "number"
+            },
+            "statusText": {
+              "type": "string"
+            },
+            "success": {
+              "type": "boolean"
+            }
+          }
+        },
+        "value": "beta"
+      }
+    },
+    {
+      "name": "anonymous readers see six topics during beta",
+      "passed": true,
+      "detail": {
+        "raw_response_shape": {
+          "type": "object",
+          "keys": [
+            "count",
+            "data",
+            "error",
+            "status",
+            "statusText",
+            "success"
+          ],
+          "fields": {
+            "count": {
+              "type": "null"
+            },
+            "data": {
+              "type": "array",
+              "length": 6,
+              "item": {
+                "type": "object",
+                "keys": [
+                  "description",
+                  "display_order",
+                  "id",
+                  "kind",
+                  "name",
+                  "slug"
+                ],
+                "fields": {
+                  "description": {
+                    "type": "string"
+                  },
+                  "display_order": {
+                    "type": "number"
+                  },
+                  "id": {
+                    "type": "number"
+                  },
+                  "kind": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "slug": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "error": {
+              "type": "null"
+            },
+            "status": {
+              "type": "number"
+            },
+            "statusText": {
+              "type": "string"
+            },
+            "success": {
+              "type": "boolean"
+            }
+          }
+        },
+        "count": 6
+      }
+    },
+    {
+      "name": "non-member publishing is denied in beta",
+      "passed": true,
+      "detail": {
+        "raw_response_shape": {
+          "type": "object",
+          "keys": [
+            "count",
+            "data",
+            "error",
+            "status",
+            "statusText",
+            "success"
+          ],
+          "fields": {
+            "count": {
+              "type": "null"
+            },
+            "data": {
+              "type": "null"
+            },
+            "error": {
+              "type": "object",
+              "keys": [
+                "code",
+                "details",
+                "hint",
+                "message"
+              ],
+              "fields": {
+                "code": {
+                  "type": "string"
+                },
+                "details": {
+                  "type": "null"
+                },
+                "hint": {
+                  "type": "null"
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            },
+            "status": {
+              "type": "number"
+            },
+            "statusText": {
+              "type": "string"
+            },
+            "success": {
+              "type": "boolean"
+            }
+          }
+        },
+        "code": "42501",
+        "message": "closed beta access is required",
+        "expected_message_matched": true
+      }
+    },
+    {
+      "name": "enrolled member creates beta post",
+      "passed": true,
+      "detail": {
+        "raw_response_shape": {
+          "type": "object",
+          "keys": [
+            "count",
+            "data",
+            "error",
+            "status",
+            "statusText",
+            "success"
+          ],
+          "fields": {
+            "count": {
+              "type": "null"
+            },
+            "data": {
+              "type": "number"
+            },
+            "error": {
+              "type": "null"
+            },
+            "status": {
+              "type": "number"
+            },
+            "statusText": {
+              "type": "string"
+            },
+            "success": {
+              "type": "boolean"
+            }
+          }
+        },
+        "post_id": 7
+      }
+    },
+    {
+      "name": "enrolled member creates beta comment",
+      "passed": true,
+      "detail": {
+        "raw_response_shape": {
+          "type": "object",
+          "keys": [
+            "count",
+            "data",
+            "error",
+            "status",
+            "statusText",
+            "success"
+          ],
+          "fields": {
+            "count": {
+              "type": "null"
+            },
+            "data": {
+              "type": "number"
+            },
+            "error": {
+              "type": "null"
+            },
+            "status": {
+              "type": "number"
+            },
+            "statusText": {
+              "type": "string"
+            },
+            "success": {
+              "type": "boolean"
+            }
+          }
+        },
+        "comment_id": 6
+      }
+    },
+    {
+      "name": "anonymous reader can open beta thread",
+      "passed": true,
+      "detail": {
+        "raw_response_shape": {
+          "type": "object",
+          "keys": [
+            "count",
+            "data",
+            "error",
+            "status",
+            "statusText",
+            "success"
+          ],
+          "fields": {
+            "count": {
+              "type": "null"
+            },
+            "data": {
+              "type": "object",
+              "keys": [
+                "author_username",
+                "body",
+                "comment_count",
+                "created_at",
+                "downvote_count",
+                "edited_at",
+                "id",
+                "is_deleted",
+                "is_locked",
+                "is_solved",
+                "score",
+                "title",
+                "topic_name",
+                "topic_slug",
+                "upvote_count",
+                "viewer_vote"
+              ],
+              "fields": {
+                "author_username": {
+                  "type": "string"
+                },
+                "body": {
+                  "type": "string"
+                },
+                "comment_count": {
+                  "type": "number"
+                },
+                "created_at": {
+                  "type": "string"
+                },
+                "downvote_count": {
+                  "type": "number"
+                },
+                "edited_at": {
+                  "type": "null"
+                },
+                "id": {
+                  "type": "number"
+                },
+                "is_deleted": {
+                  "type": "boolean"
+                },
+                "is_locked": {
+                  "type": "boolean"
+                },
+                "is_solved": {
+                  "type": "boolean"
+                },
+                "score": {
+                  "type": "number"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "topic_name": {
+                  "type": "string"
+                },
+                "topic_slug": {
+                  "type": "string"
+                },
+                "upvote_count": {
+                  "type": "number"
+                },
+                "viewer_vote": {
+                  "type": "number"
+                }
+              }
+            },
+            "error": {
+              "type": "null"
+            },
+            "status": {
+              "type": "number"
+            },
+            "statusText": {
+              "type": "string"
+            },
+            "success": {
+              "type": "boolean"
+            }
+          }
+        },
+        "post_id": 7
+      }
+    },
+    {
+      "name": "non-member can submit urgent safety report",
+      "passed": true,
+      "detail": {
+        "raw_response_shape": {
+          "type": "object",
+          "keys": [
+            "count",
+            "data",
+            "error",
+            "status",
+            "statusText",
+            "success"
+          ],
+          "fields": {
+            "count": {
+              "type": "null"
+            },
+            "data": {
+              "type": "number"
+            },
+            "error": {
+              "type": "null"
+            },
+            "status": {
+              "type": "number"
+            },
+            "statusText": {
+              "type": "string"
+            },
+            "success": {
+              "type": "boolean"
+            }
+          }
+        },
+        "report_id": 14
+      }
+    },
+    {
+      "name": "admin receives urgent report with moderation context",
+      "passed": true,
+      "detail": {
+        "raw_response_shape": {
+          "type": "object",
+          "keys": [
+            "count",
+            "data",
+            "error",
+            "status",
+            "statusText",
+            "success"
+          ],
+          "fields": {
+            "count": {
+              "type": "null"
+            },
+            "data": {
+              "type": "array",
+              "length": 1,
+              "item": {
+                "type": "object",
+                "keys": [
+                  "content_preview",
+                  "created_at",
+                  "id",
+                  "note",
+                  "post_id",
+                  "post_is_locked",
+                  "post_title",
+                  "priority",
+                  "reason",
+                  "reporter_id",
+                  "status",
+                  "target_author_username",
+                  "target_exists",
+                  "target_id",
+                  "target_is_deleted",
+                  "target_is_hidden",
+                  "target_type",
+                  "topic_slug"
+                ],
+                "fields": {
+                  "content_preview": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": "number"
+                  },
+                  "note": {
+                    "type": "string"
+                  },
+                  "post_id": {
+                    "type": "number"
+                  },
+                  "post_is_locked": {
+                    "type": "boolean"
+                  },
+                  "post_title": {
+                    "type": "string"
+                  },
+                  "priority": {
+                    "type": "string"
+                  },
+                  "reason": {
+                    "type": "string"
+                  },
+                  "reporter_id": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string"
+                  },
+                  "target_author_username": {
+                    "type": "string"
+                  },
+                  "target_exists": {
+                    "type": "boolean"
+                  },
+                  "target_id": {
+                    "type": "number"
+                  },
+                  "target_is_deleted": {
+                    "type": "boolean"
+                  },
+                  "target_is_hidden": {
+                    "type": "boolean"
+                  },
+                  "target_type": {
+                    "type": "string"
+                  },
+                  "topic_slug": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "error": {
+              "type": "null"
+            },
+            "status": {
+              "type": "number"
+            },
+            "statusText": {
+              "type": "string"
+            },
+            "success": {
+              "type": "boolean"
+            }
+          }
+        },
+        "count": 1,
+        "urgent_reason_matches": true,
+        "post_matches": true,
+        "context_present": true
+      }
+    },
+    {
+      "name": "admin removes enrolled member",
+      "passed": true,
+      "detail": {
+        "raw_response_shape": {
+          "type": "object",
+          "keys": [
+            "count",
+            "data",
+            "error",
+            "status",
+            "statusText",
+            "success"
+          ],
+          "fields": {
+            "count": {
+              "type": "null"
+            },
+            "data": {
+              "type": "boolean"
+            },
+            "error": {
+              "type": "null"
+            },
+            "status": {
+              "type": "number"
+            },
+            "statusText": {
+              "type": "string"
+            },
+            "success": {
+              "type": "boolean"
+            }
+          }
+        },
+        "value": false
+      }
+    },
+    {
+      "name": "removed member self-check becomes false",
+      "passed": true,
+      "detail": {
+        "raw_response_shape": {
+          "type": "object",
+          "keys": [
+            "count",
+            "data",
+            "error",
+            "status",
+            "statusText",
+            "success"
+          ],
+          "fields": {
+            "count": {
+              "type": "null"
+            },
+            "data": {
+              "type": "boolean"
+            },
+            "error": {
+              "type": "null"
+            },
+            "status": {
+              "type": "number"
+            },
+            "statusText": {
+              "type": "string"
+            },
+            "success": {
+              "type": "boolean"
+            }
+          }
+        },
+        "value": false
+      }
+    },
+    {
+      "name": "removed member immediately loses beta write access",
+      "passed": true,
+      "detail": {
+        "raw_response_shape": {
+          "type": "object",
+          "keys": [
+            "count",
+            "data",
+            "error",
+            "status",
+            "statusText",
+            "success"
+          ],
+          "fields": {
+            "count": {
+              "type": "null"
+            },
+            "data": {
+              "type": "null"
+            },
+            "error": {
+              "type": "object",
+              "keys": [
+                "code",
+                "details",
+                "hint",
+                "message"
+              ],
+              "fields": {
+                "code": {
+                  "type": "string"
+                },
+                "details": {
+                  "type": "null"
+                },
+                "hint": {
+                  "type": "null"
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            },
+            "status": {
+              "type": "number"
+            },
+            "statusText": {
+              "type": "string"
+            },
+            "success": {
+              "type": "boolean"
+            }
+          }
+        },
+        "code": "42501",
+        "message": "closed beta access is required",
+        "expected_message_matched": true
+      }
+    },
+    {
+      "name": "open mode remains available to admin",
+      "passed": true,
+      "detail": {
+        "raw_response_shape": {
+          "type": "object",
+          "keys": [
+            "count",
+            "data",
+            "error",
+            "status",
+            "statusText",
+            "success"
+          ],
+          "fields": {
+            "count": {
+              "type": "null"
+            },
+            "data": {
+              "type": "string"
+            },
+            "error": {
+              "type": "null"
+            },
+            "status": {
+              "type": "number"
+            },
+            "statusText": {
+              "type": "string"
+            },
+            "success": {
+              "type": "boolean"
+            }
+          }
+        },
+        "value": "open"
+      }
+    },
+    {
+      "name": "non-member can write when mode is open",
+      "passed": true,
+      "detail": {
+        "raw_response_shape": {
+          "type": "object",
+          "keys": [
+            "count",
+            "data",
+            "error",
+            "status",
+            "statusText",
+            "success"
+          ],
+          "fields": {
+            "count": {
+              "type": "null"
+            },
+            "data": {
+              "type": "number"
+            },
+            "error": {
+              "type": "null"
+            },
+            "status": {
+              "type": "number"
+            },
+            "statusText": {
+              "type": "string"
+            },
+            "success": {
+              "type": "boolean"
+            }
+          }
+        },
+        "post_id": 8
+      }
+    },
+    {
+      "name": "admin can pause contributions with read-only mode",
+      "passed": true,
+      "detail": {
+        "raw_response_shape": {
+          "type": "object",
+          "keys": [
+            "count",
+            "data",
+            "error",
+            "status",
+            "statusText",
+            "success"
+          ],
+          "fields": {
+            "count": {
+              "type": "null"
+            },
+            "data": {
+              "type": "string"
+            },
+            "error": {
+              "type": "null"
+            },
+            "status": {
+              "type": "number"
+            },
+            "statusText": {
+              "type": "string"
+            },
+            "success": {
+              "type": "boolean"
+            }
+          }
+        },
+        "value": "read_only"
+      }
+    },
+    {
+      "name": "read-only blocks publishing before membership evaluation",
+      "passed": true,
+      "detail": {
+        "raw_response_shape": {
+          "type": "object",
+          "keys": [
+            "count",
+            "data",
+            "error",
+            "status",
+            "statusText",
+            "success"
+          ],
+          "fields": {
+            "count": {
+              "type": "null"
+            },
+            "data": {
+              "type": "null"
+            },
+            "error": {
+              "type": "object",
+              "keys": [
+                "code",
+                "details",
+                "hint",
+                "message"
+              ],
+              "fields": {
+                "code": {
+                  "type": "string"
+                },
+                "details": {
+                  "type": "null"
+                },
+                "hint": {
+                  "type": "null"
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            },
+            "status": {
+              "type": "number"
+            },
+            "statusText": {
+              "type": "string"
+            },
+            "success": {
+              "type": "boolean"
+            }
+          }
+        },
+        "code": "55000",
+        "message": "forum is not open for contributions",
+        "expected_message_matched": true
+      }
+    },
+    {
+      "name": "admin returns forum to off",
+      "passed": true,
+      "detail": {
+        "raw_response_shape": {
+          "type": "object",
+          "keys": [
+            "count",
+            "data",
+            "error",
+            "status",
+            "statusText",
+            "success"
+          ],
+          "fields": {
+            "count": {
+              "type": "null"
+            },
+            "data": {
+              "type": "string"
+            },
+            "error": {
+              "type": "null"
+            },
+            "status": {
+              "type": "number"
+            },
+            "statusText": {
+              "type": "string"
+            },
+            "success": {
+              "type": "boolean"
+            }
+          }
+        },
+        "value": "off"
+      }
+    },
+    {
+      "name": "beta membership list is empty before cleanup",
+      "passed": true,
+      "detail": {
+        "raw_response_shape": {
+          "type": "object",
+          "keys": [
+            "count",
+            "data",
+            "error",
+            "status",
+            "statusText",
+            "success"
+          ],
+          "fields": {
+            "count": {
+              "type": "null"
+            },
+            "data": {
+              "type": "array",
+              "length": 0,
+              "item": null
+            },
+            "error": {
+              "type": "null"
+            },
+            "status": {
+              "type": "number"
+            },
+            "statusText": {
+              "type": "string"
+            },
+            "success": {
+              "type": "boolean"
+            }
+          }
+        },
+        "count": 0
+      }
+    }
+  ],
+  "cleanup": {
+    "attempted": true,
+    "completed": true,
+    "errors": [],
+    "residue": {
+      "fixture_auth_users": 0,
+      "fixture_profiles": 0,
+      "beta_members": 0,
+      "posts": 0,
+      "comments": 0,
+      "votes": 0,
+      "reports": 0,
+      "fixture_user_stats": 0,
+      "fixture_logs": 0,
+      "fixture_target_user_logs": 0,
+      "fixture_rate_events": 0
+    }
+  },
+  "fatal": null,
+  "finished_at": "2026-08-07T10:59:16.528Z"
+}

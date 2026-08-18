@@ -1,0 +1,40 @@
+{
+  "version": 1,
+  "request_id": "faf13b37-26d5-4b2c-a50b-7704bdc44a9b",
+  "youtube_playlist_id": "PLsgHooHkqhhPx8PUmYV2q6n6IbpGnCDlg",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "4555712a-b4ea-446c-8f57-04d2257562f9",
+    "youtube_playlist_id": "PLsgHooHkqhhPx8PUmYV2q6n6IbpGnCDlg",
+    "teacher": "Anoop Vashishtha",
+    "source_url": "https://www.youtube.com/@UnacademyNEET",
+    "source_label": "Official Unacademy NEET channel-owned playlist naming Anoop Vashishtha and retained lecture titles naming Anoop Sir",
+    "reviewed_by": "Owner",
+    "reviewed_on": "2026-08-04",
+    "youtube_video_ids": [
+      "W1emUNwTRKM", "cIaBgN4nhCA", "qkOrl0GnAWk", "IXDA3r63p5g", "cWaHweIZ-6w",
+      "mcQeeWsfS1g", "C2rrFKYkI_k", "R95078jPg_Y", "hebLKEkhVQ8"
+    ]
+  },
+  "assignments": [
+    { "position": 1, "youtube_video_id": "W1emUNwTRKM", "chapter": "Electrochemistry", "lesson_number": 1 },
+    { "position": 2, "youtube_video_id": "cIaBgN4nhCA", "chapter": "Electrochemistry", "lesson_number": 2 },
+    { "position": 3, "youtube_video_id": "qkOrl0GnAWk", "chapter": "Electrochemistry", "lesson_number": 3 },
+    { "position": 4, "youtube_video_id": "IXDA3r63p5g", "chapter": "Electrochemistry", "lesson_number": 4 },
+    { "position": 5, "youtube_video_id": "cWaHweIZ-6w", "chapter": "Electrochemistry", "lesson_number": 5 },
+    { "position": 6, "youtube_video_id": "mcQeeWsfS1g", "chapter": "Electrochemistry", "lesson_number": 6 },
+    { "position": 7, "youtube_video_id": "C2rrFKYkI_k", "chapter": "Electrochemistry", "lesson_number": 7 },
+    { "position": 8, "youtube_video_id": "R95078jPg_Y", "chapter": "Electrochemistry", "lesson_number": 8 },
+    { "position": 9, "youtube_video_id": "hebLKEkhVQ8", "chapter": "Electrochemistry", "lesson_number": 9 }
+  ],
+  "exclusions": [
+    { "position": 10, "youtube_video_id": "j0Ffkat6N8w", "reason": "Menti quiz; keep practice separate from the lecture catalogue." },
+    { "position": 11, "youtube_video_id": "IdHXZ9tMPCY", "reason": "Menti quiz; keep practice separate from the lecture catalogue." },
+    { "position": 12, "youtube_video_id": "skV0oxb8cHA", "reason": "Menti quiz; keep practice separate from the lecture catalogue." },
+    { "position": 13, "youtube_video_id": "Meb3ufKTZ6I", "reason": "Menti quiz; keep practice separate from the lecture catalogue." },
+    { "position": 14, "youtube_video_id": "_Lpva89U6oM", "reason": "Menti quiz; keep practice separate from the lecture catalogue." },
+    { "position": 15, "youtube_video_id": "ALaoZFAUlpY", "reason": "Menti quiz; keep practice separate from the lecture catalogue." },
+    { "position": 16, "youtube_video_id": "ahShHvQE81s", "reason": "Broad Physical Chemistry mega quiz; keep practice separate from the lecture catalogue." }
+  ]
+}

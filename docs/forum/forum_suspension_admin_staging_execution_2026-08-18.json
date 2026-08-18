@@ -1,0 +1,122 @@
+{
+  "version": 1,
+  "recorded_at": "2026-08-18T11:23:02Z",
+  "authorization": "The owner explicitly authorized the suspension-admin staging sequence and separately confirmed removal of the staging fixture helper.",
+  "target": {
+    "project_ref": "essmxonestbrgmgrtywn",
+    "environment": "staging",
+    "production_project_ref": "kezelafqhgqrprpadmlf",
+    "production_touched": false
+  },
+  "main_gate": {
+    "pull_request": 88,
+    "merge_commit": "ae187cf7067d2236222df90c4686ca84d438e8cf",
+    "ci_run_id": 32129928338,
+    "ci_conclusion": "success"
+  },
+  "package": {
+    "directory": "staging/forum_suspension_admin_v1_persistent",
+    "artifacts": {
+      "install.sql": "37aa6382c310c3a6409b5aeb51405ba59fead6fd6f1850dd0d8152d7e348d222",
+      "rollback.sql": "bdbb1e893ea28530254e847e0e8b15889e54ae714e9bc82035fc89e94b073b4c",
+      "http_fixture_helper.sql": "667e13a85cdbb18f0ea3d9bbb4d046200325a8042b06a30dc801d5ba7eeae2b7",
+      "http_fixture_helper_rollback.sql": "f24c28748a6828da9a93df0e6d251df0d777b2ef443f74f0384900d43166de2e"
+    },
+    "focused_tests": {
+      "files_passed": 3,
+      "tests_passed": 19,
+      "tests_failed": 0
+    }
+  },
+  "readiness": {
+    "evidence_path": "docs/forum/forum_suspension_admin_staging_readiness_2026-08-18.json",
+    "evidence_sha256": "821c2859148ec761efa291b76639f2df1a062f8203a71635375104910d9f9826",
+    "passed": true,
+    "writes_attempted": false,
+    "environment": "staging",
+    "forum_mode": "off",
+    "profiles": 0,
+    "forum_activity_rows": 0,
+    "auth_users": 0,
+    "wrappers_absent_before_install": true,
+    "fixture_helper_absent_before_install": true
+  },
+  "install": {
+    "normalized_editor_buffer_exact": true,
+    "normalized_editor_buffer_sha256": "37aa6382c310c3a6409b5aeb51405ba59fead6fd6f1850dd0d8152d7e348d222",
+    "transaction_committed": true,
+    "terminal_row": {
+      "environment_after": "staging",
+      "forum_mode": "off",
+      "set_suspension_by_username_installed": true,
+      "list_suspensions_installed": true,
+      "suspension_rows_unchanged": true,
+      "moderation_log_rows_unchanged": true,
+      "posts_unchanged": true,
+      "comments_unchanged": true,
+      "reports_unchanged": true
+    }
+  },
+  "fixture_helper_install": {
+    "normalized_editor_buffer_exact": true,
+    "normalized_editor_buffer_sha256": "667e13a85cdbb18f0ea3d9bbb4d046200325a8042b06a30dc801d5ba7eeae2b7",
+    "terminal_row": {
+      "environment_after": "staging",
+      "forum_mode": "off",
+      "fixture_helper_installed": true,
+      "service_role_can_execute": true,
+      "authenticated_cannot_execute": true
+    }
+  },
+  "jwt_proof": {
+    "evidence_path": "docs/forum/forum_suspension_admin_jwt_staging_evidence_2026-08-18.json",
+    "evidence_sha256": "2085e9b2783592af347a01027c2d205bf48e8d68a16685d723f92754dc349d89",
+    "transport": "Supabase Auth password JWT plus PostgREST HTTP RPC",
+    "checks_total": 18,
+    "checks_passed": 18,
+    "checks_failed": 0,
+    "fatal": null,
+    "cleanup": {
+      "attempted": true,
+      "completed": true,
+      "errors": 0,
+      "fixture_profiles": 0,
+      "fixture_suspensions": 0,
+      "fixture_logs": 0,
+      "fixture_posts": 0,
+      "fixture_rate_events": 0,
+      "auth_users": 0
+    }
+  },
+  "fixture_helper_removal": {
+    "normalized_editor_buffer_exact": true,
+    "normalized_editor_buffer_sha256": "f24c28748a6828da9a93df0e6d251df0d777b2ef443f74f0384900d43166de2e",
+    "terminal_row": {
+      "environment_after": "staging",
+      "forum_mode": "off",
+      "fixture_helper_removed": true
+    }
+  },
+  "final_read_only_postflight": {
+    "passed": true,
+    "writes_attempted": false,
+    "environment": "staging",
+    "forum_mode": "off",
+    "list_wrapper_present": true,
+    "set_wrapper_present": true,
+    "fixture_helper_absent": true,
+    "profiles": 0,
+    "forum_posts": 0,
+    "forum_comments": 0,
+    "forum_reports": 0,
+    "forum_suspensions": 0,
+    "forum_moderation_log": 0,
+    "forum_rate_events": 0,
+    "auth_users": 0
+  },
+  "credential_hygiene": {
+    "service_role_key_recorded": false,
+    "email_address_recorded": false,
+    "jwt_recorded": false
+  }
+}

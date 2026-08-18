@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "request_id": "76e78239-ee87-4877-a801-03f3a1c51b57",
+  "youtube_playlist_id": "PLsgHooHkqhhN29ebCtU31NQc4RSZQDJ0z",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "8f19ac66-a1b4-4304-8a6f-468131f63732",
+    "youtube_playlist_id": "PLsgHooHkqhhN29ebCtU31NQc4RSZQDJ0z",
+    "teacher": "Ashwani Tyagi",
+    "source_url": "https://www.youtube.com/playlist?list=PLsgHooHkqhhN29ebCtU31NQc4RSZQDJ0z",
+    "source_label": "Official Unacademy NEET channel-owned Ionic Equilibrium playlist naming Ashwani Tyagi; all eight retained L1-L8 lecture titles name Ashwani Sir",
+    "reviewed_by": "Owner",
+    "reviewed_on": "2026-08-07",
+    "youtube_video_ids": ["cmkw7yEt9aM", "RNOT5OZRsto", "rz7hyHgXRng", "Ef0E436QV_g", "P1iYtGppf7w", "P4XHbcrBsyQ", "O_4qhTPCLcI", "EbAahd3ecJc"]
+  },
+  "assignments": [
+    { "position": 1, "youtube_video_id": "cmkw7yEt9aM", "chapter": "Ionic Equilibrium", "lesson_number": 1 },
+    { "position": 2, "youtube_video_id": "RNOT5OZRsto", "chapter": "Ionic Equilibrium", "lesson_number": 2 },
+    { "position": 3, "youtube_video_id": "rz7hyHgXRng", "chapter": "Ionic Equilibrium", "lesson_number": 3 },
+    { "position": 4, "youtube_video_id": "Ef0E436QV_g", "chapter": "Ionic Equilibrium", "lesson_number": 4 },
+    { "position": 5, "youtube_video_id": "P1iYtGppf7w", "chapter": "Ionic Equilibrium", "lesson_number": 5 },
+    { "position": 6, "youtube_video_id": "P4XHbcrBsyQ", "chapter": "Ionic Equilibrium", "lesson_number": 6 },
+    { "position": 7, "youtube_video_id": "O_4qhTPCLcI", "chapter": "Ionic Equilibrium", "lesson_number": 7 },
+    { "position": 8, "youtube_video_id": "EbAahd3ecJc", "chapter": "Ionic Equilibrium", "lesson_number": 8 }
+  ],
+  "exclusions": []
+}

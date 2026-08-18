@@ -34,24 +34,43 @@ const EXPLORE = [
     : []),
 ];
 
+const CONTACT_EMAIL = "jeeneetardshelp@gmail.com";
+const CONTACT_URL = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(CONTACT_EMAIL)}&su=${encodeURIComponent("JEENEETARD feedback")}`;
+
 const LEGAL = [
   { label: "Terms & Disclaimer", to: "/terms" },
   { label: "Privacy Policy", to: "/privacy" },
+  { label: "Contact us", href: CONTACT_URL, external: true },
 ];
 
-function FooterLink({ to, children }) {
+const footerLinkClassName =
+  "group/fl inline-flex min-h-11 items-center gap-1.5 rounded-md text-sm text-ink-2 transition-colors duration-200 hover:text-ink";
+
+function FooterLink({ to, href, external = false, children }) {
+  const content = (
+    <>
+      {children}
+      <ArrowUpRight
+        aria-hidden="true"
+        className="h-3.5 w-3.5 opacity-0 transition-opacity duration-200 group-hover/fl:opacity-60"
+      />
+    </>
+  );
+
   return (
     <li>
-      <Link
-        to={to}
-        className="group/fl inline-flex min-h-11 items-center gap-1.5 rounded-md text-sm text-ink-2 transition-colors duration-200 hover:text-ink"
-      >
-        {children}
-        <ArrowUpRight
-          aria-hidden="true"
-          className="h-3.5 w-3.5 opacity-0 transition-opacity duration-200 group-hover/fl:opacity-60"
-        />
-      </Link>
+      {href ? (
+        <a
+          href={href}
+          className={footerLinkClassName}
+          target={external ? "_blank" : undefined}
+          rel={external ? "noreferrer" : undefined}
+        >
+          {content}
+        </a>
+      ) : (
+        <Link to={to} className={footerLinkClassName}>{content}</Link>
+      )}
     </li>
   );
 }
@@ -135,10 +154,30 @@ export default function Footer() {
             <h2 className="text-eyebrow text-ink-3">Good to know</h2>
             <ul className="mt-4">
               {LEGAL.map((item) => (
-                <FooterLink key={item.to} to={item.to}>{item.label}</FooterLink>
+                <FooterLink
+                  key={item.to ?? item.href}
+                  to={item.to}
+                  href={item.href}
+                  external={item.external}
+                >
+                  {item.label}
+                </FooterLink>
               ))}
             </ul>
             <p className="mt-6 max-w-xs text-xs leading-relaxed text-ink-3">
+              Have feedback or an idea for a feature that would make the website
+              better? Email us at{" "}
+              <a
+                href={CONTACT_URL}
+                target="_blank"
+                rel="noreferrer"
+                className="font-medium text-ink-2 underline decoration-hairline underline-offset-4 transition-colors hover:text-ink"
+              >
+                {CONTACT_EMAIL}
+              </a>
+              . We&apos;d love to hear from you.
+            </p>
+            <p className="mt-4 max-w-xs text-xs leading-relaxed text-ink-3">
               Videos play through YouTube&apos;s official embedded player and remain
               the property of their respective creators. This site is not affiliated
               with, endorsed by, or sponsored by YouTube, Google, or any coaching

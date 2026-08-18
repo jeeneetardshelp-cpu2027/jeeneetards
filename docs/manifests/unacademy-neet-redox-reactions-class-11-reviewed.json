@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "request_id": "26a97d9c-a7f4-417d-a8d3-d8eb99ef9169",
+  "youtube_playlist_id": "PLsgHooHkqhhPnLRiFEOjuIGraO0odfi1I",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "809b153c-b5ff-48e0-a869-02faa49b0e8f",
+    "youtube_playlist_id": "PLsgHooHkqhhPnLRiFEOjuIGraO0odfi1I",
+    "teacher": "Anoop Vashishtha",
+    "source_url": "https://www.youtube.com/playlist?list=PLsgHooHkqhhPnLRiFEOjuIGraO0odfi1I",
+    "source_label": "Official Unacademy NEET channel-owned Redox Reactions playlist; the playlist and all retained lecture titles name Anoop Vashishtha",
+    "reviewed_by": "Owner",
+    "reviewed_on": "2026-08-05",
+    "youtube_video_ids": [
+      "DvToaD9FW8A", "p3oZQIeg4kk", "x_QIegDKLz8", "_lNpzK29YlA", "UBfI77x0Xi0", "ePR6EEnG6rQ", "K81lTRYjmTA"
+    ]
+  },
+  "assignments": [
+    { "position": 1, "youtube_video_id": "DvToaD9FW8A", "chapter": "Redox Reactions", "lesson_number": 1 },
+    { "position": 2, "youtube_video_id": "p3oZQIeg4kk", "chapter": "Redox Reactions", "lesson_number": 2 },
+    { "position": 3, "youtube_video_id": "x_QIegDKLz8", "chapter": "Redox Reactions", "lesson_number": 3 },
+    { "position": 4, "youtube_video_id": "_lNpzK29YlA", "chapter": "Redox Reactions", "lesson_number": 4 },
+    { "position": 5, "youtube_video_id": "UBfI77x0Xi0", "chapter": "Redox Reactions", "lesson_number": 5 },
+    { "position": 6, "youtube_video_id": "ePR6EEnG6rQ", "chapter": "Redox Reactions", "lesson_number": 6 },
+    { "position": 7, "youtube_video_id": "K81lTRYjmTA", "chapter": "Redox Reactions", "lesson_number": 7 }
+  ],
+  "exclusions": []
+}

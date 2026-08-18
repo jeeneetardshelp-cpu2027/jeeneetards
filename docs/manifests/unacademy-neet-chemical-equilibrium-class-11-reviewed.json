@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "request_id": "6cb95913-1011-49e2-9953-41d90be6bd24",
+  "youtube_playlist_id": "PLsgHooHkqhhPqS8MzgJCKn9bJwGRsR3Jl",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "d8125eb3-7281-43da-bfd4-61acd655121f",
+    "youtube_playlist_id": "PLsgHooHkqhhPqS8MzgJCKn9bJwGRsR3Jl",
+    "teacher": "Anoop Vashishtha",
+    "source_url": "https://www.youtube.com/playlist?list=PLsgHooHkqhhPqS8MzgJCKn9bJwGRsR3Jl",
+    "source_label": "Official Unacademy NEET channel-owned Chemical Equilibrium playlist naming Anoop Vashishtha; every retained lecture names Anoop Sir or Anoop Vashishtha",
+    "reviewed_by": "Owner",
+    "reviewed_on": "2026-08-06",
+    "youtube_video_ids": ["aHfn4DL4wQY", "eSa1pql2qh4", "7pL4oKQWIjo", "CeTFK_I6Kkk", "szR6EqmoXOg", "WNNPo-cTx_0", "fVzvJNY5tU8", "QIfYzbTKDuI", "TVZZozr2Yqk", "NZLuN2gWiwM"]
+  },
+  "assignments": [
+    { "position": 1, "youtube_video_id": "aHfn4DL4wQY", "chapter": "Chemical Equilibrium", "lesson_number": 1 },
+    { "position": 2, "youtube_video_id": "eSa1pql2qh4", "chapter": "Chemical Equilibrium", "lesson_number": 2 },
+    { "position": 3, "youtube_video_id": "7pL4oKQWIjo", "chapter": "Chemical Equilibrium", "lesson_number": 3 },
+    { "position": 4, "youtube_video_id": "CeTFK_I6Kkk", "chapter": "Chemical Equilibrium", "lesson_number": 4 },
+    { "position": 5, "youtube_video_id": "szR6EqmoXOg", "chapter": "Chemical Equilibrium", "lesson_number": 5 },
+    { "position": 6, "youtube_video_id": "WNNPo-cTx_0", "chapter": "Chemical Equilibrium", "lesson_number": 6 },
+    { "position": 7, "youtube_video_id": "fVzvJNY5tU8", "chapter": "Chemical Equilibrium", "lesson_number": 7 },
+    { "position": 8, "youtube_video_id": "QIfYzbTKDuI", "chapter": "Chemical Equilibrium", "lesson_number": 8 },
+    { "position": 9, "youtube_video_id": "TVZZozr2Yqk", "chapter": "Chemical Equilibrium", "lesson_number": 9 },
+    { "position": 10, "youtube_video_id": "NZLuN2gWiwM", "chapter": "Chemical Equilibrium", "lesson_number": 10 }
+  ],
+  "exclusions": []
+}

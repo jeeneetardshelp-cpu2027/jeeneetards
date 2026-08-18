@@ -20,6 +20,15 @@ Use this checklist at the start and end of every task in this repository.
 - Do not run migrations merely because SQL files exist.
 - Do not rerun completed staging or production migrations without a named
   reason and owner approval.
+- Treat every checked-in SQL file, manifest, review file, and generated package
+  as evidence or a candidate input, not as an unfinished instruction. A general
+  `continue` does not authorize executing it.
+- Do not reapply chapter/class scopes v13 or v14. Production v14 was applied
+  once and independently verified on 2 August 2026; its reviewed source SHA-256
+  is `6334faeae27575df323a0e8b4561fb4fd471985a5e9978cf1f26bd6d0b4f1459`.
+- `docs/sql/complete_institute_guard_2026-08-02.sql` and
+  `docs/sql/search_lecture_subtitle_2026-08-02.sql` are prepared but not applied.
+  Do not execute either without a separate current gate and explicit approval.
 - Do not rerun the completed JEE faculty batch-1 migration or push faculty
   commit `0318c91093cabb13c9a73af7a7b2309a16909f76` to `release`; both are
   already live and verified.
@@ -31,6 +40,8 @@ Use this checklist at the start and end of every task in this repository.
   schedule, and do not rerun one automatically or manually without an explicit
   approved target and reason.
 - Keep production checks read-only unless the owner authorizes an exact write.
+- Allow only one production writer at a time. Pause imports, faculty jobs, and
+  any other process touching catalogue tables for the entire write window.
 
 ## Database-changing work
 
@@ -63,12 +74,16 @@ Use this checklist at the start and end of every task in this repository.
   [backup and restore readiness](backup_restore_readiness.md) first.
 - For NEET faculty normalization, follow the hash-pinned order and stop gates
   in [the rollout plan](faculty_registry_neet_rollout_plan_2026-07-28.md).
-  The current restore clone is stale for course IDs 91–135; do not use it to
-  claim a valid rehearsal.
+  Both historical NEET restore clones were deleted after their evidence was
+  accepted. Do not create another billable clone without a new, explicitly
+  scoped owner approval and a fresh PITR restore point.
 - Never normalize NEET courses 118 or 119 without new exact-video evidence,
   identity review, a separately tested additive artifact, and explicit
   approval.
 - Record expected counts and stop criteria before mass operations.
+- Before every content import, confirm the source playlist ID, request/audit ID,
+  and exact video IDs are not already present. An approved manifest may be
+  historical evidence for a completed import; abort on any unexpected reuse.
 - For a real staging content import, require matching write-free staging and
   production plans, exact playlist ownership, complete teacher attribution,
   zero source-ID collisions, and an approved curriculum/class mapping.

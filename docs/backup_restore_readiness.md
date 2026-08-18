@@ -915,3 +915,229 @@ reference the v11 files (see that file's own header and
 `src/scripts/buildFacultyQualityProductionPackage.js`). The two fixes are
 independent — this addendum covers the restore-lineage document specifically,
 since a restore does not go through that bundle file at all.
+
+## Operational checkpoint — 3 August 2026
+
+The current database and recovery boundary is:
+
+- production remains `youtube` / `kezelafqhgqrprpadmlf`;
+- chapter/class scopes v14 was applied once on 2 August 2026 and its independent
+  postflight passed;
+- the reviewed v14 source SHA-256 is
+  `6334faeae27575df323a0e8b4561fb4fd471985a5e9978cf1f26bd6d0b4f1459`;
+- the pre-write PITR point recorded for that completed operation was
+  `02 Aug 2026 13:31:42 UTC+05:30`;
+- the verified postflight catalogue was 292 playlists, 3,088 videos, 3,094
+  memberships, 241 chapters, 9 subjects, and 90 chapter/class scope rows;
+- the protected original 83-course JEE slice remained at 1,307 memberships with
+  fingerprint `c742fabf93ff8dd33d6ecd5eb4793db0` under the v14 postflight's
+  defined fingerprint query;
+- both historical NEET restore-rehearsal projects were permanently deleted
+  after their evidence was accepted; no restore clone remains active.
+
+See
+[chapter-class-scope-v14-readiness-2026-08-02.md](chapter-class-scope-v14-readiness-2026-08-02.md)
+for the hash-verified apply and postflight evidence. The older fingerprints and
+restore points elsewhere in this document are historical gate records. They
+must not be substituted for the exact query, baseline, and fresh restore point
+required by a future change.
+
+Do not rerun v13 or v14, start a restore, create a clone, or execute a checked-in
+migration merely because it is present in the repository. Before any future
+production write, re-open the Supabase PITR page, record the then-current latest
+restore point, snapshot the live numerical baseline, and obtain approval for
+the exact hash-verified artifact or manifest.
+
+This 3 August release-hardening update performed no database write, migration,
+content import, restore, clone operation, or manual CI dispatch.
+
+## Competishun+ upload-only imports — 3 August 2026
+
+Before the separately approved two-course create-only batch, the signed-in
+production PITR dashboard showed active 7-day retention and latest restore
+availability at `03 Aug 2026, 14:08:32 UTC+05:30`. Both source-ID-null
+transactions passed fresh anonymous dry-runs, exact baseline/reuse guards, and
+post-import verification. They created courses `303` and `304`, five videos,
+and five memberships without reusing or modifying existing catalogue rows.
+
+The immediate post-batch totals were 294 playlists, 3,093 videos, 3,099
+memberships, and 241 chapters. Separate catalogue writers subsequently
+advanced live totals; those later changes are outside this batch. The protected
+original-83 JEE fingerprint remained
+`c742fabf93ff8dd33d6ecd5eb4793db0`; rolling JEE was 168 courses / 1,896
+memberships / `583e60e33ec1ed25f3f237a94e98f185`. Full evidence and artifact hashes
+are recorded in
+[competishun-upload-only-imports-2026-08-03.md](competishun-upload-only-imports-2026-08-03.md).
+
+## PRMO and IOQM Solutions production gate — 3 August 2026
+
+Before this create-only chapter and course batch, the signed-in production PITR
+dashboard showed active 7-day retention and latest restore availability at
+`03 Aug 2026, 17:02:35 UTC+05:30`. The quiet-window course baseline was `317
+playlists / 3,728 videos / 3,734 memberships / 242 chapters / 92 chapter-class
+rows`; all four target video IDs were absent.
+
+The batch created Mathematics chapter `298`, `PRMO and IOQM Solutions`, then
+created source-ID-null Olympiad course `329`, `PRMO & IOQM Solutions
+(2018–2022)`, with four new videos and four memberships. The chapter and course
+artifact SHA-256 values are respectively
+`9eac1540f7b5c580ae548d812b96f05009b84e5b466d1bc3ef17d3becccef91a` and
+`c017a5dcc6e68c5cd5b45fe45180bfb9f565dfa34cf7a82821e4d6df9caa6874`.
+
+One initial course transaction failed on the identity-backed
+`playlist_videos.id` column and rolled back atomically. The corrected artifact
+names the writable membership columns explicitly. A separate dashboard
+client-side empty-query error also performed no database write. Exact read-only
+rollback checks preceded the successful retry.
+
+Final totals were `318 playlists / 3,732 videos / 3,738 memberships / 242
+chapters / 92 chapter-class rows`. Protected original JEE remained `83 courses
+/ 1,307 memberships / c742fabf93ff8dd33d6ecd5eb4793db0`; rolling JEE remained
+`178 courses / 2,391 memberships / 0ed8376c5c5cea7d06b3beafbc59c45f`.
+No restore or clone was created and no schema migration was run.
+
+## Unacademy NEET first production batch — 3 August 2026
+
+Before the owner-approved three-course create-only batch, the signed-in
+production PITR dashboard showed active seven-day retention and latest restore
+availability at `03 Aug 2026, 18:18:37 UTC+05:30`. The quiet-window preflight
+was `329 playlists / 3,864 videos / 3,870 memberships / 245 chapters / 92
+chapter-class rows`, with no source-course or retained-video collision.
+
+Fresh anonymous dry-runs passed immediately before each write. Courses `341`,
+`342`, and `343` were then created one at a time for Chemical Bonding,
+Evolution, and Principles of Inheritance and Variation. The batch added 44
+videos and 44 memberships, reused zero videos, and created no chapters. Final
+counts were `332 / 3,908 / 3,914 / 245 / 92` in the same order as the preflight.
+
+The protected original JEE slice remained exactly `83 courses / 1,307
+memberships / c742fabf93ff8dd33d6ecd5eb4793db0` after every write. No restore,
+clone, migration, update, delete, or `release` push was performed. Attribution
+evidence for Ashwani Tyagi and Pradeep Singh is bound to owner decision
+`6579f542-da9b-499f-bd46-3aa796ea4f27` in the exact manifests and review record.
+
+The later faculty-registry link gate used final artifact SHA-256
+`ad02e44f160000889d1836dd8e26f234337d3eef60d4febf44d59238bd4f5796`.
+Immediately before that additive-only write, production PITR again showed
+active seven-day retention and latest restore availability at `03 Aug 2026,
+22:58:47 UTC+05:30`. Exact preflight and postflight probes passed. The package
+added two verified teachers, four aliases, two institute links, two subject
+links, two goal links, and three course-teacher links; catalogue totals stayed
+`334 / 3,955 / 3,961 / 245 / 92`, and protected JEE stayed `83 / 1,307 /
+c742fabf93ff8dd33d6ecd5eb4793db0`. No restore, migration, content write, or
+`release` push occurred.
+
+## Unacademy NEET third production batch — 4 August 2026
+
+The owner approved the protected JEE rebaseline to 82 courses, 1,304
+memberships, fingerprint `30eee4a4a6842e5beeb7c97083d7f812` after the
+deliberate removal of Communication Systems course 66 and its three lessons.
+
+Fresh seven-day PITR evidence and stable anonymous baselines preceded each
+create-only import. Plant Morphology, Plant Kingdom, and Ray Optics became
+courses 391, 392, and 393, adding 18, 11, and 10 videos respectively. The total
+batch delta was +3 playlists, +39 videos, +39 memberships, zero chapters, and
+zero reuse. Final totals were 374 playlists, 4,430 videos, 4,436 memberships,
+and 247 chapters. The protected JEE boundary remained exact after every import;
+rolling JEE remained 212 courses / 2,848 memberships / fingerprint
+`9eea2b44f0b19c08cc0907c57e091342`. No release deployment was requested or
+performed. Full evidence is recorded in
+[unacademy-neet-third-batch-readiness-2026-08-04.md](unacademy-neet-third-batch-readiness-2026-08-04.md).
+
+## Unacademy NEET fourth production batch — 4 August 2026
+
+The owner approved three create-only courses under decision
+`0bd393bd-1ad4-4ed7-8f23-74b59dee5a23`. Before each transaction, the signed-in
+production dashboard confirmed active seven-day PITR; the recorded latest
+restore points were `04 Aug 2026, 16:42:24 IST`, `16:52:25 IST`, and
+`16:52:25 IST`. Each quiet-window baseline remained exact across its anonymous
+dry-run, with zero source/video collision and an `ok` quality result.
+
+Human Health and Disease, Body Fluids and Circulation, and Mole Concept became
+courses 394, 395, and 396. They added 17, 7, and 9 videos/memberships
+respectively, with zero reuse and no chapter creation. Final totals were 377
+playlists / 4,463 videos / 4,469 memberships / 247 chapters. The protected JEE
+boundary remained exactly 82 courses / 1,304 memberships / fingerprint
+`30eee4a4a6842e5beeb7c97083d7f812` after every write. No restore, clone,
+migration, update/delete, or `release` push occurred. Full evidence is in
+[unacademy-neet-fourth-batch-readiness-2026-08-04.md](unacademy-neet-fourth-batch-readiness-2026-08-04.md).
+
+## Unacademy NEET fifth production batch — 4 August 2026
+
+The owner approved three create-only courses under decision
+`461233dd-54d1-413f-9625-2ffe5f164226`, explicitly accepting `Mahendra S.` as
+the reviewed abbreviation for verified teacher Mahendra Singh. Before every
+transaction, the signed-in production dashboard confirmed active seven-day
+PITR. Recorded latest restore points were `04 Aug 2026, 17:08:25 IST`,
+`17:08:25 IST`, and `17:20:26 IST`. Each quiet-window baseline remained exact
+across its anonymous dry-run, with zero source/video collision and an `ok`
+quality result.
+
+Ecosystem, Gravitation, and Wave Optics became courses 397, 398, and 399. They
+added 6, 5, and 7 videos/memberships respectively, with zero reuse and no
+chapter creation. Final totals were 380 playlists / 4,481 videos / 4,487
+memberships / 247 chapters. The protected JEE boundary remained exactly 82
+courses / 1,304 memberships / fingerprint
+`30eee4a4a6842e5beeb7c97083d7f812` after every write; rolling JEE remained
+212 / 2,848 / `9eea2b44f0b19c08cc0907c57e091342`. No restore, clone,
+migration, update/delete, or `release` push occurred. Full evidence is in
+[unacademy-neet-fifth-batch-readiness-2026-08-04.md](unacademy-neet-fifth-batch-readiness-2026-08-04.md).
+
+## Unacademy NEET sixth production batch — 4 August 2026
+
+The owner approved two create-only courses under decision
+`1d0ea7b9-8cac-4f3b-968d-82b4307f264a`, including the reviewed `Anoop V.`
+abbreviation for verified teacher Anoop Vashishtha. Before each transaction,
+the signed-in production dashboard confirmed active seven-day PITR; the
+recorded latest restore points were `04 Aug 2026, 17:28:26 IST` and
+`04 Aug 2026, 17:46:26 IST`. Each quiet-window baseline remained exact across
+its anonymous dry-run, with zero source/video collision and an `ok` quality
+result.
+
+Hydrogen and Modern Physics became courses 400 and 401. They added 6 and 11
+videos/memberships respectively, with zero reuse and no chapter creation. Final
+totals were 382 playlists / 4,498 videos / 4,504 memberships / 247 chapters.
+The protected JEE boundary remained exactly 82 courses / 1,304 memberships /
+fingerprint `30eee4a4a6842e5beeb7c97083d7f812` after every write; rolling JEE
+remained 212 / 2,848 / `9eea2b44f0b19c08cc0907c57e091342`. No restore,
+clone, migration, update/delete, or `release` push occurred. Full evidence is
+in [unacademy-neet-sixth-batch-readiness-2026-08-04.md](unacademy-neet-sixth-batch-readiness-2026-08-04.md).
+
+## Unacademy NEET seventh production batch — 4 August 2026
+
+The owner approved three create-only Biology courses under decision
+`cf45d7d5-43ef-4311-abd7-5297ec2ea3b6`, explicitly accepting `Pradeep Sir` as
+the reviewed label for verified teacher Pradeep Singh. Before each transaction,
+the signed-in production dashboard confirmed active seven-day PITR; recorded
+latest restore points were `04 Aug 2026, 17:52:26 IST`, `18:34:28 IST`, and
+`18:36:29 IST`. Each quiet-window baseline remained exact across its anonymous
+dry-run, with zero source/video collision and an `ok` quality result.
+
+Biodiversity and Conservation, Cell Cycle and Cell Division, and Microbes in
+Human Welfare became courses 402, 403, and 404. They added 5, 7, and 4
+videos/memberships respectively, with zero reuse and no chapter creation. Final
+totals were 385 playlists / 4,514 videos / 4,520 memberships / 247 chapters.
+The protected JEE boundary remained exactly 82 courses / 1,304 memberships /
+fingerprint `30eee4a4a6842e5beeb7c97083d7f812` after every write; rolling JEE
+remained 212 / 2,848 / `9eea2b44f0b19c08cc0907c57e091342`. No restore,
+clone, migration, update/delete, or `release` push occurred. Full evidence is
+in [unacademy-neet-seventh-batch-readiness-2026-08-04.md](unacademy-neet-seventh-batch-readiness-2026-08-04.md).
+
+## Unacademy NEET eighth production batch - 5 August 2026
+
+The owner approved three create-only courses under decision
+`809b153c-b5ff-48e0-a869-02faa49b0e8f`. Before every transaction, the signed-in
+production dashboard confirmed active seven-day PITR; recorded latest restore
+points were `05 Aug 2026, 00:57:02 IST`, `01:07:02 IST`, and `01:07:02 IST`.
+Each quiet-window baseline remained exact across its anonymous dry-run, with
+zero source/video collision and an `ok` quality result.
+
+Redox Reactions, Cell Organelles, and Molecular Basis of Inheritance became
+courses 405, 406, and 407. They added 7, 9, and 9 videos/memberships
+respectively, with zero reuse and no chapter creation. Final totals were 388
+playlists / 4,539 videos / 4,545 memberships / 247 chapters. The protected JEE
+boundary remained exactly 82 courses / 1,304 memberships / fingerprint
+`30eee4a4a6842e5beeb7c97083d7f812` after every write; rolling JEE remained
+212 / 2,848 / `9eea2b44f0b19c08cc0907c57e091342`. No restore, clone,
+migration, update/delete, or `release` push occurred. Full evidence is in
+[unacademy-neet-eighth-batch-readiness-2026-08-05.md](unacademy-neet-eighth-batch-readiness-2026-08-05.md).

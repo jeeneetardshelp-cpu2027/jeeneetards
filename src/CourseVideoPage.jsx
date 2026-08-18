@@ -15,6 +15,7 @@ import { readReturnUrl, rememberReturn, resolveBack } from "./returnTo.js";
 import CourseRating from "./CourseRating.jsx";
 import VideoReport from "./VideoReport.jsx";
 import CourseOverview from "./CourseOverview.jsx";
+import ChapterTeachers from "./ChapterTeachers.jsx";
 import StudyMaterialPanel from "./StudyMaterialPanel.jsx";
 import { applyPageMetadata, useCourseMetadata, useStructuredData } from "./PageMetadata.jsx";
 import { breadcrumbListSchema, courseSchema, videoObjectSchema } from "./structuredData.js";
@@ -407,6 +408,31 @@ export default function CourseVideoPage() {
     // The student is already on the page and chose to move — from here on,
     // lesson changes (including auto-advance) may start playback.
     setAutoplayNext(true);
+
+    // "Next lesson" now walks the whole course, so it can land on a lesson in a
+    // different chapter than the one this URL is scoped to. Writing only `?v=`
+    // would be silently undone: the effect above resets an out-of-scope `v` back
+    // to the in-scope active lesson, so the student would press Next and go
+    // nowhere. Move the scope with them instead.
+    const targetChapterId = lesson.chapter?.id ?? null;
+    const leavingScope = scope.requested && targetChapterId != null &&
+      Number(targetChapterId) !== Number(chapterId);
+    if (leavingScope) {
+      const next = new URLSearchParams(searchParams);
+      next.set("v", lesson.videoId);
+      // A push, not a replace: crossing into another chapter is a real step, and
+      // Back should return to the chapter they came from.
+      navigate(`/course/${playlistId}/chapter/${targetChapterId}?${next}`);
+      if (scrollToPlayer) {
+        requestAnimationFrame(() => {
+          const player = document.getElementById("course-player");
+          player?.scrollIntoView?.({ behavior: "smooth", block: "start" });
+          player?.focus({ preventScroll: true });
+        });
+      }
+      return;
+    }
+
     if (lesson.videoId === activeLesson.videoId) {
       // Selecting the lesson that is already loaded (the overview's Continue
       // button on a revisit is the common case): a URL write would change
@@ -440,6 +466,10 @@ export default function CourseVideoPage() {
       videoId={activeLesson.videoId}
       videoTitle={activeLesson.title}
       lessons={lessons}
+      // The visible list stays chapter-scoped; prev/next and the completion
+      // overlay need the whole course so a one-lesson chapter is not mistaken
+      // for a one-lesson course.
+      courseLessons={allLessons}
       activeLessonId={activeLesson.id}
       watchedIds={watchedIds}
       onSelectLesson={selectLesson}
@@ -467,6 +497,14 @@ export default function CourseVideoPage() {
           playlistId={playlistId}
           initialAverage={Number(course.averageRating ?? 0)}
           initialCount={course.ratingsCount ?? 0}
+        />
+      }
+      moreTeachers={
+        <ChapterTeachers
+          chapterId={Number(activeLesson.chapter?.id ?? scope.chapter?.id) || null}
+          chapterName={activeLesson.chapter?.name ?? scope.chapter?.name}
+          currentCourseId={course.id}
+          currentInstituteId={course.instituteId ?? null}
         />
       }
       materialsPanel={

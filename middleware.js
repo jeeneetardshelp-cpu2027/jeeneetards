@@ -43,7 +43,7 @@ import {
 // negative lookaheads; keep this list aligned with public/ and Vite's assets/.
 export const config = {
   matcher: [
-    "/((?!assets/|fonts/|study-materials/|favicon\\.svg|robots\\.txt|sitemap\\.xml|llms\\.txt|social-preview\\.(?:png|svg)|theme-init\\.js|index\\.html).*)",
+    "/((?!assets/|fonts/|favicon\\.svg|robots\\.txt|sitemap\\.xml|llms\\.txt|social-preview\\.(?:png|svg)|theme-init\\.js|index\\.html).*)",
   ],
 };
 
@@ -64,7 +64,7 @@ const LOOKUP_TIMEOUT_MS = 1500;
 
 const STATIC_APP_ROUTES = new Set([
   "/", "/admin", "/browse", "/compare", "/explore", "/privacy",
-  "/forum", "/forum/submit", "/materials", "/reset", "/search", "/terms", "/tests",
+  "/forum", "/forum/submit", "/materials", "/reset", "/search", "/signin", "/terms", "/tests",
 ]);
 
 /** Mirrors the route shapes in App.jsx. Resource existence is checked later. */

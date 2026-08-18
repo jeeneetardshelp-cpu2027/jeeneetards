@@ -1,0 +1,83 @@
+{
+  "exam": "JEE Main 2024 Session 2 Paper 1 (B.E./B.Tech.)",
+  "language": "English and Hindi",
+  "databaseLanguageFacet": "English",
+  "officialIndexUrl": "https://www.nta.ac.in/Downloads",
+  "officialApiUrl": "https://www.nta.ac.in/downloads/getlist",
+  "officialNoticeUrl": "https://www.nta.ac.in/Download/Notice/Notice_20240413164854.pdf",
+  "verificationDate": "2026-08-07",
+  "coverageNote": "Includes all ten bilingual Paper 1 PDFs in the official NTA archive for 4, 5, 6, 8 and 9 April 2024. No third-party substitute is included.",
+  "verification": "Every live NTA PDF was checked for Paper 1 identity, date and shift metadata, English and Hindi question versions, progression through question 90, all Mathematics, Physics and Chemistry sections, page count, byte length, SHA-256 and complete visual rendering of all 1,162 pages. The NTA exports expose possible-answer fields for numerical-response questions but contain no worked solutions.",
+  "papers": [
+    {
+      "title": "JEE Main 2024 Session 2 - 4 April Shift 1 (English & Hindi)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20250306191500.pdf",
+      "pageCount": 125,
+      "byteLength": 9777632,
+      "sha256": "C6E0E586F20B4E05001FD13DD241D0933CC95A0267729ACA9EDA964B93D0F048"
+    },
+    {
+      "title": "JEE Main 2024 Session 2 - 4 April Shift 2 (English & Hindi)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20250306191610.pdf",
+      "pageCount": 106,
+      "byteLength": 9141658,
+      "sha256": "978D85C24377B2F23619DACF83D4E1ABB67615D5A598374A79996E9621BD2546"
+    },
+    {
+      "title": "JEE Main 2024 Session 2 - 5 April Shift 1 (English & Hindi)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20250306191403.pdf",
+      "pageCount": 121,
+      "byteLength": 9804829,
+      "sha256": "CB964F69662C0814B5921A815110A6BDB0D2A7C8448E1E7112763BB92FA785C9"
+    },
+    {
+      "title": "JEE Main 2024 Session 2 - 5 April Shift 2 (English & Hindi)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20250306191312.pdf",
+      "pageCount": 122,
+      "byteLength": 9864438,
+      "sha256": "7FA218634372AB370973C7D1B9CC6DA9E25CB47CA7C5E6F8065851E357CEFD39"
+    },
+    {
+      "title": "JEE Main 2024 Session 2 - 6 April Shift 1 (English & Hindi)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20250306190456.pdf",
+      "pageCount": 107,
+      "byteLength": 4901994,
+      "sha256": "0FAB78284AC12A12E1AF83D13C4AED29EFD290AA17EAB0E1146E454EB19DFBCB"
+    },
+    {
+      "title": "JEE Main 2024 Session 2 - 6 April Shift 2 (English & Hindi)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20250306190349.pdf",
+      "pageCount": 123,
+      "byteLength": 5695658,
+      "sha256": "9049F3702A2A8647B11764F01B61210AA08879B8E2A13FE5E9E3FDA5B2415F92"
+    },
+    {
+      "title": "JEE Main 2024 Session 2 - 8 April Shift 1 (English & Hindi)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20250306190254.pdf",
+      "pageCount": 110,
+      "byteLength": 5174276,
+      "sha256": "1C5A2E2348412B4CCEC0BB8F47F88AA125061F6F2975ADC025949975C0494244"
+    },
+    {
+      "title": "JEE Main 2024 Session 2 - 8 April Shift 2 (English & Hindi)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20250306190223.pdf",
+      "pageCount": 117,
+      "byteLength": 5620234,
+      "sha256": "93A7BDBD46A4146B009893810D9984EC728A095C6A38E1E82C85D85FAFF211CE"
+    },
+    {
+      "title": "JEE Main 2024 Session 2 - 9 April Shift 1 (English & Hindi)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20250306191640.pdf",
+      "pageCount": 123,
+      "byteLength": 5770087,
+      "sha256": "E4FC60FE45B10444E28DE0E9B3A04D6A5C2072A2C72015FB411C51B7092E3EBD"
+    },
+    {
+      "title": "JEE Main 2024 Session 2 - 9 April Shift 2 (English & Hindi)",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20250306191139.pdf",
+      "pageCount": 108,
+      "byteLength": 4995882,
+      "sha256": "2C844F26A65D3042AA7AA16FBDAF9BBB1B175D101C6B24E8A89807E30146C5AE"
+    }
+  ]
+}

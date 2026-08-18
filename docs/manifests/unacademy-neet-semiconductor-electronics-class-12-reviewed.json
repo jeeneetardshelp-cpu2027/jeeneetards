@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "request_id": "0b7ed214-b296-4125-b64a-17e9859c3837",
+  "youtube_playlist_id": "PLsgHooHkqhhNhMBc1PNiIav8Kv_O7NPIT",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "8de024c6-7317-4901-a91e-5006a5efcd7e",
+    "youtube_playlist_id": "PLsgHooHkqhhNhMBc1PNiIav8Kv_O7NPIT",
+    "teacher": "Indrajeet Singh Sangtani",
+    "source_url": "https://www.youtube.com/playlist?list=PLsgHooHkqhhNhMBc1PNiIav8Kv_O7NPIT",
+    "source_label": "Official Unacademy NEET channel-owned Semiconductors playlist and every retained lecture name Indrajeet Sir; official Unacademy educator pages identify him as Indrajeet Singh Sangtani",
+    "reviewed_by": "Owner",
+    "reviewed_on": "2026-08-08",
+    "youtube_video_ids": ["6r2dj5wPfMk", "OLymGXjoLUQ", "q_Yji3EdXfg"]
+  },
+  "assignments": [
+    { "position": 1, "youtube_video_id": "6r2dj5wPfMk", "chapter": "Semiconductor Electronics", "lesson_number": 1 },
+    { "position": 2, "youtube_video_id": "OLymGXjoLUQ", "chapter": "Semiconductor Electronics", "lesson_number": 2 },
+    { "position": 3, "youtube_video_id": "q_Yji3EdXfg", "chapter": "Semiconductor Electronics", "lesson_number": 3 }
+  ],
+  "exclusions": []
+}

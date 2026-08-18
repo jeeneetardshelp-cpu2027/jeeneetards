@@ -1,0 +1,74 @@
+{
+  "exam": "JEE Main 2014 Paper 1",
+  "language": "English and Hindi",
+  "officialQuestionPapersPageUrl": "https://web.archive.org/web/20150420171339id_/http://jeemain.nic.in:80/webinfo/QuestionPapers2014.htm",
+  "officialDisclosureUrl": "https://www.cbse.gov.in/attach/important_notice_jee_main_2014.pdf",
+  "verificationDate": "2026-08-13",
+  "verification": "The archived official jeemain.nic.in question-paper page identifies all eight Paper 1 PDFs below: four offline sets from 6 April and one complete online paper for each of 9, 11, 12 and 19 April. Every PDF was downloaded from the same Internet Archive capture of that original official host, hashed, page-counted and visually rendered in full. All eight files contain complete 90-question Paper 1 papers covering Physics, Chemistry and Mathematics in English and Hindi. No worked solutions or answer key are included.",
+  "papers": [
+    {
+      "title": "JEE Main 2014 - 6 April Offline Set E (English and Hindi)",
+      "sourceUrl": "https://web.archive.org/web/20150420171339id_/http://jeemain.nic.in:80/webinfo/PDF/06.04.2014E.pdf",
+      "languages": ["English", "Hindi"],
+      "pageCount": 40,
+      "byteLength": 686785,
+      "sha256": "0FC8A2A44FD56F4AE1348D7CA8CD7A1F503E4234EF4A9B76BDDAB927854D82EC"
+    },
+    {
+      "title": "JEE Main 2014 - 6 April Offline Set F (English and Hindi)",
+      "sourceUrl": "https://web.archive.org/web/20150420171339id_/http://jeemain.nic.in:80/webinfo/PDF/06.04.2014F.pdf",
+      "languages": ["English", "Hindi"],
+      "pageCount": 40,
+      "byteLength": 691822,
+      "sha256": "DC15A45777F208A467DCD1E5C43C6F4D976C58FB65B38B524049DACD86FCCB30"
+    },
+    {
+      "title": "JEE Main 2014 - 6 April Offline Set G (English and Hindi)",
+      "sourceUrl": "https://web.archive.org/web/20150420171339id_/http://jeemain.nic.in:80/webinfo/PDF/06.04.2014G.pdf",
+      "languages": ["English", "Hindi"],
+      "pageCount": 40,
+      "byteLength": 688374,
+      "sha256": "9D910D4CDD1B120291C72946C8BD7B1EAA247C83645EFAB8A3289E5026154F50"
+    },
+    {
+      "title": "JEE Main 2014 - 6 April Offline Set H (English and Hindi)",
+      "sourceUrl": "https://web.archive.org/web/20150420171339id_/http://jeemain.nic.in:80/webinfo/PDF/06.04.2014H.pdf",
+      "languages": ["English", "Hindi"],
+      "pageCount": 40,
+      "byteLength": 686365,
+      "sha256": "30157833208B316E075618FB44A6D54837551C9C3E92AA536A7575C84770E288"
+    },
+    {
+      "title": "JEE Main 2014 - 9 April Online Set 01 (English and Hindi)",
+      "sourceUrl": "https://web.archive.org/web/20150420171339id_/http://jeemain.nic.in:80/webinfo/PDF/09.04.2014.pdf",
+      "languages": ["English", "Hindi"],
+      "pageCount": 41,
+      "byteLength": 563324,
+      "sha256": "7EB4ACC7C6F394604DADAA9DD72D823617794DB9D1319B4360AFBE9BBAF53425"
+    },
+    {
+      "title": "JEE Main 2014 - 11 April Online Set 11 (English and Hindi)",
+      "sourceUrl": "https://web.archive.org/web/20150420171339id_/http://jeemain.nic.in:80/webinfo/PDF/11.04.2014.pdf",
+      "languages": ["English", "Hindi"],
+      "pageCount": 48,
+      "byteLength": 650766,
+      "sha256": "26BCE03E6E9E49CB29DB9A892993FF6C2C49A456D5349DCC05062C983C6E9B20"
+    },
+    {
+      "title": "JEE Main 2014 - 12 April Online Set 06 (English and Hindi)",
+      "sourceUrl": "https://web.archive.org/web/20150420171339id_/http://jeemain.nic.in:80/webinfo/PDF/12.04.2014.pdf",
+      "languages": ["English", "Hindi"],
+      "pageCount": 39,
+      "byteLength": 424835,
+      "sha256": "48E821507E803E7F8BF56DE3DF99680AA44EBEC9C1A2E10C41B1EB486C773E97"
+    },
+    {
+      "title": "JEE Main 2014 - 19 April Online Set 10 (English and Hindi)",
+      "sourceUrl": "https://web.archive.org/web/20150420171339id_/http://jeemain.nic.in:80/webinfo/PDF/19.04.2014.pdf",
+      "languages": ["English", "Hindi"],
+      "pageCount": 48,
+      "byteLength": 533452,
+      "sha256": "14AC6FDFD17055940C62D6DADB8F8079867A35FC647C148BB5F4DDB1EA78945C"
+    }
+  ]
+}
