@@ -80,6 +80,13 @@ describe("legal release truth", () => {
       expect(privacy()).toMatch(/published publicly/i);
     });
 
+    it("does not claim that the forum is available while its release flag is off", async () => {
+      const { RELEASE_FEATURES } = await import("./releaseCapabilities.js");
+      if (RELEASE_FEATURES.forum) return;
+      expect(privacy()).toMatch(/forum is not publicly available in this release/i);
+      expect(privacy()).not.toMatch(/forum contributions,\s+and content reporting are enabled/i);
+    });
+
     it("keeps both legal pages on the same effective date", () => {
       const dateOf = (src) => src.match(/Effective date:\s*([0-9]{1,2} \w+ [0-9]{4})/)?.[1];
       const privacyDate = dateOf(privacy());
