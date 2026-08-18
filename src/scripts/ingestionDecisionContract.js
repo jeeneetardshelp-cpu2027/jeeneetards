@@ -30,6 +30,21 @@ export function chapterDecision(row) {
   };
 }
 
+export function scopeDecision(row) {
+  return {
+    position: row.position,
+    youtube_video_id: row.youtube_video_id,
+    title: row.title,
+    evidence: row.evidence ?? null,
+    signals: Array.isArray(row.signals) ? row.signals : [],
+    teacher_candidate_ids: Array.isArray(row.teacher_candidate_ids)
+      ? row.teacher_candidate_ids
+      : [],
+    reviewer_action: null,
+    reviewer_notes: null,
+  };
+}
+
 export function automaticContext(bundle) {
   return {
     proposal_fields: Object.entries(bundle.proposal.decisions)
@@ -41,5 +56,7 @@ export function automaticContext(bundle) {
         evidence: decision.evidence,
       })),
     chapter_rows: bundle.chapter_review.rows.filter((row) => row.status === "auto").length,
+    video_teacher_evidence_summary: bundle.video_review.teacher_evidence.summary,
+    video_scope_flagged: bundle.video_review.scope_review.rows.length,
   };
 }

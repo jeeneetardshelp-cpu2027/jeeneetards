@@ -7,7 +7,7 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { sha256Json } from "./reviewIngestion.js";
+import { buildVideoReview, sha256Json } from "./reviewIngestion.js";
 
 const PROJECT_REF = /^[a-z0-9]{20}$/u;
 const REQUIRED_READ_TABLES = [
@@ -70,7 +70,7 @@ export function verifyReviewBundle(bundle) {
     return { valid: false, errors: ["bundle must be a JSON object."], summary: null };
   }
 
-  if (bundle.schema_version !== 4) fail("schema_version must equal 4.");
+  if (bundle.schema_version !== 5) fail("schema_version must equal 5.");
   if (bundle.kind !== "ingestion-human-review") fail("kind must be ingestion-human-review.");
   const safety = bundle.safety ?? {};
   if (safety.runner_mode !== "read-only") fail("runner_mode must be read-only.");
@@ -317,6 +317,107 @@ export function verifyReviewBundle(bundle) {
     }
   }
 
+  const videoReview = bundle.video_review ?? {};
+  const expectedVideoReview = buildVideoReview({ sourceVideos, taxonomy });
+  if (sha256Json(videoReview) !== sha256Json(expectedVideoReview)) {
+    fail("video review evidence does not match the source metadata and taxonomy.");
+  }
+  const teacherEvidence = videoReview.teacher_evidence ?? {};
+  const teacherRows = Array.isArray(teacherEvidence.rows) ? teacherEvidence.rows : [];
+  if (!Array.isArray(teacherEvidence.rows)) fail("video teacher-evidence rows must be an array.");
+  if (teacherRows.length !== sourceVideos.length) {
+    fail("video teacher-evidence rows must cover every source video.");
+  }
+  let singleCandidate = 0;
+  let ambiguousTeachers = 0;
+  let unmatchedTeachers = 0;
+  for (let index = 0; index < teacherRows.length; index += 1) {
+    const row = teacherRows[index] ?? {};
+    const sourceVideo = sourceVideos[index] ?? {};
+    if (row.youtube_video_id !== sourceVideo.youtube_video_id || row.position !== sourceVideo.position
+        || row.title !== sourceVideo.title) {
+      fail(`video teacher-evidence row ${index + 1} does not match source order and identity.`);
+    }
+    const candidates = Array.isArray(row.proposal?.candidates) ? row.proposal.candidates : [];
+    if (!Array.isArray(row.proposal?.candidates)) {
+      fail(`video teacher-evidence row ${index + 1} candidates must be an array.`);
+    }
+    if (candidates.length === 0) unmatchedTeachers += 1;
+    else if (candidates.length === 1) singleCandidate += 1;
+    else ambiguousTeachers += 1;
+    for (const candidate of candidates) {
+      if (!teacherById.has(candidate?.teacher_id)) {
+        fail(`video teacher-evidence row ${index + 1} uses an unknown teacher candidate.`);
+      }
+    }
+    const proposedTeacherId = row.proposal?.value;
+    if (proposedTeacherId != null && !teacherById.has(proposedTeacherId)) {
+      fail(`video teacher-evidence row ${index + 1} proposes an unknown teacher id.`);
+    }
+    if (proposedTeacherId != null
+        && !candidates.some((candidate) => candidate?.teacher_id === proposedTeacherId)) {
+      fail(`video teacher-evidence row ${index + 1} proposal is absent from its candidates.`);
+    }
+  }
+  const teacherSummary = teacherEvidence.summary ?? {};
+  if (teacherSummary.total !== teacherRows.length) fail("video teacher total does not match rows.");
+  if (teacherSummary.single_candidate !== singleCandidate) {
+    fail("video teacher single-candidate count does not match rows.");
+  }
+  if (teacherSummary.ambiguous !== ambiguousTeachers) {
+    fail("video teacher ambiguous count does not match rows.");
+  }
+  if (teacherSummary.unmatched !== unmatchedTeachers) {
+    fail("video teacher unmatched count does not match rows.");
+  }
+
+  const scopeReview = videoReview.scope_review ?? {};
+  const scopeRows = Array.isArray(scopeReview.rows) ? scopeReview.rows : [];
+  if (!Array.isArray(scopeReview.rows)) fail("video scope-review rows must be an array.");
+  const sourceByPosition = new Map(sourceVideos.map((video) => [video.position, video]));
+  const teacherByPosition = new Map(teacherRows.map((row) => [row.position, row]));
+  for (const duplicate of duplicateValues(scopeRows, (row) => row?.position)) {
+    fail(`duplicate video scope-review position: ${duplicate}.`);
+  }
+  for (let index = 0; index < scopeRows.length; index += 1) {
+    const row = scopeRows[index] ?? {};
+    const sourceVideo = sourceByPosition.get(row.position);
+    if (!sourceVideo || row.youtube_video_id !== sourceVideo.youtube_video_id
+        || row.title !== sourceVideo.title) {
+      fail(`video scope-review row ${index + 1} does not match a source video.`);
+    }
+    const signals = Array.isArray(row.signals) ? row.signals : [];
+    if (!signals.length || signals.some((signal) => !signal?.code || !signal?.label)) {
+      fail(`video scope-review row ${index + 1} must carry valid review signals.`);
+    }
+    const teacherCandidateIds = Array.isArray(row.teacher_candidate_ids)
+      ? row.teacher_candidate_ids
+      : [];
+    if (!Array.isArray(row.teacher_candidate_ids)) {
+      fail(`video scope-review row ${index + 1} teacher candidate ids must be an array.`);
+    }
+    for (const teacherId of teacherCandidateIds) {
+      if (!teacherById.has(teacherId)) {
+        fail(`video scope-review row ${index + 1} uses an unknown teacher candidate id.`);
+      }
+    }
+    const expectedTeacherIds = (teacherByPosition.get(row.position)?.proposal?.candidates ?? [])
+      .map((candidate) => candidate.teacher_id);
+    if (sha256Json(teacherCandidateIds) !== sha256Json(expectedTeacherIds)) {
+      fail(`video scope-review row ${index + 1} teacher candidates do not match evidence.`);
+    }
+    if (Object.hasOwn(row, "reviewer_action")) {
+      fail(`video scope-review row ${index + 1} must not contain a reviewer action.`);
+    }
+  }
+  const scopeSummary = scopeReview.summary ?? {};
+  if (scopeSummary.total_source_videos !== sourceVideos.length) {
+    fail("video scope source count does not match source videos.");
+  }
+  if (scopeSummary.flagged !== scopeRows.length) {
+    fail("video scope flagged count does not match rows.");
+  }
+
   return {
     valid: errors.length === 0,
     errors,
@@ -329,6 +430,9 @@ export function verifyReviewBundle(bundle) {
       chapter_review: chapterCounts.review,
       chapter_unmatched: chapterCounts.unmatched,
       chapter_manual: chapterCounts.manual,
+      video_scope_review: scopeRows.length,
+      video_teacher_ambiguous: ambiguousTeachers,
+      video_teacher_unmatched: unmatchedTeachers,
     },
   };
 }

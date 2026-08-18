@@ -8,6 +8,7 @@ import {
   assertReviewOutputAvailable,
   buildChapterReview,
   buildReviewBundle,
+  buildVideoReview,
   collectIngestionReview,
   loadLiveTaxonomy,
   loadRunnerEnvironment,
@@ -208,7 +209,7 @@ describe("human-review bundle", () => {
     });
 
     expect(bundle).toMatchObject({
-      schema_version: 4,
+      schema_version: 5,
       kind: "ingestion-human-review",
       safety: {
         runner_mode: "read-only",
@@ -245,6 +246,12 @@ describe("human-review bundle", () => {
       chapter_name: "Kinematics",
       status: "auto",
     });
+    expect(bundle.video_review).toMatchObject({
+      teacher_evidence: {
+        summary: { total: 1, single_candidate: 1, ambiguous: 0, unmatched: 0 },
+      },
+      scope_review: { summary: { total_source_videos: 1, flagged: 0 }, rows: [] },
+    });
     expect(bundle.source.sha256).toMatch(/^[0-9a-f]{64}$/u);
     expect(bundle.taxonomy.sha256).toMatch(/^[0-9a-f]{64}$/u);
     expect(bundle).not.toHaveProperty("assignments");
@@ -272,6 +279,25 @@ describe("human-review bundle", () => {
       },
       subjectDecision: { value: 1, subjectName: "Physics", status: "auto" },
     })).toThrow("duplicate chapter name");
+  });
+
+  it("flags supplemental videos with per-video teacher candidates but no automatic exclusion", () => {
+    const review = buildVideoReview({
+      sourceVideos: [{
+        position: 12,
+        youtube_video_id: "abcdefghijk",
+        title: "Work Energy & Power | DPP-2 | Physics quiz | Alakh Pandey Sir",
+        description: "",
+        tags: [],
+      }],
+      taxonomy,
+    });
+    expect(review.scope_review.rows[0]).toMatchObject({
+      position: 12,
+      signals: [{ code: "dpp" }, { code: "quiz" }],
+      teacher_candidate_ids: [34],
+    });
+    expect(review.scope_review.rows[0]).not.toHaveProperty("reviewer_action");
   });
 
   it("orchestrates YouTube and taxonomy reads without accepting mismatched source identity", async () => {

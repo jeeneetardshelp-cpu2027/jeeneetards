@@ -64,6 +64,28 @@ function sampleBundle() {
   });
 }
 
+function flaggedBundle() {
+  const bundle = sampleBundle();
+  return buildReviewBundle({
+    environment: "production",
+    expectedProjectRef: projectRef,
+    databaseUrl: `https://${projectRef}.supabase.co`,
+    taxonomy,
+    owner: bundle.source.owner,
+    videos: [{
+      videoId: "abcdefghijk",
+      title: "Kinematics DPP Quiz 1",
+      description: "Taught by Alakh Pandey Sir",
+      tags: ["JEE", "Physics"],
+      sourcePosition: 0,
+      durationSeconds: 120,
+      captionStatus: "available",
+      embeddingStatus: "embeddable",
+    }],
+    generatedAt: "2026-08-18T12:00:00.000Z",
+  });
+}
+
 function completedWorksheet(bundle) {
   const worksheet = buildDecisionWorksheet(bundle, {
     generatedAt: "2026-08-18T13:00:00.000Z",
@@ -72,8 +94,10 @@ function completedWorksheet(bundle) {
   worksheet.reviewer.reviewed_at = "2026-08-18T14:00:00.000Z";
   for (const decision of worksheet.proposal_decisions) decision.reviewer_action = "accept";
   for (const decision of worksheet.chapter_decisions) decision.reviewer_action = "accept";
+  for (const decision of worksheet.video_scope_decisions) decision.reviewer_action = "include";
   worksheet.completion.completed_decisions = worksheet.proposal_decisions.length
-    + worksheet.chapter_decisions.length;
+    + worksheet.chapter_decisions.length
+    + worksheet.video_scope_decisions.length;
   worksheet.completion.status = "complete";
   return worksheet;
 }
@@ -142,6 +166,36 @@ describe("offline ingestion decision verification", () => {
     expect(result.pending).toEqual(expect.arrayContaining([
       expect.stringContaining("replacement value pending"),
       expect.stringContaining("replacement rationale pending"),
+    ]));
+  });
+
+  it("requires a written rationale when a reviewer excludes a flagged video", () => {
+    const bundle = flaggedBundle();
+    const worksheet = completedWorksheet(bundle);
+    worksheet.video_scope_decisions[0].reviewer_action = "exclude";
+    worksheet.completion.status = "pending";
+    const incomplete = verifyDecisionWorksheet(bundle, worksheet);
+    expect(incomplete.valid).toBe(true);
+    expect(incomplete.complete).toBe(false);
+    expect(incomplete.pending).toContain("video exclusion rationale pending: position 1.");
+
+    worksheet.video_scope_decisions[0].reviewer_notes = "Practice quiz is outside lecture scope.";
+    worksheet.completion.status = "complete";
+    const complete = verifyDecisionWorksheet(bundle, worksheet);
+    expect(complete.valid).toBe(true);
+    expect(complete.complete).toBe(true);
+  });
+
+  it("rejects tampered scope evidence or an invented scope action", () => {
+    const bundle = flaggedBundle();
+    const worksheet = buildDecisionWorksheet(bundle);
+    worksheet.video_scope_decisions[0].signals = [];
+    worksheet.video_scope_decisions[0].reviewer_action = "delete";
+    const result = verifyDecisionWorksheet(bundle, worksheet);
+    expect(result.valid).toBe(false);
+    expect(result.errors).toEqual(expect.arrayContaining([
+      "video scope decision 1 context does not match the review bundle.",
+      "video scope decision 1 has an invalid action.",
     ]));
   });
 

@@ -131,6 +131,35 @@ describe("offline ingestion-review verifier", () => {
     ]));
   });
 
+  it("rejects tampered per-video teacher evidence", () => {
+    const bundle = sampleBundle();
+    bundle.video_review.teacher_evidence.rows[0].proposal.candidates[0].teacher_id = 999;
+    const result = verifyReviewBundle(bundle);
+    expect(result.valid).toBe(false);
+    expect(result.errors).toContain(
+      "video teacher-evidence row 1 uses an unknown teacher candidate.",
+    );
+  });
+
+  it("rejects reviewer actions embedded in the read-only scope evidence", () => {
+    const bundle = sampleBundle();
+    bundle.source.videos[0].title = "Kinematics DPP Quiz";
+    bundle.source.sha256 = "tampered";
+    bundle.video_review.scope_review.rows.push({
+      position: 1,
+      youtube_video_id: "abcdefghijk",
+      title: "Kinematics DPP Quiz",
+      evidence: "scope signals: quiz/assessment",
+      signals: [{ code: "quiz", label: "quiz/assessment" }],
+      teacher_candidate_ids: [34],
+      reviewer_action: "exclude",
+    });
+    bundle.video_review.scope_review.summary.flagged = 1;
+    const result = verifyReviewBundle(bundle);
+    expect(result.valid).toBe(false);
+    expect(result.errors).toContain("video scope-review row 1 must not contain a reviewer action.");
+  });
+
   it("keeps the verifier offline and without a file-writing path", () => {
     const source = readFileSync(
       resolve(process.cwd(), "src/scripts/verifyIngestionReview.js"),

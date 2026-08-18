@@ -11,6 +11,7 @@ import {
   automaticContext,
   chapterDecision,
   proposalDecision,
+  scopeDecision,
 } from "./ingestionDecisionContract.js";
 import { sha256Json } from "./reviewIngestion.js";
 import { verifyReviewBundle } from "./verifyIngestionReview.js";
@@ -86,8 +87,9 @@ export function buildDecisionWorksheet(
   const chapterDecisions = bundle.chapter_review.rows
     .filter((row) => row.status !== "auto")
     .map(chapterDecision);
+  const videoScopeDecisions = bundle.video_review.scope_review.rows.map(scopeDecision);
   return {
-    schema_version: 1,
+    schema_version: 2,
     kind: "ingestion-human-decisions",
     generated_at: generatedAt,
     safety: {
@@ -111,13 +113,16 @@ export function buildDecisionWorksheet(
       notes: null,
     },
     allowed_reviewer_actions: ["accept", "replace", "reject"],
+    allowed_scope_actions: ["include", "exclude"],
     proposal_decisions: proposalDecisions,
     chapter_decisions: chapterDecisions,
+    video_scope_decisions: videoScopeDecisions,
     automatic_context: automaticContext(bundle),
     completion: {
       status: "pending",
       required_proposal_decisions: proposalDecisions.length,
       required_chapter_decisions: chapterDecisions.length,
+      required_scope_decisions: videoScopeDecisions.length,
       completed_decisions: 0,
     },
   };
@@ -141,6 +146,7 @@ export function main(argv = process.argv.slice(2)) {
     source_bundle_verified: true,
     required_proposal_decisions: worksheet.completion.required_proposal_decisions,
     required_chapter_decisions: worksheet.completion.required_chapter_decisions,
+    required_scope_decisions: worksheet.completion.required_scope_decisions,
     database_writes_allowed: false,
     importable: false,
   }, null, 2));

@@ -13,6 +13,8 @@ import { allExact, client, must, readEnv } from "./dbProbe.js";
 import { getPlaylistOwner, getPlaylistVideos } from "./youtubeNode.js";
 import { draftAssignments } from "./classify/mapChapters.js";
 import { proposeTaxonomy } from "./classify/proposeTaxonomy.js";
+import { proposeTeacher } from "./classify/proposeTeacher.js";
+import { proposeVideoScope } from "./classify/proposeVideoScope.js";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const defaultRepoRoot = resolve(here, "../..");
@@ -354,6 +356,49 @@ export function buildChapterReview({ sourceVideos, taxonomy, subjectDecision } =
   };
 }
 
+export function buildVideoReview({ sourceVideos, taxonomy } = {}) {
+  const teacherRows = (sourceVideos ?? []).map((video) => ({
+    position: video.position,
+    youtube_video_id: video.youtube_video_id,
+    title: video.title,
+    proposal: proposeTeacher({
+      videos: [{
+        title: video.title,
+        description: video.description,
+        tags: video.tags,
+      }],
+    }, taxonomy?.teachers ?? []),
+  }));
+  const scopeRows = (sourceVideos ?? []).flatMap((video, index) => {
+    const scope = proposeVideoScope(video);
+    if (!scope.requiresReview) return [];
+    return [{
+      position: video.position,
+      youtube_video_id: video.youtube_video_id,
+      title: video.title,
+      evidence: scope.evidence,
+      signals: scope.signals,
+      teacher_candidate_ids: teacherRows[index].proposal.candidates
+        .map((candidate) => candidate.teacher_id),
+    }];
+  });
+  return {
+    teacher_evidence: {
+      summary: {
+        total: teacherRows.length,
+        single_candidate: teacherRows.filter((row) => row.proposal.candidates.length === 1).length,
+        ambiguous: teacherRows.filter((row) => row.proposal.candidates.length > 1).length,
+        unmatched: teacherRows.filter((row) => row.proposal.candidates.length === 0).length,
+      },
+      rows: teacherRows,
+    },
+    scope_review: {
+      summary: { total_source_videos: teacherRows.length, flagged: scopeRows.length },
+      rows: scopeRows,
+    },
+  };
+}
+
 export function buildReviewBundle({
   environment,
   expectedProjectRef,
@@ -384,6 +429,7 @@ export function buildReviewBundle({
     taxonomy,
     subjectDecision: proposal.decisions.subject_id,
   });
+  const videoReview = buildVideoReview({ sourceVideos, taxonomy });
   const reviewItems = Object.entries(proposal.decisions)
     .filter(([, decision]) => decision.status !== "auto")
     .map(([field, decision]) => ({ field, ...decision }));
@@ -411,7 +457,7 @@ export function buildReviewBundle({
     teachers: taxonomy.teachers,
   };
   return {
-    schema_version: 4,
+    schema_version: 5,
     kind: "ingestion-human-review",
     generated_at: generatedAt,
     safety: {
@@ -450,6 +496,7 @@ export function buildReviewBundle({
     },
     proposal,
     chapter_review: chapterReview,
+    video_review: videoReview,
     human_review: {
       warnings,
       items: reviewItems,
@@ -528,6 +575,11 @@ export async function main(argv = process.argv.slice(2)) {
     chapter_review: bundle.chapter_review.summary.review,
     chapter_unmatched: bundle.chapter_review.summary.unmatched,
     chapter_manual: bundle.chapter_review.summary.manual,
+    video_teacher_single_candidate:
+      bundle.video_review.teacher_evidence.summary.single_candidate,
+    video_teacher_ambiguous: bundle.video_review.teacher_evidence.summary.ambiguous,
+    video_teacher_unmatched: bundle.video_review.teacher_evidence.summary.unmatched,
+    video_scope_review: bundle.video_review.scope_review.summary.flagged,
     warnings: bundle.human_review.warnings.length,
     writes_attempted: false,
   }, null, 2));

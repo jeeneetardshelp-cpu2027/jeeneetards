@@ -363,7 +363,9 @@ the playlist owner, description, ordered usable videos, categories, subjects,
 learning goals, legal category-goal mappings, boards, chapters, verified
 teachers, and verified aliases. It then calls
 `proposeTaxonomy()`, runs the rules-only per-video chapter mapper when the
-subject is safely resolved, and writes a snapshot-hashed review bundle under
+subject is safely resolved, collects per-video teacher candidates, flags DPP,
+quiz/Menti, and paper-discussion scope signals, and writes a snapshot-hashed
+review bundle under
 `../outputs/ingestion-review/` by default.
 
 `--expected-project-ref` is mandatory. Before making any network read, the
@@ -375,6 +377,10 @@ The bundle is deliberately not an import manifest. It records
 `writes_attempted: false`, `importable: false`, every non-automatic decision,
 source/taxonomy SHA-256 values, and metadata warnings. Even one verified faculty
 candidate remains a human-review item; ambiguity is never broken automatically.
+Per-video teacher evidence is retained separately from the playlist-wide
+teacher proposal so a supplement can be reviewed in its own context. Scope
+signals never include or exclude a video automatically; they only create a
+human-review row.
 Chapter candidates are restricted to IDs from the resolved subject's live
 chapter list. If the subject needs review, every per-video chapter stays manual;
 ambiguous and unmatched chapter rows are surfaced instead of guessed.
@@ -402,7 +408,9 @@ This verifier is offline: it reads one local file and writes nothing. It
 recomputes the embedded source and taxonomy hashes, checks project identity and
 the read-only safety flags, confirms every proposed ID exists in the embedded
 taxonomy, and requires one chapter row for every source video. It exits nonzero
-if the bundle was altered or its internal review coverage is inconsistent.
+if the bundle was altered or its internal review coverage is inconsistent. It
+also checks that per-video teacher candidates exist in the embedded taxonomy
+and that every scope row matches its source video and teacher evidence.
 
 After verification, create the worksheet a human will complete:
 
@@ -413,7 +421,9 @@ npm.cmd run prepare:ingestion-decisions -- --bundle=<REVIEW_JSON_PATH>
 The worksheet is written beside the review bundle by default, outside the
 repository. It is bound to the complete review bundle plus the source and
 taxonomy hashes, contains one blank decision for every non-automatic proposal
-and chapter row, and records automatic results only as context. It remains
+and chapter row, plus one `include`/`exclude` decision for every flagged scope
+row, and records automatic results only as context. An exclusion requires a
+written rationale. It remains
 `importable: false`, has no database path, and refuses overwrite unless
 `--overwrite` is explicit. Creating or completing it does not authorize an
 import.
@@ -426,8 +436,9 @@ npm.cmd run verify:ingestion-decisions -- --bundle=<REVIEW_JSON_PATH> --decision
 
 The validator is offline and write-free. It rejects altered bindings, proposal
 context, automatic context, invalid reviewer actions, incorrect counts, and
-replacement chapters outside the embedded subject taxonomy. A blank worksheet
-is structurally valid but exits as incomplete; `--allow-pending` is available
+replacement chapters outside the embedded subject taxonomy. It also rejects
+altered scope evidence and exclusions without a written reason. A blank
+worksheet is structurally valid but exits as incomplete; `--allow-pending` is available
 only when checking the integrity of an intentionally unfinished worksheet.
 Completion still leaves `importable: false` and does not authorize a database
 write.

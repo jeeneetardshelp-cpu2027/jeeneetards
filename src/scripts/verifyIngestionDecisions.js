@@ -12,9 +12,11 @@ import {
   automaticContext,
   chapterDecision,
   proposalDecision,
+  scopeDecision,
 } from "./ingestionDecisionContract.js";
 
 const ACTIONS = ["accept", "replace", "reject"];
+const SCOPE_ACTIONS = ["include", "exclude"];
 
 export function parseDecisionVerifyArgs(argv = []) {
   const args = { allowPending: false };
@@ -64,6 +66,21 @@ function immutableChapterEntry(entry) {
   };
 }
 
+function immutableScopeEntry(entry) {
+  return {
+    position: entry?.position,
+    youtube_video_id: entry?.youtube_video_id,
+    title: entry?.title,
+    evidence: entry?.evidence ?? null,
+    signals: Array.isArray(entry?.signals) ? entry.signals : [],
+    teacher_candidate_ids: Array.isArray(entry?.teacher_candidate_ids)
+      ? entry.teacher_candidate_ids
+      : [],
+    reviewer_action: null,
+    reviewer_notes: null,
+  };
+}
+
 function hasText(value) {
   return typeof value === "string" && value.trim().length > 0;
 }
@@ -93,7 +110,7 @@ export function verifyDecisionWorksheet(bundle, worksheet) {
     };
   }
 
-  if (worksheet.schema_version !== 1) fail("worksheet schema_version must equal 1.");
+  if (worksheet.schema_version !== 2) fail("worksheet schema_version must equal 2.");
   if (worksheet.kind !== "ingestion-human-decisions") {
     fail("worksheet kind must be ingestion-human-decisions.");
   }
@@ -118,6 +135,9 @@ export function verifyDecisionWorksheet(bundle, worksheet) {
   }
   if (sha256Json(worksheet.allowed_reviewer_actions ?? []) !== sha256Json(ACTIONS)) {
     fail("allowed reviewer actions were altered.");
+  }
+  if (sha256Json(worksheet.allowed_scope_actions ?? []) !== sha256Json(SCOPE_ACTIONS)) {
+    fail("allowed scope actions were altered.");
   }
 
   const expectedProposals = bundle.human_review.items.map(proposalDecision);
@@ -214,6 +234,43 @@ export function verifyDecisionWorksheet(bundle, worksheet) {
     }
   }
 
+  const expectedScopeDecisions = bundle.video_review.scope_review.rows.map(scopeDecision);
+  const actualScopeDecisions = Array.isArray(worksheet.video_scope_decisions)
+    ? worksheet.video_scope_decisions
+    : [];
+  if (!Array.isArray(worksheet.video_scope_decisions)) {
+    fail("video_scope_decisions must be an array.");
+  }
+  if (actualScopeDecisions.length !== expectedScopeDecisions.length) {
+    fail("video scope decision count does not match the review bundle.");
+  }
+  const scopePositions = new Set();
+  for (let index = 0; index < actualScopeDecisions.length; index += 1) {
+    const actual = actualScopeDecisions[index] ?? {};
+    const expected = expectedScopeDecisions[index];
+    if (scopePositions.has(actual.position)) {
+      fail(`duplicate video scope decision position: ${actual.position}.`);
+    }
+    scopePositions.add(actual.position);
+    if (!expected || sha256Json(immutableScopeEntry(actual)) !== sha256Json(expected)) {
+      fail(`video scope decision ${index + 1} context does not match the review bundle.`);
+    }
+    const action = actual.reviewer_action;
+    if (action == null) {
+      waitFor(`video scope decision pending: position ${actual.position ?? index + 1}.`);
+      continue;
+    }
+    if (!SCOPE_ACTIONS.includes(action)) {
+      fail(`video scope decision ${index + 1} has an invalid action.`);
+      waitFor(`video scope decision pending: position ${actual.position ?? index + 1}.`);
+      continue;
+    }
+    completedDecisions += 1;
+    if (action === "exclude" && !hasText(actual.reviewer_notes)) {
+      waitFor(`video exclusion rationale pending: position ${actual.position}.`);
+    }
+  }
+
   if (sha256Json(worksheet.automatic_context ?? {}) !== sha256Json(automaticContext(bundle))) {
     fail("automatic decision context does not match the review bundle.");
   }
@@ -231,6 +288,9 @@ export function verifyDecisionWorksheet(bundle, worksheet) {
   if (completion.required_chapter_decisions !== expectedChapters.length) {
     fail("required chapter decision count is incorrect.");
   }
+  if (completion.required_scope_decisions !== expectedScopeDecisions.length) {
+    fail("required video scope decision count is incorrect.");
+  }
   if (completion.completed_decisions !== completedDecisions) {
     fail("completed decision count is incorrect.");
   }
@@ -245,7 +305,8 @@ export function verifyDecisionWorksheet(bundle, worksheet) {
     summary: {
       playlist: bundle.source.owner.playlistId,
       project_ref: bundle.database.project_ref,
-      required_decisions: expectedProposals.length + expectedChapters.length,
+      required_decisions: expectedProposals.length + expectedChapters.length
+        + expectedScopeDecisions.length,
       completed_decisions: completedDecisions,
       pending_items: pending.length,
       importable: false,

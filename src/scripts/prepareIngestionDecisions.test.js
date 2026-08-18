@@ -101,7 +101,7 @@ describe("offline ingestion decision worksheet", () => {
       generatedAt: "2026-08-18T13:00:00.000Z",
     });
     expect(worksheet).toMatchObject({
-      schema_version: 1,
+      schema_version: 2,
       kind: "ingestion-human-decisions",
       safety: {
         local_only: true,
@@ -111,7 +111,7 @@ describe("offline ingestion decision worksheet", () => {
         human_completion_required: true,
       },
       binding: {
-        review_bundle_schema_version: 4,
+        review_bundle_schema_version: 5,
         playlist_id: "PL_review",
         project_ref: projectRef,
       },
@@ -122,7 +122,49 @@ describe("offline ingestion decision worksheet", () => {
     expect(worksheet.proposal_decisions.every((decision) => decision.reviewer_action === null))
       .toBe(true);
     expect(worksheet.chapter_decisions).toEqual([]);
+    expect(worksheet.video_scope_decisions).toEqual([]);
     expect(worksheet).not.toHaveProperty("assignments");
+  });
+
+  it("creates a human-only scope decision for a flagged assessment video", () => {
+    const bundle = sampleBundle();
+    bundle.source.videos[0].title = "Kinematics DPP Quiz 1";
+    bundle.source.sha256 = "invalidated by test mutation";
+    expect(() => buildDecisionWorksheet(bundle)).toThrow("failed verification");
+
+    const flagged = buildReviewBundle({
+      environment: "production",
+      expectedProjectRef: projectRef,
+      databaseUrl: `https://${projectRef}.supabase.co`,
+      taxonomy,
+      owner: {
+        channelId: "UC_owner",
+        channelTitle: "Example Academy",
+        playlistId: "PL_review",
+        playlistTitle: "JEE Class 11 Physics Complete Course",
+        playlistDescription: "Faculty: Alakh Pandey",
+        videoCount: 1,
+      },
+      videos: [{
+        videoId: "abcdefghijk",
+        title: "Kinematics DPP Quiz 1",
+        description: "Taught by Alakh Pandey Sir",
+        tags: ["JEE", "Physics"],
+        sourcePosition: 0,
+      }],
+      generatedAt: "2026-08-18T12:00:00.000Z",
+    });
+    const worksheet = buildDecisionWorksheet(flagged);
+    expect(worksheet.allowed_scope_actions).toEqual(["include", "exclude"]);
+    expect(worksheet.video_scope_decisions).toEqual([
+      expect.objectContaining({
+        position: 1,
+        youtube_video_id: "abcdefghijk",
+        reviewer_action: null,
+        teacher_candidate_ids: [34],
+      }),
+    ]);
+    expect(worksheet.completion.required_scope_decisions).toBe(1);
   });
 
   it("rejects a review bundle that no longer verifies", () => {
