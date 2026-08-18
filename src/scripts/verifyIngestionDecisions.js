@@ -8,6 +8,8 @@ import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { sha256Json } from "./reviewIngestion.js";
 import { verifyReviewBundle } from "./verifyIngestionReview.js";
+import { METADATA_OPTIONS } from "./ingestionSafety.js";
+import { CLASS_SLUG_TO_LABEL } from "../classLevels.js";
 import {
   automaticContext,
   chapterDecision,
@@ -17,6 +19,12 @@ import {
 
 const ACTIONS = ["accept", "replace", "reject"];
 const SCOPE_ACTIONS = ["include", "exclude"];
+const CONTENT_TYPES = new Set(METADATA_OPTIONS.contentType);
+const LANGUAGES = new Set(METADATA_OPTIONS.language);
+const DIFFICULTIES = new Set(METADATA_OPTIONS.difficulty);
+const CLASS_SLUG_BY_LABEL = Object.freeze(Object.fromEntries(
+  Object.entries(CLASS_SLUG_TO_LABEL).map(([slug, label]) => [label, slug]),
+));
 
 export function parseDecisionVerifyArgs(argv = []) {
   const args = { allowPending: false };
@@ -83,6 +91,105 @@ function immutableScopeEntry(entry) {
 
 function hasText(value) {
   return typeof value === "string" && value.trim().length > 0;
+}
+
+function replacementErrors(field, value, bundle) {
+  const taxonomy = bundle.taxonomy;
+  const ids = (rows) => new Set(rows.map((row) => row.id));
+  if (field === "subject_id" && !ids(taxonomy.subjects).has(value)) {
+    return ["must be a live subject id"];
+  }
+  if (field === "learning_goal_id" && !ids(taxonomy.learningGoals).has(value)) {
+    return ["must be a live learning-goal id"];
+  }
+  if (field === "category_id" && !ids(taxonomy.categories).has(value)) {
+    return ["must be a live category id"];
+  }
+  if (field === "teacher_id" && !ids(taxonomy.teachers).has(value)) {
+    return ["must be a live teacher id"];
+  }
+  if (field === "board_ids") {
+    if (!Array.isArray(value) || value.length === 0) return ["must be a non-empty array"];
+    if (new Set(value).size !== value.length) return ["must not contain duplicate board ids"];
+    const boardIds = ids(taxonomy.boards);
+    if (value.some((id) => !boardIds.has(id))) return ["contains a board id outside live taxonomy"];
+  }
+  if (field === "class_labels") {
+    if (!Array.isArray(value) || value.length === 0) return ["must be a non-empty array"];
+    if (new Set(value).size !== value.length) return ["must not contain duplicate class labels"];
+    if (value.some((label) => !Object.hasOwn(CLASS_SLUG_BY_LABEL, label))) {
+      return ["contains an unsupported class label"];
+    }
+  }
+  if (field === "content_type" && !CONTENT_TYPES.has(value)) {
+    return ["must use the controlled content-type vocabulary"];
+  }
+  if (field === "language" && !LANGUAGES.has(value)) {
+    return ["must use the controlled language vocabulary"];
+  }
+  if (field === "audience_focus" && !Object.hasOwn(CLASS_SLUG_BY_LABEL, value)) {
+    return ["must use a supported class label"];
+  }
+  if (field === "difficulty" && !DIFFICULTIES.has(value)) {
+    return ["must use the controlled difficulty vocabulary"];
+  }
+  return [];
+}
+
+function effectiveProposalState(bundle, actualProposals) {
+  const actualByField = new Map(actualProposals.map((entry) => [entry?.field, entry]));
+  return Object.fromEntries(Object.entries(bundle.proposal.decisions).map(([field, proposal]) => {
+    if (proposal.status === "auto") return [field, { final: true, value: proposal.value }];
+    const actual = actualByField.get(field);
+    if (!ACTIONS.includes(actual?.reviewer_action)) {
+      return [field, { final: false, value: proposal.value }];
+    }
+    if (actual.reviewer_action === "replace") {
+      return [field, { final: true, value: actual.reviewer_value }];
+    }
+    if (actual.reviewer_action === "reject") return [field, { final: true, value: null }];
+    return [field, { final: true, value: proposal.value }];
+  }));
+}
+
+function validateEffectiveRelationships(bundle, state, fail) {
+  const goal = bundle.taxonomy.learningGoals.find(
+    (row) => row.id === state.learning_goal_id?.value,
+  );
+  if (state.category_id?.final && state.learning_goal_id?.final
+      && state.category_id.value != null && state.learning_goal_id.value != null) {
+    const legal = bundle.taxonomy.categoryLearningGoals.some(
+      (mapping) => mapping.category_id === state.category_id.value
+        && mapping.learning_goal_id === state.learning_goal_id.value,
+    );
+    if (!legal) fail("resolved category_id is not legal for the resolved learning_goal_id.");
+  }
+  if (state.board_ids?.final && state.learning_goal_id?.final && Array.isArray(state.board_ids.value)) {
+    if (goal?.slug !== "school" && state.board_ids.value.length > 0) {
+      fail("resolved board_ids must be empty outside the School learning goal.");
+    }
+    if (goal?.slug === "school" && state.board_ids.value.length === 0) {
+      fail("resolved School board_ids must not be empty.");
+    }
+  }
+  if (state.class_labels?.final && state.learning_goal_id?.final
+      && Array.isArray(state.class_labels.value) && state.learning_goal_id.value != null) {
+    const classBySlug = new Map(bundle.taxonomy.classLevels.map((row) => [row.slug, row]));
+    const legalMappings = new Set(bundle.taxonomy.learningGoalClassLevels
+      .filter((mapping) => mapping.learning_goal_id === state.learning_goal_id.value)
+      .map((mapping) => mapping.class_level_id));
+    for (const label of state.class_labels.value) {
+      const classLevel = classBySlug.get(CLASS_SLUG_BY_LABEL[label]);
+      if (!classLevel || !legalMappings.has(classLevel.id)) {
+        fail(`resolved class label ${label} is incompatible with the resolved learning goal.`);
+      }
+    }
+  }
+  if (state.audience_focus?.final && state.class_labels?.final
+      && state.audience_focus.value != null && Array.isArray(state.class_labels.value)
+      && !state.class_labels.value.includes(state.audience_focus.value)) {
+    fail("resolved audience_focus must be one of the resolved class_labels.");
+  }
 }
 
 export function verifyDecisionWorksheet(bundle, worksheet) {
@@ -175,6 +282,11 @@ export function verifyDecisionWorksheet(bundle, worksheet) {
     if (action === "replace") {
       if (actual.reviewer_value == null) waitFor(`replacement value pending: ${actual.field}.`);
       if (!hasText(actual.reviewer_notes)) waitFor(`replacement rationale pending: ${actual.field}.`);
+      if (actual.reviewer_value != null) {
+        for (const error of replacementErrors(actual.field, actual.reviewer_value, bundle)) {
+          fail(`replacement value for ${actual.field} ${error}.`);
+        }
+      }
     }
     if (action === "reject") {
       if (actual.reviewer_value != null) {
@@ -183,6 +295,8 @@ export function verifyDecisionWorksheet(bundle, worksheet) {
       if (!hasText(actual.reviewer_notes)) waitFor(`rejection rationale pending: ${actual.field}.`);
     }
   }
+
+  validateEffectiveRelationships(bundle, effectiveProposalState(bundle, actualProposals), fail);
 
   const expectedChapters = bundle.chapter_review.rows
     .filter((row) => row.status !== "auto")

@@ -443,6 +443,13 @@ only when checking the integrity of an intentionally unfinished worksheet.
 Completion still leaves `importable: false` and does not authorize a database
 write.
 
+Replacement proposal values are checked against the embedded live subject,
+goal, category, board, class, and teacher registries and the same controlled
+content-type, language, and difficulty vocabularies used by the importer.
+Resolved category/goal, board/goal, class/goal, and audience/class combinations
+must remain mutually legal. A worksheet cannot become valid merely by carrying
+a non-null replacement and reviewer note.
+
 Use `--env=staging` only when the staging environment file points to the
 intended read-only comparison target. This command performs no database write,
 RPC, migration, fixture creation, import, or deployment. A reviewed bundle does

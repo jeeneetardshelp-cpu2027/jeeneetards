@@ -86,6 +86,31 @@ function flaggedBundle() {
   });
 }
 
+function unresolvedClassBundle() {
+  return buildReviewBundle({
+    environment: "production",
+    expectedProjectRef: projectRef,
+    databaseUrl: `https://${projectRef}.supabase.co`,
+    taxonomy,
+    owner: {
+      channelId: "UC_owner",
+      channelTitle: "Example Academy",
+      playlistId: "PL_review",
+      playlistTitle: "JEE Physics",
+      playlistDescription: "Faculty: Alakh Pandey",
+      videoCount: 1,
+    },
+    videos: [{
+      videoId: "abcdefghijk",
+      title: "Kinematics Topic 1",
+      description: "Taught by Alakh Pandey Sir",
+      tags: ["JEE", "Physics"],
+      sourcePosition: 0,
+    }],
+    generatedAt: "2026-08-18T12:00:00.000Z",
+  });
+}
+
 function completedWorksheet(bundle) {
   const worksheet = buildDecisionWorksheet(bundle, {
     generatedAt: "2026-08-18T13:00:00.000Z",
@@ -166,6 +191,62 @@ describe("offline ingestion decision verification", () => {
     expect(result.pending).toEqual(expect.arrayContaining([
       expect.stringContaining("replacement value pending"),
       expect.stringContaining("replacement rationale pending"),
+    ]));
+  });
+
+  it("rejects replacement metadata and teacher ids outside controlled live values", () => {
+    const bundle = sampleBundle();
+    const worksheet = completedWorksheet(bundle);
+    const language = worksheet.proposal_decisions.find((entry) => entry.field === "language");
+    const teacher = worksheet.proposal_decisions.find((entry) => entry.field === "teacher_id");
+    language.reviewer_action = "replace";
+    language.reviewer_value = "german";
+    language.reviewer_notes = "Test invalid vocabulary.";
+    teacher.reviewer_action = "replace";
+    teacher.reviewer_value = 999;
+    teacher.reviewer_notes = "Test unknown teacher.";
+    const result = verifyDecisionWorksheet(bundle, worksheet);
+    expect(result.valid).toBe(false);
+    expect(result.errors).toEqual(expect.arrayContaining([
+      "replacement value for language must use the controlled language vocabulary.",
+      "replacement value for teacher_id must be a live teacher id.",
+    ]));
+  });
+
+  it("accepts legal controlled replacements", () => {
+    const bundle = sampleBundle();
+    const worksheet = completedWorksheet(bundle);
+    const language = worksheet.proposal_decisions.find((entry) => entry.field === "language");
+    const teacher = worksheet.proposal_decisions.find((entry) => entry.field === "teacher_id");
+    language.reviewer_action = "replace";
+    language.reviewer_value = "english";
+    language.reviewer_notes = "Reviewed source audio.";
+    teacher.reviewer_action = "replace";
+    teacher.reviewer_value = 34;
+    teacher.reviewer_notes = "Confirmed against reviewed faculty evidence.";
+    expect(verifyDecisionWorksheet(bundle, worksheet)).toMatchObject({
+      valid: true,
+      complete: true,
+      errors: [],
+    });
+  });
+
+  it("rejects incompatible resolved class and audience decisions", () => {
+    const bundle = unresolvedClassBundle();
+    const worksheet = completedWorksheet(bundle);
+    const classes = worksheet.proposal_decisions.find((entry) => entry.field === "class_labels");
+    const audience = worksheet.proposal_decisions.find((entry) => entry.field === "audience_focus");
+    classes.reviewer_action = "replace";
+    classes.reviewer_value = ["10th"];
+    classes.reviewer_notes = "Test incompatible entrance-exam class.";
+    audience.reviewer_action = "replace";
+    audience.reviewer_value = "12th";
+    audience.reviewer_notes = "Test cross-field mismatch.";
+    const result = verifyDecisionWorksheet(bundle, worksheet);
+    expect(result.valid).toBe(false);
+    expect(result.errors).toEqual(expect.arrayContaining([
+      "resolved class label 10th is incompatible with the resolved learning goal.",
+      "resolved audience_focus must be one of the resolved class_labels.",
     ]));
   });
 
