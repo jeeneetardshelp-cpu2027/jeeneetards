@@ -14,6 +14,7 @@
     "import": "node src/scripts/importChannel.js",
     "backfill": "node src/scripts/applyMetadata.js",
     "audit:ingestion": "node src/scripts/inspectIngestionState.js",
+    "review:ingestion": "node --use-system-ca src/scripts/reviewIngestion.js",
     "resolve:playlist-owner": "node src/scripts/resolvePlaylistOwner.js",
     "list:channel-playlists": "node src/scripts/listChannelPlaylists.js",
     "audit:production-catalog": "node src/scripts/reportProductionCatalog.js",

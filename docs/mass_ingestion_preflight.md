@@ -349,6 +349,38 @@ stable total order, then refuses to report overlap evidence unless the fetched
 membership count equals the summed course counts. This matters now that the
 production catalogue contains more than 1,000 memberships.
 
+## Read-only human-review bundle
+
+Before supplying academic decisions to the importer, run the classifier against
+the real source metadata and current public taxonomy:
+
+```powershell
+npm.cmd run review:ingestion -- --playlist=<PLAYLIST_ID> --env=production --expected-project-ref=<PROJECT_REF>
+```
+
+The runner uses only `YOUTUBE_API_KEY` and the Supabase anonymous key. It reads
+the playlist owner, description, ordered usable videos, subjects, learning
+goals, verified teachers, and verified aliases. It then calls
+`proposeTaxonomy()` and writes a snapshot-hashed review bundle under
+`../outputs/ingestion-review/` by default.
+
+`--expected-project-ref` is mandatory. Before making any network read, the
+runner compares it with the project ref embedded in the Supabase URL. Staging
+also requires the live `app_environment` marker to equal `staging`; production
+rejects a staging marker. A mismatch stops the run without producing a bundle.
+
+The bundle is deliberately not an import manifest. It records
+`writes_attempted: false`, `importable: false`, every non-automatic decision,
+source/taxonomy SHA-256 values, and metadata warnings. Even one verified faculty
+candidate remains a human-review item; ambiguity is never broken automatically.
+The runner refuses repository-local output and refuses to overwrite an existing
+bundle unless `--overwrite` is supplied.
+
+Use `--env=staging` only when the staging environment file points to the
+intended read-only comparison target. This command performs no database write,
+RPC, migration, fixture creation, import, or deployment. A reviewed bundle does
+not authorize any later write.
+
 ## Importer controls
 
 The channel importer:

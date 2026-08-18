@@ -5,31 +5,31 @@
 // It classifies (via rules.js), then splits every field into one of:
 //   auto    — high confidence, safe to accept without a human
 //   review  — a proposal exists but must be confirmed
-//   manual  — Phase 1 cannot propose this yet (chapter/teacher/category/board);
-//             left entirely to the human until Phases 2-4 land.
+//   manual  — the classifier cannot propose this field safely yet.
 //
 // It NEVER writes anything and NEVER invents a value outside the live taxonomy
 // it is given. Network/DB access is the caller's job — this stays pure.
 
 import { CONFIDENCE, isAutoAcceptable, proposePlaylistTags } from "./rules.js";
+import { proposeTeacher } from "./proposeTeacher.js";
 
-// Fields Phase 1 does not attempt. They stay the operator's job for now.
+// Fields the current pipeline does not attempt. They stay the operator's job.
 const MANUAL_FIELDS = Object.freeze({
   chapter_id: "per-video LLM mapping (Phase 2)",
-  teacher: "extraction + canonicalization (Phase 3)",
   category_id: "no reliable title signal — map from learning goal by hand",
   board_ids: "empty for JEE/NEET; set only in the School journey",
 });
 
 function decide(fieldStatus) {
-  return isAutoAcceptable(fieldStatus) ? "auto" : "review";
+  return isAutoAcceptable(fieldStatus) && !fieldStatus?.requiresReview ? "auto" : "review";
 }
 
-// liveTaxonomy: { subjects:[{id,name,slug}], learningGoals:[{id,slug}] }.
+// liveTaxonomy: { subjects, learningGoals, teachers:[{id,display_name,aliases}] }.
 // Only ids present here can ever be proposed.
 export function proposeTaxonomy(metadata, liveTaxonomy = {}) {
-  const { subjects = [], learningGoals = [] } = liveTaxonomy;
+  const { subjects = [], learningGoals = [], teachers = [] } = liveTaxonomy;
   const p = proposePlaylistTags({ ...metadata, subjects });
+  const teacher = proposeTeacher(metadata, teachers);
 
   // Resolve the learning-goal slug (jee/neet) to a real id from live taxonomy.
   const goalRow = p.learningGoal.value
@@ -48,6 +48,7 @@ export function proposeTaxonomy(metadata, liveTaxonomy = {}) {
     language: p.language,
     audience_focus: p.audienceFocus,
     difficulty: p.difficulty,
+    teacher_id: teacher,
   };
 
   const decisions = {};
