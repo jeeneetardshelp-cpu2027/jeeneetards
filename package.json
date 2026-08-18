@@ -16,6 +16,7 @@
     "audit:ingestion": "node src/scripts/inspectIngestionState.js",
     "review:ingestion": "node --use-system-ca src/scripts/reviewIngestion.js",
     "verify:ingestion-review": "node src/scripts/verifyIngestionReview.js",
+    "prepare:ingestion-decisions": "node src/scripts/prepareIngestionDecisions.js",
     "resolve:playlist-owner": "node src/scripts/resolvePlaylistOwner.js",
     "list:channel-playlists": "node src/scripts/listChannelPlaylists.js",
     "audit:production-catalog": "node src/scripts/reportProductionCatalog.js",

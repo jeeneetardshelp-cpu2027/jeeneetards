@@ -404,6 +404,20 @@ the read-only safety flags, confirms every proposed ID exists in the embedded
 taxonomy, and requires one chapter row for every source video. It exits nonzero
 if the bundle was altered or its internal review coverage is inconsistent.
 
+After verification, create the worksheet a human will complete:
+
+```powershell
+npm.cmd run prepare:ingestion-decisions -- --bundle=<REVIEW_JSON_PATH>
+```
+
+The worksheet is written beside the review bundle by default, outside the
+repository. It is bound to the complete review bundle plus the source and
+taxonomy hashes, contains one blank decision for every non-automatic proposal
+and chapter row, and records automatic results only as context. It remains
+`importable: false`, has no database path, and refuses overwrite unless
+`--overwrite` is explicit. Creating or completing it does not authorize an
+import.
+
 Use `--env=staging` only when the staging environment file points to the
 intended read-only comparison target. This command performs no database write,
 RPC, migration, fixture creation, import, or deployment. A reviewed bundle does
