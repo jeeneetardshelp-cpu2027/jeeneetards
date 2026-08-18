@@ -327,6 +327,13 @@ describe("channel ingestion metadata", () => {
       playlistId: "PL_real",
       videos,
     })).toThrow(/course_title.*160/i);
+    for (const courseTitle of ["Reviewed\u0000Course", "Reviewed\u007fCourse"]) {
+      expect(() => validateChapterManifest({
+        manifest: { ...manifest, course_title: courseTitle },
+        playlistId: "PL_real",
+        videos,
+      })).toThrow(/course_title.*control characters/i);
+    }
     expect(() => validateChapterManifest({
       manifest: { ...manifest, request_id: "not-a-uuid" },
       playlistId: "PL_real",
