@@ -16,6 +16,7 @@
     "audit:ingestion": "node src/scripts/inspectIngestionState.js",
     "review:ingestion": "node --use-system-ca src/scripts/reviewIngestion.js",
     "prepare:ingestion-review": "node --use-system-ca src/scripts/prepareIngestionReview.js",
+    "verify:ingestion-preparation": "node src/scripts/verifyIngestionPreparation.js",
     "verify:ingestion-review": "node src/scripts/verifyIngestionReview.js",
     "prepare:ingestion-decisions": "node src/scripts/prepareIngestionDecisions.js",
     "verify:ingestion-decisions": "node src/scripts/verifyIngestionDecisions.js",

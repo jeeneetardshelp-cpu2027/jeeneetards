@@ -10,6 +10,11 @@ import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import { buildReviewBundle } from "./reviewIngestion.js";
 import {
+  buildPreparationReceipt,
+  preparationArtifactTexts,
+  verifyPreparationReceipt,
+} from "./ingestionPreparationReceipt.js";
+import {
   assertPreparationOutputsAvailable,
   assertReusedBundleTarget,
   collectLivePreparationBundle,
@@ -126,6 +131,7 @@ describe("one-command read-only ingestion review preparation", () => {
       decisions: null,
       packet: null,
       response: null,
+      receipt: null,
       check_only: true,
       output_written: false,
       live_reads_performed: false,
@@ -209,6 +215,7 @@ describe("one-command read-only ingestion review preparation", () => {
     expect(paths.decisionsPath).toBe(resolve(outputDir, `${playlistId}.decisions.json`));
     expect(paths.packetPath).toBe(resolve(outputDir, `${playlistId}.review.md`));
     expect(paths.responsePath).toBe(resolve(outputDir, `${playlistId}.response.json`));
+    expect(paths.receiptPath).toBe(resolve(outputDir, `${playlistId}.receipt.json`));
     expect(() => assertPreparationOutputsAvailable(
       paths,
       (path) => path === paths.responsePath,
@@ -237,6 +244,52 @@ describe("one-command read-only ingestion review preparation", () => {
     )).toBe(true);
     expect(artifacts.packet).toContain("Human review complete: **No**");
     expect(artifacts.packet).toContain("Database writes allowed: **No**");
+  });
+
+  it("binds all prepared files into a tamper-evident blank-review receipt", () => {
+    const artifacts = prepareIngestionReviewArtifacts(reviewBundle(), {
+      generatedAt: "2026-08-19T04:00:00.000Z",
+    });
+    const options = {
+      ...artifacts,
+      generatedAt: "2026-08-19T04:00:00.000Z",
+      liveReadsPerformed: false,
+      reusedVerifiedBundle: true,
+      fileNames: {
+        review_bundle: `${playlistId}.review.json`,
+        decision_worksheet: `${playlistId}.decisions.json`,
+        review_packet: `${playlistId}.review.md`,
+        reviewer_response: `${playlistId}.response.json`,
+      },
+    };
+    const receipt = buildPreparationReceipt(options);
+    const texts = preparationArtifactTexts(artifacts);
+    expect(verifyPreparationReceipt(receipt, texts)).toMatchObject({
+      valid: true,
+      errors: [],
+      summary: { artifact_count: 4, completed_decisions: 0 },
+    });
+    expect(verifyPreparationReceipt(receipt, {
+      ...texts,
+      review_packet: `${texts.review_packet}\ntampered\n`,
+    }).errors).toContain("receipt artifact review_packet hash does not match.");
+
+    const contradictoryReceipt = structuredClone(receipt);
+    contradictoryReceipt.preparation.live_reads_performed = true;
+    expect(verifyPreparationReceipt(contradictoryReceipt, texts).errors)
+      .toContain("receipt must identify exactly one live or reused-bundle preparation mode.");
+    const extendedReceipt = structuredClone(receipt);
+    extendedReceipt.database_write_override = true;
+    expect(verifyPreparationReceipt(extendedReceipt, texts).errors)
+      .toContain("receipt has unexpected fields.");
+
+    const decidedArtifacts = structuredClone(artifacts);
+    decidedArtifacts.response.reviewer.name = "Reviewer";
+    const decidedReceipt = buildPreparationReceipt({ ...options, ...decidedArtifacts });
+    expect(verifyPreparationReceipt(
+      decidedReceipt,
+      preparationArtifactTexts(decidedArtifacts),
+    ).errors).toContain("initial reviewer response must remain blank.");
   });
 
   it("contains no database mutation, importer, or child-process path", () => {

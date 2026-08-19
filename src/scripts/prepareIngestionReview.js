@@ -23,6 +23,12 @@ import { verifyReviewBundle } from "./verifyIngestionReview.js";
 import { verifyDecisionWorksheet } from "./verifyIngestionDecisions.js";
 import { prepareResponse, writeResponse } from "./prepareIngestionResponse.js";
 import { renderReviewPacket, writeReviewPacket } from "./renderIngestionReviewPacket.js";
+import {
+  buildPreparationReceipt,
+  preparationArtifactTexts,
+  verifyPreparationReceipt,
+  writePreparationReceipt,
+} from "./ingestionPreparationReceipt.js";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const defaultRepoRoot = resolve(here, "../..");
@@ -104,6 +110,7 @@ export function resolvePreparationPaths({
     decisionsPath: `${prefix}.decisions.json`,
     packetPath: `${prefix}.review.md`,
     responsePath: `${prefix}.response.json`,
+    receiptPath: `${prefix}.receipt.json`,
     priorManifestPath: priorManifest ? resolve(cwd, priorManifest) : null,
   };
 }
@@ -114,6 +121,7 @@ export function assertPreparationOutputsAvailable(paths, pathExists = existsSync
     paths.decisionsPath,
     paths.packetPath,
     paths.responsePath,
+    paths.receiptPath,
   ].filter(pathExists);
   if (existing.length) {
     throw new Error(
@@ -167,6 +175,7 @@ export function writePreparationArtifacts(paths, artifacts) {
   writeDecisionWorksheet(paths.decisionsPath, artifacts.worksheet);
   writeReviewPacket(paths.packetPath, artifacts.packet);
   writeResponse(paths.responsePath, artifacts.response);
+  writePreparationReceipt(paths.receiptPath, artifacts.receipt);
 }
 
 export async function collectLivePreparationBundle(
@@ -216,14 +225,35 @@ export async function main(argv = process.argv.slice(2)) {
   const priorManifest = priorManifestBytes
     ? JSON.parse(priorManifestBytes.toString("utf8"))
     : null;
+  const priorManifestSha256 = priorManifestBytes
+    ? createHash("sha256").update(priorManifestBytes).digest("hex")
+    : null;
   const artifacts = prepareIngestionReviewArtifacts(bundle, {
     generatedAt,
     priorManifest,
     priorManifestLabel: paths.priorManifestPath ? basename(paths.priorManifestPath) : null,
-    priorManifestSha256: priorManifestBytes
-      ? createHash("sha256").update(priorManifestBytes).digest("hex")
-      : null,
+    priorManifestSha256,
   });
+  artifacts.receipt = buildPreparationReceipt({
+    ...artifacts,
+    generatedAt,
+    liveReadsPerformed: !args.bundle,
+    reusedVerifiedBundle: Boolean(args.bundle),
+    priorManifestSha256,
+    fileNames: {
+      review_bundle: basename(paths.bundlePath),
+      decision_worksheet: basename(paths.decisionsPath),
+      review_packet: basename(paths.packetPath),
+      reviewer_response: basename(paths.responsePath),
+    },
+  });
+  const receiptVerification = verifyPreparationReceipt(
+    artifacts.receipt,
+    preparationArtifactTexts(artifacts),
+  );
+  if (!receiptVerification.valid) {
+    throw new Error(`preparation receipt failed verification: ${receiptVerification.errors.join(" ")}`);
+  }
   assertPreparationOutputsAvailable(paths);
   if (!args.check) writePreparationArtifacts(paths, artifacts);
   console.log(JSON.stringify({
@@ -232,6 +262,7 @@ export async function main(argv = process.argv.slice(2)) {
     decisions: args.check ? null : paths.decisionsPath,
     packet: args.check ? null : paths.packetPath,
     response: args.check ? null : paths.responsePath,
+    receipt: args.check ? null : paths.receiptPath,
     planned_output_directory: paths.outputDir,
     check_only: args.check,
     output_written: !args.check,

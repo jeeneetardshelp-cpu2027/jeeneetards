@@ -361,10 +361,23 @@ npm.cmd run prepare:ingestion-review -- --playlist=<PLAYLIST_ID> --env=productio
 This is the preferred complete preparation command. It performs only YouTube
 and anonymous Supabase reads, constructs the review bundle, verifies it, builds
 and verifies the pending decision worksheet, renders the Markdown packet, and
-creates a blank reviewer response. Every artifact is built and verified in
-memory before local output begins. The command has no overwrite option and
-refuses the whole run if any target file already exists, protecting partially
-completed human responses. Use a new output directory for every refresh.
+creates a blank reviewer response. It also builds a non-importable preparation
+receipt containing exact SHA-256 hashes for those four files. Every artifact and
+the receipt are built and verified in memory before local output begins; the
+receipt is written last as the completion marker. The command has no overwrite
+option and refuses the whole run if any target file already exists, protecting
+partially completed human responses. Use a new output directory for every
+refresh.
+
+Verify the complete set later using only local reads:
+
+```powershell
+npm.cmd run verify:ingestion-preparation -- --receipt=<PREPARATION_RECEIPT_JSON_PATH>
+```
+
+The verifier recomputes every file hash, rechecks the bundle and worksheet
+bindings, validates the reviewer response contract, and refuses a receipt whose
+initial response contains any human decision.
 
 Add `--check` to either live or reuse mode to perform the same reads, binding,
 construction, and verification entirely in memory. Check mode reports all
