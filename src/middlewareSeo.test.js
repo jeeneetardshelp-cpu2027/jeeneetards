@@ -143,6 +143,7 @@ describe("edge-rendered discovery landings", () => {
     ["/", "Find the right lecture. Skip the noise."],
     ["/browse", "All courses"],
     ["/explore", "What are you preparing for?"],
+    ["/materials", "Find study material by your syllabus."],
     ["/tests", "Mock tests"],
     ["/methodology", "How JEENEETARD curates courses"],
     ["/terms", "Terms of Service &amp; Disclaimer"],
@@ -170,6 +171,12 @@ describe("edge-rendered discovery landings", () => {
       expect(html).toContain("What verified means");
       expect(html).toContain("does not currently sell placement");
       expect(html).toContain('href="mailto:jeeneetardshelp@gmail.com"');
+    }
+    if (pathname === "/materials") {
+      expect(html).toContain("Short notes, formula sheets, full lecture notes");
+      expect(html).toContain('href="/explore"');
+      expect(html).toContain('href="/tests"');
+      expect(html).toContain('href="/methodology"');
     }
   });
 
