@@ -38,11 +38,10 @@ export const RELEASE_FEATURES = Object.freeze({
   // resolve to ForumFeatureUnavailable so a shared link explains itself instead
   // of 404ing.
   //
-  // Before flipping this back to true: publish forum rules in the Terms (they
-  // currently say nothing about discussion, conduct, harassment or abuse, while
-  // the schema defines report reasons for abuse_or_bullying, sexual_content and
-  // self_harm), wire forum_admin_set_suspension to a UI (no component calls it
-  // today), and open the database mode. Users are 14-18.
+  // Before flipping this back to true: obtain owner/legal review of the forum
+  // rules drafted in LegalPage, deploy and production-verify the suspension UI,
+  // and open the database mode through its separately reviewed runbook. Users
+  // are 14-18, so none of those gates is implied by the code merely existing.
   forum: false,
   // Ratings launch (2026-07-30): the site owner reviewed the under-18
   // consent/age-assurance question and chose to proceed. Enabling ratings

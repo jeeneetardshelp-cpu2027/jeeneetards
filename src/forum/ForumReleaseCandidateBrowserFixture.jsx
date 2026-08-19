@@ -65,6 +65,8 @@ function Fixture() {
       return 9;
     },
     listReports: async () => [missingTargetReport],
+    listSuspensions: async () => [],
+    setSuspension: async () => null,
     moderate: async () => null,
     dismissReport: async ({ reportId }) => {
       document.documentElement.dataset.forumRcDismissedReport = String(reportId);

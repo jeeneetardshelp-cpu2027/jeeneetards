@@ -16,6 +16,8 @@ describe("disabled forum route", () => {
 
     expect(screen.getByRole("heading", { name: "Student forum is not available yet" }))
       .toBeTruthy();
+    expect(screen.getByText(/rules, moderation operations and final launch decision/i))
+      .toBeTruthy();
     expect(screen.getByRole("link", { name: "Browse available courses" }).getAttribute("href"))
       .toBe("/browse");
     expect(container.querySelector(".reveal")).toBeNull();

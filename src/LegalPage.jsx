@@ -72,7 +72,49 @@ export default function LegalPage() {
             </p>
           </Section>
 
-          <Section title="3. YouTube content and intellectual property">
+          <Section title="3. Student forum rules">
+            <p>
+              The student forum is not publicly available in this release.
+              These rules apply when it opens. Forum posts, answers, and public
+              usernames can be read by anyone and may be indexed by search
+              engines. Use a pseudonym and do not publish real names, contact
+              details, schools, coaching batches, account credentials, or
+              another person&apos;s private information.
+            </p>
+            <p>
+              Keep discussions connected to JEE, NEET, school study, exam
+              preparation, or student wellbeing. Do not bully, harass,
+              threaten, impersonate, sexually exploit, discriminate against,
+              or deliberately endanger another person. Spam, scams, illegal
+              material, malicious links, doxxing, instructions for wrongdoing,
+              and content that infringes another person&apos;s rights are also
+              prohibited.
+            </p>
+            <p>
+              Use the report control for unsafe or rule-breaking content.
+              Self-harm or suicide concerns receive a distinct urgent review
+              path, but JEENEETARD is not an emergency or crisis service and
+              moderation is not real-time. If someone may be in immediate
+              danger, contact local emergency services and a trusted adult.
+            </p>
+            <p>
+              Moderators may hide, restore, lock, remove, or dismiss reported
+              content and may temporarily suspend forum participation for up
+              to 365 days. Enforcement considers context and repeated conduct;
+              it does not guarantee that every post is reviewed before
+              publication. A moderation decision can be questioned at{" "}
+              <a
+                href="mailto:jeeneetardshelp@gmail.com"
+                className="font-medium underline"
+                style={{ color: BRAND.teal }}
+              >
+                jeeneetardshelp@gmail.com
+              </a>
+              .
+            </p>
+          </Section>
+
+          <Section title="4. YouTube content and intellectual property">
             <p>
               JEENEETARD does not claim ownership of indexed videos. Videos
               remain hosted and controlled by YouTube and their respective
@@ -92,7 +134,7 @@ export default function LegalPage() {
             </p>
           </Section>
 
-          <Section title="4. Educational disclaimer">
+          <Section title="5. Educational disclaimer">
             <p>
               Listings, filters, classifications, coverage labels, ratings, and
               metadata are for discovery only. They are not academic, career,
@@ -107,7 +149,7 @@ export default function LegalPage() {
             </p>
           </Section>
 
-          <Section title="5. Availability and accuracy">
+          <Section title="6. Availability and accuracy">
             <p>
               Creators may edit, restrict, make private, or remove videos at any
               time. Metadata may be incomplete, outdated, or incorrect despite
@@ -117,7 +159,7 @@ export default function LegalPage() {
             </p>
           </Section>
 
-          <Section title="6. Acceptable use">
+          <Section title="7. Acceptable use">
             <p>
               Use the service only for lawful personal and educational
               purposes. Do not disrupt the service, bypass security controls,
@@ -126,7 +168,7 @@ export default function LegalPage() {
             </p>
           </Section>
 
-          <Section title="7. Notices, responsibility, and owner details">
+          <Section title="8. Notices, responsibility, and owner details">
             <p>
               Listing corrections, rights-holder notices, privacy requests, and
               support can be sent to{" "}
