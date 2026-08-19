@@ -145,6 +145,25 @@ export function createForumApi(client = supabase) {
       }), "dismiss that report");
     },
 
+    async listSuspensions() {
+      const data = unwrap(
+        await requireClient(client).rpc("forum_admin_list_suspensions"),
+        "load forum suspensions",
+      );
+      return Array.isArray(data) ? data : [];
+    },
+
+    async setSuspension({ username, days, reason }) {
+      const response = await requireClient(client)
+        .rpc("forum_admin_set_suspension_by_username", {
+          p_username: username.trim(),
+          p_days: days,
+          p_reason: reason.trim(),
+        })
+        .single();
+      return unwrap(response, days == null ? "lift that suspension" : "suspend that student");
+    },
+
     async listBetaMembers() {
       const data = unwrap(
         await requireClient(client).rpc("forum_admin_list_beta_members"),

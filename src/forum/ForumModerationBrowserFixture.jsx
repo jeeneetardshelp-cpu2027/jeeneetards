@@ -46,6 +46,17 @@ function Fixture() {
       return 8;
     },
     listReports: async () => [report],
+    listSuspensions: async () => [],
+    setSuspension: async ({ username, days, reason }) => {
+      document.documentElement.dataset.suspensionUsername = username;
+      document.documentElement.dataset.suspensionDays = String(days);
+      document.documentElement.dataset.suspensionReason = reason;
+      return {
+        username,
+        suspended_until: "2026-09-18T00:00:00.000Z",
+        reason,
+      };
+    },
     moderate: async ({ action }) => {
       document.documentElement.dataset.moderationAction = action;
       return null;

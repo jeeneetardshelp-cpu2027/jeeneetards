@@ -164,4 +164,40 @@ describe("forum read API", () => {
     ]);
     expect(JSON.stringify(calls)).not.toContain("reporter_id");
   });
+
+  it("uses the reviewed single-row suspension wrapper without exposing user ids", async () => {
+    const calls = [];
+    const api = createForumApi(clientWith((name, params) => {
+      if (name === "forum_admin_list_suspensions") {
+        calls.push({ name, params });
+        return Promise.resolve({ data: [{ username: "student-one", is_active: true }], error: null });
+      }
+      return {
+        single: async () => {
+          calls.push({ name, params, shape: "single" });
+          return {
+            data: { username: "student-one", suspended_until: null, reason: null },
+            error: null,
+          };
+        },
+      };
+    }));
+
+    await expect(api.listSuspensions()).resolves.toEqual([
+      { username: "student-one", is_active: true },
+    ]);
+    await expect(api.setSuspension({
+      username: " student-one ", days: null, reason: " appeal reviewed ",
+    })).resolves.toEqual({ username: "student-one", suspended_until: null, reason: null });
+
+    expect(calls).toEqual([
+      { name: "forum_admin_list_suspensions", params: undefined },
+      {
+        name: "forum_admin_set_suspension_by_username",
+        params: { p_username: "student-one", p_days: null, p_reason: "appeal reviewed" },
+        shape: "single",
+      },
+    ]);
+    expect(JSON.stringify(calls)).not.toContain("user_id");
+  });
 });
