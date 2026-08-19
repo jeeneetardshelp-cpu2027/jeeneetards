@@ -35,7 +35,7 @@ const course = {
 describe("courseMeta", () => {
   it("builds title, description and the canonical course URL", () => {
     const meta = courseMeta(course, 5);
-    expect(meta.title).toBe("Rectilinear Motion (Kinematics) | JEENEETARD");
+    expect(meta.title).toBe("Rectilinear Motion (Kinematics) by ABJ Sir | JEENEETARD");
     expect(meta.description).toContain("Rectilinear Motion (Kinematics)");
     expect(meta.description).toContain("10 Physics lectures by ABJ Sir");
     expect(meta.description).toContain("ads or recommendations may appear");
@@ -48,8 +48,8 @@ describe("injectCourseMeta", () => {
   const html = injectCourseMeta(shell, courseMeta(course, 5));
 
   it("swaps title, description and og/twitter tags", () => {
-    expect(html).toContain("<title>Rectilinear Motion (Kinematics) | JEENEETARD</title>");
-    expect(html).toContain('property="og:title" content="Rectilinear Motion (Kinematics) | JEENEETARD"');
+    expect(html).toContain("<title>Rectilinear Motion (Kinematics) by ABJ Sir | JEENEETARD</title>");
+    expect(html).toContain('property="og:title" content="Rectilinear Motion (Kinematics) by ABJ Sir | JEENEETARD"');
     expect(html).toContain('property="og:url" content="https://www.jeeneetard.com/course/5"');
     expect(html).not.toContain("Free course finder");
     expect(html).toContain('name="robots" content="index, follow"');
@@ -77,7 +77,9 @@ describe("injectCourseMeta", () => {
   it("escapes HTML in course titles", () => {
     const hostile = { ...course, title: 'A "<b>&' };
     const out = injectCourseMeta(shell, courseMeta(hostile, 7));
-    expect(out).toContain("<title>A &quot;&lt;b&gt;&amp; | JEENEETARD</title>");
+    expect(out).toContain(
+      "<title>A &quot;&lt;b&gt;&amp; by ABJ Sir | JEENEETARD</title>",
+    );
     expect(out).not.toContain("<b>&");
   });
 
@@ -85,8 +87,9 @@ describe("injectCourseMeta", () => {
     // $' $& $1 are replacement patterns in String.replace — a string
     // replacement would expand them and splice page fragments into the tags.
     for (const title of ["Full Course worth $199", "Rock $' Roll", "Best $& $1 tricks"]) {
-      const out = injectCourseMeta(shell, courseMeta({ ...course, title }, 9));
-      expect(out).toContain(`<title>${escapeHtml(title)} | JEENEETARD</title>`);
+      const meta = courseMeta({ ...course, title }, 9);
+      const out = injectCourseMeta(shell, meta);
+      expect(out).toContain(`<title>${escapeHtml(meta.title)}</title>`);
       expect(out.match(/<link rel="canonical"/g)).toHaveLength(1);
       expect(out.match(/<\/html>/g)).toHaveLength(1);
     }
