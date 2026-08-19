@@ -75,6 +75,13 @@ function itemListSchema() {
   return el ? JSON.parse(el.textContent) : null;
 }
 
+function learningResourceSchema() {
+  const el = document.head.querySelector(
+    'script[type="application/ld+json"][data-schema-key="LearningResource"]',
+  );
+  return el ? JSON.parse(el.textContent) : null;
+}
+
 beforeEach(() => {
   window.scrollTo = vi.fn();
 });
@@ -110,6 +117,15 @@ describe("Explore structured data wiring", () => {
     ]);
     expect(itemListSchema().itemListElement.map((item) => item.name))
       .toEqual(["Kinematics"]);
+    expect(learningResourceSchema()).toMatchObject({
+      "@type": "LearningResource",
+      name: "A practical order for JEE Class 11 Physics",
+      educationalLevel: "Class 11",
+      citation: [
+        { name: "Official JEE Main 2026 syllabus (NTA)" },
+        { name: "NCERT Class 11 Physics textbooks" },
+      ],
+    });
   });
 
   it("removes the breadcrumb markup while a scoped search is live", async () => {
@@ -124,5 +140,6 @@ describe("Explore structured data wiring", () => {
     });
     await waitFor(() => expect(breadcrumbSchema()).toBeNull());
     expect(itemListSchema()).toBeNull();
+    expect(learningResourceSchema()).toBeNull();
   });
 });
