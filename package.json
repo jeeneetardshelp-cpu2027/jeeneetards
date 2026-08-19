@@ -11,7 +11,7 @@
     "preview": "vite preview",
     "test": "vitest run",
     "lint": "eslint . --max-warnings=0",
-    "import": "node src/scripts/importChannel.js",
+    "import": "node --use-system-ca src/scripts/importChannel.js",
     "backfill": "node src/scripts/applyMetadata.js",
     "audit:ingestion": "node src/scripts/inspectIngestionState.js",
     "review:ingestion": "node --use-system-ca src/scripts/reviewIngestion.js",

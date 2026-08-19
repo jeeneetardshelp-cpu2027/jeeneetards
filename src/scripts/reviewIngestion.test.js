@@ -366,8 +366,11 @@ describe("read-only source contract", () => {
     expect(source).not.toContain("SUPABASE_SERVICE_ROLE_KEY");
   });
 
-  it("registers a system-CA-enabled review command", () => {
+  it("registers system-CA-enabled ingestion network commands", () => {
     const packageJson = JSON.parse(readFileSync(resolve(here, "../../package.json"), "utf8"));
+    expect(packageJson.scripts.import).toBe(
+      "node --use-system-ca src/scripts/importChannel.js",
+    );
     expect(packageJson.scripts["review:ingestion"]).toBe(
       "node --use-system-ca src/scripts/reviewIngestion.js",
     );
