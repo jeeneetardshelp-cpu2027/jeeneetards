@@ -1,6 +1,8 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
+import { STATIC_ROUTES } from "./scripts/buildSitemap.js";
+import { SUBJECT_GUIDE_PATHS } from "./subjectGuides.js";
 
 const root = resolve(import.meta.dirname, "..");
 
@@ -33,6 +35,14 @@ describe("production metadata assets", () => {
     expect(llms).toContain("/sitemap.xml");
     expect(llms).toContain("/admin");
     expect(llms).toContain("All videos stay on YouTube");
+    for (const route of STATIC_ROUTES) {
+      expect(llms).toContain(`- \`${route}\``);
+    }
+    for (const route of SUBJECT_GUIDE_PATHS) {
+      expect(llms).toContain(`- \`${route}\``);
+    }
+    expect(llms).toContain("`/explore/:goal/:class/:subject`");
+    expect(llms).toContain("source of truth for");
   });
 
   it("advertises the public Explore landing page in the generated sitemap", () => {
