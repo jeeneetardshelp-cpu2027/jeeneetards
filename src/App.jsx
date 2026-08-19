@@ -54,6 +54,7 @@ const ForumFeatureUnavailable = lazy(() => import("./forum/ForumFeatureUnavailab
 const ForumFeedPage = lazy(() => import("./forum/ForumFeedPage.jsx"));
 const ForumPostPage = lazy(() => import("./forum/ForumPostPage.jsx"));
 const ForumSubmitPage = lazy(() => import("./forum/ForumSubmitPage.jsx"));
+const ForumUsernamePage = lazy(() => import("./forum/ForumUsernamePage.jsx"));
 
 function RouteFallback() {
   return (
@@ -342,6 +343,10 @@ export default function App() {
           <Route path="/forum" element={<ForumFeedRoute />} />
           <Route path="/forum/post/:postId" element={<ForumPostRoute />} />
           <Route path="/forum/submit" element={<ForumSubmitRoute />} />
+          {/* Username setup stays available while the forum flag and mode are
+              off, so approved beta testers can prepare without opening any
+              discussion read or write surface. */}
+          <Route path="/forum/username" element={<ForumUsernamePage />} />
           {/* Both screens are addressed by real database ids. */}
           <Route path="/chapter/:chapterId" element={<LegacyChapterRedirect />} />
           {/* A course opened from the catalogue has no chapter context, so the

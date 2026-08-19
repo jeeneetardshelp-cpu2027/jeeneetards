@@ -97,7 +97,15 @@ describe("the header's Sign-in entry point", () => {
   it("shows Sign out, not Sign in, when a session exists", () => {
     showHeader("/browse", { user: { id: "u1" } });
     expect(screen.getByRole("button", { name: "Sign out" })).toBeTruthy();
+    expect(screen.getByRole("link", { name: "Forum username" }).getAttribute("href"))
+      .toBe("/forum/username");
     expect(screen.queryByRole("link", { name: "Sign in" })).toBeNull();
+  });
+
+  it("does not repeat the Forum username link on its own page", () => {
+    showHeader("/forum/username", { user: { id: "u1" } });
+    expect(screen.queryByRole("link", { name: "Forum username" })).toBeNull();
+    expect(screen.getByRole("button", { name: "Sign out" })).toBeTruthy();
   });
 
   it("does not offer Sign in on the sign-in page itself (no self-loop)", () => {

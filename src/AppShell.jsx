@@ -28,7 +28,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router";
 import {
-  ChevronRight, LogIn, LogOut, Moon, Search, Sun, X,
+  AtSign, ChevronRight, LogIn, LogOut, Moon, Search, Sun, X,
 } from "lucide-react";
 import { useTheme } from "./theme.jsx";
 import { useSession } from "./useSession.js";
@@ -216,16 +216,28 @@ export function GlobalHeader({ crumbs = [], search = null, leading = null, width
           <div className="ml-auto hidden min-w-0 flex-1 sm:block sm:max-w-sm">{search}</div>
 
           {session?.user ? (
-            <button
-              type="button"
-              onClick={signOut}
-              disabled={signingOut}
-              aria-label="Sign out"
-              className="flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-md px-2.5 text-sm text-ink-2 transition-colors duration-200 hover:bg-surface-2 hover:text-ink disabled:opacity-50"
-            >
-              <LogOut className="h-4 w-4" aria-hidden="true" />
-              <span className="hidden lg:inline">{signingOut ? "Signing out…" : "Sign out"}</span>
-            </button>
+            <div className="flex shrink-0 items-center">
+              {RELEASE_FEATURES.studentAccounts && pathname !== "/forum/username" && (
+                <Link
+                  to="/forum/username"
+                  aria-label="Forum username"
+                  className="flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-md px-2.5 text-sm text-ink-2 transition-colors duration-200 hover:bg-surface-2 hover:text-ink"
+                >
+                  <AtSign className="h-4 w-4" aria-hidden="true" />
+                  <span className="hidden lg:inline">Forum username</span>
+                </Link>
+              )}
+              <button
+                type="button"
+                onClick={signOut}
+                disabled={signingOut}
+                aria-label="Sign out"
+                className="flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-md px-2.5 text-sm text-ink-2 transition-colors duration-200 hover:bg-surface-2 hover:text-ink disabled:opacity-50"
+              >
+                <LogOut className="h-4 w-4" aria-hidden="true" />
+                <span className="hidden lg:inline">{signingOut ? "Signing out…" : "Sign out"}</span>
+              </button>
+            </div>
           ) : (
             // The front door for an account. Only shown when accounts are a
             // real release feature; carries the current path so signing in

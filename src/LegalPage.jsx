@@ -4,10 +4,10 @@ import { BRAND_TEAL } from "./brandColors.js";
 
 const BRAND = { teal: BRAND_TEAL };
 
-function Section({ title, children }) {
+function Section({ id, title, children }) {
   const { t } = useTheme();
   return (
-    <section className="mt-8">
+    <section id={id} className="mt-8 scroll-mt-24">
       <h2 className={`text-lg font-semibold ${t.text}`}>{title}</h2>
       <div className={`mt-2 space-y-3 text-sm leading-relaxed ${t.faint}`}>
         {children}
@@ -72,7 +72,7 @@ export default function LegalPage() {
             </p>
           </Section>
 
-          <Section title="3. Student forum rules">
+          <Section id="forum-rules" title="3. Student forum rules">
             <p>
               The student forum is not publicly available in this release.
               These rules apply when it opens. Forum posts, answers, and public

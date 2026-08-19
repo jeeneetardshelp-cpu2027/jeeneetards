@@ -217,6 +217,15 @@ export function metadataForLocation(pathname = "/", search = "") {
     };
   }
 
+  if (path === "/forum/username") {
+    return {
+      ...base,
+      title: `Forum username | ${SITE_NAME}`,
+      description: "Choose the public pseudonym used for JEENEETARD forum posts and answers.",
+      robots: "noindex, nofollow",
+    };
+  }
+
   if (path === "/admin") {
     return {
       ...base,
