@@ -72,11 +72,13 @@ describe("offline ingestion human-review packet", () => {
       "--bundle=review.json",
       "--decisions",
       "decisions.json",
+      "--prior-manifest=prior.json",
       "--out=packet.md",
       "--overwrite",
     ])).toEqual({
       bundle: "review.json",
       decisions: "decisions.json",
+      priorManifest: "prior.json",
       out: "packet.md",
       overwrite: true,
     });
@@ -98,6 +100,7 @@ describe("offline ingestion human-review packet", () => {
     })).toEqual({
       bundlePath: resolve(outputDir, "playlist.review.json"),
       decisionsPath: resolve(outputDir, "playlist.decisions.json"),
+      priorManifestPath: null,
       outputPath: resolve(outputDir, "playlist.review.md"),
     });
     expect(() => resolveReviewPacketPaths({
@@ -135,6 +138,66 @@ describe("offline ingestion human-review packet", () => {
     expect(markdown).toContain("Run the response apply command with `--check` first.");
     expect(markdown).not.toContain("recording decisions in the JSON worksheet");
     expect(markdown).not.toMatch(/recommended action|we recommend|approved for import/iu);
+  });
+
+  it("attaches an exactly source-bound prior review as historical evidence only", () => {
+    const { bundle, worksheet } = artifacts();
+    const priorManifest = {
+      version: 1,
+      request_id: "400de788-67e0-445f-8b76-3a34a12a1472",
+      youtube_playlist_id: "PL_review",
+      course_title: "Kinematics",
+      teacher_evidence: {
+        version: 1,
+        kind: "reviewed_external_source",
+        decision_id: "fbf7b3a1-0a19-4dae-b5fe-d967b94f3a7c",
+        youtube_playlist_id: "PL_review",
+        teacher: "Alakh Pandey",
+        source_url: "https://www.youtube.com/playlist?list=PL_review",
+        source_label: "Earlier channel-owned playlist review",
+        reviewed_by: "Owner",
+        reviewed_on: "2026-08-16",
+        youtube_video_ids: ["abcdefghijk"],
+      },
+      assignments: [{
+        position: 1,
+        youtube_video_id: "abcdefghijk",
+        chapter: "Kinematics",
+        lesson_number: 1,
+      }],
+      exclusions: [],
+    };
+    const markdown = renderReviewPacket(bundle, worksheet, {
+      generatedAt: "2026-08-18T15:00:00.000Z",
+      priorManifest,
+      priorManifestLabel: "kinematics-reviewed.json",
+      priorManifestSha256: "a".repeat(64),
+    });
+    expect(markdown).toContain("Prior reviewed evidence (historical)");
+    expect(markdown).toContain("kinematics-reviewed.json");
+    expect(markdown).toContain("a".repeat(64));
+    expect(markdown).toContain("1 retained / 0 excluded");
+    expect(markdown).toContain("Alakh Pandey across 1 retained videos");
+    expect(markdown).toContain("does not fill, approve, or replace any current decision");
+    expect(markdown).toContain("Human review complete: **No**");
+  });
+
+  it("rejects prior review evidence that does not exactly match the fresh source", () => {
+    const { bundle, worksheet } = artifacts();
+    const priorManifest = {
+      version: 1,
+      request_id: "400de788-67e0-445f-8b76-3a34a12a1472",
+      youtube_playlist_id: "PL_review",
+      assignments: [{
+        position: 1,
+        youtube_video_id: "wrong_id_1",
+        chapter: "Kinematics",
+        lesson_number: 1,
+      }],
+      exclusions: [],
+    };
+    expect(() => renderReviewPacket(bundle, worksheet, { priorManifest }))
+      .toThrow("does not match the source");
   });
 
   it("rejects a worksheet that no longer matches its bundle", () => {

@@ -457,6 +457,19 @@ worksheet:
 npm.cmd run render:ingestion-review -- --bundle=<REVIEW_JSON_PATH> --decisions=<DECISIONS_JSON_PATH>
 ```
 
+If the repository already contains a separately reviewed manifest for the same
+source, it can be attached as historical provenance:
+
+```powershell
+npm.cmd run render:ingestion-review -- --bundle=<REVIEW_JSON_PATH> --decisions=<DECISIONS_JSON_PATH> --prior-manifest=<REVIEWED_MANIFEST_JSON_PATH>
+```
+
+The renderer accepts that evidence only when the playlist ID, every source
+position, and every YouTube video ID match the fresh bundle exactly. It records
+the prior manifest hash, reviewer provenance, retained assignments, and
+exclusions in a clearly historical section. It never copies those conclusions
+into the current worksheet or marks a decision complete.
+
 The Markdown packet is written beside the decision worksheet by default. It is
 bound to the exact review-bundle and worksheet hashes and shows automatic
 context, the ordered source-video metadata with official YouTube links, pending

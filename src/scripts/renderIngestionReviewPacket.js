@@ -5,9 +5,10 @@
 // or records a decision and has no network, database, or importer path.
 
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { createHash } from "node:crypto";
 import { basename, dirname, isAbsolute, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { METADATA_OPTIONS } from "./ingestionSafety.js";
+import { METADATA_OPTIONS, validateChapterManifest } from "./ingestionSafety.js";
 import { sha256Json } from "./reviewIngestion.js";
 import { verifyDecisionWorksheet } from "./verifyIngestionDecisions.js";
 
@@ -23,6 +24,9 @@ export function parseReviewPacketArgs(argv = []) {
     else if (arg === "--decisions") args.decisions = argv[++index];
     else if (arg.startsWith("--decisions=")) {
       args.decisions = arg.slice("--decisions=".length);
+    } else if (arg === "--prior-manifest") args.priorManifest = argv[++index];
+    else if (arg.startsWith("--prior-manifest=")) {
+      args.priorManifest = arg.slice("--prior-manifest=".length);
     } else if (arg === "--out") args.out = argv[++index];
     else if (arg.startsWith("--out=")) args.out = arg.slice("--out=".length);
     else if (arg === "--overwrite") args.overwrite = true;
@@ -32,6 +36,9 @@ export function parseReviewPacketArgs(argv = []) {
     if (!args[name] || !args[name].toLowerCase().endsWith(".json")) {
       throw new Error(`--${name} must name a JSON file.`);
     }
+  }
+  if (args.priorManifest && !args.priorManifest.toLowerCase().endsWith(".json")) {
+    throw new Error("--prior-manifest must name a JSON file.");
   }
   return args;
 }
@@ -44,12 +51,14 @@ function isInside(root, target) {
 export function resolveReviewPacketPaths({
   bundle,
   decisions,
+  priorManifest,
   out,
   cwd = process.cwd(),
   repoRoot = defaultRepoRoot,
 } = {}) {
   const bundlePath = resolve(cwd, bundle);
   const decisionsPath = resolve(cwd, decisions);
+  const priorManifestPath = priorManifest ? resolve(cwd, priorManifest) : null;
   const defaultName = basename(decisionsPath).replace(/(?:\.decisions)?\.json$/iu, ".review.md");
   const outputPath = out ? resolve(cwd, out) : resolve(dirname(decisionsPath), defaultName);
   if (!outputPath.toLowerCase().endsWith(".md")) {
@@ -58,7 +67,7 @@ export function resolveReviewPacketPaths({
   if (isInside(repoRoot, outputPath)) {
     throw new Error("review packet must stay outside the repository.");
   }
-  return { bundlePath, decisionsPath, outputPath };
+  return { bundlePath, decisionsPath, priorManifestPath, outputPath };
 }
 
 export function assertReviewPacketOutputAvailable(
@@ -139,10 +148,40 @@ function controlledValues(field, bundle) {
   return [];
 }
 
+export function bindPriorReviewedManifest(bundle, manifest, manifestSha256 = null) {
+  const playlistId = bundle.source.owner.playlistId;
+  const sourceVideos = bundle.source.videos.map((video) => ({
+    videoId: video.youtube_video_id,
+    sourcePosition: video.position - 1,
+  }));
+  const validated = validateChapterManifest({
+    manifest,
+    playlistId,
+    teacher: manifest?.teacher_evidence?.teacher,
+    videos: sourceVideos,
+  });
+  if (manifestSha256 != null && !/^[0-9a-f]{64}$/iu.test(manifestSha256)) {
+    throw new Error("prior manifest SHA-256 must contain exactly 64 hexadecimal characters.");
+  }
+  return {
+    sha256: manifestSha256?.toLowerCase() ?? sha256Json(manifest),
+    request_id: manifest.request_id,
+    course_title: manifest.course_title ?? null,
+    assignments: manifest.assignments,
+    exclusions: manifest.exclusions ?? [],
+    teacher_evidence: validated.teacherEvidence ?? null,
+  };
+}
+
 export function renderReviewPacket(
   bundle,
   worksheet,
-  { generatedAt = new Date().toISOString() } = {},
+  {
+    generatedAt = new Date().toISOString(),
+    priorManifest = null,
+    priorManifestLabel = null,
+    priorManifestSha256 = null,
+  } = {},
 ) {
   const verification = verifyDecisionWorksheet(bundle, worksheet);
   if (!verification.valid) {
@@ -154,6 +193,9 @@ export function renderReviewPacket(
   const sourceTags = [...new Set(bundle.source.videos.flatMap(
     (video) => (Array.isArray(video.tags) ? video.tags : []),
   ))];
+  const priorReview = priorManifest
+    ? bindPriorReviewedManifest(bundle, priorManifest, priorManifestSha256)
+    : null;
   const lines = [
     "# Ingestion human-review packet",
     "",
@@ -202,6 +244,43 @@ export function renderReviewPacket(
       `   - Embedding: ${code(video.embedding_status)}`,
       "",
     );
+  }
+  if (priorReview) {
+    lines.push(
+      "## Prior reviewed evidence (historical)",
+      "",
+      "> This separately recorded review is shown as provenance only. It does not fill, approve, or replace any current decision.",
+      "",
+      `- Manifest: ${text(priorManifestLabel ?? "Prior reviewed manifest")}`,
+      `- Manifest SHA-256: ${code(priorReview.sha256)}`,
+      `- Historical request ID: ${code(priorReview.request_id)}`,
+      `- Historical course title: ${priorReview.course_title ? text(priorReview.course_title) : "Not recorded"}`,
+      `- Coverage: ${priorReview.assignments.length} retained / ${priorReview.exclusions.length} excluded`,
+    );
+    if (priorReview.teacher_evidence) {
+      lines.push(
+        `- Historical decision ID: ${code(priorReview.teacher_evidence.decisionId)}`,
+        `- Reviewed by: ${text(priorReview.teacher_evidence.reviewedBy)}`,
+        `- Reviewed on: ${code(priorReview.teacher_evidence.reviewedOn)}`,
+        `- Teacher evidence: ${text(priorReview.teacher_evidence.teacher)} across ${priorReview.teacher_evidence.videoCount} retained videos`,
+        `- Source evidence: [${text(priorReview.teacher_evidence.sourceLabel)}](${priorReview.teacher_evidence.sourceUrl})`,
+      );
+    }
+    lines.push("", "### Historical retained assignments", "");
+    for (const assignment of priorReview.assignments) {
+      lines.push(
+        `- Position ${assignment.position}: ${code(assignment.youtube_video_id)} — ${text(assignment.chapter)}`
+          + (assignment.lesson_number == null ? "" : `, lesson ${assignment.lesson_number}`),
+      );
+    }
+    lines.push("", "### Historical exclusions", "");
+    if (!priorReview.exclusions.length) lines.push("None.");
+    for (const exclusion of priorReview.exclusions) {
+      lines.push(
+        `- Position ${exclusion.position}: ${code(exclusion.youtube_video_id)} — ${text(exclusion.reason)}`,
+      );
+    }
+    lines.push("");
   }
   lines.push(
     "## Automatic context",
@@ -308,11 +387,27 @@ export function writeReviewPacket(outputPath, markdown) {
 
 export function main(argv = process.argv.slice(2)) {
   const args = parseReviewPacketArgs(argv);
-  const { bundlePath, decisionsPath, outputPath } = resolveReviewPacketPaths(args);
+  const {
+    bundlePath,
+    decisionsPath,
+    priorManifestPath,
+    outputPath,
+  } = resolveReviewPacketPaths(args);
   assertReviewPacketOutputAvailable(outputPath, args.overwrite);
   const bundle = JSON.parse(readFileSync(bundlePath, "utf8"));
   const worksheet = JSON.parse(readFileSync(decisionsPath, "utf8"));
-  const markdown = renderReviewPacket(bundle, worksheet);
+  const priorManifestBytes = priorManifestPath ? readFileSync(priorManifestPath) : null;
+  const priorManifest = priorManifestBytes
+    ? JSON.parse(priorManifestBytes.toString("utf8"))
+    : null;
+  const priorManifestSha256 = priorManifestBytes
+    ? createHash("sha256").update(priorManifestBytes).digest("hex")
+    : null;
+  const markdown = renderReviewPacket(bundle, worksheet, {
+    priorManifest,
+    priorManifestLabel: priorManifestPath ? basename(priorManifestPath) : null,
+    priorManifestSha256,
+  });
   writeReviewPacket(outputPath, markdown);
   console.log(JSON.stringify({
     output: outputPath,
@@ -321,6 +416,7 @@ export function main(argv = process.argv.slice(2)) {
       + worksheet.completion.required_chapter_decisions
       + worksheet.completion.required_scope_decisions,
     completed_decisions: worksheet.completion.completed_decisions,
+    prior_review_attached: Boolean(priorManifest),
     database_writes_allowed: false,
     importable: false,
   }, null, 2));
