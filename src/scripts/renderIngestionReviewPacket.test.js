@@ -57,6 +57,9 @@ function artifacts() {
       description: "Taught by Alakh Pandey Sir",
       tags: ["JEE", "Physics"],
       sourcePosition: 0,
+      durationSeconds: 125,
+      captionStatus: "available",
+      embeddingStatus: "embeddable",
     }],
     generatedAt: "2026-08-18T12:00:00.000Z",
   });
@@ -120,6 +123,11 @@ describe("offline ingestion human-review packet", () => {
     expect(markdown).toContain("# Ingestion human-review packet");
     expect(markdown).toContain(worksheet.binding.review_bundle_sha256);
     expect(markdown).toContain("Position 1: Kinematics DPP Quiz 1");
+    expect(markdown).toContain("https://www.youtube.com/playlist?list=PL_review");
+    expect(markdown).toContain("https://www.youtube.com/watch?v=abcdefghijk");
+    expect(markdown).toContain("Duration: 2:05");
+    expect(markdown).toContain('Captions: `"available"`');
+    expect(markdown).toContain('Observed source tags: `"JEE"`, `"Physics"`');
     expect(markdown).toContain("Per-video teacher candidates: Alakh Pandey");
     expect(markdown).toContain('Allowed controlled values: `"hindi"`, `"english"`, `"hinglish"`');
     expect(markdown).toContain("Human review complete: **No**");

@@ -109,6 +109,24 @@ function decisionStatus(decision) {
   return decision.reviewer_action == null ? "Pending" : text(decision.reviewer_action);
 }
 
+function durationLabel(seconds) {
+  if (!Number.isFinite(seconds) || seconds < 0) return "unknown";
+  const whole = Math.round(seconds);
+  const hours = Math.floor(whole / 3600);
+  const minutes = Math.floor((whole % 3600) / 60);
+  const remainder = String(whole % 60).padStart(2, "0");
+  if (hours) return `${hours}:${String(minutes).padStart(2, "0")}:${remainder}`;
+  return `${minutes}:${remainder}`;
+}
+
+function youtubePlaylistUrl(playlistId) {
+  return `https://www.youtube.com/playlist?list=${encodeURIComponent(playlistId)}`;
+}
+
+function youtubeVideoUrl(videoId) {
+  return `https://www.youtube.com/watch?v=${encodeURIComponent(videoId)}`;
+}
+
 function controlledValues(field, bundle) {
   if (field === "content_type") return METADATA_OPTIONS.contentType;
   if (field === "language") return METADATA_OPTIONS.language;
@@ -133,6 +151,9 @@ export function renderReviewPacket(
   const teacherById = new Map(
     bundle.taxonomy.teachers.map((teacher) => [teacher.id, teacher.display_name]),
   );
+  const sourceTags = [...new Set(bundle.source.videos.flatMap(
+    (video) => (Array.isArray(video.tags) ? video.tags : []),
+  ))];
   const lines = [
     "# Ingestion human-review packet",
     "",
@@ -160,9 +181,32 @@ export function renderReviewPacket(
     `- Completed decisions: ${verification.summary.completed_decisions}`,
     `- Pending checklist items: ${verification.summary.pending_items}`,
     "",
-    "## Automatic context",
+    "## Source metadata",
+    "",
+    `- [Open the official YouTube playlist](${youtubePlaylistUrl(bundle.source.owner.playlistId)})`,
+    `- Channel ID: ${code(bundle.source.owner.channelId)}`,
+    `- Playlist description: ${text(bundle.source.owner.playlistDescription) || "None"}`,
+    `- Observed source tags: ${sourceTags.length
+      ? sourceTags.map((tag) => code(tag)).join(", ")
+      : "None"}`,
+    "",
+    "### Ordered source videos",
     "",
   ];
+  for (const video of bundle.source.videos) {
+    lines.push(
+      `${video.position}. [${text(video.title)}](${youtubeVideoUrl(video.youtube_video_id)})`,
+      `   - YouTube video ID: ${code(video.youtube_video_id)}`,
+      `   - Duration: ${durationLabel(video.duration_seconds)}`,
+      `   - Captions: ${code(video.caption_status)}`,
+      `   - Embedding: ${code(video.embedding_status)}`,
+      "",
+    );
+  }
+  lines.push(
+    "## Automatic context",
+    "",
+  );
   const automatic = worksheet.automatic_context.proposal_fields;
   if (!automatic.length) lines.push("No proposal fields were accepted automatically.");
   for (const item of automatic) {

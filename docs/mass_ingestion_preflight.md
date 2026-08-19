@@ -459,10 +459,11 @@ npm.cmd run render:ingestion-review -- --bundle=<REVIEW_JSON_PATH> --decisions=<
 
 The Markdown packet is written beside the decision worksheet by default. It is
 bound to the exact review-bundle and worksheet hashes and shows automatic
-context, pending proposal evidence, live candidates, per-video teacher
-candidates, scope signals, and chapter-review rows. It does not recommend or
-record decisions. Like the JSON artifacts, it must stay outside the repository
-and is never importable. Regenerate it after any human worksheet edit.
+context, the ordered source-video metadata with official YouTube links, pending
+proposal evidence, live candidates, per-video teacher candidates, scope
+signals, and chapter-review rows. It does not recommend or record decisions.
+Like the JSON artifacts, it must stay outside the repository and is never
+importable. Regenerate it after any human worksheet edit.
 
 Use `--env=staging` only when the staging environment file points to the
 intended read-only comparison target. This command performs no database write,
