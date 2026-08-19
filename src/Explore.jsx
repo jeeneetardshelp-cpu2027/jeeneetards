@@ -39,7 +39,11 @@ import { exploreStepHeading } from "./exploreHeading.js";
 import { GlobalHeader, HeaderSearch, Container } from "./AppShell.jsx";
 import { useTheme } from "./theme.jsx";
 import { useStructuredData } from "./PageMetadata.jsx";
-import { breadcrumbListSchema, itemListSchema } from "./structuredData.js";
+import {
+  breadcrumbListSchema,
+  itemListSchema,
+  learningResourceSchema,
+} from "./structuredData.js";
 import { BRAND_NAVY, BRAND_TEAL } from "./brandColors.js";
 import { getSubjectGuide } from "./subjectGuides.js";
 
@@ -242,8 +246,12 @@ export default function Explore() {
             url: option.to,
             position: index + 1,
           }))),
+          learningResourceSchema({
+            guide: subjectGuide,
+            url: crumbs.at(-1)?.to,
+          }),
         ],
-    [searching, unknownSlugTarget, goalNode?.slug, boardNode?.slug, classNode?.slug, subjectNode?.slug, chapterNode?.slug, stepOptionsKey],
+    [searching, unknownSlugTarget, goalNode?.slug, boardNode?.slug, classNode?.slug, subjectNode?.slug, chapterNode?.slug, subjectGuide?.title, stepOptionsKey],
   );
 
   if (unknownSlugTarget) return <Navigate to={unknownSlugTarget} replace />;
@@ -362,6 +370,7 @@ export function SubjectGuide({ guide }) {
 
   return (
     <article
+      id="subject-guide"
       aria-labelledby="subject-guide-title"
       className={`mt-10 border-t ${t.border} pt-8`}
     >

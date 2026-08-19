@@ -306,20 +306,21 @@ async function deepExploreResponse(url, route, supaUrl, supaKey) {
   }
 
   const meta = metadataForLocation(url.pathname, url.search);
+  const guide = getSubjectGuide({
+    goal: route.goal,
+    cls: route.cls,
+    subject: subject?.slug,
+  });
   const shell = await fetch(new URL("/index.html", url.origin));
   if (!shell.ok) return next();
   let html = injectRouteMeta(await shell.text(), meta);
-  html = injectStructuredData(html, exploreSchemas(crumbs, options));
+  html = injectStructuredData(html, exploreSchemas(crumbs, options, guide, url.pathname));
   html = injectRootContent(html, renderExploreBody({
     heading,
     meta,
     crumbs,
     options,
-    guide: getSubjectGuide({
-      goal: route.goal,
-      cls: route.cls,
-      subject: subject?.slug,
-    }),
+    guide,
   }));
   return htmlResponse(html);
 }
