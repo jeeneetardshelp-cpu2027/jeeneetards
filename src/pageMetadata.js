@@ -190,6 +190,15 @@ export function metadataForLocation(pathname = "/", search = "") {
     };
   }
 
+  if (path === "/methodology") {
+    return {
+      ...base,
+      title: `How courses are curated | ${SITE_NAME}`,
+      description:
+        "How JEENEETARD classifies, checks and orders free YouTube courses, what verified means, and how to request a correction.",
+    };
+  }
+
   if (path === "/reset") {
     return {
       ...base,

@@ -18,7 +18,7 @@ import { RELEASE_CAPABILITIES, RELEASE_FEATURES } from "../releaseCapabilities.j
 
 export const BASE = "https://www.jeeneetard.com";
 export const STATIC_ROUTES = [
-  "/", "/browse", "/explore", "/tests", "/terms", "/privacy",
+  "/", "/browse", "/explore", "/tests", "/methodology", "/terms", "/privacy",
   ...(RELEASE_CAPABILITIES.studyMaterials ? ["/materials"] : []),
   ...(RELEASE_FEATURES.forum ? ["/forum"] : []),
   // One entry per exam that actually has sources. An exam with an empty list

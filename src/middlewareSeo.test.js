@@ -24,7 +24,7 @@ describe("edge-rendered discovery landings", () => {
   it.each([
     "/", "/browse", "/explore/jee/class-11/physics",
     "/faculty/amit-bijarnia", "/chapter/79", "/course/13",
-    "/course/13/chapter/8", "/terms", "/privacy", "/search", "/tests",
+    "/course/13/chapter/8", "/methodology", "/terms", "/privacy", "/search", "/tests",
     "/tests/jee-main", "/tests/neet", "/tests/class-12",
   ])("recognises supported application path %s", (pathname) => {
     expect(isSupportedAppPath(pathname)).toBe(true);
@@ -144,6 +144,7 @@ describe("edge-rendered discovery landings", () => {
     ["/browse", "All courses"],
     ["/explore", "What are you preparing for?"],
     ["/tests", "Mock tests"],
+    ["/methodology", "How JEENEETARD curates courses"],
     ["/terms", "Terms of Service &amp; Disclaimer"],
     ["/privacy", "Privacy Policy"],
   ])("serves crawler-readable HTML for %s", async (pathname, heading) => {
@@ -164,6 +165,11 @@ describe("edge-rendered discovery landings", () => {
     if (pathname === "/explore") {
       expect(html).toContain('href="/explore/jee"');
       expect(html).toContain('href="/explore/neet"');
+    }
+    if (pathname === "/methodology") {
+      expect(html).toContain("What verified means");
+      expect(html).toContain("does not currently sell placement");
+      expect(html).toContain('href="mailto:jeeneetardshelp@gmail.com"');
     }
   });
 
@@ -396,6 +402,10 @@ describe("edge-rendered discovery landings", () => {
     );
     expect(html).toContain('data-schema-key="BreadcrumbList"');
     expect(html).toContain('data-schema-key="ItemList"');
+    expect(html).toContain("A practical order for JEE Class 11 Physics");
+    expect(html).toContain("not as an official class-wise syllabus");
+    expect(html).toContain("https://jeemain.nta.nic.in/document/syllabus-2026/");
+    expect(html).toContain('href="/methodology"');
     expect(html).not.toContain('class="boot"');
   });
 
