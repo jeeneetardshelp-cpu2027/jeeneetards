@@ -465,6 +465,27 @@ signals, and chapter-review rows. It does not recommend or record decisions.
 Like the JSON artifacts, it must stay outside the repository and is never
 importable. Regenerate it after any human worksheet edit.
 
+To avoid editing evidence or completion counters inside the worksheet, create a
+minimal response form:
+
+```powershell
+npm.cmd run prepare:ingestion-response -- --bundle=<REVIEW_JSON_PATH> --decisions=<DECISIONS_JSON_PATH>
+```
+
+Only the reviewer identity plus action, value, and notes fields are editable.
+The form is bound to the exact worksheet hash. After a human explicitly fills
+it, merge it into a new worksheet:
+
+```powershell
+npm.cmd run apply:ingestion-response -- --bundle=<REVIEW_JSON_PATH> --decisions=<DECISIONS_JSON_PATH> --response=<RESPONSE_JSON_PATH>
+```
+
+The apply command rejects altered bindings, hidden fields, illegal values, and
+inconsistent identities. It copies only whitelisted reviewer fields, recomputes
+completion, runs the offline worksheet verifier, and writes a separate
+`*.reviewed.decisions.json` file. It never overwrites the source worksheet and
+still leaves the result non-importable with database writes disabled.
+
 Use `--env=staging` only when the staging environment file points to the
 intended read-only comparison target. This command performs no database write,
 RPC, migration, fixture creation, import, or deployment. A reviewed bundle does
