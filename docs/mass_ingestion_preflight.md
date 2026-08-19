@@ -366,6 +366,12 @@ memory before local output begins. The command has no overwrite option and
 refuses the whole run if any target file already exists, protecting partially
 completed human responses. Use a new output directory for every refresh.
 
+Add `--check` to either live or reuse mode to perform the same reads, binding,
+construction, and verification entirely in memory. Check mode reports all
+planned paths as unwritten, returns `output_written: false`, and does not create
+the output directory. In live mode this is a full network-read rehearsal, not a
+credential-only check; it still has no database mutation path.
+
 When live credentials are intentionally unavailable, an existing real bundle
 can be reverified and passed through the same downstream preparation path:
 

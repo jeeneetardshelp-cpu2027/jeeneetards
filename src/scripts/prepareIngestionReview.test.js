@@ -1,4 +1,11 @@
-import { readFileSync } from "node:fs";
+import {
+  existsSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
+import { tmpdir } from "node:os";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import { buildReviewBundle } from "./reviewIngestion.js";
@@ -6,6 +13,7 @@ import {
   assertPreparationOutputsAvailable,
   assertReusedBundleTarget,
   collectLivePreparationBundle,
+  main,
   parsePreparationArgs,
   prepareIngestionReviewArtifacts,
   resolvePreparationPaths,
@@ -67,6 +75,7 @@ describe("one-command read-only ingestion review preparation", () => {
       "--out-dir=../outputs/run-1",
       "--bundle=source.review.json",
       "--prior-manifest=prior.json",
+      "--check",
     ])).toEqual({
       playlist: playlistId,
       expectedProjectRef: projectRef,
@@ -74,6 +83,7 @@ describe("one-command read-only ingestion review preparation", () => {
       outDir: "../outputs/run-1",
       bundle: "source.review.json",
       priorManifest: "prior.json",
+      check: true,
     });
     expect(() => parsePreparationArgs([
       `--playlist=${playlistId}`,
@@ -85,6 +95,44 @@ describe("one-command read-only ingestion review preparation", () => {
       "--out-dir=../outputs/run-1",
       "--overwrite",
     ])).toThrow("unknown argument");
+  });
+
+  it("runs reused-bundle check mode without creating output artifacts", async () => {
+    const tempRoot = mkdtempSync(resolve(tmpdir(), "ingestion-review-check-"));
+    const bundlePath = resolve(tempRoot, "source.review.json");
+    const outputDir = resolve(tempRoot, "planned-output");
+    writeFileSync(bundlePath, `${JSON.stringify(reviewBundle(), null, 2)}\n`, "utf8");
+    const originalLog = console.log;
+    let summary;
+    let outputExists;
+    console.log = (value) => { summary = JSON.parse(value); };
+    try {
+      await main([
+        `--playlist=${playlistId}`,
+        `--expected-project-ref=${projectRef}`,
+        "--env=production",
+        `--out-dir=${outputDir}`,
+        `--bundle=${bundlePath}`,
+        "--check",
+      ]);
+      outputExists = existsSync(outputDir);
+    } finally {
+      console.log = originalLog;
+      rmSync(tempRoot, { recursive: true, force: true });
+    }
+    expect(summary).toMatchObject({
+      output_directory: null,
+      bundle: null,
+      decisions: null,
+      packet: null,
+      response: null,
+      check_only: true,
+      output_written: false,
+      live_reads_performed: false,
+      reused_verified_bundle: true,
+      writes_attempted: false,
+    });
+    expect(outputExists).toBe(false);
   });
 
   it("binds reused real-review input to the explicit target", () => {

@@ -30,7 +30,7 @@ const SAFE_PLAYLIST_ID = /^[A-Za-z0-9_-]+$/u;
 const SAFE_PROJECT_REF = /^[a-z0-9]{20}$/u;
 
 export function parsePreparationArgs(argv = []) {
-  const args = { environment: "production" };
+  const args = { environment: "production", check: false };
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index];
     if (arg === "--playlist") args.playlist = argv[++index];
@@ -47,7 +47,8 @@ export function parsePreparationArgs(argv = []) {
     else if (arg === "--prior-manifest") args.priorManifest = argv[++index];
     else if (arg.startsWith("--prior-manifest=")) {
       args.priorManifest = arg.slice("--prior-manifest=".length);
-    } else throw new Error(`unknown argument: ${arg}`);
+    } else if (arg === "--check") args.check = true;
+    else throw new Error(`unknown argument: ${arg}`);
   }
   if (!args.playlist || !SAFE_PLAYLIST_ID.test(args.playlist)) {
     throw new Error("--playlist must be a valid YouTube playlist ID.");
@@ -224,13 +225,16 @@ export async function main(argv = process.argv.slice(2)) {
       : null,
   });
   assertPreparationOutputsAvailable(paths);
-  writePreparationArtifacts(paths, artifacts);
+  if (!args.check) writePreparationArtifacts(paths, artifacts);
   console.log(JSON.stringify({
-    output_directory: paths.outputDir,
-    bundle: paths.bundlePath,
-    decisions: paths.decisionsPath,
-    packet: paths.packetPath,
-    response: paths.responsePath,
+    output_directory: args.check ? null : paths.outputDir,
+    bundle: args.check ? null : paths.bundlePath,
+    decisions: args.check ? null : paths.decisionsPath,
+    packet: args.check ? null : paths.packetPath,
+    response: args.check ? null : paths.responsePath,
+    planned_output_directory: paths.outputDir,
+    check_only: args.check,
+    output_written: !args.check,
     playlist: args.playlist,
     source_videos: bundle.source.videos.length,
     required_decisions:
