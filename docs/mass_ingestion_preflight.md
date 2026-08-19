@@ -355,6 +355,33 @@ Before supplying academic decisions to the importer, run the classifier against
 the real source metadata and current public taxonomy:
 
 ```powershell
+npm.cmd run prepare:ingestion-review -- --playlist=<PLAYLIST_ID> --env=production --expected-project-ref=<PROJECT_REF> --out-dir=<NEW_OUTSIDE_REPOSITORY_DIRECTORY> [--prior-manifest=<REVIEWED_MANIFEST_JSON_PATH>]
+```
+
+This is the preferred complete preparation command. It performs only YouTube
+and anonymous Supabase reads, constructs the review bundle, verifies it, builds
+and verifies the pending decision worksheet, renders the Markdown packet, and
+creates a blank reviewer response. Every artifact is built and verified in
+memory before local output begins. The command has no overwrite option and
+refuses the whole run if any target file already exists, protecting partially
+completed human responses. Use a new output directory for every refresh.
+
+When live credentials are intentionally unavailable, an existing real bundle
+can be reverified and passed through the same downstream preparation path:
+
+```powershell
+npm.cmd run prepare:ingestion-review -- --playlist=<PLAYLIST_ID> --env=production --expected-project-ref=<PROJECT_REF> --out-dir=<NEW_OUTSIDE_REPOSITORY_DIRECTORY> --bundle=<EXISTING_REVIEW_JSON_PATH> [--prior-manifest=<REVIEWED_MANIFEST_JSON_PATH>]
+```
+
+Reuse mode requires the bundle's playlist, requested environment, and project
+reference to match the explicit command arguments. It is an offline artifact
+refresh, not evidence that live metadata or taxonomy were refreshed at that
+time; the command reports `live_reads_performed: false`.
+
+The lower-level bundle-only command remains available when the downstream
+review artifacts are not wanted:
+
+```powershell
 npm.cmd run review:ingestion -- --playlist=<PLAYLIST_ID> --env=production --expected-project-ref=<PROJECT_REF>
 ```
 

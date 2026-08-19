@@ -1,0 +1,203 @@
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
+import { describe, expect, it } from "vitest";
+import { buildReviewBundle } from "./reviewIngestion.js";
+import {
+  assertPreparationOutputsAvailable,
+  assertReusedBundleTarget,
+  collectLivePreparationBundle,
+  parsePreparationArgs,
+  prepareIngestionReviewArtifacts,
+  resolvePreparationPaths,
+} from "./prepareIngestionReview.js";
+
+const projectRef = "abcdefghijklmnopqrst";
+const playlistId = "PL_review";
+
+function reviewBundle() {
+  return buildReviewBundle({
+    environment: "production",
+    expectedProjectRef: projectRef,
+    databaseUrl: `https://${projectRef}.supabase.co`,
+    taxonomy: {
+      marker: null,
+      categories: [{ id: 20, name: "JEE", slug: "jee" }],
+      subjects: [{ id: 1, name: "Physics", slug: "physics" }],
+      learningGoals: [{ id: 10, name: "JEE", slug: "jee" }],
+      categoryLearningGoals: [{ category_id: 20, learning_goal_id: 10 }],
+      boards: [],
+      classLevels: [{ id: 40, name: "Class 11", slug: "class-11" }],
+      learningGoalClassLevels: [{ learning_goal_id: 10, class_level_id: 40 }],
+      chapters: [{ id: 101, subject_id: 1, name: "Kinematics", slug: "kinematics" }],
+      teachers: [{
+        id: 34,
+        display_name: "Alakh Pandey",
+        verified: true,
+        aliases: [{ alias: "ALK", status: "verified" }],
+      }],
+    },
+    owner: {
+      channelId: "UC_owner",
+      channelTitle: "Example Academy",
+      playlistId,
+      playlistTitle: "JEE Class 11 Physics Complete Course",
+      playlistDescription: "Faculty: Alakh Pandey",
+      videoCount: 1,
+    },
+    videos: [{
+      videoId: "abcdefghijk",
+      title: "Kinematics DPP Quiz 1",
+      description: "Taught by Alakh Pandey Sir",
+      tags: ["JEE", "Physics"],
+      sourcePosition: 0,
+      durationSeconds: 125,
+      captionStatus: "available",
+      embeddingStatus: "embeddable",
+    }],
+    generatedAt: "2026-08-19T01:00:00.000Z",
+  });
+}
+
+describe("one-command read-only ingestion review preparation", () => {
+  it("requires explicit source, project, and outside output directory", () => {
+    expect(parsePreparationArgs([
+      `--playlist=${playlistId}`,
+      `--expected-project-ref=${projectRef}`,
+      "--env=production",
+      "--out-dir=../outputs/run-1",
+      "--bundle=source.review.json",
+      "--prior-manifest=prior.json",
+    ])).toEqual({
+      playlist: playlistId,
+      expectedProjectRef: projectRef,
+      environment: "production",
+      outDir: "../outputs/run-1",
+      bundle: "source.review.json",
+      priorManifest: "prior.json",
+    });
+    expect(() => parsePreparationArgs([
+      `--playlist=${playlistId}`,
+      `--expected-project-ref=${projectRef}`,
+    ])).toThrow("--out-dir");
+    expect(() => parsePreparationArgs([
+      `--playlist=${playlistId}`,
+      `--expected-project-ref=${projectRef}`,
+      "--out-dir=../outputs/run-1",
+      "--overwrite",
+    ])).toThrow("unknown argument");
+  });
+
+  it("binds reused real-review input to the explicit target", () => {
+    const bundle = reviewBundle();
+    const args = {
+      playlist: playlistId,
+      expectedProjectRef: projectRef,
+      environment: "production",
+    };
+    expect(() => assertReusedBundleTarget(bundle, args)).not.toThrow();
+    expect(() => assertReusedBundleTarget(bundle, { ...args, playlist: "PL_other" }))
+      .toThrow("playlist");
+    expect(() => assertReusedBundleTarget(bundle, {
+      ...args,
+      expectedProjectRef: "zyxwvutsrqponmlkjihg",
+    })).toThrow("project");
+    expect(() => assertReusedBundleTarget(bundle, { ...args, environment: "staging" }))
+      .toThrow("environment");
+  });
+
+  it("composes live collection with an anonymous client and exact target", async () => {
+    const expectedBundle = reviewBundle();
+    const fakeDb = { kind: "anonymous-test-client" };
+    let clientOptions;
+    let collectorOptions;
+    const result = await collectLivePreparationBundle({
+      playlist: playlistId,
+      expectedProjectRef: projectRef,
+      environment: "production",
+    }, {
+      generatedAt: "2026-08-19T03:00:00.000Z",
+      loadEnvironment: () => ({
+        databaseUrl: `https://${projectRef}.supabase.co`,
+        anonKey: "anon-test-key",
+        youtubeKey: "youtube-test-key",
+      }),
+      createClient: (options) => {
+        clientOptions = options;
+        return fakeDb;
+      },
+      collectReview: async (options) => {
+        collectorOptions = options;
+        return expectedBundle;
+      },
+    });
+    expect(result).toBe(expectedBundle);
+    expect(clientOptions).toEqual({
+      service: false,
+      env: {
+        VITE_SUPABASE_URL: `https://${projectRef}.supabase.co`,
+        VITE_SUPABASE_ANON_KEY: "anon-test-key",
+      },
+    });
+    expect(collectorOptions).toMatchObject({
+      playlist: playlistId,
+      environment: "production",
+      expectedProjectRef: projectRef,
+      databaseUrl: `https://${projectRef}.supabase.co`,
+      youtubeKey: "youtube-test-key",
+      db: fakeDb,
+      generatedAt: "2026-08-19T03:00:00.000Z",
+    });
+  });
+
+  it("keeps all artifacts outside the repository and refuses any overwrite", () => {
+    const repoRoot = resolve("C:/workspace/repo");
+    const outputDir = resolve(repoRoot, "..", "outputs", "run-1");
+    const paths = resolvePreparationPaths({
+      playlist: playlistId,
+      outDir: outputDir,
+      repoRoot,
+    });
+    expect(paths.bundlePath).toBe(resolve(outputDir, `${playlistId}.review.json`));
+    expect(paths.decisionsPath).toBe(resolve(outputDir, `${playlistId}.decisions.json`));
+    expect(paths.packetPath).toBe(resolve(outputDir, `${playlistId}.review.md`));
+    expect(paths.responsePath).toBe(resolve(outputDir, `${playlistId}.response.json`));
+    expect(() => assertPreparationOutputsAvailable(
+      paths,
+      (path) => path === paths.responsePath,
+    )).toThrow("Choose a new --out-dir");
+    expect(() => resolvePreparationPaths({
+      playlist: playlistId,
+      outDir: resolve(repoRoot, "artifacts"),
+      repoRoot,
+    })).toThrow("outside the repository");
+  });
+
+  it("builds and verifies the complete blank review set before writing", () => {
+    const bundle = reviewBundle();
+    const artifacts = prepareIngestionReviewArtifacts(bundle, {
+      generatedAt: "2026-08-19T02:00:00.000Z",
+    });
+    expect(artifacts.verification.bundle.valid).toBe(true);
+    expect(artifacts.verification.worksheet.valid).toBe(true);
+    expect(artifacts.verification.worksheet.complete).toBe(false);
+    expect(artifacts.worksheet.completion.completed_decisions).toBe(0);
+    expect(artifacts.response.proposal_responses.every(
+      (entry) => entry.reviewer_action == null,
+    )).toBe(true);
+    expect(artifacts.response.video_scope_responses.every(
+      (entry) => entry.reviewer_action == null,
+    )).toBe(true);
+    expect(artifacts.packet).toContain("Human review complete: **No**");
+    expect(artifacts.packet).toContain("Database writes allowed: **No**");
+  });
+
+  it("contains no database mutation, importer, or child-process path", () => {
+    const source = readFileSync(
+      resolve(process.cwd(), "src/scripts/prepareIngestionReview.js"),
+      "utf8",
+    );
+    expect(source).not.toMatch(/\.(?:insert|upsert|delete)\s*\(/u);
+    expect(source).not.toMatch(/(?:db|query)\s*\.\s*update\s*\(/iu);
+    expect(source).not.toMatch(/\.rpc\s*\(|service\s*:\s*true|importChannel|child_process/iu);
+  });
+});

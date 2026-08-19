@@ -72,6 +72,11 @@ export function prepareResponse(bundle, worksheet, options) {
   return buildResponseTemplate(worksheet, options);
 }
 
+export function writeResponse(outputPath, response) {
+  mkdirSync(dirname(outputPath), { recursive: true });
+  writeFileSync(outputPath, `${JSON.stringify(response, null, 2)}\n`, "utf8");
+}
+
 export function main(argv = process.argv.slice(2)) {
   const args = parseResponsePrepareArgs(argv);
   const paths = resolveResponsePreparePaths(args);
@@ -79,8 +84,7 @@ export function main(argv = process.argv.slice(2)) {
   const bundle = JSON.parse(readFileSync(paths.bundlePath, "utf8"));
   const worksheet = JSON.parse(readFileSync(paths.decisionsPath, "utf8"));
   const response = prepareResponse(bundle, worksheet);
-  mkdirSync(dirname(paths.outputPath), { recursive: true });
-  writeFileSync(paths.outputPath, `${JSON.stringify(response, null, 2)}\n`, "utf8");
+  writeResponse(paths.outputPath, response);
   console.log(JSON.stringify({
     output: paths.outputPath,
     playlist: response.binding.playlist_id,
