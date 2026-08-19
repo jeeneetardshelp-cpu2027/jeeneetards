@@ -235,6 +235,61 @@ export function itemListSchema(items) {
 }
 
 /**
+ * Machine-readable description of one reviewed subject guide. The guide stays
+ * a separate LearningResource rather than pretending the surrounding Explore
+ * catalogue is an article. Every descriptive field comes from text students
+ * can see on the same page, and citations mirror the visible official-source
+ * links instead of introducing crawler-only claims.
+ */
+export function learningResourceSchema({ guide, url } = {}) {
+  if (!guide?.title || !url) return null;
+
+  const absoluteUrl = toAbsoluteUrl(url);
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "LearningResource",
+    "@id": `${absoluteUrl}#subject-guide`,
+    url: `${absoluteUrl}#subject-guide`,
+    name: guide.title,
+    learningResourceType: guide.label || "Study guide",
+    inLanguage: "en-IN",
+    isAccessibleForFree: true,
+    audience: {
+      "@type": "EducationalAudience",
+      educationalRole: "student",
+    },
+    isPartOf: {
+      "@type": "WebPage",
+      "@id": absoluteUrl,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "JEENEETARD",
+      url: `${SITE}/`,
+    },
+  };
+
+  const description = (guide.introduction ?? []).find(Boolean);
+  if (description) schema.description = description;
+
+  const educationalLevel = guide.scope?.cls === "dropper"
+    ? "Dropper"
+    : guide.scope?.cls?.replace(/^class-(\d+)$/, "Class $1");
+  if (educationalLevel) schema.educationalLevel = educationalLevel;
+
+  const citations = (guide.sources ?? [])
+    .filter((source) => source?.label && source?.href)
+    .map((source) => ({
+      "@type": "CreativeWork",
+      name: source.label,
+      url: source.href,
+    }));
+  if (citations.length) schema.citation = citations;
+
+  return schema;
+}
+
+/**
  * WebSite node advertising the homepage's real search behaviour: Home.jsx
  * already reads `?q=` on load and runs it as a search. Deliberately targets
  * `/?q=` and NOT `/search` — `/search` does not read a query param the same

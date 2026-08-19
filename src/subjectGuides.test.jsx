@@ -39,6 +39,7 @@ describe("subject guide editorial pilots", () => {
     expect(screen.getByRole("heading", {
       name: "A practical way to study NEET Class 11 Biology",
     })).toBeTruthy();
+    expect(document.getElementById("subject-guide")).toBeTruthy();
     expect(screen.getByRole("link", {
       name: "Official NEET UG 2026 syllabus (NMC via NTA)",
     }).getAttribute("href")).toContain("202601081066816297.pdf");

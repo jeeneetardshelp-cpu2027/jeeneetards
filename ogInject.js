@@ -9,6 +9,7 @@ import {
   courseSchema,
   breadcrumbListSchema,
   itemListSchema,
+  learningResourceSchema,
   personSchema,
   websiteSchema,
   organizationSchema,
@@ -439,16 +440,18 @@ export function facultySchemas(profile, meta) {
   ].filter(Boolean);
 }
 
-export function exploreSchemas(crumbs, options) {
+export function exploreSchemas(crumbs, options, guide, url) {
   const breadcrumb = breadcrumbListSchema(crumbs);
   const list = itemListSchema((options ?? []).map((option, index) => ({
     title: option.name,
     url: option.url,
     position: index + 1,
   })));
+  const learningResource = learningResourceSchema({ guide, url });
   return [
     breadcrumb && { key: "BreadcrumbList", schema: breadcrumb },
     list && { key: "ItemList", schema: list },
+    learningResource && { key: "LearningResource", schema: learningResource },
   ].filter(Boolean);
 }
 
@@ -570,7 +573,7 @@ export function renderSubjectGuide(guide) {
   ).join("");
 
   return [
-    '<article aria-labelledby="subject-guide-title">',
+    '<article id="subject-guide" aria-labelledby="subject-guide-title">',
     `<p>${escapeHtml(guide.label)}</p>`,
     `<h2 id="subject-guide-title">${escapeHtml(guide.title)}</h2>`,
     ...guide.introduction.map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`),

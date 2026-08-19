@@ -9,12 +9,66 @@ import {
   courseSchema,
   durationToIso8601,
   itemListSchema,
+  learningResourceSchema,
   organizationSchema,
   personSchema,
   safeStructuredDataJson,
   videoObjectSchema,
   websiteSchema,
 } from "./structuredData.js";
+
+describe("learningResourceSchema", () => {
+  const guide = {
+    scope: { goal: "jee", cls: "class-11", subject: "physics" },
+    label: "Study guide",
+    title: "A practical order for JEE Class 11 Physics",
+    introduction: ["Use this page as a route through the free-video catalogue."],
+    sources: [
+      {
+        label: "Official JEE Main syllabus (NTA)",
+        href: "https://jeemain.nta.nic.in/document/syllabus-2026/",
+      },
+    ],
+  };
+
+  it("describes only the visible reviewed guide and its visible citation", () => {
+    expect(learningResourceSchema({
+      guide,
+      url: "/explore/jee/class-11/physics",
+    })).toEqual({
+      "@context": "https://schema.org",
+      "@type": "LearningResource",
+      "@id": "https://www.jeeneetard.com/explore/jee/class-11/physics#subject-guide",
+      url: "https://www.jeeneetard.com/explore/jee/class-11/physics#subject-guide",
+      name: "A practical order for JEE Class 11 Physics",
+      learningResourceType: "Study guide",
+      inLanguage: "en-IN",
+      isAccessibleForFree: true,
+      audience: { "@type": "EducationalAudience", educationalRole: "student" },
+      isPartOf: {
+        "@type": "WebPage",
+        "@id": "https://www.jeeneetard.com/explore/jee/class-11/physics",
+      },
+      publisher: {
+        "@type": "Organization",
+        name: "JEENEETARD",
+        url: "https://www.jeeneetard.com/",
+      },
+      description: "Use this page as a route through the free-video catalogue.",
+      educationalLevel: "Class 11",
+      citation: [{
+        "@type": "CreativeWork",
+        name: "Official JEE Main syllabus (NTA)",
+        url: "https://jeemain.nta.nic.in/document/syllabus-2026/",
+      }],
+    });
+  });
+
+  it("does not invent a learning resource for an ordinary Explore page", () => {
+    expect(learningResourceSchema({ guide: null, url: "/explore/jee" })).toBeNull();
+    expect(learningResourceSchema({ guide, url: null })).toBeNull();
+  });
+});
 
 describe("personSchema", () => {
   it("describes only verified public faculty facts", () => {
