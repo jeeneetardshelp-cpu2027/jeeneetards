@@ -1,0 +1,149 @@
+{
+  "reviewed_on": "2026-08-07",
+  "review_status": "owner_approval_required",
+  "proposed_decision_id": "8f19ac66-a1b4-4304-8a6f-468131f63732",
+  "channel": {
+    "name": "Unacademy NEET",
+    "handle": "@UnacademyNEET",
+    "youtube_channel_id": "UCdQwYksctqqiRwqp3PiJMWA",
+    "production_institute_id": 147,
+    "playlist_count": 736
+  },
+  "preflight": {
+    "captured_at": "2026-08-07T09:35:45.408388Z",
+    "playlists": 410,
+    "videos": 4705,
+    "memberships": 4711,
+    "chapters": 263,
+    "chapter_class_levels": 92,
+    "teachers": 34,
+    "faculty_links": 165,
+    "quality_reviews": 36,
+    "source_collision_count": 0,
+    "retained_video_collision_count": 0,
+    "protected_jee_courses": 82,
+    "protected_jee_memberships": 1304,
+    "protected_jee_fingerprint": "30eee4a4a6842e5beeb7c97083d7f812",
+    "rolling_jee_courses": 212,
+    "rolling_jee_memberships": 2848,
+    "rolling_jee_fingerprint": "9eea2b44f0b19c08cc0907c57e091342"
+  },
+  "candidates": [
+    {
+      "order": 1,
+      "youtube_playlist_id": "PLsgHooHkqhhOnifSHdglxvopt3ZmRFQ5-",
+      "source_title": "Photosynthesis - Playlist | Class 11 | Unacademy NEET | LIVE DAILY | NEET Biology | Pradeep Singh",
+      "source_snapshot_sha256": "aa41f25276c318e363079fdb08d48394978b0f1199adda053efa450419045f15",
+      "source_item_count": 4,
+      "subject_id": 4,
+      "chapter_id": 119,
+      "chapter": "Photosynthesis in Higher Plants",
+      "mapping_rationale": "The three numbered chapter lectures map to the existing class-11 Photosynthesis in Higher Plants chapter; the only following row is a chapter quiz and is excluded.",
+      "class_level_id": 2,
+      "class_level": "class-11",
+      "teacher_id": 33,
+      "teacher": "Pradeep Singh",
+      "teacher_verified": true,
+      "teacher_record_status": "normalized_record_present",
+      "source_collision_count": 0,
+      "video_collision_count": 0,
+      "retained_source_positions": [1, 2, 3],
+      "excluded_source_positions": [4],
+      "videos": [
+        { "source_position": 1, "youtube_video_id": "5jycoZ1eYKE", "title": "NEET: Photosynthesis - L 1 | Light Reaction | Class 11 | Unacademy NEET | Pradeep Sir", "duration_seconds": 3096, "embedding_status": "embeddable" },
+        { "source_position": 2, "youtube_video_id": "XI1FNUWIDvs", "title": "NEET: Photosynthesis - L 2 | Photophosphorylation | Class 11 | Unacademy NEET | Pradeep Sir", "duration_seconds": 3409, "embedding_status": "embeddable" },
+        { "source_position": 3, "youtube_video_id": "EhVOh2x8KRU", "title": "NEET: Photosynthesis - L 3 | C4 Cycle | Dark Reaction | Class 11 | Unacademy NEET | Pradeep Sir", "duration_seconds": 3193, "embedding_status": "embeddable" }
+      ],
+      "exclusions": [
+        { "source_position": 4, "youtube_video_id": "ecYkLeW8Ay0", "title": "NEET: Photosynthesis - Quiz 1 | Unacademy NEET | NEET LIVE QUIZ | NEET Biology | Pradeep Sir", "duration_seconds": 2046, "embedding_status": "embeddable", "reason": "quiz" }
+      ]
+    },
+    {
+      "order": 2,
+      "youtube_playlist_id": "PLsgHooHkqhhN29ebCtU31NQc4RSZQDJ0z",
+      "source_title": "Ionic Equilibrium - Playlist | Class 11 | Unacademy NEET | LIVE DAILY | NEET Chemistry | Ashwani Tyagi",
+      "source_snapshot_sha256": "a0a46096f1b155b4dc31e577566588e663ec81eb8b1ad7d1ccb1dcdce611b032",
+      "source_item_count": 8,
+      "subject_id": 2,
+      "chapter_id": 38,
+      "chapter": "Ionic Equilibrium",
+      "mapping_rationale": "The official playlist is an uninterrupted L1-L8 Ionic Equilibrium sequence with no supplementary rows.",
+      "class_level_id": 2,
+      "class_level": "class-11",
+      "teacher_id": 32,
+      "teacher": "Ashwani Tyagi",
+      "teacher_verified": true,
+      "teacher_record_status": "normalized_record_present",
+      "source_collision_count": 0,
+      "video_collision_count": 0,
+      "retained_source_positions": [1, 2, 3, 4, 5, 6, 7, 8],
+      "excluded_source_positions": [],
+      "videos": [
+        { "source_position": 1, "youtube_video_id": "cmkw7yEt9aM", "title": "Ionic Equilibrium - L1 | Ostwald Dilution Law | Unacademy NEET | NEET Chemistry | Ashwani Sir", "duration_seconds": 3416, "embedding_status": "embeddable" },
+        { "source_position": 2, "youtube_video_id": "RNOT5OZRsto", "title": "Ionic Equilibrium - L 2 | Concept of Acid and Base | Unacademy NEET | NEET Chemistry | Ashwani Sir", "duration_seconds": 3403, "embedding_status": "embeddable" },
+        { "source_position": 3, "youtube_video_id": "rz7hyHgXRng", "title": "Ionic Equilibrium - L 3 | pH of a Solution | Unacademy NEET | NEET Chemistry | Ashwani Sir", "duration_seconds": 3259, "embedding_status": "embeddable" },
+        { "source_position": 4, "youtube_video_id": "Ef0E436QV_g", "title": "Ionic Equilibrium - L 4 | pH of Acids | Unacademy NEET | NEET Chemistry | Ashwani Sir", "duration_seconds": 3182, "embedding_status": "embeddable" },
+        { "source_position": 5, "youtube_video_id": "P1iYtGppf7w", "title": "Ionic Equilibrium - L 5 | Buffer Solutions | Unacademy NEET | NEET Chemistry | Ashwani Sir", "duration_seconds": 3325, "embedding_status": "embeddable" },
+        { "source_position": 6, "youtube_video_id": "P4XHbcrBsyQ", "title": "Ionic Equilibrium - L 6 | Salt Hydrolysis | Unacademy NEET | NEET Chemistry | Ashwani Sir", "duration_seconds": 3463, "embedding_status": "embeddable" },
+        { "source_position": 7, "youtube_video_id": "O_4qhTPCLcI", "title": "Ionic Equilibrium - L 7 | Salt Hydrolysis | Unacademy NEET | NEET Chemistry | Ashwani Sir", "duration_seconds": 3450, "embedding_status": "embeddable" },
+        { "source_position": 8, "youtube_video_id": "EbAahd3ecJc", "title": "Ionic Equilibrium - L 8 | Theory of Indicators | Unacademy NEET | NEET Chemistry | Ashwani Sir", "duration_seconds": 3010, "embedding_status": "embeddable" }
+      ],
+      "exclusions": []
+    },
+    {
+      "order": 3,
+      "youtube_playlist_id": "PLsgHooHkqhhPG_PVhW2TE7Ll_Rw2QUdu5",
+      "source_title": "Excretory Products And Their Elimination | Human Physiology - Playlist | Class 11 | Unacademy NEET | LIVE DAILY | NEET Biology | Dr. Sachin Kapur",
+      "source_snapshot_sha256": "1a5f55f3102537d4ea004f59487f41a1280fba1b29edf75fc8db5b3649d66a5e",
+      "source_item_count": 12,
+      "subject_id": 4,
+      "chapter_id": 111,
+      "chapter": "Excretory Products and Their Elimination",
+      "mapping_rationale": "Retain the complete Lecture 1-7 Excretory System sequence; exclude three chapter quizzes and two broad Human Physiology mega quizzes.",
+      "class_level_id": 2,
+      "class_level": "class-11",
+      "teacher_id": 38,
+      "teacher": "Dr. Sachin Kapur",
+      "teacher_verified": true,
+      "teacher_record_status": "normalized_record_present",
+      "source_collision_count": 0,
+      "video_collision_count": 0,
+      "retained_source_positions": [1, 2, 3, 4, 5, 6, 7],
+      "excluded_source_positions": [8, 9, 10, 11, 12],
+      "videos": [
+        { "source_position": 1, "youtube_video_id": "1u3F_NiQ7WY", "title": "Excretory System - Lecture 1 | Unacademy NEET | LIVE DAILY | NEET Biology | Dr. Sachin Kapur", "duration_seconds": 3445, "embedding_status": "embeddable" },
+        { "source_position": 2, "youtube_video_id": "bzI9ss05Rms", "title": "Excretory System - Lecture 2 | Unacademy NEET | LIVE DAILY | NEET Biology | Dr. Sachin Kapur", "duration_seconds": 3589, "embedding_status": "embeddable" },
+        { "source_position": 3, "youtube_video_id": "FD-DbUnla_o", "title": "Excretory System - Lecture 3 | Unacademy NEET | LIVE DAILY | NEET Biology | Dr. Sachin Kapur", "duration_seconds": 3470, "embedding_status": "embeddable" },
+        { "source_position": 4, "youtube_video_id": "M_BaySNiTfY", "title": "Excretory System - Lecture 4 | Unacademy NEET | LIVE DAILY | NEET Biology | Dr. Sachin Kapur", "duration_seconds": 3555, "embedding_status": "embeddable" },
+        { "source_position": 5, "youtube_video_id": "TjuciK33QmU", "title": "Excretory System - Lecture 5 | Unacademy NEET | LIVE DAILY | NEET Biology | Dr. Sachin Kapur", "duration_seconds": 3309, "embedding_status": "embeddable" },
+        { "source_position": 6, "youtube_video_id": "m7KXt6x_-PM", "title": "Excretory System - Lecture 6 | Unacademy NEET | LIVE DAILY | NEET Biology | Dr. Sachin Kapur", "duration_seconds": 2830, "embedding_status": "embeddable" },
+        { "source_position": 7, "youtube_video_id": "gTlmFUV9mhA", "title": "Excretory System - Lecture 7 | Unacademy NEET | LIVE DAILY | NEET Biology | Dr. Sachin Kapur", "duration_seconds": 3465, "embedding_status": "embeddable" }
+      ],
+      "exclusions": [
+        { "source_position": 8, "youtube_video_id": "PsE8SKOiPjI", "title": "Excretory System | Quiz 1 | Unacademy NEET | LIVE QUIZ | NEET Biology | Dr. Sachin Kapur", "duration_seconds": 2376, "embedding_status": "embeddable", "reason": "quiz" },
+        { "source_position": 9, "youtube_video_id": "ksg_G4wspoo", "title": "Excretory System | Quiz 2 | Unacademy NEET | LIVE QUIZ | NEET Biology | Dr. Sachin Kapur", "duration_seconds": 2189, "embedding_status": "embeddable", "reason": "quiz" },
+        { "source_position": 10, "youtube_video_id": "or_vWBmX8zw", "title": "Excretory System | Quiz 3 | Unacademy NEET | LIVE QUIZ | NEET Biology | Dr. Sachin Kapur", "duration_seconds": 1820, "embedding_status": "embeddable", "reason": "quiz" },
+        { "source_position": 11, "youtube_video_id": "XCHhq6G4RIE", "title": "Human Physiology - Mega Quiz 4 | Unacademy NEET | NEET LIVE QUIZ | NEET Biology | Dr. Sachin Kapur", "duration_seconds": 1782, "embedding_status": "embeddable", "reason": "mixed_chapter_quiz" },
+        { "source_position": 12, "youtube_video_id": "F4WCVEiZr_8", "title": "Human Physiology - Mega Quiz 5 | Unacademy NEET | NEET LIVE QUIZ | NEET Biology | Dr. Sachin Kapur", "duration_seconds": 1342, "embedding_status": "embeddable", "reason": "mixed_chapter_quiz" }
+      ]
+    }
+  ],
+  "teacher_normalization_gate": {
+    "status": "satisfied",
+    "matching_production_teacher_records": 3,
+    "teachers": [
+      { "teacher_id": 32, "teacher_slug": "ashwani-tyagi", "teacher_verified": true },
+      { "teacher_id": 33, "teacher_slug": "pradeep-singh", "teacher_verified": true },
+      { "teacher_id": 38, "teacher_slug": "sachin-kapur", "teacher_verified": true }
+    ],
+    "note": "All three normalized verified teacher records and their Unacademy NEET associations already exist. Owner approval is still required for these exact playlist-specific attributions."
+  },
+  "deferred": [
+    "The earlier Photosynthesis Live Daily 2.0 source remains excluded because it still contains Biodiversity contamination and duplicate Lecture 3 ambiguity; this batch uses a different clean official playlist.",
+    "Aldehydes and Ketones is mechanically clean but covers only part of the broader Organic Compounds Containing Oxygen chapter and remains deferred for scope review.",
+    "Organisms and Populations starts at Lecture 4 and remains incomplete.",
+    "The Anoop Vashishtha Ionic Equilibrium source retains its previously recorded blocker; this batch uses the separate clean Ashwani Tyagi source.",
+    "The Live Daily 2.0 Excretory source retains its previously recorded blocker; this batch uses the separate clean Dr. Sachin Kapur source.",
+    "General Principles and Processes of Isolation of Elements remains blocked and has no clean exact-title replacement in the refreshed channel catalogue."
+  ]
+}

@@ -59,7 +59,7 @@ export default function ForumSubmitPage({ api = forumApi, authState = null }) {
       setError("Choose a topic, write a title of at least 10 characters, and include your question or context.");
       return;
     }
-    if (setup.mode !== "open") {
+    if (setup.mode !== "open" && setup.mode !== "beta") {
       setError("Contributions are paused right now. Your draft is saved on this device.");
       return;
     }
@@ -71,6 +71,10 @@ export default function ForumSubmitPage({ api = forumApi, authState = null }) {
       setError(identity.status === "needs_username"
         ? "Choose your public username below before publishing."
         : "Your forum identity is still being checked. Your draft is saved.");
+      return;
+    }
+    if (setup.mode === "beta" && !identity.betaMember) {
+      setError("This closed beta is limited to invited testers. Your draft is saved on this device.");
       return;
     }
 
@@ -101,9 +105,15 @@ export default function ForumSubmitPage({ api = forumApi, authState = null }) {
         <ForumPublicNotice />
       </div>
 
-      {setup.mode !== "open" && (
+      {setup.mode !== "open" && setup.mode !== "beta" && (
         <p role="status" className="mb-5 rounded-lg border border-hairline bg-surface-2 p-4 text-sm text-ink-2">
           The forum is currently read-only. You can keep writing locally, but publishing is paused.
+        </p>
+      )}
+
+      {setup.mode === "beta" && (
+        <p role="status" className="mb-5 rounded-lg border border-accent-line bg-accent-soft p-4 text-sm text-ink-2">
+          Closed beta: only invited student testers can publish. Everyone can still read visible discussions.
         </p>
       )}
 

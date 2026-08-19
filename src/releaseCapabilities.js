@@ -25,26 +25,23 @@ export const RELEASE_CAPABILITIES = Object.freeze({
 // particular, the presence of a writable table does not make an anonymous
 // submission feature safe to expose without throttling and abuse controls.
 export const RELEASE_FEATURES = Object.freeze({
-  // TURNED BACK OFF on 2026-08-12. This flag reached `release` as `true` via
-  // a separate build of the forum work that was never reviewed in the thread
-  // that reviewed and approved the actual forum SQL/UI packages -- `main`
-  // caught and reverted the same mistake on 2026-08-12 (see its history for
-  // src/releaseCapabilities.js), but that fix was never brought to `release`.
+  // TURNED BACK OFF on 2026-08-10. The frontend was released, but the database
+  // mode was never opened, so production `forum_mode()` returns "off" and every
+  // click on the nav item landed on "Discussions are temporarily unavailable".
+  // The link was also in the footer and in the sitemap, so Google was being
+  // asked to index a dead end. Verified against production the same day:
+  // forum_mode -> "off", get_forum_topics -> [], get_forum_feed -> [],
+  // and one profile in the whole database.
   //
-  // Production `forum_mode()` was confirmed "off" throughout: get_forum_topics
-  // and get_forum_feed both returned [], and there was one profile in the
-  // whole database, so no real forum content or student activity was ever
-  // exposed. The live-site impact was limited to a dead nav/footer/sitemap
-  // link landing on "Discussions are temporarily unavailable", which Google
-  // was also being asked to index.
+  // This flag is the honest state until the mode is actually opened. Nothing is
+  // deleted -- the ~40 forum files and their tests stay, and the routes still
+  // resolve to ForumFeatureUnavailable so a shared link explains itself instead
+  // of 404ing.
   //
-  // Before flipping this back to true: reconcile this file with `main`'s
-  // version so the two branches carry the same reviewed decision, publish
-  // forum rules in the Terms (report reasons abuse_or_bullying, sexual_content
-  // and self_harm exist in the schema but the Terms say nothing about
-  // discussion/conduct), wire forum_admin_set_suspension to a UI, and open
-  // the database mode as an explicit, separate operational decision. Users
-  // are 14-18.
+  // Before flipping this back to true: obtain owner/legal review of the forum
+  // rules drafted in LegalPage, deploy and production-verify the suspension UI,
+  // and open the database mode through its separately reviewed runbook. Users
+  // are 14-18, so none of those gates is implied by the code merely existing.
   forum: false,
   // Ratings launch (2026-07-30): the site owner reviewed the under-18
   // consent/age-assurance question and chose to proceed. Enabling ratings

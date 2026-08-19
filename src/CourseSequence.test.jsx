@@ -34,6 +34,17 @@ function renderList(props = {}) {
 }
 
 describe("large course lesson sequence", () => {
+  it("shows the lesson's YouTube thumbnail", () => {
+    const lessons = makeLessons(1);
+    lessons[0].videoId = "CBvaO-uDvs8";
+    const { container } = renderList({ lessons });
+
+    const image = container.querySelector("img");
+    expect(image?.getAttribute("src"))
+      .toBe("https://img.youtube.com/vi/CBvaO-uDvs8/hqdefault.jpg");
+    expect(image?.getAttribute("loading")).toBe("lazy");
+  });
+
   it("keeps the rendered sequence bounded and pages through the full course", async () => {
     renderList();
 

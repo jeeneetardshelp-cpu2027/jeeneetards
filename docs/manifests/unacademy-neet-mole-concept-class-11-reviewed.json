@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "request_id": "b94d86b2-0616-4d3d-972f-009c2895bd78",
+  "youtube_playlist_id": "PLsgHooHkqhhPW2M3F7WjhzIUSjTFDJrek",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "0bd393bd-1ad4-4ed7-8f23-74b59dee5a23",
+    "youtube_playlist_id": "PLsgHooHkqhhPW2M3F7WjhzIUSjTFDJrek",
+    "teacher": "Ashwani Tyagi",
+    "source_url": "https://www.youtube.com/playlist?list=PLsgHooHkqhhPW2M3F7WjhzIUSjTFDJrek",
+    "source_label": "Official Unacademy NEET channel-owned Mole Concept playlist naming Ashwani Tyagi; every retained lecture title names Ashwani Tyagi",
+    "reviewed_by": "Owner",
+    "reviewed_on": "2026-08-04",
+    "youtube_video_ids": [
+      "usDS1vmB7FI", "5RI6spjs1sQ", "shRredOGyHk", "z-_LGXcUdOA", "IYAcYnUdOyo",
+      "-ZN8Y6EWffU", "eLIVvgQXOgM", "ni84uQnLaiE", "cuJY3VaLzd8"
+    ]
+  },
+  "assignments": [
+    { "position": 1, "youtube_video_id": "usDS1vmB7FI", "chapter": "Mole Concept", "lesson_number": 1 },
+    { "position": 2, "youtube_video_id": "5RI6spjs1sQ", "chapter": "Mole Concept", "lesson_number": 2 },
+    { "position": 3, "youtube_video_id": "shRredOGyHk", "chapter": "Mole Concept", "lesson_number": 3 },
+    { "position": 4, "youtube_video_id": "z-_LGXcUdOA", "chapter": "Mole Concept", "lesson_number": 4 },
+    { "position": 5, "youtube_video_id": "IYAcYnUdOyo", "chapter": "Mole Concept", "lesson_number": 5 },
+    { "position": 6, "youtube_video_id": "-ZN8Y6EWffU", "chapter": "Mole Concept", "lesson_number": 6 },
+    { "position": 7, "youtube_video_id": "eLIVvgQXOgM", "chapter": "Mole Concept", "lesson_number": 7 },
+    { "position": 8, "youtube_video_id": "ni84uQnLaiE", "chapter": "Mole Concept", "lesson_number": 8 },
+    { "position": 9, "youtube_video_id": "cuJY3VaLzd8", "chapter": "Mole Concept", "lesson_number": 9 }
+  ],
+  "exclusions": [
+    { "position": 10, "youtube_video_id": "4_yAWoP-VVM", "reason": "Live quiz; keep practice separate from the lecture catalogue." },
+    { "position": 11, "youtube_video_id": "lohFV1X0SxU", "reason": "Live quiz; keep practice separate from the lecture catalogue." },
+    { "position": 12, "youtube_video_id": "W2tMZ5h4SAk", "reason": "Live quiz; keep practice separate from the lecture catalogue." }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "request_id": "9cfb11f0-bb72-4e49-9fc1-0a3605525324",
+  "youtube_playlist_id": "PLsgHooHkqhhMRv85qlHflI5j8SoA8yZ0n",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "8de024c6-7317-4901-a91e-5006a5efcd7e",
+    "youtube_playlist_id": "PLsgHooHkqhhMRv85qlHflI5j8SoA8yZ0n",
+    "teacher": "Anoop Vashishtha",
+    "source_url": "https://www.youtube.com/playlist?list=PLsgHooHkqhhMRv85qlHflI5j8SoA8yZ0n",
+    "source_label": "Official Unacademy NEET channel-owned S Block Elements playlist naming Anoop Sir; the three retained chapter lectures name Anoop Sir and the two NCERT-question sessions are excluded",
+    "reviewed_by": "Owner",
+    "reviewed_on": "2026-08-08",
+    "youtube_video_ids": ["CdCL4s9L4F8", "4-LZNHTDJaE", "1pEXZvaack4"]
+  },
+  "assignments": [
+    { "position": 1, "youtube_video_id": "CdCL4s9L4F8", "chapter": "The s-Block Elements", "lesson_number": 1 },
+    { "position": 2, "youtube_video_id": "4-LZNHTDJaE", "chapter": "The s-Block Elements", "lesson_number": 2 },
+    { "position": 3, "youtube_video_id": "1pEXZvaack4", "chapter": "The s-Block Elements", "lesson_number": 3 }
+  ],
+  "exclusions": [
+    { "position": 4, "youtube_video_id": "ihpwvwe6Y9I", "reason": "ncert_question_practice" },
+    { "position": 5, "youtube_video_id": "4IMGrDbroK4", "reason": "ncert_question_practice" }
+  ]
+}

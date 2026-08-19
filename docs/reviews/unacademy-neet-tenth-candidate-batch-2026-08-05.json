@@ -1,0 +1,155 @@
+{
+  "reviewed_on": "2026-08-05",
+  "review_status": "production_import_complete",
+  "proposed_decision_id": "0fab6ecf-934f-46ae-bb8a-05cbd6b9cea1",
+  "channel": {
+    "name": "Unacademy NEET",
+    "handle": "@UnacademyNEET",
+    "youtube_channel_id": "UCdQwYksctqqiRwqp3PiJMWA",
+    "production_institute_id": 147,
+    "playlist_count": 736
+  },
+  "preflight": {
+    "captured_at": "2026-08-05T12:50:58.099Z",
+    "playlists": 391,
+    "videos": 4566,
+    "memberships": 4572,
+    "chapters": 263,
+    "chapter_class_levels": 92,
+    "teachers": 32,
+    "mechanical_unused_candidate_count": 153,
+    "source_collision_count": 0,
+    "retained_video_collision_count": 0,
+    "cross_candidate_retained_video_collision_count": 0,
+    "protected_jee_courses": 82,
+    "protected_jee_memberships": 1304,
+    "protected_jee_fingerprint": "30eee4a4a6842e5beeb7c97083d7f812",
+    "rolling_jee_courses": 212,
+    "rolling_jee_memberships": 2848,
+    "rolling_jee_fingerprint": "9eea2b44f0b19c08cc0907c57e091342"
+  },
+  "production_execution": {
+    "approved_decision_id": "0fab6ecf-934f-46ae-bb8a-05cbd6b9cea1",
+    "completed_at": "2026-08-05T13:13:30.708Z",
+    "pitr_retention_days": 7,
+    "pitr_restore_available_from_ist": "2026-07-30 00:01:35",
+    "pitr_latest_restore_at_ist": "2026-08-05 18:21:37",
+    "initial_catalogue": { "playlists": 391, "videos": 4566, "memberships": 4572, "chapters": 263 },
+    "final_catalogue": { "playlists": 394, "videos": 4578, "memberships": 4584, "chapters": 263 },
+    "delta": { "playlists": 3, "videos": 12, "memberships": 12, "chapters": 0, "videos_reused": 0 },
+    "protected_jee_after": { "courses": 82, "memberships": 1304, "fingerprint": "30eee4a4a6842e5beeb7c97083d7f812" },
+    "rolling_jee_after": { "courses": 212, "memberships": 2848, "fingerprint": "9eea2b44f0b19c08cc0907c57e091342" },
+    "import_contract": "reviewed_single_chapter_legacy_merge_with_new_source_guard",
+    "audit_snapshot_expected": false,
+    "request_replay_expected": false,
+    "audit_note": "These reviewed single-chapter lesson-order imports use the legacy import_playlist RPC, so playlist_import_audit rows and request replay are not part of this path. Each write had a zero-source-reuse preflight, zero video reuse, an exact catalogue delta, and exact postflight verification; the committed manifests and hashes retain the review evidence. The importer now exposes this contract and refuses an existing source before any future write."
+  },
+  "candidates": [
+    {
+      "order": 1,
+      "youtube_playlist_id": "PLsgHooHkqhhNB7vXo5H5J-QsBotPAPYUR",
+      "source_title": "NEET: Thermal Properties of Matter | Unacademy NEET | LIVE DAILY | NEET Physics | Mahendra S.",
+      "source_snapshot_sha256": "6aeec2289a3e4d81ba70db1bfbbb9ae93c5183dc6fe63f4d889dc85e9bdd429d",
+      "subject_id": 1,
+      "chapter_id": 25,
+      "chapter": "Thermal Properties of Matter",
+      "class_level_id": 2,
+      "class_level": "class-11",
+      "teacher_id": 34,
+      "teacher": "Mahendra Singh",
+      "source_collision_count": 0,
+      "video_collision_count": 0,
+      "retained_source_positions": [1, 2, 3, 4],
+      "excluded_source_positions": [],
+      "videos": [
+        { "source_position": 1, "youtube_video_id": "XBUSd2BRaXs", "title": "NEET: Thermal Properties of Matter L1 | Unacademy NEET | LIVE DAILY | NEET Physics | Mahendra S.", "duration_seconds": 4041, "embedding_status": "embeddable" },
+        { "source_position": 2, "youtube_video_id": "duHBs2i4-K4", "title": "NEET: Thermal Properties of Matter L2 | Unacademy NEET | LIVE DAILY | NEET Physics | Mahendra S.", "duration_seconds": 4033, "embedding_status": "embeddable" },
+        { "source_position": 3, "youtube_video_id": "Fl6WSiPMkXM", "title": "NEET: Thermal Properties of Matter L3 | Unacademy NEET | LIVE DAILY | NEET Physics | Mahendra S.", "duration_seconds": 3946, "embedding_status": "embeddable" },
+        { "source_position": 4, "youtube_video_id": "3YwDg7UeTcQ", "title": "NEET: Thermal Properties of Matter L4 | Unacademy NEET | LIVE DAILY | NEET Physics | Mahendra S.", "duration_seconds": 2963, "embedding_status": "embeddable" }
+      ],
+      "excluded": [],
+      "production_import": {
+        "course_id": 411,
+        "verified_at": "2026-08-05T13:06:42.772Z",
+        "videos_added": 4,
+        "memberships_added": 4,
+        "videos_reused": 0,
+        "chapters_created": 0,
+        "protected_jee_fingerprint_after": "30eee4a4a6842e5beeb7c97083d7f812"
+      }
+    },
+    {
+      "order": 2,
+      "youtube_playlist_id": "PLsgHooHkqhhNvpnnFH79_2cZGiXgI3zlt",
+      "source_title": "NEET: Electromagnetic Induction | Class 12 | Unacademy NEET | Live Daily 2.0 | NEET Physics | Anu Gupta",
+      "source_snapshot_sha256": "35ba7a705b77a522cf71aac4481b430171bb7aa42762fbeea8d7d6f0e111d5b9",
+      "subject_id": 1,
+      "chapter_id": 13,
+      "chapter": "Electromagnetic Induction",
+      "class_level_id": 3,
+      "class_level": "class-12",
+      "teacher_id": 35,
+      "teacher": "Anu Gupta",
+      "source_collision_count": 0,
+      "video_collision_count": 0,
+      "retained_source_positions": [1, 2, 3],
+      "excluded_source_positions": [],
+      "videos": [
+        { "source_position": 1, "youtube_video_id": "6M8MsZNkmc4", "title": "NEET: Electromagnetic Induction L1 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anu Gupta", "duration_seconds": 3824, "embedding_status": "embeddable" },
+        { "source_position": 2, "youtube_video_id": "AhZitScgYi8", "title": "NEET: Electromagnetic Induction L2 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anu Gupta", "duration_seconds": 4064, "embedding_status": "embeddable" },
+        { "source_position": 3, "youtube_video_id": "LIG9QqbcZ80", "title": "NEET: Electromagnetic Induction L3 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anu Gupta", "duration_seconds": 3716, "embedding_status": "embeddable" }
+      ],
+      "excluded": [],
+      "production_import": {
+        "course_id": 412,
+        "verified_at": "2026-08-05T13:10:01.959Z",
+        "videos_added": 3,
+        "memberships_added": 3,
+        "videos_reused": 0,
+        "chapters_created": 0,
+        "protected_jee_fingerprint_after": "30eee4a4a6842e5beeb7c97083d7f812"
+      }
+    },
+    {
+      "order": 3,
+      "youtube_playlist_id": "PLsgHooHkqhhOn3bqr2nMVYEGq3Zh5bMDF",
+      "source_title": "Plant Growth and Development - Playlist | Class 11 | Unacademy NEET | LIVE DAILY | NEET Biology | Pradeep Singh",
+      "source_snapshot_sha256": "d4115cf7c6d4bdc5660dbed3f82300bdd09d3449fab581b5233389c86f9d76bd",
+      "subject_id": 4,
+      "chapter_id": 120,
+      "chapter": "Plant Growth and Development",
+      "class_level_id": 2,
+      "class_level": "class-11",
+      "teacher_id": 33,
+      "teacher": "Pradeep Singh",
+      "source_collision_count": 0,
+      "video_collision_count": 0,
+      "retained_source_positions": [1, 2, 3, 4, 5],
+      "excluded_source_positions": [],
+      "videos": [
+        { "source_position": 1, "youtube_video_id": "OlgSOWbMKmk", "title": "NEET: Plant Growth & Development - L 1 | Growth in Plants | Class 11 | Unacademy NEET | Pradeep Sir", "duration_seconds": 3302, "embedding_status": "embeddable" },
+        { "source_position": 2, "youtube_video_id": "V3-p7YoVsf4", "title": "NEET: Plant Growth & Development - L 2 | Seed Dormancy | Germination | Unacademy NEET | Pradeep Sir", "duration_seconds": 4378, "embedding_status": "embeddable" },
+        { "source_position": 3, "youtube_video_id": "LdHp4Na3X_0", "title": "NEET: Plant Growth & Development - L 3 | Plant Hormones | Unacademy NEET | Pradeep Sir", "duration_seconds": 3133, "embedding_status": "embeddable" },
+        { "source_position": 4, "youtube_video_id": "HQ9VIpFSOAY", "title": "NEET: Plant Growth & Development - L 4 | Photoperiodism | Unacademy NEET | Pradeep Sir", "duration_seconds": 3606, "embedding_status": "embeddable" },
+        { "source_position": 5, "youtube_video_id": "SKmzQz6DRqU", "title": "NEET: Plant Growth & Development - L 5 | Vernalisation | Unacademy NEET | Pradeep Sir", "duration_seconds": 2558, "embedding_status": "embeddable" }
+      ],
+      "excluded": [],
+      "production_import": {
+        "course_id": 413,
+        "verified_at": "2026-08-05T13:13:30.708Z",
+        "videos_added": 5,
+        "memberships_added": 5,
+        "videos_reused": 0,
+        "chapters_created": 0,
+        "protected_jee_fingerprint_after": "30eee4a4a6842e5beeb7c97083d7f812"
+      }
+    }
+  ],
+  "deferred": [
+    "Breathing and Gas Exchange now starts with an unrelated Phoenix 2.0 video followed by Lectures 2-7; Lecture 1 is absent, so it is not a complete sequence.",
+    "Mechanical Properties of Solids contains Lectures 1 and 3 but no Lecture 2.",
+    "Alternating Current contains Lectures 1-4 followed by two quizzes; it remains deferred until completeness is independently established.",
+    "Plant Kingdom Live Daily 2.0 currently contains only Menti and mega-quiz sessions.",
+    "Previously recorded incomplete Biomolecules, Respiration in Plants, Coordination Compounds, Ionic Equilibrium, Human Reproduction, Neural Control and Coordination, and Animal Kingdom candidates remain deferred."
+  ]
+}

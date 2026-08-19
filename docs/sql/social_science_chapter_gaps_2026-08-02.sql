@@ -73,6 +73,19 @@ begin
   insert into public.playlist_videos (playlist_id, video_id, position)
   values (153, v_video_id, v_next)
   on conflict (playlist_id, video_id) do update set position = excluded.position;
+
+  -- File the lesson under the same goal and class level its course carries.
+  -- Without this the lesson is invisible to goal-scoped search:
+  -- src/useScopedSearch.js joins video_learning_goals with `!inner`, so a lesson
+  -- with no junction row can never be returned. This is the defect that left 670
+  -- existing lessons unsearchable (see backfill_video_taxonomy_junctions_2026-08-03.sql).
+  insert into public.video_learning_goals (video_id, learning_goal_id)
+  select v_video_id, learning_goal_id from public.playlist_learning_goals where playlist_id = 153
+  on conflict do nothing;
+
+  insert into public.video_class_levels (video_id, class_level_id)
+  select v_video_id, class_level_id from public.playlist_class_levels where playlist_id = 153
+  on conflict do nothing;
 end
 $federalism$;
 
@@ -138,6 +151,18 @@ begin
     insert into public.playlist_videos (playlist_id, video_id, position)
     values (v_playlist_id, v_video_id, r.pos)
     on conflict (playlist_id, video_id) do update set position = excluded.position;
+
+    -- Same reason as the Federalism block above: an unfiled lesson cannot be
+    -- returned by goal-scoped search, which inner-joins video_learning_goals.
+    insert into public.video_learning_goals (video_id, learning_goal_id)
+    select v_video_id, learning_goal_id from public.playlist_learning_goals
+    where playlist_id = v_playlist_id
+    on conflict do nothing;
+
+    insert into public.video_class_levels (video_id, class_level_id)
+    select v_video_id, class_level_id from public.playlist_class_levels
+    where playlist_id = v_playlist_id
+    on conflict do nothing;
   end loop;
 end
 $consumer$;

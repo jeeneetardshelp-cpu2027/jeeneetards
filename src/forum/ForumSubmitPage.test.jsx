@@ -20,6 +20,7 @@ function apiWith(overrides = {}) {
     getMode: vi.fn().mockResolvedValue("open"),
     getTopics: vi.fn().mockResolvedValue(topics),
     getMyIdentity: vi.fn().mockResolvedValue({ username: "physics-helper", needs_username: false }),
+    getBetaMembership: vi.fn().mockResolvedValue(true),
     claimUsername: vi.fn().mockResolvedValue("physics-helper"),
     createPost: vi.fn().mockResolvedValue(77),
     ...overrides,
@@ -89,6 +90,7 @@ describe("forum discussion composer", () => {
 
     fillDraft();
     fireEvent.change(await screen.findByLabelText("Username"), { target: { value: "physics-helper" } });
+    fireEvent.click(screen.getByRole("checkbox", { name: /I have reviewed and agree/i }));
     fireEvent.click(screen.getByRole("button", { name: "Claim username" }));
     expect(await screen.findByText(/publishing publicly as/i)).toBeTruthy();
 
@@ -116,5 +118,30 @@ describe("forum discussion composer", () => {
     expect(screen.getByDisplayValue(/taking moments about the hinge/)).toBeTruthy();
     expect([...Array(localStorage.length)].some((_, index) => localStorage.getItem(localStorage.key(index))?.includes("angular momentum")))
       .toBe(true);
+  });
+
+  it("lets only an enrolled identity publish while mode is beta", async () => {
+    mocks.auth = { session: { user: { id: "student-beta" } }, loading: false };
+    const api = apiWith({ getMode: vi.fn().mockResolvedValue("beta") });
+    renderPage(api);
+    expect(await screen.findByText(/closed beta: only invited/i)).toBeTruthy();
+    fillDraft();
+    fireEvent.click(screen.getByRole("button", { name: "Publish discussion" }));
+    await waitFor(() => expect(api.createPost).toHaveBeenCalledOnce());
+  });
+
+  it("preserves a non-member draft instead of attempting a beta write", async () => {
+    mocks.auth = { session: { user: { id: "student-outsider" } }, loading: false };
+    const api = apiWith({
+      getMode: vi.fn().mockResolvedValue("beta"),
+      getBetaMembership: vi.fn().mockResolvedValue(false),
+    });
+    renderPage(api);
+    await screen.findByText(/closed beta: only invited/i);
+    fillDraft();
+    fireEvent.click(screen.getByRole("button", { name: "Publish discussion" }));
+    expect((await screen.findByRole("alert")).textContent).toMatch(/limited to invited testers/i);
+    expect(api.createPost).not.toHaveBeenCalled();
+    expect(screen.getByDisplayValue(/taking moments about the hinge/)).toBeTruthy();
   });
 });

@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "request_id": "cf5b83c5-cae3-47a9-85b8-0b4c8dd70bc8",
+  "youtube_playlist_id": "PLsgHooHkqhhM6fzJQ3Vhv7s6iOglsVJw2",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "b19eaa58-7931-4c84-8cea-8b6622230b4d",
+    "youtube_playlist_id": "PLsgHooHkqhhM6fzJQ3Vhv7s6iOglsVJw2",
+    "teacher": "Pradeep Singh",
+    "source_url": "https://www.youtube.com/playlist?list=PLsgHooHkqhhM6fzJQ3Vhv7s6iOglsVJw2",
+    "source_label": "Official Unacademy NEET channel-owned The Unit of Life playlist; every retained lecture names Pradeep Sir",
+    "reviewed_by": "Owner",
+    "reviewed_on": "2026-08-06",
+    "youtube_video_ids": ["FT0tu_hVtVY", "EmZfiGMbY7g", "2YkF8igeSEQ", "KSwPeW0wolo"]
+  },
+  "assignments": [
+    { "position": 1, "youtube_video_id": "FT0tu_hVtVY", "chapter": "Cell: The Unit of Life", "lesson_number": 1 },
+    { "position": 2, "youtube_video_id": "EmZfiGMbY7g", "chapter": "Cell: The Unit of Life", "lesson_number": 2 },
+    { "position": 3, "youtube_video_id": "2YkF8igeSEQ", "chapter": "Cell: The Unit of Life", "lesson_number": 3 },
+    { "position": 4, "youtube_video_id": "KSwPeW0wolo", "chapter": "Cell: The Unit of Life", "lesson_number": 4 }
+  ],
+  "exclusions": [
+    { "position": 5, "youtube_video_id": "haLvt8Ro0H4", "reason": "quiz" }
+  ]
+}

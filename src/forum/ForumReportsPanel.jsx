@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useTheme } from "../theme.jsx";
 import { forumApi } from "./forumApi.js";
 import { BRAND_TEAL } from "../brandColors.js";
+import ForumSuspensionControl from "./ForumSuspensionControl.jsx";
 
 const LABELS = Object.freeze({
   spam: "Spam or promotion",
@@ -17,7 +18,9 @@ const LABELS = Object.freeze({
 
 export default function ForumReportsPanel({ api = forumApi }) {
   const { t } = useTheme();
-  const [state, setState] = useState({ status: "loading", reports: [], error: null });
+  const [state, setState] = useState({
+    status: "loading", reports: [], suspensions: [], error: null,
+  });
   const [busyId, setBusyId] = useState(null);
   const [actionError, setActionError] = useState(null);
   const [removeId, setRemoveId] = useState(null);
@@ -27,10 +30,13 @@ export default function ForumReportsPanel({ api = forumApi }) {
   const load = useCallback(async () => {
     setState((current) => ({ ...current, status: "loading", error: null }));
     try {
-      const reports = await api.listReports({ limit: 100 });
-      setState({ status: "ready", reports, error: null });
+      const [reports, suspensions] = await Promise.all([
+        api.listReports({ limit: 100 }),
+        api.listSuspensions(),
+      ]);
+      setState({ status: "ready", reports, suspensions, error: null });
     } catch (error) {
-      setState({ status: "error", reports: [], error });
+      setState({ status: "error", reports: [], suspensions: [], error });
     }
   }, [api]);
 
@@ -77,6 +83,20 @@ export default function ForumReportsPanel({ api = forumApi }) {
     }
   };
 
+  const suspensionChanged = (result) => {
+    setState((current) => {
+      const withoutStudent = current.suspensions.filter(
+        (item) => item.username.toLowerCase() !== result.username.toLowerCase(),
+      );
+      return {
+        ...current,
+        suspensions: result.suspended_until
+          ? [{ ...result, is_active: new Date(result.suspended_until).getTime() > Date.now() }, ...withoutStudent]
+          : withoutStudent,
+      };
+    });
+  };
+
   if (state.status === "loading") return <p role="status" className={`text-sm ${t.muted}`}>Loading forum reports…</p>;
   if (state.status === "error") {
     return (
@@ -86,18 +106,41 @@ export default function ForumReportsPanel({ api = forumApi }) {
       </div>
     );
   }
-  if (state.reports.length === 0) {
-    return (
-      <div className={`rounded-2xl border border-dashed ${t.border} p-8 text-center`}>
-        <p className={`text-sm font-semibold ${t.text}`}>No open forum reports</p>
-        <p className={`mt-1 text-sm ${t.muted}`}>Student discussion reports will appear here.</p>
-      </div>
-    );
-  }
-
   return (
     <div className="space-y-4">
       {actionError && <p role="alert" className="text-sm text-danger">{actionError}</p>}
+      <section className={`rounded-2xl border p-5 ${t.card} ${t.border}`} aria-labelledby="forum-suspensions-heading">
+        <h3 id="forum-suspensions-heading" className={`text-sm font-semibold ${t.text}`}>Forum suspensions</h3>
+        <p className={`mt-1 text-xs ${t.muted}`}>Active and expired restrictions remain here until a moderator lifts or clears them.</p>
+        {state.suspensions.length === 0 ? (
+          <p className={`mt-3 text-sm ${t.faint}`}>No forum suspensions.</p>
+        ) : (
+          <div className="mt-4 space-y-3">
+            {state.suspensions.map((suspension) => (
+              <div key={suspension.username} className={`rounded-xl border p-4 ${t.border}`}>
+                <p className={`text-sm font-semibold ${t.text}`}>@{suspension.username}</p>
+                <p className={`mt-1 text-xs ${t.muted}`}>
+                  {suspension.is_active ? "Active" : "Expired"} · {suspension.reason}
+                </p>
+                <div className="mt-3">
+                  <ForumSuspensionControl
+                    username={suspension.username}
+                    existing={suspension}
+                    api={api}
+                    onChanged={suspensionChanged}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+      {state.reports.length === 0 && (
+        <div className={`rounded-2xl border border-dashed ${t.border} p-8 text-center`}>
+          <p className={`text-sm font-semibold ${t.text}`}>No open forum reports</p>
+          <p className={`mt-1 text-sm ${t.muted}`}>Student discussion reports will appear here.</p>
+        </div>
+      )}
       {state.reports.map((report) => {
         const urgent = report.reason === "self_harm" || report.priority === "urgent";
         const removing = removeId === report.id;
@@ -214,6 +257,16 @@ export default function ForumReportsPanel({ api = forumApi }) {
               >
                 Dismiss report without changing content
               </button>
+              {report.target_author_username && (
+                <ForumSuspensionControl
+                  username={report.target_author_username}
+                  existing={state.suspensions.find(
+                    (item) => item.username.toLowerCase() === report.target_author_username.toLowerCase(),
+                  )}
+                  api={api}
+                  onChanged={suspensionChanged}
+                />
+              )}
             </div>
 
             {removing && (

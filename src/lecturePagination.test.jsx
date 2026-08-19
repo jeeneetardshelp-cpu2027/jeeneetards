@@ -55,6 +55,7 @@ describe("paged lecture discovery", () => {
       8 * LECTURE_PAGE_SIZE - 1,
     ]);
     expect(calls[0].cols).toContain("youtube_video_id");
+    expect(calls[0].cols).toContain("institutes_channels(id, name, logo_url)");
   });
 
   it("applies goal, subject, chapter, and search in PostgREST", async () => {
@@ -118,7 +119,11 @@ describe("paged lecture discovery", () => {
     response = {
       data: [{
         id: 9, youtube_video_id: "abc", title: "Vectors",
-        institutes_channels: { name: "Institute" },
+        institutes_channels: {
+          id: 8,
+          name: "Institute",
+          logo_url: "https://yt3.ggpht.com/institute=s88",
+        },
         subjects: { name: "Physics" }, chapters: { name: "Vectors" },
       }],
       error: null,
@@ -128,7 +133,13 @@ describe("paged lecture discovery", () => {
     await waitFor(() => expect(seen.loading).toBe(false));
     expect(seen.total).toBe(LECTURE_PAGE_SIZE + 1);
     expect(seen.hasMore).toBe(true);
-    expect(seen.videos[0]).toMatchObject({ id: 9, youtubeVideoId: "abc", chapter: "Vectors" });
+    expect(seen.videos[0]).toMatchObject({
+      id: 9,
+      youtubeVideoId: "abc",
+      chapter: "Vectors",
+      instituteId: 8,
+      instituteLogoUrl: "https://yt3.ggpht.com/institute=s88",
+    });
   });
 
   it("treats a stale out-of-range URL as an empty page, not an outage", async () => {

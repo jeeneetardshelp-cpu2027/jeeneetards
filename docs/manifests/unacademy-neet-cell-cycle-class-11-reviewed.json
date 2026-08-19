@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "request_id": "ac578201-0827-4860-826d-c3092669da61",
+  "youtube_playlist_id": "PLsgHooHkqhhMbUvz0HhRZwLrpa4--2M1F",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "cf45d7d5-43ef-4311-abd7-5297ec2ea3b6",
+    "youtube_playlist_id": "PLsgHooHkqhhMbUvz0HhRZwLrpa4--2M1F",
+    "teacher": "Pradeep Singh",
+    "source_url": "https://www.youtube.com/playlist?list=PLsgHooHkqhhMbUvz0HhRZwLrpa4--2M1F",
+    "source_label": "Official Unacademy NEET channel-owned Cell Cycle and Cell Division playlist; playlist and every retained lecture title use Pradeep Sir, owner-reviewed as verified Pradeep Singh",
+    "reviewed_by": "Owner",
+    "reviewed_on": "2026-08-04",
+    "youtube_video_ids": [
+      "p3gwQAYSMnw", "z9FuX2sXyk4", "yAbQQiPVscE", "c9rksFuU_wo", "HBVEWh9qoj0", "n3_peTeIG_0", "32ApiAa9jrM"
+    ]
+  },
+  "assignments": [
+    { "position": 1, "youtube_video_id": "p3gwQAYSMnw", "chapter": "Cell Cycle and Cell Division", "lesson_number": 1 },
+    { "position": 2, "youtube_video_id": "z9FuX2sXyk4", "chapter": "Cell Cycle and Cell Division", "lesson_number": 2 },
+    { "position": 3, "youtube_video_id": "yAbQQiPVscE", "chapter": "Cell Cycle and Cell Division", "lesson_number": 3 },
+    { "position": 4, "youtube_video_id": "c9rksFuU_wo", "chapter": "Cell Cycle and Cell Division", "lesson_number": 4 },
+    { "position": 5, "youtube_video_id": "HBVEWh9qoj0", "chapter": "Cell Cycle and Cell Division", "lesson_number": 5 },
+    { "position": 6, "youtube_video_id": "n3_peTeIG_0", "chapter": "Cell Cycle and Cell Division", "lesson_number": 6 },
+    { "position": 7, "youtube_video_id": "32ApiAa9jrM", "chapter": "Cell Cycle and Cell Division", "lesson_number": 7 }
+  ],
+  "exclusions": []
+}

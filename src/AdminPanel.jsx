@@ -30,6 +30,7 @@ import ContentQualityPanel from "./ContentQualityPanel.jsx";
 import { hasAdminAccess } from "./adminAccess.js";
 import ManageCatalogPanel from "./ManageCatalogPanel.jsx";
 import ForumReportsPanel from "./forum/ForumReportsPanel.jsx";
+import ForumBetaAdminPanel from "./forum/ForumBetaAdminPanel.jsx";
 
 export { slugify } from "./adminUI.jsx";
 
@@ -946,6 +947,7 @@ export default function AdminPanel() {
     { id: "quality", label: "Content Quality" },
     { id: "faculty", label: "Faculty Review" },
     { id: "reports", label: "Reports" },
+    { id: "forum-beta", label: "Forum beta" },
     { id: "reviews", label: "Reviews" },
   ];
 
@@ -1014,6 +1016,13 @@ export default function AdminPanel() {
               <ContentReportsPanel />
             </section>
           </div>
+        ) : tab === "forum-beta" ? (
+          <section aria-labelledby="forum-beta-heading">
+            <h2 id="forum-beta-heading" className={`mb-4 text-lg font-semibold ${t.text}`}>
+              Closed-beta access
+            </h2>
+            <ForumBetaAdminPanel />
+          </section>
         ) : tab === "reviews" ? (
           <ReviewModerationPanel />
         ) : tab === "quality" ? (

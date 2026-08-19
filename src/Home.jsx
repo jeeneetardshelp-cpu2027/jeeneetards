@@ -44,16 +44,12 @@ import { useStructuredData } from "./PageMetadata.jsx";
 import { organizationSchema, websiteSchema } from "./structuredData.js";
 import { Button, EmptyState, Pill, Skeleton, Surface } from "./ui.jsx";
 import {
-  Benefits, ContinueWatching, ExamGrid, Faq, Features, FinalCta, Hero,
-  Pricing, Process, SocialProof, Statistics, TopRated,
-  pickInstitutes, pickTopRated,
+  ContinueWatching, ExamGrid, Faq, Features, Hero,
+  SocialProof, TopRated, pickTopRated,
 } from "./HomeSections.jsx";
-
-// The comparison table's attribute count, and the languages the catalogue
-// classifies. Both are real product facts, stated once here so the numbers
-// on the page cannot drift from the pages they describe.
-const COMPARED_ATTRIBUTES = 17;
-const LANGUAGES = 3;
+import YouTubeThumbnail from "./YouTubeThumbnail.jsx";
+import ChannelAvatar from "./ChannelAvatar.jsx";
+import { useHomepageChannels } from "./useHomepageChannels.js";
 
 export function homeTagline(capabilities = RELEASE_CAPABILITIES) {
   return capabilities.comparison
@@ -92,9 +88,12 @@ export default function Home() {
 
   const [continueWatching] = useState(() => getContinueWatching(3));
   const { goals, loading: goalsLoading, error: goalsError } = useLearningGoals();
-  // ONE catalogue request serves four things: the hero stat rail, the rated
-  // strip, the channel marquee and the library-wide course total.
+  // One catalogue request serves the hero stat rail, rated strip, and
+  // library-wide course total. Channels come from their complete bounded
+  // dimension query below; a page of courses can never prove which channels
+  // exist elsewhere in the library.
   const { items, total, loading: catalogueLoading } = usePlaylistBrowse({ page: 0 });
+  const { channels, loading: channelsLoading } = useHomepageChannels();
 
   const exams = useMemo(
     () =>
@@ -116,7 +115,6 @@ export default function Home() {
     total ?? (goals ?? []).reduce((sum, goal) => sum + Number(goal.count ?? 0), 0);
 
   const topRated = useMemo(() => pickTopRated(items, 3), [items]);
-  const institutes = useMemo(() => pickInstitutes(items, 8), [items]);
 
   // Site identity, not search-state-dependent — written once, never removed
   // while Home stays mounted. organizationSchema describes the SITE itself,
@@ -127,8 +125,18 @@ export default function Home() {
   // rendered once at least one of them is real, so it never animates to zero.
   const heroStats = courseCount > 0
     ? [
-        { value: courseCount, label: "Free courses", note: "Curriculum-tagged" },
-        { value: liveTracks, label: "Exam tracks", note: "JEE, NEET, Boards" },
+        {
+          value: courseCount,
+          label: "Free courses",
+          note: "Curriculum-tagged",
+          to: "/browse",
+        },
+        {
+          value: liveTracks,
+          label: "Exam tracks",
+          note: "JEE, NEET, Boards",
+          to: "/explore",
+        },
         { value: "₹0", numeric: false, label: "Forever", note: "No account needed" },
       ]
     : [];
@@ -169,11 +177,10 @@ export default function Home() {
           <Landing
             continueWatching={continueWatching}
             exams={exams}
-            institutes={institutes}
+            institutes={channels}
+            channelsLoading={channelsLoading}
             topRated={topRated}
             catalogueLoading={catalogueLoading}
-            courseCount={courseCount}
-            liveTracks={liveTracks}
           />
         )}
       </main>
@@ -258,66 +265,43 @@ function TrustChips() {
 }
 
 // ---------------------------------------------------------------------
-//  Default landing (no query). Order is deliberate: a returning student's
-//  own progress first, then the exam entry points, then the argument.
+//  Default landing (no query).
+//
+//  Trimmed on 2026-08-10, from eleven sections to six. The page was 14.8
+//  phone-screens tall and led with marketing; the audit's finding was that a
+//  student wanting a Thermodynamics lecture had to scroll past a value
+//  proposition, a before/after table, a three-step explainer, a pricing tier
+//  and a stat band to reach the tool. Removed: Benefits (why-students-stay),
+//  Process (how-it-works), the Statistics band (which also carried a false
+//  "17 attributes" figure), Pricing (the hero already says "Free forever"),
+//  and the Final CTA (it repeated the hero). Those components are gone from
+//  HomeSections.jsx too, not just unrendered.
+//
+//  What stays is the tool and one honest explainer, in a deliberate order:
+//  a returning student's own progress, then the exam entry grid (the actual
+//  product), then the trust strip, then one compact "what it does", the real
+//  student ratings, and the FAQ that answers genuine first-visit questions.
+//  The search box itself is at the very top, in the hero.
 // ---------------------------------------------------------------------
 function Landing({
   continueWatching, exams, institutes, topRated, catalogueLoading,
-  courseCount, liveTracks,
+  channelsLoading,
 }) {
   return (
     <>
       <ContinueWatching entries={continueWatching} />
 
-      <SocialProof institutes={institutes} loading={catalogueLoading} />
-
+      {/* The tool comes before any argument for it. */}
       <ExamGrid exams={exams} />
+
+      <SocialProof institutes={institutes} loading={channelsLoading} />
 
       <Features />
 
+      {/* Real ratings, and it hides itself when there are none. */}
       <TopRated courses={topRated} loading={catalogueLoading} />
 
-      <Benefits />
-
-      <Process />
-
-      {/* Counts that come from a live query are dropped when that query hasn't
-          produced a real number, rather than rendered as a confident "0". With
-          a literal array here, a failed catalogue request made the homepage
-          state "0 — Courses in the library" and "0 — Exam tracks live" as
-          statistics, while the hero rail above (already guarded on
-          courseCount > 0) correctly hid itself. The last two are constants
-          describing the product, not measurements, so they always hold. */}
-      <Statistics
-        stats={[
-          courseCount > 0 && {
-            value: courseCount,
-            label: "Courses in the library",
-            note: "Curriculum-tagged, chapter by chapter",
-          },
-          liveTracks > 0 && {
-            value: liveTracks,
-            label: "Exam tracks live",
-            note: "JEE, NEET and school boards",
-          },
-          {
-            value: COMPARED_ATTRIBUTES,
-            label: "Attributes compared",
-            note: "Coverage, pacing, prerequisites and more",
-          },
-          {
-            value: LANGUAGES,
-            label: "Languages classified",
-            note: "Hindi, English and Hinglish",
-          },
-        ].filter(Boolean)}
-      />
-
-      <Pricing />
-
       <Faq />
-
-      <FinalCta />
     </>
   );
 }
@@ -405,6 +389,19 @@ function SearchResults({ groups, loading, error, tooShort, retry, query }) {
                     to={resultHref(g.key, row)}
                     className="group/row flex min-h-14 w-full items-center gap-4 px-5 py-4 text-left transition-colors duration-200 hover:bg-surface-2"
                   >
+                    {g.key === "lecture" && (
+                      <YouTubeThumbnail
+                        videoId={row.extra?.youtube_video_id}
+                        className="aspect-video w-20 shrink-0 rounded-md border border-hairline sm:w-24"
+                      />
+                    )}
+                    {g.key === "institute" && (
+                      <ChannelAvatar
+                        url={row.extra?.logo_url}
+                        name={row.title}
+                        className="h-10 w-10 sm:h-11 sm:w-11"
+                      />
+                    )}
                     <span className="min-w-0 flex-1">
                       <span className="block truncate text-sm font-medium text-ink">
                         {row.title}

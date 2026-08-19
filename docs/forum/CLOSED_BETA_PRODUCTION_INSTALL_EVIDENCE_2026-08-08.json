@@ -1,0 +1,71 @@
+{
+  "evidence_version": 1,
+  "recorded_at": "2026-08-08T11:44:56+05:30",
+  "project_ref": "kezelafqhgqrprpadmlf",
+  "environment": "production",
+  "execution_surface": "Supabase SQL Editor",
+  "database_role": "postgres",
+  "main_commit_at_execution": "fbbb674f6f42083037be03bd3d14539c6118daa5",
+  "package": {
+    "directory": "production/forum_closed_beta_v1_release",
+    "install_sha256": "bb3c50d281a88020f3d6c80467cc3ab909e2347181b6f90b427647af2fa94c22",
+    "preflight_sha256": "ceea18d4ae986e090b0bacc9ef06ee1ea633407dfdb13a74a85656e26a65a6a4",
+    "audit_sha256": "49689ad8467b3799c8a4c7c1d426f3a3402bb04eaf1511cb1e0cc8632c375bdd",
+    "postflight_sha256": "98165ee99dd83ecba10acfe6b157a5e6eb98f3d510bb755da739b71a7c68b05b",
+    "source_manifest_sha256": "2fcb5bfad6c9a4a2a45967fd8fa6439040266390398e1eb332c05ed6b88b69ad"
+  },
+  "pitr": {
+    "enabled": true,
+    "retention_days": 7,
+    "logging_interval_minutes": 2,
+    "latest_restore_point": "2026-08-08T11:34:00+05:30",
+    "checked_at": "2026-08-08T11:40:31+05:30"
+  },
+  "buffer_verification": {
+    "target_project_matched": true,
+    "install_buffer_sha256_matched": true,
+    "install_buffer_length": 18513
+  },
+  "preflight": {
+    "database_name": "postgres",
+    "forum_mode": "off",
+    "baseline_state_present": true,
+    "database_changed": false
+  },
+  "audit": {
+    "forum_mode": "off",
+    "active_topics": 6,
+    "post_count": 0,
+    "comment_count": 0,
+    "report_count": 0,
+    "admin_count": 1,
+    "claim_ready_profiles": 0,
+    "note": "The reviewed preflight and installer guards separately proved that closed-beta objects were absent before installation."
+  },
+  "install_terminal_row": {
+    "forum_mode_is_off": true,
+    "beta_table_installed": true,
+    "beta_check_installed": true,
+    "beta_admin_write_installed": true,
+    "beta_admin_list_installed": true,
+    "no_beta_members_created": true,
+    "no_posts_created": true,
+    "no_reports_created": true,
+    "baseline_state_retained": true
+  },
+  "postflight_terminal_row": {
+    "forum_mode_is_off": true,
+    "no_beta_members": true,
+    "no_posts": true,
+    "no_reports": true,
+    "baseline_state_retained": true,
+    "database_changed": false
+  },
+  "authorization_boundaries": {
+    "forum_mode_changed": false,
+    "beta_members_enrolled": false,
+    "production_http_jwt_write_test_run": false,
+    "rollback_run": false
+  },
+  "result": "passed"
+}

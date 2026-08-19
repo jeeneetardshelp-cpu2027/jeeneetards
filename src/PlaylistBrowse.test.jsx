@@ -14,14 +14,26 @@ import { MemoryRouter, Routes, Route, useLocation } from "react-router";
 const calls = [];
 let NEXT_RESULTS = [];
 function makeBuilder(rows, count) {
-  const rec = { table: null, cols: null, eq: {}, range: null, ilike: null, orders: [] };
+  const rec = {
+    table: null, cols: null, eq: {}, range: null, ilike: null, orders: [],
+    referencedOrders: {}, referencedRanges: {},
+  };
   const b = {
     select(cols, opts) { rec.cols = cols; rec.opts = opts; return b; },
     order(column, options) {
-      rec.orders.push(options?.ascending === false ? `${column} desc` : column);
+      const value = options?.ascending === false ? `${column} desc` : column;
+      if (options?.referencedTable) {
+        (rec.referencedOrders[options.referencedTable] ??= []).push(value);
+      } else {
+        rec.orders.push(value);
+      }
       return b;
     },
-    range(a, z) { rec.range = [a, z]; return b; },
+    range(a, z, options) {
+      if (options?.referencedTable) rec.referencedRanges[options.referencedTable] = [a, z];
+      else rec.range = [a, z];
+      return b;
+    },
     eq(k, v) { rec.eq[k] = v; return b; },
     ilike(k, v) { rec.ilike = [k, v]; return b; },
     in(k, v) { rec.in = [k, v]; return b; },
@@ -45,16 +57,29 @@ vi.mock("./supabaseClient", () => ({
 vi.mock("./useRatingsAvailability.js", () => ({
   useRatingsAvailability: () => ratingsMock.available,
 }));
+const popularityMock = vi.hoisted(() => ({ available: null }));
+vi.mock("./usePopularityAvailability.js", () => ({
+  usePopularityAvailability: () => popularityMock.available,
+}));
 
 import {
   usePlaylistBrowse, PAGE_SIZE, formatDuration, isMissingBrowseStatsColumn,
 } from "./usePlaylistBrowse.js";
-import PlaylistBrowse from "./PlaylistBrowse.jsx";
+import PlaylistBrowse, { PlaylistCard } from "./PlaylistBrowse.jsx";
+import { ThemeProvider } from "./theme.jsx";
 
 // Drives the hook and reports nothing — we assert on the recorded query.
 function Probe(props) {
   usePlaylistBrowse(props);
   return null;
+}
+function ResultProbe(props) {
+  const result = usePlaylistBrowse(props);
+  return <span>{result.items[0]?.coverVideoId ?? "none"}</span>;
+}
+function LogoProbe(props) {
+  const result = usePlaylistBrowse(props);
+  return <span>{result.items[0]?.instituteLogoUrl ?? "none"}</span>;
 }
 const run = async (props) => {
   render(<MemoryRouter><Probe {...props} /></MemoryRouter>);
@@ -74,6 +99,36 @@ beforeEach(() => {
   ROWS = [];
   COUNT = 0;
   ratingsMock.available = null;
+  popularityMock.available = null;
+});
+
+describe("playlist card channel navigation", () => {
+  it("links the channel credit to all courses from that channel", () => {
+    render(
+      <MemoryRouter>
+        <ThemeProvider>
+          <PlaylistCard
+            course={{
+              id: 11,
+              title: "Indefinite Integration",
+              subject: "Mathematics",
+              instituteId: 5,
+              institute: "Mohit Tyagi",
+              instituteLogoUrl: "https://yt3.ggpht.com/mohit-tyagi=s88",
+              classLevels: [],
+            }}
+            to="/course/11"
+            comparisonEnabled={false}
+          />
+        </ThemeProvider>
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByRole("link", { name: "View all courses from Mohit Tyagi" })
+      .getAttribute("href")).toBe("/browse?channel=5");
+    expect(screen.getByRole("link", { name: "View course" })
+      .getAttribute("href")).toBe("/course/11");
+  });
 });
 
 describe("goal isolation", () => {
@@ -117,6 +172,37 @@ describe("chapter filtering happens in the database", () => {
 });
 
 describe("pagination", () => {
+  it("maps the channel logo selected with each playlist", async () => {
+    ROWS = [row(11, "Indefinite Integration", {
+      institutes_channels: {
+        id: 5,
+        name: "Mohit Tyagi",
+        logo_url: "https://yt3.ggpht.com/mohit-tyagi=s88",
+      },
+    })];
+    COUNT = 1;
+
+    render(<MemoryRouter><LogoProbe /></MemoryRouter>);
+    expect(await screen.findByText("https://yt3.ggpht.com/mohit-tyagi=s88")).toBeTruthy();
+    expect(calls[0].cols).toContain("institutes_channels(id, name, logo_url)");
+  });
+
+  it("fetches only the first lesson image as each playlist cover", async () => {
+    ROWS = [row(11, "Indefinite Integration", {
+      cover: [{ id: 99, position: 1, videos: { youtube_video_id: "CBvaO-uDvs8" } }],
+    })];
+    COUNT = 1;
+
+    render(<MemoryRouter><ResultProbe /></MemoryRouter>);
+    expect(await screen.findByText("CBvaO-uDvs8")).toBeTruthy();
+
+    const q = calls[0];
+    expect(q.cols).toContain("cover:playlist_videos");
+    expect(q.cols).toContain("videos(youtube_video_id)");
+    expect(q.referencedOrders.cover).toEqual(["position", "id"]);
+    expect(q.referencedRanges.cover).toEqual([0, 0]);
+  });
+
   it("uses curated curriculum order before popularity and stable tie-breakers", async () => {
     const q = await run({});
     expect(q.cols).toContain("display_order");
@@ -288,6 +374,54 @@ describe("rating sort truthfulness", () => {
 
     const sort = await screen.findByRole("combobox", { name: "Sort courses" });
     expect([...sort.options].map((option) => option.text)).toContain("Highest rated");
+  });
+});
+
+describe("popularity sort truthfulness", () => {
+  const optionTexts = async () => {
+    const sort = await screen.findByRole("combobox", { name: "Sort courses" });
+    return [...sort.options].map((option) => option.text);
+  };
+
+  it("hides Most popular and Most viewed when both columns are empty", async () => {
+    popularityMock.available = { popular: false, views: false };
+    renderBrowse({ subject: null, chapter: null, search: "" });
+
+    const texts = await optionTexts();
+    expect(texts).not.toContain("Most popular");
+    expect(texts).not.toContain("Most viewed");
+    // The tool the student came for is still there.
+    expect(texts).toContain("Recommended");
+    expect(texts).toContain("Recently added");
+  });
+
+  it("hides each sort independently when only its own column is empty", async () => {
+    popularityMock.available = { popular: true, views: false };
+    renderBrowse({ subject: null, chapter: null, search: "" });
+
+    const texts = await optionTexts();
+    expect(texts).toContain("Most popular");
+    expect(texts).not.toContain("Most viewed");
+  });
+
+  it("keeps both while the availability check is unknown", async () => {
+    popularityMock.available = null;
+    renderBrowse({ subject: null, chapter: null, search: "" });
+
+    const texts = await optionTexts();
+    expect(texts).toContain("Most popular");
+    expect(texts).toContain("Most viewed");
+  });
+
+  it("removes a stale most_viewed sort URL when no course has views", async () => {
+    popularityMock.available = { popular: false, views: false };
+    renderBrowse(
+      { subject: null, chapter: null, search: "" },
+      "/browse?sort=most_viewed&page=2",
+    );
+
+    await waitFor(() => expect(screen.getByTestId("loc").textContent).toBe("/browse"));
+    expect(screen.getByRole("combobox", { name: "Sort courses" }).value).toBe("recommended");
   });
 });
 

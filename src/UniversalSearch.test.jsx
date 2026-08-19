@@ -11,6 +11,7 @@ import { MemoryRouter, Routes, Route, useLocation } from "react-router";
 
 let RPC_ROWS = [];
 let RPC_ERROR = null;
+let CHANNEL_LOGOS = [];
 const rpcCalls = [];
 let rpcDelay = 0;
 
@@ -23,6 +24,13 @@ vi.mock("./supabaseClient", () => ({
       return rpcDelay
         ? new Promise((r) => setTimeout(() => r(payload), rpcDelay))
         : Promise.resolve(payload);
+    },
+    from: () => {
+      const builder = {
+        select: () => builder,
+        in: () => Promise.resolve({ data: CHANNEL_LOGOS, error: null }),
+      };
+      return builder;
     },
   },
 }));
@@ -65,6 +73,7 @@ const settle = async () => {
 beforeEach(() => {
   vi.useFakeTimers({ shouldAdvanceTime: true });
   RPC_ROWS = []; RPC_ERROR = null; rpcDelay = 0; rpcCalls.length = 0;
+  CHANNEL_LOGOS = [];
 });
 afterEach(() => { vi.useRealTimers(); });
 
@@ -98,6 +107,40 @@ describe("grouped results (the five groups)", () => {
     expect(opt.textContent).toContain("Amit Bijarnia");
     expect(opt.textContent).toContain("Also known as: ABJ Sir");
     expect(opt.textContent).toContain("Competishun · Physics · JEE");
+  });
+
+  it("shows a YouTube thumbnail beside lecture results", async () => {
+    RPC_ROWS = [row({
+      group_key: "lecture",
+      entity_id: 9,
+      title: "Relative motion",
+      aka: null,
+      extra: { playlist_id: 7, youtube_video_id: "CBvaO-uDvs8" },
+    })];
+    const { container } = renderSearch();
+    type("relative motion");
+    await settle();
+    await screen.findByText("Relative motion");
+
+    const image = container.querySelector("img");
+    expect(image?.getAttribute("src"))
+      .toBe("https://img.youtube.com/vi/CBvaO-uDvs8/hqdefault.jpg");
+    expect(image?.getAttribute("loading")).toBe("lazy");
+  });
+
+  it("shows the authoritative avatar beside channel results", async () => {
+    RPC_ROWS = [row({
+      group_key: "institute", entity_id: 3, title: "Competishun", aka: null,
+      extra: { institute_id: 3 },
+    })];
+    CHANNEL_LOGOS = [{ id: 3, logo_url: "https://yt3.ggpht.com/competishun=s88" }];
+    const { container } = renderSearch();
+    type("competishun");
+    await settle();
+    await screen.findByText("Competishun");
+
+    expect(container.querySelector("img")?.getAttribute("src"))
+      .toBe("https://yt3.ggpht.com/competishun=s88");
   });
 
   it("omits a group entirely rather than drawing an empty one", async () => {

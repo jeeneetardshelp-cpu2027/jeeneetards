@@ -1,0 +1,148 @@
+{
+  "version": 1,
+  "status": "review-ready-not-authorized",
+  "generated_at": "2026-08-03T09:58:39.836Z",
+  "read_only": true,
+  "source": {
+    "channel_id": "UC6ieIswHA9WInRsa2r88hRw",
+    "channel_title": "Competishun+",
+    "channel_reported_videos": 1966,
+    "public_uploads_scanned": 1966,
+    "production_covered_uploads": 500,
+    "public_playlists_scanned": 78,
+    "candidate_videos_in_public_playlists": 0
+  },
+  "attribution": {
+    "display_name": "Competishun+",
+    "decision_id": "1c06eb34-fbdc-4d3b-a239-39f256f889e8",
+    "requires_owner_reaffirmation_for_this_batch": true,
+    "named_teacher_record_required": false,
+    "note": "The official descriptions credit Rajat Jain Sir and Praveen Agrawal (PAL) Sir, but production has no exact teacher record for either name. This review does not invent a teacher or extend the prior decision to a new batch without owner approval."
+  },
+  "baseline": {
+    "observed_at": "2026-08-03T09:58:39.836Z",
+    "playlists": 301,
+    "videos": 3564,
+    "memberships": 3570,
+    "chapters": 241,
+    "protected_jee_courses": 83,
+    "protected_jee_memberships": 1307,
+    "protected_jee_fingerprint": "c742fabf93ff8dd33d6ecd5eb4793db0",
+    "rolling_jee_courses": 174,
+    "rolling_jee_memberships": 2361,
+    "rolling_jee_fingerprint": "cbf36bb736ac40c8e340ab75947d6202"
+  },
+  "reference_data": {
+    "subject": {
+      "id": 3,
+      "name": "Mathematics",
+      "slug": "mathematics",
+      "exists": true
+    },
+    "learning_goal": {
+      "id": 3,
+      "name": "Olympiad",
+      "slug": "olympiad",
+      "exists": true
+    },
+    "class_levels": [
+      "class-11",
+      "class-12",
+      "dropper"
+    ],
+    "proposed_chapter": {
+      "name": "PRMO and IOQM Solutions",
+      "exists": false,
+      "requires_create_only_reference_write": true,
+      "must_not_be_collapsed_into": "INMO Solutions"
+    }
+  },
+  "courses": [
+    {
+      "key": "competishun-upload-only-prmo-ioqm-solutions-2018-2022",
+      "proposed_title": "PRMO & IOQM Solutions (2018–2022)",
+      "youtube_playlist_id": null,
+      "ordering_basis": "Exam year and stage: PRMO 2018, PRMO 2019, IOQM 2020, IOQM 2021–22",
+      "goal": "olympiad",
+      "subject": "Mathematics",
+      "chapter": "PRMO and IOQM Solutions",
+      "class_levels": [
+        "class-11",
+        "class-12",
+        "dropper"
+      ],
+      "content_type": "pyq",
+      "language": "hinglish",
+      "difficulty": "advanced",
+      "videos": [
+        {
+          "position": 1,
+          "youtube_video_id": "dows6wBBk3A",
+          "source_title": "PRMO 2018 SOLUTIONS Q 1 to 10 | Indian Olympiad Qualifier For Mathematics | IAPT | HBCSE",
+          "published_at": "2022-03-12T11:41:49Z",
+          "duration_seconds": 3846,
+          "privacy_status": "public",
+          "embedding_status": "allowed",
+          "definition": "hd",
+          "captions": false,
+          "review_evidence": "Title explicitly identifies PRMO 2018 solutions for questions 1 through 10; description credits Rajat Jain Sir."
+        },
+        {
+          "position": 2,
+          "youtube_video_id": "3YvuUlM2OHY",
+          "source_title": "PRMO 2019 SOLUTIONS Q 1 to 15 | Pre Regional Mathematics Olympiad | IAPT | HBCSE",
+          "published_at": "2022-01-06T06:31:35Z",
+          "duration_seconds": 4259,
+          "privacy_status": "public",
+          "embedding_status": "allowed",
+          "definition": "hd",
+          "captions": false,
+          "review_evidence": "Title explicitly identifies PRMO 2019 solutions for questions 1 through 15."
+        },
+        {
+          "position": 3,
+          "youtube_video_id": "2qm5UjRyIcs",
+          "source_title": "IOQM 2020 SOLUTIONS | Indian Olympiad Qualifier For Mathematics | IAPT | HBCSE | PRMO | Competishun",
+          "published_at": "2022-01-06T10:57:58Z",
+          "duration_seconds": 9515,
+          "privacy_status": "public",
+          "embedding_status": "allowed",
+          "definition": "hd",
+          "captions": false,
+          "review_evidence": "Title and timestamped description identify a complete IOQM 2020 solution covering geometry, number theory, algebra, combinatorics, and statistics; description credits Praveen Agrawal (PAL) Sir."
+        },
+        {
+          "position": 4,
+          "youtube_video_id": "X3BWR79DtyU",
+          "source_title": "IOQM 2021 22 Solutions | Indian Olympiad Qualifier for Mathematics",
+          "published_at": "2022-03-07T13:22:04Z",
+          "duration_seconds": 4366,
+          "privacy_status": "public",
+          "embedding_status": "allowed",
+          "definition": "hd",
+          "captions": false,
+          "review_evidence": "Title and timestamped description identify IOQM 2021–22 Part 1 solutions and enumerate the covered questions; description credits Praveen Agrawal (PAL) Sir."
+        }
+      ],
+      "projected_delta": {
+        "playlists": 1,
+        "videos": 4,
+        "memberships": 4,
+        "chapters": 1
+      }
+    }
+  ],
+  "collision_review": {
+    "production_video_matches": 0,
+    "production_title_matches": 0,
+    "exact_chapter_name_matches": 0,
+    "candidate_video_ids_unique": true,
+    "candidate_videos_all_outside_current_public_playlists": true
+  },
+  "approval_required": [
+    "Approve the four-video grouping as one source-ID-null course.",
+    "Approve the exact course title and new Mathematics chapter name.",
+    "Approve Olympiad plus class-11, class-12, and dropper tags.",
+    "Reaffirm Competishun+ channel attribution decision 1c06eb34-fbdc-4d3b-a239-39f256f889e8 for this exact batch."
+  ]
+}

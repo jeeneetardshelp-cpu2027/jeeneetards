@@ -25,6 +25,11 @@ describe("browse-only legal disclosures", () => {
     expect(document.body.textContent).toMatch(/courts of Kota/i);
     expect(document.body.textContent).not.toMatch(/\bAmit\b/i);
     expect(document.body.textContent).not.toMatch(/\bJaipur\b/i);
+    expect(document.body.textContent).toMatch(/forum posts, answers, and public usernames can be read by anyone/i);
+    expect(document.body.textContent).toMatch(/do not bully, harass/i);
+    expect(document.body.textContent).toMatch(/not an emergency or crisis service/i);
+    expect(document.body.textContent).toMatch(/temporarily suspend forum participation for up to 365 days/i);
+    expect(document.body.textContent).toMatch(/moderation decision can be questioned/i);
   });
 
   it("accurately discloses accounts, submissions, storage, providers, and under-18 use", () => {
@@ -42,5 +47,8 @@ describe("browse-only legal disclosures", () => {
     expect(text).not.toMatch(/\bAmit\b/i);
     expect(text).not.toMatch(/\bJaipur\b/i);
     expect(text).toMatch(/jeeneetardshelp@gmail\.com/i);
+    expect(text).toMatch(/student forum is not publicly available in this release/i);
+    expect(text).not.toMatch(/forum contributions,\s+and content reporting are enabled/i);
+    expect(text).not.toMatch(/forum posts, answers, and public usernames are visible/i);
   });
 });

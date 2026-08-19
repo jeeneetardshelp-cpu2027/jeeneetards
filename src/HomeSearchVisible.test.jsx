@@ -32,6 +32,15 @@ vi.mock("./useUniversalSearch.js", () => ({
         total: 1,
         rows: [{ id: 7, title: "Kinematics", subtitle: "Physics", extra: { chapter_id: 7 } }],
       },
+      lecture: {
+        total: 1,
+        rows: [{
+          id: 9,
+          title: "Relative motion",
+          subtitle: "Kinematics course",
+          extra: { playlist_id: 5, youtube_video_id: "CBvaO-uDvs8" },
+        }],
+      },
     },
     loading: false,
     error: null,
@@ -57,6 +66,13 @@ describe("homepage search results are actually visible", () => {
   it("renders a matching result for the query", async () => {
     renderSearch();
     expect(await screen.findByText("Kinematics")).toBeTruthy();
+  });
+
+  it("shows a YouTube thumbnail for lecture results", async () => {
+    const { container } = renderSearch();
+    await screen.findByText("Relative motion");
+    expect(container.querySelector("img")?.getAttribute("src"))
+      .toBe("https://img.youtube.com/vi/CBvaO-uDvs8/hqdefault.jpg");
   });
 
   it("does not hide any search result inside an unrevealed .reveal wrapper", async () => {

@@ -41,6 +41,7 @@ import { useTheme } from "./theme.jsx";
 import { useStructuredData } from "./PageMetadata.jsx";
 import { breadcrumbListSchema, itemListSchema } from "./structuredData.js";
 import { BRAND_NAVY, BRAND_TEAL } from "./brandColors.js";
+import { getSubjectGuide } from "./subjectGuides.js";
 
 const BRAND = { navy: BRAND_NAVY, teal: BRAND_TEAL };
 
@@ -102,6 +103,13 @@ export default function Explore() {
   const subjectNode = subjects.find((s) => s.slug === subject);
   const chapterNode = subjectNode
     ? (chaptersBySubject[subjectNode.id] ?? []).find((c) => c.slug === chapter)
+    : null;
+  const subjectGuide = subjectNode && !chapter
+    ? getSubjectGuide({
+        goal: goalNode?.slug,
+        cls: classNode?.slug,
+        subject: subjectNode.slug,
+      })
     : null;
 
   // Breadcrumb: Explore › JEE › Class 11 › Physics › Kinematics (each clickable)
@@ -315,13 +323,18 @@ export default function Explore() {
             options={stepOptions}
           />
         ) : !chapterNode ? (
-          <Step
-            title={exploreStepHeading("chapter", stepScope)}
-            loading={catLoading}
-            error={catalogError}
-            onRetry={retryCatalog}
-            options={stepOptions}
-          />
+          <>
+            <Step
+              title={exploreStepHeading("chapter", stepScope)}
+              loading={catLoading}
+              error={catalogError}
+              onRetry={retryCatalog}
+              options={stepOptions}
+            />
+            {subjectGuide && !catLoading && !catalogError && (
+              <SubjectGuide guide={subjectGuide} />
+            )}
+          </>
         ) : (
           // The guided journey does not render its own results. The last step
           // hands off to the ONE result system at its canonical address, so
@@ -341,6 +354,77 @@ export default function Explore() {
         </Container>
       </main>
     </div>
+  );
+}
+
+export function SubjectGuide({ guide }) {
+  const { t } = useTheme();
+
+  return (
+    <article
+      aria-labelledby="subject-guide-title"
+      className={`mt-10 border-t ${t.border} pt-8`}
+    >
+      <p className={`text-xs font-semibold uppercase tracking-[0.16em] ${t.muted}`}>
+        {guide.label}
+      </p>
+      <h2 id="subject-guide-title" className={`mt-2 text-xl font-bold tracking-tight ${t.text}`}>
+        {guide.title}
+      </h2>
+      <div className={`mt-4 space-y-3 text-sm leading-relaxed ${t.faint}`}>
+        {guide.introduction.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+      </div>
+
+      <div className="mt-6 grid gap-6 md:grid-cols-2">
+        {guide.sections.map((section) => (
+          <section key={section.title}>
+            <h3 className={`font-semibold ${t.text}`}>{section.title}</h3>
+            {section.items && (
+              <ol className={`mt-2 list-decimal space-y-2 pl-5 text-sm leading-relaxed ${t.faint}`}>
+                {section.items.map((item) => <li key={item}>{item}</li>)}
+              </ol>
+            )}
+            {section.paragraphs && (
+              <div className={`mt-2 space-y-3 text-sm leading-relaxed ${t.faint}`}>
+                {section.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+              </div>
+            )}
+          </section>
+        ))}
+      </div>
+
+      <section className={`mt-6 rounded-xl border ${t.border} ${t.card} p-4`}>
+        <h3 className={`text-sm font-semibold ${t.text}`}>Check the current official sources</h3>
+        <ul className="mt-2 space-y-2">
+          {guide.sources.map((source) => (
+            <li key={source.href}>
+              <a
+                href={source.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex min-h-11 items-center text-sm font-medium underline underline-offset-4"
+                style={{ color: BRAND.teal }}
+              >
+                {source.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+        <p className={`mt-2 text-xs ${t.muted}`}>Sources checked {guide.sourceChecked}.</p>
+      </section>
+
+      <p className={`mt-4 text-xs leading-relaxed ${t.muted}`}>
+        Read{" "}
+        <Link
+          to="/methodology"
+          className="font-medium underline underline-offset-4"
+          style={{ color: BRAND.teal }}
+        >
+          how JEENEETARD classifies and checks courses
+        </Link>
+        .
+      </p>
+    </article>
   );
 }
 

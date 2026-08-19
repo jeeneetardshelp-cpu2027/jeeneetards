@@ -274,6 +274,7 @@ export function organizationSchema() {
     "@type": "Organization",
     name: "JEENEETARD",
     url: `${SITE}/`,
+    publishingPrinciples: `${SITE}/methodology`,
     description:
       "Browse free educational YouTube courses by exam, class, subject and chapter.",
   };

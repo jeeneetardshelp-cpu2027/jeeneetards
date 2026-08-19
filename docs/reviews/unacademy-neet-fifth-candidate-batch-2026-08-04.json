@@ -1,0 +1,105 @@
+{
+  "version": 1,
+  "generated_on": "2026-08-04",
+  "safety_boundary": "Read-only source and anonymous production review; no production write authorized.",
+  "channel": {
+    "title": "Unacademy NEET",
+    "youtube_channel_id": "UCdQwYksctqqiRwqp3PiJMWA",
+    "handle": "@UnacademyNEET",
+    "public_playlist_count": 736
+  },
+  "production_snapshot": {
+    "playlists": 377,
+    "videos": 4463,
+    "memberships": 4469,
+    "chapters": 247,
+    "protected_jee": {
+      "courses": 82,
+      "memberships": 1304,
+      "fingerprint": "30eee4a4a6842e5beeb7c97083d7f812"
+    },
+    "rolling_jee": {
+      "courses": 212,
+      "memberships": 2848,
+      "fingerprint": "9eea2b44f0b19c08cc0907c57e091342"
+    }
+  },
+  "candidates": [
+    {
+      "order": 1,
+      "youtube_playlist_id": "PLsgHooHkqhhNu-Uw9RzbSyF1wsdL0Q25z",
+      "playlist_title": "NEET: Ecosystem | LIVE Daily 2.0 | Unacademy NEET | Pradeep Singh",
+      "teacher": "Pradeep Singh",
+      "teacher_id": 33,
+      "subject": "Biology",
+      "subject_id": 4,
+      "chapter": "Ecosystem",
+      "chapter_id": 109,
+      "class_level": "class-12",
+      "class_level_id": 3,
+      "source_collision_count": 0,
+      "video_collision_count": 0,
+      "videos": [
+        { "position": 1, "youtube_video_id": "9pEnn4AYr1s", "title": "NEET: Ecosystem L1 | LIVE Daily 2.0 | Unacademy NEET | Pradeep Singh", "duration_seconds": 2345, "embedding_status": "embeddable" },
+        { "position": 2, "youtube_video_id": "-HOM0EZ-lvU", "title": "NEET: Ecosystem L2 | LIVE Daily 2.0 | Unacademy NEET | Pradeep Singh", "duration_seconds": 4080, "embedding_status": "embeddable" },
+        { "position": 3, "youtube_video_id": "JWbbwbMFTZc", "title": "NEET: Ecosystem L3 | LIVE Daily 2.0 | Unacademy NEET | Pradeep Singh", "duration_seconds": 3460, "embedding_status": "embeddable" },
+        { "position": 4, "youtube_video_id": "p3BXX1_zlbU", "title": "NEET: Ecosystem L4 | LIVE Daily 2.0 | Unacademy NEET | Pradeep Singh", "duration_seconds": 3650, "embedding_status": "embeddable" },
+        { "position": 5, "youtube_video_id": "boKRkEWNaIY", "title": "NEET: Ecosystem L5 | LIVE Daily 2.0 | Unacademy NEET | Pradeep Singh", "duration_seconds": 3720, "embedding_status": "embeddable" },
+        { "position": 6, "youtube_video_id": "AuX-hOGI9fc", "title": "NEET: Ecosystem L6 | LIVE Daily 2.0 | Unacademy NEET | Pradeep Singh", "duration_seconds": 4190, "embedding_status": "embeddable" }
+      ]
+    },
+    {
+      "order": 2,
+      "youtube_playlist_id": "PLsgHooHkqhhN0mEZWnzPfkn8UcmdYg-Mx",
+      "playlist_title": "NEET: Gravitation | Unacademy NEET | LIVE DAILY | NEET Physics | Mahendra S.",
+      "teacher": "Mahendra Singh",
+      "teacher_id": 34,
+      "subject": "Physics",
+      "subject_id": 1,
+      "chapter": "Gravitation",
+      "chapter_id": 81,
+      "class_level": "class-11",
+      "class_level_id": 2,
+      "source_collision_count": 0,
+      "video_collision_count": 0,
+      "videos": [
+        { "position": 1, "youtube_video_id": "R-YvlRd0gDU", "title": "NEET: Gravitation - L1 | Unacademy NEET | LIVE DAILY | NEET Physics | Mahendra S.", "duration_seconds": 3846, "embedding_status": "embeddable" },
+        { "position": 2, "youtube_video_id": "vWlMC0mEJbw", "title": "NEET: Gravitation - L2 | Unacademy NEET | LIVE DAILY | NEET Physics | Mahendra S.", "duration_seconds": 3661, "embedding_status": "embeddable" },
+        { "position": 3, "youtube_video_id": "f2_eJP0GTMw", "title": "NEET: Gravitation - L3 | Unacademy NEET | LIVE DAILY | NEET Physics | Mahendra S.", "duration_seconds": 4066, "embedding_status": "embeddable" },
+        { "position": 4, "youtube_video_id": "G4sZZb0e_nk", "title": "NEET: Gravitation - L4 | Unacademy NEET | LIVE DAILY | NEET Physics | Mahendra S.", "duration_seconds": 3891, "embedding_status": "embeddable" },
+        { "position": 5, "youtube_video_id": "O1jya36Z4_M", "title": "NEET: Gravitation - L5 | Unacademy NEET | LIVE DAILY | NEET Physics | Mahendra S.", "duration_seconds": 4202, "embedding_status": "embeddable" }
+      ]
+    },
+    {
+      "order": 3,
+      "youtube_playlist_id": "PLsgHooHkqhhMil-qxm3tGjv6Q7uJ1s1WI",
+      "playlist_title": "NEET: Wave Optics | Class 12 | Live Daily 2.0 | Unacademy NEET | Anu Gupta",
+      "teacher": "Anu Gupta",
+      "teacher_id": 35,
+      "subject": "Physics",
+      "subject_id": 1,
+      "chapter": "Wave Optics",
+      "chapter_id": 16,
+      "class_level": "class-12",
+      "class_level_id": 3,
+      "source_collision_count": 0,
+      "video_collision_count": 0,
+      "videos": [
+        { "position": 1, "youtube_video_id": "z19PUhdRjiU", "title": "NEET: Wave Optics L1 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anu Gupta", "duration_seconds": 3600, "embedding_status": "embeddable" },
+        { "position": 2, "youtube_video_id": "p_fNlh1wAb4", "title": "NEET: Wave Optics L2 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anu Gupta", "duration_seconds": 3875, "embedding_status": "embeddable" },
+        { "position": 3, "youtube_video_id": "-U5sEl7wTh8", "title": "NEET: Wave Optics L3 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anu Gupta", "duration_seconds": 3081, "embedding_status": "embeddable" },
+        { "position": 4, "youtube_video_id": "D8XGE0oGwYY", "title": "NEET: Wave Optics L4 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anu Gupta", "duration_seconds": 4245, "embedding_status": "embeddable" },
+        { "position": 5, "youtube_video_id": "pyppwnPgIpc", "title": "NEET: Wave Optics L5 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anu Gupta", "duration_seconds": 3740, "embedding_status": "embeddable" },
+        { "position": 6, "youtube_video_id": "Wk-rv-gKMbI", "title": "NEET: Wave Optics L6 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anu Gupta", "duration_seconds": 3648, "embedding_status": "embeddable" },
+        { "position": 7, "youtube_video_id": "YfvIKgWcsnE", "title": "NEET: Wave Optics L7 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anu Gupta", "duration_seconds": 3463, "embedding_status": "embeddable" }
+      ]
+    }
+  ],
+  "deferrals": [
+    "Human Reproduction: source sequence still lacks lecture 4.",
+    "Neural Control and Coordination: source sequence still lacks lecture 3.",
+    "Animal Kingdom: source sequence still lacks lecture 3.",
+    "Hydrogen: three NCERT-question sessions must stay outside the lecture-only course.",
+    "Modern Physics: the practice session must stay outside the lecture-only course."
+  ]
+}

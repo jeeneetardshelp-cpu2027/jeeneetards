@@ -31,7 +31,9 @@ import Home from "./Home.jsx";
 import Footer from "./Footer.jsx";
 import LegalPage from "./LegalPage.jsx";
 import PrivacyPolicy from "./PrivacyPolicy.jsx";
+import MethodologyPage from "./MethodologyPage.jsx";
 import PasswordReset from "./PasswordReset.jsx";
+import SignInPage from "./SignInPage.jsx";
 import FeatureUnavailable from "./FeatureUnavailable.jsx";
 import NotFound from "./NotFound.jsx";
 import AppErrorBoundary from "./AppErrorBoundary.jsx";
@@ -52,6 +54,7 @@ const ForumFeatureUnavailable = lazy(() => import("./forum/ForumFeatureUnavailab
 const ForumFeedPage = lazy(() => import("./forum/ForumFeedPage.jsx"));
 const ForumPostPage = lazy(() => import("./forum/ForumPostPage.jsx"));
 const ForumSubmitPage = lazy(() => import("./forum/ForumSubmitPage.jsx"));
+const ForumUsernamePage = lazy(() => import("./forum/ForumUsernamePage.jsx"));
 
 function RouteFallback() {
   return (
@@ -340,6 +343,10 @@ export default function App() {
           <Route path="/forum" element={<ForumFeedRoute />} />
           <Route path="/forum/post/:postId" element={<ForumPostRoute />} />
           <Route path="/forum/submit" element={<ForumSubmitRoute />} />
+          {/* Username setup stays available while the forum flag and mode are
+              off, so approved beta testers can prepare without opening any
+              discussion read or write surface. */}
+          <Route path="/forum/username" element={<ForumUsernamePage />} />
           {/* Both screens are addressed by real database ids. */}
           <Route path="/chapter/:chapterId" element={<LegacyChapterRedirect />} />
           {/* A course opened from the catalogue has no chapter context, so the
@@ -359,7 +366,9 @@ export default function App() {
           <Route path="/tests/:examId" element={<ExamTestsPage />} />
           <Route path="/terms" element={<TermsPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
+          <Route path="/methodology" element={<MethodologyPage />} />
           <Route path="/reset" element={<PasswordReset />} />
+          <Route path="/signin" element={<SignInPage />} />
           {/* Anything else is honestly a 404 — silently redirecting to Home
               made every mistyped or stale link a soft-404 for crawlers and a
               mystery for students. */}

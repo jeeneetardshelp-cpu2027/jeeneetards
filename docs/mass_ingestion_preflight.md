@@ -349,6 +349,210 @@ stable total order, then refuses to report overlap evidence unless the fetched
 membership count equals the summed course counts. This matters now that the
 production catalogue contains more than 1,000 memberships.
 
+## Read-only human-review bundle
+
+Before supplying academic decisions to the importer, run the classifier against
+the real source metadata and current public taxonomy:
+
+```powershell
+npm.cmd run prepare:ingestion-review -- --playlist=<PLAYLIST_ID> --env=production --expected-project-ref=<PROJECT_REF> --out-dir=<NEW_OUTSIDE_REPOSITORY_DIRECTORY> [--prior-manifest=<REVIEWED_MANIFEST_JSON_PATH>]
+```
+
+This is the preferred complete preparation command. It performs only YouTube
+and anonymous Supabase reads, constructs the review bundle, verifies it, builds
+and verifies the pending decision worksheet, renders the Markdown packet, and
+creates a blank reviewer response. It also builds a non-importable preparation
+receipt containing exact SHA-256 hashes for those four files. Every artifact and
+the receipt are built and verified in memory before local output begins; the
+receipt is written last as the completion marker. The command has no overwrite
+option and refuses the whole run if any target file already exists, protecting
+partially completed human responses. Use a new output directory for every
+refresh.
+
+Verify the complete set later using only local reads:
+
+```powershell
+npm.cmd run verify:ingestion-preparation -- --receipt=<PREPARATION_RECEIPT_JSON_PATH>
+```
+
+The verifier recomputes every file hash, rechecks the bundle and worksheet
+bindings, validates the reviewer response contract, and refuses a receipt whose
+initial response contains any human decision.
+
+Add `--check` to either live or reuse mode to perform the same reads, binding,
+construction, and verification entirely in memory. Check mode reports all
+planned paths as unwritten, returns `output_written: false`, and does not create
+the output directory. In live mode this is a full network-read rehearsal, not a
+credential-only check; it still has no database mutation path.
+
+When live credentials are intentionally unavailable, an existing real bundle
+can be reverified and passed through the same downstream preparation path:
+
+```powershell
+npm.cmd run prepare:ingestion-review -- --playlist=<PLAYLIST_ID> --env=production --expected-project-ref=<PROJECT_REF> --out-dir=<NEW_OUTSIDE_REPOSITORY_DIRECTORY> --bundle=<EXISTING_REVIEW_JSON_PATH> [--prior-manifest=<REVIEWED_MANIFEST_JSON_PATH>]
+```
+
+Reuse mode requires the bundle's playlist, requested environment, and project
+reference to match the explicit command arguments. It is an offline artifact
+refresh, not evidence that live metadata or taxonomy were refreshed at that
+time; the command reports `live_reads_performed: false`.
+
+The lower-level bundle-only command remains available when the downstream
+review artifacts are not wanted:
+
+```powershell
+npm.cmd run review:ingestion -- --playlist=<PLAYLIST_ID> --env=production --expected-project-ref=<PROJECT_REF>
+```
+
+The runner uses only `YOUTUBE_API_KEY` and the Supabase anonymous key. It reads
+the playlist owner, description, ordered usable videos, categories, subjects,
+learning goals, legal category-goal mappings, boards, chapters, verified
+teachers, and verified aliases. It then calls
+`proposeTaxonomy()`, runs the rules-only per-video chapter mapper when the
+subject is safely resolved, collects per-video teacher candidates, flags DPP,
+quiz/Menti, and paper-discussion scope signals, and writes a snapshot-hashed
+review bundle under
+`../outputs/ingestion-review/` by default.
+
+`--expected-project-ref` is mandatory. Before making any network read, the
+runner compares it with the project ref embedded in the Supabase URL. Staging
+also requires the live `app_environment` marker to equal `staging`; production
+rejects a staging marker. A mismatch stops the run without producing a bundle.
+
+The bundle is deliberately not an import manifest. It records
+`writes_attempted: false`, `importable: false`, every non-automatic decision,
+source/taxonomy SHA-256 values, and metadata warnings. Even one verified faculty
+candidate remains a human-review item; ambiguity is never broken automatically.
+Per-video teacher evidence is retained separately from the playlist-wide
+teacher proposal so a supplement can be reviewed in its own context. Scope
+signals never include or exclude a video automatically; they only create a
+human-review row.
+Chapter candidates are restricted to IDs from the resolved subject's live
+chapter list. If the subject needs review, every per-video chapter stays manual;
+ambiguous and unmatched chapter rows are surfaced instead of guessed.
+The proposal deliberately has no singular top-level `chapter_id`: the v12
+mapped importer forbids it and requires one reviewed chapter ID per video.
+`category_id` is automatic only when the resolved learning goal has exactly one
+legal category in `category_learning_goals`; zero or multiple matches stay in
+review. `board_ids` is automatically empty for non-School goals because the
+database forbids boards there. School goals always keep board selection under
+human review using the embedded live board list.
+Metadata-derived class labels are checked against `class_levels` and
+`learning_goal_class_levels`. An incompatible label is discarded and returned
+to review; an absent signal stays in review with only the live-compatible class
+candidates. `audience_focus` is recomputed from that validated label set.
+The runner refuses repository-local output and refuses to overwrite an existing
+bundle unless `--overwrite` is supplied.
+
+Verify a bundle again before asking a human to review it or using it as evidence:
+
+```powershell
+npm.cmd run verify:ingestion-review -- --bundle=<REVIEW_JSON_PATH>
+```
+
+This verifier is offline: it reads one local file and writes nothing. It
+recomputes the embedded source and taxonomy hashes, checks project identity and
+the read-only safety flags, confirms every proposed ID exists in the embedded
+taxonomy, and requires one chapter row for every source video. It exits nonzero
+if the bundle was altered or its internal review coverage is inconsistent. It
+also checks that per-video teacher candidates exist in the embedded taxonomy
+and that every scope row matches its source video and teacher evidence.
+
+After verification, create the worksheet a human will complete:
+
+```powershell
+npm.cmd run prepare:ingestion-decisions -- --bundle=<REVIEW_JSON_PATH>
+```
+
+The worksheet is written beside the review bundle by default, outside the
+repository. It is bound to the complete review bundle plus the source and
+taxonomy hashes, contains one blank decision for every non-automatic proposal
+and chapter row, plus one `include`/`exclude` decision for every flagged scope
+row, and records automatic results only as context. An exclusion requires a
+written rationale. It remains
+`importable: false`, has no database path, and refuses overwrite unless
+`--overwrite` is explicit. Creating or completing it does not authorize an
+import.
+
+Validate the worksheet against its exact review bundle:
+
+```powershell
+npm.cmd run verify:ingestion-decisions -- --bundle=<REVIEW_JSON_PATH> --decisions=<DECISIONS_JSON_PATH>
+```
+
+The validator is offline and write-free. It rejects altered bindings, proposal
+context, automatic context, invalid reviewer actions, incorrect counts, and
+replacement chapters outside the embedded subject taxonomy. It also rejects
+altered scope evidence and exclusions without a written reason. A blank
+worksheet is structurally valid but exits as incomplete; `--allow-pending` is available
+only when checking the integrity of an intentionally unfinished worksheet.
+Completion still leaves `importable: false` and does not authorize a database
+write.
+
+Replacement proposal values are checked against the embedded live subject,
+goal, category, board, class, and teacher registries and the same controlled
+content-type, language, and difficulty vocabularies used by the importer.
+Resolved category/goal, board/goal, class/goal, and audience/class combinations
+must remain mutually legal. A worksheet cannot become valid merely by carrying
+a non-null replacement and reviewer note.
+
+Render a plain-language packet for the human reviewer without changing the
+worksheet:
+
+```powershell
+npm.cmd run render:ingestion-review -- --bundle=<REVIEW_JSON_PATH> --decisions=<DECISIONS_JSON_PATH>
+```
+
+If the repository already contains a separately reviewed manifest for the same
+source, it can be attached as historical provenance:
+
+```powershell
+npm.cmd run render:ingestion-review -- --bundle=<REVIEW_JSON_PATH> --decisions=<DECISIONS_JSON_PATH> --prior-manifest=<REVIEWED_MANIFEST_JSON_PATH>
+```
+
+The renderer accepts that evidence only when the playlist ID, every source
+position, and every YouTube video ID match the fresh bundle exactly. It records
+the prior manifest hash, reviewer provenance, retained assignments, and
+exclusions in a clearly historical section. It never copies those conclusions
+into the current worksheet or marks a decision complete.
+
+The Markdown packet is written beside the decision worksheet by default. It is
+bound to the exact review-bundle and worksheet hashes and shows automatic
+context, the ordered source-video metadata with official YouTube links, pending
+proposal evidence, live candidates, per-video teacher candidates, scope
+signals, and chapter-review rows. It does not recommend or record decisions.
+Like the JSON artifacts, it must stay outside the repository and is never
+importable. Regenerate it after any human worksheet edit.
+
+To avoid editing evidence or completion counters inside the worksheet, create a
+minimal response form:
+
+```powershell
+npm.cmd run prepare:ingestion-response -- --bundle=<REVIEW_JSON_PATH> --decisions=<DECISIONS_JSON_PATH>
+```
+
+Only the reviewer identity plus action, value, and notes fields are editable.
+The form is bound to the exact worksheet hash. After a human explicitly fills
+it, merge it into a new worksheet:
+
+```powershell
+npm.cmd run apply:ingestion-response -- --bundle=<REVIEW_JSON_PATH> --decisions=<DECISIONS_JSON_PATH> --response=<RESPONSE_JSON_PATH>
+```
+
+The apply command rejects altered bindings, hidden fields, illegal values, and
+inconsistent identities. It copies only whitelisted reviewer fields, recomputes
+completion, runs the offline worksheet verifier, and writes a separate
+`*.reviewed.decisions.json` file. It never overwrites the source worksheet and
+still leaves the result non-importable with database writes disabled.
+Run the same command with `--check` first to validate the response and merged
+worksheet entirely in memory. Check mode rejects `--out` and `--overwrite` and
+writes no file.
+
+Use `--env=staging` only when the staging environment file points to the
+intended read-only comparison target. This command performs no database write,
+RPC, migration, fixture creation, import, or deployment. A reviewed bundle does
+not authorize any later write.
+
 ## Importer controls
 
 The channel importer:

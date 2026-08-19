@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "request_id": "7d5a18d5-074b-4a74-9734-36d8e961aa2a",
+  "youtube_playlist_id": "PLsgHooHkqhhP5Nu98FZfS--EqYQpo15KT",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "d8125eb3-7281-43da-bfd4-61acd655121f",
+    "youtube_playlist_id": "PLsgHooHkqhhP5Nu98FZfS--EqYQpo15KT",
+    "teacher": "Anoop Vashishtha",
+    "source_url": "https://www.youtube.com/playlist?list=PLsgHooHkqhhP5Nu98FZfS--EqYQpo15KT",
+    "source_label": "Official Unacademy NEET channel-owned Surface Chemistry playlist naming Anoop Vashishtha; every retained lecture names Anoop Sir",
+    "reviewed_by": "Owner",
+    "reviewed_on": "2026-08-06",
+    "youtube_video_ids": ["y9ldy2De_Nk", "qkci1SpYaLc", "Xj5nPbrIC6Y", "l7R7Tdn7neM", "4XsWizjv280"]
+  },
+  "assignments": [
+    { "position": 1, "youtube_video_id": "y9ldy2De_Nk", "chapter": "Surface Chemistry", "lesson_number": 1 },
+    { "position": 2, "youtube_video_id": "qkci1SpYaLc", "chapter": "Surface Chemistry", "lesson_number": 2 },
+    { "position": 3, "youtube_video_id": "Xj5nPbrIC6Y", "chapter": "Surface Chemistry", "lesson_number": 3 },
+    { "position": 4, "youtube_video_id": "l7R7Tdn7neM", "chapter": "Surface Chemistry", "lesson_number": 4 },
+    { "position": 5, "youtube_video_id": "4XsWizjv280", "chapter": "Surface Chemistry", "lesson_number": 5 }
+  ],
+  "exclusions": [
+    { "position": 6, "youtube_video_id": "h2VzpDzeI08", "reason": "Menti quiz; keep practice separate from the lecture catalogue." },
+    { "position": 7, "youtube_video_id": "NKgsm3U3omg", "reason": "Menti quiz; keep practice separate from the lecture catalogue." }
+  ]
+}

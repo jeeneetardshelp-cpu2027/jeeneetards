@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "request_id": "08df4798-2635-4f0a-beeb-3e17cf7e28cd",
+  "youtube_playlist_id": "PLsgHooHkqhhOO8a8vMQLe_CVVzttQd_Dh",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "809b153c-b5ff-48e0-a869-02faa49b0e8f",
+    "youtube_playlist_id": "PLsgHooHkqhhOO8a8vMQLe_CVVzttQd_Dh",
+    "teacher": "Pradeep Singh",
+    "source_url": "https://www.youtube.com/playlist?list=PLsgHooHkqhhOO8a8vMQLe_CVVzttQd_Dh",
+    "source_label": "Official Unacademy NEET channel-owned Molecular Basis of Inheritance playlist; the playlist names Pradeep Singh and retained lecture titles use Pradeep Sir, owner-reviewed as the same verified teacher",
+    "reviewed_by": "Owner",
+    "reviewed_on": "2026-08-05",
+    "youtube_video_ids": [
+      "bT1j3zHxBpA", "sRQzVH0kAco", "yEt6LEeXmyQ", "JgYuIUe-zzg", "vjulaLD6NCk", "vu8552PnZDQ", "1UWWfBUqshU", "TXtKhWCf95Y", "ENBnbG36D-c"
+    ]
+  },
+  "assignments": [
+    { "position": 1, "youtube_video_id": "bT1j3zHxBpA", "chapter": "Molecular Basis of Inheritance", "lesson_number": 1 },
+    { "position": 2, "youtube_video_id": "sRQzVH0kAco", "chapter": "Molecular Basis of Inheritance", "lesson_number": 2 },
+    { "position": 3, "youtube_video_id": "yEt6LEeXmyQ", "chapter": "Molecular Basis of Inheritance", "lesson_number": 3 },
+    { "position": 4, "youtube_video_id": "JgYuIUe-zzg", "chapter": "Molecular Basis of Inheritance", "lesson_number": 4 },
+    { "position": 5, "youtube_video_id": "vjulaLD6NCk", "chapter": "Molecular Basis of Inheritance", "lesson_number": 5 },
+    { "position": 6, "youtube_video_id": "vu8552PnZDQ", "chapter": "Molecular Basis of Inheritance", "lesson_number": 6 },
+    { "position": 7, "youtube_video_id": "1UWWfBUqshU", "chapter": "Molecular Basis of Inheritance", "lesson_number": 7 },
+    { "position": 8, "youtube_video_id": "TXtKhWCf95Y", "chapter": "Molecular Basis of Inheritance", "lesson_number": 8 },
+    { "position": 9, "youtube_video_id": "ENBnbG36D-c", "chapter": "Molecular Basis of Inheritance", "lesson_number": 9 }
+  ],
+  "exclusions": []
+}

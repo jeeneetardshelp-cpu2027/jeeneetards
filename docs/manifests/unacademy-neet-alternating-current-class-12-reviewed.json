@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "request_id": "7bb6d8c7-fc62-46a7-bd17-5351ea6dc718",
+  "youtube_playlist_id": "PLsgHooHkqhhNaF6JnP38ojTYkuAZ5YFvd",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "b988e5f2-fbf5-4cba-bb7a-54d3dd35a3a6",
+    "youtube_playlist_id": "PLsgHooHkqhhNaF6JnP38ojTYkuAZ5YFvd",
+    "teacher": "Mahendra Singh",
+    "source_url": "https://www.youtube.com/playlist?list=PLsgHooHkqhhNaF6JnP38ojTYkuAZ5YFvd",
+    "source_label": "Official Unacademy NEET channel-owned Alternating Current playlist naming Mahendra Singh; every retained lecture title names Mahendra Sir",
+    "reviewed_by": "Owner",
+    "reviewed_on": "2026-08-05",
+    "youtube_video_ids": [
+      "Vpxn_a-JeOo", "OhjxnIuVsKE", "Et2gonaVGoQ", "Ex0qzK4OhIc", "jU1ELUf-s4I", "NBB2-uRbjtc"
+    ]
+  },
+  "assignments": [
+    { "position": 1, "youtube_video_id": "Vpxn_a-JeOo", "chapter": "Alternating Current", "lesson_number": 1 },
+    { "position": 2, "youtube_video_id": "OhjxnIuVsKE", "chapter": "Alternating Current", "lesson_number": 2 },
+    { "position": 3, "youtube_video_id": "Et2gonaVGoQ", "chapter": "Alternating Current", "lesson_number": 3 },
+    { "position": 4, "youtube_video_id": "Ex0qzK4OhIc", "chapter": "Alternating Current", "lesson_number": 4 },
+    { "position": 5, "youtube_video_id": "jU1ELUf-s4I", "chapter": "Alternating Current", "lesson_number": 5 },
+    { "position": 6, "youtube_video_id": "NBB2-uRbjtc", "chapter": "Alternating Current", "lesson_number": 6 }
+  ],
+  "exclusions": [
+    { "position": 7, "youtube_video_id": "W5PyICSZsM8", "reason": "Quiz taught by a different instructor; keep practice separate from Mahendra Singh's lecture course." }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "request_id": "f895c5bb-cdbd-4ca5-9ab6-e6ed736d9021",
+  "youtube_playlist_id": "PLsgHooHkqhhNKfP8VeJvlmz5qO-RgNqzQ",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "e6539ac8-512b-4e76-8bd1-774c1a3c4bdc",
+    "youtube_playlist_id": "PLsgHooHkqhhNKfP8VeJvlmz5qO-RgNqzQ",
+    "teacher": "Anoop Vashishtha",
+    "source_url": "https://www.youtube.com/playlist?list=PLsgHooHkqhhNKfP8VeJvlmz5qO-RgNqzQ",
+    "source_label": "Official Unacademy NEET channel-owned D and F Block Elements playlist naming Anoop Sir; both retained lecture titles name Anoop Sir",
+    "reviewed_by": "Owner",
+    "reviewed_on": "2026-08-07",
+    "youtube_video_ids": ["0BwLckcTdUA", "3ZlCJ1keY6s"]
+  },
+  "assignments": [
+    { "position": 1, "youtube_video_id": "0BwLckcTdUA", "chapter": "The d and f Block Elements", "lesson_number": 1 },
+    { "position": 2, "youtube_video_id": "3ZlCJ1keY6s", "chapter": "The d and f Block Elements", "lesson_number": 2 }
+  ],
+  "exclusions": []
+}

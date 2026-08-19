@@ -33,6 +33,7 @@ import {
   assertProductionWriteAllowed,
   buildImportPayload,
   findDuplicateVideoIds,
+  isReviewedSingleChapterOrder,
   mappedSourceSnapshotEvidence,
   parseImporterArgs,
   playlistFromOwner,
@@ -308,6 +309,7 @@ async function main() {
           videos: ytVideos,
         })
         : null;
+      const reviewedSingleChapterOrder = isReviewedSingleChapterOrder(mapped);
       const chapterNames = mapped?.chapterNames ?? [plan.chapterName];
       const chapterRows = await Promise.all(
         chapterNames.map(async (name) => ({
@@ -346,7 +348,7 @@ async function main() {
         : [];
       const readinessFindings = mapped
         ? [
-          ...(!mappedCapability?.supported
+          ...(!reviewedSingleChapterOrder && !mappedCapability?.supported
             ? [{
               code: "mapped_capability_missing",
               severity: "block",
@@ -354,13 +356,22 @@ async function main() {
             }]
             : []),
           ...(existingPlaylist
-            ? [{
-              code: "source_playlist_replay_unverified",
-              severity: "review",
-              message:
-                "The source already exists. Anonymous dry-run cannot read the " +
-                "audit row; write mode will allow only an exact, drift-free replay.",
-            }]
+            ? [reviewedSingleChapterOrder
+              ? {
+                code: "reviewed_single_chapter_source_exists",
+                severity: "block",
+                message:
+                  "The source already exists. Reviewed single-chapter imports use " +
+                  "the legacy RPC without an audit-backed replay, so create-only " +
+                  "policy refuses this write.",
+              }
+              : {
+                code: "source_playlist_replay_unverified",
+                severity: "review",
+                message:
+                  "The source already exists. Anonymous dry-run cannot read the " +
+                  "audit row; write mode will allow only an exact, drift-free replay.",
+              }]
             : []),
           ...(missingChapters.length
             ? [{
@@ -395,6 +406,7 @@ async function main() {
       entries.push({
         youtube_playlist_id: plan.playlist.id,
         title: plan.playlist.title,
+        import_title: mapped?.courseTitle ?? plan.playlist.title,
         published_video_count: Number(plan.playlist.videoCount),
         usable_video_count: ytVideos.length,
         video_validation: {
@@ -423,6 +435,7 @@ async function main() {
               version: plan.chapterManifest.version,
               request_id: mapped.requestId,
               exact_source_mapping: true,
+              reviewed_course_title: mapped.courseTitle ?? null,
               path: plan.chapterManifestPath,
               manifest_sha256: plan.chapterManifestSha256,
               source_snapshot_sha256: sourceSnapshotSha256(ytVideos),
@@ -436,6 +449,25 @@ async function main() {
               teacher_evidence: mapped.teacherEvidence,
             },
             capability: mappedCapability,
+            import_contract: reviewedSingleChapterOrder
+              ? {
+                rpc: "import_playlist",
+                mode: "merge",
+                create_only_guard: "client_source_preflight",
+                atomic_create_only: false,
+                audit_snapshot: false,
+                request_replay: false,
+                reviewed_lesson_order: true,
+              }
+              : {
+                rpc: "import_playlist_with_chapters",
+                mode: "merge",
+                create_only_guard: "database_rpc",
+                atomic_create_only: true,
+                audit_snapshot: true,
+                request_replay: true,
+                reviewed_lesson_order: false,
+              },
             chapters: chapterRows.map(({ name, chapter }) => ({
               name,
               action: chapter ? "reuse" : "missing",
@@ -518,6 +550,7 @@ async function main() {
     let chapterId = null;
     let importVideos = ytVideos;
     let rpc = "import_playlist";
+    let rpcMode = null;
     let importPlan = plan;
     let importPayload = null;
     if (plan.chapterManifest) {
@@ -527,6 +560,12 @@ async function main() {
         teacher: plan.teacher,
         videos: ytVideos,
       });
+      if (mapped.courseTitle) {
+        importPlan = {
+          ...plan,
+          playlist: { ...plan.playlist, title: mapped.courseTitle },
+        };
+      }
       if (
         mapped.teacherEvidence
         && args.reviewedTeacherEvidenceDecision !== mapped.teacherEvidence.decisionId
@@ -549,12 +588,22 @@ async function main() {
           `${missing.join(", ")}.`,
         );
       }
-      const isReviewedSingleChapterOrder =
-        mapped.chapterNames.length === 1
-        && mapped.videos.every(
-          (video) => Number.isSafeInteger(video.lessonNumber) && video.lessonNumber > 0,
-        );
-      if (isReviewedSingleChapterOrder) {
+      const reviewedSingleChapterOrder = isReviewedSingleChapterOrder(mapped);
+      if (reviewedSingleChapterOrder) {
+        const { data: existingSource, error: existingSourceError } = await db
+          .from("playlists")
+          .select("id")
+          .eq("youtube_playlist_id", plan.playlist.id)
+          .maybeSingle();
+        if (existingSourceError) {
+          fail(`checking reviewed single-chapter source: ${existingSourceError.message}`);
+        }
+        if (existingSource) {
+          fail(
+            "Reviewed single-chapter create-only import refuses an existing " +
+            "source playlist because this legacy path has no audit-backed replay.",
+          );
+        }
         const detailValidation = validateMappedVideoDetails(mapped.videos);
         if (!detailValidation.ok) {
           fail(
@@ -590,12 +639,17 @@ async function main() {
         chapterId = chapterRows[0].chapter.id;
         importVideos = mapped.videos;
         importPayload = buildImportPayload({
-          plan,
+          plan: importPlan,
           channel,
           channelId,
           chapterId,
           videos: importVideos,
         });
+        // The deployed legacy RPC supports merge|replace only. A reviewed
+        // single-chapter import is therefore guarded as new-source-only above,
+        // run in a serialized quiet window, and rejected below if the RPC ever
+        // reports an unexpected source reuse.
+        rpcMode = "merge";
       } else {
         await assertMappedImportCapability(db);
       const chapterByName = new Map(
@@ -606,7 +660,7 @@ async function main() {
         chapterId: chapterByName.get(video.chapterName),
       }));
       importPlan = {
-        ...plan,
+        ...importPlan,
         requestId: mapped.requestId,
         manifestSha256: plan.chapterManifestSha256,
         sourceSnapshotSha256: sourceSnapshotSha256(ytVideos),
@@ -689,8 +743,15 @@ async function main() {
     });
     const { data, error } = await db.rpc(rpc, {
       payload: importPayload,
+      ...(rpcMode ? { mode: rpcMode } : {}),
     });
     if (error) fail(`import "${plan.playlist.title}": ${error.message}`);
+    if (rpcMode && data.reused_playlist) {
+      fail(
+        "Reviewed single-chapter import stopped: the source was unexpectedly " +
+        "reused after its create-only preflight. Treat the quiet window as breached.",
+      );
+    }
     if (data.idempotent_replay) {
       say(
         `  verified replay: request ${data.request_id} already matches live ` +

@@ -190,11 +190,38 @@ export function metadataForLocation(pathname = "/", search = "") {
     };
   }
 
+  if (path === "/methodology") {
+    return {
+      ...base,
+      title: `How courses are curated | ${SITE_NAME}`,
+      description:
+        "How JEENEETARD classifies, checks and orders free YouTube courses, what verified means, and how to request a correction.",
+    };
+  }
+
   if (path === "/reset") {
     return {
       ...base,
       title: `Password reset | ${SITE_NAME}`,
       description: "Request a password-reset link or choose a new account password.",
+      robots: "noindex, nofollow",
+    };
+  }
+
+  if (path === "/signin") {
+    return {
+      ...base,
+      title: `Sign in | ${SITE_NAME}`,
+      description: "Sign in to carry your watch progress across devices and rate courses. Browsing needs no account.",
+      robots: "noindex, nofollow",
+    };
+  }
+
+  if (path === "/forum/username") {
+    return {
+      ...base,
+      title: `Forum username | ${SITE_NAME}`,
+      description: "Choose the public pseudonym used for JEENEETARD forum posts and answers.",
       robots: "noindex, nofollow",
     };
   }

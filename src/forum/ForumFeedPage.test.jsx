@@ -59,7 +59,13 @@ describe("signed-out forum feed", () => {
     const { container } = renderFeed(apiWith());
     expect(await screen.findByRole("heading", { name: "Question 1" })).toBeTruthy();
     expect(screen.getByText("Solved")).toBeTruthy();
-    expect(screen.queryByText(/email|sign in|submit a post/i)).toBeNull();
+    // The inline auth form must not be mounted in the FEED. Checked by the
+    // form's own fields, not by the word "sign in" — the GlobalHeader now
+    // carries a global "Sign in" nav link on every signed-out page, which is
+    // navigation, not the auth surface this test guards against.
+    expect(screen.queryByLabelText("Email")).toBeNull();
+    expect(screen.queryByLabelText("Password")).toBeNull();
+    expect(screen.queryByText(/submit a post/i)).toBeNull();
     expect(container.querySelector(".reveal")).toBeNull();
   });
 
@@ -152,5 +158,28 @@ describe("signed-out forum feed", () => {
     fireEvent.click(await screen.findByRole("button", { name: "Upvote this discussion" }));
     expect(await screen.findByRole("heading", { name: "Choose your public forum username" })).toBeTruthy();
     expect(api.castVote).not.toHaveBeenCalled();
+  });
+
+  it("shows beta contribution controls only to an enrolled student", async () => {
+    const memberApi = apiWith();
+    memberApi.getMode.mockResolvedValue("beta");
+    memberApi.getBetaMembership = vi.fn().mockResolvedValue(true);
+    const member = renderFeed(memberApi, "/forum", {
+      session: { user: { id: "beta-member" } }, loading: false,
+    });
+    expect(await screen.findByRole("link", { name: "Start a discussion" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Upvote this discussion" })).toBeTruthy();
+    member.unmount();
+
+    const outsiderApi = apiWith();
+    outsiderApi.getMode.mockResolvedValue("beta");
+    outsiderApi.getBetaMembership = vi.fn().mockResolvedValue(false);
+    renderFeed(outsiderApi, "/forum", {
+      session: { user: { id: "not-enrolled" } }, loading: false,
+    });
+    await screen.findByRole("heading", { name: "Question 1" });
+    await waitFor(() => expect(outsiderApi.getBetaMembership).toHaveBeenCalled());
+    expect(screen.queryByRole("link", { name: "Start a discussion" })).toBeNull();
+    expect(screen.queryByRole("button", { name: "Upvote this discussion" })).toBeNull();
   });
 });

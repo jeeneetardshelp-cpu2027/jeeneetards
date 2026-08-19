@@ -46,6 +46,7 @@ export async function getPlaylistOwner(key, playlistId) {
     channelTitle: item.snippet.channelTitle,
     playlistId: item.id,
     playlistTitle: item.snippet.title,
+    playlistDescription: item.snippet.description ?? "",
     videoCount: item.contentDetails?.itemCount ?? 0,
   };
 }

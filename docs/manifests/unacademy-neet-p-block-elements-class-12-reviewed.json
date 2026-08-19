@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "request_id": "7bc34b38-36b9-4e53-9529-acac837f0795",
+  "youtube_playlist_id": "PLsgHooHkqhhM_8IsqTEL1V6sDYskLuymO",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "d8125eb3-7281-43da-bfd4-61acd655121f",
+    "youtube_playlist_id": "PLsgHooHkqhhM_8IsqTEL1V6sDYskLuymO",
+    "teacher": "Anoop Vashishtha",
+    "source_url": "https://www.youtube.com/playlist?list=PLsgHooHkqhhM_8IsqTEL1V6sDYskLuymO",
+    "source_label": "Official Unacademy NEET channel-owned P-Block Elements playlist naming Anoop Vashishtha; every retained lecture names Anoop Sir or Anoop Vashishtha",
+    "reviewed_by": "Owner",
+    "reviewed_on": "2026-08-06",
+    "youtube_video_ids": ["1nvcAW2-Vh4", "_roqDOfRZds", "AE0_l920alc", "gwkDIzulbM4", "gP_0x9Zdddo", "dKYpRC5jsQc", "SotzQs9b-BM", "GG1jDVqv_8Q", "Oz06ev9gHqo", "L8qjDOXE0gU"]
+  },
+  "assignments": [
+    { "position": 1, "youtube_video_id": "1nvcAW2-Vh4", "chapter": "P-Block Elements", "lesson_number": 1 },
+    { "position": 2, "youtube_video_id": "_roqDOfRZds", "chapter": "P-Block Elements", "lesson_number": 2 },
+    { "position": 3, "youtube_video_id": "AE0_l920alc", "chapter": "P-Block Elements", "lesson_number": 3 },
+    { "position": 4, "youtube_video_id": "gwkDIzulbM4", "chapter": "P-Block Elements", "lesson_number": 4 },
+    { "position": 5, "youtube_video_id": "gP_0x9Zdddo", "chapter": "P-Block Elements", "lesson_number": 5 },
+    { "position": 6, "youtube_video_id": "dKYpRC5jsQc", "chapter": "P-Block Elements", "lesson_number": 6 },
+    { "position": 7, "youtube_video_id": "SotzQs9b-BM", "chapter": "P-Block Elements", "lesson_number": 7 },
+    { "position": 8, "youtube_video_id": "GG1jDVqv_8Q", "chapter": "P-Block Elements", "lesson_number": 8 },
+    { "position": 9, "youtube_video_id": "Oz06ev9gHqo", "chapter": "P-Block Elements", "lesson_number": 9 },
+    { "position": 10, "youtube_video_id": "L8qjDOXE0gU", "chapter": "P-Block Elements", "lesson_number": 10 }
+  ],
+  "exclusions": []
+}

@@ -20,7 +20,10 @@ export default function ForumFeedPage({ api = forumApi, authState = null }) {
   const query = (params.get("q") || "").trim().slice(0, 100);
   const feed = useForumFeed({ sort, topic: topic || null, query: query || null, api });
   const voteAccess = useForumVoteAccess({ api, authState });
-  const voting = feed.mode === "open" ? {
+  const betaWriter = feed.mode === "beta"
+    && voteAccess.canVote
+    && voteAccess.identity.betaMember;
+  const voting = feed.mode === "open" || betaWriter ? {
     api,
     canVote: voteAccess.canVote,
     onBlocked: voteAccess.requestAccess,
@@ -59,7 +62,7 @@ export default function ForumFeedPage({ api = forumApi, authState = null }) {
         eyebrow="Student discussions"
         title="Ask, explain and prepare together"
         lead="Read preparation questions and answers from other students, or share a clear doubt of your own."
-        action={feed.status === "ready" && feed.mode === "open"
+        action={feed.status === "ready" && (feed.mode === "open" || betaWriter)
           ? <Button to="/forum/submit">Start a discussion</Button>
           : null}
       />

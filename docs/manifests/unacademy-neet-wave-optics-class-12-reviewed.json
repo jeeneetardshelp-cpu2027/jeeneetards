@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "request_id": "a2ff2e58-fccf-488c-ae2d-1c0040524122",
+  "youtube_playlist_id": "PLsgHooHkqhhMil-qxm3tGjv6Q7uJ1s1WI",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "461233dd-54d1-413f-9625-2ffe5f164226",
+    "youtube_playlist_id": "PLsgHooHkqhhMil-qxm3tGjv6Q7uJ1s1WI",
+    "teacher": "Anu Gupta",
+    "source_url": "https://www.youtube.com/playlist?list=PLsgHooHkqhhMil-qxm3tGjv6Q7uJ1s1WI",
+    "source_label": "Official Unacademy NEET channel-owned Wave Optics playlist naming Anu Gupta; every retained lecture title names Anu Gupta",
+    "reviewed_by": "Owner",
+    "reviewed_on": "2026-08-04",
+    "youtube_video_ids": [
+      "z19PUhdRjiU", "p_fNlh1wAb4", "-U5sEl7wTh8", "D8XGE0oGwYY", "pyppwnPgIpc", "Wk-rv-gKMbI", "YfvIKgWcsnE"
+    ]
+  },
+  "assignments": [
+    { "position": 1, "youtube_video_id": "z19PUhdRjiU", "chapter": "Wave Optics", "lesson_number": 1 },
+    { "position": 2, "youtube_video_id": "p_fNlh1wAb4", "chapter": "Wave Optics", "lesson_number": 2 },
+    { "position": 3, "youtube_video_id": "-U5sEl7wTh8", "chapter": "Wave Optics", "lesson_number": 3 },
+    { "position": 4, "youtube_video_id": "D8XGE0oGwYY", "chapter": "Wave Optics", "lesson_number": 4 },
+    { "position": 5, "youtube_video_id": "pyppwnPgIpc", "chapter": "Wave Optics", "lesson_number": 5 },
+    { "position": 6, "youtube_video_id": "Wk-rv-gKMbI", "chapter": "Wave Optics", "lesson_number": 6 },
+    { "position": 7, "youtube_video_id": "YfvIKgWcsnE", "chapter": "Wave Optics", "lesson_number": 7 }
+  ],
+  "exclusions": []
+}

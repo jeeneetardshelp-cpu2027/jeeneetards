@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "request_id": "f34a6ef8-b67c-45df-a891-f4833d5918f9",
+  "youtube_playlist_id": "PLsgHooHkqhhMpUzdl2c1YMGYdrTxCCXFe",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "ae4a8549-84d5-4784-91ed-2f56e4208d88",
+    "youtube_playlist_id": "PLsgHooHkqhhMpUzdl2c1YMGYdrTxCCXFe",
+    "teacher": "Dr. Sachin Kapur",
+    "source_url": "https://www.youtube.com/playlist?list=PLsgHooHkqhhMpUzdl2c1YMGYdrTxCCXFe",
+    "source_label": "Official Unacademy NEET channel-owned Breathing and Exchange of Gases playlist naming Dr Sachin Kapur; every retained lecture title names Sachin Sir, while all rows credited to other faculty are excluded quizzes",
+    "reviewed_by": "Owner",
+    "reviewed_on": "2026-08-07",
+    "youtube_video_ids": ["bmF2tmenuMI", "fG72ty2A2tg", "at_rKPlIXoo", "5Jls9m-jDjM", "Ev3t9nip0PU", "zNpJSgVOR1M"]
+  },
+  "assignments": [
+    { "position": 1, "youtube_video_id": "bmF2tmenuMI", "chapter": "Breathing and Exchange of Gases", "lesson_number": 1 },
+    { "position": 2, "youtube_video_id": "fG72ty2A2tg", "chapter": "Breathing and Exchange of Gases", "lesson_number": 2 },
+    { "position": 3, "youtube_video_id": "at_rKPlIXoo", "chapter": "Breathing and Exchange of Gases", "lesson_number": 3 },
+    { "position": 4, "youtube_video_id": "5Jls9m-jDjM", "chapter": "Breathing and Exchange of Gases", "lesson_number": 4 },
+    { "position": 5, "youtube_video_id": "Ev3t9nip0PU", "chapter": "Breathing and Exchange of Gases", "lesson_number": 5 },
+    { "position": 6, "youtube_video_id": "zNpJSgVOR1M", "chapter": "Breathing and Exchange of Gases", "lesson_number": 6 }
+  ],
+  "exclusions": [
+    { "position": 7, "youtube_video_id": "CVdTTRSt_0A", "reason": "quiz" },
+    { "position": 8, "youtube_video_id": "Bl-YgxRq_fQ", "reason": "quiz" },
+    { "position": 9, "youtube_video_id": "Qk3QYf6QHjo", "reason": "mixed_chapter_quiz" },
+    { "position": 10, "youtube_video_id": "fAfY2QDcc60", "reason": "quiz" }
+  ]
+}

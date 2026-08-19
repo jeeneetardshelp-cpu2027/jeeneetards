@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "request_id": "0f7c245d-4f5b-48b7-af2e-5745cc64ec9c",
+  "youtube_playlist_id": "PLsgHooHkqhhMMPfEYr7m_ofP61K_YScyw",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "5b4b1d41-b7dc-4f12-80cf-b490e72edd96",
+    "youtube_playlist_id": "PLsgHooHkqhhMMPfEYr7m_ofP61K_YScyw",
+    "teacher": "Mahendra Singh",
+    "source_url": "https://www.youtube.com/playlist?list=PLsgHooHkqhhMMPfEYr7m_ofP61K_YScyw",
+    "source_label": "Official Unacademy NEET channel-owned Fluid Mechanics playlist; every retained lecture names Mahendra Sir",
+    "reviewed_by": "Owner",
+    "reviewed_on": "2026-08-06",
+    "youtube_video_ids": ["YDAmpY5Ltuw", "gCbZdFytavU", "4XOyLNYMEAg", "_U2nUzirfPg", "k1FJxpk0ldE", "Y6Bw17IdKcA", "reS2GKKFYFU", "14uTcuI9qAg", "jLmIBKL07JI", "nuXcXTGitIg", "rD4OBjxyTLQ"]
+  },
+  "assignments": [
+    { "position": 1, "youtube_video_id": "YDAmpY5Ltuw", "chapter": "Mechanical Properties of Fluids", "lesson_number": 1 },
+    { "position": 2, "youtube_video_id": "gCbZdFytavU", "chapter": "Mechanical Properties of Fluids", "lesson_number": 2 },
+    { "position": 3, "youtube_video_id": "4XOyLNYMEAg", "chapter": "Mechanical Properties of Fluids", "lesson_number": 3 },
+    { "position": 4, "youtube_video_id": "_U2nUzirfPg", "chapter": "Mechanical Properties of Fluids", "lesson_number": 4 },
+    { "position": 5, "youtube_video_id": "k1FJxpk0ldE", "chapter": "Mechanical Properties of Fluids", "lesson_number": 5 },
+    { "position": 6, "youtube_video_id": "Y6Bw17IdKcA", "chapter": "Mechanical Properties of Fluids", "lesson_number": 6 },
+    { "position": 7, "youtube_video_id": "reS2GKKFYFU", "chapter": "Mechanical Properties of Fluids", "lesson_number": 7 },
+    { "position": 8, "youtube_video_id": "14uTcuI9qAg", "chapter": "Mechanical Properties of Fluids", "lesson_number": 8 },
+    { "position": 9, "youtube_video_id": "jLmIBKL07JI", "chapter": "Mechanical Properties of Fluids", "lesson_number": 9 },
+    { "position": 10, "youtube_video_id": "nuXcXTGitIg", "chapter": "Mechanical Properties of Fluids", "lesson_number": 10 },
+    { "position": 12, "youtube_video_id": "rD4OBjxyTLQ", "chapter": "Mechanical Properties of Fluids", "lesson_number": 11 }
+  ],
+  "exclusions": [
+    { "position": 11, "youtube_video_id": "bgpLvLY9mqU", "reason": "quiz" }
+  ]
+}

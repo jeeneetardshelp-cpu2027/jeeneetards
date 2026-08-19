@@ -18,6 +18,12 @@ import {
 import { TEST_SECTIONS, ACCESS, findTestSection } from "./src/testPlatforms.js";
 import { buildCourseMetadata } from "./src/courseMetadata.js";
 import { testPageSchemas } from "./src/testPageStructuredData.js";
+import {
+  METHODOLOGY_CONTACT,
+  METHODOLOGY_INTRO,
+  METHODOLOGY_SECTIONS,
+  METHODOLOGY_UPDATED,
+} from "./src/methodologyContent.js";
 
 const SITE = "https://www.jeeneetard.com";
 
@@ -178,6 +184,7 @@ export function renderLandingBody(pathname, meta) {
   // Built from the same TEST_SECTIONS the React page renders, so the served
   // HTML can never claim a source the page does not show.
   if (pathname === "/tests") return renderTestsBody(meta);
+  if (pathname === "/methodology") return renderMethodologyBody();
   if (pathname.startsWith("/tests/")) {
     const section = findTestSection(pathname.slice("/tests/".length));
     if (section) return renderExamTestsBody(section, meta);
@@ -195,6 +202,27 @@ export function renderLandingBody(pathname, meta) {
     `<h1>${escapeHtml(page.heading)}</h1>`,
     `<p>${escapeHtml(page.description)}</p>`,
     `<nav aria-label="Course discovery">${links}</nav>`,
+    "</main>",
+  ].join("");
+}
+
+export function renderMethodologyBody() {
+  const sections = METHODOLOGY_SECTIONS.map((section) => [
+    `<section><h2>${escapeHtml(section.title)}</h2>`,
+    ...section.paragraphs.map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`),
+    "</section>",
+  ].join(""));
+
+  return [
+    "<main>",
+    '<nav aria-label="Breadcrumb"><a href="/">Home</a> - <span>How courses are curated</span></nav>',
+    "<h1>How JEENEETARD curates courses</h1>",
+    `<p>${escapeHtml(METHODOLOGY_INTRO)}</p>`,
+    `<p>Last updated: ${escapeHtml(METHODOLOGY_UPDATED)}</p>`,
+    ...sections,
+    "<section><h2>Request a correction</h2>",
+    `<p>Send the page URL, the field that appears wrong, and a public source to <a href="mailto:${escapeHtml(METHODOLOGY_CONTACT)}">${escapeHtml(METHODOLOGY_CONTACT)}</a>.</p></section>`,
+    '<p><a href="/explore">Find a course</a> <a href="/browse">Browse all courses</a></p>',
     "</main>",
   ].join("");
 }
@@ -502,7 +530,7 @@ export function renderFacultyBody(profile, meta) {
   ].join("");
 }
 
-export function renderExploreBody({ heading, meta, crumbs, options, emptyMessage }) {
+export function renderExploreBody({ heading, meta, crumbs, options, emptyMessage, guide }) {
   const breadcrumb = crumbs.map((crumb, index) => {
     const label = escapeHtml(crumb.label);
     return index === crumbs.length - 1
@@ -521,8 +549,36 @@ export function renderExploreBody({ heading, meta, crumbs, options, emptyMessage
     `<h1>${escapeHtml(heading)}</h1>`,
     `<p>${escapeHtml(meta.description)}</p>`,
     items ? `<ul>${items}</ul>` : `<p>${escapeHtml(emptyMessage ?? "No courses are available for this selection yet.")}</p>`,
+    guide ? renderSubjectGuide(guide) : "",
     '<p><a href="/browse">Browse all courses</a></p>',
     "</main>",
+  ].join("");
+}
+
+export function renderSubjectGuide(guide) {
+  const sections = guide.sections.map((section) => {
+    const items = section.items
+      ? `<ol>${section.items.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ol>`
+      : "";
+    const paragraphs = (section.paragraphs ?? [])
+      .map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`)
+      .join("");
+    return `<section><h3>${escapeHtml(section.title)}</h3>${items}${paragraphs}</section>`;
+  }).join("");
+  const sources = guide.sources.map((source) =>
+    `<li><a href="${escapeHtml(source.href)}">${escapeHtml(source.label)}</a></li>`,
+  ).join("");
+
+  return [
+    '<article aria-labelledby="subject-guide-title">',
+    `<p>${escapeHtml(guide.label)}</p>`,
+    `<h2 id="subject-guide-title">${escapeHtml(guide.title)}</h2>`,
+    ...guide.introduction.map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`),
+    sections,
+    "<section><h3>Check the current official sources</h3>",
+    `<ul>${sources}</ul><p>Sources checked ${escapeHtml(guide.sourceChecked)}.</p></section>`,
+    '<p><a href="/methodology">How JEENEETARD classifies and checks courses</a></p>',
+    "</article>",
   ].join("");
 }
 

@@ -137,8 +137,12 @@ describe("automatic sort cleanup does not trap the Back button", () => {
   it("passes replace:true when clearing an unavailable sort", async () => {
     const { readFileSync } = await import("node:fs");
     const src = readFileSync("src/PlaylistBrowse.jsx", "utf8");
-    // The cleanup effect must clear the sort with replace semantics.
-    expect(src).toMatch(/if \(ratingSortUnavailable\) setSort\(DEFAULT_SORT, \{ replace: true \}\)/);
+    // The cleanup effect must clear the sort with replace semantics. The guard
+    // was generalised on 2026-08-10 from rating-only (ratingSortUnavailable) to
+    // every data-dependent sort (sortUnavailable covers rating, popular and
+    // most_viewed), but the replace-not-push contract this test protects is the
+    // same.
+    expect(src).toMatch(/if \(sortUnavailable\) setSort\(DEFAULT_SORT, \{ replace: true \}\)/);
     // ...and setSort must actually forward that to setParams.
     expect(src).toMatch(/setParams\(\([\s\S]*?\}, \{ replace \}\)/);
   });

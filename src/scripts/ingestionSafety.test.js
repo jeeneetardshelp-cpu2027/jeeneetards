@@ -7,6 +7,7 @@ import {
   assertExpectedRowCount,
   buildImportPayload,
   findDuplicateVideoIds,
+  isReviewedSingleChapterOrder,
   mappedSourceSnapshotEvidence,
   parseBulkConfirmation,
   parseImporterArgs,
@@ -112,6 +113,37 @@ describe("channel ingestion metadata", () => {
     expect(source).toMatch(/args\.dryRun \? publicKey : serviceKey/);
     expect(source.indexOf("if (args.dryRun)"))
       .toBeLessThan(source.indexOf("db.rpc(rpc"));
+  });
+
+  it("recognises only complete reviewed single-chapter lesson ordering", () => {
+    expect(isReviewedSingleChapterOrder({
+      chapterNames: ["Electromagnetic Induction"],
+      videos: [{ lessonNumber: 1 }, { lessonNumber: 2 }],
+    })).toBe(true);
+    expect(isReviewedSingleChapterOrder({
+      chapterNames: ["One", "Two"],
+      videos: [{ lessonNumber: 1 }, { lessonNumber: 2 }],
+    })).toBe(false);
+    expect(isReviewedSingleChapterOrder({
+      chapterNames: ["Electromagnetic Induction"],
+      videos: [{ lessonNumber: 1 }, {}],
+    })).toBe(false);
+    expect(isReviewedSingleChapterOrder({
+      chapterNames: ["Electromagnetic Induction"],
+      videos: [],
+    })).toBe(false);
+  });
+
+  it("fails closed on reviewed single-chapter source replay and reports its contract", () => {
+    const source = readFileSync(resolve("src/scripts/importChannel.js"), "utf8");
+    expect(source).toMatch(/reviewed_single_chapter_source_exists/);
+    expect(source).toMatch(/create-only import refuses an existing/);
+    expect(source).toMatch(/create_only_guard: "client_source_preflight"/);
+    expect(source).toMatch(/atomic_create_only: false/);
+    expect(source).toMatch(/audit_snapshot: false/);
+    expect(source).toMatch(/request_replay: false/);
+    expect(source).toMatch(/rpcMode = "merge"/);
+    expect(source).toMatch(/if \(rpcMode && data\.reused_playlist\)/);
   });
 
   it("lets ephemeral runtime credentials override ignored env files", () => {
@@ -267,6 +299,7 @@ describe("channel ingestion metadata", () => {
       version: 1,
       request_id: "018f7e3b-39b0-4f3e-8ee4-7a8d4d5a6b7c",
       youtube_playlist_id: "PL_real",
+      course_title: "Reviewed Functions Course",
       assignments: [
         { position: 1, youtube_video_id: "video-one01", chapter: "Functions" },
         { position: 2, youtube_video_id: "video-two02", chapter: "Inverse Trigonometric Functions" },
@@ -282,7 +315,25 @@ describe("channel ingestion metadata", () => {
       excludedVideos: [],
       chapterNames: ["Functions", "Inverse Trigonometric Functions"],
       requestId: "018f7e3b-39b0-4f3e-8ee4-7a8d4d5a6b7c",
+      courseTitle: "Reviewed Functions Course",
     });
+    expect(() => validateChapterManifest({
+      manifest: { ...manifest, course_title: "\n" },
+      playlistId: "PL_real",
+      videos,
+    })).toThrow(/course_title.*non-empty/i);
+    expect(() => validateChapterManifest({
+      manifest: { ...manifest, course_title: "x".repeat(161) },
+      playlistId: "PL_real",
+      videos,
+    })).toThrow(/course_title.*160/i);
+    for (const courseTitle of ["Reviewed\u0000Course", "Reviewed\u007fCourse"]) {
+      expect(() => validateChapterManifest({
+        manifest: { ...manifest, course_title: courseTitle },
+        playlistId: "PL_real",
+        videos,
+      })).toThrow(/course_title.*control characters/i);
+    }
     expect(() => validateChapterManifest({
       manifest: { ...manifest, request_id: "not-a-uuid" },
       playlistId: "PL_real",

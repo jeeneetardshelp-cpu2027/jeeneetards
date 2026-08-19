@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "request_id": "7a803caa-eca4-43ad-acbb-9d92c4a172bc",
+  "youtube_playlist_id": "PLsgHooHkqhhN0mEZWnzPfkn8UcmdYg-Mx",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "461233dd-54d1-413f-9625-2ffe5f164226",
+    "youtube_playlist_id": "PLsgHooHkqhhN0mEZWnzPfkn8UcmdYg-Mx",
+    "teacher": "Mahendra Singh",
+    "source_url": "https://www.youtube.com/playlist?list=PLsgHooHkqhhN0mEZWnzPfkn8UcmdYg-Mx",
+    "source_label": "Official Unacademy NEET channel-owned Gravitation playlist consistently naming Mahendra S.; owner reviewed Mahendra S. as the abbreviation for verified teacher Mahendra Singh",
+    "reviewed_by": "Owner",
+    "reviewed_on": "2026-08-04",
+    "youtube_video_ids": [
+      "R-YvlRd0gDU", "vWlMC0mEJbw", "f2_eJP0GTMw", "G4sZZb0e_nk", "O1jya36Z4_M"
+    ]
+  },
+  "assignments": [
+    { "position": 1, "youtube_video_id": "R-YvlRd0gDU", "chapter": "Gravitation", "lesson_number": 1 },
+    { "position": 2, "youtube_video_id": "vWlMC0mEJbw", "chapter": "Gravitation", "lesson_number": 2 },
+    { "position": 3, "youtube_video_id": "f2_eJP0GTMw", "chapter": "Gravitation", "lesson_number": 3 },
+    { "position": 4, "youtube_video_id": "G4sZZb0e_nk", "chapter": "Gravitation", "lesson_number": 4 },
+    { "position": 5, "youtube_video_id": "O1jya36Z4_M", "chapter": "Gravitation", "lesson_number": 5 }
+  ],
+  "exclusions": []
+}

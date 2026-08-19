@@ -1,0 +1,1201 @@
+{
+  "version": 1,
+  "run_id": "b6f432d3",
+  "started_at": "2026-08-18T11:17:52.112Z",
+  "project_ref": "essmxonestbrgmgrtywn",
+  "environment": "staging",
+  "transport": "Supabase Auth password JWT plus PostgREST HTTP RPC",
+  "checks": [
+    {
+      "name": "disposable clone contains no profiles or forum activity",
+      "passed": true,
+      "detail": {
+        "raw_response_shape": {
+          "type": "array",
+          "length": 2,
+          "item": {
+            "type": "object",
+            "keys": [
+              "count",
+              "data",
+              "error",
+              "status",
+              "statusText",
+              "success"
+            ],
+            "fields": {
+              "count": {
+                "type": "null"
+              },
+              "data": {
+                "type": "object",
+                "keys": [
+                  "name"
+                ],
+                "fields": {
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "error": {
+                "type": "null"
+              },
+              "status": {
+                "type": "number"
+              },
+              "statusText": {
+                "type": "string"
+              },
+              "success": {
+                "type": "boolean"
+              }
+            }
+          }
+        },
+        "counts": {
+          "profiles": 0,
+          "forum_posts": 0,
+          "forum_comments": 0,
+          "forum_reports": 0,
+          "forum_suspensions": 0,
+          "forum_moderation_log": 0,
+          "forum_rate_events": 0
+        }
+      }
+    },
+    {
+      "name": "two staging.invalid Auth fixtures created",
+      "passed": true,
+      "detail": {
+        "raw_response_shape": {
+          "type": "array",
+          "length": 2,
+          "item": {
+            "type": "object",
+            "keys": [
+              "data",
+              "error"
+            ],
+            "fields": {
+              "data": {
+                "type": "object",
+                "keys": [
+                  "user"
+                ],
+                "fields": {
+                  "user": {
+                    "type": "object",
+                    "keys": [
+                      "app_metadata",
+                      "aud",
+                      "created_at",
+                      "email",
+                      "email_confirmed_at",
+                      "id",
+                      "identities",
+                      "is_anonymous",
+                      "phone",
+                      "role",
+                      "updated_at",
+                      "user_metadata"
+                    ],
+                    "fields": null
+                  }
+                }
+              },
+              "error": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        "count": 2
+      }
+    },
+    {
+      "name": "helper prepared exact users and cooldown",
+      "passed": true,
+      "detail": {
+        "raw_response_shape": {
+          "type": "object",
+          "keys": [
+            "count",
+            "data",
+            "error",
+            "status",
+            "statusText",
+            "success"
+          ],
+          "fields": {
+            "count": {
+              "type": "null"
+            },
+            "data": {
+              "type": "object",
+              "keys": [
+                "admins_prepared",
+                "cooldown_satisfied",
+                "environment",
+                "profiles_prepared",
+                "users_prepared"
+              ],
+              "fields": {
+                "admins_prepared": {
+                  "type": "number"
+                },
+                "cooldown_satisfied": {
+                  "type": "boolean"
+                },
+                "environment": {
+                  "type": "string"
+                },
+                "profiles_prepared": {
+                  "type": "number"
+                },
+                "users_prepared": {
+                  "type": "number"
+                }
+              }
+            },
+            "error": {
+              "type": "null"
+            },
+            "status": {
+              "type": "number"
+            },
+            "statusText": {
+              "type": "string"
+            },
+            "success": {
+              "type": "boolean"
+            }
+          }
+        },
+        "users_prepared": 2,
+        "profiles_prepared": 2,
+        "admins_prepared": 1,
+        "cooldown_satisfied": true
+      }
+    },
+    {
+      "name": "admin received genuine authenticated JWT",
+      "passed": true,
+      "detail": {
+        "raw_response_shape": {
+          "type": "object",
+          "keys": [
+            "data",
+            "error"
+          ],
+          "fields": {
+            "data": {
+              "type": "object",
+              "keys": [
+                "session",
+                "user"
+              ],
+              "fields": {
+                "session": {
+                  "type": "object",
+                  "keys": [
+                    "access_token",
+                    "expires_at",
+                    "expires_in",
+                    "refresh_token",
+                    "token_type",
+                    "user",
+                    "weak_password"
+                  ],
+                  "fields": {
+                    "access_token": {
+                      "type": "string"
+                    },
+                    "expires_at": {
+                      "type": "number"
+                    },
+                    "expires_in": {
+                      "type": "number"
+                    },
+                    "refresh_token": {
+                      "type": "string"
+                    },
+                    "token_type": {
+                      "type": "string"
+                    },
+                    "user": {
+                      "type": "object",
+                      "keys": [
+                        "app_metadata",
+                        "aud",
+                        "confirmed_at",
+                        "created_at",
+                        "email",
+                        "email_confirmed_at",
+                        "id",
+                        "identities",
+                        "is_anonymous",
+                        "last_sign_in_at",
+                        "phone",
+                        "role",
+                        "updated_at",
+                        "user_metadata"
+                      ],
+                      "fields": null
+                    },
+                    "weak_password": {
+                      "type": "null"
+                    }
+                  }
+                },
+                "user": {
+                  "type": "object",
+                  "keys": [
+                    "app_metadata",
+                    "aud",
+                    "confirmed_at",
+                    "created_at",
+                    "email",
+                    "email_confirmed_at",
+                    "id",
+                    "identities",
+                    "is_anonymous",
+                    "last_sign_in_at",
+                    "phone",
+                    "role",
+                    "updated_at",
+                    "user_metadata"
+                  ],
+                  "fields": {
+                    "app_metadata": {
+                      "type": "object",
+                      "keys": [
+                        "forum_suspension_fixture",
+                        "provider",
+                        "providers"
+                      ],
+                      "fields": null
+                    },
+                    "aud": {
+                      "type": "string"
+                    },
+                    "confirmed_at": {
+                      "type": "string"
+                    },
+                    "created_at": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "email_confirmed_at": {
+                      "type": "string"
+                    },
+                    "id": {
+                      "type": "string"
+                    },
+                    "identities": {
+                      "type": "array",
+                      "length": 1,
+                      "item": null
+                    },
+                    "is_anonymous": {
+                      "type": "boolean"
+                    },
+                    "last_sign_in_at": {
+                      "type": "string"
+                    },
+                    "phone": {
+                      "type": "string"
+                    },
+                    "role": {
+                      "type": "string"
+                    },
+                    "updated_at": {
+                      "type": "string"
+                    },
+                    "user_metadata": {
+                      "type": "object",
+                      "keys": [
+                        "email_verified",
+                        "full_name"
+                      ],
+                      "fields": null
+                    }
+                  }
+                }
+              }
+            },
+            "error": {
+              "type": "null"
+            }
+          }
+        },
+        "subject_matches": true,
+        "role_is_authenticated": true
+      }
+    },
+    {
+      "name": "student received genuine authenticated JWT",
+      "passed": true,
+      "detail": {
+        "raw_response_shape": {
+          "type": "object",
+          "keys": [
+            "data",
+            "error"
+          ],
+          "fields": {
+            "data": {
+              "type": "object",
+              "keys": [
+                "session",
+                "user"
+              ],
+              "fields": {
+                "session": {
+                  "type": "object",
+                  "keys": [
+                    "access_token",
+                    "expires_at",
+                    "expires_in",
+                    "refresh_token",
+                    "token_type",
+                    "user",
+                    "weak_password"
+                  ],
+                  "fields": {
+                    "access_token": {
+                      "type": "string"
+                    },
+                    "expires_at": {
+                      "type": "number"
+                    },
+                    "expires_in": {
+                      "type": "number"
+                    },
+                    "refresh_token": {
+                      "type": "string"
+                    },
+                    "token_type": {
+                      "type": "string"
+                    },
+                    "user": {
+                      "type": "object",
+                      "keys": [
+                        "app_metadata",
+                        "aud",
+                        "confirmed_at",
+                        "created_at",
+                        "email",
+                        "email_confirmed_at",
+                        "id",
+                        "identities",
+                        "is_anonymous",
+                        "last_sign_in_at",
+                        "phone",
+                        "role",
+                        "updated_at",
+                        "user_metadata"
+                      ],
+                      "fields": null
+                    },
+                    "weak_password": {
+                      "type": "null"
+                    }
+                  }
+                },
+                "user": {
+                  "type": "object",
+                  "keys": [
+                    "app_metadata",
+                    "aud",
+                    "confirmed_at",
+                    "created_at",
+                    "email",
+                    "email_confirmed_at",
+                    "id",
+                    "identities",
+                    "is_anonymous",
+                    "last_sign_in_at",
+                    "phone",
+                    "role",
+                    "updated_at",
+                    "user_metadata"
+                  ],
+                  "fields": {
+                    "app_metadata": {
+                      "type": "object",
+                      "keys": [
+                        "forum_suspension_fixture",
+                        "provider",
+                        "providers"
+                      ],
+                      "fields": null
+                    },
+                    "aud": {
+                      "type": "string"
+                    },
+                    "confirmed_at": {
+                      "type": "string"
+                    },
+                    "created_at": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "email_confirmed_at": {
+                      "type": "string"
+                    },
+                    "id": {
+                      "type": "string"
+                    },
+                    "identities": {
+                      "type": "array",
+                      "length": 1,
+                      "item": null
+                    },
+                    "is_anonymous": {
+                      "type": "boolean"
+                    },
+                    "last_sign_in_at": {
+                      "type": "string"
+                    },
+                    "phone": {
+                      "type": "string"
+                    },
+                    "role": {
+                      "type": "string"
+                    },
+                    "updated_at": {
+                      "type": "string"
+                    },
+                    "user_metadata": {
+                      "type": "object",
+                      "keys": [
+                        "email_verified",
+                        "full_name"
+                      ],
+                      "fields": null
+                    }
+                  }
+                }
+              }
+            },
+            "error": {
+              "type": "null"
+            }
+          }
+        },
+        "subject_matches": true,
+        "role_is_authenticated": true
+      }
+    },
+    {
+      "name": "anonymous cannot list suspensions",
+      "passed": true,
+      "detail": {
+        "raw_response_shape": {
+          "type": "object",
+          "keys": [
+            "count",
+            "data",
+            "error",
+            "status",
+            "statusText",
+            "success"
+          ],
+          "fields": {
+            "count": {
+              "type": "null"
+            },
+            "data": {
+              "type": "null"
+            },
+            "error": {
+              "type": "object",
+              "keys": [
+                "code",
+                "details",
+                "hint",
+                "message"
+              ],
+              "fields": {
+                "code": {
+                  "type": "string"
+                },
+                "details": {
+                  "type": "null"
+                },
+                "hint": {
+                  "type": "null"
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            },
+            "status": {
+              "type": "number"
+            },
+            "statusText": {
+              "type": "string"
+            },
+            "success": {
+              "type": "boolean"
+            }
+          }
+        },
+        "code": "42501",
+        "message_matches": true
+      }
+    },
+    {
+      "name": "non-admin JWT cannot list suspensions",
+      "passed": true,
+      "detail": {
+        "raw_response_shape": {
+          "type": "object",
+          "keys": [
+            "count",
+            "data",
+            "error",
+            "status",
+            "statusText",
+            "success"
+          ],
+          "fields": {
+            "count": {
+              "type": "null"
+            },
+            "data": {
+              "type": "null"
+            },
+            "error": {
+              "type": "object",
+              "keys": [
+                "code",
+                "details",
+                "hint",
+                "message"
+              ],
+              "fields": {
+                "code": {
+                  "type": "string"
+                },
+                "details": {
+                  "type": "null"
+                },
+                "hint": {
+                  "type": "null"
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            },
+            "status": {
+              "type": "number"
+            },
+            "statusText": {
+              "type": "string"
+            },
+            "success": {
+              "type": "boolean"
+            }
+          }
+        },
+        "code": "42501",
+        "message_matches": true
+      }
+    },
+    {
+      "name": "non-admin JWT cannot suspend",
+      "passed": true,
+      "detail": {
+        "raw_response_shape": {
+          "type": "object",
+          "keys": [
+            "count",
+            "data",
+            "error",
+            "status",
+            "statusText",
+            "success"
+          ],
+          "fields": {
+            "count": {
+              "type": "null"
+            },
+            "data": {
+              "type": "null"
+            },
+            "error": {
+              "type": "object",
+              "keys": [
+                "code",
+                "details",
+                "hint",
+                "message"
+              ],
+              "fields": {
+                "code": {
+                  "type": "string"
+                },
+                "details": {
+                  "type": "null"
+                },
+                "hint": {
+                  "type": "null"
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            },
+            "status": {
+              "type": "number"
+            },
+            "statusText": {
+              "type": "string"
+            },
+            "success": {
+              "type": "boolean"
+            }
+          }
+        },
+        "code": "42501",
+        "message_matches": true
+      }
+    },
+    {
+      "name": "student contributes before suspension",
+      "passed": true,
+      "detail": {
+        "raw_response_shape": {
+          "type": "object",
+          "keys": [
+            "count",
+            "data",
+            "error",
+            "status",
+            "statusText",
+            "success"
+          ],
+          "fields": {
+            "count": {
+              "type": "null"
+            },
+            "data": {
+              "type": "number"
+            },
+            "error": {
+              "type": "null"
+            },
+            "status": {
+              "type": "number"
+            },
+            "statusText": {
+              "type": "string"
+            },
+            "success": {
+              "type": "boolean"
+            }
+          }
+        },
+        "post_created": true
+      }
+    },
+    {
+      "name": "admin suspends by case-insensitive public username",
+      "passed": true,
+      "detail": {
+        "raw_response_shape": {
+          "type": "object",
+          "keys": [
+            "count",
+            "data",
+            "error",
+            "status",
+            "statusText",
+            "success"
+          ],
+          "fields": {
+            "count": {
+              "type": "null"
+            },
+            "data": {
+              "type": "object",
+              "keys": [
+                "reason",
+                "suspended_until",
+                "username"
+              ],
+              "fields": {
+                "reason": {
+                  "type": "string"
+                },
+                "suspended_until": {
+                  "type": "string"
+                },
+                "username": {
+                  "type": "string"
+                }
+              }
+            },
+            "error": {
+              "type": "null"
+            },
+            "status": {
+              "type": "number"
+            },
+            "statusText": {
+              "type": "string"
+            },
+            "success": {
+              "type": "boolean"
+            }
+          }
+        },
+        "username_matches": true,
+        "deadline_present": true,
+        "reason_matches": true
+      }
+    },
+    {
+      "name": "nested security-definer delegation records the real admin actor",
+      "passed": true,
+      "detail": {
+        "raw_response_shape": {
+          "type": "array",
+          "length": 2,
+          "item": {
+            "type": "object",
+            "keys": [
+              "count",
+              "data",
+              "error",
+              "status",
+              "statusText",
+              "success"
+            ],
+            "fields": {
+              "count": {
+                "type": "null"
+              },
+              "data": {
+                "type": "object",
+                "keys": [
+                  "created_by",
+                  "user_id"
+                ],
+                "fields": {
+                  "created_by": {
+                    "type": "string"
+                  },
+                  "user_id": {
+                    "type": "string"
+                  }
+                }
+              },
+              "error": {
+                "type": "null"
+              },
+              "status": {
+                "type": "number"
+              },
+              "statusText": {
+                "type": "string"
+              },
+              "success": {
+                "type": "boolean"
+              }
+            }
+          }
+        },
+        "row_actor_is_admin": true,
+        "log_actor_is_admin": true,
+        "log_target_is_student": true
+      }
+    },
+    {
+      "name": "admin list returns actionable suspension context",
+      "passed": true,
+      "detail": {
+        "raw_response_shape": {
+          "type": "object",
+          "keys": [
+            "count",
+            "data",
+            "error",
+            "status",
+            "statusText",
+            "success"
+          ],
+          "fields": {
+            "count": {
+              "type": "null"
+            },
+            "data": {
+              "type": "array",
+              "length": 1,
+              "item": {
+                "type": "object",
+                "keys": [
+                  "created_at",
+                  "created_by_username",
+                  "is_active",
+                  "reason",
+                  "suspended_until",
+                  "username"
+                ],
+                "fields": {
+                  "created_at": {
+                    "type": "string"
+                  },
+                  "created_by_username": {
+                    "type": "string"
+                  },
+                  "is_active": {
+                    "type": "boolean"
+                  },
+                  "reason": {
+                    "type": "string"
+                  },
+                  "suspended_until": {
+                    "type": "string"
+                  },
+                  "username": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "error": {
+              "type": "null"
+            },
+            "status": {
+              "type": "number"
+            },
+            "statusText": {
+              "type": "string"
+            },
+            "success": {
+              "type": "boolean"
+            }
+          }
+        },
+        "count": 1,
+        "username_matches": true,
+        "actor_username_matches": true,
+        "active": true
+      }
+    },
+    {
+      "name": "suspended student is blocked from contribution",
+      "passed": true,
+      "detail": {
+        "raw_response_shape": {
+          "type": "object",
+          "keys": [
+            "count",
+            "data",
+            "error",
+            "status",
+            "statusText",
+            "success"
+          ],
+          "fields": {
+            "count": {
+              "type": "null"
+            },
+            "data": {
+              "type": "null"
+            },
+            "error": {
+              "type": "object",
+              "keys": [
+                "code",
+                "details",
+                "hint",
+                "message"
+              ],
+              "fields": {
+                "code": {
+                  "type": "string"
+                },
+                "details": {
+                  "type": "null"
+                },
+                "hint": {
+                  "type": "null"
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            },
+            "status": {
+              "type": "number"
+            },
+            "statusText": {
+              "type": "string"
+            },
+            "success": {
+              "type": "boolean"
+            }
+          }
+        },
+        "code": "42501",
+        "message_matches": true
+      }
+    },
+    {
+      "name": "admin lifts suspension by username",
+      "passed": true,
+      "detail": {
+        "raw_response_shape": {
+          "type": "object",
+          "keys": [
+            "count",
+            "data",
+            "error",
+            "status",
+            "statusText",
+            "success"
+          ],
+          "fields": {
+            "count": {
+              "type": "null"
+            },
+            "data": {
+              "type": "object",
+              "keys": [
+                "reason",
+                "suspended_until",
+                "username"
+              ],
+              "fields": {
+                "reason": {
+                  "type": "null"
+                },
+                "suspended_until": {
+                  "type": "null"
+                },
+                "username": {
+                  "type": "string"
+                }
+              }
+            },
+            "error": {
+              "type": "null"
+            },
+            "status": {
+              "type": "number"
+            },
+            "statusText": {
+              "type": "string"
+            },
+            "success": {
+              "type": "boolean"
+            }
+          }
+        },
+        "username_matches": true,
+        "deadline_is_null": true
+      }
+    },
+    {
+      "name": "lift removes student from suspension list",
+      "passed": true,
+      "detail": {
+        "raw_response_shape": {
+          "type": "object",
+          "keys": [
+            "count",
+            "data",
+            "error",
+            "status",
+            "statusText",
+            "success"
+          ],
+          "fields": {
+            "count": {
+              "type": "null"
+            },
+            "data": {
+              "type": "array",
+              "length": 0,
+              "item": null
+            },
+            "error": {
+              "type": "null"
+            },
+            "status": {
+              "type": "number"
+            },
+            "statusText": {
+              "type": "string"
+            },
+            "success": {
+              "type": "boolean"
+            }
+          }
+        },
+        "count": 0
+      }
+    },
+    {
+      "name": "student contributes again after lift",
+      "passed": true,
+      "detail": {
+        "raw_response_shape": {
+          "type": "object",
+          "keys": [
+            "count",
+            "data",
+            "error",
+            "status",
+            "statusText",
+            "success"
+          ],
+          "fields": {
+            "count": {
+              "type": "null"
+            },
+            "data": {
+              "type": "number"
+            },
+            "error": {
+              "type": "null"
+            },
+            "status": {
+              "type": "number"
+            },
+            "statusText": {
+              "type": "string"
+            },
+            "success": {
+              "type": "boolean"
+            }
+          }
+        },
+        "post_created": true
+      }
+    },
+    {
+      "name": "audit trail contains one suspend and one unsuspend by the admin",
+      "passed": true,
+      "detail": {
+        "raw_response_shape": {
+          "type": "object",
+          "keys": [
+            "count",
+            "data",
+            "error",
+            "status",
+            "statusText",
+            "success"
+          ],
+          "fields": {
+            "count": {
+              "type": "null"
+            },
+            "data": {
+              "type": "array",
+              "length": 2,
+              "item": {
+                "type": "object",
+                "keys": [
+                  "action",
+                  "actor_id",
+                  "target_user_id"
+                ],
+                "fields": {
+                  "action": {
+                    "type": "string"
+                  },
+                  "actor_id": {
+                    "type": "string"
+                  },
+                  "target_user_id": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "error": {
+              "type": "null"
+            },
+            "status": {
+              "type": "number"
+            },
+            "statusText": {
+              "type": "string"
+            },
+            "success": {
+              "type": "boolean"
+            }
+          }
+        },
+        "count": 2,
+        "ordered_actions_match": true,
+        "every_actor_is_admin": true
+      }
+    },
+    {
+      "name": "forum mode restored to off",
+      "passed": true,
+      "detail": {
+        "raw_response_shape": {
+          "type": "object",
+          "keys": [
+            "count",
+            "data",
+            "error",
+            "status",
+            "statusText",
+            "success"
+          ],
+          "fields": {
+            "count": {
+              "type": "null"
+            },
+            "data": {
+              "type": "string"
+            },
+            "error": {
+              "type": "null"
+            },
+            "status": {
+              "type": "number"
+            },
+            "statusText": {
+              "type": "string"
+            },
+            "success": {
+              "type": "boolean"
+            }
+          }
+        },
+        "value_is_off": true
+      }
+    }
+  ],
+  "cleanup": {
+    "attempted": true,
+    "completed": true,
+    "errors": [],
+    "residue": {
+      "fixture_profiles": 0,
+      "fixture_suspensions": 0,
+      "fixture_logs": 0,
+      "fixture_posts": 0,
+      "fixture_rate_events": 0,
+      "auth_users": 0
+    }
+  },
+  "fatal": null,
+  "finished_at": "2026-08-18T11:17:57.663Z"
+}

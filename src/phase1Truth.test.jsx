@@ -167,7 +167,15 @@ describe("truthful course entry", () => {
     expect(screen.queryByRole("button", { name: /Lesson one/i })).toBeNull();
     expect(screen.getAllByText("Laws of Motion")).toHaveLength(2);
     expect(screen.getByText("1 lesson")).not.toBeNull();
-    expect(screen.getByText("Lesson 1 of 1")).not.toBeNull();
+    // Was "Lesson 1 of 1", which is exactly the misleading half-truth this
+    // suite exists to catch: on a chapter-scoped route that reads as a
+    // one-lesson COURSE, and 55.2% of (course, chapter) pairs in production hold
+    // exactly one lesson. The label now names what it is counting within and
+    // gives the course position too.
+    // See src/chapterScopedCourseSequence.test.jsx.
+    expect(
+      screen.getByText("Lesson 1 of 1 in this chapter · 3 of 3 in the course"),
+    ).not.toBeNull();
   });
 
   it("does not let progress from another chapter override chapter entry", async () => {

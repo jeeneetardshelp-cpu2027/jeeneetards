@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "request_id": "516ff6af-84ea-4881-90cd-b93c5236ab9c",
+  "youtube_playlist_id": "PLsgHooHkqhhNu-Uw9RzbSyF1wsdL0Q25z",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "461233dd-54d1-413f-9625-2ffe5f164226",
+    "youtube_playlist_id": "PLsgHooHkqhhNu-Uw9RzbSyF1wsdL0Q25z",
+    "teacher": "Pradeep Singh",
+    "source_url": "https://www.youtube.com/playlist?list=PLsgHooHkqhhNu-Uw9RzbSyF1wsdL0Q25z",
+    "source_label": "Official Unacademy NEET channel-owned Ecosystem playlist naming Pradeep Singh; every retained lecture title names Pradeep Singh",
+    "reviewed_by": "Owner",
+    "reviewed_on": "2026-08-04",
+    "youtube_video_ids": [
+      "9pEnn4AYr1s", "-HOM0EZ-lvU", "JWbbwbMFTZc", "p3BXX1_zlbU", "boKRkEWNaIY", "AuX-hOGI9fc"
+    ]
+  },
+  "assignments": [
+    { "position": 1, "youtube_video_id": "9pEnn4AYr1s", "chapter": "Ecosystem", "lesson_number": 1 },
+    { "position": 2, "youtube_video_id": "-HOM0EZ-lvU", "chapter": "Ecosystem", "lesson_number": 2 },
+    { "position": 3, "youtube_video_id": "JWbbwbMFTZc", "chapter": "Ecosystem", "lesson_number": 3 },
+    { "position": 4, "youtube_video_id": "p3BXX1_zlbU", "chapter": "Ecosystem", "lesson_number": 4 },
+    { "position": 5, "youtube_video_id": "boKRkEWNaIY", "chapter": "Ecosystem", "lesson_number": 5 },
+    { "position": 6, "youtube_video_id": "AuX-hOGI9fc", "chapter": "Ecosystem", "lesson_number": 6 }
+  ],
+  "exclusions": []
+}

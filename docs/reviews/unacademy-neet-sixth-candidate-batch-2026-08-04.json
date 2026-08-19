@@ -1,0 +1,97 @@
+{
+  "version": 1,
+  "generated_on": "2026-08-04",
+  "safety_boundary": "Read-only source and anonymous production review; no production write authorized.",
+  "channel": {
+    "title": "Unacademy NEET",
+    "youtube_channel_id": "UCdQwYksctqqiRwqp3PiJMWA",
+    "handle": "@UnacademyNEET",
+    "public_playlist_count": 736
+  },
+  "production_snapshot": {
+    "playlists": 380,
+    "videos": 4481,
+    "memberships": 4487,
+    "chapters": 247,
+    "protected_jee": {
+      "courses": 82,
+      "memberships": 1304,
+      "fingerprint": "30eee4a4a6842e5beeb7c97083d7f812"
+    },
+    "rolling_jee": {
+      "courses": 212,
+      "memberships": 2848,
+      "fingerprint": "9eea2b44f0b19c08cc0907c57e091342"
+    }
+  },
+  "candidates": [
+    {
+      "order": 1,
+      "youtube_playlist_id": "PLsgHooHkqhhP65sAqtkbWpVVSrK7FlTWA",
+      "playlist_title": "NEET: Hydrogen | Class 11 | Unacademy NEET | Anoop V.",
+      "teacher": "Anoop Vashishtha",
+      "teacher_id": 36,
+      "source_teacher_label": "Anoop V.",
+      "subject": "Chemistry",
+      "subject_id": 2,
+      "chapter": "Hydrogen",
+      "chapter_id": 44,
+      "class_level": "class-11",
+      "class_level_id": 2,
+      "chapter_class_scope": "playlist fallback: the chapter has no reviewed canonical class row",
+      "source_collision_count": 0,
+      "video_collision_count": 0,
+      "videos": [
+        { "position": 1, "youtube_video_id": "UwSHRuGvXDM", "title": "NEET: Hydrogen - L1 | Class 11 | Unacademy NEET | Anoop V.", "duration_seconds": 3185, "embedding_status": "embeddable" },
+        { "position": 2, "youtube_video_id": "a5L0eHgIKB8", "title": "NEET: Hydrogen - L2 | Class 11 | Unacademy NEET | Anoop V.", "duration_seconds": 3470, "embedding_status": "embeddable" },
+        { "position": 3, "youtube_video_id": "eIRNUvlOP4Q", "title": "NEET: Hydrogen - L3 | Class 11 | Unacademy NEET | Anoop V.", "duration_seconds": 3282, "embedding_status": "embeddable" },
+        { "position": 4, "youtube_video_id": "1nJnNwh5Has", "title": "NEET: Hydrogen l Covalent Hydrides l L4 | Class 11 | Unacademy NEET | Anoop V.", "duration_seconds": 3131, "embedding_status": "embeddable" },
+        { "position": 5, "youtube_video_id": "IRDUbSjI5_k", "title": "NEET: Hydrogen L5 | Class 11 | Unacademy NEET | Anoop V.", "duration_seconds": 3105, "embedding_status": "embeddable" },
+        { "position": 6, "youtube_video_id": "4AyCPH9PnIo", "title": "NEET: Hydrogen L6 | Class 11 | Unacademy NEET | Anoop V.", "duration_seconds": 3050, "embedding_status": "embeddable" }
+      ],
+      "excluded_videos": [
+        { "source_position": 7, "youtube_video_id": "nXyI43o7l1k", "title": "NEET: NCERT Questions | Hydrogen | L2 | Chemistry | Unacademy NEET | Anoop V.", "duration_seconds": 3170, "embedding_status": "embeddable", "reason": "NCERT-question session" },
+        { "source_position": 8, "youtube_video_id": "p67zTYCNYpk", "title": "NEET: NCERT Questions | Hydrogen | L3 | Chemistry | Unacademy NEET | Anoop V.", "duration_seconds": 2760, "embedding_status": "embeddable", "reason": "NCERT-question session" },
+        { "source_position": 9, "youtube_video_id": "ZfjKBvdxVlU", "title": "NEET: NCERT Exemplar Questions | Hydrogen | L1 | Chemistry | Unacademy NEET | Anoop V.", "duration_seconds": 3320, "embedding_status": "embeddable", "reason": "NCERT Exemplar question session" }
+      ]
+    },
+    {
+      "order": 2,
+      "youtube_playlist_id": "PLsgHooHkqhhMQWo55rneDci-gmYynS9Za",
+      "playlist_title": "NEET: Modern Physics | Class 12 | Live Daily 2.0 | Unacademy NEET | Anu Gupta",
+      "teacher": "Anu Gupta",
+      "teacher_id": 35,
+      "source_teacher_label": "Anu Gupta",
+      "subject": "Physics",
+      "subject_id": 1,
+      "chapter": "Modern Physics",
+      "chapter_id": 83,
+      "class_level": "class-12",
+      "class_level_id": 3,
+      "chapter_class_scope": "canonical class-12 row",
+      "source_collision_count": 0,
+      "video_collision_count": 0,
+      "videos": [
+        { "position": 1, "youtube_video_id": "teNEjXhsviw", "title": "NEET: Modern Physics L1 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anu Gupta", "duration_seconds": 3820, "embedding_status": "embeddable" },
+        { "position": 2, "youtube_video_id": "1hQiBNBREyc", "title": "NEET: Modern Physics L2 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anu Gupta", "duration_seconds": 3949, "embedding_status": "embeddable" },
+        { "position": 3, "youtube_video_id": "MfP1lAjfE4s", "title": "NEET: Modern Physics L3 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anu Gupta", "duration_seconds": 4270, "embedding_status": "embeddable" },
+        { "position": 4, "youtube_video_id": "mch8Gs9vaG4", "title": "NEET: Modern Physics L4 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anu Gupta", "duration_seconds": 3980, "embedding_status": "embeddable" },
+        { "position": 5, "youtube_video_id": "vZcS87xwtJE", "title": "NEET: Modern Physics L5 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anu Gupta", "duration_seconds": 3880, "embedding_status": "embeddable" },
+        { "position": 6, "youtube_video_id": "3gUXPVvO5cc", "title": "NEET: Modern Physics L6 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anu Gupta", "duration_seconds": 3905, "embedding_status": "embeddable" },
+        { "position": 7, "youtube_video_id": "E-IGfQD5mXk", "title": "NEET: Modern Physics L7 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anu Gupta", "duration_seconds": 3930, "embedding_status": "embeddable" },
+        { "position": 8, "youtube_video_id": "acfZoOM90Cw", "title": "NEET: Modern Physics L8 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anu Gupta", "duration_seconds": 3825, "embedding_status": "embeddable" },
+        { "position": 9, "youtube_video_id": "wAHMJEppbyA", "title": "NEET: Modern Physics L9 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anu Gupta", "duration_seconds": 4032, "embedding_status": "embeddable" },
+        { "position": 10, "youtube_video_id": "2h_fOhJBqas", "title": "NEET: Modern Physics L10 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anu Gupta", "duration_seconds": 4330, "embedding_status": "embeddable" },
+        { "position": 11, "youtube_video_id": "U5nIKa_wP4g", "title": "NEET: Modern Physics L11 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anu Gupta", "duration_seconds": 3865, "embedding_status": "embeddable" }
+      ],
+      "excluded_videos": [
+        { "source_position": 12, "youtube_video_id": "ExLH4LSDyac", "title": "NEET: Modern Physics | Practice Session | Class 12 | Live Daily 2.0 | Unacademy NEET | Anu Gupta", "duration_seconds": 3805, "embedding_status": "embeddable", "reason": "practice session" }
+      ]
+    }
+  ],
+  "deferrals": [
+    "Human Reproduction: source sequence still lacks lecture 4.",
+    "Neural Control and Coordination: source sequence still lacks lecture 3.",
+    "Animal Kingdom: source sequence still lacks lecture 3."
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "request_id": "400de788-67e0-445f-8b76-3a34a12a1472",
+  "youtube_playlist_id": "PLsgHooHkqhhOHzoncmAMTU9UgJiN1gtcp",
+  "course_title": "Work, Energy and Power",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "fbf7b3a1-0a19-4dae-b5fe-d967b94f3a7c",
+    "youtube_playlist_id": "PLsgHooHkqhhOHzoncmAMTU9UgJiN1gtcp",
+    "teacher": "Mahendra Singh",
+    "source_url": "https://www.youtube.com/playlist?list=PLsgHooHkqhhOHzoncmAMTU9UgJiN1gtcp",
+    "source_label": "Official Unacademy NEET channel-owned Work Energy and Power playlist; every retained lecture title names Mahendra Singh or Mahendra S.",
+    "reviewed_by": "Owner",
+    "reviewed_on": "2026-08-16",
+    "youtube_video_ids": [
+      "nNfVSQK__qo", "tpTtsf8bUT0", "1YBTvWxbyFU", "A5qKIJCC_z4", "0Ffb8pVnssg",
+      "4D3YA2WwMpY", "M6gBk4ItYXs", "IlVdc4mNfoE", "gSPbfLfBuu8", "h-lynBmTHN0",
+      "eI8iO8Ljqrk"
+    ]
+  },
+  "assignments": [
+    { "position": 1, "youtube_video_id": "nNfVSQK__qo", "chapter": "Work, Energy and Power", "lesson_number": 1 },
+    { "position": 2, "youtube_video_id": "tpTtsf8bUT0", "chapter": "Work, Energy and Power", "lesson_number": 2 },
+    { "position": 3, "youtube_video_id": "1YBTvWxbyFU", "chapter": "Work, Energy and Power", "lesson_number": 3 },
+    { "position": 4, "youtube_video_id": "A5qKIJCC_z4", "chapter": "Work, Energy and Power", "lesson_number": 4 },
+    { "position": 5, "youtube_video_id": "0Ffb8pVnssg", "chapter": "Work, Energy and Power", "lesson_number": 5 },
+    { "position": 6, "youtube_video_id": "4D3YA2WwMpY", "chapter": "Work, Energy and Power", "lesson_number": 6 },
+    { "position": 7, "youtube_video_id": "M6gBk4ItYXs", "chapter": "Work, Energy and Power", "lesson_number": 7 },
+    { "position": 8, "youtube_video_id": "IlVdc4mNfoE", "chapter": "Work, Energy and Power", "lesson_number": 8 },
+    { "position": 9, "youtube_video_id": "gSPbfLfBuu8", "chapter": "Work, Energy and Power", "lesson_number": 9 },
+    { "position": 10, "youtube_video_id": "h-lynBmTHN0", "chapter": "Work, Energy and Power", "lesson_number": 10 },
+    { "position": 11, "youtube_video_id": "eI8iO8Ljqrk", "chapter": "Work, Energy and Power", "lesson_number": 11 }
+  ],
+  "exclusions": [
+    { "position": 12, "youtube_video_id": "2ERQpt8VNCM", "reason": "DPP quiz; keep practice separate from the lecture catalogue." },
+    { "position": 13, "youtube_video_id": "5D0cPlbC-GM", "reason": "DPP quiz; keep practice separate from the lecture catalogue." }
+  ]
+}

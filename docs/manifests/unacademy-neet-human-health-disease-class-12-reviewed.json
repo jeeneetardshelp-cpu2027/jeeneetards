@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "request_id": "f877f70c-04df-42b1-ad28-b7ae527e7b05",
+  "youtube_playlist_id": "PLsgHooHkqhhOBJpGejuKlJjjyqLGSUgax",
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "0bd393bd-1ad4-4ed7-8f23-74b59dee5a23",
+    "youtube_playlist_id": "PLsgHooHkqhhOBJpGejuKlJjjyqLGSUgax",
+    "teacher": "Seep Pahuja",
+    "source_url": "https://www.youtube.com/playlist?list=PLsgHooHkqhhOBJpGejuKlJjjyqLGSUgax",
+    "source_label": "Official Unacademy NEET channel-owned Human Health and Disease playlist naming Seep Pahuja; every retained lecture title names Seep Ma'am or Seep Pahuja",
+    "reviewed_by": "Owner",
+    "reviewed_on": "2026-08-04",
+    "youtube_video_ids": [
+      "CFB1HTWacxA", "XZD4Bh8MhDQ", "o3z0o1QimIg", "-nlWkqmJk5Q", "JQziZGYY_Os",
+      "eZvsGye6lXI", "4dqcy0EQgFc", "shlFBvx-3iA", "mqY3Eosc2Xs", "dvUzZpSqgik",
+      "J-sqeEn_bcw", "0br3aG0V8l8", "Kkpj5aeyNlo", "qdf295NMbug", "1-36ngXJpzQ",
+      "Ywn-kNU6XDs", "Um9SjKwH3Tk"
+    ]
+  },
+  "assignments": [
+    { "position": 1, "youtube_video_id": "CFB1HTWacxA", "chapter": "Human Health and Disease", "lesson_number": 1 },
+    { "position": 2, "youtube_video_id": "XZD4Bh8MhDQ", "chapter": "Human Health and Disease", "lesson_number": 2 },
+    { "position": 3, "youtube_video_id": "o3z0o1QimIg", "chapter": "Human Health and Disease", "lesson_number": 3 },
+    { "position": 4, "youtube_video_id": "-nlWkqmJk5Q", "chapter": "Human Health and Disease", "lesson_number": 4 },
+    { "position": 5, "youtube_video_id": "JQziZGYY_Os", "chapter": "Human Health and Disease", "lesson_number": 5 },
+    { "position": 6, "youtube_video_id": "eZvsGye6lXI", "chapter": "Human Health and Disease", "lesson_number": 6 },
+    { "position": 7, "youtube_video_id": "4dqcy0EQgFc", "chapter": "Human Health and Disease", "lesson_number": 7 },
+    { "position": 8, "youtube_video_id": "shlFBvx-3iA", "chapter": "Human Health and Disease", "lesson_number": 8 },
+    { "position": 9, "youtube_video_id": "mqY3Eosc2Xs", "chapter": "Human Health and Disease", "lesson_number": 9 },
+    { "position": 10, "youtube_video_id": "dvUzZpSqgik", "chapter": "Human Health and Disease", "lesson_number": 10 },
+    { "position": 11, "youtube_video_id": "J-sqeEn_bcw", "chapter": "Human Health and Disease", "lesson_number": 11 },
+    { "position": 12, "youtube_video_id": "Kkpj5aeyNlo", "chapter": "Human Health and Disease", "lesson_number": 13 },
+    { "position": 13, "youtube_video_id": "qdf295NMbug", "chapter": "Human Health and Disease", "lesson_number": 14 },
+    { "position": 14, "youtube_video_id": "1-36ngXJpzQ", "chapter": "Human Health and Disease", "lesson_number": 15 },
+    { "position": 15, "youtube_video_id": "Ywn-kNU6XDs", "chapter": "Human Health and Disease", "lesson_number": 16 },
+    { "position": 16, "youtube_video_id": "Um9SjKwH3Tk", "chapter": "Human Health and Disease", "lesson_number": 17 },
+    { "position": 18, "youtube_video_id": "0br3aG0V8l8", "chapter": "Human Health and Disease", "lesson_number": 12 }
+  ],
+  "exclusions": [
+    { "position": 17, "youtube_video_id": "_uaoj3El8fM", "reason": "Menti quiz; keep practice separate from the lecture catalogue." }
+  ]
+}
