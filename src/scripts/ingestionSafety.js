@@ -1,8 +1,8 @@
-const METADATA_OPTIONS = {
-  contentType: ["full-course", "one-shot", "revision", "pyq", "practice"],
-  language: ["hindi", "english", "hinglish"],
-  difficulty: ["beginner", "intermediate", "advanced"],
-};
+export const METADATA_OPTIONS = Object.freeze({
+  contentType: Object.freeze(["full-course", "one-shot", "revision", "pyq", "practice"]),
+  language: Object.freeze(["hindi", "english", "hinglish"]),
+  difficulty: Object.freeze(["beginner", "intermediate", "advanced"]),
+});
 
 async function promptOption(ask, label, options, onInvalid) {
   while (true) {

@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { getVideoDetails } from "./youtubeNode.js";
+import { getPlaylistOwner, getVideoDetails } from "./youtubeNode.js";
 
 afterEach(() => {
   vi.unstubAllGlobals();
@@ -35,6 +35,35 @@ describe("getVideoDetails", () => {
       durationSeconds: 120,
       captionStatus: "none",
       embeddingStatus: "embeddable",
+    });
+  });
+});
+
+describe("getPlaylistOwner", () => {
+  it("preserves the public playlist description for attribution review", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        items: [{
+          id: "PL_review",
+          snippet: {
+            channelId: "UC_owner",
+            channelTitle: "Example Academy",
+            title: "JEE Physics",
+            description: "Faculty: Alakh Pandey",
+          },
+          contentDetails: { itemCount: 12 },
+        }],
+      }),
+    }));
+
+    await expect(getPlaylistOwner("test-key", "PL_review")).resolves.toEqual({
+      channelId: "UC_owner",
+      channelTitle: "Example Academy",
+      playlistId: "PL_review",
+      playlistTitle: "JEE Physics",
+      playlistDescription: "Faculty: Alakh Pandey",
+      videoCount: 12,
     });
   });
 });

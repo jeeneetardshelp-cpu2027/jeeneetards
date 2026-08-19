@@ -1,0 +1,131 @@
+import { describe, expect, it } from "vitest";
+import {
+  proposeBoards,
+  proposeCategory,
+  proposeTaxonomy,
+  validateClassLabelsAgainstTaxonomy,
+} from "./proposeTaxonomy.js";
+
+const taxonomy = {
+  subjects: [{ id: 1, name: "Physics", slug: "physics" }],
+  learningGoals: [{ id: 10, name: "JEE", slug: "jee" }],
+  categories: [{ id: 20, name: "JEE", slug: "jee" }],
+  categoryLearningGoals: [{ category_id: 20, learning_goal_id: 10 }],
+  boards: [{ id: 30, name: "CBSE", slug: "cbse" }],
+  classLevels: [
+    { id: 39, name: "Class 10", slug: "class-10" },
+    { id: 40, name: "Class 11", slug: "class-11" },
+    { id: 41, name: "Class 12", slug: "class-12" },
+    { id: 42, name: "Dropper", slug: "dropper" },
+  ],
+  learningGoalClassLevels: [
+    { learning_goal_id: 10, class_level_id: 40 },
+    { learning_goal_id: 10, class_level_id: 41 },
+    { learning_goal_id: 10, class_level_id: 42 },
+  ],
+  teachers: [{
+    id: 34,
+    display_name: "Alakh Pandey",
+    verified: true,
+    aliases: [{ alias: "ALK", status: "verified" }],
+  }],
+};
+
+describe("proposeTaxonomy teacher integration", () => {
+  it("routes a verified teacher candidate to review instead of auto-accepting identity", () => {
+    const result = proposeTaxonomy({
+      playlistTitle: "JEE Class 11 Physics Complete Course",
+      playlistDescription: "Faculty: Alakh Pandey",
+      videoTitles: ["Kinematics lecture 1"],
+    }, taxonomy);
+
+    expect(result.decisions.teacher_id).toMatchObject({
+      value: 34,
+      status: "review",
+      requiresReview: true,
+    });
+    expect(result.summary.reviewFields).toContain("teacher_id");
+    expect(result.summary.autoFields).not.toContain("teacher_id");
+  });
+
+  it("keeps teacher identification in review when the registry has no match", () => {
+    const result = proposeTaxonomy({
+      playlistTitle: "JEE Class 11 Physics Complete Course",
+      playlistDescription: "Faculty: Unknown Person",
+    }, taxonomy);
+
+    expect(result.decisions.teacher_id).toMatchObject({
+      value: null,
+      status: "review",
+      candidates: [],
+    });
+    expect(result.decisions.category_id).toMatchObject({ value: 20, status: "auto" });
+    expect(result.decisions.board_ids).toMatchObject({ value: [], status: "auto" });
+    expect(result.summary.manualFields).toEqual([]);
+    expect(result.decisions).not.toHaveProperty("chapter_id");
+  });
+});
+
+describe("live category and board taxonomy", () => {
+  it("requires review when a goal has more than one legal category", () => {
+    const proposal = proposeCategory(
+      { value: 10, slug: "jee" },
+      [{ id: 20, name: "JEE", slug: "jee" }, { id: 21, name: "Advanced", slug: "advanced" }],
+      [
+        { category_id: 20, learning_goal_id: 10 },
+        { category_id: 21, learning_goal_id: 10 },
+      ],
+    );
+    expect(proposal).toMatchObject({ value: null, requiresReview: true });
+    expect(proposal.candidates).toHaveLength(2);
+  });
+
+  it("keeps School boards under review but auto-confirms an empty non-School list", () => {
+    const boards = [{ id: 30, name: "CBSE", slug: "cbse" }];
+    expect(proposeBoards({ value: 10, slug: "jee" }, boards)).toMatchObject({
+      value: [],
+      confidence: 0.9,
+    });
+    expect(proposeBoards({ value: 11, slug: "school" }, boards)).toMatchObject({
+      value: [],
+      requiresReview: true,
+      candidates: boards,
+    });
+  });
+});
+
+describe("live class-level compatibility", () => {
+  it("keeps no-signal class selection in review with only legal candidates", () => {
+    const proposal = validateClassLabelsAgainstTaxonomy(
+      { value: [], confidence: 0, evidence: "no class-level signal" },
+      { value: 10, slug: "jee" },
+      taxonomy.classLevels,
+      taxonomy.learningGoalClassLevels,
+    );
+    expect(proposal).toMatchObject({ value: [], requiresReview: true });
+    expect(proposal.candidates.map((candidate) => candidate.label))
+      .toEqual(["11th", "12th", "Dropper"]);
+  });
+
+  it("rejects a metadata class that is illegal for the resolved goal", () => {
+    const proposal = validateClassLabelsAgainstTaxonomy(
+      { value: ["10th"], confidence: 0.9, evidence: "matched 10th" },
+      { value: 10, slug: "jee" },
+      taxonomy.classLevels,
+      taxonomy.learningGoalClassLevels,
+    );
+    expect(proposal).toMatchObject({ value: [], confidence: 0, requiresReview: true });
+    expect(proposal.evidence).toContain("incompatible");
+  });
+
+  it("preserves a high-confidence class only when live compatibility confirms it", () => {
+    const proposal = validateClassLabelsAgainstTaxonomy(
+      { value: ["11th"], confidence: 0.9, evidence: "matched 11th" },
+      { value: 10, slug: "jee" },
+      taxonomy.classLevels,
+      taxonomy.learningGoalClassLevels,
+    );
+    expect(proposal).toMatchObject({ value: ["11th"], confidence: 0.9 });
+    expect(proposal).not.toHaveProperty("requiresReview");
+  });
+});
