@@ -115,6 +115,16 @@ try {
   const adminUrgentContrast = await contrastSnapshot(page.getByText(/Do not treat this as an ordinary takedown ticket/i));
   const adminLayout = await page.evaluate(layoutSnapshot);
   await page.screenshot({ path: resolve(outputDir, "forum-moderation-queue-context-360.png"), fullPage: true });
+  await page.getByRole("button", { name: "Suspend author…" }).click();
+  const suspensionDisabledWithoutReason = await page.getByRole("button", { name: "Confirm suspension" }).isDisabled();
+  await page.getByLabel(/Moderation reason/).fill("Repeated unsafe conduct");
+  const suspensionFormLayout = await page.evaluate(layoutSnapshot);
+  await page.screenshot({ path: resolve(outputDir, "forum-moderation-suspension-form-360.png"), fullPage: true });
+  await page.getByRole("button", { name: "Confirm suspension" }).click();
+  await page.getByText("physics_helper is suspended for 7 days.").waitFor();
+  const suspensionUsername = await page.locator("html").getAttribute("data-suspension-username");
+  const suspensionDays = await page.locator("html").getAttribute("data-suspension-days");
+  const suspensionReason = await page.locator("html").getAttribute("data-suspension-reason");
   await page.getByRole("button", { name: "Hide and resolve" }).click();
   await page.getByText("No open forum reports").waitFor();
   const moderationAction = await page.locator("html").getAttribute("data-moderation-action");
@@ -123,11 +133,12 @@ try {
   check("self-harm is a distinct urgent reporting path", urgentExplanation && emergencyBoundary && selfHarmReason === "self_harm", { urgent_explanation: urgentExplanation, emergency_boundary: emergencyBoundary, submitted_reason: selfHarmReason });
   check("self-harm success differs from generic confirmation", genericReason === "spam" && genericHasUrgent === 0, { generic_reason: genericReason, urgent_confirmation_count: genericHasUrgent });
   check("admin sees reported content and containing post context", adminContext && adminUrgent, { post_context: adminContext, urgent_badge: adminUrgent });
+  check("admin suspension requires a reason and targets the public author username", suspensionDisabledWithoutReason && suspensionUsername === "physics_helper" && suspensionDays === "7" && suspensionReason === "Repeated unsafe conduct", { disabled_without_reason: suspensionDisabledWithoutReason, username: suspensionUsername, days: suspensionDays, reason: suspensionReason });
   check("admin moderation action is wired", moderationAction === "hide", { action: moderationAction });
   check("urgent safety copy passes AA contrast", studentUrgentContrast.contrast_ratio >= 4.5 && adminUrgentContrast.contrast_ratio >= 4.5, { student: studentUrgentContrast, admin: adminUrgentContrast });
-  check("moderation layouts have no horizontal page overflow", [urgentLayout, genericLayout, adminLayout].every((item) => item.page_scroll_width <= item.viewport_width), { urgent: urgentLayout, generic: genericLayout, admin: adminLayout });
-  check("moderation controls meet the 44px mobile target", [urgentLayout, genericLayout, adminLayout].every((item) => item.undersized_targets.length === 0), { urgent: urgentLayout.undersized_targets, generic: genericLayout.undersized_targets, admin: adminLayout.undersized_targets });
-  check("moderation surfaces mount no unowned Reveal blocks", [urgentLayout, genericLayout, adminLayout].every((item) => item.reveal_nodes === 0), { urgent: urgentLayout.reveal_nodes, generic: genericLayout.reveal_nodes, admin: adminLayout.reveal_nodes });
+  check("moderation layouts have no horizontal page overflow", [urgentLayout, genericLayout, adminLayout, suspensionFormLayout].every((item) => item.page_scroll_width <= item.viewport_width), { urgent: urgentLayout, generic: genericLayout, admin: adminLayout, suspension_form: suspensionFormLayout });
+  check("moderation controls meet the 44px mobile target", [urgentLayout, genericLayout, adminLayout, suspensionFormLayout].every((item) => item.undersized_targets.length === 0), { urgent: urgentLayout.undersized_targets, generic: genericLayout.undersized_targets, admin: adminLayout.undersized_targets, suspension_form: suspensionFormLayout.undersized_targets });
+  check("moderation surfaces mount no unowned Reveal blocks", [urgentLayout, genericLayout, adminLayout, suspensionFormLayout].every((item) => item.reveal_nodes === 0), { urgent: urgentLayout.reveal_nodes, generic: genericLayout.reveal_nodes, admin: adminLayout.reveal_nodes, suspension_form: suspensionFormLayout.reveal_nodes });
   check("browser emitted no console or page errors", evidence.console_errors.length === 0 && evidence.page_errors.length === 0, { console_errors: evidence.console_errors, page_errors: evidence.page_errors });
 } catch (error) {
   evidence.fatal_error = error instanceof Error ? error.stack : String(error);

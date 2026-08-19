@@ -19,6 +19,7 @@ import { findTestSection } from "./src/testPlatforms.js";
 import { CLASS_LEVELS_BY_GOAL } from "./src/classLevels.js";
 import { canonicalBrowseUrl } from "./src/canonicalUrl.js";
 import { exploreStepHeading } from "./src/exploreHeading.js";
+import { getSubjectGuide } from "./src/subjectGuides.js";
 import {
   courseMeta,
   injectCourseMeta,
@@ -64,7 +65,7 @@ const LOOKUP_TIMEOUT_MS = 1500;
 
 const STATIC_APP_ROUTES = new Set([
   "/", "/admin", "/browse", "/compare", "/explore", "/privacy",
-  "/forum", "/forum/submit", "/materials", "/reset", "/search", "/signin", "/terms", "/tests",
+  "/forum", "/forum/submit", "/materials", "/methodology", "/reset", "/search", "/signin", "/terms", "/tests",
 ]);
 
 /** Mirrors the route shapes in App.jsx. Resource existence is checked later. */
@@ -309,7 +310,17 @@ async function deepExploreResponse(url, route, supaUrl, supaKey) {
   if (!shell.ok) return next();
   let html = injectRouteMeta(await shell.text(), meta);
   html = injectStructuredData(html, exploreSchemas(crumbs, options));
-  html = injectRootContent(html, renderExploreBody({ heading, meta, crumbs, options }));
+  html = injectRootContent(html, renderExploreBody({
+    heading,
+    meta,
+    crumbs,
+    options,
+    guide: getSubjectGuide({
+      goal: route.goal,
+      cls: route.cls,
+      subject: subject?.slug,
+    }),
+  }));
   return htmlResponse(html);
 }
 

@@ -6,7 +6,7 @@ export default function ForumFeatureUnavailable({ released = false }) {
   const title = released ? "Student forum UI is being prepared" : "Student forum is not available yet";
   const detail = released
     ? "The discussion pages are still under review. No student contribution surface is open yet."
-    : "The forum is being reviewed for student safety, accessibility and reliable draft handling before it is linked from the website.";
+    : "The forum is being held behind a release flag until its rules, moderation operations and final launch decision are complete.";
 
   return (
     <Page crumbs={[{ label: "Student forum" }]} width="reading">

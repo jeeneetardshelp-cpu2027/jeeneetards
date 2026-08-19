@@ -12,6 +12,8 @@ describe("forum moderation browser verifier source", () => {
     expect(verifier).toContain("Sent for urgent human review");
     expect(verifier).toContain("Report received");
     expect(verifier).toContain("Urgent human review");
+    expect(verifier).toContain("Suspend author…");
+    expect(verifier).toContain("data-suspension-username");
     expect(verifier).toContain("page_scroll_width");
     expect(verifier).toContain("undersized_targets");
   });

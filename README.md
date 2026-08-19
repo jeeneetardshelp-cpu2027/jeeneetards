@@ -114,6 +114,15 @@ the local `.env` file or any privileged credential.
 | `npm run verify:frontend-release` | Check secrets, metadata, headers, SPA routing and legal placeholders |
 | `npm run verify:production-capabilities` | Read-only check that production API capabilities match the frontend flags |
 | `npm run audit:production-catalog` | Read-only anonymous inventory of live catalogue metadata and coverage |
+| `npm run review:ingestion -- --playlist=<ID> --expected-project-ref=<REF>` | Build an outside-repository, read-only human-review bundle from real YouTube metadata and live public taxonomy |
+| `npm run prepare:ingestion-review -- --playlist=<ID> --expected-project-ref=<REF> --out-dir=<NEW_DIR> [--check]` | Run the complete fail-closed review preparation; `--check` creates no files, while `--bundle=<REVIEW>` reverifies an existing real bundle offline |
+| `npm run verify:ingestion-preparation -- --receipt=<RECEIPT>` | Offline verification of the complete preparation receipt, all four artifact hashes, bindings, and blank-response state |
+| `npm run verify:ingestion-review -- --bundle=<FILE>` | Offline integrity check for a generated ingestion human-review bundle |
+| `npm run prepare:ingestion-decisions -- --bundle=<FILE>` | Create a hash-bound, non-importable human decision worksheet outside the repository |
+| `npm run verify:ingestion-decisions -- --bundle=<REVIEW> --decisions=<DECISIONS>` | Offline integrity and human-completion check for an ingestion decision worksheet |
+| `npm run render:ingestion-review -- --bundle=<REVIEW> --decisions=<DECISIONS> [--prior-manifest=<MANIFEST>]` | Render a hash-bound, evidence-only Markdown packet; an optional prior reviewed manifest is exact-source-bound and labelled historical |
+| `npm run prepare:ingestion-response -- --bundle=<REVIEW> --decisions=<DECISIONS>` | Create a minimal hash-bound form containing only editable reviewer fields |
+| `npm run apply:ingestion-response -- --bundle=<REVIEW> --decisions=<DECISIONS> --response=<RESPONSE> --check` | Validate an explicit reviewer response and merged result without writing a file; omit `--check` to create a separate revalidated worksheet |
 | `npm run ui:audit` | Run the responsive browser audit and fail on objective layout/accessibility regressions |
 | `npm run pack:review` | Build a review archive outside the repository |
 

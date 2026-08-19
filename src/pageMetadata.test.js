@@ -25,6 +25,14 @@ describe("public page metadata", () => {
     expect(explore).toContain("JEE, NEET, Olympiad or School Boards");
   });
 
+  it("publishes indexable metadata for the curation methodology", () => {
+    const page = metadataForLocation("/methodology");
+    expect(page.title).toBe("How courses are curated | JEENEETARD");
+    expect(page.description).toContain("what verified means");
+    expect(page.robots).toBe("index, follow");
+    expect(page.canonicalPath).toBe("/methodology");
+  });
+
   it("creates readable, route-specific explore metadata", () => {
     expect(readablePathSegment("jee")).toBe("JEE");
     expect(readablePathSegment("class-12")).toBe("Class 12");

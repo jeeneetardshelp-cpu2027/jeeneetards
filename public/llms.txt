@@ -10,6 +10,7 @@ official YouTube player instead of hosting video files.
 - Chapter pages that list free courses for the same topic side by side.
 - Course pages with embedded YouTube lessons, chapter notes, and comments.
 - Faculty profile pages for verified aliases and course discovery.
+- A curation-methodology page that explains catalogue labels and corrections.
 - Legal pages for terms and privacy.
 
 ## Public crawlable routes
@@ -19,6 +20,7 @@ official YouTube player instead of hosting video files.
 - `/explore`
 - `/course/:id`
 - `/faculty/:slug`
+- `/methodology`
 - `/terms`
 - `/privacy`
 
@@ -34,4 +36,4 @@ official YouTube player instead of hosting video files.
 - All videos stay on YouTube; this site stores descriptive metadata only.
 - Use the canonical course page for course-level summaries.
 - Use the browse and chapter pages for discovery and comparison.
-
+- Use `/methodology` for the meaning and limits of catalogue classifications.
