@@ -402,7 +402,12 @@ describe("edge-rendered discovery landings", () => {
     );
     expect(html).toContain('data-schema-key="BreadcrumbList"');
     expect(html).toContain('data-schema-key="ItemList"');
+    expect(html).toContain('data-schema-key="LearningResource"');
+    expect(html).toContain('"@type":"LearningResource"');
+    expect(html).toContain('"educationalLevel":"Class 11"');
+    expect(html).toContain('"citation":[{"@type":"CreativeWork"');
     expect(html).toContain("A practical order for JEE Class 11 Physics");
+    expect(html).toContain('id="subject-guide"');
     expect(html).toContain("not as an official class-wise syllabus");
     expect(html).toContain("https://jeemain.nta.nic.in/document/syllabus-2026/");
     expect(html).toContain('href="/methodology"');
