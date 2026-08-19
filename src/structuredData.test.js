@@ -373,6 +373,7 @@ describe("organizationSchema", () => {
       "@type": "Organization",
       name: "JEENEETARD",
       url: "https://www.jeeneetard.com/",
+      publishingPrinciples: "https://www.jeeneetard.com/methodology",
       description:
         "Browse free educational YouTube courses by exam, class, subject and chapter.",
     });

@@ -38,6 +38,7 @@ const CONTACT_EMAIL = "jeeneetardshelp@gmail.com";
 const CONTACT_URL = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(CONTACT_EMAIL)}&su=${encodeURIComponent("JEENEETARD feedback")}`;
 
 const LEGAL = [
+  { label: "How courses are curated", to: "/methodology" },
   { label: "Terms & Disclaimer", to: "/terms" },
   { label: "Privacy Policy", to: "/privacy" },
   { label: "Contact us", href: CONTACT_URL, external: true },
