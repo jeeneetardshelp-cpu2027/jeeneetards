@@ -15,9 +15,11 @@ begin
      or to_regclass('public.profiles') is null
      or to_regclass('public.forum_install_state') is null
      or to_regclass('public.forum_settings') is null
+     or to_regprocedure('auth.role()') is null
      or to_regprocedure('public.forum_mode()') is null
      or to_regprocedure('public.forum_username_is_allowed(text)') is null
-     or to_regprocedure('public.is_admin()') is null then
+     or to_regprocedure('public.is_admin()') is null
+     or to_regprocedure('public.protect_profile_admin_flag()') is null then
     raise exception 'REFUSING: transfer preflight production baseline is incomplete';
   end if;
   if to_regclass('public.forum_admin_transfer_state') is not null then
@@ -32,6 +34,22 @@ begin
   end if;
   if not public.forum_username_is_allowed('alecc_daddy') then
     raise exception 'REFUSING: target username no longer passes the reviewed forum rule';
+  end if;
+  if current_user <> 'postgres'
+     or session_user <> 'postgres'
+     or coalesce(auth.role(), '') <> '' then
+    raise exception 'REFUSING: transfer preflight requires the reviewed SQL Editor postgres context';
+  end if;
+  if not exists (
+    select 1
+    from pg_trigger t
+    where t.tgrelid = 'public.profiles'::regclass
+      and t.tgname = 'trg_protect_profile_admin_flag'
+      and not t.tgisinternal
+      and t.tgenabled = 'O'
+      and t.tgfoid = 'public.protect_profile_admin_flag()'::regprocedure
+  ) then
+    raise exception 'REFUSING: profile admin-protection trigger does not match';
   end if;
   if (
     select count(*)
@@ -65,6 +83,8 @@ select
   (select count(*) from public.profiles where is_admin) = 1
     as exactly_one_current_admin,
   true as audited_identity_shape_matches,
+  true as sql_editor_context_ready,
+  true as admin_protection_trigger_ready,
   false as database_changed;
 
 commit;

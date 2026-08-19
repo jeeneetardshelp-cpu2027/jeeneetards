@@ -10,8 +10,17 @@ that exact target. It does not open the forum or alter forum content.
 
 ## Status
 
-Prepared locally only. No file authorizes production execution. Read-only and
-mutating files remain separate exact-hash approvals.
+The first reviewed `transfer.sql` revision was attempted once in production on
+2026-08-20. The existing `protect_profile_admin_flag()` trigger rejected the
+two-row update because the Supabase SQL Editor runs as `postgres` without a JWT
+`service_role` claim. The transaction failed before `commit`; a fresh audit
+confirmed the original sole administrator, target non-administrator, absent
+transfer-state table, forum mode `off`, and `database_changed = false`.
+
+This corrective revision is prepared locally only. It has new file hashes and
+is not covered by the earlier execution approval. No file authorizes another
+production attempt. Read-only and mutating files remain separate exact-hash
+approvals.
 
 ## Required order
 
@@ -36,6 +45,20 @@ requires mode `off`; validates both exact identity shapes; creates a locked-down
 `forum_admin_transfer_state` table; records the previous and target profile IDs;
 and changes exactly two `is_admin` values in one SQL statement. Any failure
 rolls the entire transaction back, including the state table.
+
+The transfer and rollback require the exact Supabase SQL Editor context:
+`current_user = session_user = postgres` and no incoming JWT role. They verify
+that `trg_protect_profile_admin_flag` is enabled and still calls
+`protect_profile_admin_flag()`. Immediately around the two-row update they set
+the transaction-local `request.jwt.claim.role` to `service_role`, allowing the
+existing protection trigger to evaluate its intended trusted path, and restore
+the prior empty claim before checking postconditions. The trigger is never
+disabled, dropped, or replaced; the setting automatically rolls back on any
+error; and no service-role key is stored or used.
+
+The package test fixture installs the real protection trigger and proves that a
+plain update fails with the same production error before exercising the guarded
+transfer and rollback successfully.
 
 The captured UUIDs are deliberately not foreign keys: the operational audit
 record must not create a new lifetime block on either account. If an account is
