@@ -139,6 +139,9 @@ describe("public page metadata", () => {
     });
 
     expect(server.title).toBe(client.title);
+    expect(server.title).toBe(
+      "Rectilinear Motion (Kinematics) by ABJ Sir | JEENEETARD",
+    );
     expect(server.description).toBe(client.description);
     expect(server.description).toContain("Rectilinear Motion (Kinematics)");
     expect(server.description.length).toBeLessThanOrEqual(160);
