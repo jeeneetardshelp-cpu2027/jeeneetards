@@ -1,0 +1,98 @@
+{
+  "evidence_version": 1,
+  "captured_at": "2026-08-19T10:04:07.5477919+05:30",
+  "operation": "forum_suspension_admin_v1_production_install",
+  "target": {
+    "project_ref": "kezelafqhgqrprpadmlf",
+    "dashboard_project_label": "main Production",
+    "database_name": "postgres"
+  },
+  "authorization": {
+    "explicit_owner_authorization_received": true,
+    "authorized_installer_sha256": "0f7ecfa2a9fed99a3be11a0bd67fb59f31d3acba2421fe22bd4fadf71b90a24d"
+  },
+  "source": {
+    "origin_main_commit": "ba7ce9c2954ea774b7cc76cad7acf6d8aa17e8b0",
+    "package_matches_origin_main": true,
+    "release_forum_flag_before_and_after": false
+  },
+  "restore_gate": {
+    "pitr_enabled": true,
+    "recovery_window_days": 7,
+    "restore_granularity": "seconds",
+    "verified_in_production_dashboard_immediately_before_install": true,
+    "setting_changed": false
+  },
+  "editor_copyback": {
+    "line_endings_normalized_for_comparison": true,
+    "preflight": {
+      "expected_sha256": "bf9d3252959ab7581791fdddd2131f422c883b9f6da34e9aaa7eafbe6cf5363a",
+      "copied_back_sha256": "bf9d3252959ab7581791fdddd2131f422c883b9f6da34e9aaa7eafbe6cf5363a",
+      "matched": true
+    },
+    "audit": {
+      "expected_sha256": "9f3605335ca53dc365132389ba76bbcc0f53aa45ad790a65a7cd8bb2cdef26de",
+      "copied_back_sha256": "9f3605335ca53dc365132389ba76bbcc0f53aa45ad790a65a7cd8bb2cdef26de",
+      "matched": true
+    },
+    "install": {
+      "expected_sha256": "0f7ecfa2a9fed99a3be11a0bd67fb59f31d3acba2421fe22bd4fadf71b90a24d",
+      "copied_back_sha256": "0f7ecfa2a9fed99a3be11a0bd67fb59f31d3acba2421fe22bd4fadf71b90a24d",
+      "matched": true
+    },
+    "postflight": {
+      "expected_sha256": "90e41614547d32671b06b70471fbccdcdc84214f27434a7f7276edb2da1499e0",
+      "copied_back_sha256": "90e41614547d32671b06b70471fbccdcdc84214f27434a7f7276edb2da1499e0",
+      "matched": true
+    }
+  },
+  "preflight": {
+    "assertions_passed": true,
+    "database_name": "postgres",
+    "existing_suspension_rows": 0,
+    "database_changed": false
+  },
+  "audit": {
+    "assertions_passed": true,
+    "suspend_log_entries": 0,
+    "unsuspend_log_entries": 0,
+    "read_only_transaction_rolled_back": true
+  },
+  "install": {
+    "transaction_committed_cleanly": true,
+    "terminal_row": {
+      "forum_mode_is_off": true,
+      "baseline_state_retained": true,
+      "set_suspension_by_username_installed": true,
+      "list_suspensions_installed": true,
+      "staging_fixture_helper_absent": true,
+      "profiles_unchanged": true,
+      "posts_unchanged": true,
+      "comments_unchanged": true,
+      "votes_unchanged": true,
+      "user_stats_unchanged": true,
+      "reports_unchanged": true,
+      "moderation_log_unchanged": true,
+      "suspensions_unchanged": true,
+      "rate_events_unchanged": true
+    }
+  },
+  "postflight": {
+    "assertions_passed": true,
+    "terminal_row": {
+      "forum_mode_is_off": true,
+      "baseline_state_retained": true,
+      "set_suspension_by_username_installed": true,
+      "list_suspensions_installed": true,
+      "staging_fixture_helper_absent": true,
+      "database_changed": false
+    }
+  },
+  "not_performed": [
+    "forum mode change",
+    "frontend release flag change",
+    "production fixture creation",
+    "production suspension or unsuspension",
+    "rollback"
+  ]
+}
