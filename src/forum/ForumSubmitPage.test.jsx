@@ -90,6 +90,7 @@ describe("forum discussion composer", () => {
 
     fillDraft();
     fireEvent.change(await screen.findByLabelText("Username"), { target: { value: "physics-helper" } });
+    fireEvent.click(screen.getByRole("checkbox", { name: /I have reviewed and agree/i }));
     fireEvent.click(screen.getByRole("button", { name: "Claim username" }));
     expect(await screen.findByText(/publishing publicly as/i)).toBeTruthy();
 

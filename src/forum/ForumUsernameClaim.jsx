@@ -1,5 +1,6 @@
 import { AtSign, ShieldCheck } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router";
 import { Button, IconTile, Surface } from "../ui.jsx";
 import { forumApi } from "./forumApi.js";
 import { forumContributionError } from "./forumErrorMessages.js";
@@ -8,6 +9,7 @@ export const FORUM_USERNAME_PATTERN = /^[A-Za-z0-9_-]{3,30}$/;
 
 export default function ForumUsernameClaim({ api = forumApi, onClaimed }) {
   const [username, setUsername] = useState("");
+  const [rulesAccepted, setRulesAccepted] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
 
@@ -16,6 +18,10 @@ export default function ForumUsernameClaim({ api = forumApi, onClaimed }) {
     const candidate = username.trim();
     if (!FORUM_USERNAME_PATTERN.test(candidate)) {
       setError("Use 3–30 letters, numbers, underscores or hyphens.");
+      return;
+    }
+    if (!rulesAccepted) {
+      setError("Review and accept the Forum Rules before claiming a username.");
       return;
     }
     setBusy(true);
@@ -58,6 +64,22 @@ export default function ForumUsernameClaim({ api = forumApi, onClaimed }) {
             </Button>
           </div>
           <p className="mt-2 text-xs text-ink-3">Letters, numbers, _ and - only. Usernames cannot be changed after claiming.</p>
+          <label className="mt-4 flex min-h-11 cursor-pointer items-start gap-3 rounded-md border border-hairline bg-surface-inset px-3 py-3 text-sm leading-relaxed text-ink-2">
+            <input
+              type="checkbox"
+              checked={rulesAccepted}
+              onChange={(event) => setRulesAccepted(event.target.checked)}
+              required
+              className="mt-1 h-4 w-4 shrink-0 accent-[var(--accent)]"
+            />
+            <span>
+              I have reviewed and agree to follow the Forum Rules in the{" "}
+              <Link to="/terms#forum-rules" className="font-medium text-accent underline hover:no-underline">
+                Terms of Service
+              </Link>
+              . I understand that breaking these rules may result in content removal or temporary account suspension.
+            </span>
+          </label>
           {error && <p role="alert" className="mt-3 text-sm text-red-600">{error}</p>}
         </form>
         <p className="mt-4 flex items-start gap-2 text-xs leading-relaxed text-ink-3">
