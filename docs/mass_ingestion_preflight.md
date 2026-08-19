@@ -485,6 +485,9 @@ inconsistent identities. It copies only whitelisted reviewer fields, recomputes
 completion, runs the offline worksheet verifier, and writes a separate
 `*.reviewed.decisions.json` file. It never overwrites the source worksheet and
 still leaves the result non-importable with database writes disabled.
+Run the same command with `--check` first to validate the response and merged
+worksheet entirely in memory. Check mode rejects `--out` and `--overwrite` and
+writes no file.
 
 Use `--env=staging` only when the staging environment file points to the
 intended read-only comparison target. This command performs no database write,

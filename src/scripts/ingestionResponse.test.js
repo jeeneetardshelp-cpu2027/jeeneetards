@@ -82,7 +82,21 @@ describe("offline ingestion reviewer responses", () => {
       decisions: "decisions.json",
       response: "response.json",
       overwrite: false,
+      check: false,
     });
+    expect(parseResponseApplyArgs([
+      "--bundle=review.json",
+      "--decisions=decisions.json",
+      "--response=response.json",
+      "--check",
+    ]).check).toBe(true);
+    expect(() => parseResponseApplyArgs([
+      "--bundle=review.json",
+      "--decisions=decisions.json",
+      "--response=response.json",
+      "--check",
+      "--overwrite",
+    ])).toThrow("cannot be combined");
   });
 
   it("keeps response and merged outputs separate and outside the repository", () => {

@@ -20,7 +20,7 @@ const here = dirname(fileURLToPath(import.meta.url));
 const defaultRepoRoot = resolve(here, "../..");
 
 export function parseResponseApplyArgs(argv = []) {
-  const args = { overwrite: false };
+  const args = { overwrite: false, check: false };
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index];
     if (arg === "--bundle") args.bundle = argv[++index];
@@ -32,12 +32,16 @@ export function parseResponseApplyArgs(argv = []) {
     else if (arg === "--out") args.out = argv[++index];
     else if (arg.startsWith("--out=")) args.out = arg.slice("--out=".length);
     else if (arg === "--overwrite") args.overwrite = true;
+    else if (arg === "--check") args.check = true;
     else throw new Error(`unknown argument: ${arg}`);
   }
   for (const name of ["bundle", "decisions", "response"]) {
     if (!args[name] || !args[name].toLowerCase().endsWith(".json")) {
       throw new Error(`--${name} must name a JSON file.`);
     }
+  }
+  if (args.check && (args.out || args.overwrite)) {
+    throw new Error("--check cannot be combined with --out or --overwrite.");
   }
   return args;
 }
@@ -245,15 +249,18 @@ export function mergeReviewerResponse(bundle, worksheet, response) {
 export function main(argv = process.argv.slice(2)) {
   const args = parseResponseApplyArgs(argv);
   const paths = resolveResponseApplyPaths(args);
-  assertMergedOutputAvailable(paths.outputPath, args.overwrite);
+  if (!args.check) assertMergedOutputAvailable(paths.outputPath, args.overwrite);
   const bundle = JSON.parse(readFileSync(paths.bundlePath, "utf8"));
   const worksheet = JSON.parse(readFileSync(paths.decisionsPath, "utf8"));
   const response = JSON.parse(readFileSync(paths.responsePath, "utf8"));
   const merged = mergeReviewerResponse(bundle, worksheet, response);
-  mkdirSync(dirname(paths.outputPath), { recursive: true });
-  writeFileSync(paths.outputPath, `${JSON.stringify(merged.worksheet, null, 2)}\n`, "utf8");
+  if (!args.check) {
+    mkdirSync(dirname(paths.outputPath), { recursive: true });
+    writeFileSync(paths.outputPath, `${JSON.stringify(merged.worksheet, null, 2)}\n`, "utf8");
+  }
   console.log(JSON.stringify({
-    output: paths.outputPath,
+    output: args.check ? null : paths.outputPath,
+    check_only: args.check,
     playlist: merged.worksheet.binding.playlist_id,
     valid: merged.verification.valid,
     complete: merged.verification.complete,

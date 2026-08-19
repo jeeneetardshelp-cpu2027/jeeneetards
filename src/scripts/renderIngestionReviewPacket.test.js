@@ -132,6 +132,8 @@ describe("offline ingestion human-review packet", () => {
     expect(markdown).toContain('Allowed controlled values: `"hindi"`, `"english"`, `"hinglish"`');
     expect(markdown).toContain("Human review complete: **No**");
     expect(markdown).toContain("Database writes allowed: **No**");
+    expect(markdown).toContain("Run the response apply command with `--check` first.");
+    expect(markdown).not.toContain("recording decisions in the JSON worksheet");
     expect(markdown).not.toMatch(/recommended action|we recommend|approved for import/iu);
   });
 

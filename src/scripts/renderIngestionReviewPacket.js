@@ -294,7 +294,8 @@ export function renderReviewPacket(
     `- Reviewed at: ${worksheet.reviewer.reviewed_at ? code(worksheet.reviewer.reviewed_at) : "Pending"}`,
     `- Notes: ${worksheet.reviewer.notes ? text(worksheet.reviewer.notes) : "None"}`,
     "",
-    "After recording decisions in the JSON worksheet, regenerate this packet and run the offline decision verifier again.",
+    "Complete the separate reviewer response form; do not edit this packet or its evidence worksheet.",
+    "Run the response apply command with `--check` first. After it validates, create the separate reviewed worksheet, verify it, and regenerate this packet from that worksheet.",
     "",
   );
   return `${lines.join("\n")}\n`;
