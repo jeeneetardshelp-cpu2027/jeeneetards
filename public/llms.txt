@@ -10,6 +10,8 @@ official YouTube player instead of hosting video files.
 - Chapter pages that list free courses for the same topic side by side.
 - Course pages with embedded YouTube lessons, chapter notes, and comments.
 - Faculty profile pages for verified aliases and course discovery.
+- A study-material directory and exam-specific mock-test source pages.
+- Two source-checked subject study guides inside the Explore directory.
 - A curation-methodology page that explains catalogue labels and corrections.
 - Legal pages for terms and privacy.
 
@@ -18,22 +20,47 @@ official YouTube player instead of hosting video files.
 - `/`
 - `/browse`
 - `/explore`
+- `/explore/:goal`
+- `/explore/:goal/:class`
+- `/explore/:goal/:class/:subject`
+- `/explore/school/:board/:class`
+- `/explore/school/:board/:class/:subject`
 - `/course/:id`
 - `/faculty/:slug`
+- `/materials`
+- `/tests`
+- `/tests/jee-main`
+- `/tests/jee-advanced`
+- `/tests/neet`
+- `/tests/olympiad`
+- `/tests/class-10`
+- `/tests/class-12`
 - `/methodology`
 - `/terms`
 - `/privacy`
+
+## Source-checked editorial pages
+
+- `/explore/jee/class-11/physics`
+- `/explore/neet/class-11/biology`
+- `/methodology`
+
+The two subject guides cite the current official syllabus and NCERT sources
+visible on their pages. They are navigation guidance, not replacement syllabi.
 
 ## Indexing and crawl guidance
 
 - Public pages are intended to be indexed.
 - `/admin` is restricted and excluded by robots rules.
 - Search result URLs and capability-gated routes may be `noindex`.
-- The canonical XML sitemap is `/sitemap.xml`.
+- The canonical XML sitemap is `/sitemap.xml` and is the source of truth for
+  the currently populated Explore routes.
 
 ## Content policy
 
 - All videos stay on YouTube; this site stores descriptive metadata only.
 - Use the canonical course page for course-level summaries.
 - Use the browse and chapter pages for discovery and comparison.
+- Mock-test pages link to external providers and label whether access is free,
+  account-gated, or paid.
 - Use `/methodology` for the meaning and limits of catalogue classifications.
