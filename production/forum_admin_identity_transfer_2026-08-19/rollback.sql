@@ -25,7 +25,9 @@ begin
      or to_regclass('public.forum_install_state') is null
      or to_regclass('public.forum_settings') is null
      or to_regclass('public.forum_admin_transfer_state') is null
-     or to_regprocedure('public.forum_mode()') is null then
+     or to_regprocedure('auth.role()') is null
+     or to_regprocedure('public.forum_mode()') is null
+     or to_regprocedure('public.protect_profile_admin_flag()') is null then
     raise exception 'REFUSING: transfer rollback production baseline is incomplete';
   end if;
   if (select count(*) from public.forum_install_state) <> 1 then
@@ -37,6 +39,22 @@ begin
   end if;
   lock table public.profiles in share row exclusive mode;
   lock table public.forum_admin_transfer_state in share row exclusive mode;
+  if current_user <> 'postgres'
+     or session_user <> 'postgres'
+     or coalesce(auth.role(), '') <> '' then
+    raise exception 'REFUSING: transfer rollback requires the reviewed SQL Editor postgres context';
+  end if;
+  if not exists (
+    select 1
+    from pg_trigger t
+    where t.tgrelid = 'public.profiles'::regclass
+      and t.tgname = 'trg_protect_profile_admin_flag'
+      and not t.tgisinternal
+      and t.tgenabled = 'O'
+      and t.tgfoid = 'public.protect_profile_admin_flag()'::regprocedure
+  ) then
+    raise exception 'REFUSING: profile admin-protection trigger does not match';
+  end if;
   if (select count(*) from public.profiles where is_admin) <> 1
      or (select count(*) from public.forum_admin_transfer_state) <> 1 then
     raise exception 'REFUSING: transfer rollback state count drifted';
@@ -70,6 +88,11 @@ begin
     raise exception 'REFUSING: transfer rollback identity or role state does not match';
   end if;
 
+  perform set_config('request.jwt.claim.role', 'service_role', true);
+  if auth.role() is distinct from 'service_role' then
+    raise exception 'REFUSING: transaction-local service_role claim was not established';
+  end if;
+
   update public.profiles
   set is_admin = case
     when id = previous_admin then true
@@ -79,6 +102,11 @@ begin
   where id in (previous_admin, target_admin)
     and is_admin is distinct from (id = previous_admin);
   get diagnostics affected_rows = row_count;
+
+  perform set_config('request.jwt.claim.role', '', true);
+  if coalesce(auth.role(), '') <> '' then
+    raise exception 'REFUSING: transaction-local claim role was not restored';
+  end if;
 
   if affected_rows <> 2
      or (select count(*) from public.profiles where is_admin) <> 1
@@ -118,6 +146,16 @@ select
     where s.id = true and not p.is_admin
   ) as exact_target_is_not_admin,
   (select count(*) from public.forum_admin_transfer_state
-    where rolled_back_at is not null) = 1 as rollback_recorded;
+    where rolled_back_at is not null) = 1 as rollback_recorded,
+  exists (
+    select 1
+    from pg_trigger t
+    where t.tgrelid = 'public.profiles'::regclass
+      and t.tgname = 'trg_protect_profile_admin_flag'
+      and not t.tgisinternal
+      and t.tgenabled = 'O'
+      and t.tgfoid = 'public.protect_profile_admin_flag()'::regprocedure
+  ) as admin_protection_trigger_enabled,
+  coalesce(auth.role(), '') = '' as claim_role_restored;
 
 commit;
