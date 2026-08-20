@@ -15,14 +15,32 @@ begin
      or to_regclass('public.profiles') is null
      or to_regclass('public.forum_install_state') is null
      or to_regclass('public.forum_settings') is null
+     or to_regprocedure('auth.role()') is null
      or to_regprocedure('public.forum_mode()') is null
      or to_regprocedure('public.forum_username_is_allowed(text)') is null
-     or to_regprocedure('public.is_admin()') is null then
+     or to_regprocedure('public.is_admin()') is null
+     or to_regprocedure('public.protect_profile_admin_flag()') is null then
     raise exception 'REFUSING: transfer audit production baseline is incomplete';
   end if;
   if (select count(*) from public.forum_install_state) <> 1
      or public.forum_mode() is distinct from 'off' then
     raise exception 'REFUSING: transfer audit requires the reviewed Forum v1 baseline with mode off';
+  end if;
+  if current_user <> 'postgres'
+     or session_user <> 'postgres'
+     or coalesce(auth.role(), '') <> '' then
+    raise exception 'REFUSING: transfer audit requires the reviewed SQL Editor postgres context';
+  end if;
+  if not exists (
+    select 1
+    from pg_trigger t
+    where t.tgrelid = 'public.profiles'::regclass
+      and t.tgname = 'trg_protect_profile_admin_flag'
+      and not t.tgisinternal
+      and t.tgenabled = 'O'
+      and t.tgfoid = 'public.protect_profile_admin_flag()'::regprocedure
+  ) then
+    raise exception 'REFUSING: profile admin-protection trigger does not match';
   end if;
 end;
 $forum_admin_identity_transfer_audit$;
@@ -53,6 +71,8 @@ select
   ) as exact_target_ready,
   public.forum_username_is_allowed('alecc_daddy')
     as target_username_allowed,
+  true as sql_editor_context_ready,
+  true as admin_protection_trigger_ready,
   false as database_changed;
 
 commit;
