@@ -18,6 +18,7 @@ import {
 // Pure data, no React — safe to pull into the edge runtime.
 import { TEST_SECTIONS, ACCESS, findTestSection } from "./src/testPlatforms.js";
 import { buildCourseMetadata } from "./src/courseMetadata.js";
+import { studyMaterialsPageSchemas } from "./src/studyMaterialsStructuredData.js";
 import { testPageSchemas } from "./src/testPageStructuredData.js";
 import {
   METHODOLOGY_CONTACT,
@@ -117,7 +118,10 @@ export function landingSchemas(pathname) {
       { key: "Organization", schema: organizationSchema() },
     ];
   }
-  return testPageSchemas(pathname).map((schema) => ({
+  const schemas = pathname === "/materials"
+    ? studyMaterialsPageSchemas()
+    : testPageSchemas(pathname);
+  return schemas.map((schema) => ({
     key: schema["@type"],
     schema,
   }));
