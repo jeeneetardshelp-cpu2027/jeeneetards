@@ -15,7 +15,9 @@ begin
      or to_regclass('public.profiles') is null
      or to_regclass('public.forum_install_state') is null
      or to_regclass('public.forum_admin_transfer_state') is null
-     or to_regprocedure('public.forum_mode()') is null then
+     or to_regprocedure('auth.role()') is null
+     or to_regprocedure('public.forum_mode()') is null
+     or to_regprocedure('public.protect_profile_admin_flag()') is null then
     raise exception 'REFUSING: transfer postflight production baseline is incomplete';
   end if;
   if (select count(*) from public.forum_install_state) <> 1
@@ -23,6 +25,22 @@ begin
      or (select count(*) from public.profiles where is_admin) <> 1
      or (select count(*) from public.forum_admin_transfer_state) <> 1 then
     raise exception 'REFUSING: transfer postflight state drifted';
+  end if;
+  if current_user <> 'postgres'
+     or session_user <> 'postgres'
+     or coalesce(auth.role(), '') <> '' then
+    raise exception 'REFUSING: transfer postflight requires the reviewed SQL Editor postgres context';
+  end if;
+  if not exists (
+    select 1
+    from pg_trigger t
+    where t.tgrelid = 'public.profiles'::regclass
+      and t.tgname = 'trg_protect_profile_admin_flag'
+      and not t.tgisinternal
+      and t.tgenabled = 'O'
+      and t.tgfoid = 'public.protect_profile_admin_flag()'::regprocedure
+  ) then
+    raise exception 'REFUSING: profile admin-protection trigger does not match';
   end if;
   if not exists (
     select 1
@@ -66,6 +84,8 @@ select
   true as previous_admin_demoted,
   true as rollback_state_captured,
   true as transfer_state_locked_down,
+  true as admin_protection_trigger_enabled,
+  true as claim_role_restored,
   false as database_changed;
 
 commit;

@@ -22,6 +22,8 @@ async function productionShape({
   previousConfirmed = true,
   previousAdmin = true,
   includeTarget = true,
+  includeProtection = true,
+  claimRole = null,
 } = {}) {
   const pg = new PGlite();
   await pg.exec(`
@@ -88,6 +90,34 @@ async function productionShape({
   if (environment) {
     await pg.query("insert into public.app_environment (id, name) values (true, $1)", [environment]);
   }
+  await pg.exec(`
+    create function auth.role() returns text
+    language sql stable set search_path = '' as $$
+      select nullif(current_setting('request.jwt.claim.role', true), '')::text
+    $$;
+  `);
+  if (includeProtection) {
+    await pg.exec(`
+    create function public.protect_profile_admin_flag() returns trigger
+    language plpgsql security definer set search_path = '' as $$
+    begin
+      if coalesce(auth.role(), '') <> 'service_role'
+         and new.is_admin is distinct from old.is_admin then
+        raise exception using
+          errcode = '42501',
+          message = 'profiles.is_admin may only be changed by service_role';
+      end if;
+      return new;
+    end;
+    $$;
+    create trigger trg_protect_profile_admin_flag
+      before update on public.profiles
+      for each row execute function public.protect_profile_admin_flag();
+    `);
+  }
+  if (claimRole) {
+    await pg.query("select set_config('request.jwt.claim.role', $1, false)", [claimRole]);
+  }
   return pg;
 }
 
@@ -100,6 +130,22 @@ function terminalRow(results, key) {
 }
 
 describe("forum administrator identity-transfer package", () => {
+  it("reproduces the production admin-protection trigger boundary", async () => {
+    const pg = await productionShape();
+    try {
+      await expect(pg.query(
+        "update public.profiles set is_admin = true where id = $1",
+        [TARGET_ID],
+      )).rejects.toThrow(/profiles\.is_admin may only be changed by service_role/);
+      expect((await pg.query(
+        "select is_admin from public.profiles where id = $1",
+        [TARGET_ID],
+      )).rows[0]).toEqual({ is_admin: false });
+    } finally {
+      await pg.close();
+    }
+  });
+
   it("audits, transfers atomically, verifies, and restores from captured IDs", async () => {
     const pg = await productionShape();
     const original = await roles(pg);
@@ -112,6 +158,8 @@ describe("forum administrator identity-transfer package", () => {
         existing_admin_ready: true,
         exact_target_ready: true,
         target_username_allowed: true,
+        sql_editor_context_ready: true,
+        admin_protection_trigger_ready: true,
         database_changed: false,
       });
 
@@ -121,6 +169,8 @@ describe("forum administrator identity-transfer package", () => {
         transfer_state_table_absent: true,
         exactly_one_current_admin: true,
         audited_identity_shape_matches: true,
+        sql_editor_context_ready: true,
+        admin_protection_trigger_ready: true,
         database_changed: false,
       });
 
@@ -132,6 +182,8 @@ describe("forum administrator identity-transfer package", () => {
         previous_admin_demoted: true,
         rollback_state_captured: true,
         transfer_state_locked_down: true,
+        admin_protection_trigger_enabled: true,
+        claim_role_restored: true,
       });
       expect(await roles(pg)).toEqual([
         { id: TARGET_ID, username: "alecc_daddy", is_admin: true },
@@ -155,6 +207,8 @@ describe("forum administrator identity-transfer package", () => {
         previous_admin_demoted: true,
         rollback_state_captured: true,
         transfer_state_locked_down: true,
+        admin_protection_trigger_enabled: true,
+        claim_role_restored: true,
         database_changed: false,
       });
 
@@ -165,6 +219,8 @@ describe("forum administrator identity-transfer package", () => {
         previous_admin_restored: true,
         exact_target_is_not_admin: true,
         rollback_recorded: true,
+        admin_protection_trigger_enabled: true,
+        claim_role_restored: true,
       });
       expect(await roles(pg)).toEqual(original);
       expect((await pg.query(`
@@ -186,6 +242,8 @@ describe("forum administrator identity-transfer package", () => {
     ["the target is unconfirmed", { targetConfirmed: false }],
     ["the target username drifted", { targetUsername: "different_name" }],
     ["the target profile is missing", { includeTarget: false }],
+    ["the admin-protection trigger is missing", { includeProtection: false }],
+    ["the SQL session carries a JWT role", { claimRole: "authenticated" }],
   ])("refuses the transfer without changing roles when %s", async (_label, options) => {
     const pg = await productionShape(options);
     const before = await roles(pg);
@@ -241,8 +299,12 @@ describe("forum administrator identity-transfer package", () => {
     expect(scripts["preflight.sql"]).toContain("begin transaction read only");
     expect(scripts["postflight.sql"]).toContain("begin transaction read only");
     expect(scripts["transfer.sql"]).toContain("affected_rows <> 2");
+    expect(scripts["transfer.sql"]).toContain("set_config('request.jwt.claim.role', 'service_role', true)");
+    expect(scripts["transfer.sql"]).not.toMatch(/disable\s+trigger/i);
     expect(scripts["transfer.sql"]).not.toMatch(/admin_transfer_state[\s\S]*references public\.profiles/i);
     expect(scripts["rollback.sql"]).toContain("affected_rows <> 2");
+    expect(scripts["rollback.sql"]).toContain("set_config('request.jwt.claim.role', 'service_role', true)");
+    expect(scripts["rollback.sql"]).not.toMatch(/disable\s+trigger/i);
     for (const value of Object.values(scripts)) {
       expect(value).not.toMatch(/eyJ[A-Za-z0-9_-]{20,}/);
       expect(value).not.toMatch(/postgres(?:ql)?:\/\//i);

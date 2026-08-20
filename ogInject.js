@@ -169,6 +169,16 @@ export function renderLandingBody(pathname, meta) {
         ["Browse all courses", "/browse"],
       ],
     },
+    "/materials": {
+      heading: "Find study material by your syllabus.",
+      description:
+        "Short notes, formula sheets, full lecture notes and previous-year papers—organised by exam, class, subject and chapter.",
+      links: [
+        ["Find a course", "/explore"],
+        ["Mock tests", "/tests"],
+        ["How resources are curated", "/methodology"],
+      ],
+    },
     "/terms": {
       heading: "Terms of Service & Disclaimer",
       description: meta.description,
