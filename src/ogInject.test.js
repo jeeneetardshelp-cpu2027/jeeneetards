@@ -116,6 +116,13 @@ describe("server-rendered discovery landings", () => {
     expect(landingSchemas("/browse")).toEqual([]);
   });
 
+  it("emits the study-material breadcrumb from the shared landing schemas", () => {
+    const schemas = landingSchemas("/materials");
+    expect(schemas.map(({ key }) => key)).toEqual(["BreadcrumbList"]);
+    expect(schemas[0].schema.itemListElement.map(({ name }) => name))
+      .toEqual(["Home", "Study material"]);
+  });
+
   it.each([
     ["/", "Find the right lecture. Skip the noise.", "/explore"],
     ["/browse", "All courses", "/explore"],

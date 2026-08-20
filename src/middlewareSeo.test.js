@@ -181,9 +181,10 @@ describe("edge-rendered discovery landings", () => {
   });
 
   it.each([
+    ["/materials", ["BreadcrumbList"]],
     ["/tests", ["BreadcrumbList", "ItemList"]],
     ["/tests/neet", ["BreadcrumbList"]],
-  ])("server-renders test-page schemas for %s", async (pathname, keys) => {
+  ])("server-renders discovery-page schemas for %s", async (pathname, keys) => {
     vi.stubGlobal("fetch", vi.fn(async () => new Response(shell, { status: 200 })));
 
     const response = await middleware(

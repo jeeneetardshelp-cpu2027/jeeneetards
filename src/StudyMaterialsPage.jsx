@@ -1,7 +1,9 @@
 import { BookOpen, FileText, RefreshCw, SearchX } from "lucide-react";
 import { useSearchParams } from "react-router";
 import { Page } from "./AppShell.jsx";
+import { useStructuredData } from "./PageMetadata.jsx";
 import StudyMaterialCard from "./StudyMaterialCard.jsx";
+import { studyMaterialsPageSchemas } from "./studyMaterialsStructuredData.js";
 import { useStudyMaterialCatalog } from "./useStudyMaterialCatalog.js";
 import {
   STUDY_MATERIAL_PAGE_SIZE,
@@ -123,6 +125,7 @@ export function StudyMaterialsDirectoryView({
 }
 
 export default function StudyMaterialsPage() {
+  useStructuredData(studyMaterialsPageSchemas(), []);
   const [params, setParams] = useSearchParams();
   const goal = params.get("goal") ?? "";
   const board = params.get("board") ?? "";
