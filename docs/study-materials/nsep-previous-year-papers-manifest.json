@@ -1,0 +1,72 @@
+[
+  {
+    "title": "NSEP 2019-20 Physics Paper with Solutions",
+    "file": "nsep-2019-20-paper-with-solutions.pdf",
+    "sha256": "433EE539CB0B634852B68FFF142E697548EDEB743AFD86862E681DE4E43C4177",
+    "pageCount": 35,
+    "examYear": 2019,
+    "session": "2019-20",
+    "goal": "olympiad",
+    "subject": "physics"
+  },
+  {
+    "title": "NSEP 2020-21 Physics Paper with Solutions",
+    "file": "nsep-2020-21-paper-with-solutions.pdf",
+    "sha256": "DDD9AEA50B288880805D0A784070912E03D7A18E483860D002FE3D75A0926B4E",
+    "pageCount": 18,
+    "examYear": 2020,
+    "session": "2020-21",
+    "goal": "olympiad",
+    "subject": "physics"
+  },
+  {
+    "title": "NSEP 2021-22 Physics Paper with Solutions",
+    "file": "nsep-2021-22-paper-with-solutions.pdf",
+    "sha256": "EBBDFA9F78511BA1A8191791205C75439108E6E9E7A4AD2BB7473BACC93D1E0F",
+    "pageCount": 22,
+    "examYear": 2021,
+    "session": "2021-22",
+    "goal": "olympiad",
+    "subject": "physics"
+  },
+  {
+    "title": "NSEP 2022-23 Physics Paper with Solutions",
+    "file": "nsep-2022-23-paper-with-solutions.pdf",
+    "sha256": "BC19F77349FA88009EB1CB28B36451E687ACDB6EC8B8FA88756D9A7B987BD216",
+    "pageCount": 46,
+    "examYear": 2022,
+    "session": "2022-23",
+    "goal": "olympiad",
+    "subject": "physics"
+  },
+  {
+    "title": "NSEP 2023-24 Physics Paper with Solutions",
+    "file": "nsep-2023-24-paper-with-solutions.pdf",
+    "sha256": "0E2A41EC3DF540D293BF34DA47BE930F7DDE1A8590C253CF8665470562B2298F",
+    "pageCount": 33,
+    "examYear": 2023,
+    "session": "2023-24",
+    "goal": "olympiad",
+    "subject": "physics"
+  },
+  {
+    "title": "NSEP 2024-25 Physics Paper with Solutions",
+    "file": "nsep-2024-25-paper-with-solutions.pdf",
+    "sha256": "25D1F3EA74A83F8E35D3534DBBC465A024A4BE4839362F11668DFAE504DD2708",
+    "pageCount": 37,
+    "examYear": 2024,
+    "session": "2024-25",
+    "goal": "olympiad",
+    "subject": "physics"
+  },
+  {
+    "title": "NSEP 2025-26 Physics Paper with Solutions",
+    "file": "nsep-2025-26-paper-with-solutions.pdf",
+    "sha256": "24B361724556219118E9FA5BA9468F55EFD216F122A5E85A229F389BB6C68954",
+    "pageCount": 47,
+    "examYear": 2025,
+    "session": "2025-26",
+    "goal": "olympiad",
+    "subject": "physics"
+  }
+]
