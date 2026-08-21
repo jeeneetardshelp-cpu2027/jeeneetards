@@ -24,6 +24,7 @@ vi.mock("./useStudyMaterials.js", async (importOriginal) => {
 });
 
 import StudyMaterialsPage, { StudyMaterialsDirectoryView } from "./StudyMaterialsPage.jsx";
+import { studyMaterialsPageSchemas } from "./studyMaterialsStructuredData.js";
 
 const MATERIAL = {
   id: 7,
@@ -56,6 +57,18 @@ describe("StudyMaterialsDirectoryView", () => {
     expect(link.getAttribute("href")).toBe(MATERIAL.sourceUrl);
     expect(link.getAttribute("rel")).toContain("noopener");
     expect(document.querySelector("img")?.getAttribute("src")).toBe(MATERIAL.previewImageUrl);
+  });
+
+  it("publishes visible client material as an ItemList", () => {
+    const schemas = studyMaterialsPageSchemas([MATERIAL]);
+    const directory = schemas.find((schema) => schema["@type"] === "ItemList");
+
+    expect(directory.itemListElement).toEqual([{
+      "@type": "ListItem",
+      position: 1,
+      name: MATERIAL.title,
+      url: MATERIAL.sourceUrl,
+    }]);
   });
 
   it("keeps empty and retryable error states honest", () => {
