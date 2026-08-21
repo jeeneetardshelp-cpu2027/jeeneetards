@@ -20,6 +20,7 @@ import {
   injectRouteMeta,
   landingSchemas,
   renderLandingBody,
+  renderStudyMaterialsBody,
 } from "../ogInject.js";
 import { metadataForLocation } from "./pageMetadata.js";
 
@@ -121,6 +122,40 @@ describe("server-rendered discovery landings", () => {
     expect(schemas.map(({ key }) => key)).toEqual(["BreadcrumbList"]);
     expect(schemas[0].schema.itemListElement.map(({ name }) => name))
       .toEqual(["Home", "Study material"]);
+  });
+
+  it("describes only public HTTPS study-material destinations", () => {
+    const schemas = landingSchemas("/materials", [
+      { title: "Kinematics formula sheet", source_url: "https://example.edu/kinematics.pdf" },
+      { title: "Unsafe destination", source_url: "javascript:alert(1)" },
+    ]);
+
+    expect(schemas.map(({ key }) => key)).toEqual(["BreadcrumbList", "ItemList"]);
+    expect(schemas[1].schema.itemListElement).toEqual([{
+      "@type": "ListItem",
+      position: 1,
+      name: "Kinematics formula sheet",
+      url: "https://example.edu/kinematics.pdf",
+    }]);
+  });
+
+  it("renders reviewed materials as escaped crawler-readable links", () => {
+    const html = renderStudyMaterialsBody(metadataForLocation("/materials"), [
+      {
+        title: "Kinematics <formula> sheet",
+        description: "Concise revision notes.",
+        source_name: "Reviewed source",
+        source_url: "https://example.edu/kinematics.pdf",
+      },
+      { title: "Unsafe destination", source_url: "javascript:alert(1)" },
+    ]);
+
+    expect(html).toContain("<h2>Reviewed resources</h2>");
+    expect(html).toContain(
+      '<a href="https://example.edu/kinematics.pdf" rel="noopener">Kinematics &lt;formula&gt; sheet</a>',
+    );
+    expect(html).toContain("Reviewed source. Concise revision notes.");
+    expect(html).not.toContain("javascript:");
   });
 
   it.each([

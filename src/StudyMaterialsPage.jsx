@@ -125,7 +125,6 @@ export function StudyMaterialsDirectoryView({
 }
 
 export default function StudyMaterialsPage() {
-  useStructuredData(studyMaterialsPageSchemas(), []);
   const [params, setParams] = useSearchParams();
   const goal = params.get("goal") ?? "";
   const board = params.get("board") ?? "";
@@ -154,6 +153,7 @@ export default function StudyMaterialsPage() {
     chapterId: chapterId ? Number(chapterId) : null,
     type: type || null,
   });
+  useStructuredData(studyMaterialsPageSchemas(materials.items), [materials.items]);
 
   const update = (key, value, clear = []) => {
     const next = new URLSearchParams(params);

@@ -82,7 +82,8 @@ for (const name of PRIVATE_SERVER_ENV) {
 if (exists("vercel.json")) {
   const config = JSON.parse(read("vercel.json"));
   const fallback = config.rewrites?.some(
-    (rule) => rule.source === "/(.*)" && rule.destination === "/index.html",
+    (rule) => ["/(.*)", "/((?!api/).*)"].includes(rule.source)
+      && rule.destination === "/index.html",
   );
   if (!fallback) fail("Vercel SPA fallback is missing");
   else pass("Vercel SPA fallback is configured");

@@ -61,6 +61,14 @@ describe("production metadata assets", () => {
     });
   });
 
+  it("keeps API functions outside the Vercel SPA fallback", () => {
+    const config = JSON.parse(readFileSync(resolve(root, "vercel.json"), "utf8"));
+    expect(config.rewrites).toContainEqual({
+      source: "/((?!api/).*)",
+      destination: "/index.html",
+    });
+  });
+
   it("ships a correctly sized social preview image", () => {
     const png = readFileSync(resolve(root, "public/social-preview.png"));
     expect(png.subarray(0, 8).toString("hex")).toBe("89504e470d0a1a0a");

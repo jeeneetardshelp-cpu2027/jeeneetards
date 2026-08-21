@@ -111,7 +111,7 @@ export function injectRouteMeta(html, meta) {
 }
 
 /** Homepage schemas use the same pure builders as Home.jsx. */
-export function landingSchemas(pathname) {
+export function landingSchemas(pathname, materials = []) {
   if (pathname === "/") {
     return [
       { key: "WebSite", schema: websiteSchema() },
@@ -119,12 +119,48 @@ export function landingSchemas(pathname) {
     ];
   }
   const schemas = pathname === "/materials"
-    ? studyMaterialsPageSchemas()
+    ? studyMaterialsPageSchemas(materials)
     : testPageSchemas(pathname);
   return schemas.map((schema) => ({
     key: schema["@type"],
     schema,
   }));
+}
+
+/**
+ * Canonical study-material directory for crawlers that do not run the React
+ * request. The RPC already limits this input to approved, published records;
+ * this layer additionally refuses non-HTTPS destinations before rendering.
+ */
+export function renderStudyMaterialsBody(meta, materials = []) {
+  const items = materials
+    .filter((material) => material?.title &&
+      /^https:\/\//i.test(material.sourceUrl ?? material.source_url ?? ""))
+    .map((material) => {
+      const url = material.sourceUrl ?? material.source_url;
+      const source = material.sourceName ?? material.source_name;
+      const description = material.description
+        ? ` ${escapeHtml(material.description)}`
+        : "";
+      return `<li><a href="${escapeHtml(url)}" rel="noopener">` +
+        `${escapeHtml(material.title)}</a>` +
+        `${source ? ` — ${escapeHtml(source)}.` : ""}${description}</li>`;
+    })
+    .join("");
+
+  if (!items) return renderLandingBody("/materials", meta);
+  return [
+    "<main>",
+    '<nav aria-label="Breadcrumb"><a href="/">Home</a> - <span>Study material</span></nav>',
+    "<h1>Find study material by your syllabus.</h1>",
+    `<p>${escapeHtml(meta.description)}</p>`,
+    "<h2>Reviewed resources</h2>",
+    `<ul>${items}</ul>`,
+    '<nav aria-label="Study resources"><a href="/explore">Find a course</a> ' +
+      '<a href="/tests">Mock tests</a> ' +
+      '<a href="/methodology">How resources are curated</a></nav>',
+    "</main>",
+  ].join("");
 }
 
 /** The canonical Browse response already renders every course link as HTML.
