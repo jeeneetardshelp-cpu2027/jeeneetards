@@ -1,0 +1,147 @@
+{
+  "evidence_version": 1,
+  "captured_at": "2026-08-20T12:12:37.3831656+05:30",
+  "operation": "forum_admin_identity_transfer_production",
+  "target": {
+    "project_ref": "kezelafqhgqrprpadmlf",
+    "dashboard_project_label": "main Production",
+    "database_name": "postgres",
+    "target_email": "jeeneetardshelp@gmail.com",
+    "target_username": "alecc_daddy"
+  },
+  "authorization": {
+    "explicit_owner_authorization_received_for_each_sql_file": true,
+    "authorized_audit_sha256": "9bccb886bac16526002fac7c505f38a3d0acfa9500c6f6d3f0e8e4ca605eb01e",
+    "authorized_preflight_sha256": "e3a4514f3b412826e25be54864eeacf2ea3628117f0a5fde6d0ec672bd36ffa1",
+    "authorized_transfer_sha256": "0c0bcae6add0373b8846e3fdbb948e2691cdfec2e42a11f8ffb05fa203d30b23",
+    "authorized_postflight_sha256": "2e9419249804de946e05b970053c58ab2d36892a7080dde2003bcdf683946baa"
+  },
+  "source": {
+    "pull_request": "https://github.com/jeeneetardshelp-cpu2027/jeeneetards/pull/110",
+    "approved_head_commit": "41264679235bfe8a0acead0ee87cae2e92211619",
+    "merge_commit": "ce9af5158b996d4225a98b33fe647d089ee6bb91",
+    "origin_main_commit_at_capture": "ce9af5158b996d4225a98b33fe647d089ee6bb91",
+    "package_matches_reviewed_and_merged_source": true,
+    "post_merge_ci_passed": true,
+    "post_merge_ci_run": "https://github.com/jeeneetardshelp-cpu2027/jeeneetards/actions/runs/32338691746"
+  },
+  "previous_failed_attempt": {
+    "failed_closed_before_commit": true,
+    "error_source": "public.protect_profile_admin_flag()",
+    "follow_up_read_only_audit_confirmed_original_admin_state": true,
+    "transfer_state_residue_absent": true,
+    "database_change_from_failed_attempt": false
+  },
+  "restore_gate": {
+    "pitr_enabled": true,
+    "database_changes_logged_every_minutes": 2,
+    "recovery_window_days": 7,
+    "restore_available_from": "2026-08-14T00:00:40+05:30",
+    "latest_restore_available_at_verification": "2026-08-20T12:01:34+05:30",
+    "verified_in_production_dashboard_immediately_before_transfer": true,
+    "setting_changed": false,
+    "restore_started": false
+  },
+  "editor_copyback": {
+    "line_endings_normalized_for_comparison": "CRLF converted to LF",
+    "audit": {
+      "expected_sha256": "9bccb886bac16526002fac7c505f38a3d0acfa9500c6f6d3f0e8e4ca605eb01e",
+      "copied_back_sha256": "9bccb886bac16526002fac7c505f38a3d0acfa9500c6f6d3f0e8e4ca605eb01e",
+      "matched": true
+    },
+    "preflight": {
+      "expected_sha256": "e3a4514f3b412826e25be54864eeacf2ea3628117f0a5fde6d0ec672bd36ffa1",
+      "copied_back_sha256": "e3a4514f3b412826e25be54864eeacf2ea3628117f0a5fde6d0ec672bd36ffa1",
+      "matched": true
+    },
+    "transfer": {
+      "expected_sha256": "0c0bcae6add0373b8846e3fdbb948e2691cdfec2e42a11f8ffb05fa203d30b23",
+      "copied_back_sha256": "0c0bcae6add0373b8846e3fdbb948e2691cdfec2e42a11f8ffb05fa203d30b23",
+      "matched": true
+    },
+    "postflight": {
+      "expected_sha256": "2e9419249804de946e05b970053c58ab2d36892a7080dde2003bcdf683946baa",
+      "copied_back_sha256": "2e9419249804de946e05b970053c58ab2d36892a7080dde2003bcdf683946baa",
+      "matched": true
+    }
+  },
+  "audit": {
+    "read_only": true,
+    "assertions_passed": true,
+    "terminal_row": {
+      "forum_mode_is_off": true,
+      "transfer_state_table_absent": true,
+      "total_admins": 1,
+      "existing_admin_ready": true,
+      "exact_target_ready": true,
+      "target_username_allowed": true,
+      "sql_editor_context_ready": true,
+      "admin_protection_trigger_ready": true,
+      "database_changed": false
+    }
+  },
+  "preflight": {
+    "read_only": true,
+    "assertions_passed": true,
+    "terminal_row": {
+      "forum_mode_is_off": true,
+      "transfer_state_table_absent": true,
+      "exactly_one_current_admin": true,
+      "audited_identity_shape_matches": true,
+      "sql_editor_context_ready": true,
+      "admin_protection_trigger_ready": true,
+      "database_changed": false
+    }
+  },
+  "transfer": {
+    "transaction_committed_cleanly": true,
+    "terminal_row": {
+      "forum_mode_is_off": true,
+      "exactly_one_admin": true,
+      "exact_target_is_admin": true,
+      "previous_admin_demoted": true,
+      "rollback_state_captured": true,
+      "transfer_state_locked_down": true,
+      "admin_protection_trigger_enabled": true,
+      "claim_role_restored": true
+    }
+  },
+  "postflight": {
+    "read_only": true,
+    "assertions_passed": true,
+    "terminal_row": {
+      "forum_mode_is_off": true,
+      "exactly_one_admin": true,
+      "exact_target_is_admin": true,
+      "previous_admin_demoted": true,
+      "rollback_state_captured": true,
+      "transfer_state_locked_down": true,
+      "admin_protection_trigger_enabled": true,
+      "claim_role_restored": true,
+      "database_changed": false
+    }
+  },
+  "application_verification": {
+    "production_admin_page": "https://www.jeeneetard.com/admin",
+    "signed_in_email_displayed": "jeeneetardshelp@gmail.com",
+    "administrator_access_confirmed": true,
+    "reports_control_visible": true,
+    "forum_beta_control_visible": true,
+    "admin_action_performed": false
+  },
+  "final_state": {
+    "sole_administrator_username": "alecc_daddy",
+    "forum_mode": "off",
+    "rollback_available": true,
+    "rollback_executed": false,
+    "service_role_key_used_or_recorded": false
+  },
+  "not_performed": [
+    "forum mode change",
+    "frontend release flag change",
+    "production fixture creation",
+    "content moderation action",
+    "rollback",
+    "database restore"
+  ]
+}
