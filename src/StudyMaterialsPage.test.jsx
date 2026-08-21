@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
 import { describe, expect, it, vi } from "vitest";
 
@@ -126,5 +126,26 @@ describe("StudyMaterialsDirectoryView", () => {
     expect(screen.getByRole("option", { name: "Class 11" })).toBeTruthy();
     expect(screen.getByRole("option", { name: "Physics" })).toBeTruthy();
     expect(screen.getByRole("option", { name: "Kinematics" })).toBeTruthy();
+  });
+
+  it("writes the same Home to Study material breadcrumb as the edge response", async () => {
+    render(
+      <MemoryRouter initialEntries={["/materials"]}>
+        <StudyMaterialsPage />
+      </MemoryRouter>,
+    );
+
+    let schema;
+    await waitFor(() => {
+      const script = document.head.querySelector(
+        'script[type="application/ld+json"][data-schema-key="BreadcrumbList"]',
+      );
+      expect(script).not.toBeNull();
+      schema = JSON.parse(script.textContent);
+    });
+    expect(schema.itemListElement.map(({ name }) => name))
+      .toEqual(["Home", "Study material"]);
+    expect(schema.itemListElement[1].item)
+      .toBe("https://www.jeeneetard.com/materials");
   });
 });
