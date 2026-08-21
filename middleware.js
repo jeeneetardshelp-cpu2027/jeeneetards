@@ -36,6 +36,7 @@ import {
   browseDirectorySchemas,
   renderLandingBody,
   renderBrowseDirectoryBody,
+  renderStudyMaterialsBody,
   renderNotFoundBody,
 } from "./ogInject.js";
 
@@ -404,8 +405,9 @@ export default async function middleware(request) {
       return deepExploreResponse(url, exploreRoute, supaUrl, supaKey);
     }
 
-    // Static routes share the client's metadata. Canonical Browse and root
-    // Explore additionally fetch bounded directory data for crawler HTML.
+    // Static routes share the client's metadata. Canonical Browse, root
+    // Explore, and Study material additionally fetch bounded public directory
+    // data for crawler HTML.
     if (!courseMatch && !facultyMatch) {
       const routeMeta = metadataForLocation(url.pathname, url.search);
       if (!routeMeta) return next();
@@ -441,10 +443,33 @@ export default async function middleware(request) {
             body: JSON.stringify({ p_goal: null, p_class: null, p_subject: null }),
           })
         : Promise.resolve(null);
-      const [shell, directory, exploreRoot] = await Promise.all([
+      const materialsPromise = url.pathname === "/materials" && !url.search && supaUrl && supaKey
+        ? edgeJson(`${supaUrl}/rest/v1/rpc/get_study_materials`, {
+            method: "POST",
+            headers: {
+              apikey: supaKey,
+              Authorization: `Bearer ${supaKey}`,
+              "content-type": "application/json",
+            },
+            body: JSON.stringify({
+              p_goal_slug: null,
+              p_board_slug: null,
+              p_class_slug: null,
+              p_subject_slug: null,
+              p_chapter_slug: null,
+              p_chapter_id: null,
+              p_video_id: null,
+              p_material_type: null,
+              p_limit: 60,
+              p_offset: 0,
+            }),
+          })
+        : Promise.resolve(null);
+      const [shell, directory, exploreRoot, materials] = await Promise.all([
         fetch(new URL("/index.html", url.origin)),
         directoryPromise,
         exploreRootPromise,
+        materialsPromise,
       ]);
       if (!shell.ok) return next();
       let html = injectRouteMeta(await shell.text(), routeMeta);
@@ -460,8 +485,11 @@ export default async function middleware(request) {
               count: Number(goal.course_count),
             }))
         : [];
+      const materialItems = materials?.confirmed && Array.isArray(materials.data)
+        ? materials.data
+        : [];
       html = injectStructuredData(html, [
-        ...landingSchemas(url.pathname),
+        ...landingSchemas(url.pathname, materialItems),
         ...(hasDirectory ? browseDirectorySchemas(courseResult.data) : []),
         ...exploreSchemas([], exploreRootOptions),
       ]);
@@ -477,6 +505,8 @@ export default async function middleware(request) {
               crumbs: [],
               options: exploreRootOptions,
             })
+          : materialItems.length > 0
+            ? renderStudyMaterialsBody(routeMeta, materialItems)
           : renderLandingBody(url.pathname, routeMeta);
       html = injectRootContent(html, body);
       return htmlResponse(html);

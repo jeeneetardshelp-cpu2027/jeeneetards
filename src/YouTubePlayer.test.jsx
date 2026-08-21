@@ -200,6 +200,31 @@ describe("YouTube course player", () => {
     expect(setPlaybackRate).toHaveBeenCalledTimes(1);
   });
 
+  it("offers a YouTube link when the creator disabled embedding (101/150)", async () => {
+    render(<YouTubePlayer videoId="dQw4w9WgXcQ" title="Lesson" />);
+    activatePlayer();
+    await waitFor(() => expect(latestOptions).toBeTruthy());
+
+    act(() => latestOptions.events.onError({ data: 150 }));
+    expect(screen.getByText(/restricted by creator/i)).toBeTruthy();
+    // Still watchable on YouTube, so the direct link is offered.
+    const link = screen.getByRole("link", { name: /watch directly on youtube/i });
+    expect(link.getAttribute("href")).toBe("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
+  });
+
+  it("says a removed/private video is gone (100) and offers no dead link", async () => {
+    render(<YouTubePlayer videoId="dQw4w9WgXcQ" title="Lesson" />);
+    activatePlayer();
+    await waitFor(() => expect(latestOptions).toBeTruthy());
+
+    act(() => latestOptions.events.onError({ data: 100 }));
+    // Honest wording — not "restricted by creator", which would be a lie.
+    expect(screen.getByText(/no longer available on youtube/i)).toBeTruthy();
+    expect(screen.queryByText(/restricted by creator/i)).toBeNull();
+    // A link to a deleted YouTube page would be another dead end.
+    expect(screen.queryByRole("link", { name: /watch directly on youtube/i })).toBeNull();
+  });
+
   it("passes playback-rate changes through to the parent", async () => {
     const onPlaybackRateChange = vi.fn();
     render(
