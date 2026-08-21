@@ -1,5 +1,6 @@
 import { Component } from "react";
 import { useTheme } from "./theme.jsx";
+import { reportError } from "./lib/errorReporter.js";
 
 function ErrorFallback() {
   const { t } = useTheme();
@@ -38,8 +39,15 @@ export default class AppErrorBoundary extends Component {
   }
 
   componentDidCatch(error, info) {
-    // Keep a local diagnostic until privacy-approved monitoring is selected.
+    // The local diagnostic stays — it is what a developer sees in the console.
     console.error("Uncaught application render error", error, info);
+    // And, when a DSN is configured, the crash also reaches the operator.
+    // reportError is a no-op without VITE_SENTRY_DSN, so this sends nothing by
+    // default.
+    reportError(error, {
+      source: "react-error-boundary",
+      componentStack: info?.componentStack,
+    });
   }
 
   render() {

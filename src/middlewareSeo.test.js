@@ -197,6 +197,63 @@ describe("edge-rendered discovery landings", () => {
     }
   });
 
+  it("serves approved study-material links and ItemList data before JavaScript", async () => {
+    vi.stubEnv("VITE_SUPABASE_URL", "https://catalog.example");
+    vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
+    const fetchSpy = vi.fn(async (input) => {
+      const url = String(input);
+      if (url.includes("/rest/v1/rpc/get_study_materials")) {
+        return Response.json([{
+          id: 7,
+          title: "Rectilinear motion formula sheet",
+          description: "A concise revision sheet for motion in one dimension.",
+          source_name: "Reviewed physics resource",
+          source_url: "https://example.edu/rectilinear-motion.pdf",
+        }]);
+      }
+      return new Response(shell, { status: 200 });
+    });
+    vi.stubGlobal("fetch", fetchSpy);
+
+    const response = await middleware(
+      new Request("https://www.jeeneetard.com/materials"),
+    );
+    const html = await response.text();
+
+    expect(response.status).toBe(200);
+    expect(html).toContain("<h2>Reviewed resources</h2>");
+    expect(html).toContain(
+      '<a href="https://example.edu/rectilinear-motion.pdf" rel="noopener">' +
+        "Rectilinear motion formula sheet</a>",
+    );
+    expect(html).toContain('data-schema-key="ItemList"');
+    expect(html).toContain(
+      '"url":"https://example.edu/rectilinear-motion.pdf"',
+    );
+    const rpcCall = fetchSpy.mock.calls.find(([input]) =>
+      String(input).includes("/rest/v1/rpc/get_study_materials"));
+    expect(JSON.parse(rpcCall[1].body)).toMatchObject({ p_limit: 60, p_offset: 0 });
+  });
+
+  it("keeps the materials landing available when its directory lookup is unconfirmed", async () => {
+    vi.stubEnv("VITE_SUPABASE_URL", "https://catalog.example");
+    vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
+    vi.stubGlobal("fetch", vi.fn(async (input) =>
+      String(input).includes("/rest/v1/rpc/get_study_materials")
+        ? new Response("temporarily unavailable", { status: 503 })
+        : new Response(shell, { status: 200 })));
+
+    const response = await middleware(
+      new Request("https://www.jeeneetard.com/materials"),
+    );
+    const html = await response.text();
+
+    expect(response.status).toBe(200);
+    expect(html).toContain("<h1>Find study material by your syllabus.</h1>");
+    expect(html).not.toContain("<h2>Reviewed resources</h2>");
+    expect(html).not.toContain('data-schema-key="ItemList"');
+  });
+
   it("serves canonical Browse as a linked course and faculty directory", async () => {
     vi.stubEnv("VITE_SUPABASE_URL", "https://catalog.example");
     vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");

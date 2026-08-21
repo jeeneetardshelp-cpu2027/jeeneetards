@@ -91,6 +91,7 @@
     "demo:classify": "node src/scripts/classify/demoClassify.js",
     "demo:quality": "node src/scripts/classify/demoQualityGate.js",
     "refresh:stats": "node src/scripts/refreshVideoStats.js",
+    "check:liveness": "node src/scripts/checkVideoLiveness.js",
     "refresh:channel-logos": "node src/scripts/refreshChannelLogos.js",
     "verify:course": "node src/scripts/verifyImportedCourse.js"
   },

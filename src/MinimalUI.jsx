@@ -16,7 +16,7 @@
 
 import { GlobalHeader, Container } from "./AppShell.jsx";
 import {
-  ArrowLeft, Check, ChevronLeft, ChevronRight, ExternalLink, Search, X,
+  AlertCircle, ArrowLeft, Check, ChevronLeft, ChevronRight, ExternalLink, Search, X,
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import YouTubePlayer from "./YouTubePlayer.jsx";
@@ -266,6 +266,11 @@ export function LessonList({ lessons, activeLessonId, onSelectLesson, watchedIds
                     {lesson.embeddingStatus === "blocked" && (
                       <span className="inline-flex items-center gap-1 text-amber-600">
                         <ExternalLink className="h-3 w-3" /> YouTube only
+                      </span>
+                    )}
+                    {lesson.embeddingStatus === "unavailable" && (
+                      <span className="inline-flex items-center gap-1 text-rose-600">
+                        <AlertCircle className="h-3 w-3" /> Unavailable
                       </span>
                     )}
                   </span>

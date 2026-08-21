@@ -3,8 +3,9 @@
 //
 //  A plain <iframe> can't tell you when a creator has blocked embedding.
 //  The YouTube IFrame Player API can: it fires an onError event with
-//  code 101 or 150 = "embedding disabled by owner" (100 = removed/private).
-//  When that happens we show a friendly message + a direct YouTube link.
+//  code 101 or 150 = "embedding disabled by owner" (still watchable on
+//  YouTube, so we offer a direct link) and 100 = removed/private (gone
+//  everywhere, so we say so plainly and offer no dead link).
 //
 //  Usage:  <YouTubePlayer videoId="dQw4w9WgXcQ" title="My lesson" />
 // =====================================================================
@@ -33,18 +34,22 @@ function loadYouTubeAPI() {
 }
 
 // --- The friendly fallback (shown over the player area) -------------
-function FallbackOverlay({ videoId, message }) {
+// showYouTubeLink is false when the video is gone (removed/private): a link to
+// a dead YouTube page would just send the student to another error.
+function FallbackOverlay({ videoId, message, showYouTubeLink = true }) {
   return (
     <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 bg-slate-900 p-6 text-center">
       <p className="text-sm text-slate-200">{message}</p>
-      <a
-        href={`https://www.youtube.com/watch?v=${videoId}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-700"
-      >
-        Click here to watch directly on YouTube
-      </a>
+      {showYouTubeLink && (
+        <a
+          href={`https://www.youtube.com/watch?v=${videoId}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-700"
+        >
+          Click here to watch directly on YouTube
+        </a>
+      )}
     </div>
   );
 }
@@ -88,7 +93,7 @@ export default function YouTubePlayer({
   playbackRateRef.current = playbackRate;
   const onPlaybackRateChangeRef = useRef(onPlaybackRateChange);
   onPlaybackRateChangeRef.current = onPlaybackRateChange;
-  // status: "idle" | "loading" | "ready" | "blocked" | "error"
+  // status: "idle" | "loading" | "ready" | "blocked" | "unavailable" | "error"
   const [status, setStatus] = useState(activated ? "loading" : "idle");
 
   useEffect(() => {
@@ -197,8 +202,15 @@ export default function YouTubePlayer({
             }
           },
           onError: (e) => {
-            // 101 & 150 => embedding disabled by owner. 100 => removed/private.
-            if (!cancelled && [101, 150, 100].includes(e.data)) {
+            if (cancelled) return;
+            // 100 => the video was removed or made private: there is nothing to
+            // watch anywhere, so say that honestly rather than blaming the
+            // creator's embed settings. 101 & 150 => embedding disabled by the
+            // creator, but it still plays on YouTube itself.
+            if (e.data === 100) {
+              clearTimeout(timer);
+              setStatus("unavailable");
+            } else if (e.data === 101 || e.data === 150) {
               clearTimeout(timer);
               setStatus("blocked");
             }
@@ -317,6 +329,14 @@ export default function YouTubePlayer({
         <FallbackOverlay
           videoId={videoId}
           message="Playback restricted by creator on external sites."
+        />
+      )}
+
+      {status === "unavailable" && (
+        <FallbackOverlay
+          videoId={videoId}
+          showYouTubeLink={false}
+          message="This video is no longer available on YouTube — it was removed or made private."
         />
       )}
 
