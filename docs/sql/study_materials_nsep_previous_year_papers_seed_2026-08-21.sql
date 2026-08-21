@@ -1,11 +1,11 @@
--- Seven NSEP Physics Olympiad previous-year papers with worked solutions,
+-- Nine NSEP Physics Olympiad previous-year papers with worked solutions,
 -- supplied by the JEENEETARD owner. Competishun redistribution permission was
 -- previously confirmed by the owner. PDFs and first-page previews are hosted
 -- by JEENEETARD with attribution. NSEP is conducted by IAPT.
 --
 -- These are full-exam resources spanning many chapters, so each paper receives
 -- one Olympiad + Physics scope and no misleading chapter or lecture attachment.
--- Safe to rerun: this seed upserts its seven records and replaces their scopes.
+-- Safe to rerun: this seed upserts its nine records and replaces their scopes.
 
 begin;
 
@@ -20,6 +20,12 @@ create temporary table nsep_paper_seed_resources (
 insert into nsep_paper_seed_resources (
   title, description, file_name, exam_year, page_count
 ) values
+  ('NSEP 2017-18 Physics Paper with Solutions',
+   'National Standard Examination in Physics 2017-18 paper with worked Competishun solutions for Physics Olympiad preparation.',
+   'nsep-2017-18-paper-with-solutions.pdf', 2017, 22),
+  ('NSEP 2018-19 Physics Paper with Solutions',
+   'National Standard Examination in Physics 2018-19 paper with worked Competishun solutions for Physics Olympiad preparation.',
+   'nsep-2018-19-paper-with-solutions.pdf', 2018, 23),
   ('NSEP 2019-20 Physics Paper with Solutions',
    'National Standard Examination in Physics 2019-20 paper with worked Competishun solutions for Physics Olympiad preparation.',
    'nsep-2019-20-paper-with-solutions.pdf', 2019, 35),
@@ -132,8 +138,8 @@ begin
      and m.review_status = 'approved'
      and m.published_at is not null
      and m.preview_image_url = 'https://jeeneetard.com/study-materials/previews/previous-year-papers/nsep/' || replace(r.file_name, '.pdf', '.jpg');
-  if batch_material_count <> 7 then
-    raise exception 'NSEP PAPERS POSTFLIGHT: expected 7 exact materials, found %', batch_material_count;
+  if batch_material_count <> 9 then
+    raise exception 'NSEP PAPERS POSTFLIGHT: expected 9 exact materials, found %', batch_material_count;
   end if;
 
   select count(*)::integer into batch_scope_count
@@ -146,8 +152,8 @@ begin
      and s.board_id is null
      and s.class_level_id is null
      and s.chapter_id is null;
-  if batch_scope_count <> 7 then
-    raise exception 'NSEP PAPERS POSTFLIGHT: expected 7 Olympiad Physics scopes, found %', batch_scope_count;
+  if batch_scope_count <> 9 then
+    raise exception 'NSEP PAPERS POSTFLIGHT: expected 9 Olympiad Physics scopes, found %', batch_scope_count;
   end if;
 
   select count(*)::integer into unexpected_scope_count

@@ -14,10 +14,10 @@ const pdfRoot = "public/study-materials/previous-year-papers/nsep";
 const previewRoot = "public/study-materials/previews/previous-year-papers/nsep";
 
 describe("NSEP previous-year paper release", () => {
-  it("ships seven verified source PDFs unchanged with valid previews", () => {
-    expect(manifest).toHaveLength(7);
-    expect(new Set(manifest.map((item) => item.file)).size).toBe(7);
-    expect(manifest.reduce((sum, item) => sum + item.pageCount, 0)).toBe(238);
+  it("ships nine verified source PDFs unchanged with valid previews", () => {
+    expect(manifest).toHaveLength(9);
+    expect(new Set(manifest.map((item) => item.file)).size).toBe(9);
+    expect(manifest.reduce((sum, item) => sum + item.pageCount, 0)).toBe(283);
 
     for (const item of manifest) {
       const pdfPath = `${pdfRoot}/${item.file}`;
@@ -39,7 +39,7 @@ describe("NSEP previous-year paper release", () => {
 
   it("catalogs every paper only under Olympiad and Physics", () => {
     expect(manifest.map((item) => item.examYear)).toEqual([
-      2019, 2020, 2021, 2022, 2023, 2024, 2025,
+      2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025,
     ]);
     expect(manifest.every((item) => item.goal === "olympiad")).toBe(true);
     expect(manifest.every((item) => item.subject === "physics")).toBe(true);
@@ -56,8 +56,8 @@ describe("NSEP previous-year paper release", () => {
     expect(seed).toContain("where slug = 'olympiad'");
     expect(seed).toContain("where slug = 'physics'");
     expect(seed).toContain("delete from public.study_material_scopes");
-    expect(seed).toContain("expected 7 exact materials");
-    expect(seed).toContain("expected 7 Olympiad Physics scopes");
+    expect(seed).toContain("expected 9 exact materials");
+    expect(seed).toContain("expected 9 Olympiad Physics scopes");
     expect(seed).toContain("unexpected scopes found");
     expect(seed.trimEnd()).toMatch(/commit;$/i);
   });

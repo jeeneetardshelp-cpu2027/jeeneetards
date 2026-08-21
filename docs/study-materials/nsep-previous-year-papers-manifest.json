@@ -1,5 +1,25 @@
 [
   {
+    "title": "NSEP 2017-18 Physics Paper with Solutions",
+    "file": "nsep-2017-18-paper-with-solutions.pdf",
+    "sha256": "1FDC47A2BCEA0B1FE9CEF2B87BF9A5F9ED0D43E8EC0EABF2484CB1E478AE6A97",
+    "pageCount": 22,
+    "examYear": 2017,
+    "session": "2017-18",
+    "goal": "olympiad",
+    "subject": "physics"
+  },
+  {
+    "title": "NSEP 2018-19 Physics Paper with Solutions",
+    "file": "nsep-2018-19-paper-with-solutions.pdf",
+    "sha256": "6C7BE873CD6406F178E50E9B6C7332440F0E59794AFE8B3EC998D690E024E0C1",
+    "pageCount": 23,
+    "examYear": 2018,
+    "session": "2018-19",
+    "goal": "olympiad",
+    "subject": "physics"
+  },
+  {
     "title": "NSEP 2019-20 Physics Paper with Solutions",
     "file": "nsep-2019-20-paper-with-solutions.pdf",
     "sha256": "433EE539CB0B634852B68FFF142E697548EDEB743AFD86862E681DE4E43C4177",
