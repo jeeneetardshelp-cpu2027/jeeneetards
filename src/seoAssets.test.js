@@ -61,10 +61,10 @@ describe("production metadata assets", () => {
     });
   });
 
-  it("keeps API functions outside the Vercel SPA fallback", () => {
+  it("keeps API functions and study-material files outside the Vercel SPA fallback", () => {
     const config = JSON.parse(readFileSync(resolve(root, "vercel.json"), "utf8"));
     expect(config.rewrites).toContainEqual({
-      source: "/((?!api/).*)",
+      source: "/((?!api/|study-materials/).*)",
       destination: "/index.html",
     });
   });
