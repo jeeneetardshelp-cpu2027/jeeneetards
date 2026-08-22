@@ -32,6 +32,9 @@ const REQUIRED_CSP = [
   "base-uri 'self'",
   "frame-ancestors 'none'",
 ];
+const VERCEL_SPA_FALLBACKS = [
+  "/((?!api/|study-materials/).*)",
+];
 
 function verifyHeaderSet(label, headers) {
   const normalized = new Map(
@@ -82,7 +85,7 @@ for (const name of PRIVATE_SERVER_ENV) {
 if (exists("vercel.json")) {
   const config = JSON.parse(read("vercel.json"));
   const fallback = config.rewrites?.some(
-    (rule) => ["/(.*)", "/((?!api/).*)"].includes(rule.source)
+    (rule) => VERCEL_SPA_FALLBACKS.includes(rule.source)
       && rule.destination === "/index.html",
   );
   if (!fallback) fail("Vercel SPA fallback is missing");
