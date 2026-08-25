@@ -453,15 +453,13 @@ export default function Dashboard() {
     // would silently ignore part of the student's question, so omit counts
     // until those dimensions are added to the RPC contract.
     //
-    // Search is the same story: the facet RPC still matches p_search with a
-    // single-column title ILIKE, but the result LIST now matches with the
-    // homepage engine (search_playlist_ids / search_video_ids). Left on, the
-    // sidebar counts would collapse toward 0 during a search and disagree with
-    // the results shown. Omit counts while a search is active until the facet
-    // RPC is upgraded to the same matcher (tracked as the follow-up); filters
-    // still work without counts, exactly as in the board/teacher case above.
+    // Search counts ARE shown: browse_facet_search_2026-08-25.sql upgraded the
+    // facet RPC's p_search to match with the same engine as the result list
+    // (search_playlist_ids), so the sidebar counts now agree with the results.
+    // If that migration is not yet deployed the RPC still answers (its own
+    // matcher), so counts never error here.
     enabled: canonical.ready && !filterOptions.loading && !filterOptions.error
-      && !teacherRequested && !canonical.board && !urlQuery.trim(),
+      && !teacherRequested && !canonical.board,
   });
   const searchTerm = urlQuery.trim();
   const scopeHeading = chapterName ?? subjectName ?? goalName ?? null;
