@@ -37,7 +37,7 @@ const ACCENT = { teal: BRAND_TEAL };
 // =====================================================================
 function PlayerArea({
   videoId, title, onPlay, onPlaying, onEnded, onProgress,
-  startSeconds, autoplay, playbackRate, onPlaybackRateChange, playSignal,
+  startSeconds, autoplay, playbackRate, onPlaybackRateChange, playSignal, seekTo,
 }) {
   return (
     <div className="aspect-video w-full overflow-hidden rounded-2xl bg-neutral-900">
@@ -53,6 +53,7 @@ function PlayerArea({
         playbackRate={playbackRate}
         onPlaybackRateChange={onPlaybackRateChange}
         playSignal={playSignal}
+        seekTo={seekTo}
       />
     </div>
   );
@@ -325,6 +326,8 @@ export function VideoView({
   ratingPanel = null,
   reportSlot = null,
   materialsPanel = null,
+  // The student's own device-local notes for this lesson.
+  notesPanel = null,
   // "Who else teaches this chapter" — a strip directly under the player nav.
   moreTeachers = null,
   overview = null,
@@ -338,6 +341,9 @@ export function VideoView({
   onEnded = null,
   onProgress = null,
   playSignal = 0,
+  // { seconds, nonce } — forwarded to the player so a clicked note timestamp
+  // seeks the video.
+  seekTo = null,
 }) {
   const { t } = useTheme();
   const crumbs = crumbsProp ?? [
@@ -494,6 +500,7 @@ export function VideoView({
                 playbackRate={playbackRate}
                 onPlaybackRateChange={onPlaybackRateChange}
                 playSignal={playSignal}
+                seekTo={seekTo}
               />
               {/* One-shot announcement: the overlay itself is NOT a live
                   region, so the per-second countdown never re-announces. */}
@@ -622,6 +629,7 @@ export function VideoView({
             {moreTeachers}
 
             {materialsPanel}
+            {notesPanel}
             {reportSlot}
           </div>
 

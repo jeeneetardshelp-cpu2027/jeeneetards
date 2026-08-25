@@ -35,6 +35,7 @@ import { useSession } from "./useSession.js";
 import { supabase } from "./supabaseClient.js";
 import { RELEASE_CAPABILITIES, RELEASE_FEATURES } from "./releaseCapabilities.js";
 import { clearProgress } from "./progress.js";
+import { clearNotes } from "./notes.js";
 import { prefersReducedMotion } from "./motion.jsx";
 
 // `width` picks the cap. "reading" stays narrow on purpose (guided steps,
@@ -157,8 +158,10 @@ export function GlobalHeader({ crumbs = [], search = null, leading = null, width
     // Only after a SUCCESSFUL sign-out: leaving the device-local watch history
     // behind means the next person on a shared machine sees this student's
     // courses in "Continue watching" and their watched ticks on every lesson
-    // list. The server copy is untouched, so it returns on next sign-in.
+    // list. The server copy is untouched, so it returns on next sign-in. Notes
+    // are device-local too and carry the same shared-machine risk.
     clearProgress();
+    clearNotes();
   };
 
   return (
