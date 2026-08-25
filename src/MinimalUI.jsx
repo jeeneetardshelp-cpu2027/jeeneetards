@@ -150,7 +150,10 @@ export function LessonList({
             Course lessons
           </h2>
           <p className={`mt-0.5 text-sm ${t.faint}`}>
-            {watchedCount > 0 ? `${watchedCount} of ${lessons.length} watched` : `${lessons.length} lessons`}
+            {/* "started", not "watched": this counts lessons the student has
+                played at least a moment of. The per-lesson ticks say which of
+                those are actually completed vs still in progress. */}
+            {watchedCount > 0 ? `${watchedCount} of ${lessons.length} started` : `${lessons.length} lessons`}
           </p>
         </div>
         {filteredLessons.length > 0 && (
@@ -575,7 +578,7 @@ export function VideoView({
                         lesson. */}
                     {sequence.length > 0 && (
                       <p className={`mt-2 text-sm ${t.muted}`}>
-                        You watched {courseWatchedCount} of {sequence.length} lesson{sequence.length === 1 ? "" : "s"} in this course.
+                        You started {courseWatchedCount} of {sequence.length} lesson{sequence.length === 1 ? "" : "s"} in this course.
                       </p>
                     )}
                   </div>
