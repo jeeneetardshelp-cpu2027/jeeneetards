@@ -28,6 +28,7 @@ official YouTube player instead of hosting video files.
 - `/course/:id`
 - `/faculty/:slug`
 - `/materials`
+- `/materials/jee-main/previous-year-papers`
 - `/tests`
 - `/tests/jee-main`
 - `/tests/jee-advanced`

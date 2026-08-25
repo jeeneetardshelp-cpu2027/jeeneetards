@@ -3,6 +3,7 @@ import { materialTypeLabel } from "./useStudyMaterials.js";
 
 const GOAL_LABELS = {
   jee: "JEE",
+  "jee-main": "JEE Main",
   neet: "NEET",
   olympiad: "Olympiad",
   school: "School",

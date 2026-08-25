@@ -159,6 +159,28 @@ describe("server-rendered discovery landings", () => {
     expect(html).not.toContain("javascript:");
   });
 
+  it("groups the JEE Main paper directory newest year first", () => {
+    const html = renderStudyMaterialsBody(
+      metadataForLocation("/materials/jee-main/previous-year-papers"),
+      [
+        {
+          title: "JEE Main 2022 Session 1 paper",
+          exam_year: 2022,
+          source_url: "https://example.edu/2022.pdf",
+        },
+        {
+          title: "JEE Main 2024 Session 1 paper",
+          exam_year: 2024,
+          source_url: "https://example.edu/2024.pdf",
+        },
+      ],
+    );
+
+    expect(html).toContain("<h2>JEE Main question papers</h2>");
+    expect(html).toContain("<h3>2024</h3>");
+    expect(html.indexOf("<h3>2024</h3>")).toBeLessThan(html.indexOf("<h3>2022</h3>"));
+  });
+
   it.each([
     ["/", "Find the right lecture. Skip the noise.", "/explore"],
     ["/browse", "All courses", "/explore"],

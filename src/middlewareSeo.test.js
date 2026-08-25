@@ -178,6 +178,7 @@ describe("edge-rendered discovery landings", () => {
     ["/browse", "All courses"],
     ["/explore", "What are you preparing for?"],
     ["/materials", "Find study material by your syllabus."],
+    ["/materials/jee-main/previous-year-papers", "Official JEE Main previous year question papers"],
     ["/tests", "Mock tests"],
     ["/methodology", "How JEENEETARD curates courses"],
     ["/terms", "Terms of Service &amp; Disclaimer"],
@@ -216,6 +217,7 @@ describe("edge-rendered discovery landings", () => {
 
   it.each([
     ["/materials", ["BreadcrumbList"]],
+    ["/materials/jee-main/previous-year-papers", ["BreadcrumbList"]],
     ["/tests", ["BreadcrumbList", "ItemList"]],
     ["/tests/neet", ["BreadcrumbList"]],
   ])("server-renders discovery-page schemas for %s", async (pathname, keys) => {
@@ -286,6 +288,47 @@ describe("edge-rendered discovery landings", () => {
     expect(html).toContain("<h1>Find study material by your syllabus.</h1>");
     expect(html).not.toContain("<h2>Reviewed resources</h2>");
     expect(html).not.toContain('data-schema-key="ItemList"');
+  });
+
+  it("serves a self-canonical JEE Main paper directory before JavaScript", async () => {
+    vi.stubEnv("VITE_SUPABASE_URL", "https://catalog.example");
+    vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
+    const fetchSpy = vi.fn(async (input) => {
+      const url = String(input);
+      if (url.includes("/rest/v1/study_materials?")) {
+        return Response.json([{
+          id: 81,
+          title: "JEE Main 2024 Session 1 - 27 January Shift 1",
+          description: "Official NTA question paper.",
+          source_name: "National Testing Agency (JEE Main)",
+          source_url: "https://nta.example/paper.pdf",
+        }]);
+      }
+      return new Response(shell, { status: 200 });
+    });
+    vi.stubGlobal("fetch", fetchSpy);
+
+    const pathname = "/materials/jee-main/previous-year-papers";
+    const response = await middleware(new Request(`https://www.jeeneetard.com${pathname}`));
+    const html = await response.text();
+
+    expect(response.status).toBe(200);
+    expect(html).toContain("<h1>Official JEE Main previous year question papers</h1>");
+    expect(html).toContain("<h2>JEE Main question papers</h2>");
+    expect(html).toContain("<h2>JEE Main papers with solutions</h2>");
+    expect(html).toContain("No reviewed papers with worked solutions are listed yet");
+    expect(html).toContain('<a href="https://nta.example/paper.pdf" rel="noopener">');
+    expect(html).toContain(
+      `<link rel="canonical" href="https://www.jeeneetard.com${pathname}" />`,
+    );
+    expect(html).toContain('data-schema-key="ItemList"');
+
+    const dataCall = fetchSpy.mock.calls.find(([input]) =>
+      String(input).includes("/rest/v1/study_materials?"));
+    const dataUrl = new URL(String(dataCall[0]));
+    expect(dataUrl.searchParams.get("material_type")).toBe("eq.previous_year_paper");
+    expect(dataUrl.searchParams.get("title")).toBe("ilike.JEE Main%");
+    expect(dataUrl.searchParams.get("limit")).toBe("100");
   });
 
   it("serves canonical Browse as a linked course and faculty directory", async () => {
