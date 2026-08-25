@@ -32,7 +32,7 @@ security controls and release evidence must also be present.
 | Rating submission | Enabled |
 | Review display | Enabled |
 | Content reporting | Enabled |
-| Student forum | Disabled — schema installed, database mode still `off` |
+| Student forum | Enabled — limited closed beta; public reading, invited-member contributions |
 | Continue with Google sign-in | Disabled — button shipped, Google/Supabase provider not yet configured (`docs/auth/google_oauth_setup.md`) |
 
 The source of truth is

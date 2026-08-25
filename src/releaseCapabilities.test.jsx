@@ -23,12 +23,9 @@ describe("current production capability contract", () => {
       studyMaterials: true,
     });
     expect(RELEASE_FEATURES).toEqual({
-      // Off since 2026-08-10: the frontend shipped but the database mode was
-      // never opened, so every nav click reached "Discussions are temporarily
-      // unavailable" and the sitemap pointed Google at it. This whole file
-      // exists to stop the frontend claiming a capability production does not
-      // have -- the forum was that exact mismatch.
-      forum: false,
+      // The separately gated production database is in closed-beta mode: public
+      // reading is available and contribution remains invitation-only.
+      forum: true,
       studentAccounts: true,
       courseRatingSubmission: true,
       reviewDisplay: true,
