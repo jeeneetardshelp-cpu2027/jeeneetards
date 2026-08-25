@@ -46,6 +46,7 @@ vi.mock("./usePlaylistVideos.js", () => ({
 
 vi.mock("./progress.js", () => ({
   getWatchedVideoIds: () => [],
+  getCompletedVideoIds: () => [],
   getCourseProgress: () => phase.progress,
   recordLessonView: phase.record,
   getContinueWatching: () => [],

@@ -56,6 +56,7 @@ vi.mock("./YouTubePlayer.jsx", () => ({
 
 vi.mock("./progress.js", () => ({
   getWatchedVideoIds: () => watch.watched,
+  getCompletedVideoIds: () => watch.completed ?? [],
   getCourseProgress: () => null,
   recordLessonView: () => null,
   getContinueWatching: () => [],

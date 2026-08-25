@@ -6,8 +6,9 @@ import { VideoView } from "./MinimalUI.jsx";
 import { useTheme } from "./theme.jsx";
 import { usePlaylistVideos } from "./usePlaylistVideos.js";
 import {
-  getCourseProgress, getLessonPosition, getPlayerPrefs, getWatchedVideoIds,
-  mergeRemoteEntry, recordLessonPosition, recordLessonView, savePlayerPrefs,
+  getCompletedVideoIds, getCourseProgress, getLessonPosition, getPlayerPrefs,
+  getWatchedVideoIds, mergeRemoteEntry, recordLessonPosition, recordLessonView,
+  savePlayerPrefs,
 } from "./progress.js";
 import { pullServerProgress, queueProgressSync } from "./progressSync.js";
 import { useSession } from "./useSession.js";
@@ -162,8 +163,13 @@ export default function CourseVideoPage() {
   }, [activeLesson, error, lessons, loading, resumeVideoId, searchParams, setSearchParams]);
 
   const [watchedIds, setWatchedIds] = useState([]);
+  // Completed = watched to the end (the honest lesson-list check). Started but
+  // unfinished lessons show an in-progress mark instead. Kept in sync with
+  // watchedIds at the same points, plus refreshed when a lesson finishes.
+  const [completedIds, setCompletedIds] = useState([]);
   useEffect(() => {
     setWatchedIds(getWatchedVideoIds(playlistId));
+    setCompletedIds(getCompletedVideoIds(playlistId));
   }, [playlistId]);
 
   // Signed-in students may have progress from another device. Pulled once
@@ -178,6 +184,7 @@ export default function CourseVideoPage() {
       rows.forEach((row) => mergeRemoteEntry(row));
       setSavedProgress(getCourseProgress(playlistId));
       setWatchedIds(getWatchedVideoIds(playlistId));
+      setCompletedIds(getCompletedVideoIds(playlistId));
     });
     return () => {
       active = false;
@@ -331,6 +338,8 @@ export default function CourseVideoPage() {
       duration,
       watched: true,
     }, { force: true });
+    // The lesson just reached its end, so its completed check can now appear.
+    setCompletedIds(getCompletedVideoIds(playlistId));
     // Finishing a lesson is the moment to ask "was this helpful?" — once per
     // visit, and RatingPrompt itself stays quiet for anyone who already rated.
     if (!ratingPromptDoneRef.current) setShowRatingPrompt(true);
@@ -514,6 +523,7 @@ export default function CourseVideoPage() {
       courseLessons={allLessons}
       activeLessonId={activeLesson.id}
       watchedIds={watchedIds}
+      completedIds={completedIds}
       onSelectLesson={selectLesson}
       onLessonPlay={recordActiveLessonPlayback}
       onBack={backToHub}
