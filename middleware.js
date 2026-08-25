@@ -39,6 +39,7 @@ import {
   renderStudyMaterialsBody,
   renderNotFoundBody,
 } from "./ogInject.js";
+import { getFacultyGuide } from "./src/facultyGuides.js";
 
 // Inspect every application path so an unknown SPA URL can carry a real HTTP
 // 404. Static assets bypass middleware entirely. Vercel matcher regex supports
@@ -61,6 +62,29 @@ function htmlResponse(html, status = 200) {
       ...(status === 404 ? { "x-robots-tag": "noindex, nofollow" } : {}),
     },
   });
+}
+
+const APP_SHELL_PATTERN = /<div\s+[^>]*id=["']root["'][^>]*>/i;
+
+/**
+ * Fetch the Vite shell from the same deployment without losing Vercel preview
+ * authentication. Only same-origin protection context is forwarded; catalogue
+ * credentials and unrelated request headers never leave their existing calls.
+ *
+ * A protected login page can still return HTTP 200. Treat any response without
+ * the app's #root as untrusted shell HTML and fail through to Vercel's normal
+ * routing rather than injecting metadata into the login page.
+ */
+export async function fetchAppShell(request) {
+  const headers = new Headers();
+  for (const name of ["cookie", "x-vercel-protection-bypass"]) {
+    const value = request.headers.get(name);
+    if (value) headers.set(name, value);
+  }
+  const response = await fetch(new URL("/index.html", request.url), { headers });
+  if (!response.ok) return null;
+  const html = await response.text();
+  return APP_SHELL_PATTERN.test(html) ? html : null;
 }
 const LOOKUP_TIMEOUT_MS = 1500;
 
@@ -151,7 +175,7 @@ const GOAL_NAMES = Object.freeze({
   school: "School Boards",
 });
 
-async function deepExploreResponse(url, route, supaUrl, supaKey) {
+async function deepExploreResponse(request, url, route, supaUrl, supaKey) {
   const headers = {
     apikey: supaKey,
     Authorization: `Bearer ${supaKey}`,
@@ -312,9 +336,9 @@ async function deepExploreResponse(url, route, supaUrl, supaKey) {
     cls: route.cls,
     subject: subject?.slug,
   });
-  const shell = await fetch(new URL("/index.html", url.origin));
-  if (!shell.ok) return next();
-  let html = injectRouteMeta(await shell.text(), meta);
+  const shell = await fetchAppShell(request);
+  if (!shell) return next();
+  let html = injectRouteMeta(shell, meta);
   html = injectStructuredData(html, exploreSchemas(crumbs, options, guide, url.pathname));
   html = injectRootContent(html, renderExploreBody({
     heading,
@@ -326,9 +350,9 @@ async function deepExploreResponse(url, route, supaUrl, supaKey) {
   return htmlResponse(html);
 }
 
-async function notFoundResponse(url, heading = "Page not found") {
-  const shell = await fetch(new URL("/index.html", url.origin));
-  if (!shell.ok) return next();
+async function notFoundResponse(request, url, heading = "Page not found") {
+  const shell = await fetchAppShell(request);
+  if (!shell) return next();
   const meta = {
     ...metadataForLocation(url.pathname, url.search),
     title: `${heading} | ${SITE_NAME}`,
@@ -337,7 +361,7 @@ async function notFoundResponse(url, heading = "Page not found") {
     robots: "noindex, nofollow",
     type: "website",
   };
-  let html = injectRouteMeta(await shell.text(), meta);
+  let html = injectRouteMeta(shell, meta);
   html = injectRootContent(html, renderNotFoundBody(url.pathname, heading));
   return htmlResponse(html, 404);
 }
@@ -368,7 +392,7 @@ export default async function middleware(request) {
       const canonicalPath = url.pathname.replace(/\/+$/, "") || "/";
       return redirectResponse(url, `${canonicalPath}${url.search}`);
     }
-    if (!isSupportedAppPath(url.pathname)) return notFoundResponse(url);
+    if (!isSupportedAppPath(url.pathname)) return notFoundResponse(request, url);
 
     const supaUrl = process.env.VITE_SUPABASE_URL;
     const supaKey = process.env.VITE_SUPABASE_ANON_KEY;
@@ -395,14 +419,14 @@ export default async function middleware(request) {
         });
         if (!found.confirmed) return next();
         if (Array.isArray(found.data) && found.data.length === 0) {
-          return notFoundResponse(url, "Forum post not found");
+          return notFoundResponse(request, url, "Forum post not found");
         }
       }
     }
 
     if (exploreRoute) {
       if (!supaUrl || !supaKey) return next();
-      return deepExploreResponse(url, exploreRoute, supaUrl, supaKey);
+      return deepExploreResponse(request, url, exploreRoute, supaUrl, supaKey);
     }
 
     // Static routes share the client's metadata. Canonical Browse, root
@@ -466,13 +490,13 @@ export default async function middleware(request) {
           })
         : Promise.resolve(null);
       const [shell, directory, exploreRoot, materials] = await Promise.all([
-        fetch(new URL("/index.html", url.origin)),
+        fetchAppShell(request),
         directoryPromise,
         exploreRootPromise,
         materialsPromise,
       ]);
-      if (!shell.ok) return next();
-      let html = injectRouteMeta(await shell.text(), routeMeta);
+      if (!shell) return next();
+      let html = injectRouteMeta(shell, routeMeta);
       const [courseResult, facultyResult] = directory ?? [];
       const hasDirectory = courseResult?.confirmed && facultyResult?.confirmed &&
         ((courseResult.data?.length ?? 0) > 0 || (facultyResult.data?.length ?? 0) > 0);
@@ -519,7 +543,7 @@ export default async function middleware(request) {
       try {
         slug = decodeURIComponent(facultyMatch[1]);
       } catch {
-        return notFoundResponse(url, "Faculty page not found");
+        return notFoundResponse(request, url, "Faculty page not found");
       }
       const controller = new AbortController();
       const timer = setTimeout(() => controller.abort(), LOOKUP_TIMEOUT_MS);
@@ -544,21 +568,23 @@ export default async function middleware(request) {
         clearTimeout(timer);
       }
       if (lookupConfirmed && !profile) {
-        return notFoundResponse(url, "Faculty page not found");
+        return notFoundResponse(request, url, "Faculty page not found");
       }
       if (!lookupConfirmed) return next();
 
-      const shell = await fetch(new URL("/index.html", url.origin));
-      if (!shell.ok) return next();
+      const shell = await fetchAppShell(request);
+      if (!shell) return next();
+      const guide = getFacultyGuide(profile.slug);
       const meta = {
         ...metadataForLocation(url.pathname, url.search),
         title: `${profile.display_name} faculty profile | ${SITE_NAME}`,
-        description: `Browse verified aliases and free courses taught by ${profile.display_name}.`,
+        description: guide?.metaDescription || profile.bio ||
+          `Browse verified aliases and free courses taught by ${profile.display_name}.`,
         canonicalPath: `/faculty/${profile.slug}`,
       };
-      let html = injectRouteMeta(await shell.text(), meta);
-      html = injectStructuredData(html, facultySchemas(profile, meta));
-      html = injectRootContent(html, renderFacultyBody(profile, meta));
+      let html = injectRouteMeta(shell, meta);
+      html = injectStructuredData(html, facultySchemas(profile, meta, guide));
+      html = injectRootContent(html, renderFacultyBody(profile, meta, guide));
       return htmlResponse(html);
     }
 
@@ -627,7 +653,7 @@ export default async function middleware(request) {
     ]);
     const { course, confirmed: lookupConfirmed } = courseLookup;
     if (lookupConfirmed && (!course || !course.title)) {
-      return notFoundResponse(url, "Course not found");
+      return notFoundResponse(request, url, "Course not found");
     }
     if (!lookupConfirmed) return next();
 
@@ -636,15 +662,15 @@ export default async function middleware(request) {
     // relationship the catalogue uses, without scanning or returning rows.
     if (chapterLookup) {
       if (chapterLookup.confirmed && !chapterLookup.exists) {
-        return notFoundResponse(url, "Chapter not found in this course");
+        return notFoundResponse(request, url, "Chapter not found in this course");
       }
       if (!chapterLookup.confirmed) return next();
     }
 
     // 2. Fetch the built shell (not matched by this middleware, so no loop)
     //    and swap its head tags.
-    const shellRes = await fetch(new URL("/index.html", url.origin));
-    if (!shellRes.ok) return next();
+    const shell = await fetchAppShell(request);
+    if (!shell) return next();
 
     const meta = courseMeta(course, id);
     const lessons = (course.lessons ?? [])
@@ -654,7 +680,7 @@ export default async function middleware(request) {
     // Meta first, then JSON-LD, then the crawler-readable body. Each step is
     // independent: if one pattern does not match the shell it leaves the HTML
     // unchanged rather than corrupting it.
-    let html = injectCourseMeta(await shellRes.text(), meta);
+    let html = injectCourseMeta(shell, meta);
     html = injectStructuredData(html, courseSchemas(course, meta));
     html = injectRootContent(html, renderCourseBody(course, meta, lessons));
 
