@@ -35,6 +35,9 @@ export function StudyMaterialsDirectoryView({
   items = [], total = 0, loading = false, loadingMore = false,
   error = null, loadMoreError = null, unavailable = false,
   hasMore = false, loadMore = null, retry = null,
+  heading = "Study material", eyebrow = "Reviewed resources",
+  emptyTitle = "No reviewed material for these filters yet",
+  emptyDescription = "Try a broader exam, subject or material type.",
 }) {
   if (loading) {
     return (
@@ -75,8 +78,8 @@ export function StudyMaterialsDirectoryView({
     return (
       <div className="rounded-xl border border-hairline bg-surface p-8 text-center">
         <SearchX aria-hidden="true" className="mx-auto h-8 w-8 text-ink-3" />
-        <h2 className="mt-4 text-lg font-semibold text-ink">No reviewed material for these filters yet</h2>
-        <p className="mt-2 text-sm text-ink-2">Try a broader exam, subject or material type.</p>
+        <h2 className="mt-4 text-lg font-semibold text-ink">{emptyTitle}</h2>
+        <p className="mt-2 text-sm text-ink-2">{emptyDescription}</p>
       </div>
     );
   }
@@ -85,8 +88,8 @@ export function StudyMaterialsDirectoryView({
     <section aria-labelledby="material-results-heading">
       <div className="mb-5 flex items-end justify-between gap-4">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-accent">Reviewed resources</p>
-          <h2 id="material-results-heading" className="mt-1 text-2xl font-semibold text-ink">Study material</h2>
+          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-accent">{eyebrow}</p>
+          <h2 id="material-results-heading" className="mt-1 text-2xl font-semibold text-ink">{heading}</h2>
         </div>
         <p className="text-sm text-ink-3">{total} resource{total === 1 ? "" : "s"}</p>
       </div>

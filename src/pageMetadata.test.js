@@ -62,6 +62,16 @@ describe("public page metadata", () => {
     expect(metadataForLocation("/browse").robots).toBe("index, follow");
   });
 
+  it("gives the JEE Main paper collection its own indexable search result", () => {
+    const page = metadataForLocation("/materials/jee-main/previous-year-papers");
+    expect(page.title).toBe(
+      "Official JEE Main previous year question papers PDF | JEENEETARD",
+    );
+    expect(page.description).toContain("official JEE Main previous-year question papers");
+    expect(page.canonicalPath).toBe("/materials/jee-main/previous-year-papers");
+    expect(page.robots).toBe("index, follow");
+  });
+
   it("keeps restricted routes out, and keeps the unreleased forum unindexed", () => {
     expect(metadataForLocation("/admin").robots).toBe("noindex, nofollow");
     expect(metadataForLocation("/admin/").robots).toBe("noindex, nofollow");

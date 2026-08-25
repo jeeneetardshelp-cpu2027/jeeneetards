@@ -50,6 +50,7 @@ const CourseVideoPage = lazy(() => import("./CourseVideoPage.jsx"));
 const TestsPage = lazy(() => import("./TestsPage.jsx"));
 const ExamTestsPage = lazy(() => import("./ExamTestsPage.jsx"));
 const StudyMaterialsPage = lazy(() => import("./StudyMaterialsPage.jsx"));
+const JeeMainPapersPage = lazy(() => import("./JeeMainPapersPage.jsx"));
 const ForumFeatureUnavailable = lazy(() => import("./forum/ForumFeatureUnavailable.jsx"));
 const ForumFeedPage = lazy(() => import("./forum/ForumFeedPage.jsx"));
 const ForumPostPage = lazy(() => import("./forum/ForumPostPage.jsx"));
@@ -283,6 +284,16 @@ function StudyMaterialsRoute() {
   );
 }
 
+function JeeMainPapersRoute() {
+  if (RELEASE_CAPABILITIES.studyMaterials) return <JeeMainPapersPage />;
+  return (
+    <FeatureUnavailable
+      title="JEE Main papers are coming soon"
+      detail="Official previous-year papers are being checked before they are published."
+    />
+  );
+}
+
 function ForumFeedRoute() {
   return RELEASE_FEATURES.forum
     ? <ForumFeedPage />
@@ -337,6 +348,10 @@ export default function App() {
           <Route path="/compare" element={<ComparisonRoute />} />
           <Route path="/search" element={<UniversalSearchRoute />} />
           <Route path="/materials" element={<StudyMaterialsRoute />} />
+          <Route
+            path="/materials/jee-main/previous-year-papers"
+            element={<JeeMainPapersRoute />}
+          />
           {/* The forum is deliberately routeable before release so its edge
               contract and review builds cannot silently 404. The feature flag
               keeps it out of public navigation until the complete UI ships. */}
