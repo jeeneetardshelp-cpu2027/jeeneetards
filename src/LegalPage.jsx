@@ -74,12 +74,13 @@ export default function LegalPage() {
 
           <Section id="forum-rules" title="3. Student forum rules">
             <p>
-              The student forum is not publicly available in this release.
-              These rules apply when it opens. Forum posts, answers, and public
-              usernames can be read by anyone and may be indexed by search
-              engines. Use a pseudonym and do not publish real names, contact
-              details, schools, coaching batches, account credentials, or
-              another person&apos;s private information.
+              The student forum is operating as a limited closed beta. Anyone
+              can read visible discussions, but only invited signed-in members
+              can contribute during this phase. Forum posts, answers, and
+              public usernames can be read by anyone and may be indexed by
+              search engines. Use a pseudonym and do not publish real names,
+              contact details, schools, coaching batches, account credentials,
+              or another person&apos;s private information.
             </p>
             <p>
               Keep discussions connected to JEE, NEET, school study, exam

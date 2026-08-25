@@ -3,6 +3,10 @@ import { RELEASE_CAPABILITIES, RELEASE_FEATURES } from "./releaseCapabilities.js
 // imports this module to compute the same metadata the client will.
 import { findTestSection, sectionIsAllFree } from "./testPlatforms.js";
 import { buildCourseMetadata } from "./courseMetadata.js";
+import {
+  JEE_MAIN_PAPERS_META,
+  JEE_MAIN_PAPERS_PATH,
+} from "./studyMaterialLandings.js";
 
 export const SITE_NAME = "JEENEETARD";
 export const DEFAULT_TITLE = "Free JEE & NEET video lectures, chapter by chapter | JEENEETARD";
@@ -268,6 +272,17 @@ export function metadataForLocation(pathname = "/", search = "") {
       description: "Find reviewed short notes, formula sheets, full lecture notes and previous-year papers by exam, class, subject and chapter.",
       canonicalPath: "/materials",
       robots: hasFilters ? "noindex, follow" : "index, follow",
+    };
+  }
+
+  if (path === JEE_MAIN_PAPERS_PATH) {
+    if (!RELEASE_CAPABILITIES.studyMaterials) return comingSoon(base);
+    return {
+      ...base,
+      title: JEE_MAIN_PAPERS_META.title,
+      description: JEE_MAIN_PAPERS_META.description,
+      canonicalPath: JEE_MAIN_PAPERS_PATH,
+      robots: "index, follow",
     };
   }
 

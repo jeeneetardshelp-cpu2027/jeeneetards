@@ -45,7 +45,7 @@ describe("repository onboarding contract", () => {
 
   it("documents which public write features are enabled and which remain disabled", () => {
     expect(RELEASE_FEATURES).toEqual({
-      forum: false,
+      forum: true,
       studentAccounts: true,
       courseRatingSubmission: true,
       reviewDisplay: true,
@@ -57,12 +57,7 @@ describe("repository onboarding contract", () => {
     ]) {
       expect(readme).toMatch(new RegExp(`\\| ${label} \\| Enabled \\|`));
     }
-    // The forum row must say Disabled and say WHY, so the next reader does not
-    // flip the flag back on the strength of the code existing. The database mode
-    // is the thing that was never opened. Google sign-in is the same shape:
-    // the button exists but the provider is not configured yet.
-    expect(readme).toMatch(/\| Student forum \| Disabled[^|]*\|/);
-    expect(readme).toMatch(/Student forum \| Disabled.*mode still/);
+    expect(readme).toMatch(/Student forum \| Enabled.*closed beta.*public reading.*invited-member contributions/i);
     expect(readme).toMatch(/\| Continue with Google sign-in \| Disabled[^|]*\|/);
   });
 

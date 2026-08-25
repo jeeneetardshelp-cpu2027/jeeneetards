@@ -80,7 +80,11 @@ export default function PrivacyPolicy() {
               across devices — never to browse or watch.
             </p>
             {forumAvailable ? (
-              <p>An account is also needed to contribute to the student forum.</p>
+              <p>
+                The student forum is operating as a limited closed beta. Anyone
+                can read visible discussions; contributing requires an account,
+                a public forum username, and a beta invitation.
+              </p>
             ) : (
               <p>The student forum is not publicly available in this release.</p>
             )}

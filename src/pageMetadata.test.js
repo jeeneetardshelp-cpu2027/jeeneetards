@@ -62,7 +62,17 @@ describe("public page metadata", () => {
     expect(metadataForLocation("/browse").robots).toBe("index, follow");
   });
 
-  it("keeps restricted routes out, and keeps the unreleased forum unindexed", () => {
+  it("gives the JEE Main paper collection its own indexable search result", () => {
+    const page = metadataForLocation("/materials/jee-main/previous-year-papers");
+    expect(page.title).toBe(
+      "Official JEE Main previous year question papers PDF | JEENEETARD",
+    );
+    expect(page.description).toContain("official JEE Main previous-year question papers");
+    expect(page.canonicalPath).toBe("/materials/jee-main/previous-year-papers");
+    expect(page.robots).toBe("index, follow");
+  });
+
+  it("keeps restricted routes out and publishes only readable forum routes", () => {
     expect(metadataForLocation("/admin").robots).toBe("noindex, nofollow");
     expect(metadataForLocation("/admin/").robots).toBe("noindex, nofollow");
     expect(metadataForLocation("/reset").robots).toBe("noindex, nofollow");
@@ -73,17 +83,18 @@ describe("public page metadata", () => {
     expect(metadataForLocation("/forum/username").title).toBe("Forum username | JEENEETARD");
     expect(metadataForLocation("/compare").robots).toBe("noindex, follow");
 
-    // RELEASE_FEATURES.forum is false since 2026-08-10, so every forum path
-    // collapses to the "coming soon" metadata and is withheld from the index.
-    // Indexing it while production forum_mode() returns "off" was asking Google
-    // to rank "Discussions are temporarily unavailable", and a canonical
-    // /forum/post/42 for a post that cannot be read.
-    for (const path of ["/forum", "/forum/submit", "/forum/post/42"]) {
-      const page = metadataForLocation(path);
-      expect(page.robots, path).toBe("noindex, follow");
-      expect(page.canonicalPath, path).toBe("/forum");
-      expect(page.title, path).toBe("Feature coming soon | JEENEETARD");
-    }
+    expect(metadataForLocation("/forum")).toMatchObject({
+      robots: "index, follow",
+      canonicalPath: "/forum",
+      title: "Student preparation forum | JEENEETARD",
+    });
+    expect(metadataForLocation("/forum/post/42")).toMatchObject({
+      robots: "index, follow",
+      canonicalPath: "/forum/post/42",
+      type: "article",
+    });
+    expect(metadataForLocation("/forum/submit").robots).toBe("noindex, follow");
+    expect(metadataForLocation("/forum", "?q=kinematics").robots).toBe("noindex, follow");
   });
 
   it("treats the legacy /chapter redirect as supported, not as a 404", () => {

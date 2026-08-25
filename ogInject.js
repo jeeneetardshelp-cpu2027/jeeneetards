@@ -19,7 +19,15 @@ import { getFacultyGuide } from "./src/facultyGuides.js";
 // Pure data, no React — safe to pull into the edge runtime.
 import { TEST_SECTIONS, ACCESS, findTestSection } from "./src/testPlatforms.js";
 import { buildCourseMetadata } from "./src/courseMetadata.js";
-import { studyMaterialsPageSchemas } from "./src/studyMaterialsStructuredData.js";
+import {
+  studyMaterialLandingSchemas,
+  studyMaterialsPageSchemas,
+} from "./src/studyMaterialsStructuredData.js";
+import {
+  JEE_MAIN_PAPERS_META,
+  JEE_MAIN_PAPERS_PATH,
+  splitJeeMainPapers,
+} from "./src/studyMaterialLandings.js";
 import { testPageSchemas } from "./src/testPageStructuredData.js";
 import {
   METHODOLOGY_CONTACT,
@@ -121,7 +129,12 @@ export function landingSchemas(pathname, materials = []) {
   }
   const schemas = pathname === "/materials"
     ? studyMaterialsPageSchemas(materials)
-    : testPageSchemas(pathname);
+    : pathname === JEE_MAIN_PAPERS_PATH
+      ? studyMaterialLandingSchemas(materials, {
+          label: "JEE Main previous year papers",
+          path: JEE_MAIN_PAPERS_PATH,
+        })
+      : testPageSchemas(pathname);
   return schemas.map((schema) => ({
     key: schema["@type"],
     schema,
@@ -134,9 +147,10 @@ export function landingSchemas(pathname, materials = []) {
  * this layer additionally refuses non-HTTPS destinations before rendering.
  */
 export function renderStudyMaterialsBody(meta, materials = []) {
-  const items = materials
+  const safeMaterials = materials
     .filter((material) => material?.title &&
-      /^https:\/\//i.test(material.sourceUrl ?? material.source_url ?? ""))
+      /^https:\/\//i.test(material.sourceUrl ?? material.source_url ?? ""));
+  const renderItems = (collection) => collection
     .map((material) => {
       const url = material.sourceUrl ?? material.source_url;
       const source = material.sourceName ?? material.source_name;
@@ -148,16 +162,53 @@ export function renderStudyMaterialsBody(meta, materials = []) {
         `${source ? ` — ${escapeHtml(source)}.` : ""}${description}</li>`;
     })
     .join("");
+  const renderYearGroups = (collection) => {
+    const byYear = new Map();
+    for (const material of collection) {
+      const year = Number(material.examYear ?? material.exam_year);
+      const label = Number.isFinite(year) ? String(year) : "Year not listed";
+      if (!byYear.has(label)) byYear.set(label, []);
+      byYear.get(label).push(material);
+    }
+    return [...byYear.entries()]
+      .sort(([yearA], [yearB]) => {
+        if (yearA === "Year not listed") return 1;
+        if (yearB === "Year not listed") return -1;
+        return Number(yearB) - Number(yearA);
+      })
+      .map(([year, collectionForYear]) => (
+        `<section><h3>${escapeHtml(year)}</h3><ul>${renderItems(collectionForYear)}</ul></section>`
+      ))
+      .join("");
+  };
 
-  if (!items) return renderLandingBody("/materials", meta);
+  if (!safeMaterials.length) return renderLandingBody(meta.canonicalPath || "/materials", meta);
+  const jeeMain = meta.canonicalPath === JEE_MAIN_PAPERS_PATH;
+  const groups = splitJeeMainPapers(safeMaterials);
+  const items = renderItems(safeMaterials);
+  const questionOnlyItems = jeeMain
+    ? renderYearGroups(groups.questionOnly)
+    : renderItems(groups.questionOnly);
+  const solutionItems = jeeMain
+    ? renderYearGroups(groups.withSolutions)
+    : renderItems(groups.withSolutions);
   return [
     "<main>",
-    '<nav aria-label="Breadcrumb"><a href="/">Home</a> - <span>Study material</span></nav>',
-    "<h1>Find study material by your syllabus.</h1>",
+    jeeMain
+      ? '<nav aria-label="Breadcrumb"><a href="/">Home</a> - <a href="/materials">Study material</a> - <span>JEE Main papers</span></nav>'
+      : '<nav aria-label="Breadcrumb"><a href="/">Home</a> - <span>Study material</span></nav>',
+    `<h1>${escapeHtml(jeeMain ? JEE_MAIN_PAPERS_META.heading : "Find study material by your syllabus.")}</h1>`,
     `<p>${escapeHtml(meta.description)}</p>`,
-    "<h2>Reviewed resources</h2>",
-    `<ul>${items}</ul>`,
-    '<nav aria-label="Study resources"><a href="/explore">Find a course</a> ' +
+    jeeMain ? "<h2>JEE Main question papers</h2>" : "<h2>Reviewed resources</h2>",
+    jeeMain ? questionOnlyItems : `<ul>${items}</ul>`,
+    jeeMain ? "<h2>JEE Main papers with solutions</h2>" : "",
+    jeeMain && solutionItems
+      ? solutionItems
+      : jeeMain
+        ? "<p>No reviewed papers with worked solutions are listed yet. Official answer keys are not labelled as worked solutions.</p>"
+        : "",
+    '<nav aria-label="Study resources"><a href="/materials">All study material</a> ' +
+      '<a href="/explore">Find a course</a> ' +
       '<a href="/tests">Mock tests</a> ' +
       '<a href="/methodology">How resources are curated</a></nav>',
     "</main>",
@@ -216,6 +267,15 @@ export function renderLandingBody(pathname, meta) {
         "Short notes, formula sheets, full lecture notes and previous-year papers—organised by exam, class, subject and chapter.",
       links: [
         ["Find a course", "/explore"],
+        ["Mock tests", "/tests"],
+        ["How resources are curated", "/methodology"],
+      ],
+    },
+    [JEE_MAIN_PAPERS_PATH]: {
+      heading: JEE_MAIN_PAPERS_META.heading,
+      description: JEE_MAIN_PAPERS_META.description,
+      links: [
+        ["All study material", "/materials"],
         ["Mock tests", "/tests"],
         ["How resources are curated", "/methodology"],
       ],

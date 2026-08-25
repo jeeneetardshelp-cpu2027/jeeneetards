@@ -11,6 +11,8 @@ official YouTube player instead of hosting video files.
 - Course pages with embedded YouTube lessons, chapter notes, and comments.
 - Faculty profile pages for verified aliases and course discovery.
 - A study-material directory and exam-specific mock-test source pages.
+- A public student forum in limited closed beta, with contributions restricted
+  to invited signed-in members.
 - Two source-checked subject study guides inside the Explore directory.
 - A curation-methodology page that explains catalogue labels and corrections.
 - Legal pages for terms and privacy.
@@ -28,6 +30,7 @@ official YouTube player instead of hosting video files.
 - `/course/:id`
 - `/faculty/:slug`
 - `/materials`
+- `/materials/jee-main/previous-year-papers`
 - `/tests`
 - `/tests/jee-main`
 - `/tests/jee-advanced`
@@ -35,6 +38,7 @@ official YouTube player instead of hosting video files.
 - `/tests/olympiad`
 - `/tests/class-10`
 - `/tests/class-12`
+- `/forum`
 - `/methodology`
 - `/terms`
 - `/privacy`

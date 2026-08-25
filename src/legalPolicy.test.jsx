@@ -47,8 +47,9 @@ describe("browse-only legal disclosures", () => {
     expect(text).not.toMatch(/\bAmit\b/i);
     expect(text).not.toMatch(/\bJaipur\b/i);
     expect(text).toMatch(/jeeneetardshelp@gmail\.com/i);
-    expect(text).toMatch(/student forum is not publicly available in this release/i);
-    expect(text).not.toMatch(/forum contributions,\s+and content reporting are enabled/i);
-    expect(text).not.toMatch(/forum posts, answers, and public usernames are visible/i);
+    expect(text).toMatch(/student forum is operating as a limited closed beta/i);
+    expect(text).toMatch(/anyone can read visible discussions/i);
+    expect(text).toMatch(/contributing requires an account,\s+a public forum username, and a beta invitation/i);
+    expect(text).toMatch(/forum posts, answers, and public usernames are visible/i);
   });
 });

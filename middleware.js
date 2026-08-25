@@ -40,6 +40,10 @@ import {
   renderNotFoundBody,
 } from "./ogInject.js";
 import { getFacultyGuide } from "./src/facultyGuides.js";
+import {
+  JEE_MAIN_PAPERS_PATH,
+  JEE_MAIN_PAPERS_TITLE_PATTERN,
+} from "./src/studyMaterialLandings.js";
 
 // Inspect every application path so an unknown SPA URL can carry a real HTTP
 // 404. Static assets bypass middleware entirely. Vercel matcher regex supports
@@ -90,7 +94,7 @@ const LOOKUP_TIMEOUT_MS = 1500;
 
 const STATIC_APP_ROUTES = new Set([
   "/", "/admin", "/browse", "/compare", "/explore", "/privacy",
-  "/forum", "/forum/submit", "/forum/username", "/materials", "/methodology", "/reset", "/search", "/signin", "/terms", "/tests",
+  "/forum", "/forum/submit", "/forum/username", "/materials", JEE_MAIN_PAPERS_PATH, "/methodology", "/reset", "/search", "/signin", "/terms", "/tests",
 ]);
 
 /** Mirrors the route shapes in App.jsx. Resource existence is checked later. */
@@ -467,8 +471,11 @@ export default async function middleware(request) {
             body: JSON.stringify({ p_goal: null, p_class: null, p_subject: null }),
           })
         : Promise.resolve(null);
-      const materialsPromise = url.pathname === "/materials" && !url.search && supaUrl && supaKey
-        ? edgeJson(`${supaUrl}/rest/v1/rpc/get_study_materials`, {
+      const isMaterialsDirectory = url.pathname === "/materials" && !url.search;
+      const isJeeMainPapers = url.pathname === JEE_MAIN_PAPERS_PATH && !url.search;
+      let materialsPromise = Promise.resolve(null);
+      if (isMaterialsDirectory && supaUrl && supaKey) {
+        materialsPromise = edgeJson(`${supaUrl}/rest/v1/rpc/get_study_materials`, {
             method: "POST",
             headers: {
               apikey: supaKey,
@@ -487,8 +494,18 @@ export default async function middleware(request) {
               p_limit: 60,
               p_offset: 0,
             }),
-          })
-        : Promise.resolve(null);
+          });
+      } else if (isJeeMainPapers && supaUrl && supaKey) {
+        const endpoint = new URL(`${supaUrl}/rest/v1/study_materials`);
+        endpoint.searchParams.set("select", "id,title,description,material_type,source_name,source_url,preview_image_url,file_format,language,exam_year,page_count,is_downloadable,rights_status");
+        endpoint.searchParams.set("material_type", "eq.previous_year_paper");
+        endpoint.searchParams.set("title", `ilike.${JEE_MAIN_PAPERS_TITLE_PATTERN}`);
+        endpoint.searchParams.set("order", "exam_year.desc.nullslast,title.asc");
+        endpoint.searchParams.set("limit", "100");
+        materialsPromise = edgeJson(endpoint, {
+          headers: { apikey: supaKey, Authorization: `Bearer ${supaKey}` },
+        });
+      }
       const [shell, directory, exploreRoot, materials] = await Promise.all([
         fetchAppShell(request),
         directoryPromise,
@@ -529,7 +546,7 @@ export default async function middleware(request) {
               crumbs: [],
               options: exploreRootOptions,
             })
-          : materialItems.length > 0
+          : (isMaterialsDirectory || isJeeMainPapers)
             ? renderStudyMaterialsBody(routeMeta, materialItems)
           : renderLandingBody(url.pathname, routeMeta);
       html = injectRootContent(html, body);

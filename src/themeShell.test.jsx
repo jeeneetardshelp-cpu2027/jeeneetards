@@ -33,9 +33,8 @@ describe("shared shell accessibility and theme", () => {
     expect(screen.queryByRole("button", { name: "Relative motion" })).toBeNull();
     expect(screen.getByText("Relative motion").getAttribute("aria-current")).toBe("page");
     expect(screen.getAllByRole("navigation", { name: "Primary navigation" })).toHaveLength(2);
-    // The Forum nav item is gone while RELEASE_FEATURES.forum is false (both
-    // the desktop and mobile navs render, hence the previous length of 2).
-    expect(screen.queryAllByRole("link", { name: "Forum" })).toHaveLength(0);
+    // Both desktop and mobile navigation expose the closed-beta forum.
+    expect(screen.getAllByRole("link", { name: "Forum" })).toHaveLength(2);
   });
 
   it("collapses discovery into one Courses door plus a persistent search icon", () => {

@@ -25,3 +25,21 @@ export function studyMaterialsPageSchemas(materials = []) {
     directory,
   ].filter(Boolean);
 }
+
+export function studyMaterialLandingSchemas(materials = [], { label, path } = {}) {
+  const directory = itemListSchema(
+    materials.filter(isPublicMaterial).map((material, index) => ({
+      title: material.title,
+      url: publicMaterialUrl(material),
+      position: index + 1,
+    })),
+  );
+  return [
+    breadcrumbListSchema([
+      { label: "Home", url: "/" },
+      { label: "Study material", url: MATERIALS_PATH },
+      { label, url: path },
+    ]),
+    directory,
+  ].filter(Boolean);
+}
