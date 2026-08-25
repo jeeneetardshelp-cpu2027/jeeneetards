@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   useLocation, useNavigate, useParams, useSearchParams,
 } from "react-router";
@@ -13,6 +13,7 @@ import { pullServerProgress, queueProgressSync } from "./progressSync.js";
 import { useSession } from "./useSession.js";
 import { readReturnUrl, rememberReturn, resolveBack } from "./returnTo.js";
 import CourseRating from "./CourseRating.jsx";
+import RatingPrompt from "./RatingPrompt.jsx";
 import VideoReport from "./VideoReport.jsx";
 import CourseOverview from "./CourseOverview.jsx";
 import ChapterTeachers from "./ChapterTeachers.jsx";
@@ -195,6 +196,8 @@ export default function CourseVideoPage() {
   useEffect(() => {
     setAutoplayNext(false);
     setPlaySignal(0);
+    setShowRatingPrompt(false);
+    ratingPromptDoneRef.current = false;
   }, [playlistId]);
   // Saved playback rate is read once per mount; rate changes made in the
   // player persist and carry into the next lesson's player build.
@@ -210,6 +213,14 @@ export default function CourseVideoPage() {
   // A clicked note timestamp seeks the player: { seconds, nonce }. Only the
   // nonce changing triggers a seek, so the same timestamp can be clicked twice.
   const [seekRequest, setSeekRequest] = useState(null);
+  // The one-tap rating ask is shown the first time a lesson ends in this visit,
+  // and never re-shown once the student rates or dismisses it.
+  const [showRatingPrompt, setShowRatingPrompt] = useState(false);
+  const ratingPromptDoneRef = useRef(false);
+  const dismissRatingPrompt = useCallback(() => {
+    ratingPromptDoneRef.current = true;
+    setShowRatingPrompt(false);
+  }, []);
 
   const activeVideoId = activeLesson?.videoId ?? null;
   // The resume point recomputes only when the lesson changes: positions
@@ -320,6 +331,9 @@ export default function CourseVideoPage() {
       duration,
       watched: true,
     }, { force: true });
+    // Finishing a lesson is the moment to ask "was this helpful?" — once per
+    // visit, and RatingPrompt itself stays quiet for anyone who already rated.
+    if (!ratingPromptDoneRef.current) setShowRatingPrompt(true);
   };
 
   const persistPlaybackRate = (rate) => {
@@ -511,6 +525,11 @@ export default function CourseVideoPage() {
       onProgress={recordLessonProgressReport}
       onEnded={recordLessonFinished}
       seekTo={seekRequest}
+      ratingPrompt={
+        showRatingPrompt
+          ? <RatingPrompt playlistId={playlistId} onDismiss={dismissRatingPrompt} />
+          : null
+      }
       notesPanel={
         <NotesPanel
           playlistId={playlistId}

@@ -328,6 +328,8 @@ export function VideoView({
   materialsPanel = null,
   // The student's own device-local notes for this lesson.
   notesPanel = null,
+  // A one-tap "was this helpful?" ask, surfaced when a lesson ends.
+  ratingPrompt = null,
   // "Who else teaches this chapter" — a strip directly under the player nav.
   moreTeachers = null,
   overview = null,
@@ -622,6 +624,10 @@ export function VideoView({
                 </button>
               </nav>
             )}
+
+            {/* The rating ask, surfaced at the moment a lesson ends rather than
+                buried at the foot of the page. Self-hides until then. */}
+            {ratingPrompt}
 
             {/* Other institutes teaching this chapter — the site's one real
                 advantage over YouTube, placed where a student decides they want
