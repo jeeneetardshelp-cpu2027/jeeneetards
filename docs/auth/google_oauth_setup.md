@@ -95,28 +95,26 @@ At https://supabase.com/dashboard → your project (`kezelafqhgqrprpadmlf`):
 
 ---
 
-## Part C — The one code change (Claude can do this)
+## Part C — The code change (already shipped, behind a flag)
 
-OAuth is not usable until the app offers a button that starts it. It's a small,
-self-contained change to `src/StudentAuth.jsx` (the inline sign-in used by the
-rating prompt and the ratings panel) and, for parity, `src/SignInPage.jsx`:
+The "Continue with Google" button is **already implemented** in
+`src/StudentAuth.jsx` (the shared sign-in used by the rating prompt, the ratings
+panel, AND `/signin` — SignInPage reuses the same form, so one button covers all
+three). It calls `supabase.auth.signInWithOAuth({ provider: "google", options:
+{ redirectTo } })`, where `redirectTo` is the exact page the student was on — so
+after Google they return to the lesson they were about to rate, and `/signin`
+forwards them via `?next`. That URL is covered by the `https://www.jeeneetard.com/**`
+allow-list in Part B.
 
-```jsx
-// "Continue with Google" — returns the student to the page they were on.
-const signInWithGoogle = async () => {
-  await supabase.auth.signInWithOAuth({
-    provider: "google",
-    options: {
-      redirectTo: window.location.origin + window.location.pathname + window.location.search,
-    },
-  });
-};
-```
+It is **gated behind a release flag** so it stays hidden until Google is actually
+configured — a visible button that errored would be worse than none:
 
-Rendered as a button above the email/password form ("or continue with email").
-The `redirectTo` above returns them to the exact page (e.g. the lesson they were
-about to rate); it must match one of the Redirect URLs allow-listed in Part B —
-`https://www.jeeneetard.com/**` covers every app page.
+> **In the same change where you finish Parts A–B, flip
+> `googleAuth: false` → `true` in `src/releaseCapabilities.js`
+> (RELEASE_FEATURES), then deploy (`main → release`).**
+
+Until you flip it, nothing on the site changes. After you flip it, the button
+appears above the email/password form everywhere StudentAuth is shown.
 
 No other code changes are needed:
 - **No callback route** — the default Supabase client detects the session in the
