@@ -39,6 +39,13 @@ export function FacultyFilter({ params, setParams, scope = {}, onAvailabilityCha
       const next = new URLSearchParams(prev);
       if (teacherId == null || teacherId === selected) next.delete("teacher");
       else next.set("teacher", String(teacherId));
+      // Changing the faculty filter re-scopes the result set, so any page
+      // offset from before is meaningless — dropping it is the rule every
+      // other filter already follows (filterChips.js, PlaylistBrowse.jsx:317).
+      // Without it, choosing a teacher from page 2+ keeps ?page=2, the scoped
+      // query requests an out-of-range row window, and a teacher who has
+      // courses renders the false "No courses match this view" empty state.
+      next.delete("page");
       return next;
     });
     setQuery("");
