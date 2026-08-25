@@ -11,7 +11,9 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
 
 const calls = [];
+const rpcCalls = [];
 let FIXTURES = [];
+let rpcResponse = { data: [], error: null };
 
 function makeBuilder(table) {
   const rec = { table, cols: null, eq: {}, in: {}, ilike: null, range: null, opts: null, order: [] };
@@ -45,7 +47,10 @@ function makeBuilder(table) {
   calls.push(rec);
   return b;
 }
-const supabaseMock = { from: (t) => makeBuilder(t) };
+const supabaseMock = {
+  from: (t) => makeBuilder(t),
+  rpc: (name, args) => { rpcCalls.push({ name, args }); return Promise.resolve(rpcResponse); },
+};
 vi.mock("./supabaseClient", () => ({
   isSupabaseConfigured: true,
   get supabase() { return supabaseMock; },
@@ -79,7 +84,10 @@ const run = async (props) => {
 };
 const P = (qs = "") => new URLSearchParams(qs);
 
-beforeEach(() => { calls.length = 0; FIXTURES = CATALOGUE; result = undefined; });
+beforeEach(() => {
+  calls.length = 0; rpcCalls.length = 0; FIXTURES = CATALOGUE; result = undefined;
+  rpcResponse = { data: [], error: null };
+});
 
 // ---------------------------------------------------------------- schema
 describe("only filters the schema supports are offered", () => {
@@ -167,6 +175,47 @@ describe("every filter changes the database query", () => {
     expect(Object.keys(q.eq)).toEqual([]);
     expect(Object.keys(q.in)).toEqual([]);
     expect(q.cols).not.toContain("!inner");
+  });
+
+  it("search runs the homepage matcher (RPC) and intersects its ids, not ILIKE", async () => {
+    // The old behaviour was `title ilike '%term%'`, which returned 0 for
+    // "friction problems" while the homepage found 3. Now the trimmed term goes
+    // to search_playlist_ids and the returned ids filter the catalogue.
+    rpcResponse = { data: [{ id: 2 }, { id: 4 }], error: null };
+    const { q, state } = await run({ search: "  friction problems  " });
+    expect(rpcCalls).toEqual([{ name: "search_playlist_ids", args: { p_query: "friction problems" } }]);
+    expect(q.in.id).toEqual([2, 4]);
+    expect(q.ilike).toBeNull();
+    // The .in("id") composes with paging/count like every other filter.
+    expect(state.items.map((i) => i.id)).toEqual([2, 4]);
+    expect(state.total).toBe(2);
+  });
+
+  it("a search that matches nothing yields an empty page without a catalogue query", async () => {
+    rpcResponse = { data: [], error: null };
+    const { state } = await run({ search: "zzzznotathing" });
+    expect(rpcCalls).toEqual([{ name: "search_playlist_ids", args: { p_query: "zzzznotathing" } }]);
+    expect(calls.filter((c) => c.table === "playlists")).toHaveLength(0);
+    expect(state.total).toBe(0);
+    expect(state.items).toEqual([]);
+  });
+
+  it("an empty search box never calls the match RPC", async () => {
+    const { q } = await run({ search: "   " });
+    expect(rpcCalls).toHaveLength(0);
+    expect(q.ilike).toBeNull();
+    expect(q.in.id).toBeUndefined();
+  });
+
+  it("falls back to ILIKE when the match function is not deployed", async () => {
+    // Deploy-order safety: RPC missing (PGRST202) -> keep the old single-column
+    // match so course search still works if the frontend ships before the SQL.
+    rpcResponse = { data: null, error: { code: "PGRST202", message: "Could not find the function public.search_playlist_ids" } };
+    const { q, state } = await run({ search: "friction" });
+    expect(rpcCalls).toEqual([{ name: "search_playlist_ids", args: { p_query: "friction" } }]);
+    expect(q.ilike).toEqual(["title", "%friction%"]);
+    expect(q.in.id).toBeUndefined();
+    expect(state.error).toBeNull();
   });
 });
 

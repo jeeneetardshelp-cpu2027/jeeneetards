@@ -11,6 +11,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { supabase, isSupabaseConfigured } from "./supabaseClient";
 import { chapterScopeStageDecision, classSlugsForStage } from "./classLevels.js";
+import { isMissingCatalogRpc } from "./useExplore.js";
 export { classSlugsForStage } from "./classLevels.js";
 
 export const PAGE_SIZE = 12;
@@ -144,6 +145,45 @@ export function usePlaylistBrowse({
     }
     setState((s) => ({ ...s, loading: true, error: null }));
 
+    // The catalogue search box now matches with the SAME engine as the homepage
+    // instead of a single-column title ILIKE. A small RPC (search_playlist_ids)
+    // returns the ids of courses whose title matches — multi-token, typo-
+    // tolerant, Hinglish-aware — and we intersect that set with the active
+    // filters below via .in("id", ...). Resolving ids ONCE here (they depend
+    // only on the term, not on the stats-column retry) keeps buildQuery a pure
+    // filter composition. Before this, "friction problems" returned 0 courses
+    // on /browse while the homepage found 3.
+    const term = (search ?? "").trim();
+    let searchIds = null;
+    let searchIlike = null; // graceful fallback while the match RPC is undeployed
+    if (term) {
+      const { data: idRows, error: searchErr } = await supabase.rpc(
+        "search_playlist_ids", { p_query: term },
+      );
+      if (!current()) return;
+      if (searchErr) {
+        if (isMissingCatalogRpc(searchErr)) {
+          // The browse-search functions (docs/sql/browse_search_2026-08-25.sql)
+          // are not deployed yet. Fall back to the old single-column match so
+          // search still works — no regression window if the frontend ships
+          // before the SQL. Once the functions exist, this branch never runs.
+          searchIlike = term;
+        } else {
+          console.error("playlist browse search:", searchErr);
+          setState({ items: [], total: null, loading: false, error: "Couldn't search courses.", hasMore: false });
+          return;
+        }
+      } else {
+        searchIds = (idRows ?? []).map((r) => r.id);
+        // No title matched. An empty .in() is ambiguous in PostgREST and an
+        // unfiltered query would wrongly show everything, so answer empty here.
+        if (searchIds.length === 0) {
+          setState({ items: [], total: 0, loading: false, error: null, hasMore: false });
+          return;
+        }
+      }
+    }
+
     // Every filter runs IN THE DATABASE and the page is fetched with range().
     // The previous version pulled every playlist_videos row for a chapter into
     // the browser, deduped it, then passed the whole id list back as .in(...) —
@@ -210,8 +250,9 @@ export function usePlaylistBrowse({
       if (contentTypeValues.length) q = q.in("content_type", contentTypeValues);
       if (difficultyValues.length) q = q.in("difficulty", difficultyValues);
       if (chapterId) q = q.eq("pv.videos.chapter_id", chapterId);
-      const term = (search ?? "").trim();
-      if (term) q = q.ilike("title", `%${term}%`);
+      // Intersect the filtered catalogue with the search matches resolved above.
+      if (searchIds) q = q.in("id", searchIds);
+      else if (searchIlike) q = q.ilike("title", `%${searchIlike}%`);
 
       return q;
     };

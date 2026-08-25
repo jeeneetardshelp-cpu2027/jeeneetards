@@ -49,10 +49,17 @@ function makeBuilder(rows, count) {
 }
 let ROWS = [];
 let COUNT = 0;
+// The catalogue search now resolves matching ids via an RPC before the list
+// query. Default to a non-empty match so a search-bearing probe still issues
+// its list request; tests that care about the ids set RPC_RESULT themselves.
+let RPC_RESULT = { data: [{ id: 1 }], error: null };
 const ratingsMock = vi.hoisted(() => ({ available: null }));
 vi.mock("./supabaseClient", () => ({
   isSupabaseConfigured: true,
-  supabase: { from: (t) => { const b = makeBuilder(ROWS, COUNT); calls[calls.length - 1].table = t; return b; } },
+  supabase: {
+    from: (t) => { const b = makeBuilder(ROWS, COUNT); calls[calls.length - 1].table = t; return b; },
+    rpc: () => Promise.resolve(RPC_RESULT),
+  },
 }));
 vi.mock("./useRatingsAvailability.js", () => ({
   useRatingsAvailability: () => ratingsMock.available,
@@ -96,6 +103,7 @@ const row = (id, title, over = {}) => ({
 beforeEach(() => {
   calls.length = 0;
   NEXT_RESULTS = [];
+  RPC_RESULT = { data: [{ id: 1 }], error: null };
   ROWS = [];
   COUNT = 0;
   ratingsMock.available = null;
