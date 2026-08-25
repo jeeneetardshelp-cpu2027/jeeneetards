@@ -18,10 +18,14 @@ import { ArrowUpRight } from "lucide-react";
 import { Container } from "./AppShell.jsx";
 import { RELEASE_CAPABILITIES, RELEASE_FEATURES } from "./releaseCapabilities.js";
 
+// The footer is a sitemap, not the cramped top nav, so it still lists the
+// guided funnel and library search as separate crawlable destinations (both
+// keep their routes). Only the label matches the header's single "Courses"
+// door, for consistency.
 const EXPLORE = [
   { label: "Home", to: "/" },
+  { label: "Courses", to: "/browse" },
   { label: "Find a course", to: "/explore" },
-  { label: "Browse courses", to: "/browse" },
   { label: "Mock tests", to: "/tests" },
   ...(RELEASE_CAPABILITIES.studyMaterials
     ? [{ label: "Study material", to: "/materials" }]
