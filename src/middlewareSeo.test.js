@@ -3,6 +3,7 @@ import { resolve } from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import middleware, {
   config,
+  fetchAppShell,
   isSupportedAppPath,
   parseExplorePath,
 } from "../middleware.js";
@@ -12,6 +13,38 @@ const shell = readFileSync(resolve(import.meta.dirname, "../index.html"), "utf8"
 afterEach(() => {
   vi.unstubAllGlobals();
   vi.unstubAllEnvs();
+});
+
+describe("protected preview shell fetching", () => {
+  it("forwards only same-origin preview authentication to the app shell", async () => {
+    const fetchSpy = vi.fn(async () => new Response(shell, { status: 200 }));
+    vi.stubGlobal("fetch", fetchSpy);
+    const request = new Request("https://preview.example/faculty/amit-bijarnia", {
+      headers: {
+        cookie: "_vercel_jwt=preview-cookie",
+        "x-vercel-protection-bypass": "preview-bypass",
+        authorization: "Bearer must-not-forward",
+      },
+    });
+
+    expect(await fetchAppShell(request)).toBe(shell);
+    expect(String(fetchSpy.mock.calls[0][0])).toBe("https://preview.example/index.html");
+    const forwarded = new Headers(fetchSpy.mock.calls[0][1].headers);
+    expect(forwarded.get("cookie")).toBe("_vercel_jwt=preview-cookie");
+    expect(forwarded.get("x-vercel-protection-bypass")).toBe("preview-bypass");
+    expect(forwarded.has("authorization")).toBe(false);
+  });
+
+  it("rejects a successful Vercel login response that is not the app shell", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => new Response(
+      '<!doctype html><html><body><a href="#geist-skip-nav">Skip to content</a>' +
+        "<h1>Log in to Vercel</h1></body></html>",
+      { status: 200 },
+    )));
+
+    expect(await fetchAppShell(new Request("https://preview.example/faculty/amit-bijarnia")))
+      .toBeNull();
+  });
 });
 
 describe("edge-rendered discovery landings", () => {
@@ -697,7 +730,7 @@ describe("edge-rendered discovery landings", () => {
           display_name: "Amit Bijarnia",
           slug: "amit-bijarnia",
           verified: true,
-          bio: "Physics educator.",
+          bio: "Legacy database bio.",
           photo_url: "https://example.com/amit.jpg",
           aliases: [
             { alias: "ABJ Sir", status: "verified" },
@@ -723,7 +756,48 @@ describe("edge-rendered discovery landings", () => {
     expect(html).toContain('href="/course/5"');
     expect(html).toContain('data-schema-key="Person"');
     expect(html).toContain('data-schema-key="BreadcrumbList"');
+    expect(html).toContain('<section id="source-backed-profile">');
+    expect(html).toContain("listed by Competishun as a Physics faculty member");
+    expect(html).toContain('href="https://competishun.com/" rel="noopener"');
+    expect(html).toContain("Sources checked 2026-08-25.");
+    expect(html).toContain('"description":"Amit Bijarnia (ABJ Sir)');
+    expect(html).not.toContain("Legacy database bio.");
     expect(html).not.toContain('class="boot"');
+  });
+
+  it("fails through instead of returning a protected-preview login shell", async () => {
+    vi.stubEnv("VITE_SUPABASE_URL", "https://catalog.example");
+    vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
+    const fetchSpy = vi.fn(async (input) => {
+      if (String(input).includes("/rest/v1/rpc/get_faculty_profile")) {
+        return Response.json({
+          id: 1,
+          display_name: "Amit Bijarnia",
+          slug: "amit-bijarnia",
+          verified: true,
+          aliases: [],
+          institutes: ["Competishun"],
+          courses: [],
+        });
+      }
+      return new Response(
+        '<!doctype html><html><body><a href="#geist-skip-nav">Skip to content</a>' +
+          "<h1>Log in to Vercel</h1></body></html>",
+        { status: 200 },
+      );
+    });
+    vi.stubGlobal("fetch", fetchSpy);
+
+    const response = await middleware(new Request(
+      "https://preview.example/faculty/amit-bijarnia",
+      { headers: { cookie: "_vercel_jwt=preview-cookie" } },
+    ));
+
+    expect(response.headers.get("x-middleware-next")).toBe("1");
+    const shellCall = fetchSpy.mock.calls.find(([input]) =>
+      String(input) === "https://preview.example/index.html");
+    expect(new Headers(shellCall[1].headers).get("cookie"))
+      .toBe("_vercel_jwt=preview-cookie");
   });
 
   it("returns an honest HTTP 404 for an unknown SPA route", async () => {
