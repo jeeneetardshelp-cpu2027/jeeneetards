@@ -33,6 +33,9 @@ describe("current production capability contract", () => {
       courseRatingSubmission: true,
       reviewDisplay: true,
       contentReporting: true,
+      // Off until the Supabase/Google provider is configured
+      // (docs/auth/google_oauth_setup.md); the button is hidden while false.
+      googleAuth: false,
     });
     expect(homeTagline()).toMatch(/compare/i);
   });
