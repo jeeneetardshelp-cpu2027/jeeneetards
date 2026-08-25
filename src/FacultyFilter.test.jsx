@@ -87,6 +87,28 @@ describe("FacultyFilter", () => {
     expect(screen.getByTestId("qs").textContent).not.toContain("teacher=");
   });
 
+  // Choosing a teacher re-scopes the results, so a stale page offset from an
+  // earlier, larger view must be dropped — otherwise a teacher who has courses
+  // renders the false "No courses match this view" empty state (page 2 of a
+  // one-page result set returns an out-of-range, empty row window).
+  it("drops a stale page offset when a teacher is chosen", () => {
+    useFacultyFacets.mockReturnValue({ facets: [ABJ, PRIYA], loading: false, error: null });
+    renderAt("/?page=2");
+    fireEvent.click(screen.getByText("Amit Bijarnia"));
+    const qs = screen.getByTestId("qs").textContent;
+    expect(qs).toContain("teacher=7");
+    expect(qs).not.toContain("page=");
+  });
+
+  it("drops the page offset when the faculty filter is cleared", () => {
+    useFacultyFacets.mockReturnValue({ facets: [ABJ, PRIYA], loading: false, error: null });
+    renderAt("/?teacher=7&page=2");
+    fireEvent.click(screen.getByText("Clear"));
+    const qs = screen.getByTestId("qs").textContent;
+    expect(qs).not.toContain("teacher=");
+    expect(qs).not.toContain("page=");
+  });
+
   it("reports a failed facet query instead of showing an empty filter", () => {
     useFacultyFacets.mockReturnValue({ facets: [], loading: false, error: "Couldn't load faculty filters." });
     renderAt();
