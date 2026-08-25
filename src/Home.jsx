@@ -23,7 +23,7 @@
 //  HomeSections.jsx.
 // =====================================================================
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router";
 import {
   ArrowRight, BookOpen, Loader2, PlayCircle, Search, Users, X,
@@ -36,7 +36,9 @@ import { Container, GlobalHeader } from "./AppShell.jsx";
 // server-ranked universal_search RPC that /search does.
 import { useUniversalSearch, MIN_QUERY } from "./useUniversalSearch.js";
 import { resultHref } from "./searchDestinations.js";
-import { getContinueWatching } from "./progress.js";
+import { getContinueWatching, mergeRemoteEntry } from "./progress.js";
+import { pullServerProgress } from "./progressSync.js";
+import { useSession } from "./useSession.js";
 import { EXAMS } from "./filterModel.js";
 import { useLearningGoals } from "./useExplore.js";
 import { RELEASE_CAPABILITIES } from "./releaseCapabilities.js";
@@ -86,7 +88,30 @@ export default function Home() {
   const { groups, loading, error, tooShort, retry } = useUniversalSearch(input, { limit: 6 });
   const searching = input.trim().length > 0;
 
-  const [continueWatching] = useState(() => getContinueWatching(3));
+  const [continueWatching, setContinueWatching] = useState(() => getContinueWatching(3));
+  const { session } = useSession();
+  const userId = session?.user?.id ?? null;
+
+  // A signed-in student's resume history lives on the server; localStorage on a
+  // fresh device (or after a sign-out that cleared it) starts empty, so without
+  // this the homepage — the first thing a returning student sees — greets them
+  // as a stranger and hides "Continue watching" entirely. Pull once when the
+  // session resolves, fold each row forward into localStorage (mergeRemoteEntry
+  // is idempotent and never moves a position backward), then re-read the rail.
+  // Mirrors the same pull the course page already runs on every visit.
+  useEffect(() => {
+    if (!userId) return undefined;
+    let active = true;
+    pullServerProgress(userId).then((rows) => {
+      if (!active || !rows.length) return;
+      rows.forEach((row) => mergeRemoteEntry(row));
+      setContinueWatching(getContinueWatching(3));
+    });
+    return () => {
+      active = false;
+    };
+  }, [userId]);
+
   const { goals, loading: goalsLoading, error: goalsError } = useLearningGoals();
   // One catalogue request serves the hero stat rail, rated strip, and
   // library-wide course total. Channels come from their complete bounded
