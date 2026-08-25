@@ -429,7 +429,7 @@ describe("organizationSchema", () => {
       url: "https://www.jeeneetard.com/",
       publishingPrinciples: "https://www.jeeneetard.com/methodology",
       description:
-        "Browse free educational YouTube courses by exam, class, subject and chapter.",
+        "Free JEE, NEET and board exam video lectures from top YouTube teachers, organised by class, subject and chapter.",
     });
     expect(schema).not.toHaveProperty("logo");
   });

@@ -10,7 +10,7 @@ describe("production metadata assets", () => {
   it("ships a truthful browse-only HTML fallback", () => {
     const html = readFileSync(resolve(root, "index.html"), "utf8");
     expect(html).toContain(
-      "Browse free educational YouTube courses by exam, class, subject and chapter.",
+      "Free JEE, NEET and board exam video lectures from top YouTube teachers, organised by class, subject and chapter.",
     );
     expect(html.toLowerCase()).not.toContain("find and compare");
     expect(html).toContain('rel="icon"');
