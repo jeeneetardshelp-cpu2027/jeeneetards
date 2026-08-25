@@ -452,8 +452,16 @@ export default function Dashboard() {
     // v9 has no teacher/board argument. Showing counts while either is active
     // would silently ignore part of the student's question, so omit counts
     // until those dimensions are added to the RPC contract.
+    //
+    // Search is the same story: the facet RPC still matches p_search with a
+    // single-column title ILIKE, but the result LIST now matches with the
+    // homepage engine (search_playlist_ids / search_video_ids). Left on, the
+    // sidebar counts would collapse toward 0 during a search and disagree with
+    // the results shown. Omit counts while a search is active until the facet
+    // RPC is upgraded to the same matcher (tracked as the follow-up); filters
+    // still work without counts, exactly as in the board/teacher case above.
     enabled: canonical.ready && !filterOptions.loading && !filterOptions.error
-      && !teacherRequested && !canonical.board,
+      && !teacherRequested && !canonical.board && !urlQuery.trim(),
   });
   const searchTerm = urlQuery.trim();
   const scopeHeading = chapterName ?? subjectName ?? goalName ?? null;
