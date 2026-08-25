@@ -133,18 +133,28 @@ export function GlobalHeader({ crumbs = [], search = null, leading = null, width
   const [signingOut, setSigningOut] = useState(false);
   const [signOutError, setSignOutError] = useState("");
 
+  // ONE discovery door. "Find a course" (/explore, a guided wizard that just
+  // redirects into /browse), "Browse courses" (/browse) and "Search" (/search)
+  // were three adjacent pills that all meant "find a lecture" but behaved
+  // differently — and on a narrow phone the 6-pill rail pushed the last items
+  // off-screen. Now: Home · Courses · Mock tests · Study material. /explore and
+  // /search keep their routes (reachable from the home page and the persistent
+  // search icon below) and their footer links; they are only dropped from the
+  // top nav. See DESIGN note in the commit / next-priorities memory.
   const nav = [
     { label: "Home", to: "/" },
-    { label: "Find a course", to: "/explore" },
-    { label: "Browse courses", to: "/browse" },
+    { label: "Courses", to: "/browse" },
     { label: "Mock tests", to: "/tests" },
     ...(RELEASE_CAPABILITIES.studyMaterials ? [{ label: "Study material", to: "/materials" }] : []),
     ...(RELEASE_FEATURES.forum ? [{ label: "Forum", to: "/forum" }] : []),
-    // The ranked, keyboard-friendly library search. Gated like its route: the
-    // header must never advertise a page the release cannot honestly serve.
-    ...(RELEASE_CAPABILITIES.universalSearch ? [{ label: "Search", to: "/search" }] : []),
   ];
-  const isActive = (to) => (to === "/" ? pathname === "/" : pathname.startsWith(to));
+  // "Courses" also owns the guided /explore funnel, which only redirects into
+  // /browse — so the student is never on a page with no active nav item.
+  const isActive = (to) => {
+    if (to === "/") return pathname === "/";
+    if (to === "/browse") return pathname.startsWith("/browse") || pathname.startsWith("/explore");
+    return pathname.startsWith(to);
+  };
 
   const signOut = async () => {
     setSigningOut(true);
@@ -217,6 +227,21 @@ export function GlobalHeader({ crumbs = [], search = null, leading = null, width
               past the viewport at 360. Hidden here rather than clipped — every
               screen that passes a search also offers it in the page body. */}
           <div className="ml-auto hidden min-w-0 flex-1 sm:block sm:max-w-sm">{search}</div>
+
+          {/* The library search now lives as one persistent icon on EVERY page,
+              instead of a nav pill that only reached it from a menu. Sits in the
+              controls cluster (right-aligned by the ml-auto box above), visible
+              on mobile too where the old pill scrolled off-screen. */}
+          {RELEASE_CAPABILITIES.universalSearch && (
+            <Link
+              to="/search"
+              aria-label="Search the library"
+              aria-current={pathname.startsWith("/search") ? "page" : undefined}
+              className="flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-md text-ink-2 transition-colors duration-200 hover:bg-surface-2 hover:text-ink"
+            >
+              <Search className="h-5 w-5" aria-hidden="true" />
+            </Link>
+          )}
 
           {session?.user ? (
             <div className="flex shrink-0 items-center">

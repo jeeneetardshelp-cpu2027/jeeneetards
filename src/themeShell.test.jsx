@@ -38,6 +38,21 @@ describe("shared shell accessibility and theme", () => {
     expect(screen.queryAllByRole("link", { name: "Forum" })).toHaveLength(0);
   });
 
+  it("collapses discovery into one Courses door plus a persistent search icon", () => {
+    renderHeader();
+    // One clear entry to the catalogue, rendered in both the desktop and mobile
+    // navs — not three near-synonymous pills.
+    const courses = screen.getAllByRole("link", { name: "Courses" });
+    expect(courses.length).toBeGreaterThanOrEqual(1);
+    expect(courses[0].getAttribute("href")).toBe("/browse");
+    // The old "Find a course" and "Search" nav pills are gone from the nav.
+    expect(screen.queryByRole("link", { name: "Find a course" })).toBeNull();
+    expect(screen.queryByRole("link", { name: "Search" })).toBeNull();
+    // Search is now a persistent icon link, reachable on every page.
+    const search = screen.getByRole("link", { name: "Search the library" });
+    expect(search.getAttribute("href")).toBe("/search");
+  });
+
   // Dark is the product default, not a mirror of prefers-color-scheme: it is
   // the signature theme (see theme.jsx and public/theme-init.js, which must
   // agree). So a fresh visitor starts dark, and the toggle offers light.
