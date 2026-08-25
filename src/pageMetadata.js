@@ -5,9 +5,9 @@ import { findTestSection, sectionIsAllFree } from "./testPlatforms.js";
 import { buildCourseMetadata } from "./courseMetadata.js";
 
 export const SITE_NAME = "JEENEETARD";
-export const DEFAULT_TITLE = "JEENEETARD - Free course finder";
+export const DEFAULT_TITLE = "Free JEE & NEET video lectures, chapter by chapter | JEENEETARD";
 export const DEFAULT_DESCRIPTION =
-  "Browse free educational YouTube courses by exam, class, subject and chapter.";
+  "Free JEE, NEET and board exam video lectures from top YouTube teachers, organised by class, subject and chapter.";
 
 // A capability-gated page still under review keeps a neutral, noindex title.
 const comingSoon = (base) => ({

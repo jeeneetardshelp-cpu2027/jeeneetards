@@ -52,7 +52,8 @@ describe("injectCourseMeta", () => {
     expect(html).toContain("<title>Rectilinear Motion (Kinematics) by ABJ Sir | JEENEETARD</title>");
     expect(html).toContain('property="og:title" content="Rectilinear Motion (Kinematics) by ABJ Sir | JEENEETARD"');
     expect(html).toContain('property="og:url" content="https://www.jeeneetard.com/course/5"');
-    expect(html).not.toContain("Free course finder");
+    // The course page must not fall back to the homepage default title.
+    expect(html).not.toContain("chapter by chapter");
     expect(html).toContain('name="robots" content="index, follow"');
     expect(html).toContain('property="og:type" content="article"');
   });
@@ -297,7 +298,7 @@ describe("injectRouteMeta (non-course routes)", () => {
     const html = forPath("/browse");
     expect(titleOf(html)).toBe("Browse free courses | JEENEETARD");
     expect(canonOf(html)).toBe("https://www.jeeneetard.com/browse");
-    expect(titleOf(html)).not.toBe("JEENEETARD - Free course finder");
+    expect(titleOf(html)).not.toBe("Free JEE &amp; NEET video lectures, chapter by chapter | JEENEETARD");
   });
 
   it("marks a search view noindex so query URLs are not crawl targets", () => {

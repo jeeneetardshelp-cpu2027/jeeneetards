@@ -2,7 +2,9 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { render, waitFor } from "@testing-library/react";
 
 const calls = [];
+const rpcCalls = [];
 let response;
+let rpcResponse;
 
 function builder(table) {
   const rec = { table, cols: null, opts: null, eq: {}, in: {}, range: null, ilike: null };
@@ -21,7 +23,10 @@ function builder(table) {
 
 vi.mock("./supabaseClient.js", () => ({
   isSupabaseConfigured: true,
-  supabase: { from: (table) => builder(table) },
+  supabase: {
+    from: (table) => builder(table),
+    rpc: (name, args) => { rpcCalls.push({ name, args }); return Promise.resolve(rpcResponse); },
+  },
 }));
 
 import { LECTURE_PAGE_SIZE, useVideos } from "./useBrowse.js";
@@ -34,8 +39,10 @@ function Probe(props) {
 
 beforeEach(() => {
   calls.length = 0;
+  rpcCalls.length = 0;
   seen = undefined;
   response = { data: [], error: null, count: 0 };
+  rpcResponse = { data: [], error: null };
 });
 
 describe("paged lecture discovery", () => {
@@ -58,7 +65,11 @@ describe("paged lecture discovery", () => {
     expect(calls[0].cols).toContain("institutes_channels(id, name, logo_url)");
   });
 
-  it("applies goal, subject, chapter, and search in PostgREST", async () => {
+  it("applies goal, subject, chapter in PostgREST and search through the id RPC", async () => {
+    // Search no longer runs a single-column title ILIKE. The trimmed term goes
+    // to search_video_ids (the homepage matcher), and its ids intersect the
+    // filtered query via .in("id", ...).
+    rpcResponse = { data: [{ id: 9 }, { id: 42 }], error: null };
     render(<Probe goalId={1} subjectId={2} chapterId={3} search="  vectors  " />);
     await waitFor(() => expect(calls).toHaveLength(1));
     expect(calls[0].cols).toContain("video_learning_goals!inner");
@@ -67,7 +78,40 @@ describe("paged lecture discovery", () => {
       subject_id: 2,
       chapter_id: 3,
     });
+    expect(rpcCalls).toEqual([{ name: "search_video_ids", args: { p_query: "vectors" } }]);
+    expect(calls[0].in.id).toEqual([9, 42]);
+    expect(calls[0].ilike).toBeNull();
+  });
+
+  it("returns an empty page without a catalogue query when nothing matches", async () => {
+    rpcResponse = { data: [], error: null };
+    render(<Probe search="qwertyzxcv" />);
+    await waitFor(() => expect(seen.loading).toBe(false));
+    // The match RPC ran; the main videos query did not (an empty .in() or a
+    // dropped filter would wrongly show the whole catalogue).
+    expect(rpcCalls).toEqual([{ name: "search_video_ids", args: { p_query: "qwertyzxcv" } }]);
+    expect(calls).toHaveLength(0);
+    expect(seen.total).toBe(0);
+    expect(seen.videos).toEqual([]);
+  });
+
+  it("does not call the search RPC when the box is empty", async () => {
+    render(<Probe search="   " />);
+    await waitFor(() => expect(calls).toHaveLength(1));
+    expect(rpcCalls).toHaveLength(0);
+    expect(calls[0].ilike).toBeNull();
+  });
+
+  it("falls back to the old ILIKE when the match function is not deployed", async () => {
+    // Deploy-order safety: if the frontend ships before the SQL, the RPC 404s
+    // (PGRST202) and lecture search must still work via the single-column match.
+    rpcResponse = { data: null, error: { code: "PGRST202", message: "Could not find the function public.search_video_ids" } };
+    render(<Probe search="vectors" />);
+    await waitFor(() => expect(calls).toHaveLength(1));
+    expect(rpcCalls).toEqual([{ name: "search_video_ids", args: { p_query: "vectors" } }]);
     expect(calls[0].ilike).toEqual(["title", "%vectors%"]);
+    expect(calls[0].in.id).toBeUndefined();
+    expect(seen.error).toBeNull();
   });
 
   it("does not display URL filters that the lecture query ignores", async () => {

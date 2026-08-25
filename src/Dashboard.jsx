@@ -452,6 +452,12 @@ export default function Dashboard() {
     // v9 has no teacher/board argument. Showing counts while either is active
     // would silently ignore part of the student's question, so omit counts
     // until those dimensions are added to the RPC contract.
+    //
+    // Search counts ARE shown: browse_facet_search_2026-08-25.sql upgraded the
+    // facet RPC's p_search to match with the same engine as the result list
+    // (search_playlist_ids), so the sidebar counts now agree with the results.
+    // If that migration is not yet deployed the RPC still answers (its own
+    // matcher), so counts never error here.
     enabled: canonical.ready && !filterOptions.loading && !filterOptions.error
       && !teacherRequested && !canonical.board,
   });

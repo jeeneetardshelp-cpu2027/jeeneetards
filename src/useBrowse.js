@@ -10,6 +10,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { supabase, isSupabaseConfigured } from "./supabaseClient";
 import { chapterScopeStageDecision, classSlugsForStage } from "./classLevels.js";
+import { isMissingCatalogRpc } from "./useExplore.js";
 
 const NOT_CONFIGURED = "Supabase isn't configured. Add your keys to .env and restart.";
 
@@ -75,6 +76,41 @@ export function useVideos({
     const needsPlaylistContext = Boolean(
       classSlugs || languageValues.length || contentTypeValues.length || difficultyValues.length || teacherId,
     );
+
+    // The lecture search now uses the homepage's matcher instead of a single-
+    // column title ILIKE: search_video_ids returns the ids of lectures whose
+    // title matches (multi-token, typo-tolerant, Hinglish), capped at the most
+    // relevant 500, and we intersect that with the filters below. Resolving ids
+    // once here keeps the branchy column/filter builder untouched otherwise.
+    const term = (search ?? "").trim();
+    let searchIds = null;
+    let searchIlike = null; // graceful fallback while the match RPC is undeployed
+    if (term) {
+      const { data: idRows, error: searchErr } = await supabase.rpc(
+        "search_video_ids", { p_query: term },
+      );
+      if (!current()) return;
+      if (searchErr) {
+        if (isMissingCatalogRpc(searchErr)) {
+          // search_video_ids not deployed yet (see the note in usePlaylistBrowse):
+          // fall back to the old single-column match so lecture search still
+          // works regardless of deploy order.
+          searchIlike = term;
+        } else {
+          console.error("videos search:", searchErr);
+          setState({ videos: [], total: null, loading: false, error: "Couldn't search lessons.", hasMore: false });
+          return;
+        }
+      } else {
+        searchIds = (idRows ?? []).map((r) => r.id);
+        // No title matched: answer empty rather than letting an empty .in() or a
+        // dropped filter show the whole catalogue.
+        if (searchIds.length === 0) {
+          setState({ videos: [], total: 0, loading: false, error: null, hasMore: false });
+          return;
+        }
+      }
+    }
     const cols =
       "id, youtube_video_id, title, institutes_channels(id, name, logo_url), subjects(name), chapters(name)" +
       (goalId ? ", video_learning_goals!inner(learning_goal_id)" : "") +
@@ -99,8 +135,8 @@ export function useVideos({
     if (languageValues.length) q = q.in("membership.playlists.language", languageValues);
     if (contentTypeValues.length) q = q.in("membership.playlists.content_type", contentTypeValues);
     if (difficultyValues.length) q = q.in("membership.playlists.difficulty", difficultyValues);
-    const term = (search ?? "").trim();
-    if (term) q = q.ilike("title", `%${term}%`);
+    if (searchIds) q = q.in("id", searchIds);
+    else if (searchIlike) q = q.ilike("title", `%${searchIlike}%`);
 
     try {
       const { data, error, count } = await q;
