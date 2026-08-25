@@ -78,6 +78,7 @@ describe("sitemap generation", () => {
     expect(xml).toContain("<loc>https://www.jeeneetard.com/course/5</loc>");
     expect(xml).toContain("<lastmod>2026-07-20</lastmod>");
     expect(xml).toContain("<loc>https://www.jeeneetard.com/faculty/amit-bijarnia</loc>");
+    expect(xml).toContain("<loc>https://www.jeeneetard.com/faculty</loc>");
     expect(xml.match(/faculty\/mohit-tyagi/g)).toHaveLength(1);
     expect(xml).toContain("<loc>https://www.jeeneetard.com/explore/jee</loc>");
     expect(xml).toContain("<loc>https://www.jeeneetard.com/explore/jee/class-11</loc>");

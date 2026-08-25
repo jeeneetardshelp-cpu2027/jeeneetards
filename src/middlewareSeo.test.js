@@ -57,7 +57,7 @@ describe("edge-rendered discovery landings", () => {
 
   it.each([
     "/", "/browse", "/explore/jee/class-11/physics",
-    "/faculty/amit-bijarnia", "/chapter/79", "/course/13",
+    "/faculty", "/faculty/amit-bijarnia", "/chapter/79", "/course/13",
     "/course/13/chapter/8", "/methodology", "/terms", "/privacy", "/search", "/tests",
     "/tests/jee-main", "/tests/neet", "/tests/class-12",
   ])("recognises supported application path %s", (pathname) => {
@@ -177,6 +177,7 @@ describe("edge-rendered discovery landings", () => {
     ["/", "Find the right lecture. Skip the noise."],
     ["/browse", "All courses"],
     ["/explore", "What are you preparing for?"],
+    ["/faculty", "Find courses by faculty"],
     ["/materials", "Find study material by your syllabus."],
     ["/materials/jee-main/previous-year-papers", "Official JEE Main previous year question papers"],
     ["/tests", "Mock tests"],
@@ -373,6 +374,57 @@ describe("edge-rendered discovery landings", () => {
     expect(html).toContain(
       '"url":"https://www.jeeneetard.com/course/8"',
     );
+  });
+
+  it("serves the canonical faculty landing as linked crawler-readable profiles", async () => {
+    vi.stubEnv("VITE_SUPABASE_URL", "https://catalog.example");
+    vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
+    vi.stubGlobal("fetch", vi.fn(async (input) => {
+      const url = String(input);
+      if (url.includes("/rest/v1/rpc/get_faculty_facets")) {
+        return Response.json([
+          {
+            slug: "amit-bijarnia", display_name: "Amit Bijarnia",
+            institutes: "Competishun", course_count: 4,
+          },
+          {
+            slug: "mohit-tyagi", display_name: "Mohit Tyagi",
+            institutes: "Competishun", course_count: 3,
+          },
+        ]);
+      }
+      return new Response(shell, { status: 200 });
+    }));
+
+    const response = await middleware(
+      new Request("https://www.jeeneetard.com/faculty"),
+    );
+    const html = await response.text();
+
+    expect(response.status).toBe(200);
+    expect(html).toContain("<h1>Find courses by faculty</h1>");
+    expect(html).toContain('<a href="/faculty/amit-bijarnia">Amit Bijarnia</a>');
+    expect(html).toContain("Competishun (4 linked courses)");
+    expect(html).toContain('data-schema-key="ItemList"');
+    expect(html).toContain(
+      '<link rel="canonical" href="https://www.jeeneetard.com/faculty" />',
+    );
+  });
+
+  it("keeps filtered faculty-directory URLs out of the index", async () => {
+    const fetchSpy = vi.fn(async () => new Response(shell, { status: 200 }));
+    vi.stubGlobal("fetch", fetchSpy);
+
+    const response = await middleware(new Request(
+      "https://www.jeeneetard.com/faculty?goal=jee&subject=physics",
+    ));
+    const html = await response.text();
+
+    expect(html).toContain('name="robots" content="noindex, follow"');
+    expect(html).toContain(
+      '<link rel="canonical" href="https://www.jeeneetard.com/faculty" />',
+    );
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
   });
 
   it("keeps Browse available when the directory lookup is unconfirmed", async () => {

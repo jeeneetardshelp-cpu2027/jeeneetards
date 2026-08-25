@@ -34,8 +34,10 @@ import {
   injectRootContent,
   landingSchemas,
   browseDirectorySchemas,
+  facultyDirectorySchemas,
   renderLandingBody,
   renderBrowseDirectoryBody,
+  renderFacultyDirectoryBody,
   renderStudyMaterialsBody,
   renderNotFoundBody,
 } from "./ogInject.js";
@@ -94,7 +96,7 @@ const LOOKUP_TIMEOUT_MS = 1500;
 
 const STATIC_APP_ROUTES = new Set([
   "/", "/admin", "/browse", "/compare", "/explore", "/privacy",
-  "/forum", "/forum/submit", "/forum/username", "/materials", JEE_MAIN_PAPERS_PATH, "/methodology", "/reset", "/search", "/signin", "/terms", "/tests",
+  "/faculty", "/forum", "/forum/submit", "/forum/username", "/materials", JEE_MAIN_PAPERS_PATH, "/methodology", "/reset", "/search", "/signin", "/terms", "/tests",
 ]);
 
 /** Mirrors the route shapes in App.jsx. Resource existence is checked later. */
@@ -433,9 +435,9 @@ export default async function middleware(request) {
       return deepExploreResponse(request, url, exploreRoute, supaUrl, supaKey);
     }
 
-    // Static routes share the client's metadata. Canonical Browse, root
-    // Explore, and Study material additionally fetch bounded public directory
-    // data for crawler HTML.
+    // Static routes share the client's metadata. Canonical Browse, Faculty,
+    // root Explore, and Study material additionally fetch bounded public data
+    // for crawler HTML.
     if (!courseMatch && !facultyMatch) {
       const routeMeta = metadataForLocation(url.pathname, url.search);
       if (!routeMeta) return next();
@@ -506,11 +508,28 @@ export default async function middleware(request) {
           headers: { apikey: supaKey, Authorization: `Bearer ${supaKey}` },
         });
       }
-      const [shell, directory, exploreRoot, materials] = await Promise.all([
+      const isFacultyDirectory = url.pathname === "/faculty" && !url.search;
+      const facultyDirectoryPromise = isFacultyDirectory && supaUrl && supaKey
+        ? edgeJson(`${supaUrl}/rest/v1/rpc/get_faculty_facets`, {
+            method: "POST",
+            headers: {
+              apikey: supaKey,
+              Authorization: `Bearer ${supaKey}`,
+              "content-type": "application/json",
+            },
+            body: JSON.stringify({
+              p_chapter_id: null,
+              p_subject_id: null,
+              p_goal_id: null,
+            }),
+          })
+        : Promise.resolve(null);
+      const [shell, directory, exploreRoot, materials, facultyDirectory] = await Promise.all([
         fetchAppShell(request),
         directoryPromise,
         exploreRootPromise,
         materialsPromise,
+        facultyDirectoryPromise,
       ]);
       if (!shell) return next();
       let html = injectRouteMeta(shell, routeMeta);
@@ -529,9 +548,13 @@ export default async function middleware(request) {
       const materialItems = materials?.confirmed && Array.isArray(materials.data)
         ? materials.data
         : [];
+      const facultyDirectoryItems = facultyDirectory?.confirmed && Array.isArray(facultyDirectory.data)
+        ? facultyDirectory.data
+        : [];
       html = injectStructuredData(html, [
         ...landingSchemas(url.pathname, materialItems),
         ...(hasDirectory ? browseDirectorySchemas(courseResult.data) : []),
+        ...facultyDirectorySchemas(facultyDirectoryItems),
         ...exploreSchemas([], exploreRootOptions),
       ]);
       const body = hasDirectory
@@ -548,6 +571,8 @@ export default async function middleware(request) {
             })
           : (isMaterialsDirectory || isJeeMainPapers)
             ? renderStudyMaterialsBody(routeMeta, materialItems)
+          : isFacultyDirectory
+            ? renderFacultyDirectoryBody(routeMeta, facultyDirectoryItems)
           : renderLandingBody(url.pathname, routeMeta);
       html = injectRootContent(html, body);
       return htmlResponse(html);

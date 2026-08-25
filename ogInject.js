@@ -231,6 +231,20 @@ export function browseDirectorySchemas(courses = []) {
   return list ? [{ key: "ItemList", schema: list }] : [];
 }
 
+/** The canonical faculty landing lists every linked public faculty profile. */
+export function facultyDirectorySchemas(faculty = []) {
+  const list = itemListSchema(
+    faculty
+      .filter((person) => person?.slug && person?.display_name)
+      .map((person, index) => ({
+        title: person.display_name,
+        url: `/faculty/${encodeURIComponent(person.slug)}`,
+        position: index + 1,
+      })),
+  );
+  return list ? [{ key: "ItemList", schema: list }] : [];
+}
+
 /**
  * Small, truthful fallbacks for public discovery landings. React replaces
  * this content during hydration; the wording and H1 mirror the visible page.
@@ -247,6 +261,11 @@ export function renderLandingBody(pathname, meta) {
       heading: "All courses",
       description: meta.description,
       links: [["Home", "/"], ["Find a course", "/explore"]],
+    },
+    "/faculty": {
+      heading: "Find courses by faculty",
+      description: meta.description,
+      links: [["Browse all courses", "/browse"], ["Search the library", "/search"], ["Home", "/"]],
     },
     "/explore": {
       heading: "What are you preparing for?",
@@ -373,6 +392,33 @@ export function renderBrowseDirectoryBody(meta, { courses = [], faculty = [] } =
       '<a href="/explore">Find a course</a> ' +
       '<a href="/tests">Mock tests</a> ' +
       '<a href="/terms">Terms</a> <a href="/privacy">Privacy</a></nav>',
+    "</main>",
+  ].join("");
+}
+
+/** Crawler-readable equivalent of the canonical React faculty directory. */
+export function renderFacultyDirectoryBody(meta, faculty = []) {
+  const items = faculty
+    .filter((person) => person?.slug && person?.display_name)
+    .map((person) => {
+      const count = Number(person.course_count ?? 0);
+      const institute = person.institutes ? ` — ${escapeHtml(person.institutes)}` : "";
+      return `<li><a href="/faculty/${encodeURIComponent(person.slug)}">` +
+        `${escapeHtml(person.display_name)}</a>${institute}` +
+        ` (${count} linked course${count === 1 ? "" : "s"})</li>`;
+    })
+    .join("");
+
+  if (!items) return renderLandingBody("/faculty", meta);
+  return [
+    "<main>",
+    '<nav aria-label="Breadcrumb"><a href="/">Home</a> - <span>Faculty</span></nav>',
+    "<h1>Find courses by faculty</h1>",
+    `<p>${escapeHtml(meta.description)}</p>`,
+    "<h2>Faculty directory</h2>",
+    `<ul>${items}</ul>`,
+    '<nav aria-label="Course discovery"><a href="/browse">Browse all courses</a> ' +
+      '<a href="/search">Search the library</a></nav>',
     "</main>",
   ].join("");
 }
@@ -543,7 +589,7 @@ export function facultySchemas(profile, meta, guide = getFacultyGuide(profile?.s
   });
   const crumbs = breadcrumbListSchema([
     { label: "Home", url: "/" },
-    { label: "Browse courses", url: "/browse" },
+    { label: "Faculty", url: "/faculty" },
     { label: profile?.display_name, url: meta?.canonicalPath },
   ]);
   return [
@@ -648,7 +694,7 @@ export function renderFacultyBody(profile, meta, guide = getFacultyGuide(profile
   return [
     "<main>",
     `<nav aria-label="Breadcrumb"><a href="/">Home</a> - ` +
-      `<a href="/browse">Browse courses</a> - <span>${name}</span></nav>`,
+      `<a href="/faculty">Faculty</a> - <span>${name}</span></nav>`,
     `<h1>${name}</h1>`,
     profile.verified ? "<p>Verified faculty profile.</p>" : "",
     aliases.length ? `<p>Also known as ${aliases.map(escapeHtml).join(", ")}</p>` : "",
@@ -658,7 +704,7 @@ export function renderFacultyBody(profile, meta, guide = getFacultyGuide(profile
       : `<p>${escapeHtml(meta.description)}</p>`),
     `<h2>Courses taught by ${name}</h2>`,
     courseItems ? `<ul>${courseItems}</ul>` : "<p>No linked courses are currently listed.</p>",
-    '<p><a href="/browse">Browse all free courses</a></p>',
+    '<p><a href="/faculty">Browse all faculty</a> <a href="/browse">Browse all free courses</a></p>',
     "</main>",
   ].join("");
 }

@@ -239,6 +239,20 @@ export function metadataForLocation(pathname = "/", search = "") {
     };
   }
 
+  if (path === "/faculty") {
+    const hasFilters = [...params.keys()].length > 0;
+    return RELEASE_CAPABILITIES.facultyRegistry
+      ? {
+          ...base,
+          title: `JEE, NEET and board exam faculty | ${SITE_NAME}`,
+          description:
+            "Find faculty by verified name or alias, exam and subject, then browse their linked free YouTube courses.",
+          robots: hasFilters ? "noindex, follow" : "index, follow",
+          canonicalPath: "/faculty",
+        }
+      : comingSoon(base);
+  }
+
   if (path.startsWith("/faculty/")) {
     const slug = path.split("/")[2] ?? "";
     const name = readableFacultySlug(slug);

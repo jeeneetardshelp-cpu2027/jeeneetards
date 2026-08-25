@@ -20,6 +20,7 @@ import { JEE_MAIN_PAPERS_PATH } from "../studyMaterialLandings.js";
 export const BASE = "https://www.jeeneetard.com";
 export const STATIC_ROUTES = [
   "/", "/browse", "/explore", "/tests", "/methodology", "/terms", "/privacy",
+  ...(RELEASE_CAPABILITIES.facultyRegistry ? ["/faculty"] : []),
   ...(RELEASE_CAPABILITIES.studyMaterials
     ? ["/materials", JEE_MAIN_PAPERS_PATH]
     : []),

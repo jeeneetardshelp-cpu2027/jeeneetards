@@ -122,6 +122,18 @@ describe("public page metadata", () => {
     expect(page.type).toBe("profile");
   });
 
+  it("publishes the faculty directory but keeps filtered variants out of the index", () => {
+    const directory = metadataForLocation("/faculty");
+    expect(directory.title).toBe("JEE, NEET and board exam faculty | JEENEETARD");
+    expect(directory.description).toContain("verified name or alias");
+    expect(directory.robots).toBe("index, follow");
+    expect(directory.canonicalPath).toBe("/faculty");
+
+    const filtered = metadataForLocation("/faculty", "?goal=jee&subject=physics");
+    expect(filtered.robots).toBe("noindex, follow");
+    expect(filtered.canonicalPath).toBe("/faculty");
+  });
+
   it("uses loaded course data when a course finishes loading", () => {
     const page = metadataForCourse({
       title: "Rectilinear Motion (Kinematics)",

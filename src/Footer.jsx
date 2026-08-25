@@ -26,6 +26,9 @@ const EXPLORE = [
   { label: "Home", to: "/" },
   { label: "Courses", to: "/browse" },
   { label: "Find a course", to: "/explore" },
+  ...(RELEASE_CAPABILITIES.facultyRegistry
+    ? [{ label: "Faculty directory", to: "/faculty" }]
+    : []),
   { label: "Mock tests", to: "/tests" },
   ...(RELEASE_CAPABILITIES.studyMaterials
     ? [{ label: "Study material", to: "/materials" }]
