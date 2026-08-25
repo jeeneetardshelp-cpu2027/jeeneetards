@@ -80,11 +80,15 @@ describe("legal release truth", () => {
       expect(privacy()).toMatch(/published publicly/i);
     });
 
-    it("does not claim that the forum is available while its release flag is off", async () => {
+    it("describes forum availability consistently with its release flag", async () => {
       const { RELEASE_FEATURES } = await import("./releaseCapabilities.js");
-      if (RELEASE_FEATURES.forum) return;
+      if (RELEASE_FEATURES.forum) {
+        expect(privacy()).toMatch(/forum is operating as a limited closed beta/i);
+        expect(privacy()).toMatch(/beta invitation/i);
+        expect(privacy()).toMatch(/forum posts, answers, and public usernames are visible/i);
+        return;
+      }
       expect(privacy()).toMatch(/forum is not publicly available in this release/i);
-      expect(privacy()).not.toMatch(/forum contributions,\s+and content reporting are enabled/i);
     });
 
     it("keeps both legal pages on the same effective date", () => {

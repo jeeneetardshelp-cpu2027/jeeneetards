@@ -27,9 +27,6 @@ describe("Footer contact and feedback", () => {
     expect(document.body.textContent).toContain(
       "Have feedback or an idea for a feature that would make the website better?",
     );
-    // No forum link while RELEASE_FEATURES.forum is false. It was removed on
-    // 2026-08-10 because the database mode was never opened, so the link led to
-    // "Discussions are temporarily unavailable".
-    expect(screen.queryByRole("link", { name: "Student forum" })).toBeNull();
+    expect(screen.getByRole("link", { name: "Student forum" }).getAttribute("href")).toBe("/forum");
   });
 });
