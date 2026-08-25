@@ -27,6 +27,7 @@ function renderList(props = {}) {
         lessons={lessons}
         activeLessonId={props.activeLessonId ?? 1}
         watchedIds={props.watchedIds ?? []}
+        completedIds={props.completedIds ?? []}
         onSelectLesson={props.onSelectLesson ?? vi.fn()}
       />
     </ThemeProvider>,
@@ -120,6 +121,19 @@ describe("large course lesson sequence", () => {
     await waitFor(() => expect(screen.getByText("Showing 1–50 of 59")).toBeTruthy());
     expect(screen.queryByText("Lesson 61")).toBeNull();
     expect(screen.getByText("Lesson 62")).toBeTruthy();
+  });
+
+  it("shows a completed check only for finished lessons, not merely started ones", () => {
+    // Lesson 2 finished, lesson 3 started-but-unfinished, lesson 4 untouched.
+    // Lesson 1 is the active lesson, so it shows its number, not a state mark.
+    renderList({ activeLessonId: 1, watchedIds: ["video-2", "video-3"], completedIds: ["video-2"] });
+
+    // A completed lesson gets the check; a started-but-unfinished one gets the
+    // honest "in progress" mark instead of falsely claiming done.
+    expect(screen.getAllByRole("img", { name: "Completed" })).toHaveLength(1);
+    expect(screen.getAllByRole("img", { name: "In progress" })).toHaveLength(1);
+    // An untouched lesson shows its position number, no state mark.
+    expect(screen.getByText("Lesson 4")).toBeTruthy();
   });
 
   it("offers a useful reset when no lesson matches", async () => {

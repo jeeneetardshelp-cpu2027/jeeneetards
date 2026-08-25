@@ -248,6 +248,25 @@ export function getWatchedVideoIds(playlistId) {
   return readAll()[String(playlistId)]?.watched ?? [];
 }
 
+// Which lesson videos were watched to the END (completed), derived from the
+// resume points already stored — a finished lesson is written at seconds ==
+// duration (recordLessonFinished), and any position at or past 95% of a known
+// duration counts as done. This is the honest signal behind the lesson list's
+// completed check: `watched` above only means "started playing", so a lesson a
+// student opened for ten seconds is watched-started but NOT completed.
+export function getCompletedVideoIds(playlistId) {
+  const positions = readAll()[String(playlistId)]?.positions ?? {};
+  const out = [];
+  for (const [videoId, pos] of Object.entries(positions)) {
+    const t = Number(pos?.t);
+    const d = Number(pos?.d);
+    if (Number.isFinite(t) && Number.isFinite(d) && d > 0 && t >= 0.95 * d) {
+      out.push(videoId);
+    }
+  }
+  return out;
+}
+
 // Full per-course entry for a truthful Continue button. Reading progress does
 // not create it; only genuine YouTube PLAYING events write progress.
 export function getCourseProgress(playlistId) {

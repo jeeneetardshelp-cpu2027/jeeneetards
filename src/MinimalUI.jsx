@@ -86,14 +86,20 @@ function PlayerOverlay({ label, children }) {
 // a watched tick appears only after YouTube reports actual playback.
 export const LESSONS_PER_VIEW = 50;
 
-export function LessonList({ lessons, activeLessonId, onSelectLesson, watchedIds = [] }) {
+export function LessonList({
+  lessons, activeLessonId, onSelectLesson, watchedIds = [], completedIds = [],
+}) {
   const { t } = useTheme();
   const [query, setQuery] = useState("");
   const [chapterId, setChapterId] = useState("");
   const [unwatchedOnly, setUnwatchedOnly] = useState(false);
   const [page, setPage] = useState(1);
 
+  // "watched" = started playing (drives the "Unwatched only" filter and the
+  // opened-count). "completed" = watched to the end. The tick tells them apart
+  // honestly: a check ONLY for completed, an in-progress mark for started.
   const watched = useMemo(() => new Set(watchedIds), [watchedIds]);
+  const completed = useMemo(() => new Set(completedIds), [completedIds]);
   const chapters = useMemo(() => {
     const found = new Map();
     lessons.forEach((lesson) => {
@@ -225,7 +231,10 @@ export function LessonList({ lessons, activeLessonId, onSelectLesson, watchedIds
       <ol className={`mt-3 overflow-hidden rounded-xl border ${t.border}`}>
         {visibleLessons.map((lesson, index) => {
           const active = lesson.id === activeLessonId;
-          const isWatched = watched.has(lesson.videoId);
+          const isCompleted = completed.has(lesson.videoId);
+          // Started but not finished — the state the old single check wrongly
+          // reported as done.
+          const inProgress = !isCompleted && watched.has(lesson.videoId);
           const previous = visibleLessons[index - 1];
           const startsChapter = lesson.chapter?.id && lesson.chapter.id !== previous?.chapter?.id;
           return (
@@ -245,8 +254,15 @@ export function LessonList({ lessons, activeLessonId, onSelectLesson, watchedIds
                 }}
               >
                 <span className="flex w-4 shrink-0 items-center justify-center">
-                  {isWatched && !active ? (
-                    <Check className="h-4 w-4" style={{ color: ACCENT.teal }} />
+                  {!active && isCompleted ? (
+                    <Check role="img" aria-label="Completed" className="h-4 w-4" style={{ color: ACCENT.teal }} />
+                  ) : !active && inProgress ? (
+                    // A half-filled ring: honestly "started, not finished",
+                    // where the old check falsely claimed done.
+                    <svg role="img" aria-label="In progress" viewBox="0 0 16 16" className="h-4 w-4">
+                      <circle cx="8" cy="8" r="6.5" fill="none" stroke={ACCENT.teal} strokeWidth="1.5" opacity="0.45" />
+                      <path d="M8 1.5 A6.5 6.5 0 0 1 8 14.5 Z" fill={ACCENT.teal} opacity="0.65" />
+                    </svg>
                   ) : (
                     <span
                       className={`text-xs ${active ? "font-semibold" : t.faint}`}
@@ -323,6 +339,7 @@ export function VideoView({
   courseLessons = null,
   activeLessonId = null,
   watchedIds = [],
+  completedIds = [],
   ratingPanel = null,
   reportSlot = null,
   materialsPanel = null,
@@ -650,6 +667,7 @@ export function VideoView({
               lessons={lessons}
               activeLessonId={activeLessonId}
               watchedIds={watchedIds}
+              completedIds={completedIds}
               onSelectLesson={onSelectLesson}
             />
           </aside>
