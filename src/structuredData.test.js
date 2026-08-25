@@ -79,6 +79,7 @@ describe("personSchema", () => {
       image: "https://example.com/amit.jpg",
       aliases: ["ABJ Sir"],
       institutes: ["Competishun"],
+      sameAs: ["https://www.youtube.com/@example", "javascript:alert(1)"],
     })).toEqual({
       "@context": "https://schema.org",
       "@type": "Person",
@@ -88,6 +89,7 @@ describe("personSchema", () => {
       image: "https://example.com/amit.jpg",
       alternateName: ["ABJ Sir"],
       affiliation: [{ "@type": "Organization", name: "Competishun" }],
+      sameAs: ["https://www.youtube.com/@example"],
     });
   });
 

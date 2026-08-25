@@ -15,6 +15,7 @@ import {
   organizationSchema,
   safeStructuredDataJson,
 } from "./src/structuredData.js";
+import { getFacultyGuide } from "./src/facultyGuides.js";
 // Pure data, no React — safe to pull into the edge runtime.
 import { TEST_SECTIONS, ACCESS, findTestSection } from "./src/testPlatforms.js";
 import { buildCourseMetadata } from "./src/courseMetadata.js";
@@ -470,14 +471,15 @@ const verifiedAliases = (profile) => (profile?.aliases ?? [])
   .map((item) => item.alias)
   .filter((alias) => alias && alias !== profile?.display_name);
 
-export function facultySchemas(profile, meta) {
+export function facultySchemas(profile, meta, guide = getFacultyGuide(profile?.slug)) {
   const person = personSchema({
     name: profile?.display_name,
     url: meta?.canonicalPath,
-    description: profile?.bio,
+    description: guide?.summary || profile?.bio,
     image: profile?.photo_url,
     aliases: verifiedAliases(profile),
     institutes: profile?.institutes,
+    sameAs: guide?.sameAs,
   });
   const crumbs = breadcrumbListSchema([
     { label: "Home", url: "/" },
@@ -553,7 +555,7 @@ export function renderCourseBody(course, meta, lessons = []) {
   ].join("");
 }
 
-export function renderFacultyBody(profile, meta) {
+export function renderFacultyBody(profile, meta, guide = getFacultyGuide(profile?.slug)) {
   const name = escapeHtml(profile.display_name);
   const aliases = verifiedAliases(profile);
   const institutes = (profile.institutes ?? []).filter(Boolean);
@@ -566,6 +568,22 @@ export function renderFacultyBody(profile, meta) {
     return `<li><a href="/course/${encodeURIComponent(course.playlist_id)}">` +
       `${escapeHtml(course.title)}</a>${details ? ` (${details})` : ""}</li>`;
   }).join("");
+  const facts = (guide?.facts ?? []).map((fact) =>
+    `<div><dt>${escapeHtml(fact.label)}</dt><dd>${escapeHtml(fact.value)}</dd></div>`,
+  ).join("");
+  const sources = (guide?.sources ?? []).map((source) =>
+    `<li><a href="${escapeHtml(source.href)}" rel="noopener">` +
+      `${escapeHtml(source.label)}</a></li>`,
+  ).join("");
+  const sourceBackedProfile = guide ? [
+    '<section id="source-backed-profile">',
+    "<h2>Source-backed profile</h2>",
+    `<p>${escapeHtml(guide.summary)}</p>`,
+    facts ? `<dl>${facts}</dl>` : "",
+    sources ? `<h3>Primary sources</h3><ul>${sources}</ul>` : "",
+    `<p>Sources checked ${escapeHtml(guide.sourceChecked)}.</p>`,
+    "</section>",
+  ].join("") : "";
 
   return [
     "<main>",
@@ -575,7 +593,9 @@ export function renderFacultyBody(profile, meta) {
     profile.verified ? "<p>Verified faculty profile.</p>" : "",
     aliases.length ? `<p>Also known as ${aliases.map(escapeHtml).join(", ")}</p>` : "",
     institutes.length ? `<p>Institutes: ${institutes.map(escapeHtml).join(", ")}</p>` : "",
-    profile.bio ? `<p>${escapeHtml(profile.bio)}</p>` : `<p>${escapeHtml(meta.description)}</p>`,
+    sourceBackedProfile || (profile.bio
+      ? `<p>${escapeHtml(profile.bio)}</p>`
+      : `<p>${escapeHtml(meta.description)}</p>`),
     `<h2>Courses taught by ${name}</h2>`,
     courseItems ? `<ul>${courseItems}</ul>` : "<p>No linked courses are currently listed.</p>",
     '<p><a href="/browse">Browse all free courses</a></p>',

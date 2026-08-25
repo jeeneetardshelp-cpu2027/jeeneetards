@@ -58,4 +58,29 @@ describe("FacultyProfile", () => {
     expect(link.getAttribute("href")).toBe("/course/9");
     expect(screen.getByText("1 student rating")).toBeDefined();
   });
+
+  it("shows the reviewed faculty pilot with visible sources and matching schema", () => {
+    profileHook.value = {
+      loading: false, error: null,
+      profile: {
+        id: 7, slug: "amit-bijarnia", display_name: "Amit Bijarnia",
+        verified: true, course_count: 0, bio: "Legacy database bio.", photo_url: null,
+        aliases: [{ alias: "ABJ Sir", status: "verified" }],
+        institutes: ["Mohit Tyagi"], courses: [],
+      },
+    };
+    renderProfile();
+
+    expect(screen.getByRole("heading", { name: "Source-backed profile" })).toBeDefined();
+    expect(screen.getByText(/listed by Competishun as a Physics faculty member/)).toBeDefined();
+    expect(screen.getByRole("link", { name: /Competishun faculty overview/ })
+      .getAttribute("href")).toBe("https://competishun.com/");
+    expect(screen.getByText("Sources checked 2026-08-25.")).toBeDefined();
+    expect(document.querySelector('meta[name="description"]')?.getAttribute("content"))
+      .toContain("Competishun Physics faculty for JEE");
+    expect(document.head.querySelector('[data-schema-key="Person"]')?.textContent)
+      .toContain('"description":"Amit Bijarnia');
+    expect(document.head.querySelector('[data-schema-key="Person"]')?.textContent)
+      .not.toContain("Legacy database bio.");
+  });
 });
