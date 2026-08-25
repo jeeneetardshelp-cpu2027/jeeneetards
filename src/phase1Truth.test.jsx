@@ -46,6 +46,7 @@ vi.mock("./usePlaylistVideos.js", () => ({
 
 vi.mock("./progress.js", () => ({
   getWatchedVideoIds: () => [],
+  getCompletedVideoIds: () => [],
   getCourseProgress: () => phase.progress,
   recordLessonView: phase.record,
   getContinueWatching: () => [],
@@ -157,7 +158,7 @@ describe("truthful course entry", () => {
     expect(phase.record).toHaveBeenCalledWith(expect.objectContaining({
       playlistId: "1", videoId: "video-one", position: 1,
     }));
-    expect(screen.getAllByText("1 of 2 watched")).toHaveLength(2);
+    expect(screen.getAllByText("1 of 2 started")).toHaveLength(2);
   });
 
   it("scopes a chapter-qualified route to that chapter", async () => {

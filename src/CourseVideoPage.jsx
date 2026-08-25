@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   useLocation, useNavigate, useParams, useSearchParams,
 } from "react-router";
@@ -6,17 +6,20 @@ import { VideoView } from "./MinimalUI.jsx";
 import { useTheme } from "./theme.jsx";
 import { usePlaylistVideos } from "./usePlaylistVideos.js";
 import {
-  getCourseProgress, getLessonPosition, getPlayerPrefs, getWatchedVideoIds,
-  mergeRemoteEntry, recordLessonPosition, recordLessonView, savePlayerPrefs,
+  getCompletedVideoIds, getCourseProgress, getLessonPosition, getPlayerPrefs,
+  getWatchedVideoIds, mergeRemoteEntry, recordLessonPosition, recordLessonView,
+  savePlayerPrefs,
 } from "./progress.js";
 import { pullServerProgress, queueProgressSync } from "./progressSync.js";
 import { useSession } from "./useSession.js";
 import { readReturnUrl, rememberReturn, resolveBack } from "./returnTo.js";
 import CourseRating from "./CourseRating.jsx";
+import RatingPrompt from "./RatingPrompt.jsx";
 import VideoReport from "./VideoReport.jsx";
 import CourseOverview from "./CourseOverview.jsx";
 import ChapterTeachers from "./ChapterTeachers.jsx";
 import StudyMaterialPanel from "./StudyMaterialPanel.jsx";
+import NotesPanel from "./NotesPanel.jsx";
 import { applyPageMetadata, useCourseMetadata, useStructuredData } from "./PageMetadata.jsx";
 import { breadcrumbListSchema, courseSchema, videoObjectSchema } from "./structuredData.js";
 import { metadataForCourse } from "./pageMetadata.js";
@@ -160,8 +163,13 @@ export default function CourseVideoPage() {
   }, [activeLesson, error, lessons, loading, resumeVideoId, searchParams, setSearchParams]);
 
   const [watchedIds, setWatchedIds] = useState([]);
+  // Completed = watched to the end (the honest lesson-list check). Started but
+  // unfinished lessons show an in-progress mark instead. Kept in sync with
+  // watchedIds at the same points, plus refreshed when a lesson finishes.
+  const [completedIds, setCompletedIds] = useState([]);
   useEffect(() => {
     setWatchedIds(getWatchedVideoIds(playlistId));
+    setCompletedIds(getCompletedVideoIds(playlistId));
   }, [playlistId]);
 
   // Signed-in students may have progress from another device. Pulled once
@@ -176,6 +184,7 @@ export default function CourseVideoPage() {
       rows.forEach((row) => mergeRemoteEntry(row));
       setSavedProgress(getCourseProgress(playlistId));
       setWatchedIds(getWatchedVideoIds(playlistId));
+      setCompletedIds(getCompletedVideoIds(playlistId));
     });
     return () => {
       active = false;
@@ -194,6 +203,8 @@ export default function CourseVideoPage() {
   useEffect(() => {
     setAutoplayNext(false);
     setPlaySignal(0);
+    setShowRatingPrompt(false);
+    ratingPromptDoneRef.current = false;
   }, [playlistId]);
   // Saved playback rate is read once per mount; rate changes made in the
   // player persist and carry into the next lesson's player build.
@@ -201,6 +212,22 @@ export default function CourseVideoPage() {
   // Duration from the player's most recent progress report; the fallback when
   // a lesson ends before its first report is the catalogue metadata.
   const lastProgressRef = useRef({ videoId: null, duration: 0 });
+  // The active lesson's latest playback second, so a new note can be stamped
+  // with roughly where the student is (exact when paused, ≤5s stale while
+  // playing). Keyed by videoId so a stale value from the previous lesson is
+  // never attributed to the current one.
+  const notePositionRef = useRef({ videoId: null, seconds: 0 });
+  // A clicked note timestamp seeks the player: { seconds, nonce }. Only the
+  // nonce changing triggers a seek, so the same timestamp can be clicked twice.
+  const [seekRequest, setSeekRequest] = useState(null);
+  // The one-tap rating ask is shown the first time a lesson ends in this visit,
+  // and never re-shown once the student rates or dismisses it.
+  const [showRatingPrompt, setShowRatingPrompt] = useState(false);
+  const ratingPromptDoneRef = useRef(false);
+  const dismissRatingPrompt = useCallback(() => {
+    ratingPromptDoneRef.current = true;
+    setShowRatingPrompt(false);
+  }, []);
 
   const activeVideoId = activeLesson?.videoId ?? null;
   // The resume point recomputes only when the lesson changes: positions
@@ -209,6 +236,21 @@ export default function CourseVideoPage() {
     () => (activeVideoId ? getLessonPosition(playlistId, activeVideoId) : 0),
     [playlistId, activeVideoId],
   );
+
+  // Switching lessons cancels any pending seek so a leftover request can't jump
+  // the new video (the player would otherwise apply it once it becomes ready).
+  useEffect(() => { setSeekRequest(null); }, [activeVideoId]);
+
+  // What second to stamp a new note with: the active lesson's latest reported
+  // position, or null when the player hasn't reported for it yet (an untimed
+  // note). Never returns another lesson's position.
+  const noteTimestamp = () => (
+    notePositionRef.current.videoId === activeVideoId ? notePositionRef.current.seconds : null
+  );
+  const seekActivePlayer = (seconds) => {
+    if (!Number.isFinite(seconds) || seconds < 0) return;
+    setSeekRequest((prev) => ({ seconds, nonce: (prev?.nonce ?? 0) + 1 }));
+  };
 
   const recordActiveLessonPlayback = () => {
     if (!course || !activeLesson) return;
@@ -252,6 +294,10 @@ export default function CourseVideoPage() {
     if (Number.isFinite(duration) && duration > 0) {
       lastProgressRef.current = { videoId, duration };
     }
+    // Remember where playback is, so "Add note" can stamp the current second.
+    if (Number.isFinite(seconds) && seconds >= 0) {
+      notePositionRef.current = { videoId, seconds };
+    }
     recordLessonPosition({ playlistId, videoId, seconds, duration });
     // Throttled (~25s): this fires every 5s while playing, plus once on
     // pause and once on pagehide/lesson-switch (YouTubePlayer's own
@@ -292,6 +338,11 @@ export default function CourseVideoPage() {
       duration,
       watched: true,
     }, { force: true });
+    // The lesson just reached its end, so its completed check can now appear.
+    setCompletedIds(getCompletedVideoIds(playlistId));
+    // Finishing a lesson is the moment to ask "was this helpful?" — once per
+    // visit, and RatingPrompt itself stays quiet for anyone who already rated.
+    if (!ratingPromptDoneRef.current) setShowRatingPrompt(true);
   };
 
   const persistPlaybackRate = (rate) => {
@@ -472,6 +523,7 @@ export default function CourseVideoPage() {
       courseLessons={allLessons}
       activeLessonId={activeLesson.id}
       watchedIds={watchedIds}
+      completedIds={completedIds}
       onSelectLesson={selectLesson}
       onLessonPlay={recordActiveLessonPlayback}
       onBack={backToHub}
@@ -482,6 +534,20 @@ export default function CourseVideoPage() {
       onPlaybackRateChange={persistPlaybackRate}
       onProgress={recordLessonProgressReport}
       onEnded={recordLessonFinished}
+      seekTo={seekRequest}
+      ratingPrompt={
+        showRatingPrompt
+          ? <RatingPrompt playlistId={playlistId} onDismiss={dismissRatingPrompt} />
+          : null
+      }
+      notesPanel={
+        <NotesPanel
+          playlistId={playlistId}
+          videoId={activeLesson.videoId}
+          getCurrentTime={noteTimestamp}
+          onSeek={seekActivePlayer}
+        />
+      }
       overview={
         <CourseOverview
           course={displayedCourse}

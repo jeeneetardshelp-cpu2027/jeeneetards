@@ -50,6 +50,7 @@ describe("repository onboarding contract", () => {
       courseRatingSubmission: true,
       reviewDisplay: true,
       contentReporting: true,
+      googleAuth: false,
     });
     for (const label of [
       "Public student accounts", "Rating submission", "Review display", "Content reporting",
@@ -58,9 +59,11 @@ describe("repository onboarding contract", () => {
     }
     // The forum row must say Disabled and say WHY, so the next reader does not
     // flip the flag back on the strength of the code existing. The database mode
-    // is the thing that was never opened.
+    // is the thing that was never opened. Google sign-in is the same shape:
+    // the button exists but the provider is not configured yet.
     expect(readme).toMatch(/\| Student forum \| Disabled[^|]*\|/);
     expect(readme).toMatch(/Student forum \| Disabled.*mode still/);
+    expect(readme).toMatch(/\| Continue with Google sign-in \| Disabled[^|]*\|/);
   });
 
   it("keeps privileged keys out of frontend guidance", () => {

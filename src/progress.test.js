@@ -14,6 +14,7 @@ import {
   getPlayerPrefs,
   savePlayerPrefs,
   getWatchedVideoIds,
+  getCompletedVideoIds,
   getCourseProgress,
   getContinueWatching,
   mergeRemoteEntry,
@@ -26,6 +27,31 @@ const PREFS_KEY = "ll_player_prefs_v1";
 // jsdom provides a real localStorage; each test starts from an empty one.
 beforeEach(() => {
   localStorage.clear();
+});
+
+describe("getCompletedVideoIds (the honest 'watched to the end' signal)", () => {
+  it("counts a lesson finished (position at duration) as completed", () => {
+    recordLessonPosition({ playlistId: 1, videoId: "done", seconds: 600, duration: 600 });
+    expect(getCompletedVideoIds(1)).toEqual(["done"]);
+  });
+
+  it("does not count a merely-started lesson as completed", () => {
+    recordLessonView({ playlistId: 1, videoId: "started", videoTitle: "x" });
+    recordLessonPosition({ playlistId: 1, videoId: "started", seconds: 120, duration: 600 });
+    // Started and has a resume point, but nowhere near the end.
+    expect(getWatchedVideoIds(1)).toContain("started");
+    expect(getCompletedVideoIds(1)).toEqual([]);
+  });
+
+  it("treats >=95% as done and needs a known duration", () => {
+    recordLessonPosition({ playlistId: 2, videoId: "near-end", seconds: 96, duration: 100 });
+    recordLessonPosition({ playlistId: 2, videoId: "no-duration", seconds: 500, duration: 0 });
+    expect(getCompletedVideoIds(2)).toEqual(["near-end"]);
+  });
+
+  it("is empty for an unknown course", () => {
+    expect(getCompletedVideoIds(999)).toEqual([]);
+  });
 });
 
 describe("getLessonPosition resume rules", () => {

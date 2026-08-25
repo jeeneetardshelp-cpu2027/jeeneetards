@@ -65,6 +65,7 @@ vi.mock("./YouTubePlayer.jsx", () => ({
 
 vi.mock("./progress.js", () => ({
   getWatchedVideoIds: () => watch.watched,
+  getCompletedVideoIds: () => watch.completed ?? [],
   getCourseProgress: () => null,
   recordLessonView: () => null,
   getContinueWatching: () => [],
@@ -244,7 +245,7 @@ describe("up-next overlay", () => {
     fireEvent.click(screen.getByRole("button", { name: "Finish video" }));
 
     expect(screen.getByText("Course complete")).toBeTruthy();
-    expect(screen.getByText("You watched 3 of 3 lessons in this course.")).toBeTruthy();
+    expect(screen.getByText("You started 3 of 3 lessons in this course.")).toBeTruthy();
     // The page's back affordance plus the overlay's copy of it.
     expect(screen.getAllByRole("button", { name: "Back to results" })).toHaveLength(2);
     expect(screen.queryByText("Play now")).toBeNull();

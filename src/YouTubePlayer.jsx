@@ -66,9 +66,16 @@ export default function YouTubePlayer({
   playbackRate = null,
   onPlaybackRateChange = null,
   playSignal = 0,
+  // A seek request from outside (e.g. clicking a note's timestamp): { seconds,
+  // nonce }. The nonce changing is the trigger, so clicking the same timestamp
+  // twice seeks twice.
+  seekTo = null,
 }) {
   const hostRef = useRef(null);   // stable node that React controls
   const playerRef = useRef(null);
+  // A seek asked for before the player exists is remembered here and applied
+  // once onReady fires (see the seek effect and onReady below).
+  const pendingSeekRef = useRef(null);
   // A fresh course page shows a lightweight, explicit Play control instead of
   // downloading the full YouTube runtime before the student asks for video.
   // In-page lesson changes still activate immediately because their parent
@@ -199,6 +206,18 @@ export default function YouTubePlayer({
                   // The player may have been torn down before ready settled.
                 }
               }
+              // A note's timestamp was clicked before the player had loaded:
+              // land there now that it is ready.
+              if (pendingSeekRef.current != null) {
+                const target = pendingSeekRef.current;
+                pendingSeekRef.current = null;
+                try {
+                  playerRef.current?.seekTo(target, true);
+                  playerRef.current?.playVideo?.();
+                } catch {
+                  // torn down between ready and this call — ignore.
+                }
+              }
             }
           },
           onError: (e) => {
@@ -293,6 +312,33 @@ export default function YouTubePlayer({
       // Player not ready yet — the student still has the normal play button.
     }
   }, [activated, playSignal, videoId]);
+
+  // Seek to a requested second (a clicked note timestamp). Triggered only by
+  // the nonce so the same target can be requested repeatedly. If the player
+  // has not been built yet, remember the target and activate — onReady lands
+  // there; if it is built but the YT instance is still settling, stash it too.
+  useEffect(() => {
+    const target = seekTo?.seconds;
+    if (!seekTo?.nonce || !Number.isFinite(target) || target < 0) return;
+    if (!activated) {
+      pendingSeekRef.current = target;
+      setActivatedVideoId(videoId);
+      return;
+    }
+    const player = playerRef.current;
+    if (player?.seekTo) {
+      try {
+        player.seekTo(target, true);
+        player.playVideo?.();
+      } catch {
+        pendingSeekRef.current = target;
+      }
+    } else {
+      pendingSeekRef.current = target;
+    }
+    // Only the nonce should trigger a seek; activated/videoId are read fresh.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [seekTo?.nonce]);
 
   return (
     <div className="relative aspect-video w-full overflow-hidden bg-black">

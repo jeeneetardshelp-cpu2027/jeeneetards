@@ -37,7 +37,7 @@ const ACCENT = { teal: BRAND_TEAL };
 // =====================================================================
 function PlayerArea({
   videoId, title, onPlay, onPlaying, onEnded, onProgress,
-  startSeconds, autoplay, playbackRate, onPlaybackRateChange, playSignal,
+  startSeconds, autoplay, playbackRate, onPlaybackRateChange, playSignal, seekTo,
 }) {
   return (
     <div className="aspect-video w-full overflow-hidden rounded-2xl bg-neutral-900">
@@ -53,6 +53,7 @@ function PlayerArea({
         playbackRate={playbackRate}
         onPlaybackRateChange={onPlaybackRateChange}
         playSignal={playSignal}
+        seekTo={seekTo}
       />
     </div>
   );
@@ -85,14 +86,20 @@ function PlayerOverlay({ label, children }) {
 // a watched tick appears only after YouTube reports actual playback.
 export const LESSONS_PER_VIEW = 50;
 
-export function LessonList({ lessons, activeLessonId, onSelectLesson, watchedIds = [] }) {
+export function LessonList({
+  lessons, activeLessonId, onSelectLesson, watchedIds = [], completedIds = [],
+}) {
   const { t } = useTheme();
   const [query, setQuery] = useState("");
   const [chapterId, setChapterId] = useState("");
   const [unwatchedOnly, setUnwatchedOnly] = useState(false);
   const [page, setPage] = useState(1);
 
+  // "watched" = started playing (drives the "Unwatched only" filter and the
+  // opened-count). "completed" = watched to the end. The tick tells them apart
+  // honestly: a check ONLY for completed, an in-progress mark for started.
   const watched = useMemo(() => new Set(watchedIds), [watchedIds]);
+  const completed = useMemo(() => new Set(completedIds), [completedIds]);
   const chapters = useMemo(() => {
     const found = new Map();
     lessons.forEach((lesson) => {
@@ -143,7 +150,10 @@ export function LessonList({ lessons, activeLessonId, onSelectLesson, watchedIds
             Course lessons
           </h2>
           <p className={`mt-0.5 text-sm ${t.faint}`}>
-            {watchedCount > 0 ? `${watchedCount} of ${lessons.length} watched` : `${lessons.length} lessons`}
+            {/* "started", not "watched": this counts lessons the student has
+                played at least a moment of. The per-lesson ticks say which of
+                those are actually completed vs still in progress. */}
+            {watchedCount > 0 ? `${watchedCount} of ${lessons.length} started` : `${lessons.length} lessons`}
           </p>
         </div>
         {filteredLessons.length > 0 && (
@@ -224,7 +234,10 @@ export function LessonList({ lessons, activeLessonId, onSelectLesson, watchedIds
       <ol className={`mt-3 overflow-hidden rounded-xl border ${t.border}`}>
         {visibleLessons.map((lesson, index) => {
           const active = lesson.id === activeLessonId;
-          const isWatched = watched.has(lesson.videoId);
+          const isCompleted = completed.has(lesson.videoId);
+          // Started but not finished — the state the old single check wrongly
+          // reported as done.
+          const inProgress = !isCompleted && watched.has(lesson.videoId);
           const previous = visibleLessons[index - 1];
           const startsChapter = lesson.chapter?.id && lesson.chapter.id !== previous?.chapter?.id;
           return (
@@ -244,8 +257,15 @@ export function LessonList({ lessons, activeLessonId, onSelectLesson, watchedIds
                 }}
               >
                 <span className="flex w-4 shrink-0 items-center justify-center">
-                  {isWatched && !active ? (
-                    <Check className="h-4 w-4" style={{ color: ACCENT.teal }} />
+                  {!active && isCompleted ? (
+                    <Check role="img" aria-label="Completed" className="h-4 w-4" style={{ color: ACCENT.teal }} />
+                  ) : !active && inProgress ? (
+                    // A half-filled ring: honestly "started, not finished",
+                    // where the old check falsely claimed done.
+                    <svg role="img" aria-label="In progress" viewBox="0 0 16 16" className="h-4 w-4">
+                      <circle cx="8" cy="8" r="6.5" fill="none" stroke={ACCENT.teal} strokeWidth="1.5" opacity="0.45" />
+                      <path d="M8 1.5 A6.5 6.5 0 0 1 8 14.5 Z" fill={ACCENT.teal} opacity="0.65" />
+                    </svg>
                   ) : (
                     <span
                       className={`text-xs ${active ? "font-semibold" : t.faint}`}
@@ -322,9 +342,14 @@ export function VideoView({
   courseLessons = null,
   activeLessonId = null,
   watchedIds = [],
+  completedIds = [],
   ratingPanel = null,
   reportSlot = null,
   materialsPanel = null,
+  // The student's own device-local notes for this lesson.
+  notesPanel = null,
+  // A one-tap "was this helpful?" ask, surfaced when a lesson ends.
+  ratingPrompt = null,
   // "Who else teaches this chapter" — a strip directly under the player nav.
   moreTeachers = null,
   overview = null,
@@ -338,6 +363,9 @@ export function VideoView({
   onEnded = null,
   onProgress = null,
   playSignal = 0,
+  // { seconds, nonce } — forwarded to the player so a clicked note timestamp
+  // seeks the video.
+  seekTo = null,
 }) {
   const { t } = useTheme();
   const crumbs = crumbsProp ?? [
@@ -494,6 +522,7 @@ export function VideoView({
                 playbackRate={playbackRate}
                 onPlaybackRateChange={onPlaybackRateChange}
                 playSignal={playSignal}
+                seekTo={seekTo}
               />
               {/* One-shot announcement: the overlay itself is NOT a live
                   region, so the per-second countdown never re-announces. */}
@@ -549,7 +578,7 @@ export function VideoView({
                         lesson. */}
                     {sequence.length > 0 && (
                       <p className={`mt-2 text-sm ${t.muted}`}>
-                        You watched {courseWatchedCount} of {sequence.length} lesson{sequence.length === 1 ? "" : "s"} in this course.
+                        You started {courseWatchedCount} of {sequence.length} lesson{sequence.length === 1 ? "" : "s"} in this course.
                       </p>
                     )}
                   </div>
@@ -616,12 +645,17 @@ export function VideoView({
               </nav>
             )}
 
+            {/* The rating ask, surfaced at the moment a lesson ends rather than
+                buried at the foot of the page. Self-hides until then. */}
+            {ratingPrompt}
+
             {/* Other institutes teaching this chapter — the site's one real
                 advantage over YouTube, placed where a student decides they want
                 a different teacher. Hides itself when there is no other one. */}
             {moreTeachers}
 
             {materialsPanel}
+            {notesPanel}
             {reportSlot}
           </div>
 
@@ -636,6 +670,7 @@ export function VideoView({
               lessons={lessons}
               activeLessonId={activeLessonId}
               watchedIds={watchedIds}
+              completedIds={completedIds}
               onSelectLesson={onSelectLesson}
             />
           </aside>

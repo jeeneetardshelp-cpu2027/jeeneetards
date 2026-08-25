@@ -8,6 +8,7 @@ let destroy;
 let getCurrentTime;
 let getDuration;
 let setPlaybackRate;
+let seekTo;
 
 let playVideo;
 
@@ -18,6 +19,7 @@ beforeEach(() => {
   getCurrentTime = vi.fn(() => 0);
   getDuration = vi.fn(() => 0);
   setPlaybackRate = vi.fn();
+  seekTo = vi.fn();
   playVideo = vi.fn();
   window.YT = {
     PlayerState: { ENDED: 0, PLAYING: 1, PAUSED: 2 },
@@ -28,6 +30,7 @@ beforeEach(() => {
       this.getCurrentTime = getCurrentTime;
       this.getDuration = getDuration;
       this.setPlaybackRate = setPlaybackRate;
+      this.seekTo = seekTo;
       this.playVideo = playVideo;
       queueMicrotask(() => options.events.onReady());
     }),
@@ -223,6 +226,31 @@ describe("YouTube course player", () => {
     expect(screen.queryByText(/restricted by creator/i)).toBeNull();
     // A link to a deleted YouTube page would be another dead end.
     expect(screen.queryByRole("link", { name: /watch directly on youtube/i })).toBeNull();
+  });
+
+  it("seeks the live player when the seekTo nonce changes", async () => {
+    const { rerender } = render(<YouTubePlayer videoId="dQw4w9WgXcQ" title="Lesson" autoplay />);
+    await waitFor(() => expect(latestOptions).toBeTruthy());
+    expect(seekTo).not.toHaveBeenCalled();
+
+    rerender(<YouTubePlayer videoId="dQw4w9WgXcQ" title="Lesson" autoplay seekTo={{ seconds: 130, nonce: 1 }} />);
+    await waitFor(() => expect(seekTo).toHaveBeenCalledWith(130, true));
+    expect(playVideo).toHaveBeenCalled();
+
+    // Same target, new nonce -> seeks again (clicking the same note twice).
+    rerender(<YouTubePlayer videoId="dQw4w9WgXcQ" title="Lesson" autoplay seekTo={{ seconds: 130, nonce: 2 }} />);
+    await waitFor(() => expect(seekTo).toHaveBeenCalledTimes(2));
+  });
+
+  it("activates and applies a seek requested before the player exists", async () => {
+    // Not autoplaying: the player has not been built, so a seek must first
+    // build it, then land at the target once onReady fires.
+    const { rerender } = render(<YouTubePlayer videoId="dQw4w9WgXcQ" title="Lesson" />);
+    expect(latestOptions).toBeNull();
+
+    rerender(<YouTubePlayer videoId="dQw4w9WgXcQ" title="Lesson" seekTo={{ seconds: 65, nonce: 1 }} />);
+    await waitFor(() => expect(latestOptions).toBeTruthy());
+    await waitFor(() => expect(seekTo).toHaveBeenCalledWith(65, true));
   });
 
   it("passes playback-rate changes through to the parent", async () => {
