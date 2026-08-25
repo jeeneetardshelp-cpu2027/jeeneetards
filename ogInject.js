@@ -188,7 +188,7 @@ export function renderLandingBody(pathname, meta) {
     "/": {
       heading: "Find the right lecture. Skip the noise.",
       description:
-        "Thousands of free lectures from India's best teachers, organised by syllabus so students can compare before choosing a course.",
+        "Thousands of free JEE, NEET and board-exam lectures from India's best YouTube teachers, organised by class, subject and chapter so you can compare teachers before choosing a course.",
       links: [["Find a course", "/explore"], ["Browse courses", "/browse"]],
     },
     "/browse": {
