@@ -129,7 +129,7 @@ export default function CourseOverview({
         <div className="w-full shrink-0 lg:w-64">
           {watchedCount > 0 && (
             <div className="mb-2 flex items-center justify-between text-xs">
-              <span className={t.muted}>{watchedCount} of {lessons.length} watched</span>
+              <span className={t.muted}>{watchedCount} of {lessons.length} started</span>
               <span className={t.faint}>{Math.round((watchedCount / lessons.length) * 100)}%</span>
             </div>
           )}

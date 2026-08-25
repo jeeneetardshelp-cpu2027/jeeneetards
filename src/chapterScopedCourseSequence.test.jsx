@@ -164,7 +164,7 @@ describe("the real end of the course still reports completion", () => {
 
     expect(screen.getByText("Course complete")).toBeTruthy();
     // Counted over the course (3), never over the visible chapter slice (1).
-    expect(screen.getByText(/You watched 3 of 3 lessons in this course/)).toBeTruthy();
+    expect(screen.getByText(/You started 3 of 3 lessons in this course/)).toBeTruthy();
   });
 });
 
