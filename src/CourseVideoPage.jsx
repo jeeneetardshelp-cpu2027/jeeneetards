@@ -17,6 +17,7 @@ import VideoReport from "./VideoReport.jsx";
 import CourseOverview from "./CourseOverview.jsx";
 import ChapterTeachers from "./ChapterTeachers.jsx";
 import StudyMaterialPanel from "./StudyMaterialPanel.jsx";
+import NotesPanel from "./NotesPanel.jsx";
 import { applyPageMetadata, useCourseMetadata, useStructuredData } from "./PageMetadata.jsx";
 import { breadcrumbListSchema, courseSchema, videoObjectSchema } from "./structuredData.js";
 import { metadataForCourse } from "./pageMetadata.js";
@@ -201,6 +202,14 @@ export default function CourseVideoPage() {
   // Duration from the player's most recent progress report; the fallback when
   // a lesson ends before its first report is the catalogue metadata.
   const lastProgressRef = useRef({ videoId: null, duration: 0 });
+  // The active lesson's latest playback second, so a new note can be stamped
+  // with roughly where the student is (exact when paused, ≤5s stale while
+  // playing). Keyed by videoId so a stale value from the previous lesson is
+  // never attributed to the current one.
+  const notePositionRef = useRef({ videoId: null, seconds: 0 });
+  // A clicked note timestamp seeks the player: { seconds, nonce }. Only the
+  // nonce changing triggers a seek, so the same timestamp can be clicked twice.
+  const [seekRequest, setSeekRequest] = useState(null);
 
   const activeVideoId = activeLesson?.videoId ?? null;
   // The resume point recomputes only when the lesson changes: positions
@@ -209,6 +218,21 @@ export default function CourseVideoPage() {
     () => (activeVideoId ? getLessonPosition(playlistId, activeVideoId) : 0),
     [playlistId, activeVideoId],
   );
+
+  // Switching lessons cancels any pending seek so a leftover request can't jump
+  // the new video (the player would otherwise apply it once it becomes ready).
+  useEffect(() => { setSeekRequest(null); }, [activeVideoId]);
+
+  // What second to stamp a new note with: the active lesson's latest reported
+  // position, or null when the player hasn't reported for it yet (an untimed
+  // note). Never returns another lesson's position.
+  const noteTimestamp = () => (
+    notePositionRef.current.videoId === activeVideoId ? notePositionRef.current.seconds : null
+  );
+  const seekActivePlayer = (seconds) => {
+    if (!Number.isFinite(seconds) || seconds < 0) return;
+    setSeekRequest((prev) => ({ seconds, nonce: (prev?.nonce ?? 0) + 1 }));
+  };
 
   const recordActiveLessonPlayback = () => {
     if (!course || !activeLesson) return;
@@ -251,6 +275,10 @@ export default function CourseVideoPage() {
     if (!lesson) return;
     if (Number.isFinite(duration) && duration > 0) {
       lastProgressRef.current = { videoId, duration };
+    }
+    // Remember where playback is, so "Add note" can stamp the current second.
+    if (Number.isFinite(seconds) && seconds >= 0) {
+      notePositionRef.current = { videoId, seconds };
     }
     recordLessonPosition({ playlistId, videoId, seconds, duration });
     // Throttled (~25s): this fires every 5s while playing, plus once on
@@ -482,6 +510,15 @@ export default function CourseVideoPage() {
       onPlaybackRateChange={persistPlaybackRate}
       onProgress={recordLessonProgressReport}
       onEnded={recordLessonFinished}
+      seekTo={seekRequest}
+      notesPanel={
+        <NotesPanel
+          playlistId={playlistId}
+          videoId={activeLesson.videoId}
+          getCurrentTime={noteTimestamp}
+          onSeek={seekActivePlayer}
+        />
+      }
       overview={
         <CourseOverview
           course={displayedCourse}
