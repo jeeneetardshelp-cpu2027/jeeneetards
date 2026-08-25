@@ -30,12 +30,8 @@ import PlaylistBrowse from "./PlaylistBrowse.jsx";
 import { FacultyFilter } from "./FacultyFilter.jsx";
 import { useTheme } from "./theme.jsx";
 import { RELEASE_CAPABILITIES } from "./releaseCapabilities.js";
-import { BRAND_TEAL } from "./brandColors.js";
 import YouTubeThumbnail from "./YouTubeThumbnail.jsx";
 import ChannelAvatar from "./ChannelAvatar.jsx";
-
-// Your Competishun brand colours. Change these two lines to re-theme.
-const BRAND = { teal: BRAND_TEAL };
 
 
 // ---------------------------------------------------------------------
@@ -78,8 +74,7 @@ export function VideoCard({ video, onOpen }) {
           <Link
             to={`/browse?channel=${video.instituteId}`}
             aria-label={`View all courses from ${video.institute}`}
-            className="inline-flex w-fit items-center gap-1.5 rounded-sm text-xs font-medium transition-colors hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-            style={{ color: BRAND.teal }}
+            className="inline-flex w-fit items-center gap-1.5 rounded-sm text-xs font-medium text-accent transition-colors hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
           >
             <ChannelAvatar
               url={video.instituteLogoUrl}
@@ -89,7 +84,7 @@ export function VideoCard({ video, onOpen }) {
             {video.institute}
           </Link>
         ) : (
-          <div className="flex items-center gap-1.5 text-xs font-medium" style={{ color: BRAND.teal }}>
+          <div className="flex items-center gap-1.5 text-xs font-medium text-accent">
             <ChannelAvatar
               url={video.instituteLogoUrl}
               name={video.institute}
@@ -109,10 +104,9 @@ export function VideoCard({ video, onOpen }) {
 
         <button
           onClick={() => onOpen(video)}
-          className="mt-auto inline-flex min-h-11 items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold text-white transition hover:opacity-90"
-          style={{ backgroundColor: BRAND.teal }}
+          className="mt-auto inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-accent-ink transition hover:brightness-110"
         >
-          <Play className="h-4 w-4" fill="white" />
+          <Play className="h-4 w-4" fill="currentColor" />
           Watch Lesson
         </button>
       </div>
@@ -246,7 +240,7 @@ function SearchBar({ value, onChange, ariaLabel = "Search courses and lessons" }
         onChange={(e) => onChange(e.target.value)}
         aria-label={ariaLabel}
         placeholder="Search courses and lessons…"
-        className={`w-full min-h-11 min-w-0 rounded-lg border ${t.border} ${t.input} ${t.text} py-2 pl-9 pr-11 text-sm outline-none transition focus:ring-2 focus:ring-teal-500`}
+        className={`w-full min-h-11 min-w-0 rounded-lg border ${t.border} ${t.input} ${t.text} py-2 pl-9 pr-11 text-sm outline-none transition focus:ring-2 focus:ring-accent`}
       />
       {value && (
         <button
@@ -684,8 +678,7 @@ export default function Dashboard() {
               </p>
               <button
                 onClick={reload}
-                className="mt-4 min-h-11 rounded-xl px-4 text-sm font-semibold text-white"
-                style={{ backgroundColor: BRAND.teal }}
+                className="mt-4 min-h-11 rounded-xl bg-accent px-4 text-sm font-semibold text-accent-ink transition hover:brightness-110"
               >
                 Retry
               </button>
@@ -700,8 +693,7 @@ export default function Dashboard() {
               {anyFilter && (
                 <button
                   onClick={clearAll}
-                  className="mt-2 text-sm font-medium"
-                  style={{ color: BRAND.teal }}
+                  className="mt-2 text-sm font-medium text-accent"
                 >
                   Clear filters
                 </button>
