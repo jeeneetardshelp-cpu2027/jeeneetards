@@ -39,6 +39,7 @@ import {
   renderStudyMaterialsBody,
   renderNotFoundBody,
 } from "./ogInject.js";
+import { getFacultyGuide } from "./src/facultyGuides.js";
 
 // Inspect every application path so an unknown SPA URL can carry a real HTTP
 // 404. Static assets bypass middleware entirely. Vercel matcher regex supports
@@ -550,15 +551,17 @@ export default async function middleware(request) {
 
       const shell = await fetch(new URL("/index.html", url.origin));
       if (!shell.ok) return next();
+      const guide = getFacultyGuide(profile.slug);
       const meta = {
         ...metadataForLocation(url.pathname, url.search),
         title: `${profile.display_name} faculty profile | ${SITE_NAME}`,
-        description: `Browse verified aliases and free courses taught by ${profile.display_name}.`,
+        description: guide?.metaDescription || profile.bio ||
+          `Browse verified aliases and free courses taught by ${profile.display_name}.`,
         canonicalPath: `/faculty/${profile.slug}`,
       };
       let html = injectRouteMeta(await shell.text(), meta);
-      html = injectStructuredData(html, facultySchemas(profile, meta));
-      html = injectRootContent(html, renderFacultyBody(profile, meta));
+      html = injectStructuredData(html, facultySchemas(profile, meta, guide));
+      html = injectRootContent(html, renderFacultyBody(profile, meta, guide));
       return htmlResponse(html);
     }
 

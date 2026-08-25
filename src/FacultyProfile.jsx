@@ -5,19 +5,22 @@
 // faculty — seeing "also known as ABJ Sir" is what confirms you found the right
 // person.
 
+import { useEffect } from "react";
 import { Link, useParams } from "react-router";
-import { BadgeCheck, Star } from "lucide-react";
+import { BadgeCheck, ExternalLink, Star } from "lucide-react";
 import { useFacultyProfile } from "./useFaculty.js";
 import { GlobalHeader, Container } from "./AppShell.jsx";
 import { ratingDisplay } from "./ratingConfidence.js";
 import { useTheme } from "./theme.jsx";
-import { useStructuredData } from "./PageMetadata.jsx";
+import { applyPageMetadata, useStructuredData } from "./PageMetadata.jsx";
 import { breadcrumbListSchema, personSchema } from "./structuredData.js";
+import { getFacultyGuide } from "./facultyGuides.js";
 
 export default function FacultyProfile() {
   const { slug } = useParams();
   const { profile, loading, error } = useFacultyProfile(slug);
   const { t, dark } = useTheme();
+  const guide = getFacultyGuide(profile?.slug ?? slug);
   const verifiedAliases = (profile?.aliases ?? [])
     .map((item) => typeof item === "string" ? { alias: item, status: "verified" } : item)
     .filter((item) => item?.status === "verified")
@@ -31,14 +34,30 @@ export default function FacultyProfile() {
     { label: profile?.display_name ?? "Faculty" },
   ];
   const schemaUrl = `/faculty/${profile?.slug ?? slug}`;
+  const structuredDescription = guide?.summary || profile?.bio || (profile
+    ? `Browse verified aliases and free courses taught by ${profile.display_name}.`
+    : null);
+  const metaDescription = guide?.metaDescription || structuredDescription;
+
+  useEffect(() => {
+    if (!profile || !metaDescription) return;
+    applyPageMetadata({
+      title: `${profile.display_name} faculty profile | JEENEETARD`,
+      description: metaDescription,
+      canonicalPath: schemaUrl,
+      type: "profile",
+    });
+  }, [profile, metaDescription, schemaUrl]);
+
   useStructuredData(profile ? [
     personSchema({
       name: profile.display_name,
       url: schemaUrl,
-      description: profile.bio,
+      description: structuredDescription,
       image: profile.photo_url,
       aliases: verifiedAliases,
       institutes: profile.institutes,
+      sameAs: guide?.sameAs,
     }),
     breadcrumbListSchema([
       { label: "Home", url: "/" },
@@ -51,8 +70,10 @@ export default function FacultyProfile() {
     profile?.slug,
     profile?.bio,
     profile?.photo_url,
+    structuredDescription,
     verifiedAliases.join("|"),
     (profile?.institutes ?? []).join("|"),
+    (guide?.sameAs ?? []).join("|"),
   ]);
 
   return (
@@ -114,7 +135,42 @@ export default function FacultyProfile() {
               </div>
             </div>
 
-            {profile.bio && <p className={`mt-6 text-sm leading-relaxed ${t.faint}`}>{profile.bio}</p>}
+            {guide ? (
+              <section
+                id="source-backed-profile"
+                className={`mt-6 rounded-xl border ${t.border} ${t.card} p-5`}
+              >
+                <h2 className={`text-sm font-semibold ${t.text}`}>Source-backed profile</h2>
+                <p className={`mt-2 text-sm leading-relaxed ${t.faint}`}>{guide.summary}</p>
+                <dl className="mt-4 grid gap-3 sm:grid-cols-3">
+                  {guide.facts.map((fact) => (
+                    <div key={fact.label}>
+                      <dt className={`text-xs ${t.muted}`}>{fact.label}</dt>
+                      <dd className={`mt-0.5 text-sm font-medium ${t.text}`}>{fact.value}</dd>
+                    </div>
+                  ))}
+                </dl>
+                <h3 className={`mt-5 text-xs font-semibold ${t.text}`}>Primary sources</h3>
+                <ul className="mt-2 space-y-1.5">
+                  {guide.sources.map((source) => (
+                    <li key={source.href}>
+                      <a
+                        href={source.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 text-sm underline-offset-2 hover:underline"
+                        style={{ color: dark ? "#5EEAD4" : "#0F6F78" }}
+                      >
+                        {source.label}<ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+                <p className={`mt-3 text-xs ${t.muted}`}>Sources checked {guide.sourceChecked}.</p>
+              </section>
+            ) : profile.bio ? (
+              <p className={`mt-6 text-sm leading-relaxed ${t.faint}`}>{profile.bio}</p>
+            ) : null}
 
             <h2 className={`mt-8 text-sm font-semibold ${t.text}`}>Courses</h2>
             {(profile.courses ?? []).length === 0 ? (

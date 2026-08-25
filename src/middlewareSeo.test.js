@@ -697,7 +697,7 @@ describe("edge-rendered discovery landings", () => {
           display_name: "Amit Bijarnia",
           slug: "amit-bijarnia",
           verified: true,
-          bio: "Physics educator.",
+          bio: "Legacy database bio.",
           photo_url: "https://example.com/amit.jpg",
           aliases: [
             { alias: "ABJ Sir", status: "verified" },
@@ -723,6 +723,12 @@ describe("edge-rendered discovery landings", () => {
     expect(html).toContain('href="/course/5"');
     expect(html).toContain('data-schema-key="Person"');
     expect(html).toContain('data-schema-key="BreadcrumbList"');
+    expect(html).toContain('<section id="source-backed-profile">');
+    expect(html).toContain("listed by Competishun as a Physics faculty member");
+    expect(html).toContain('href="https://competishun.com/" rel="noopener"');
+    expect(html).toContain("Sources checked 2026-08-25.");
+    expect(html).toContain('"description":"Amit Bijarnia (ABJ Sir)');
+    expect(html).not.toContain("Legacy database bio.");
     expect(html).not.toContain('class="boot"');
   });
 

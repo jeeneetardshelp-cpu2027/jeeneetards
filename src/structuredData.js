@@ -51,6 +51,7 @@ export function personSchema({
   image,
   aliases,
   institutes,
+  sameAs,
 } = {}) {
   if (!name) return null;
   const schema = {
@@ -70,6 +71,10 @@ export function personSchema({
       name: institute,
     }));
   }
+  const identityLinks = [...new Set((sameAs ?? []).filter((href) =>
+    /^https:\/\//i.test(href),
+  ))];
+  if (identityLinks.length) schema.sameAs = identityLinks;
   return schema;
 }
 
