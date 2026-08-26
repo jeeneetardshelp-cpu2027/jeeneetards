@@ -58,12 +58,16 @@ export const RELEASE_FEATURES = Object.freeze({
   // exploitable path (unauthorized read/write, rate-limit/dedup bypass,
   // XSS) -- see the comment above and site-audit memory item #24.
   contentReporting: true,
-  // "Continue with Google" one-tap sign-in. OFF until the owner completes the
-  // Supabase + Google Cloud provider setup (docs/auth/google_oauth_setup.md) --
-  // showing the button before Google is enabled would just error. Flip to true
-  // in the SAME change that finishes that dashboard config. The button itself
-  // lives in StudentAuth.jsx (used by the rating panel/prompt and /signin).
-  googleAuth: false,
+  // "Continue with Google" one-tap sign-in. Flipped ON 2026-08-26, in the same
+  // change as the dashboard config it depends on: the owner created the Google
+  // Cloud OAuth client (redirect URI -> the Supabase /auth/v1/callback), enabled
+  // the Google provider in Supabase with that client id/secret, and allow-listed
+  // the site + return URLs (docs/auth/google_oauth_setup.md). The button lives
+  // in StudentAuth.jsx (used by the rating panel/prompt and /signin).
+  //
+  // This removes the email+password+confirm wall that is the ratings cold-start
+  // bottleneck -- production had ~2 accounts and 0 ratings behind it.
+  googleAuth: true,
 });
 
 export const hasReleaseCapability = (name) =>

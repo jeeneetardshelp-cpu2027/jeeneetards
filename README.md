@@ -33,7 +33,7 @@ security controls and release evidence must also be present.
 | Review display | Enabled |
 | Content reporting | Enabled |
 | Student forum | Enabled — limited closed beta; public reading, invited-member contributions |
-| Continue with Google sign-in | Disabled — button shipped, Google/Supabase provider not yet configured (`docs/auth/google_oauth_setup.md`) |
+| Continue with Google sign-in | Enabled |
 
 The source of truth is
 [`src/releaseCapabilities.js`](src/releaseCapabilities.js). Do not enable a
