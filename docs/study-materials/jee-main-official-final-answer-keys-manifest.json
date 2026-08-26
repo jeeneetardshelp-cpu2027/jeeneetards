@@ -1,0 +1,57 @@
+{
+  "preparedOn": "2026-08-25",
+  "officialIndexUrl": "https://jeemain.nta.nic.in/documents/",
+  "coverage": "JEE Main Paper 1 (B.E./B.Tech.) Session 1 and Session 2 final answer keys for 2024, 2025 and 2026.",
+  "exclusions": "Provisional answer keys, answer-key challenge notices, Paper 2 B.Arch/B.Planning keys, question papers and third-party worked solutions are excluded.",
+  "hostingPolicy": "Link-only. The PDFs remain on official NTA or NIC government infrastructure and are not mirrored by JEENEETARD.",
+  "resources": [
+    {
+      "title": "JEE Main 2024 Session 1 Final Answer Key (Paper 1 B.E./B.Tech)",
+      "session": 1,
+      "examYear": 2024,
+      "pageCount": 10,
+      "sourceUrl": "https://www.nta.ac.in/Download/Notice/Notice_20240212120843.pdf",
+      "sha256": "2EEE0C466F49712827C46945DB029DDC163C3D562FEDA763113783A2B151F9D6"
+    },
+    {
+      "title": "JEE Main 2024 Session 2 Final Answer Key (Paper 1 B.E./B.Tech)",
+      "session": 2,
+      "examYear": 2024,
+      "pageCount": 10,
+      "sourceUrl": "https://www.nta.ac.in/Download/Notice/Notice_20240424132602.pdf",
+      "sha256": "3D3DD32FFC8B637B48656739AB5E360822481CFB5A127F17FCBA0FFBE84BA757"
+    },
+    {
+      "title": "JEE Main 2025 Session 1 Final Answer Key (Paper 1 B.E./B.Tech)",
+      "session": 1,
+      "examYear": 2025,
+      "pageCount": 20,
+      "sourceUrl": "https://cdnbbsr.s3waas.gov.in/s3f8e59f4b2fe7c5705bf878bbd494ccdf/uploads/2025/02/2025021039.pdf",
+      "sha256": "B5135CCF76BAEA695BA5B6F201F6F3FE682936FF61E73B423126C6DAF5C94ACE"
+    },
+    {
+      "title": "JEE Main 2025 Session 2 Final Answer Key (Paper 1 B.E./B.Tech)",
+      "session": 2,
+      "examYear": 2025,
+      "pageCount": 18,
+      "sourceUrl": "https://cdnbbsr.s3waas.gov.in/s3f8e59f4b2fe7c5705bf878bbd494ccdf/uploads/2025/04/2025041892.pdf",
+      "sha256": "B00208D79179A4A69BB2FDD3176CFEE9E0A0B02B01BD10DA45BF617AA1EC8453"
+    },
+    {
+      "title": "JEE Main 2026 Session 1 Final Answer Key (Paper 1 B.E./B.Tech)",
+      "session": 1,
+      "examYear": 2026,
+      "pageCount": 20,
+      "sourceUrl": "https://cdnbbsr.s3waas.gov.in/s3f8e59f4b2fe7c5705bf878bbd494ccdf/uploads/2026/02/202602161216637872.pdf",
+      "sha256": "06B0BB57D4CF2A52DC6210A7CC98B1B8BD112BC916CBB5E8A518D580F195077A"
+    },
+    {
+      "title": "JEE Main 2026 Session 2 Final Answer Key (Paper 1 B.E./B.Tech)",
+      "session": 2,
+      "examYear": 2026,
+      "pageCount": 18,
+      "sourceUrl": "https://cdnbbsr.s3waas.gov.in/s3f8e59f4b2fe7c5705bf878bbd494ccdf/uploads/2026/04/20260420409057044.pdf",
+      "sha256": "07C89E20741C17F14A000501D6F79055D09834692DE0DCB792BF237B77E1C7F9"
+    }
+  ]
+}

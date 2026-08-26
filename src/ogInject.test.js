@@ -159,7 +159,7 @@ describe("server-rendered discovery landings", () => {
     expect(html).not.toContain("javascript:");
   });
 
-  it("groups the JEE Main paper directory newest year first", () => {
+  it("groups the JEE Main directory newest year first and separates answer keys", () => {
     const html = renderStudyMaterialsBody(
       metadataForLocation("/materials/jee-main/previous-year-papers"),
       [
@@ -173,10 +173,18 @@ describe("server-rendered discovery landings", () => {
           exam_year: 2024,
           source_url: "https://example.edu/2024.pdf",
         },
+        {
+          title: "JEE Main 2025 Session 1 Final Answer Key",
+          description: "Official final answer key only; no worked solutions.",
+          exam_year: 2025,
+          source_url: "https://example.edu/2025-key.pdf",
+        },
       ],
     );
 
     expect(html).toContain("<h2>JEE Main question papers</h2>");
+    expect(html).toContain("<h2>JEE Main official answer keys</h2>");
+    expect(html).toContain('href="https://example.edu/2025-key.pdf"');
     expect(html).toContain("<h3>2024</h3>");
     expect(html.indexOf("<h3>2024</h3>")).toBeLessThan(html.indexOf("<h3>2022</h3>"));
   });

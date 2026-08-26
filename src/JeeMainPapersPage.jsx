@@ -34,6 +34,8 @@ function PapersByYear({
   items,
   emptyTitle,
   emptyDescription,
+  itemNoun = "paper",
+  typeLabel,
 }) {
   const yearGroups = groupPapersByYear(items);
 
@@ -50,11 +52,16 @@ function PapersByYear({
               <div className="mb-4 flex items-baseline justify-between gap-4 border-b border-hairline pb-3">
                 <h3 id={`${id}-${year}`} className="text-xl font-semibold text-ink">{year}</h3>
                 <p className="text-sm text-ink-3">
-                  {papers.length} paper{papers.length === 1 ? "" : "s"}
+                  {papers.length} {itemNoun}{papers.length === 1 ? "" : "s"}
                 </p>
               </div>
               <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-                {papers.map((paper) => <StudyMaterialCard key={paper.id} material={paper} />)}
+                {papers.map((paper) => (
+                  <StudyMaterialCard
+                    key={paper.id}
+                    material={typeLabel ? { ...paper, typeLabel } : paper}
+                  />
+                ))}
               </div>
             </div>
           ))}
@@ -90,11 +97,12 @@ export default function JeeMainPapersPage() {
       .includes(normalizedQuery);
   };
   const filteredQuestionOnly = groups.questionOnly.filter(matchesFilters);
+  const filteredAnswerKeys = groups.answerKeys.filter(matchesFilters);
   const filteredWithSolutions = groups.withSolutions.filter(matchesFilters);
-  const visibleCount = filteredQuestionOnly.length + filteredWithSolutions.length;
+  const visibleCount = filteredQuestionOnly.length + filteredAnswerKeys.length + filteredWithSolutions.length;
   const filtersActive = Boolean(selectedYear || normalizedQuery);
   useStructuredData(studyMaterialLandingSchemas(papers.items, {
-    label: "JEE Main previous year papers",
+    label: "JEE Main papers, answer keys and solutions",
     path: JEE_MAIN_PAPERS_PATH,
   }), [papers.items]);
 
@@ -109,31 +117,38 @@ export default function JeeMainPapersPage() {
           <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-accent-line bg-accent-soft text-accent">
             <FileCheck2 aria-hidden="true" className="h-5 w-5" />
           </span>
-          <p className="mt-5 text-xs font-semibold uppercase tracking-[0.16em] text-accent">JEE Main · Official papers</p>
+          <p className="mt-5 text-xs font-semibold uppercase tracking-[0.16em] text-accent">JEE Main · Year-wise resources</p>
           <h1 className="mt-2 text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
             {JEE_MAIN_PAPERS_META.heading}
           </h1>
           <p className="mt-3 max-w-2xl text-base leading-relaxed text-ink-2">
-            Browse reviewed question papers by year, session and shift. Each PDF opens on the official CBSE or National Testing Agency source recorded for that paper.
+            Browse question papers, official final answer keys and reviewed worked solutions by year, session and shift.
           </p>
           <p className="mt-3 max-w-2xl text-sm leading-relaxed text-ink-3">
-            These are question papers. An answer key or solution is included only when the individual resource explicitly says so.
+            Final answer keys are listed separately from worked solutions. Every card says exactly what the PDF contains and opens the recorded source.
           </p>
           <a
             href="#paper-filters"
             className="mt-5 inline-flex min-h-11 items-center rounded-lg border border-accent-line bg-accent-soft px-4 text-sm font-semibold text-accent"
           >
-            Browse JEE Main papers by year
+            Browse JEE Main resources by year
           </a>
         </div>
       </section>
 
-      <nav aria-label="JEE Main paper collections" className="my-8 grid gap-4 sm:grid-cols-2">
+      <nav aria-label="JEE Main resource collections" className="my-8 grid gap-4 sm:grid-cols-3">
         <a href="#question-papers" className="rounded-xl border border-hairline bg-surface p-5 transition-colors hover:border-accent-line">
           <FileText aria-hidden="true" className="h-5 w-5 text-accent" />
           <p className="mt-4 text-lg font-semibold text-ink">Question papers only</p>
           <p className="mt-1 text-sm text-ink-3">
             {papers.loading ? "Loading reviewed papers…" : `${groups.questionOnly.length} reviewed paper${groups.questionOnly.length === 1 ? "" : "s"}`}
+          </p>
+        </a>
+        <a href="#official-answer-keys" className="rounded-xl border border-hairline bg-surface p-5 transition-colors hover:border-accent-line">
+          <FileCheck2 aria-hidden="true" className="h-5 w-5 text-accent" />
+          <p className="mt-4 text-lg font-semibold text-ink">Official answer keys</p>
+          <p className="mt-1 text-sm text-ink-3">
+            {papers.loading ? "Checking final answer keys…" : `${groups.answerKeys.length} final answer key${groups.answerKeys.length === 1 ? "" : "s"}`}
           </p>
         </a>
         <a href="#papers-with-solutions" className="rounded-xl border border-hairline bg-surface p-5 transition-colors hover:border-accent-line">
@@ -149,23 +164,23 @@ export default function JeeMainPapersPage() {
         <section id="paper-filters" aria-labelledby="paper-filters-heading" className="my-8 scroll-mt-24 rounded-xl border border-hairline bg-surface p-5 sm:p-6">
           <div className="flex flex-wrap items-end justify-between gap-3">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent">Find a paper</p>
-              <h2 id="paper-filters-heading" className="mt-1 text-xl font-semibold text-ink">Search by year, session or shift</h2>
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent">Find a resource</p>
+              <h2 id="paper-filters-heading" className="mt-1 text-xl font-semibold text-ink">Search by year, session, shift or resource type</h2>
             </div>
             <p className="text-sm text-ink-3" aria-live="polite">
-              Showing {visibleCount} of {papers.items.length} papers
+              Showing {visibleCount} of {papers.items.length} resources
             </p>
           </div>
           <div className="mt-5 grid gap-4 md:grid-cols-[minmax(0,1fr)_14rem_auto]">
             <label className="block">
-              <span className="mb-2 block text-sm font-medium text-ink">Paper search</span>
+              <span className="mb-2 block text-sm font-medium text-ink">Resource search</span>
               <span className="flex min-h-11 items-center gap-2 rounded-lg border border-hairline bg-canvas px-3 focus-within:border-accent-line">
                 <Search aria-hidden="true" className="h-4 w-4 shrink-0 text-ink-3" />
                 <input
                   type="search"
                   value={query}
                   onChange={(event) => setQuery(event.target.value)}
-                  placeholder="Example: 2024 Session 1 Shift 2"
+                  placeholder="Example: 2025 Session 1 answer key"
                   className="min-w-0 flex-1 bg-transparent py-2 text-sm text-ink outline-none placeholder:text-ink-3"
                 />
               </span>
@@ -218,10 +233,21 @@ export default function JeeMainPapersPage() {
             emptyDescription={filtersActive ? "Try another year, session or shift." : "Only reviewed official papers appear here."}
           />
           <PapersByYear
+            id="official-answer-keys"
+            items={filteredAnswerKeys}
+            eyebrow="Official final keys · Newest year first"
+            heading="JEE Main official answer keys"
+            itemNoun="answer key"
+            typeLabel="Official final answer key"
+            emptyTitle={filtersActive ? "No official answer keys match these filters" : "No official final answer keys are listed yet"}
+            emptyDescription={filtersActive ? "Try another year, session or search term." : "Only final answer keys published by NTA or CBSE will appear here; provisional keys are excluded."}
+          />
+          <PapersByYear
             id="papers-with-solutions"
             items={filteredWithSolutions}
             eyebrow="Questions and worked answers · Newest year first"
             heading="JEE Main papers with solutions"
+            typeLabel="Paper with worked solutions"
             emptyTitle={filtersActive ? "No solved papers match these filters" : "No reviewed papers with worked solutions yet"}
             emptyDescription={filtersActive ? "Try another year, session or shift." : "Official answer keys are not labelled as worked solutions. This section will fill only when a paper includes explained answers and redistribution rights have been checked."}
           />

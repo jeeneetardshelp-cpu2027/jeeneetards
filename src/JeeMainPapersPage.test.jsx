@@ -19,6 +19,18 @@ vi.mock("./useJeeMainPapers.js", () => ({
         scopes: [{ goal: "jee-main" }],
       },
       {
+        id: 10,
+        title: "JEE Main 2025 Session 1 Final Answer Key",
+        description: "Official NTA final answer key for Paper 1 (B.E./B.Tech).",
+        type: "previous_year_paper",
+        typeLabel: "Previous-year papers",
+        sourceName: "National Testing Agency (JEE Main)",
+        sourceUrl: "https://nta.example/final-answer-key.pdf",
+        fileFormat: "pdf",
+        examYear: 2025,
+        scopes: [{ goal: "jee-main" }],
+      },
+      {
         id: 8,
         title: "JEE Main 2023 paper with solutions",
         description: "The official question paper and reviewed worked solutions are included.",
@@ -43,7 +55,7 @@ vi.mock("./useJeeMainPapers.js", () => ({
         scopes: [{ goal: "jee-main" }],
       },
     ],
-    total: 3,
+    total: 4,
     loading: false,
     loadingMore: false,
     error: null,
@@ -64,18 +76,20 @@ describe("JEE Main previous-year-paper landing", () => {
     );
 
     expect(screen.getByRole("heading", {
-      name: "Official JEE Main previous year question papers",
+      name: "JEE Main papers, answer keys and solutions",
     })).toBeTruthy();
-    expect(screen.getByText(/question papers\. An answer key or solution/i)).toBeTruthy();
+    expect(screen.getByText(/final answer keys are listed separately from worked solutions/i)).toBeTruthy();
     expect(screen.getByRole("heading", {
       name: "JEE Main 2024 Session 1 - 27 January Shift 1",
     })).toBeTruthy();
     expect(screen.getByRole("heading", { name: "JEE Main question papers" })).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "JEE Main official answer keys" })).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "JEE Main 2025 Session 1 Final Answer Key" })).toBeTruthy();
     expect(screen.getByRole("heading", { name: "JEE Main papers with solutions" })).toBeTruthy();
     expect(screen.getByRole("heading", { name: "JEE Main 2023 paper with solutions" })).toBeTruthy();
-    expect(screen.getByRole("link", { name: "Browse JEE Main papers by year" })
+    expect(screen.getByRole("link", { name: "Browse JEE Main resources by year" })
       .getAttribute("href")).toBe("#paper-filters");
-    expect(screen.getAllByText("JEE Main", { exact: true })).toHaveLength(3);
+    expect(screen.getAllByText("JEE Main", { exact: true })).toHaveLength(4);
 
     const newestQuestionYear = screen.getByRole("heading", { name: "2024" });
     const olderQuestionYear = screen.getByRole("heading", { name: "2022" });
@@ -90,7 +104,7 @@ describe("JEE Main previous-year-paper landing", () => {
       expect(script).not.toBeNull();
       const schema = JSON.parse(script.textContent);
       expect(schema.itemListElement.map(({ name }) => name)).toEqual([
-        "Home", "Study material", "JEE Main previous year papers",
+        "Home", "Study material", "JEE Main papers, answer keys and solutions",
       ]);
       expect(schema.itemListElement[2].item).toBe(
         "https://www.jeeneetard.com/materials/jee-main/previous-year-papers",
@@ -108,12 +122,12 @@ describe("JEE Main previous-year-paper landing", () => {
     fireEvent.change(screen.getByLabelText("Year"), { target: { value: "2024" } });
     expect(screen.getByRole("heading", { name: "JEE Main 2024 Session 1 - 27 January Shift 1" })).toBeTruthy();
     expect(screen.queryByRole("heading", { name: "JEE Main 2022 Session 2 - 28 July Shift 2" })).toBeNull();
-    expect(screen.getByText("Showing 1 of 3 papers")).toBeTruthy();
+    expect(screen.getByText("Showing 1 of 4 resources")).toBeTruthy();
 
     fireEvent.click(screen.getByRole("button", { name: "Clear" }));
-    fireEvent.change(screen.getByLabelText("Paper search"), { target: { value: "Shift 2" } });
+    fireEvent.change(screen.getByLabelText("Resource search"), { target: { value: "Shift 2" } });
     expect(screen.getByRole("heading", { name: "JEE Main 2022 Session 2 - 28 July Shift 2" })).toBeTruthy();
     expect(screen.queryByRole("heading", { name: "JEE Main 2024 Session 1 - 27 January Shift 1" })).toBeNull();
-    expect(screen.getByText("Showing 1 of 3 papers")).toBeTruthy();
+    expect(screen.getByText("Showing 1 of 4 resources")).toBeTruthy();
   });
 });
