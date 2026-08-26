@@ -50,10 +50,31 @@ describe("protected preview shell fetching", () => {
 describe("edge-rendered discovery landings", () => {
   it("matches application paths while excluding built and public assets", () => {
     expect(config.matcher).toHaveLength(1);
+    expect(config.matcher[0]).toContain("api/");
     expect(config.matcher[0]).toContain("assets/");
     expect(config.matcher[0]).toContain("study-materials/");
     expect(config.matcher[0]).toContain("robots\\.txt");
   });
+
+  // Serverless functions are not app pages. Before this guard, /api/* fell
+  // through to the isSupportedAppPath 404 and every function — including the
+  // admin's /api/youtube proxy — was served an HTML 404 before Vercel could
+  // route it (verified against production). The body guard must pass the
+  // request through untouched: no shell fetch, no redirect, no lookup.
+  it.each(["/api/youtube", "/api/og?course=13", "/api/anything/nested"])(
+    "passes %s through to the serverless function untouched",
+    async (path) => {
+      const fetchSpy = vi.fn(async () => new Response(shell, { status: 200 }));
+      vi.stubGlobal("fetch", fetchSpy);
+
+      const response = await middleware(
+        new Request(`https://www.jeeneetard.com${path}`),
+      );
+
+      expect(response.headers.get("x-middleware-next")).toBe("1");
+      expect(fetchSpy).not.toHaveBeenCalled();
+    },
+  );
 
   it.each([
     "/", "/browse", "/explore/jee/class-11/physics",
