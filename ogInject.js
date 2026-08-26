@@ -189,6 +189,9 @@ export function renderStudyMaterialsBody(meta, materials = []) {
   const questionOnlyItems = jeeMain
     ? renderYearGroups(groups.questionOnly)
     : renderItems(groups.questionOnly);
+  const answerKeyItems = jeeMain
+    ? renderYearGroups(groups.answerKeys)
+    : renderItems(groups.answerKeys);
   const solutionItems = jeeMain
     ? renderYearGroups(groups.withSolutions)
     : renderItems(groups.withSolutions);
@@ -201,6 +204,12 @@ export function renderStudyMaterialsBody(meta, materials = []) {
     `<p>${escapeHtml(meta.description)}</p>`,
     jeeMain ? "<h2>JEE Main question papers</h2>" : "<h2>Reviewed resources</h2>",
     jeeMain ? questionOnlyItems : `<ul>${items}</ul>`,
+    jeeMain ? "<h2>JEE Main official answer keys</h2>" : "",
+    jeeMain && answerKeyItems
+      ? answerKeyItems
+      : jeeMain
+        ? "<p>No official final answer keys are listed yet. Provisional keys are excluded.</p>"
+        : "",
     jeeMain ? "<h2>JEE Main papers with solutions</h2>" : "",
     jeeMain && solutionItems
       ? solutionItems
