@@ -58,6 +58,21 @@ describe("injectCourseMeta", () => {
     expect(html).toContain('property="og:type" content="article"');
   });
 
+  it("points og:image and twitter:image at the course's own preview card", () => {
+    expect(courseMeta(course, 5).image).toBe("https://www.jeeneetard.com/api/og?course=5");
+    expect(html).toContain('property="og:image" content="https://www.jeeneetard.com/api/og?course=5"');
+    expect(html).toContain('name="twitter:image" content="https://www.jeeneetard.com/api/og?course=5"');
+    // The card is 1200x630 PNG like the static image, so the size/type tags stay.
+    expect(html).toContain('property="og:image:width" content="1200"');
+    expect(html).toContain('property="og:image:type" content="image/png"');
+  });
+
+  it("leaves the generic preview image alone when meta carries no image", () => {
+    const generic = injectCourseMeta(shell, { ...courseMeta(course, 5), image: null });
+    expect(generic).toContain('property="og:image" content="https://www.jeeneetard.com/social-preview.png"');
+    expect(generic).toContain('name="twitter:image" content="https://www.jeeneetard.com/social-preview.png"');
+  });
+
   it("adds the course canonical exactly once", () => {
     expect(html.match(/<link rel="canonical"/g)).toHaveLength(1);
     expect(html).toContain(
@@ -97,8 +112,11 @@ describe("injectCourseMeta", () => {
     }
   });
 
-  it("keeps the default branded social image", () => {
-    expect(html).toContain(
+  // Course pages now carry their own /api/og preview card (asserted above);
+  // the static brand image remains the fallback for image-less metadata and
+  // is what /api/og itself redirects to when it cannot render a course.
+  it("does not leave the generic social image on a course page", () => {
+    expect(html).not.toContain(
       'property="og:image" content="https://www.jeeneetard.com/social-preview.png"',
     );
   });
