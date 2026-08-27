@@ -50,10 +50,31 @@ describe("protected preview shell fetching", () => {
 describe("edge-rendered discovery landings", () => {
   it("matches application paths while excluding built and public assets", () => {
     expect(config.matcher).toHaveLength(1);
+    expect(config.matcher[0]).toContain("api/");
     expect(config.matcher[0]).toContain("assets/");
     expect(config.matcher[0]).toContain("study-materials/");
     expect(config.matcher[0]).toContain("robots\\.txt");
   });
+
+  // Serverless functions are not app pages. Before this guard, /api/* fell
+  // through to the isSupportedAppPath 404 and every function — including the
+  // admin's /api/youtube proxy — was served an HTML 404 before Vercel could
+  // route it (verified against production). The body guard must pass the
+  // request through untouched: no shell fetch, no redirect, no lookup.
+  it.each(["/api/youtube", "/api/og?course=13", "/api/anything/nested"])(
+    "passes %s through to the serverless function untouched",
+    async (path) => {
+      const fetchSpy = vi.fn(async () => new Response(shell, { status: 200 }));
+      vi.stubGlobal("fetch", fetchSpy);
+
+      const response = await middleware(
+        new Request(`https://www.jeeneetard.com${path}`),
+      );
+
+      expect(response.headers.get("x-middleware-next")).toBe("1");
+      expect(fetchSpy).not.toHaveBeenCalled();
+    },
+  );
 
   it.each([
     "/", "/browse", "/explore/jee/class-11/physics",
@@ -179,7 +200,7 @@ describe("edge-rendered discovery landings", () => {
     ["/explore", "What are you preparing for?"],
     ["/faculty", "Find courses by faculty"],
     ["/materials", "Find study material by your syllabus."],
-    ["/materials/jee-main/previous-year-papers", "Official JEE Main previous year question papers"],
+    ["/materials/jee-main/previous-year-papers", "JEE Main papers, answer keys and solutions"],
     ["/tests", "Mock tests"],
     ["/methodology", "How JEENEETARD curates courses"],
     ["/terms", "Terms of Service &amp; Disclaimer"],
@@ -297,13 +318,24 @@ describe("edge-rendered discovery landings", () => {
     const fetchSpy = vi.fn(async (input) => {
       const url = String(input);
       if (url.includes("/rest/v1/study_materials?")) {
-        return Response.json([{
-          id: 81,
-          title: "JEE Main 2024 Session 1 - 27 January Shift 1",
-          description: "Official NTA question paper.",
-          source_name: "National Testing Agency (JEE Main)",
-          source_url: "https://nta.example/paper.pdf",
-        }]);
+        return Response.json([
+          {
+            id: 81,
+            title: "JEE Main 2024 Session 1 - 27 January Shift 1",
+            description: "Official NTA question paper.",
+            source_name: "National Testing Agency (JEE Main)",
+            source_url: "https://nta.example/paper.pdf",
+            exam_year: 2024,
+          },
+          {
+            id: 82,
+            title: "JEE Main 2025 Session 1 Final Answer Key",
+            description: "Official final answer key only; no worked solutions.",
+            source_name: "National Testing Agency (JEE Main)",
+            source_url: "https://nta.example/answer-key.pdf",
+            exam_year: 2025,
+          },
+        ]);
       }
       return new Response(shell, { status: 200 });
     });
@@ -314,11 +346,13 @@ describe("edge-rendered discovery landings", () => {
     const html = await response.text();
 
     expect(response.status).toBe(200);
-    expect(html).toContain("<h1>Official JEE Main previous year question papers</h1>");
+    expect(html).toContain("<h1>JEE Main papers, answer keys and solutions</h1>");
     expect(html).toContain("<h2>JEE Main question papers</h2>");
+    expect(html).toContain("<h2>JEE Main official answer keys</h2>");
     expect(html).toContain("<h2>JEE Main papers with solutions</h2>");
     expect(html).toContain("No reviewed papers with worked solutions are listed yet");
     expect(html).toContain('<a href="https://nta.example/paper.pdf" rel="noopener">');
+    expect(html).toContain('<a href="https://nta.example/answer-key.pdf" rel="noopener">');
     expect(html).toContain(
       `<link rel="canonical" href="https://www.jeeneetard.com${pathname}" />`,
     );

@@ -32,7 +32,7 @@ describe("current production capability contract", () => {
       contentReporting: true,
       // Off until the Supabase/Google provider is configured
       // (docs/auth/google_oauth_setup.md); the button is hidden while false.
-      googleAuth: false,
+      googleAuth: true,
     });
     expect(homeTagline()).toMatch(/compare/i);
   });

@@ -52,7 +52,7 @@ import {
 // negative lookaheads; keep this list aligned with public/ and Vite's assets/.
 export const config = {
   matcher: [
-    "/((?!assets/|fonts/|study-materials/|favicon\\.svg|robots\\.txt|sitemap\\.xml|llms\\.txt|social-preview\\.(?:png|svg)|theme-init\\.js|index\\.html).*)",
+    "/((?!api/|assets/|fonts/|study-materials/|favicon\\.svg|robots\\.txt|sitemap\\.xml|llms\\.txt|social-preview\\.(?:png|svg)|theme-init\\.js|index\\.html).*)",
   ],
 };
 
@@ -375,6 +375,18 @@ async function notFoundResponse(request, url, heading = "Page not found") {
 export default async function middleware(request) {
   try {
     const url = new URL(request.url);
+
+    // Serverless functions are not app pages. Without this, /api/* fell
+    // through to the isSupportedAppPath check below and every function —
+    // including the admin's /api/youtube proxy — was intercepted and served
+    // a 404 HTML shell before Vercel could route it (verified live:
+    // GET /api/youtube returned text/html 404). The matcher also excludes
+    // api/ so these requests stop invoking the middleware at all; this body
+    // guard is the unit-testable belt-and-braces for both.
+    if (url.pathname === "/api" || url.pathname.startsWith("/api/")) {
+      return next();
+    }
+
     const courseMatch = url.pathname.match(/^\/course\/(\d+)(?:\/chapter\/(\d+))?\/?$/);
     const facultyMatch = url.pathname.match(/^\/faculty\/([^/]+)\/?$/);
     const forumPostMatch = url.pathname.match(/^\/forum\/post\/(\d+)\/?$/);

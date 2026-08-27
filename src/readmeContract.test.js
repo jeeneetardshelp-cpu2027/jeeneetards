@@ -50,15 +50,15 @@ describe("repository onboarding contract", () => {
       courseRatingSubmission: true,
       reviewDisplay: true,
       contentReporting: true,
-      googleAuth: false,
+      googleAuth: true,
     });
     for (const label of [
       "Public student accounts", "Rating submission", "Review display", "Content reporting",
+      "Continue with Google sign-in",
     ]) {
       expect(readme).toMatch(new RegExp(`\\| ${label} \\| Enabled \\|`));
     }
     expect(readme).toMatch(/Student forum \| Enabled.*closed beta.*public reading.*invited-member contributions/i);
-    expect(readme).toMatch(/\| Continue with Google sign-in \| Disabled[^|]*\|/);
   });
 
   it("keeps privileged keys out of frontend guidance", () => {

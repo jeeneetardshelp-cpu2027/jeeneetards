@@ -51,6 +51,11 @@ export function courseMeta(course, id) {
   return {
     ...buildCourseMetadata(course),
     url: `${SITE}/course/${id}`,
+    // Per-course WhatsApp/Telegram preview card. /api/og renders the course's
+    // own title/teacher/rating as a PNG and falls back to the static
+    // social-preview.png for anything it cannot render, so pointing og:image
+    // here is always safe — the preview degrades, never breaks.
+    image: `${SITE}/api/og?course=${id}`,
     robots: "index, follow",
   };
 }
@@ -80,13 +85,24 @@ export function injectCourseMeta(html, meta) {
     .replace(/(<meta property="og:type" content=")[^"]*(")/, (m, a, z) => `${a}${type}${z}`)
     .replace(/(<meta name="twitter:title" content=")[^"]*(")/, (m, a, z) => `${a}${t}${z}`)
     .replace(/(<meta name="twitter:description" content=")[^"]*(")/, (m, a, z) => `${a}${d}${z}`);
+  // Course pages carry their own preview card (/api/og renders the course's
+  // title/teacher/rating as a PNG, falling back to the static
+  // social-preview.png for anything it cannot render). Opt-in via meta.image
+  // so every other caller keeps the generic image. The og:image:width/height/
+  // type tags stay as-is: /api/og emits a 1200x630 PNG too.
+  const img = meta.image ? escapeHtml(meta.image) : null;
+  const withImage = img
+    ? out
+        .replace(/(<meta property="og:image" content=")[^"]*(")/, (m, a, z) => `${a}${img}${z}`)
+        .replace(/(<meta name="twitter:image" content=")[^"]*(")/, (m, a, z) => `${a}${img}${z}`)
+    : out;
   // Canonical: the shell deliberately ships WITHOUT one (a static canonical
   // would claim the homepage for every route). Replace it if an old shell
   // still has it, otherwise insert it next to <title> — which always exists.
   const canonicalTag = `<link rel="canonical" href="${u}" />`;
-  return /<link rel="canonical"[^>]*>/.test(out)
-    ? out.replace(/<link rel="canonical"[^>]*>/, () => canonicalTag)
-    : out.replace(/<title>/, () => `${canonicalTag}\n    <title>`);
+  return /<link rel="canonical"[^>]*>/.test(withImage)
+    ? withImage.replace(/<link rel="canonical"[^>]*>/, () => canonicalTag)
+    : withImage.replace(/<title>/, () => `${canonicalTag}\n    <title>`);
 }
 
 /**
@@ -189,6 +205,9 @@ export function renderStudyMaterialsBody(meta, materials = []) {
   const questionOnlyItems = jeeMain
     ? renderYearGroups(groups.questionOnly)
     : renderItems(groups.questionOnly);
+  const answerKeyItems = jeeMain
+    ? renderYearGroups(groups.answerKeys)
+    : renderItems(groups.answerKeys);
   const solutionItems = jeeMain
     ? renderYearGroups(groups.withSolutions)
     : renderItems(groups.withSolutions);
@@ -201,6 +220,12 @@ export function renderStudyMaterialsBody(meta, materials = []) {
     `<p>${escapeHtml(meta.description)}</p>`,
     jeeMain ? "<h2>JEE Main question papers</h2>" : "<h2>Reviewed resources</h2>",
     jeeMain ? questionOnlyItems : `<ul>${items}</ul>`,
+    jeeMain ? "<h2>JEE Main official answer keys</h2>" : "",
+    jeeMain && answerKeyItems
+      ? answerKeyItems
+      : jeeMain
+        ? "<p>No official final answer keys are listed yet. Provisional keys are excluded.</p>"
+        : "",
     jeeMain ? "<h2>JEE Main papers with solutions</h2>" : "",
     jeeMain && solutionItems
       ? solutionItems

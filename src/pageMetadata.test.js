@@ -65,9 +65,9 @@ describe("public page metadata", () => {
   it("gives the JEE Main paper collection its own indexable search result", () => {
     const page = metadataForLocation("/materials/jee-main/previous-year-papers");
     expect(page.title).toBe(
-      "Official JEE Main previous year question papers PDF | JEENEETARD",
+      "JEE Main papers, official answer keys and solutions | JEENEETARD",
     );
-    expect(page.description).toContain("official JEE Main previous-year question papers");
+    expect(page.description).toContain("official final answer keys");
     expect(page.canonicalPath).toBe("/materials/jee-main/previous-year-papers");
     expect(page.robots).toBe("index, follow");
   });
