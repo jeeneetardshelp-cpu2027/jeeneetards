@@ -18,6 +18,7 @@ import RatingPrompt from "./RatingPrompt.jsx";
 import VideoReport from "./VideoReport.jsx";
 import CourseOverview from "./CourseOverview.jsx";
 import ChapterTeachers from "./ChapterTeachers.jsx";
+import ChapterChampions from "./ChapterChampions.jsx";
 import StudyMaterialPanel from "./StudyMaterialPanel.jsx";
 import NotesPanel from "./NotesPanel.jsx";
 import { applyPageMetadata, useCourseMetadata, useStructuredData } from "./PageMetadata.jsx";
@@ -566,12 +567,21 @@ export default function CourseVideoPage() {
         />
       }
       moreTeachers={
-        <ChapterTeachers
-          chapterId={Number(activeLesson.chapter?.id ?? scope.chapter?.id) || null}
-          chapterName={activeLesson.chapter?.name ?? scope.chapter?.name}
-          currentCourseId={course.id}
-          currentInstituteId={course.instituteId ?? null}
-        />
+        <>
+          {/* Champions first: "who teaches this chapter best" answers the
+              question before "who else teaches it" lists the options. Both
+              render nothing at all when they have nothing confident to say. */}
+          <ChapterChampions
+            chapterId={Number(activeLesson.chapter?.id ?? scope.chapter?.id) || null}
+            chapterName={activeLesson.chapter?.name ?? scope.chapter?.name}
+          />
+          <ChapterTeachers
+            chapterId={Number(activeLesson.chapter?.id ?? scope.chapter?.id) || null}
+            chapterName={activeLesson.chapter?.name ?? scope.chapter?.name}
+            currentCourseId={course.id}
+            currentInstituteId={course.instituteId ?? null}
+          />
+        </>
       }
       materialsPanel={
         <StudyMaterialPanel
