@@ -1,0 +1,25 @@
+{
+  "preparedOn": "2026-08-27",
+  "officialIndexUrl": "https://jeemain.nta.nic.in/document-category/archive/page/2/",
+  "coverage": "JEE Main 2023 Paper 1 (B.E./B.Tech.) Session 1 and Session 2 final answer keys.",
+  "exclusions": "The superseded 24 April 2023 Session 2 provisional final key, other provisional answer keys, answer-key challenge notices, Paper 2 B.Arch/B.Planning keys, question papers and third-party worked solutions are excluded.",
+  "hostingPolicy": "Link-only. The PDFs remain on official NIC government infrastructure and are not mirrored by JEENEETARD.",
+  "resources": [
+    {
+      "title": "JEE Main 2023 Session 1 Final Answer Key (Paper 1 B.E./B.Tech)",
+      "session": 1,
+      "examYear": 2023,
+      "pageCount": 12,
+      "sourceUrl": "https://cdnbbsr.s3waas.gov.in/s3f8e59f4b2fe7c5705bf878bbd494ccdf/uploads/2023/02/2023020697.pdf",
+      "sha256": "54D7A2AF9EFC68B3AF26DCE84FC5185B552D922BB5CB1345A2E1B913C261AF0D"
+    },
+    {
+      "title": "JEE Main 2023 Session 2 Final Answer Key (Paper 1 B.E./B.Tech)",
+      "session": 2,
+      "examYear": 2023,
+      "pageCount": 12,
+      "sourceUrl": "https://cdnbbsr.s3waas.gov.in/s3f8e59f4b2fe7c5705bf878bbd494ccdf/uploads/2023/04/2023042948.pdf",
+      "sha256": "8C02C43372B37CEB10FE1C8ABFCC53C283F81ED43BD17B362EF49DA292329182"
+    }
+  ]
+}
