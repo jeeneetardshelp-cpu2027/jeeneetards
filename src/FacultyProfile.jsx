@@ -30,7 +30,7 @@ export default function FacultyProfile() {
   // Breadcrumb instead of a bare Back link: it says WHERE you are, and every
   // crumb is a real destination rather than a guess about history.
   const crumbs = [
-    { label: "Browse courses", to: "/browse" },
+    { label: "Faculty", to: "/faculty" },
     { label: profile?.display_name ?? "Faculty" },
   ];
   const schemaUrl = `/faculty/${profile?.slug ?? slug}`;
@@ -61,7 +61,7 @@ export default function FacultyProfile() {
     }),
     breadcrumbListSchema([
       { label: "Home", url: "/" },
-      { label: "Browse courses", url: "/browse" },
+      { label: "Faculty", url: "/faculty" },
       { label: profile.display_name, url: schemaUrl },
     ]),
   ] : [], [

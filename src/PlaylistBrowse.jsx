@@ -64,7 +64,12 @@ export function PlaylistCard({ course, onOpen, to, state, selected, onToggle, di
   // "Teacher not recorded / Coverage not assessed / Not yet rated" on every
   // card made the whole catalogue read as broken (rule 2).
   const facts = [
-    course.lectures != null && { icon: Layers, text: `${course.lectures} lecture${course.lectures === 1 ? "" : "s"}` },
+    // On a chapter page this counts THIS chapter, not the whole course, so say
+    // so — the bare number read as a course total and overstated the match.
+    course.lectures != null && {
+      icon: Layers,
+      text: `${course.lectures} lecture${course.lectures === 1 ? "" : "s"}${course.chapterScoped ? " on this chapter" : ""}`,
+    },
     duration && { icon: Clock, text: duration },
     course.language && { text: cap(course.language) },
     course.contentType && { text: COURSE_TYPE_LABEL[course.contentType] ?? course.contentType },

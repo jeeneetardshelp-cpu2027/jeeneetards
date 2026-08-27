@@ -166,7 +166,10 @@ describe("goal isolation", () => {
 describe("chapter filtering happens in the database", () => {
   it("uses an inner join + eq, never a client-side id list", async () => {
     const q = await run({ chapterId: 42 });
-    expect(q.cols).toContain("videos!inner(chapter_id)");
+    // The embed also carries duration_seconds now, so match the join itself
+    // rather than an exact column list: the point is that chapter filtering is
+    // an inner join in the DATABASE, not a client-side id list.
+    expect(q.cols).toContain("pv:playlist_videos!inner(videos!inner(chapter_id");
     expect(q.eq["pv.videos.chapter_id"]).toBe(42);
     expect(q.in).toBeUndefined();          // the old .in(id, [...]) aggregation
   });
@@ -602,5 +605,83 @@ describe("honest metadata", () => {
     expect(formatDuration(null)).toBeNull();
     expect(formatDuration(0)).toBeNull();
     expect(formatDuration(6000)).toBe("1h 40m");
+  });
+});
+
+// A chapter card must count the chapter, not the whole course.
+//
+// Measured against production on 2026-08-26: 73% of the 1,345 possible
+// (chapter, course) cards overstated their lecture count, median 9x, because
+// `playlist_videos(count)` is the whole-playlist total while the chapter filter
+// constrains a SEPARATE aliased embed. A card read "30 lectures" and then opened
+// a 2-lesson list, since CourseVideoPage scopes correctly and the card did not.
+describe("chapter cards count the chapter, not the whole course", () => {
+  // Reports "title:lectures" per card, in render order.
+  function CardsProbe(props) {
+    const { items } = usePlaylistBrowse(props);
+    return <span data-testid="cards">{items.map((i) => `${i.title}:${i.lectures}`).join("|")}</span>;
+  }
+  const cards = async (props) => {
+    render(<MemoryRouter><CardsProbe {...props} /></MemoryRouter>);
+    await waitFor(() => expect(screen.getByTestId("cards").textContent).not.toBe(""));
+    return screen.getByTestId("cards").textContent;
+  };
+  // `pv` is what the inner join returns: only this chapter's rows.
+  const lesson = (seconds = 600) => ({ videos: { chapter_id: 42, duration_seconds: seconds } });
+
+  it("uses the chapter-scoped row count, not playlist_videos(count)", async () => {
+    ROWS = [row(1, "One Shot Series", { playlist_videos: [{ count: 30 }], pv: [lesson(), lesson()] })];
+    COUNT = 1;
+    // The card must say 2 (what it teaches on this chapter), never 30.
+    expect(await cards({ chapterId: 42 })).toBe("One Shot Series:2");
+  });
+
+  it("ranks by real chapter depth, not alphabetically", async () => {
+    // Alphabetically "Aakash" leads; by chapter depth "Zenith" does. Production
+    // sort collapses to title because 472/477 rows share display_order and every
+    // popularity_score is 0, which floated thin one-shot series to the top.
+    ROWS = [
+      row(1, "Aakash One Shot", { playlist_videos: [{ count: 49 }], pv: [lesson()] }),
+      row(2, "Zenith Chapter Deep Dive", { playlist_videos: [{ count: 9 }], pv: [lesson(), lesson(), lesson()] }),
+    ];
+    COUNT = 2;
+    expect(await cards({ chapterId: 42 })).toBe("Zenith Chapter Deep Dive:3|Aakash One Shot:1");
+  });
+
+  it("leaves an explicitly chosen sort alone", async () => {
+    ROWS = [
+      row(1, "Aakash One Shot", { playlist_videos: [{ count: 49 }], pv: [lesson()] }),
+      row(2, "Zenith Chapter Deep Dive", { playlist_videos: [{ count: 9 }], pv: [lesson(), lesson(), lesson()] }),
+    ];
+    COUNT = 2;
+    // Only the DEFAULT ordering is re-ranked; "recent" is the student's choice.
+    expect(await cards({ chapterId: 42, sort: "recent" })).toBe("Aakash One Shot:1|Zenith Chapter Deep Dive:3");
+  });
+
+  it("still shows the whole-course count when NOT scoped to a chapter", async () => {
+    ROWS = [row(1, "One Shot Series", { playlist_videos: [{ count: 30 }] })];
+    COUNT = 1;
+    expect(await cards({})).toBe("One Shot Series:30");
+  });
+
+  it("totals a real duration from the chapter's own lessons", async () => {
+    function DurProbe(props) {
+      const { items } = usePlaylistBrowse(props);
+      return <span data-testid="dur">{String(items[0]?.durationSeconds ?? "none")}</span>;
+    }
+    ROWS = [row(1, "Deep Dive", { pv: [lesson(600), lesson(900)] })];
+    COUNT = 1;
+    render(<MemoryRouter><DurProbe chapterId={42} /></MemoryRouter>);
+    // Whole-course duration is still unavailable, but the chapter's is not.
+    await waitFor(() => expect(screen.getByTestId("dur").textContent).toBe("1500"));
+  });
+
+  it("labels the number so it cannot be read as a course total", () => {
+    render(
+      <MemoryRouter><ThemeProvider>
+        <PlaylistCard course={{ id: 1, title: "X", classLevels: [], lectures: 2, chapterScoped: true }} to="/course/1" comparisonEnabled={false} />
+      </ThemeProvider></MemoryRouter>,
+    );
+    expect(screen.getByText("2 lectures on this chapter")).toBeTruthy();
   });
 });
