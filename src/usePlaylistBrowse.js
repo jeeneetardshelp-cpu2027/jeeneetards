@@ -18,7 +18,23 @@ export const PAGE_SIZE = 12;
 
 // One row -> the shape the card renders. Explicit nulls, never defaults.
 function toCard(row) {
-  const lectures = row.playlist_videos?.[0]?.count ?? null;
+  // When the browse is chapter-scoped, `pv` holds the SAME playlist_videos rows
+  // narrowed to that chapter by the inner join, so its LENGTH is how many
+  // lectures this course actually has ON this chapter. `playlist_videos(count)`
+  // is the whole-course total, and measured against production it overstated
+  // 73% of chapter cards, median 9x -- a card read "30 lectures" and then opened
+  // a 2-lesson list, because CourseVideoPage scopes correctly and the card did
+  // not. The scoped number is the one the student is deciding with, so it wins
+  // whenever it is present.
+  const chapterRows = Array.isArray(row.pv) ? row.pv : null;
+  const lectures = chapterRows
+    ? chapterRows.length
+    : (row.playlist_videos?.[0]?.count ?? null);
+  // Those same rows carry duration, so a chapter-scoped card can total it
+  // honestly instead of falling back to the null below.
+  const chapterSeconds = chapterRows
+    ? chapterRows.reduce((sum, r) => sum + (Number(r.videos?.duration_seconds) || 0), 0)
+    : 0;
   const ratings = Number(row.ratings_count ?? 0);
   return {
     id: row.id,
@@ -29,12 +45,15 @@ function toCard(row) {
     instituteLogoUrl: row.institutes_channels?.logo_url ?? null,
     subject: row.subjects?.name ?? null,
     lectures,
+    // True when `lectures` counts one chapter rather than the whole course, so
+    // the card can say "on this chapter" instead of implying a course total.
+    chapterScoped: chapterRows != null,
     coverVideoId: row.cover?.[0]?.videos?.youtube_video_id ?? null,
-    // NOTE: total duration is NOT a column on playlists — it is computed inside
-    // get_chapter_courses(). Rather than invent a number here, it stays null and
-    // the card omits the field. A database-side aggregate view is the correct
-    // fix and is on the follow-up list.
-    durationSeconds: null,
+    // Whole-course duration is still NOT a column on playlists (it is computed
+    // inside get_chapter_courses()), so an unscoped card omits it rather than
+    // inventing one. A chapter-scoped card CAN total it honestly, from rows the
+    // inner join already returned.
+    durationSeconds: chapterSeconds > 0 ? chapterSeconds : null,
     language: row.language ?? null,
     contentType: row.content_type ?? null,
     difficulty: row.difficulty ?? null,
@@ -213,7 +232,9 @@ export function usePlaylistBrowse({
       // Faculty filtering is course-scoped and happens before range()/count.
       // It is included only when teachers_v7 capability has been confirmed.
       (teacherId ? ", pt:playlist_teachers!inner(teacher_id)" : "") +
-      (chapterId ? ", pv:playlist_videos!inner(videos!inner(chapter_id))" : "");
+      // duration_seconds rides along on rows already being fetched, so the one
+      // embed yields both the chapter-scoped lecture count and its runtime.
+      (chapterId ? ", pv:playlist_videos!inner(videos!inner(chapter_id, duration_seconds))" : "");
 
     // The sort the student chose (?sort=) selects the ordering. "recommended"
     // still leads with curated display_order (new courses default to 1,000,000,
@@ -279,7 +300,22 @@ export function usePlaylistBrowse({
       setState({ items: [], total: null, loading: false, error: "Couldn't load courses.", hasMore: false });
       return;
     }
-    const items = (data ?? []).map(toCard);
+    let items = (data ?? []).map(toCard);
+    // "recommended" is display_order -> popularity_score -> title, but 472/477
+    // production rows share display_order=1000000 and popularity_score is 0 on
+    // ALL of them, so a chapter page fell through to ALPHABETICAL. That floated
+    // omnibus one-shot series -- the thinnest chapter matches, carrying the most
+    // inflated counts -- above genuinely chapter-specific courses. Rank by real
+    // chapter depth instead. Only the DEFAULT sort is re-ordered; a sort the
+    // student explicitly chose is left alone.
+    //
+    // LIMIT: this orders the fetched PAGE, not the whole result set, because
+    // PostgREST cannot order by an embedded aggregate without a database-side
+    // rollup. That is enough in practice -- chapter result sets are tiny (median
+    // 3 courses, max 22) and only 18 of 249 populated chapters exceed one page.
+    if (chapterId && (sort ?? "recommended") === "recommended") {
+      items = [...items].sort((a, b) => (b.lectures ?? 0) - (a.lectures ?? 0));
+    }
     setState({
       items, total: count ?? null, loading: false, error: null,
       hasMore: count != null ? (page + 1) * PAGE_SIZE < count : items.length === PAGE_SIZE,

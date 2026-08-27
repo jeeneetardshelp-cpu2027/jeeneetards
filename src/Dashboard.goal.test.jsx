@@ -99,7 +99,10 @@ describe("Dashboard route → playlist query", () => {
     const q = playlistQuery();
     expect(q.eq["subject_id"]).toBe("3");
     expect(q.eq["pv.videos.chapter_id"]).toBe("7");
-    expect(q.cols).toContain("videos!inner(chapter_id)");
+    // The embed also carries duration_seconds now, so match the join itself
+    // rather than an exact column list: the point is that chapter filtering is
+    // an inner join in the DATABASE, not a client-side id list.
+    expect(q.cols).toContain("pv:playlist_videos!inner(videos!inner(chapter_id");
   });
 
   it("keeps the page offset from the URL", async () => {
