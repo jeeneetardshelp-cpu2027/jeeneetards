@@ -140,7 +140,7 @@ describe("every filter changes the database query", () => {
 
   it("chapter", async () => {
     const { q } = await run({ chapterId: 9 });
-    expect(q.cols).toContain("videos!inner(chapter_id)");
+    expect(q.cols).toContain("pv:playlist_videos!inner(videos!inner(chapter_id");
     expect(q.eq["pv.videos.chapter_id"]).toBe(9);
   });
 
