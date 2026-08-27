@@ -59,6 +59,19 @@ describe("FacultyProfile", () => {
     expect(screen.getByText("1 student rating")).toBeDefined();
   });
 
+  it("links back to the canonical faculty directory", () => {
+    profileHook.value = {
+      loading: false, error: null,
+      profile: {
+        display_name: "Amit Bijarnia", slug: "amit-bijarnia", verified: true,
+        course_count: 0, aliases: [], courses: [],
+      },
+    };
+    renderProfile();
+    expect(screen.getByRole("link", { name: "Faculty" }).getAttribute("href"))
+      .toBe("/faculty");
+  });
+
   it("shows the reviewed faculty pilot with visible sources and matching schema", () => {
     profileHook.value = {
       loading: false, error: null,

@@ -26,6 +26,7 @@ export function isMissingFacultyCapability(error) {
 
 // Ranked faculty suggestions. Debounce upstream; this fires on every change.
 export function useTeacherSearch(query, limit = 8) {
+  const [generation, setGeneration] = useState(0);
   const [state, setState] = useState({ results: [], loading: false, error: null });
 
   useEffect(() => {
@@ -47,9 +48,9 @@ export function useTeacherSearch(query, limit = 8) {
         setState({ results: data ?? [], loading: false, error: null });
       });
     return () => { active = false; };
-  }, [query, limit]);
+  }, [query, limit, generation]);
 
-  return state;
+  return { ...state, retry: () => setGeneration((n) => n + 1) };
 }
 
 // Admin suggestions deliberately use the admin-only RPC. Unlike the public
@@ -141,11 +142,21 @@ export function useFacultyImportCapability() {
 
 // Filter options for the current context, counted BY THE DATABASE.
 // Counting in the browser would mean paging the whole junction table.
-export function useFacultyFacets({ chapterId = null, subjectId = null, goalId = null } = {}) {
+export function useFacultyFacets({
+  chapterId = null,
+  subjectId = null,
+  goalId = null,
+  enabled = true,
+} = {}) {
+  const [generation, setGeneration] = useState(0);
   const [state, setState] = useState({ facets: [], loading: true, error: null, unavailable: false });
 
   useEffect(() => {
     let active = true;
+    if (!enabled) {
+      setState({ facets: [], loading: true, error: null, unavailable: false });
+      return;
+    }
     if (!isSupabaseConfigured) { setState({ facets: [], loading: false, error: NOT_CONFIGURED }); return; }
     setState((s) => ({ ...s, loading: true, error: null }));
 
@@ -171,9 +182,53 @@ export function useFacultyFacets({ chapterId = null, subjectId = null, goalId = 
         setState({ facets: data ?? [], loading: false, error: null });
       });
     return () => { active = false; };
-  }, [chapterId, subjectId, goalId]);
+  }, [chapterId, subjectId, goalId, enabled, generation]);
 
-  return state;
+  return { ...state, retry: () => setGeneration((n) => n + 1) };
+}
+
+// Small, bounded dimension lists used by the faculty directory filters. The
+// directory deliberately does not download courses to derive these options.
+export function useFacultyDirectoryOptions() {
+  const [generation, setGeneration] = useState(0);
+  const [state, setState] = useState({
+    goals: [], subjects: [], loading: true, error: null,
+  });
+
+  useEffect(() => {
+    let active = true;
+    if (!isSupabaseConfigured) {
+      setState({ goals: [], subjects: [], loading: false, error: NOT_CONFIGURED });
+      return;
+    }
+
+    setState((current) => ({ ...current, loading: true, error: null }));
+    Promise.all([
+      supabase.from("learning_goals").select("id, slug, name").order("display_order"),
+      supabase.from("subjects").select("id, slug, name").order("display_order"),
+    ]).then(([goals, subjects]) => {
+      if (!active) return;
+      const failure = goals.error ?? subjects.error;
+      if (failure) {
+        console.error("faculty directory options:", failure);
+        setState({
+          goals: [], subjects: [], loading: false,
+          error: "Couldn't load the faculty filters.",
+        });
+        return;
+      }
+      setState({
+        goals: goals.data ?? [],
+        subjects: subjects.data ?? [],
+        loading: false,
+        error: null,
+      });
+    });
+
+    return () => { active = false; };
+  }, [generation]);
+
+  return { ...state, retry: () => setGeneration((n) => n + 1) };
 }
 
 // The playlist ids taught by a given teacher, for filtering a result list.

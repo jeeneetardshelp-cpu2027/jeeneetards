@@ -41,6 +41,7 @@ import RouteMetadata from "./PageMetadata.jsx";
 import { RELEASE_CAPABILITIES, RELEASE_FEATURES } from "./releaseCapabilities.js";
 
 const Explore = lazy(() => import("./Explore.jsx"));
+const FacultyDirectory = lazy(() => import("./FacultyDirectory.jsx"));
 const FacultyProfile = lazy(() => import("./FacultyProfile.jsx"));
 const Compare = lazy(() => import("./Compare.jsx"));
 const SearchPage = lazy(() => import("./SearchPage.jsx"));
@@ -274,6 +275,16 @@ function FacultyRoute() {
   );
 }
 
+function FacultyDirectoryRoute() {
+  if (RELEASE_CAPABILITIES.facultyRegistry) return <FacultyDirectory />;
+  return (
+    <FeatureUnavailable
+      title="Faculty directory is coming soon"
+      detail="Faculty identities and course links are still under editorial review."
+    />
+  );
+}
+
 function StudyMaterialsRoute() {
   if (RELEASE_CAPABILITIES.studyMaterials) return <StudyMaterialsPage />;
   return (
@@ -344,6 +355,7 @@ export default function App() {
           <Route path="/explore/:goal/:s1/:s2/:s3" element={<Explore />} />
           <Route path="/explore/:goal/:s1/:s2/:s3/:s4" element={<Explore />} />
           <Route path="/browse" element={<BrowsePage />} />
+          <Route path="/faculty" element={<FacultyDirectoryRoute />} />
           <Route path="/faculty/:slug" element={<FacultyRoute />} />
           <Route path="/compare" element={<ComparisonRoute />} />
           <Route path="/search" element={<UniversalSearchRoute />} />
