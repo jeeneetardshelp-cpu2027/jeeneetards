@@ -49,6 +49,7 @@ import {
   ContinueWatching, ExamGrid, Faq, Features, Hero,
   SocialProof, TopRated, pickTopRated,
 } from "./HomeSections.jsx";
+import ExamCountdown from "./ExamCountdown.jsx";
 import YouTubeThumbnail from "./YouTubeThumbnail.jsx";
 import ChannelAvatar from "./ChannelAvatar.jsx";
 import { useHomepageChannels } from "./useHomepageChannels.js";
@@ -315,6 +316,11 @@ function Landing({
   return (
     <>
       <ContinueWatching entries={continueWatching} />
+
+      {/* Days-left sits with the student's own progress, above the argument
+          for the product: both answer "where am I?", which is what a
+          returning student opens the site to find out. */}
+      <ExamCountdown />
 
       {/* The tool comes before any argument for it. */}
       <ExamGrid exams={exams} />
