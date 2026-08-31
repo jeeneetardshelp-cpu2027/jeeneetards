@@ -15,6 +15,7 @@ import { ImagePlus, Plus, Send, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import { Page } from "../AppShell.jsx";
+import { APPROVED_IMAGE_HOSTS, APPROVED_IMAGE_SOURCES } from "../imageHosts.js";
 import { useSession } from "../useSession.js";
 import { Button, Note, Pill, SectionHead, Surface } from "../ui.jsx";
 import { pollApi } from "./pollApi.js";
@@ -27,27 +28,15 @@ const MAX_QUESTION = 160;
 const MAX_DETAIL = 600;
 const MAX_LABEL = 80;
 
-// Mirrors the poll_image_hosts seed in polls_v1.sql, mapped to the name a
-// student would recognise. The server is the real boundary; this exists only so
-// a bad link is caught before submitting instead of coming back as a refusal.
-// If you add a host in SQL, add it here too — and read the rule above that
-// seed first: the test is whether the SUBMITTER can swap the bytes after
-// approval, not whether the site is reputable.
-const APPROVED_HOSTS = Object.freeze({
-  "i.ytimg.com": "YouTube",
-  "img.youtube.com": "YouTube",
-  "yt3.ggpht.com": "YouTube",
-  "upload.wikimedia.org": "Wikipedia",
-  "assets.openstax.org": "OpenStax",
-  "openstax.org": "OpenStax",
-  "cdn.kastatic.org": "Khan Academy",
-  "ncert.nic.in": "NCERT",
-  "www.jeeneetard.com": "this site",
-  "jeeneetard.com": "this site",
-});
+// The allowlist lives in src/imageHosts.js, shared with the forum's Markdown
+// renderer — two student-writable surfaces must not keep separate lists. The
+// server is still the real boundary (poll_image_host_allowed + a CHECK on
+// poll_options.image_url); this exists only so a bad link is caught before
+// submitting instead of coming back as a refusal.
+const APPROVED_HOSTS = APPROVED_IMAGE_HOSTS;
 
-/** The recognisable source names, de-duplicated, for student-facing copy. */
-export const APPROVED_SOURCES = [...new Set(Object.values(APPROVED_HOSTS))];
+/** Re-exported under the name this module's callers already use. */
+export const APPROVED_SOURCES = APPROVED_IMAGE_SOURCES;
 
 const emptyOption = () => ({ label: "", image_url: "" });
 

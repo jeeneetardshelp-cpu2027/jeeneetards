@@ -4,6 +4,7 @@ import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import "katex/dist/katex.min.css";
 import { useTheme } from "../theme.jsx";
+import { isApprovedImageUrl } from "../imageHosts.js";
 import { normalizeDisplayMath } from "./normalizeDisplayMath.js";
 
 const KATEX_OPTIONS = Object.freeze({
@@ -22,12 +23,13 @@ function safeForumUrl(url, key) {
   const transformed = defaultUrlTransform(url);
   if (!transformed) return "";
   if (key !== "src") return transformed;
-  try {
-    const parsed = new URL(transformed);
-    return parsed.protocol === "https:" || parsed.protocol === "http:" ? transformed : "";
-  } catch {
-    return "";
-  }
+  // An <img> loads automatically for every reader, so its host is a decision
+  // about whose server gets to see an anonymous minor's IP and user-agent —
+  // and about what imagery can appear on a page Google indexes. Protocol alone
+  // was not a check: it accepted any host on the internet. Links are different
+  // and stay open: a reader has to choose to follow one, and they carry
+  // rel="noopener noreferrer nofollow".
+  return isApprovedImageUrl(transformed) ? transformed : "";
 }
 
 /**

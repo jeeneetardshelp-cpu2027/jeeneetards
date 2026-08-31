@@ -12,6 +12,7 @@
 // fails if either side moves without the other.
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
+import { APPROVED_IMAGE_HOSTS } from "./imageHosts.js";
 
 const sqlSource = readFileSync("src/migrations/polls_v1.sql", "utf8");
 const vercel = JSON.parse(readFileSync("vercel.json", "utf8"));
@@ -63,5 +64,26 @@ describe("poll image allowlist agrees with the shipped CSP", () => {
     // without putting a user-upload host in front of an audience of minors.
     expect(seededHosts()).not.toContain("commons.wikimedia.org");
     expect(imgSrc(vercelCsp)).not.toContain("commons.wikimedia.org");
+  });
+});
+
+// Three places now decide which hosts an image may come from: the SQL seed
+// (server boundary for polls), src/imageHosts.js (client checks for polls AND
+// the forum renderer), and img-src in the deploy configs (the browser's own
+// enforcement). All three must name the same hosts — a host missing from any
+// one of them fails somewhere the others cannot see.
+describe("the shared JS allowlist matches the SQL seed and the CSP", () => {
+  const jsHosts = Object.keys(APPROVED_IMAGE_HOSTS);
+
+  it("names exactly the seeded hosts", () => {
+    expect([...jsHosts].sort()).toEqual([...seededHosts()].sort());
+  });
+
+  it("is allowed by the CSP", () => {
+    const allowed = imgSrc(vercelCsp);
+    for (const host of jsHosts) {
+      if (host === "www.jeeneetard.com") continue; // covered by 'self'
+      expect(allowed, `img-src is missing ${host}`).toContain(host);
+    }
   });
 });
