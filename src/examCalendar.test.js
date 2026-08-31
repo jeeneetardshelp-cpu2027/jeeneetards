@@ -100,3 +100,21 @@ describe("labels and lookup", () => {
     expect(findExam("nope")).toBeNull();
   });
 });
+
+// The countdown read the UTC calendar day while targets are midnight UTC, so an
+// Indian student between 00:00 and 05:30 IST saw a number one day too high.
+// Every pre-existing case used T09:00Z — inside the safe window — so nothing
+// covered the small hours this audience actually studies in.
+describe("counts from the student's own calendar day", () => {
+  const exam = { slug: "x", name: "X", status: "announced", date: "2027-01-20", goal: "jee" };
+
+  it("uses the local date, not the UTC date, to decide 'today'", () => {
+    // Build a moment whose LOCAL day is 2027-01-20 in whatever zone the runner
+    // is in. On exam day the answer must be 0 regardless of the UTC offset.
+    const localExamDay = new Date(2027, 0, 20, 1, 30, 0);
+    expect(examCountdown(exam, localExamDay).days).toBe(0);
+    // And the day before is exactly 1, not 0 or 2.
+    const dayBefore = new Date(2027, 0, 19, 23, 0, 0);
+    expect(examCountdown(exam, dayBefore).days).toBe(1);
+  });
+});

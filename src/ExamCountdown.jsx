@@ -34,7 +34,14 @@ export function shareMessage(exam, countdown, origin = "https://www.jeeneetard.c
   const days = countdown.days === 0
     ? "Today"
     : `${countdown.approximate ? "About " : ""}${countdown.days} day${countdown.days === 1 ? "" : "s"}`;
-  return `${days} to ${examLabel(exam)}. Free chapter-wise lectures: ${origin}/`;
+  // Carry the caveat the on-page band prints. Every exam in the calendar is
+  // currently an ESTIMATE, so without this 100% of shared countdowns travel as
+  // bare numbers into batch groups, stripped of the one fact that makes them
+  // honest — the date is not announced yet.
+  const caveat = countdown.approximate && exam.expectedLabel
+    ? ` ${exam.authority ?? "The exam board"} has not announced dates yet (expected ${exam.expectedLabel}).`
+    : "";
+  return `${days} to ${examLabel(exam)}.${caveat} Free chapter-wise lectures: ${origin}/`;
 }
 
 export default function ExamCountdown() {
@@ -54,7 +61,9 @@ export default function ExamCountdown() {
     const text = shareMessage(exam, countdown, window.location.origin);
     try {
       if (navigator.share) {
-        await navigator.share({ text, url: `${window.location.origin}/` });
+        // `text` already ends with the link, so passing `url` as well makes
+        // Android paste it twice. The text is the canonical payload here.
+        await navigator.share({ text });
       } else {
         await navigator.clipboard.writeText(text);
         setShared(true);
