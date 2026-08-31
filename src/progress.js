@@ -5,6 +5,8 @@
 // watched ticks in the lesson list. If we later add accounts, this becomes
 // the offline mirror of a server-side progress table.
 
+import { recordStudyDay } from "./streak.js";
+
 const KEY = "ll_progress_v1";
 
 function isObject(value) {
@@ -158,6 +160,11 @@ export function recordLessonView({
   if (prev.positions) entry.positions = prev.positions;
   all[key] = entry;
   writeAll(all);
+  // A study day is recorded HERE and nowhere else: this function runs only on
+  // a genuine YouTube PLAYING event, so a streak can never be earned by
+  // opening a page. Kept last and self-contained — a storage failure inside
+  // the streak store must never cost the student their watch progress.
+  recordStudyDay();
   return entry;
 }
 
@@ -223,6 +230,27 @@ export function savePlayerPrefs({ rate }) {
 }
 
 // Most recently watched courses, newest first.
+/**
+ * How many distinct lessons were played today, for the daily-goal ring.
+ *
+ * Counts positions[].at falling inside the local calendar day. That timestamp
+ * is a LAST-touch (a replay overwrites it), which makes it exact for today —
+ * today's touches cannot yet have been overwritten by a later day — while
+ * saying nothing reliable about the past. The streak store owns history.
+ */
+export function countLessonsStudiedToday(now = new Date()) {
+  const start = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+  const end = start + 86400000;
+  let count = 0;
+  for (const entry of Object.values(readAll())) {
+    for (const position of Object.values(entry?.positions ?? {})) {
+      const at = Number(position?.at);
+      if (Number.isFinite(at) && at >= start && at < end) count += 1;
+    }
+  }
+  return count;
+}
+
 export function getContinueWatching(limit = 4) {
   return Object.values(readAll())
     .filter(hasCompleteContinueIdentity)
