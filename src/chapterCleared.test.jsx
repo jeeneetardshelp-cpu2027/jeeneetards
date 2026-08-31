@@ -83,6 +83,46 @@ const show = (props) => render(
   </ThemeProvider>,
 );
 
+// The card now also WRITES: it is the only place the app learns that a chapter
+// was finished. Isolate the store so that record cannot leak between tests or
+// into another suite.
+beforeEach(() => localStorage.clear());
+afterEach(() => localStorage.clear());
+
+describe("<ChapterCleared> records the finish", () => {
+  const revision = () => JSON.parse(localStorage.getItem("ll_revision_v1") ?? "null");
+
+  it("writes one record naming the chapter, the course and the count", () => {
+    show({ completedIds: ["vidA", "vidB"], courseTitle: "Physics Class 11", subject: "Physics" });
+    const items = revision().items;
+    expect(items).toHaveLength(1);
+    expect(items[0]).toMatchObject({
+      courseId: 374, chapterId: 27, chapterName: "Rotational Motion",
+      courseTitle: "Physics Class 11", subject: "Physics", totalLessons: 2, step: 0,
+    });
+    expect(Math.abs(items[0].clearedAt - Date.now())).toBeLessThan(2000);
+  });
+
+  it("writes nothing for a chapter that is not cleared", () => {
+    show({ completedIds: ["vidA"] });
+    expect(revision()).toBeNull();
+  });
+
+  it("does not move the finish date when the card renders again", () => {
+    // The card is a derivation of stored positions, not an event: it renders
+    // on EVERY later visit to a cleared chapter. If a re-render overwrote the
+    // record, the chapter would restart its schedule each time and never come
+    // due for revision at all.
+    const first = show({ completedIds: ["vidA", "vidB"] });
+    const clearedAt = revision().items[0].clearedAt;
+    first.unmount();
+
+    show({ completedIds: ["vidA", "vidB"] });
+    expect(revision().items).toHaveLength(1);
+    expect(revision().items[0].clearedAt).toBe(clearedAt);
+  });
+});
+
 describe("<ChapterCleared>", () => {
   it("renders nothing at all until the chapter is cleared", () => {
     const { container } = show({ completedIds: ["vidA"] });

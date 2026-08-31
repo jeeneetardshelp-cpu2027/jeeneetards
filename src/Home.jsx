@@ -51,6 +51,7 @@ import {
 } from "./HomeSections.jsx";
 import ExamCountdown from "./ExamCountdown.jsx";
 import PrepStreak from "./PrepStreak.jsx";
+import DueForRevision from "./DueForRevision.jsx";
 import YouTubeThumbnail from "./YouTubeThumbnail.jsx";
 import ChannelAvatar from "./ChannelAvatar.jsx";
 import { useHomepageChannels } from "./useHomepageChannels.js";
@@ -317,6 +318,11 @@ function Landing({
   return (
     <>
       <ContinueWatching entries={continueWatching} />
+
+      {/* Beside continue-watching, not beside the motivational bands: both are
+          actions on work the student has already done. Hides itself until a
+          chapter they finished is old enough to be worth going back to. */}
+      <DueForRevision />
 
       {/* The student's own momentum, before anything the site has to say.
           Hides itself until they have actually watched something. */}
