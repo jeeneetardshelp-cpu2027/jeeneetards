@@ -1,0 +1,49 @@
+{
+  "preparedOn": "2026-08-31",
+  "officialIndexUrl": "https://www.nta.ac.in/NoticeBoardArchive",
+  "coverage": "JEE Main 2021 Paper 1 (B.E./B.Tech.) Session 1 through Session 4 final answer keys.",
+  "exclusions": "Provisional answer keys, answer-key challenge notices, Paper 2 B.Arch/B.Planning keys, question papers and third-party worked solutions are excluded.",
+  "hostingPolicy": "Link-only. The PDFs remain on the official NTA website and are not mirrored by JEENEETARD.",
+  "resources": [
+    {
+      "title": "JEE Main 2021 Session 1 Final Answer Key (Paper 1 B.E./B.Tech)",
+      "officialTitle": "JEE (Main) FEB - 2021 FINAL ANSWER KEY ON WHICH RESULT COMPILED ON 08.03.2021",
+      "session": 1,
+      "examYear": 2021,
+      "resultCompiledOn": "2021-03-08",
+      "pageCount": 78,
+      "sourceUrl": "https://www.nta.ac.in/Download/Notice/Notice_20210308221806.pdf",
+      "sha256": "E04F6BAAAE3BA8E51D10DED321C3F595235A31FE36D8A233AEE537F9E30B014C"
+    },
+    {
+      "title": "JEE Main 2021 Session 2 Final Answer Key (Paper 1 B.E./B.Tech)",
+      "officialTitle": "JEE (Main) MARCH - 2021 FINAL ANSWER KEY ON WHICH RESULT COMPILED ON 24.03.2021",
+      "session": 2,
+      "examYear": 2021,
+      "resultCompiledOn": "2021-03-24",
+      "pageCount": 78,
+      "sourceUrl": "https://www.nta.ac.in/Download/Notice/Notice_20210324193450.pdf",
+      "sha256": "754C8958BAFAC5F5461F5F3210E249EEA6DC82CF9B00D3AED7B5EAA93FA7DE98"
+    },
+    {
+      "title": "JEE Main 2021 Session 3 Final Answer Key (Paper 1 B.E./B.Tech)",
+      "officialTitle": "JEE (Main) Session - 3, 2021 FINAL ANSWER KEY ON WHICH RESULT COMPILED ON 06.08.2021",
+      "session": 3,
+      "examYear": 2021,
+      "resultCompiledOn": "2021-08-06",
+      "pageCount": 11,
+      "sourceUrl": "https://www.nta.ac.in/Download/Notice/Notice_20210806221131.pdf",
+      "sha256": "26933F2A3AB69A2E70C95D75D3F8130D45B4149682877BB730D663BE0C8AC68E"
+    },
+    {
+      "title": "JEE Main 2021 Session 4 Final Answer Key (Paper 1 B.E./B.Tech)",
+      "officialTitle": "JEE (Main) Session - 4, 2021 FINAL ANSWER KEY ON WHICH RESULT COMPILED ON 15.09.2021",
+      "session": 4,
+      "examYear": 2021,
+      "resultCompiledOn": "2021-09-15",
+      "pageCount": 7,
+      "sourceUrl": "https://www.nta.ac.in/Download/Notice/Notice_20210915141450.pdf",
+      "sha256": "3D9E0AA5DA24884CA8EAA105B8F38B8461E0D45F3DF2DACC1C29FC6ECDB31783"
+    }
+  ]
+}
