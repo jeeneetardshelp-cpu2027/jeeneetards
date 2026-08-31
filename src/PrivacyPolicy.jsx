@@ -41,7 +41,7 @@ export default function PrivacyPolicy() {
         <Container width="reading">
           <h1 className={`text-2xl font-bold ${t.text}`}>Privacy Policy</h1>
           <p className={`mt-1 text-xs ${t.muted}`}>
-            Effective date: 31 July 2026
+            Effective date: 31 August 2026
           </p>
 
           <Section title="1. Scope and operator details">
@@ -57,7 +57,7 @@ export default function PrivacyPolicy() {
               >
                 jeeneetardshelp@gmail.com
               </a>
-              . This version is effective 31 July 2026.
+              . This version is effective 31 August 2026.
             </p>
           </Section>
 
