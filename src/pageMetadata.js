@@ -178,6 +178,42 @@ export function metadataForLocation(pathname = "/", search = "") {
     };
   }
 
+  // A poll is made to be shared, so its link has to preview as something
+  // worth tapping. The question itself is not known to this pure function --
+  // it lives in the database -- so the slug carries it: poll slugs are the
+  // question, slugified, with a trailing id. Stripping that id back off gives
+  // a readable title without a round trip, and the client refines it once the
+  // poll loads.
+  if (path === "/polls" || path === "/polls/new" || /^\/polls\/[a-z0-9-]+$/.test(path)) {
+    if (!RELEASE_FEATURES.polls) return comingSoon({ ...base, canonicalPath: "/polls" });
+    const isSinglePoll = path !== "/polls" && path !== "/polls/new";
+    if (isSinglePoll) {
+      const slug = path.slice("/polls/".length).replace(/-\d+$/, "");
+      const question = readablePathSegment(slug);
+      return {
+        ...base,
+        title: question ? `${question} | ${SITE_NAME} polls` : `Student poll | ${SITE_NAME}`,
+        description:
+          "Vote in this student poll, see how everyone else answered, and read the discussion underneath.",
+        canonicalPath: path,
+        type: "article",
+      };
+    }
+    return {
+      ...base,
+      title: `Student polls | ${SITE_NAME}`,
+      description:
+        "Vote on what other JEE and NEET students actually think — study hours, hardest chapters, revision strategy — and argue about it in the comments.",
+      canonicalPath: "/polls",
+      // Same policy as /browse and /faculty: the feed keeps sort and subject in
+      // the query string, so noindex every faceted variant and let only the
+      // clean /polls landing (and never /polls/new) into the index.
+      robots: path === "/polls/new" || [...params.keys()].length > 0
+        ? "noindex, follow"
+        : "index, follow",
+    };
+  }
+
   if (path === "/terms") {
     return {
       ...base,
