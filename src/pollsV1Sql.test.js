@@ -632,6 +632,20 @@ describe("audit hardening", () => {
     }
   });
 
+  it("accepts every host actually present in the poll_image_hosts seed", async () => {
+    // Guards the seed itself: a host added with a typo, uppercase, or a stray
+    // space would sit in the table looking correct and silently never match.
+    await asOwner(pg);
+    const seeded = await pg.query("select host from public.poll_image_hosts order by host");
+    expect(seeded.rows.length).toBeGreaterThan(4);
+    for (const { host } of seeded.rows) {
+      const r = await pg.query("select public.poll_image_host_allowed($1) as ok", [
+        `https://${host}/example.png`,
+      ]);
+      expect(r.rows[0].ok, host).toBe(true);
+    }
+  });
+
   it("poll_image_host_allowed itself denies the userinfo/port spoof (not only the column CHECK)", async () => {
     await asOwner(pg);
     // These resolve to evil.com in a browser; the function must say no on its own.

@@ -27,7 +27,28 @@ const MAX_QUESTION = 160;
 const MAX_DETAIL = 600;
 const MAX_LABEL = 80;
 
-const APPROVED_HOSTS = ["i.ytimg.com", "img.youtube.com", "yt3.ggpht.com", "upload.wikimedia.org"];
+// Mirrors the poll_image_hosts seed in polls_v1.sql, mapped to the name a
+// student would recognise. The server is the real boundary; this exists only so
+// a bad link is caught before submitting instead of coming back as a refusal.
+// If you add a host in SQL, add it here too — and read the rule above that
+// seed first: the test is whether the SUBMITTER can swap the bytes after
+// approval, not whether the site is reputable.
+const APPROVED_HOSTS = Object.freeze({
+  "i.ytimg.com": "YouTube",
+  "img.youtube.com": "YouTube",
+  "yt3.ggpht.com": "YouTube",
+  "upload.wikimedia.org": "Wikipedia and Wikimedia Commons",
+  "commons.wikimedia.org": "Wikipedia and Wikimedia Commons",
+  "assets.openstax.org": "OpenStax",
+  "openstax.org": "OpenStax",
+  "cdn.kastatic.org": "Khan Academy",
+  "ncert.nic.in": "NCERT",
+  "www.jeeneetard.com": "this site",
+  "jeeneetard.com": "this site",
+});
+
+/** The recognisable source names, de-duplicated, for student-facing copy. */
+export const APPROVED_SOURCES = [...new Set(Object.values(APPROVED_HOSTS))];
 
 const emptyOption = () => ({ label: "", image_url: "" });
 
@@ -48,8 +69,8 @@ export function imageLinkProblem(url) {
   if (!match) {
     return "That link has an unusual host. Use a plain lowercase https:// link with no “@” or port.";
   }
-  if (!APPROVED_HOSTS.includes(match[1])) {
-    return `Pictures can only come from ${APPROVED_HOSTS.join(", ")}.`;
+  if (!Object.hasOwn(APPROVED_HOSTS, match[1])) {
+    return `Pictures can only come from ${APPROVED_SOURCES.join(", ")}.`;
   }
   return null;
 }
@@ -418,9 +439,9 @@ export default function PollSubmitPage({ api = pollApi, authState = null }) {
             )}
 
             <Note icon={ImagePlus} className="mt-5">
-              Pictures are added as links, not uploads, and only from YouTube
-              thumbnails or Wikimedia. That keeps a picture from being swapped for
-              something else after an admin has approved your poll.
+              Pictures are added as links, not uploads, and only from{" "}
+              {APPROVED_SOURCES.join(", ")}. That keeps a picture from being
+              swapped for something else after an admin has approved your poll.
             </Note>
           </Surface>
 

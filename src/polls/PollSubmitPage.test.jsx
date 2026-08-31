@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
 import { describe, expect, it, vi } from "vitest";
@@ -43,9 +44,44 @@ async function fillValidPoll() {
 }
 
 describe("imageLinkProblem", () => {
-  it("accepts the approved hosts", () => {
-    expect(imageLinkProblem("https://i.ytimg.com/vi/abc/hqdefault.jpg")).toBeNull();
-    expect(imageLinkProblem("https://upload.wikimedia.org/w/x.png")).toBeNull();
+  it("accepts every approved host", () => {
+    for (const url of [
+      "https://i.ytimg.com/vi/abc/hqdefault.jpg",
+      "https://img.youtube.com/vi/abc/0.jpg",
+      "https://yt3.ggpht.com/a/avatar.jpg",
+      "https://upload.wikimedia.org/w/x.png",
+      "https://commons.wikimedia.org/wiki/Special:FilePath/Lens.svg",
+      "https://assets.openstax.org/oscms/media/figure.png",
+      "https://openstax.org/figure.png",
+      "https://cdn.kastatic.org/ka-content-images/diagram.png",
+      "https://ncert.nic.in/textbook/figure.png",
+      "https://www.jeeneetard.com/diagrams/free-body.png",
+      "https://jeeneetard.com/diagrams/free-body.png",
+    ]) {
+      expect(imageLinkProblem(url), url).toBeNull();
+    }
+  });
+
+  it("names recognisable sources rather than listing every hostname", () => {
+    // With eleven hosts, joining raw hostnames produced an unreadable wall of
+    // text in the student-facing error.
+    const message = imageLinkProblem("https://evil.example/x.png");
+    expect(message).toMatch(/YouTube/);
+    expect(message).toMatch(/Wikipedia/);
+    expect(message).not.toMatch(/ytimg|ggpht|kastatic/);
+  });
+
+  it("still refuses the general-purpose image hosts a student could swap", () => {
+    // The rule is not "is the site reputable" but "can the submitter replace
+    // the bytes after approval". These all fail that test.
+    for (const url of [
+      "https://i.imgur.com/abc.png",
+      "https://i.ibb.co/abc.png",
+      "https://drive.google.com/uc?id=abc",
+      "https://cdn.discordapp.com/attachments/1/2/x.png",
+    ]) {
+      expect(imageLinkProblem(url), url).toMatch(/can only come from/);
+    }
   });
 
   it("accepts an empty value, because a picture is optional", () => {
@@ -69,6 +105,21 @@ describe("imageLinkProblem", () => {
     // A lowercase-scheme but uppercase-host URL that new URL() would have
     // silently normalized-and-accepted is now refused, matching the server.
     expect(imageLinkProblem("https://I.YTIMG.COM/x.png")).toBeTruthy();
+  });
+
+  it("stays in step with the poll_image_hosts seed in the migration", () => {
+    // The two lists are maintained by hand in different languages, so drift is
+    // the likely failure: SQL gains a host, the client keeps rejecting it, and
+    // a student is told a legitimate link is not allowed. Read the seed and
+    // require the client to accept every host in it.
+    const sql = readFileSync("src/migrations/polls_v1.sql", "utf8");
+    const seed = sql.match(/insert into public\.poll_image_hosts[\s\S]*?;/)?.[0] ?? "";
+    const hosts = [...seed.matchAll(/\('([a-z0-9.-]+)',/g)].map((m) => m[1]);
+
+    expect(hosts.length).toBeGreaterThan(4); // the parse actually worked
+    for (const host of hosts) {
+      expect(imageLinkProblem(`https://${host}/x.png`), host).toBeNull();
+    }
   });
 
   it("refuses something that is not a link at all", () => {

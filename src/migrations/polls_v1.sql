@@ -77,11 +77,25 @@ create table public.poll_image_hosts (
   created_at timestamptz not null default now()
 );
 
+-- THE RULE FOR ADDING A HOST, and it is not "is this site reputable":
+-- can the STUDENT WHO SUBMITTED THE POLL replace the bytes at that URL after
+-- an admin has approved it? If yes, the host does not belong here however
+-- respectable it looks. That single question rules out every general-purpose
+-- image host -- imgur, postimg, ibb, Google Drive, Dropbox, Discord CDN --
+-- because anyone can upload there and swap the file afterwards. The hosts
+-- below all serve content the submitter does not control.
 insert into public.poll_image_hosts (host, note) values
   ('i.ytimg.com', 'YouTube video thumbnails -- already the catalogue image source'),
   ('img.youtube.com', 'YouTube thumbnail alias'),
   ('yt3.ggpht.com', 'YouTube channel avatars'),
-  ('upload.wikimedia.org', 'Wikimedia Commons -- stable URLs, licensed reuse');
+  ('upload.wikimedia.org', 'Wikimedia -- serves the images for Wikipedia and Commons'),
+  ('commons.wikimedia.org', 'Wikimedia Commons Special:FilePath links, which redirect to upload.wikimedia.org'),
+  ('assets.openstax.org', 'OpenStax CC-BY textbook figures -- physics, chemistry and biology diagrams'),
+  ('openstax.org', 'OpenStax apex, for figures not served from the assets subdomain'),
+  ('cdn.kastatic.org', 'Khan Academy article and exercise images'),
+  ('ncert.nic.in', 'NCERT -- the official syllabus authority these courses follow'),
+  ('www.jeeneetard.com', 'This site. Anything an admin puts in public/ is by definition reviewed.'),
+  ('jeeneetard.com', 'This site, apex form');
 
 create table public.polls (
   id bigint generated always as identity primary key,
