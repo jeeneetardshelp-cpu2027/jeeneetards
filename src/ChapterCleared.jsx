@@ -18,11 +18,13 @@
 //
 // No <Reveal>: reveal blocks ship at opacity:0 until a useReveal() root
 // observes them, which has shipped a blank section twice in this codebase.
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CircleCheckBig, Share2 } from "lucide-react";
 import { useTheme } from "./theme.jsx";
 import { BRAND_TEAL } from "./brandColors.js";
 import { chapterCompletion, chapterShareMessage, courseByline } from "./chapterCompletion.js";
+import { recordChapterCleared } from "./revision.js";
+import { getLastWatchedAt } from "./progress.js";
 
 export default function ChapterCleared({
   // The WHOLE course's lessons. A chapter slice would make every one-lesson
@@ -33,11 +35,46 @@ export default function ChapterCleared({
   courseId = null,
   teacher = null,
   institute = null,
+  // Context for the revision record only — never rendered on this card.
+  courseTitle = null,
+  subject = null,
 }) {
   const { t } = useTheme();
   const [shared, setShared] = useState(false);
 
   const progress = chapterCompletion(lessons, completedIds, chapterId);
+
+  // This is the ONLY moment the app knows a chapter was finished: progress.js
+  // is keyed by course and its positions carry no chapter, so the fact is
+  // unrecoverable afterwards. Written here, read back by the homepage band
+  // weeks later.
+  //
+  // Deliberately fire-and-forget and outside any state: a storage failure must
+  // not cost the student their celebration. recordChapterCleared is
+  // create-if-absent because this card is a derivation of stored positions,
+  // not an event — it renders again on every later visit to a cleared chapter,
+  // and an overwrite would reset the schedule to day zero each time.
+  //
+  // The date comes from the WATCH RECORD, not from the clock. This card fires
+  // the first time the app OBSERVES a chapter complete, which is not the day
+  // the student finished it: on a second device, or after any sign-out and
+  // sign-in, the server sync rebuilds the completed set and this would
+  // otherwise stamp a June chapter with today's date — then tell the student
+  // "Cleared 7 days ago" about something they finished in June.
+  const cleared = Boolean(progress?.cleared);
+  const clearedName = progress?.chapter?.name ?? null;
+  const clearedTotal = progress?.total ?? null;
+  const finishedAt = cleared
+    ? getLastWatchedAt(courseId, progress.completedVideoIds)
+    : null;
+  useEffect(() => {
+    if (!cleared) return;
+    recordChapterCleared({
+      courseId, chapterId, chapterName: clearedName, courseTitle, subject,
+      totalLessons: clearedTotal, clearedAt: finishedAt,
+    });
+  }, [cleared, courseId, chapterId, clearedName, courseTitle, subject, clearedTotal, finishedAt]);
+
   // Nothing to celebrate yet — and nothing rendered. No progress bar, no
   // "3 of 14 done" nag: this band is the reward, not another tracker.
   if (!progress?.cleared) return null;

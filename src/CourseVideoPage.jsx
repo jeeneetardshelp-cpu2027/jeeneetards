@@ -20,6 +20,8 @@ import CourseOverview from "./CourseOverview.jsx";
 import ChapterTeachers from "./ChapterTeachers.jsx";
 import ChapterChampions from "./ChapterChampions.jsx";
 import ChapterCleared from "./ChapterCleared.jsx";
+import ChapterRevision from "./ChapterRevision.jsx";
+import { recordChapterWatched } from "./revision.js";
 import StudyMaterialPanel from "./StudyMaterialPanel.jsx";
 import NotesPanel from "./NotesPanel.jsx";
 import { applyPageMetadata, useCourseMetadata, useStructuredData } from "./PageMetadata.jsx";
@@ -280,6 +282,14 @@ export default function CourseVideoPage() {
       duration: null,
       watched: true,
     }, { force: true });
+    // A student replaying a chapter they already finished IS revising it, so
+    // the revision queue must stop suggesting it. No-op unless that chapter
+    // was cleared, and rate-limited inside the store so one evening of
+    // replaying cannot walk a chapter up the ladder.
+    recordChapterWatched({
+      courseId: course.id,
+      chapterId: activeLesson.chapter?.id ?? chapterId,
+    });
   };
 
   // Player reports carry the videoId THEY were measured against: an old
@@ -581,6 +591,18 @@ export default function CourseVideoPage() {
             courseId={course.id}
             teacher={course.teacher}
             institute={course.institute}
+            courseTitle={course.title}
+            subject={activeLesson.subject ?? null}
+          />
+          {/* The revision surface: one-shots and revision series covering
+              this chapter. Placed after the cleared card (a student who just
+              finished is exactly who wants it) and before the full-course
+              alternatives below. Hides itself on the 74 of 263 chapters with
+              no revision material. */}
+          <ChapterRevision
+            chapterId={Number(activeLesson.chapter?.id ?? scope.chapter?.id) || null}
+            chapterName={activeLesson.chapter?.name ?? scope.chapter?.name}
+            currentCourseId={course.id}
           />
           {/* Champions first: "who teaches this chapter best" answers the
               question before "who else teaches it" lists the options. Both

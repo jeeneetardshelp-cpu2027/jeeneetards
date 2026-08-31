@@ -95,6 +95,44 @@ describe("student account safety", () => {
     expect(localStorage.getItem("ll_progress_v1")).not.toBeNull();
   });
 
+  // Same shared-device reasoning as the watch history above, and the same
+  // failure mode: without this, deleting clearRevision() from AppShell leaves
+  // the suite green while a school-lab machine hands the next student the
+  // names of every chapter the last one finished.
+  it("clears this device's revision queue after a successful sign-out", async () => {
+    localStorage.setItem("ll_revision_v1", JSON.stringify({ pausedOn: null, items: [{ courseId: 374, chapterId: 27, chapterName: "Rotational Motion", clearedAt: 1700000000000 }] }));
+
+    render(
+      <ThemeProvider>
+        <MemoryRouter>
+          <GlobalHeader />
+        </MemoryRouter>
+      </ThemeProvider>,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Sign out" }));
+
+    await waitFor(() => expect(localStorage.getItem("ll_revision_v1")).toBeNull());
+  });
+
+  it("keeps this device's revision queue when sign-out FAILS", async () => {
+    auth.signOut.mockResolvedValue({ error: { message: "network" } });
+    localStorage.setItem("ll_revision_v1", JSON.stringify({ pausedOn: null, items: [{ courseId: 374, chapterId: 27, chapterName: "Rotational Motion", clearedAt: 1700000000000 }] }));
+
+    render(
+      <ThemeProvider>
+        <MemoryRouter>
+          <GlobalHeader />
+        </MemoryRouter>
+      </ThemeProvider>,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Sign out" }));
+
+    await waitFor(() => expect(auth.signOut).toHaveBeenCalled());
+    expect(localStorage.getItem("ll_revision_v1")).not.toBeNull();
+  });
+
   it("links the sign-in form to the password-reset route", () => {
     render(
       <ThemeProvider>

@@ -38,6 +38,9 @@ describe("legal release truth", () => {
       // Supabase account", which the sync made false.
       "video_progress",
       "ll_player_prefs_v1",
+      "ll_notes_v1",
+      "ll_streak_v1",
+      "ll_revision_v1",
     ]) {
       expect(privacy).toContain(fact);
     }
@@ -59,6 +62,16 @@ describe("legal release truth", () => {
       expect(privacy()).not.toContain("not attached to a Supabase account");
       // Server-side data survives "clear site data" — students must be told.
       expect(privacy()).toMatch(/clearing site data does not delete it/i);
+    });
+
+    it("discloses the revision queue whenever a chapter clear is recorded", () => {
+      // ll_revision_v1 names the chapters a student has finished. The
+      // allow-list above only catches a fact someone remembered to add; this
+      // derives it from the code, so wiring the write without the disclosure
+      // fails the build.
+      const writesRevision = read("src/ChapterCleared.jsx").includes("recordChapterCleared");
+      if (!writesRevision) return;
+      expect(privacy()).toContain("ll_revision_v1");
     });
 
     it("never describes a live feature as hidden behind a release control", async () => {

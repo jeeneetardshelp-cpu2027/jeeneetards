@@ -104,3 +104,43 @@ describe("/api/og", () => {
     expect(new Headers(init.headers).get("apikey")).toBe("anon-key");
   }, 30_000);
 });
+
+// The CDN keys on the exact query string, and this endpoint's URL is published
+// in the og:image of every course page — where anything can append to it. Each
+// distinct variant used to pay a fresh satori+resvg render AND a database read
+// even though the handler ignores every parameter except `course`.
+describe("cache key is canonical", () => {
+  it("redirects a decorated URL onto the one cacheable form, without rendering", async () => {
+    const fetchSpy = vi.spyOn(globalThis, "fetch");
+    const res = fakeRes();
+    await handler(request("?course=5&utm_source=whatsapp"), res);
+
+    expect(res.statusCode).toBe(308);
+    expect(res.headers.location).toBe("/api/og?course=5");
+    // The point of the fix: no database read and no image render on a variant.
+    expect(fetchSpy).not.toHaveBeenCalled();
+    expect(res.body).toBeNull();
+    // And the redirect itself is cached, so the second hit never reaches us.
+    expect(res.headers["cache-control"]).toMatch(/s-maxage=604800/);
+  });
+
+  it("normalises an equivalent id rather than caching it twice", async () => {
+    const res = fakeRes();
+    await handler(request("?course=007"), res);
+    expect(res.statusCode).toBe(308);
+    expect(res.headers.location).toBe("/api/og?course=7");
+  });
+
+  it("does not redirect the canonical URL, so there is no loop", async () => {
+    const res = fakeRes();
+    await handler(request("?course=5"), res);
+    expect(res.statusCode).not.toBe(308);
+  });
+
+  it("still falls back, never redirects, when the id is unusable", async () => {
+    const res = fakeRes();
+    await handler(request("?course=abc&utm_source=x"), res);
+    expect(res.statusCode).toBe(302);
+    expect(res.headers.location).toBe(FALLBACK);
+  });
+});

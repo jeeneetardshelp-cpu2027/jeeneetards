@@ -75,9 +75,27 @@ async function lookupCourse(id) {
 
 export default async function handler(req, res) {
   try {
-    const query = new URL(req.url ?? "/", "https://internal").searchParams;
-    const id = parseCourseId(query.get("course"));
+    const url = new URL(req.url ?? "/", "https://internal");
+    const id = parseCourseId(url.searchParams.get("course"));
     if (!id) return fallback(res);
+
+    // Collapse every URL variant onto ONE cache object, before doing any work.
+    // The CDN keys on the exact query string, so ?course=5&utm_source=x and
+    // ?course=5&t=99 are separate entries that each pay a fresh satori+resvg
+    // render AND a database read — and this endpoint's URL is published in the
+    // og:image of all 483 course pages, where anyone can append to it. The
+    // handler already ignores every parameter except `course`, so a variant is
+    // pure waste. Redirect instead of rendering: scrapers here already follow
+    // redirects (the static fallback below relies on it), and the redirect
+    // itself is cached for a week so the second hit never reaches the function.
+    const canonical = `?course=${id}`;
+    if (url.search !== canonical) {
+      res.statusCode = 308;
+      res.setHeader("Location", `/api/og${canonical}`);
+      res.setHeader("Cache-Control", "public, max-age=0, s-maxage=604800");
+      res.end();
+      return undefined;
+    }
 
     const model = courseCardModel(await lookupCourse(id));
     if (!model) return fallback(res);
