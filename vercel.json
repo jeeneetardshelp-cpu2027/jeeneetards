@@ -35,14 +35,12 @@
       ]
     },
     {
-      "//": "Font filenames are stable and their bytes never change under the same name, so they are safe to freeze. Previously only /assets was immutable, leaving fonts on max-age=0 and revalidating on every repeat visit.",
       "source": "/fonts/(.*)",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
       ]
     },
     {
-      "//": "theme-init.js is a SYNC script in <head>, so a revalidation blocks the parser before first paint. It is deliberately NOT immutable: the filename carries no content hash, so a year-long freeze would strand any future fix on returning devices. An hour removes the blocking round trip for a session without that risk.",
       "source": "/theme-init.js",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=3600" }
