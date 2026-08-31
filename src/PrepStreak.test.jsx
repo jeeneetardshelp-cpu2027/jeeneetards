@@ -4,7 +4,7 @@
 import { render, screen, fireEvent, cleanup } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ThemeProvider } from "./theme.jsx";
-import PrepStreak, { streakMessage } from "./PrepStreak.jsx";
+import PrepStreak, { streakMessage, streakUncounted } from "./PrepStreak.jsx";
 
 const STREAK_KEY = "ll_streak_v1";
 const PROGRESS_KEY = "ll_progress_v1";
@@ -101,5 +101,41 @@ describe("streakMessage", () => {
     ]) {
       expect(streakMessage(args)).not.toMatch(/lost|failed|broke|don't|shouldn't/i);
     }
+  });
+});
+
+// The streak store is device-local and cleared on sign-out (deliberate — shared
+// school machines), but watch progress IS restored from the server on the next
+// sign-in. So the band could assert "0 days in a row" and "Watch one lesson to
+// start a streak" directly beside "Today: 1 of 2" — telling a student who
+// demonstrably studied today that they had not.
+describe("does not deny a study day it cannot see", () => {
+  it("says what it knows instead of claiming a zero streak", () => {
+    // No streak record at all (as after a sign-out) but real play data today.
+    seedProgress(new Date(2026, 7, 27, 9, 0, 0), 1);
+    renderBand();
+
+    expect(screen.queryByRole("heading", { name: /0\s+days in a row/ })).toBeNull();
+    expect(screen.queryByText(/Watch one lesson to start a streak/)).toBeNull();
+    // The half it CAN verify is still shown, and the gap is explained.
+    expect(screen.getByText("Today: 1 of 2")).toBeTruthy();
+    expect(screen.getByText(/kept on the device you watch on/)).toBeTruthy();
+  });
+
+  it("still shows a real streak normally", () => {
+    localStorage.setItem(STREAK_KEY, JSON.stringify({
+      days: ["2026-08-26", "2026-08-27"], goal: 2,
+    }));
+    seedProgress(new Date(2026, 7, 27, 9, 0, 0), 1);
+    renderBand();
+    expect(screen.getByRole("heading", { name: /2\s+days in a row/ })).toBeTruthy();
+    expect(screen.queryByText(/kept on the device you watch on/)).toBeNull();
+  });
+
+  it("streakUncounted only fires when play data and the streak store disagree", () => {
+    expect(streakUncounted({ current: 0, studiedToday: false, studiedTodayCount: 1 })).toBe(true);
+    expect(streakUncounted({ current: 0, studiedToday: false, studiedTodayCount: 0 })).toBe(false);
+    expect(streakUncounted({ current: 3, studiedToday: false, studiedTodayCount: 1 })).toBe(false);
+    expect(streakUncounted({ current: 0, studiedToday: true, studiedTodayCount: 1 })).toBe(false);
   });
 });
