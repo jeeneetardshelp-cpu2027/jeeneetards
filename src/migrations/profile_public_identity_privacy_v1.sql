@@ -1,12 +1,28 @@
--- Legacy rerunnable profile-read hardening.
+-- Public profile identity privacy v1.
 --
--- This file originally made every profile column except is_admin public.
--- That still exposed OAuth full_name/avatar_url and stable account IDs. Keep
--- the historical migration safe to re-run by enforcing the current contract:
--- only the separately claimed forum username is browser-readable.
-
+-- Browser roles keep direct access only to the separately claimed forum
+-- username. OAuth full_name/avatar_url, account IDs, timestamps, admin flags,
+-- and any future profile columns remain private. This migration changes ACLs
+-- only; it does not read or mutate profile rows.
 begin;
 
+do $$
+begin
+  if to_regclass('public.profiles') is null then
+    raise exception 'public.profiles is missing';
+  end if;
+  if not exists (
+    select 1 from information_schema.columns
+     where table_schema = 'public' and table_name = 'profiles' and column_name = 'username'
+  ) then
+    raise exception 'public.profiles.username is missing';
+  end if;
+end
+$$;
+
+-- A table-level REVOKE also clears existing column-level SELECT grants. Revoke
+-- PUBLIC as well because privileges inherited from PUBLIC would otherwise
+-- make a direct anon/authenticated revoke ineffective.
 revoke select on table public.profiles from public, anon, authenticated;
 grant select (username) on table public.profiles to anon, authenticated;
 grant select on table public.profiles to service_role;
