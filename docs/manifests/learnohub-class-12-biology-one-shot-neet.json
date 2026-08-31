@@ -1,0 +1,126 @@
+{
+  "version": 1,
+  "request_id": "bc434c12-ec26-40da-a10e-fc7de8af8865",
+  "youtube_playlist_id": "PLCzaIJYXP5YdzEuuJNhRKbk_iAcJKP7XC",
+  "course_title": "LearnoHub Class 12 Biology One-Shot Course",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "q_RnPjnHv7k",
+      "chapter": "Sexual Reproduction in Flowering Plants",
+      "lesson_number": 1
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "Vk6eS07anCs",
+      "chapter": "Sexual Reproduction in Flowering Plants",
+      "lesson_number": 2
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "LenU4UHvO5s",
+      "chapter": "Human Reproduction",
+      "lesson_number": 3
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "AaHSGOYK5hk",
+      "chapter": "Principles of Inheritance and Variation",
+      "lesson_number": 4
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "CEsHQExeEQo",
+      "chapter": "Reproductive Health",
+      "lesson_number": 5
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "LLN3QDSGpXQ",
+      "chapter": "Molecular Basis of Inheritance",
+      "lesson_number": 6
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "_DWKb_MVSp8",
+      "chapter": "Molecular Basis of Inheritance",
+      "lesson_number": 7
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "GJfuAvL0i9U",
+      "chapter": "Evolution",
+      "lesson_number": 8
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "L7Kdbvgltr8",
+      "chapter": "Human Health and Disease",
+      "lesson_number": 9
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "icMSA6poemE",
+      "chapter": "Microbes in Human Welfare",
+      "lesson_number": 10
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "S-SIdczw-hc",
+      "chapter": "Biotechnology: Principles and Processes",
+      "lesson_number": 11
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "303EcvaFsmg",
+      "chapter": "Biotechnology and its Applications",
+      "lesson_number": 12
+    },
+    {
+      "position": 13,
+      "youtube_video_id": "2cWVFJX6VG0",
+      "chapter": "Organisms and Populations",
+      "lesson_number": 13
+    },
+    {
+      "position": 14,
+      "youtube_video_id": "SyDUFv9ITPk",
+      "chapter": "Ecosystem",
+      "lesson_number": 14
+    },
+    {
+      "position": 15,
+      "youtube_video_id": "HICoS7grDyg",
+      "chapter": "Biodiversity and Conservation",
+      "lesson_number": 15
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "1b221ce1-0ab0-439b-8951-e8f5751d4591",
+    "youtube_playlist_id": "PLCzaIJYXP5YdzEuuJNhRKbk_iAcJKP7XC",
+    "teacher": "Roshni Mukherjee",
+    "reviewed_on": "2026-08-27",
+    "reviewed_by": "Codex evidence review",
+    "source_url": "https://www.youtube.com/playlist?list=PLCzaIJYXP5YdzEuuJNhRKbk_iAcJKP7XC",
+    "source_label": "The official LearnoHub channel owns this playlist and its title attributes the complete Class 12 Biology course to Roshni Ma'am. LearnoHub's official site identifies its educator as Roshni, and Roshni Mukherjee's public professional profile identifies her as LearnoHub's founder and long-time educator.",
+    "youtube_video_ids": [
+      "q_RnPjnHv7k",
+      "Vk6eS07anCs",
+      "LenU4UHvO5s",
+      "AaHSGOYK5hk",
+      "CEsHQExeEQo",
+      "LLN3QDSGpXQ",
+      "_DWKb_MVSp8",
+      "GJfuAvL0i9U",
+      "L7Kdbvgltr8",
+      "icMSA6poemE",
+      "S-SIdczw-hc",
+      "303EcvaFsmg",
+      "2cWVFJX6VG0",
+      "SyDUFv9ITPk",
+      "HICoS7grDyg"
+    ]
+  }
+}

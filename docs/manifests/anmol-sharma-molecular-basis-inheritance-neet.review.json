@@ -1,0 +1,79 @@
+{
+  "subject": "Biology",
+  "summary": {
+    "total": 6,
+    "auto": 6,
+    "review": 0,
+    "unmatched": 0,
+    "excluded": 0
+  },
+  "source_note": "The official Anmol Sharma Biology playlist contains six published, long, embeddable NCERT line-by-line lectures. Every lecture maps automatically at full confidence to the existing live Biology chapter Molecular Basis of Inheritance; the playlist reports one additional unavailable item that is absent from the usable YouTube metadata set.",
+  "rows": [
+    {
+      "position": 1,
+      "youtube_video_id": "90pzvaiyevw",
+      "title": "NCERT निचोड़ : Molecular basis of inheritance | New NCERT Biology Line by Line Explanation NEET 2026",
+      "chapter": "Molecular Basis of Inheritance",
+      "lesson_number": 1,
+      "confidence": 1,
+      "review": false,
+      "reason": "automatic high-confidence match to the exact live Biology chapter",
+      "alternatives": ["Molecular Basis of Inheritance"]
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "TDBVozwG7aY",
+      "title": "NCERT निचोड़ : Molecular basis of inheritance | New NCERT Biology Line by Line Explanation NEET 2026",
+      "chapter": "Molecular Basis of Inheritance",
+      "lesson_number": 2,
+      "confidence": 1,
+      "review": false,
+      "reason": "automatic high-confidence match to the exact live Biology chapter",
+      "alternatives": ["Molecular Basis of Inheritance"]
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "UsnnU7o2m-0",
+      "title": "NCERT निचोड़ : Molecular basis of inheritance | New NCERT Biology Line by Line Explanation NEET 2026",
+      "chapter": "Molecular Basis of Inheritance",
+      "lesson_number": 3,
+      "confidence": 1,
+      "review": false,
+      "reason": "automatic high-confidence match to the exact live Biology chapter",
+      "alternatives": ["Molecular Basis of Inheritance"]
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "UPL3fnimjqY",
+      "title": "NCERT निचोड़ : Molecular basis of inheritance | New NCERT Biology Line by Line Explanation NEET 2026",
+      "chapter": "Molecular Basis of Inheritance",
+      "lesson_number": 4,
+      "confidence": 1,
+      "review": false,
+      "reason": "automatic high-confidence match to the exact live Biology chapter",
+      "alternatives": ["Molecular Basis of Inheritance"]
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "xJCJfL7Fxzc",
+      "title": "NCERT निचोड़ : Molecular basis of inheritance | New NCERT Biology Line by Line Explanation NEET 2026",
+      "chapter": "Molecular Basis of Inheritance",
+      "lesson_number": 5,
+      "confidence": 1,
+      "review": false,
+      "reason": "automatic high-confidence match to the exact live Biology chapter",
+      "alternatives": ["Molecular Basis of Inheritance"]
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "NXRZvWLTHo0",
+      "title": "NCERT निचोड़ : Molecular basis of inheritance | New NCERT Biology Line by Line Explanation NEET 2026",
+      "chapter": "Molecular Basis of Inheritance",
+      "lesson_number": 6,
+      "confidence": 1,
+      "review": false,
+      "reason": "automatic high-confidence match to the exact live Biology chapter",
+      "alternatives": ["Molecular Basis of Inheritance"]
+    }
+  ]
+}

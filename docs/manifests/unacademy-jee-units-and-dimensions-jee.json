@@ -1,0 +1,56 @@
+{
+  "version": 1,
+  "request_id": "5a58723d-7127-4330-9e3c-06e6bc722f40",
+  "youtube_playlist_id": "PLbu_fGT0MPsuUGoXKKJmphfGOa1I6gtTE",
+  "course_title": "Unacademy JEE Units and Dimensions",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "ZgqH47_kBQE",
+      "chapter": "Units and Measurements",
+      "lesson_number": 1
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "I5I32B7aJxg",
+      "chapter": "Units and Measurements",
+      "lesson_number": 2
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "u9lXrMCLf0g",
+      "chapter": "Units and Measurements",
+      "lesson_number": 3
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "7Hwu8uZg5nY",
+      "chapter": "Units and Measurements",
+      "lesson_number": 4
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "3DzW_JDEaMc",
+      "chapter": "Units and Measurements",
+      "lesson_number": 5
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "d7515904-e8c6-4a6d-8bcc-edb4b7312d28",
+    "youtube_playlist_id": "PLbu_fGT0MPsuUGoXKKJmphfGOa1I6gtTE",
+    "teacher": "Namo Kaul",
+    "reviewed_on": "2026-08-19",
+    "reviewed_by": "Codex evidence review",
+    "source_url": "https://www.youtube.com/playlist?list=PLbu_fGT0MPsuUGoXKKJmphfGOa1I6gtTE",
+    "source_label": "Official Unacademy JEE playlist and all five official video titles explicitly name Namo Kaul; the lecture descriptions also identify Namo Sir as the Physics educator",
+    "youtube_video_ids": [
+      "ZgqH47_kBQE",
+      "I5I32B7aJxg",
+      "u9lXrMCLf0g",
+      "7Hwu8uZg5nY",
+      "3DzW_JDEaMc"
+    ]
+  }
+}

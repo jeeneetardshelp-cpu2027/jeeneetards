@@ -1,0 +1,169 @@
+{
+  "subject": "Biology",
+  "summary": {
+    "total": 13,
+    "auto": 0,
+    "review": 13,
+    "unmatched": 0,
+    "excluded": 0
+  },
+  "source_note": "The official playlist describes a selected set of detailed explanatory videos from high-weightage Class 12 Genetics and Evolution topics. The reviewed mapping preserves all 13 usable source positions without presenting the playlist as complete coverage of both chapters.",
+  "rows": [
+    {
+      "position": 1,
+      "youtube_video_id": "VNuthqvuGWY",
+      "title": "Hardy-Weinberg Principle | Class XII Evolution #neet #biology #study",
+      "chapter": "Evolution",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched the explicitly titled Hardy-Weinberg evolution lesson to the live Evolution chapter",
+      "alternatives": [
+        "Evolution"
+      ]
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "HqFYg2QHEVY",
+      "title": "Miller's Experiment | Class 12 | Evolution",
+      "chapter": "Evolution",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched the explicitly titled Miller experiment evolution lesson to the live Evolution chapter",
+      "alternatives": [
+        "Evolution"
+      ]
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "hiJ5HUfXy4o",
+      "title": "DNA Fingerprinting | Class 12 | Molecular Basis of Inheritance",
+      "chapter": "Molecular Basis of Inheritance",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched the explicitly titled DNA fingerprinting lesson to the live Molecular Basis of Inheritance chapter",
+      "alternatives": [
+        "Molecular Basis of Inheritance"
+      ]
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "QvjBmTpcL14",
+      "title": "The Lac Operon | Class 12 Genetics | Molecular Basis of Inheritance",
+      "chapter": "Molecular Basis of Inheritance",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched the explicitly titled lac operon lesson to the live Molecular Basis of Inheritance chapter",
+      "alternatives": [
+        "Molecular Basis of Inheritance"
+      ]
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "0NQMc_XP4ck",
+      "title": "Translation | Class 12 | Molecular Basis of Inheritance",
+      "chapter": "Molecular Basis of Inheritance",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched the explicitly titled translation lesson to the live Molecular Basis of Inheritance chapter",
+      "alternatives": [
+        "Molecular Basis of Inheritance"
+      ]
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "2CpoWTsEqgI",
+      "title": "Gene vs Cistron | Molecular Basis of Inheritance | Class 12 | NEET",
+      "chapter": "Molecular Basis of Inheritance",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched the explicitly titled gene and cistron lesson to the live Molecular Basis of Inheritance chapter",
+      "alternatives": [
+        "Molecular Basis of Inheritance"
+      ]
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "OGP5Bp1bjrA",
+      "title": "Transcription in Eukaryotes | Class 12 | Molecular basis of Inheritance",
+      "chapter": "Molecular Basis of Inheritance",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched the explicitly titled eukaryotic transcription lesson to the live Molecular Basis of Inheritance chapter",
+      "alternatives": [
+        "Molecular Basis of Inheritance"
+      ]
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "ZAl8ZLDmJX8",
+      "title": "Transcription in Prokaryotes | Class 12 Genetics | NEET Biology",
+      "chapter": "Molecular Basis of Inheritance",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched the explicitly titled prokaryotic transcription lesson to the live Molecular Basis of Inheritance chapter",
+      "alternatives": [
+        "Molecular Basis of Inheritance"
+      ]
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "ttJV8nKPayg",
+      "title": "DNA Replication | Molecular Basis of Inheritance | Class 12 Genetics",
+      "chapter": "Molecular Basis of Inheritance",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched the explicitly titled DNA replication lesson to the live Molecular Basis of Inheritance chapter",
+      "alternatives": [
+        "Molecular Basis of Inheritance"
+      ]
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "gfE5N1OPE1E",
+      "title": "Meselson and Stahl Experiment | Class 12 Genetics | NEET Biology",
+      "chapter": "Molecular Basis of Inheritance",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched the DNA-replication experiment lesson to the live Molecular Basis of Inheritance chapter",
+      "alternatives": [
+        "Molecular Basis of Inheritance"
+      ]
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "-ppDRRjYKeA",
+      "title": "Hershey and Chase Experiment | Class 12 | NEET Biology",
+      "chapter": "Molecular Basis of Inheritance",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched the genetic-material experiment lesson to the live Molecular Basis of Inheritance chapter",
+      "alternatives": [
+        "Molecular Basis of Inheritance"
+      ]
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "fT2xMTTNKp0",
+      "title": "Avery, MacLeod & McCarty Experiment | Class 12 | NEET Biology",
+      "chapter": "Molecular Basis of Inheritance",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched the genetic-material experiment lesson to the live Molecular Basis of Inheritance chapter",
+      "alternatives": [
+        "Molecular Basis of Inheritance"
+      ]
+    },
+    {
+      "position": 13,
+      "youtube_video_id": "PVda6obJIE0",
+      "title": "Griffith's Experiment | Class 12 | NEET Biology",
+      "chapter": "Molecular Basis of Inheritance",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched the transforming-principle experiment lesson to the live Molecular Basis of Inheritance chapter",
+      "alternatives": [
+        "Molecular Basis of Inheritance"
+      ]
+    }
+  ]
+}

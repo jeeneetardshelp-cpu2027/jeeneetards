@@ -1,0 +1,46 @@
+{
+  "subject": "Biology",
+  "summary": {
+    "total": 3,
+    "auto": 1,
+    "review": 2,
+    "unmatched": 0,
+    "excluded": 2
+  },
+  "source_note": "The official five-day Plant Physiology crash-course playlist contains five long, embeddable chapter one-shots. Manual review retains the three chapters present in the live Biology taxonomy and excludes Transport in Plants and Mineral Nutrition rather than misfiling them or creating unapproved production chapters.",
+  "rows": [
+    {
+      "position": 1,
+      "youtube_video_id": "43EEtSGIF-o",
+      "title": "Photosynthesis in One Shot | Class 11 NCERT Crash Course",
+      "chapter": "Photosynthesis in Higher Plants",
+      "lesson_number": 1,
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched the explicit Photosynthesis lecture to the live canonical chapter Photosynthesis in Higher Plants",
+      "alternatives": ["Photosynthesis in Higher Plants"]
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "PaSKMNpPF6o",
+      "title": "Respiration in Plants in One Shot | Class 11 NCERT Crash Course",
+      "chapter": "Respiration in Plants",
+      "lesson_number": 2,
+      "confidence": 1,
+      "review": false,
+      "reason": "automatic high-confidence match to the exact live Biology chapter",
+      "alternatives": ["Respiration in Plants"]
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "SnAFmx3a3SY",
+      "title": "Plant Growth And Develpoment in  One shot | Class 11th | NCERT Crash Course",
+      "chapter": "Plant Growth and Development",
+      "lesson_number": 3,
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review resolved the source-title spelling error to the exact live Plant Growth and Development chapter",
+      "alternatives": ["Plant Growth and Development"]
+    }
+  ]
+}

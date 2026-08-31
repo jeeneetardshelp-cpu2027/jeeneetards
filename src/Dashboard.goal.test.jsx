@@ -17,16 +17,26 @@ import { MemoryRouter, Routes, Route } from "react-router";
 const calls = [];
 const rpcCalls = [];
 function builder(table) {
-  const rec = { table, cols: null, eq: {}, range: null };
+  const rec = { table, cols: null, eq: {}, range: null, orders: [] };
   calls.push(rec);
   const b = {
     select(cols, opts) { rec.cols = cols; rec.opts = opts; return b; },
-    order() { return b; },
+    order(column, options) {
+      rec.orders.push(
+        column
+          + (options?.ascending === false ? " desc" : "")
+          + (options?.nullsFirst === false ? " nullslast" : ""),
+      );
+      return b;
+    },
     limit() { return b; },
     range(a, z) { rec.range = [a, z]; return b; },
     eq(k, v) { rec.eq[k] = v; return b; },
     ilike() { return b; },
     in() { return b; },
+    // The legacy-chapter label lookup (useChapterName) resolves nothing here;
+    // Dashboard.legacyChapterChip.test.jsx covers the labelled path.
+    maybeSingle() { return Promise.resolve({ data: null, error: null }); },
     then(resolve) { return Promise.resolve({ data: [], error: null, count: 0 }).then(resolve); },
   };
   return b;
@@ -156,5 +166,16 @@ describe("Dashboard route → playlist query", () => {
     const q = calls.find((c) => c.table === "videos" && c.range != null);
     expect(q.range).toEqual([168, 191]);
     expect(q.eq["video_learning_goals.learning_goal_id"]).toBe("1");
+  });
+
+  it("carries ?lsort= from the URL into the lecture query's ordering", async () => {
+    renderAt("/browse?tab=lectures&lsort=shortest");
+    await screen.findByText("Individual lectures");
+    await waitFor(() =>
+      expect(calls.find((c) => c.table === "videos" && c.range != null)).toBeTruthy());
+    const q = calls.find((c) => c.table === "videos" && c.range != null);
+    // unknown durations last, id as the deterministic tie-break
+    expect(q.orders).toEqual(["duration_seconds nullslast", "id"]);
+    expect(screen.getByRole("combobox", { name: "Sort lessons" }).value).toBe("shortest");
   });
 });

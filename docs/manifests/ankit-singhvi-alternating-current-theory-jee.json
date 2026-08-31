@@ -1,0 +1,105 @@
+{
+  "version": 1,
+  "request_id": "b1aa8877-1632-48a8-9013-093a18de8b6d",
+  "youtube_playlist_id": "PLqatU21VofpszKtI__J4TzRNb3YFZEhBR",
+  "course_title": "Arihant Senior Alternating Current Theory",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "4rARPoMLDZU",
+      "chapter": "Alternating Current",
+      "lesson_number": 1
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "KA3svBxqRaA",
+      "chapter": "Alternating Current",
+      "lesson_number": 2
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "GMsx1loLxmQ",
+      "chapter": "Alternating Current",
+      "lesson_number": 3
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "kxzdm_iQCms",
+      "chapter": "Alternating Current",
+      "lesson_number": 4
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "i89OeO91MPA",
+      "chapter": "Alternating Current",
+      "lesson_number": 5
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "c6p4dw3nDho",
+      "chapter": "Alternating Current",
+      "lesson_number": 6
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "vjYmn8x2IJE",
+      "chapter": "Alternating Current",
+      "lesson_number": 7
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "GxETOi5UjKk",
+      "chapter": "Alternating Current",
+      "lesson_number": 8
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "kKParsnAvNk",
+      "chapter": "Alternating Current",
+      "lesson_number": 9
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "U9uKmFeicac",
+      "chapter": "Alternating Current",
+      "lesson_number": 10
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "5ucA8j1N6Uc",
+      "chapter": "Alternating Current",
+      "lesson_number": 11
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "VWavoFuqThk",
+      "chapter": "Alternating Current",
+      "lesson_number": 12
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "17834904-45b3-4069-b1e2-db6db0603aa8",
+    "youtube_playlist_id": "PLqatU21VofpszKtI__J4TzRNb3YFZEhBR",
+    "teacher": "Ankit Singhvi",
+    "reviewed_on": "2026-08-25",
+    "reviewed_by": "Codex evidence review",
+    "source_url": "https://www.youtube.com/@Ankit_Singhvi/about",
+    "source_label": "The official Arihant Senior channel identifies its owner and presenter as Ankit Singhvi; all twelve retained Class 12 Alternating Current video descriptions are signed by Ankit Singhvi and explicitly link his Physics for JEE Advanced XI and XII course",
+    "youtube_video_ids": [
+      "4rARPoMLDZU",
+      "KA3svBxqRaA",
+      "GMsx1loLxmQ",
+      "kxzdm_iQCms",
+      "i89OeO91MPA",
+      "c6p4dw3nDho",
+      "vjYmn8x2IJE",
+      "GxETOi5UjKk",
+      "kKParsnAvNk",
+      "U9uKmFeicac",
+      "5ucA8j1N6Uc",
+      "VWavoFuqThk"
+    ]
+  }
+}

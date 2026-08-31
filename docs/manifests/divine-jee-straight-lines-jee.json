@@ -1,0 +1,112 @@
+{
+  "version": 1,
+  "request_id": "61c0738a-a1c9-432a-be54-1423997aaddb",
+  "youtube_playlist_id": "PLcGMj6pJueMCBWLKLogya0lSyxS69hLTk",
+  "course_title": "Divine JEE Straight Lines",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "asg1sDxaOys",
+      "chapter": "Straight Lines",
+      "lesson_number": 13
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "oFH1cua4Zyg",
+      "chapter": "Straight Lines",
+      "lesson_number": 12
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "krhOlX5R5J8",
+      "chapter": "Straight Lines",
+      "lesson_number": 11
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "BvlNZClCY-E",
+      "chapter": "Straight Lines",
+      "lesson_number": 10
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "slAg2GjLPws",
+      "chapter": "Straight Lines",
+      "lesson_number": 9
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "SUo5ZK_Y-b0",
+      "chapter": "Coordinate Geometry",
+      "lesson_number": 8
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "Zc9CIgVL4oc",
+      "chapter": "Coordinate Geometry",
+      "lesson_number": 7
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "VOlDMqUkl_I",
+      "chapter": "Coordinate Geometry",
+      "lesson_number": 6
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "13qjDHR0xuE",
+      "chapter": "Straight Lines",
+      "lesson_number": 5
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "WVQs9KPmqRo",
+      "chapter": "Coordinate Geometry",
+      "lesson_number": 4
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "IWhwwp0_8MQ",
+      "chapter": "Coordinate Geometry",
+      "lesson_number": 3
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "nEggNjHZc98",
+      "chapter": "Coordinate Geometry",
+      "lesson_number": 2
+    },
+    {
+      "position": 13,
+      "youtube_video_id": "AJ4Wl6KTAYw",
+      "chapter": "Coordinate Geometry",
+      "lesson_number": 1
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "b1b9b8a0-344b-40dd-93c8-705bf4bec43a",
+    "youtube_playlist_id": "PLcGMj6pJueMCBWLKLogya0lSyxS69hLTk",
+    "teacher": "Krishan Bajiya",
+    "reviewed_on": "2026-08-21",
+    "reviewed_by": "Codex evidence review",
+    "source_url": "https://www.divinejee.com/",
+    "source_label": "The official Divine JEE website identifies Krishan Bajiya as its IIT Ropar Mathematics faculty, and the official channel owns all thirteen Straight Lines playlist videos",
+    "youtube_video_ids": [
+      "asg1sDxaOys",
+      "oFH1cua4Zyg",
+      "krhOlX5R5J8",
+      "BvlNZClCY-E",
+      "slAg2GjLPws",
+      "SUo5ZK_Y-b0",
+      "Zc9CIgVL4oc",
+      "VOlDMqUkl_I",
+      "13qjDHR0xuE",
+      "WVQs9KPmqRo",
+      "IWhwwp0_8MQ",
+      "nEggNjHZc98",
+      "AJ4Wl6KTAYw"
+    ]
+  }
+}

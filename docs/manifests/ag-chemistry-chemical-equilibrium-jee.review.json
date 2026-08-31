@@ -1,0 +1,111 @@
+{
+  "subject": "Chemistry",
+  "summary": {
+    "total": 10,
+    "auto": 9,
+    "review": 1,
+    "unmatched": 0
+  },
+  "rows": [
+    {
+      "position": 1,
+      "youtube_video_id": "kgNELa1nqow",
+      "title": "Introduction to Chemical Equilibrium | Lecture - 1 | Chemical Equilibrium | JEE | Ankit Gaur Sir",
+      "chapter": "Chemical Equilibrium",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review corrected the generic Introduction to Chemistry suggestion; the title, description, and playlist sequence all identify Chemical Equilibrium",
+      "alternatives": ["Chemical Equilibrium", "Introduction to Chemistry"]
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "6ePh4xHOs_0",
+      "title": "Law of Mass Action, Equilibrium Constant | Lecture - 2 | Chemical Equilibrium | JEE | Ankit Gaur Sir",
+      "chapter": "Chemical Equilibrium",
+      "confidence": 1,
+      "review": false,
+      "reason": "rules-only classifier matched the exact live chapter",
+      "alternatives": ["Chemical Equilibrium"]
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "rmnGfQlEADQ",
+      "title": "Relation of Kp & Kc, Expressions of Kn, Kx | Lecture-3 | Chemical Equilibrium | JEE | Ankit Gaur Sir",
+      "chapter": "Chemical Equilibrium",
+      "confidence": 1,
+      "review": false,
+      "reason": "rules-only classifier matched the exact live chapter",
+      "alternatives": ["Chemical Equilibrium"]
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "IqlKwjNzvXg",
+      "title": "Properties of Eq. Const. & Reaction Quotient | Lecture-4 | Chemical Equilibrium | JEE | Ankit Gaur",
+      "chapter": "Chemical Equilibrium",
+      "confidence": 1,
+      "review": false,
+      "reason": "rules-only classifier matched the exact live chapter",
+      "alternatives": ["Chemical Equilibrium"]
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "6H_fXBTw7m4",
+      "title": "Reaction Quotient & Degree of Dissociation| Lecture - 5 | Chemical Equilibrium | JEE | Ankit Gaur",
+      "chapter": "Chemical Equilibrium",
+      "confidence": 1,
+      "review": false,
+      "reason": "rules-only classifier matched the exact live chapter",
+      "alternatives": ["Chemical Equilibrium"]
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "aV_bZZDxdCU",
+      "title": "Degree of Dissociation & Vapour Density | Lecture - 6 | Chemical Equilibrium | JEE | Ankit Gaur",
+      "chapter": "Chemical Equilibrium",
+      "confidence": 1,
+      "review": false,
+      "reason": "rules-only classifier matched the exact live chapter",
+      "alternatives": ["Chemical Equilibrium"]
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "muNMiUHK1t0",
+      "title": "Heterogeneous Equilibrium Questions Solving | Lecture - 7 | Chemical Equilibrium | JEE | Ankit Gaur",
+      "chapter": "Chemical Equilibrium",
+      "confidence": 1,
+      "review": false,
+      "reason": "rules-only classifier matched the exact live chapter",
+      "alternatives": ["Chemical Equilibrium"]
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "J9KJuT2-E88",
+      "title": "Effect of Concentration & Pressure Change | Lecture- 8 | Chemical Equilibrium | JEE | Ankit Gaur Sir",
+      "chapter": "Chemical Equilibrium",
+      "confidence": 1,
+      "review": false,
+      "reason": "rules-only classifier matched the exact live chapter",
+      "alternatives": ["Chemical Equilibrium"]
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "fXFnDLS-IkA",
+      "title": "Effect of Temperature Change on Equilibrium | Lecture - 9 | Chemical Equilibrium | JEE | Ankit Gaur",
+      "chapter": "Chemical Equilibrium",
+      "confidence": 1,
+      "review": false,
+      "reason": "rules-only classifier matched the exact live chapter",
+      "alternatives": ["Chemical Equilibrium"]
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "VSGFXibY5oM",
+      "title": "Effect of Adding Inert Gas at Equilibrium | Lecture - 10 | Chemical Equilibrium | JEE | Ankit Gaur",
+      "chapter": "Chemical Equilibrium",
+      "confidence": 1,
+      "review": false,
+      "reason": "rules-only classifier matched the exact live chapter",
+      "alternatives": ["Chemical Equilibrium"]
+    }
+  ]
+}

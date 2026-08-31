@@ -1,0 +1,77 @@
+{
+  "version": 1,
+  "request_id": "6459c517-43d2-420f-bee3-561081c04b93",
+  "youtube_playlist_id": "PLlvzNT6o5XpJm8tf1xYRZSl3yKOcFzUZO",
+  "course_title": "INSP Optics Advanced Problems",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "c4Nr8ImWxNk",
+      "chapter": "Ray Optics and Optical Instruments",
+      "lesson_number": 1
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "5NAOZvmfsu0",
+      "chapter": "Ray Optics and Optical Instruments",
+      "lesson_number": 2
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "clr9YGtHYOk",
+      "chapter": "Modern Physics",
+      "lesson_number": 3
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "zszJFBaUjHg",
+      "chapter": "Ray Optics and Optical Instruments",
+      "lesson_number": 4
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "mFH2qVwaB18",
+      "chapter": "Ray Optics and Optical Instruments",
+      "lesson_number": 5
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "oyp-qq0POPY",
+      "chapter": "Wave Optics",
+      "lesson_number": 6
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "y2zK8wsjtCY",
+      "chapter": "Ray Optics and Optical Instruments",
+      "lesson_number": 7
+    }
+  ],
+  "exclusions": [
+    {
+      "position": 5,
+      "youtube_video_id": "2Q3XOo1Me6I",
+      "reason": "59-second channel promotion rather than an instructional lecture"
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "839f70ff-3ce2-44ac-b935-5a2c2ac25897",
+    "youtube_playlist_id": "PLlvzNT6o5XpJm8tf1xYRZSl3yKOcFzUZO",
+    "teacher": "Nitin Sachan",
+    "reviewed_on": "2026-08-19",
+    "reviewed_by": "Codex evidence review",
+    "source_url": "https://www.inspedu.in/about-us",
+    "source_label": "The official Indian School of Physics site identifies Nitin Sachan as its founder and says he initiated the INSP YouTube channel; the owned playlist's lecture descriptions also use his Nitin Sachan email identity",
+    "youtube_video_ids": [
+      "c4Nr8ImWxNk",
+      "5NAOZvmfsu0",
+      "clr9YGtHYOk",
+      "zszJFBaUjHg",
+      "mFH2qVwaB18",
+      "oyp-qq0POPY",
+      "y2zK8wsjtCY"
+    ]
+  }
+}

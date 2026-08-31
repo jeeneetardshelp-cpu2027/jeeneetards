@@ -21,7 +21,9 @@ import { Eyebrow, Pill, Surface } from "./ui.jsx";
 import { Reveal, useReveal } from "./motion.jsx";
 import { useStructuredData } from "./PageMetadata.jsx";
 import NotFound from "./NotFound.jsx";
-import { ResourceCard, SECTION_ART } from "./testCards.jsx";
+import { OnSiteResourceCard, ResourceCard, SECTION_ART } from "./testCards.jsx";
+import { RELEASE_CAPABILITIES } from "./releaseCapabilities.js";
+import { ON_SITE_TEST_RESOURCES } from "./studyMaterialLandings.js";
 import { testPageSchemas } from "./testPageStructuredData.js";
 import {
   TEST_SECTIONS,
@@ -48,6 +50,12 @@ export default function ExamTestsPage() {
   const free = section.resources.filter(isFreeToTake).length;
   const allFree = sectionIsAllFree(section);
   const others = TEST_SECTIONS.filter((s) => s.id !== section.id);
+  // Papers this site itself curates for the same exam (today: the JEE Main
+  // paper landing). Gated on the same release flag as the /materials routes,
+  // so the card can never point at a not-yet-released page.
+  const onSite = RELEASE_CAPABILITIES.studyMaterials
+    ? ON_SITE_TEST_RESOURCES[section.id] ?? null
+    : null;
 
   return (
     <div className="min-h-screen bg-canvas text-ink">
@@ -89,7 +97,7 @@ export default function ExamTestsPage() {
             </div>
           </Reveal>
 
-          {count === 0 ? (
+          {count === 0 && !onSite ? (
             <Reveal delay={1}>
               <Surface className="mt-10 max-w-2xl">
                 <h2 className="text-h3 text-ink">Nothing listed yet</h2>
@@ -113,6 +121,7 @@ export default function ExamTestsPage() {
                 {section.resources.map((r) => (
                   <ResourceCard key={r.url} resource={r} />
                 ))}
+                {onSite && <OnSiteResourceCard resource={onSite} />}
               </ul>
             </Reveal>
           )}
@@ -142,9 +151,14 @@ export default function ExamTestsPage() {
             <Surface className="max-w-3xl">
               <Eyebrow>Before you click</Eyebrow>
               <p className="mt-4 text-sm leading-relaxed text-ink-2">
-                These are third-party websites. Their questions, scoring,
-                pricing, accounts and privacy practices are their own, and any
-                of them may change or withdraw a test at any time.
+                {/* Stays literally true when the grid above carries the one
+                    card that does NOT leave the site. */}
+                {onSite
+                  ? 'Apart from the card marked "On JEENEETARD", these are third-party websites.'
+                  : "These are third-party websites."}{" "}
+                Their questions, scoring, pricing, accounts and privacy
+                practices are their own, and any of them may change or
+                withdraw a test at any time.
               </p>
               <p className="mt-3 text-sm leading-relaxed text-ink-2">
                 JEENEETARD does not conduct these tests, does not store your

@@ -81,6 +81,7 @@ function Row({ item, group, query, active, onPick, id }) {
         {group === "lecture" && (
           <YouTubeThumbnail
             videoId={item.extra?.youtube_video_id}
+            quality="mqdefault"
             className="aspect-video w-20 shrink-0 rounded-md border border-hairline sm:w-24"
           />
         )}
@@ -140,7 +141,7 @@ export default function UniversalSearch() {
   const [text, setText] = useState(urlQuery);
   useEffect(() => { setText(urlQuery); }, [urlQuery]);
 
-  const { groups, loading, error, tooShort, retry } = useUniversalSearch(text, {
+  const { groups, loading, error, tooShort, retry, page, setPage } = useUniversalSearch(text, {
     type, limit: type ? 20 : 5,       // one group open -> show more of it
   });
 
@@ -340,7 +341,9 @@ export default function UniversalSearch() {
                 <section key={g.key}>
                   <h2 className={`flex min-h-11 items-center justify-between border-b ${t.border} ${t.input} px-4 py-1.5 text-[11px] font-semibold uppercase tracking-wide ${t.muted}`}>
                     <span>{g.label}</span>
-                    {bucket.total > bucket.rows.length && (
+                    {/* "See all" narrows to this group; once it IS the active
+                        filter, paging happens through "Show more" below. */}
+                    {type !== g.key && bucket.total > bucket.rows.length && (
                       <button
                         onClick={() => setType(g.key)}
                         className="min-h-11 px-2 text-[11px] font-medium normal-case tracking-normal"
@@ -366,6 +369,35 @@ export default function UniversalSearch() {
                       );
                     })}
                   </ul>
+                  {/* Paging exists only in the single-type view: "See all 43"
+                      used to promise 43 and stop at 20. The next page APPENDS —
+                      the rows above stay put (same ids, same running index), so
+                      the keyboard cursor and scroll position survive, and the
+                      new rows join the same arrow-key list. */}
+                  {type === g.key && bucket.total > bucket.rows.length && (
+                    <button
+                      onClick={() => setPage(page + 1)}
+                      disabled={loading}
+                      className={`flex min-h-11 w-full items-center justify-center gap-2 border-t ${t.border} px-4 text-sm font-medium ${t.hover} disabled:opacity-60`}
+                      style={{ color: BRAND.teal }}
+                    >
+                      {loading ? (
+                        <>
+                          <Loader2 className="h-4 w-4 animate-spin" /> Loading…
+                        </>
+                      ) : (
+                        `Show more (${bucket.rows.length} of ${bucket.total})`
+                      )}
+                    </button>
+                  )}
+                  {/* End of the results, said outright — a button that silently
+                      vanished would leave "did it break?" hanging. Only after
+                      paging: a list complete on page one needs no footer. */}
+                  {type === g.key && page > 0 && bucket.rows.length >= bucket.total && (
+                    <p className={`border-t ${t.border} px-4 py-3 text-center text-xs ${t.muted}`}>
+                      All {bucket.total} results shown.
+                    </p>
+                  )}
                 </section>
               );
             })}

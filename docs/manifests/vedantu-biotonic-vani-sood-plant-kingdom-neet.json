@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "request_id": "570f6c59-dc89-432f-94c6-451fcdc662e3",
+  "youtube_playlist_id": "PLw4_E5WmrJxvwlM80VlGKJ468fmBrs6A_",
+  "course_title": "Vedantu Biotonic Plant Kingdom",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "2arlcClLU90",
+      "chapter": "Plant Kingdom",
+      "lesson_number": 1
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "d40mfsnS_h0",
+      "chapter": "Plant Kingdom",
+      "lesson_number": 2
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "STDYp2IeNcs",
+      "chapter": "Plant Kingdom",
+      "lesson_number": 3
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "pDyxxrmC9L0",
+      "chapter": "Plant Kingdom",
+      "lesson_number": 4
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "3U9JvxcmNUA",
+      "chapter": "Plant Kingdom",
+      "lesson_number": 5
+    }
+  ],
+  "exclusions": [
+    {
+      "position": 6,
+      "youtube_video_id": "FA_So2X4xOw",
+      "reason": "General Class 11 diagram-special Quiztopedia MCQ session outside the official five-lecture Plant Kingdom sequence; excluded to keep this course chapter-specific"
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "9e983717-ac59-43ab-a789-3621b117a0e7",
+    "youtube_playlist_id": "PLw4_E5WmrJxvwlM80VlGKJ468fmBrs6A_",
+    "teacher": "Vani Sood",
+    "reviewed_on": "2026-08-26",
+    "reviewed_by": "Codex evidence review",
+    "source_url": "https://www.youtube.com/playlist?list=PLw4_E5WmrJxvwlM80VlGKJ468fmBrs6A_",
+    "source_label": "The official Vedantu Biotonic for NEET channel owns this playlist, its title explicitly credits Dr. Vani Sood, and the retained lecture descriptions or tags identify Vani Ma'am or Vani Sood across the stated L1-L5 Plant Kingdom schedule",
+    "youtube_video_ids": [
+      "2arlcClLU90",
+      "d40mfsnS_h0",
+      "STDYp2IeNcs",
+      "pDyxxrmC9L0",
+      "3U9JvxcmNUA"
+    ]
+  }
+}

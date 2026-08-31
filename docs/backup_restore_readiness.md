@@ -3,6 +3,868 @@
 This is a release control for database-changing work. It does not attest that a
 backup exists or that a restore exercise has passed.
 
+## NS Sir Structural Identification and Practical Organic Chemistry production import — 31 August 2026
+
+- The owner approved the exact NS Sir Structural Identification and Practical
+  Organic Chemistry production import on project `kezelafqhgqrprpadmlf`, the
+  link to existing verified faculty `3` (`Neeraj Saini`), and reuse of his
+  existing Mohit Tyagi / Chemistry / JEE contexts. The immutable manifest
+  SHA-256 was
+  `1dd9ec8416f583697f001a24dd9a3d75785a913d78585e28e325b3127dce7b4b`,
+  its importer source snapshot SHA-256 was
+  `6da767d41b17e6e7007c5a3738744cf31cf0efc416ff97bb0ef26a05ee3c3fe8`,
+  its request ID was `05b4eaaa-a4a2-4122-b3b7-a48af8bd33c4`, and its reviewed
+  teacher-evidence decision was `948a837d-81c5-4bff-b348-cfb881df47cb`.
+- The signed-in Supabase dashboard identified project `youtube`, reference
+  `kezelafqhgqrprpadmlf`, branch `main` (`Production`). Point-in-Time Recovery
+  was enabled with changes logged every two minutes and up to seven days of
+  retention. In dashboard timezone `(UTC+05:30)`, the displayed restore window
+  ran from `25 Aug 2026, 00:02:38` through `31 Aug 2026, 16:51:31`. Storage
+  objects remain excluded from database backups.
+- The immediate fail-closed preflight matched the exact 483-course,
+  5,451-video, 5,457-membership, 238-faculty-link, and 63-import-audit baseline;
+  existing channel `1`; Chemistry subject `2`; JEE goal/category `1`; reviewed
+  chapters `89` (`Hydrocarbons`), `53` (`Structural Isomerism`), and `94`
+  (`Purification and Characterisation of Organic Compounds`); and the complete
+  existing faculty `3` graph. Playlist, title, all 20 source-video, request, and
+  course-faculty-link collisions were zero. The v12 mapped-import capability
+  was complete and all three reviewed chapters already existed.
+- The refreshed anonymous dry-run found all 20 published lectures usable,
+  duration-complete, and embeddable; none carried captions. It confirmed exact
+  reviewed positions 1–20, the immutable manifest and source hashes, JEE-only
+  scope, Class 11 and Dropper applicability, full-course / Hinglish / advanced
+  metadata, one `ok` plan, and zero findings, exclusions, review items, or
+  blockers. The focused ingestion suite passed 97/97 before the write.
+- Atomic v12 audit `64` created course `505`, added 20 new videos and 20
+  memberships in exact source order, reused zero videos, and created no chapter.
+  The reviewed distribution was four Hydrocarbons lessons, three Structural
+  Isomerism lessons, and 13 Purification and Characterisation lessons. Exact
+  stored metadata, order, taxonomy, scope, duration, embedding, hashes, and
+  audit invariants were independently checked before the faculty link.
+- The separately guarded faculty step inserted only the position-1 instructor
+  link from course `505` to existing verified teacher `3`. No teacher, alias,
+  institute, subject, or learning-goal row was created or changed. Both verified
+  aliases (`NS Sir` and `Neeraj Saini Sir`), the primary Mohit Tyagi institute,
+  Chemistry subject, and JEE goal remained exact. The anonymous faculty search
+  stayed unambiguous and the public profile now lists courses `50`, `57`, `58`,
+  `63`, and `505`.
+- Independent course verification passed 8/8 for both Class 11 and Dropper.
+  The anonymous public postflight confirmed course `505`, all 20 ordered and
+  embeddable lessons, the exact instructor link, and final counts of 484
+  courses, 5,471 unique videos, 5,477 memberships, 239 faculty links, and 64
+  import-audit rows. The production catalogue report showed JEE 259, NEET 283,
+  Chemistry 148, Class 11 coverage 298, Dropper coverage 265, and zero duplicate
+  candidates. No schema migration, deployment, commit, or push was performed.
+
+## Physics Galaxy Kinetic Theory of Gases production import — 31 August 2026
+
+- The owner approved the exact Physics Galaxy Kinetic Theory of Gases Concept
+  Course as a JEE-only production import on project `kezelafqhgqrprpadmlf`,
+  reuse of existing verified faculty `47` (`Ashish Arora`), and reuse of his
+  existing Physics Galaxy / Physics / JEE contexts. The immutable manifest
+  SHA-256 was
+  `8998b7c6d3d4b9ac0b2690013a46739b5c534296544869bc2600776341ba9ca4`,
+  its fresh YouTube source snapshot SHA-256 was
+  `20b744cf0f939fa320edc3d1e4ac84da7a0adbb695556ec724740d319ef97bd2`,
+  its request ID was `c0f19c0e-f77a-42ee-b8ff-be32610676d1`, and its reviewed
+  teacher-evidence decision was `e620669e-c6b0-4ef7-b16c-b0631c6c8921`.
+- The signed-in Supabase dashboard identified project `youtube`, reference
+  `kezelafqhgqrprpadmlf`, branch `main` (`Production`). Point-in-Time Recovery
+  was enabled with changes logged every two minutes and up to seven days of
+  retention. In dashboard timezone `(UTC+05:30)`, the displayed restore window
+  ran from `25 Aug 2026, 00:02:38` through `31 Aug 2026, 15:11:28`. Storage
+  objects remain excluded from database backups. The dashboard still showed an
+  outstanding-invoices warning that the owner should resolve to avoid service
+  disruption.
+- The immediate fail-closed preflight matched the exact 482-course,
+  5,419-video, 5,425-membership, 237-faculty-link, and 63-import-audit baseline;
+  maxima course `503` and video `5523`; channel `214`; Physics subject `1`; JEE
+  goal/category `1`; Kinetic Theory of Gases chapter `275`; and the complete
+  existing faculty `47` graph. Playlist, title, all 32 source-video, request,
+  and course-faculty-link collisions were zero. The existing Physics Galaxy
+  institute context was deliberately preserved exactly as found, including its
+  `is_primary = false` marker; no context normalization was authorized.
+- The refreshed anonymous dry-run found all 32 published lectures usable,
+  duration-complete, and embeddable; 31 carried captions. It confirmed exact
+  reviewed positions 1–32, the immutable manifest and source hashes, JEE-only
+  scope, Class 11 and Dropper applicability, full-course / English /
+  intermediate metadata, one reused chapter, one `ok` plan, and zero findings,
+  exclusions, review items, or blockers. The focused ingestion suite passed
+  80/80 immediately before the write.
+- The guarded reviewed single-chapter import created course `504`, videos
+  `5524`–`5555`, and 32 memberships in exact source order while reusing channel
+  `214` and chapter `275`. It added 32 videos, reused zero, and created no
+  chapter. This legacy single-chapter path has no audit-backed request replay,
+  so `playlist_import_audit` correctly remained at `63`; exact stored course,
+  video, taxonomy, scope, duration, embedding, and order invariants were checked
+  before the faculty link.
+- The separately guarded faculty step inserted only the position-1 instructor
+  link from course `504` to existing verified teacher `47`. No teacher, alias,
+  institute, subject, or learning-goal row was created or changed. Ashish
+  Arora's sole verified full-name alias, sole Physics Galaxy institute context,
+  Physics subject, and JEE goal remained exact, and his public profile now lists
+  exactly courses `449` and `504`.
+- Independent course verification passed 9/9 for both Class 11 and Dropper.
+  The anonymous public postflight confirmed course `504`, all 32 ordered and
+  embeddable lessons, the exact instructor link, two Kinetic Theory of Gases
+  courses, and final counts of 483 courses, 5,451 unique videos, 5,457
+  memberships, 238 faculty links, and 63 import-audit rows. The production
+  catalogue report showed JEE 258, NEET 283, Physics 106, Biology 109, Class 11
+  coverage 297, Dropper coverage 264, and zero duplicate candidates. No schema
+  migration, deployment, commit, or push was performed.
+
+## Biomentors Biodiversity and Conservation production import — 31 August 2026
+
+- The owner approved the exact Biomentors Biodiversity and Conservation for
+  NEET manifest for production project `kezelafqhgqrprpadmlf`, reuse of
+  existing verified faculty `91` (`Geetendra Singh`), and reuse of his existing
+  Biomentors Classes Online / Biology / NEET contexts. The immutable manifest
+  SHA-256 was
+  `b557eda7412aacafe96778eddabd0b6be9434958ba18bb7338e99b16f97857a3`,
+  its fresh YouTube source snapshot SHA-256 was
+  `abb5ec0ea18a1f31789fc03dabd1e2c828203c29440a3ed560c4c73e32153e68`,
+  and its request ID was `ebe699c0-523e-4491-ac70-6c8752f1ad6f`.
+- The signed-in Supabase dashboard identified project `youtube`, reference
+  `kezelafqhgqrprpadmlf`, branch `main` (`Production`). Point-in-Time Recovery
+  was enabled with changes logged every two minutes and up to seven days of
+  retention. In dashboard timezone `(UTC+05:30)`, the displayed restore window
+  ran from `25 Aug 2026, 00:02:38` through `31 Aug 2026, 14:27:26`. Storage
+  objects remain excluded from database backups. The dashboard still showed an
+  outstanding-invoices warning that the owner should resolve to avoid service
+  disruption.
+- The immediate fail-closed preflight matched the expected 481-course,
+  5,414-video, and 5,420-membership production baseline; channel `259`, Biology
+  subject `4`, NEET goal/category `2`, Biodiversity and Conservation chapter
+  `99`, and the complete existing faculty `91` graph; and zero playlist, title,
+  source-video, request, or faculty-link collision. The fresh anonymous dry-run
+  found 5/5 published, usable, duration-complete, and embeddable lectures, five
+  exact reviewed assignments in lesson order, one `ok` plan, and zero findings,
+  exclusions, review items, or blockers.
+- The guarded reviewed single-chapter import created course `503`, videos
+  `5519`–`5523`, and five memberships in the exact source order while reusing
+  channel `259` and chapter `99`. It reused no video and created no chapter.
+  This legacy single-chapter path has no audit-backed request replay, so
+  `playlist_import_audit` correctly remained at `63`; its exact stored course,
+  video, taxonomy, scope, duration, embedding, and lesson-order invariants were
+  independently checked before the faculty link.
+- The separately guarded faculty step inserted only the position-1 instructor
+  link from course `503` to existing verified teacher `91`. No teacher, alias,
+  institute, subject, or learning-goal row was created or changed; his sole
+  verified full-name alias and sole primary Biomentors Classes Online, Biology,
+  and NEET contexts remained exact.
+- Independent course verification passed 11/11 for both Class 12 and Dropper.
+  The anonymous public postflight confirmed the unique rank-1 faculty identity,
+  unchanged one-alias profile and contexts, three linked Geetendra Singh
+  courses, exact public course metadata, one instructor link, and all five
+  ordered embeddable lessons. Final counts were 482 courses, 5,419 unique
+  videos, and 5,425 memberships; JEE remained 257 courses, while the catalogue
+  report showed 283 NEET courses, 109 Biology courses, Class 12 coverage of 281,
+  Dropper coverage of 263, and zero duplicate candidates. No schema migration,
+  deployment, commit, or push was performed.
+
+## LearnoHub Class 12 Biology One-Shot production import — 31 August 2026
+
+- The owner approved the exact LearnoHub Class 12 Biology One-Shot Course
+  manifest for production project `kezelafqhgqrprpadmlf`. The immutable
+  manifest SHA-256 was
+  `8aecd70139eacfb03912e5e70c524a2cf80a4605b89ce66a0d421b3583421eff`,
+  its fresh YouTube source snapshot SHA-256 was
+  `d81034a09ab82e5ba8db08beb4ee474fa061cdb3103f91d830d08aee7a067776`,
+  and its request ID was `bc434c12-ec26-40da-a10e-fc7de8af8865`.
+- The signed-in Supabase dashboard identified project `youtube`, reference
+  `kezelafqhgqrprpadmlf`, branch `main` (`Production`). Point-in-Time Recovery
+  was enabled with changes logged every two minutes and up to seven days of
+  retention. In dashboard timezone `(UTC+05:30)`, the displayed restore window
+  ran from `25 Aug 2026, 00:02:38` through `31 Aug 2026, 00:06:58`. Storage
+  objects remain excluded from database backups. The dashboard still showed an
+  outstanding-invoices warning that the owner should resolve to avoid service
+  disruption.
+- The immediate fail-closed preflight matched the expected 480-course,
+  5,399-video, and 5,405-membership production baseline, all 13 reviewed live
+  Class 12 Biology chapters, and zero playlist, title, channel, source-video,
+  request, exact-faculty, slug, or alias collision. The refreshed anonymous
+  dry-run found 15/15 published, usable, duration-complete, and embeddable
+  lectures, 15 exact reviewed chapter assignments, one `ok` plan, and zero
+  review or blocked plans. The only fuzzy faculty result was unrelated Biology
+  teacher Swagata Mukherjee and was not reused.
+- Atomic v12 audit `63` created course `502`, channel `267`, 15 videos, and 15
+  memberships in the reviewed source order across the 13 existing chapters. It
+  reused no video and created no chapter.
+- The separately guarded faculty step created verified teacher `97`, `Roshni
+  Mukherjee`, with only the automatic verified full-name alias. It added exactly
+  the primary `LearnoHub - Class 11, 12` institute context, Biology subject
+  context, NEET goal context, and one position-1 instructor link to course
+  `502`; no additional alias was created.
+- Independent course verification passed 10/10 for both Class 12 and Dropper.
+  The anonymous public postflight confirmed the unique exact-alias search hit,
+  non-ambiguous verified faculty profile, single public course, exact course
+  metadata, and single instructor link. Final counts were 481 courses, 5,414
+  unique videos, and 5,420 memberships; JEE remained 257 courses, while the
+  catalogue report showed 282 NEET courses, 108 Biology courses, and zero
+  duplicate candidates. No schema migration, deployment, commit, or push was
+  performed.
+
+## Biomentors Human Reproduction production import — 27 August 2026
+
+- The owner approved the exact Biomentors Human Reproduction for NEET manifest
+  for production project `kezelafqhgqrprpadmlf`. The immutable manifest
+  SHA-256 was
+  `4edc9e4828701f02ce0223ff2792f8fb7fc639b12d1e20b18b7668a139582a35`,
+  its fresh YouTube source snapshot SHA-256 was
+  `c7944a2190a37b3887884ac2a00c1d38e49d59a5fd13e944b7c698ec6202b9c0`,
+  and its request ID was `62deee8f-e9ee-4d08-beaf-01c784449260`.
+- The signed-in Supabase dashboard identified project `youtube`, reference
+  `kezelafqhgqrprpadmlf`, branch `main` (`Production`). Point-in-Time Recovery
+  was enabled with changes logged every two minutes and up to seven days of
+  retention. In dashboard timezone `(UTC+05:30)`, the displayed restore window
+  ran from `21 Aug 2026, 00:02:37` through `27 Aug 2026, 17:53:02`. Storage
+  objects remain excluded from database backups. The dashboard still showed an
+  outstanding-invoices warning that the owner should resolve to avoid service
+  disruption.
+- The immediate fail-closed preflight matched the expected 479-course,
+  5,381-video, and 5,387-membership production baseline; Biology subject `4`,
+  NEET goal/category `2`, existing Human Reproduction chapter `113`, channel
+  `259`, and verified teacher `91`; and zero playlist, source-video, request, or
+  title collision. It confirmed exact reuse of Geetendra Singh's sole full-name
+  alias, primary Biomentors institute context, Biology subject context, and
+  NEET learning-goal context. The refreshed anonymous dry-run found 18/18
+  usable and embeddable lectures, six reviewed assignments, zero exclusions,
+  one `ok` plan, and zero findings or blockers.
+- The guarded legacy single-chapter import created course `501`, 18 videos, and
+  18 memberships in the reviewed source order while reusing channel `259`. It
+  reused no video and created no chapter. This legacy path has no audit-backed
+  request replay, so `playlist_import_audit` correctly remained at 62; exact
+  stored invariants were independently verified before the faculty link.
+- The separately guarded link step added only one instructor link from course
+  `501` to existing verified teacher `91`, `Geetendra Singh`. No teacher, alias,
+  institute, subject, or learning-goal row was created or changed. The existing
+  Biomentors Classes Online, Biology, and NEET contexts were preserved exactly.
+- Independent course verification passed 11/11 for both Class 12 and Dropper.
+  The anonymous public postflight confirmed exact metadata and lesson order,
+  18 embeddable Human Reproduction lectures, unique exact faculty search, the
+  unchanged faculty identity and contexts, and two linked Geetendra Singh
+  courses. Final counts were 480 courses, 5,399 unique videos, and 5,405
+  memberships; JEE remained 257 courses, while the catalogue report showed 281
+  NEET courses, 107 Biology courses, and zero duplicate candidates. No schema
+  migration, deployment, commit, or push was performed.
+
+## Anmol Sharma Molecular Basis of Inheritance production import — 27 August 2026
+
+- The owner approved the exact Anmol Sharma Molecular Basis of Inheritance NCERT
+  Course manifest for production project `kezelafqhgqrprpadmlf`. The immutable
+  manifest SHA-256 was
+  `dfdd226b1a0da9895a34d92578d32ff90f2f751106f48112b5f46811688c075e`,
+  its fresh YouTube source snapshot SHA-256 was
+  `23de758aad5e4a32f24c9095088c99b37c00e5d331a1c2d2d820c487b14ad670`,
+  and its request ID was `a469e1fc-8bd1-4ff1-aeb7-3aafa31b9359`.
+- The signed-in Supabase dashboard identified project `youtube`, reference
+  `kezelafqhgqrprpadmlf`, branch `main` (`Production`). Point-in-Time Recovery
+  was enabled with changes logged every two minutes and up to seven days of
+  retention. In dashboard timezone `(UTC+05:30)`, the displayed restore window
+  ran from `21 Aug 2026, 00:02:37` through `27 Aug 2026, 17:31:02`. Storage
+  objects remain excluded from database backups. The dashboard still showed an
+  outstanding-invoices warning that the owner should resolve to avoid service
+  disruption.
+- The immediate fail-closed preflight matched the expected 478-course,
+  5,375-video, and 5,381-membership production baseline; Biology subject `4`,
+  NEET goal/category `2`, and existing Molecular Basis of Inheritance chapter
+  `128`; and zero new playlist, source-video, request, or title collision. It
+  independently confirmed exact reuse of channel `264`, verified teacher `96`,
+  full-name alias `151`, the sole primary channel context, Biology/NEET
+  contexts, and the existing instructor link to course `499`. The refreshed
+  anonymous dry-run found 7 playlist items, 6 usable and embeddable lectures,
+  six reviewed assignments, zero exclusions, one `ok` plan, and zero findings
+  or blockers.
+- The guarded legacy single-chapter import created course `500`, videos `5480`–
+  `5485`, and memberships `5531`–`5536` in the reviewed source order while
+  reusing channel `264`. It reused no video and created no chapter. The
+  unavailable seventh playlist item was absent from usable YouTube metadata.
+  This legacy path has no audit-backed request replay, so
+  `playlist_import_audit` correctly remained at 62; exact stored invariants were
+  independently verified before the teacher link.
+- The separately guarded link step added only one instructor link from course
+  `500` to existing verified teacher `96`, `Anmol Sharma`. No teacher, alias,
+  institute, subject, or learning-goal row was created or changed. The existing
+  Anmol Sharma Biology primary institute, Biology subject, and NEET goal
+  contexts were preserved exactly.
+- Independent course verification passed 10/10 for both Class 12 and Dropper.
+  The anonymous public postflight confirmed exact metadata and lesson order,
+  six embeddable Molecular Basis of Inheritance lectures, unique exact faculty
+  search, the unchanged one-alias and one-institute public faculty profile, and
+  two linked Anmol Sharma courses. Final counts were 479 courses, 5,381 unique
+  videos, and 5,387 memberships; JEE remained 257 courses, while the catalogue
+  report showed 280 NEET courses, 106 Biology courses, and zero duplicate
+  candidates. No schema migration, deployment, commit, or push was performed.
+
+## Anmol Sharma Cell: The Unit of Life production import — 27 August 2026
+
+- The owner approved the exact Anmol Sharma Cell: The Unit of Life NCERT Course
+  manifest for production project `kezelafqhgqrprpadmlf`. The immutable
+  manifest SHA-256 was
+  `8899493bb2f121171816d7a8819ebdf5b4d223a0a43c011e889451a583e466f2`,
+  its fresh YouTube source snapshot SHA-256 was
+  `0f6d12df0b6772667a155dee9bbb42a0e5003d5bf88ffb7892d48d0cd6bb9887`,
+  and its request ID was `0ee29858-2b9d-4766-bf17-4d6af6a824fc`.
+- The signed-in Supabase dashboard identified project `youtube`, reference
+  `kezelafqhgqrprpadmlf`, branch `main` (`Production`). Point-in-Time Recovery
+  was enabled with changes logged every two minutes and up to seven days of
+  retention. In dashboard timezone `(UTC+05:30)`, the displayed restore window
+  ran from `21 Aug 2026, 00:02:37` through `27 Aug 2026, 16:20:59`. Storage
+  objects remain excluded from database backups. The dashboard still showed an
+  outstanding-invoices warning that the owner should resolve to avoid service
+  disruption.
+- The immediate fail-closed preflight matched the expected 477-course,
+  5,368-video, and 5,374-membership production baseline; Biology subject `4`,
+  NEET goal/category `2`, and existing Cell: The Unit of Life chapter `107`;
+  and zero playlist, channel, source-video, request, title, exact faculty, or
+  alias collision. Public fuzzy search returned Om Sharma Sir, a Mathematics/JEE
+  faculty member, which was explicitly rejected as a different person. The
+  refreshed anonymous dry-run found 8 playlist items, 7 usable and embeddable
+  lectures, seven reviewed assignments, zero exclusions, one `ok` plan, and
+  zero findings or blockers.
+- The guarded legacy single-chapter import created course `499`, channel `264`,
+  videos `5473`–`5479`, and memberships `5524`–`5530` in the reviewed source
+  order. It reused no video and created no chapter. The unavailable eighth
+  playlist item was absent from usable YouTube metadata. This legacy path has
+  no audit-backed request replay, so `playlist_import_audit` correctly remained
+  at 62; exact stored invariants were independently verified before the faculty
+  write.
+- The separately guarded faculty step created verified teacher `96`, `Anmol
+  Sharma`, with only the automatic verified full-name alias. It added exactly
+  the sole primary Anmol Sharma Biology institute context, Biology subject
+  context, NEET goal context, and one instructor link to course `499`; no
+  additional alias was created.
+- Independent course verification passed 10/10 for both Class 11 and Dropper.
+  The anonymous public postflight confirmed exact metadata and lesson order,
+  seven embeddable Cell: The Unit of Life lectures, unique exact faculty search,
+  the one-alias public faculty profile, primary channel/Biology/NEET context,
+  and instructor link. Final counts were 478 courses, 5,375 unique videos, and
+  5,381 memberships; JEE remained 257 courses, while the catalogue report
+  showed 279 NEET courses, 105 Biology courses, and zero duplicate candidates.
+  No schema migration, deployment, commit, or push was performed.
+
+## Rakshita Singh Plant Physiology production import — 26 August 2026
+
+- The owner approved the exact Rakshita Singh Plant Physiology Crash Course
+  manifest for production project `kezelafqhgqrprpadmlf`. The immutable
+  manifest SHA-256 was
+  `2cf3917c0b18f78f9fbfdfd12835e38c7365a55b69bc0bdfc8896c431ba0f9c7`,
+  its fresh YouTube source snapshot SHA-256 was
+  `7208ccd07eb1514fbc123f2055a771c1c70e4f59b5920674cb8e3a82788a91ab`,
+  and its request ID was `e1f672c2-ad81-471a-a1fe-d0e810133f51`.
+- The immediately preceding approved import had verified production PITR on the
+  same date. The browser control surface was unavailable for another dashboard
+  refresh at this checkpoint, so no stronger current-backup claim is made. No
+  backup setting was changed.
+- The immediate fail-closed preflight matched the expected 476-course,
+  5,365-video, and 5,371-membership production baseline; Biology subject `4`,
+  NEET goal/category `2`, and existing chapters `119`, `120`, and `124`; and
+  zero playlist, channel, source-video, request, title, faculty, or alias
+  collision. The refreshed anonymous dry-run found 5/5 usable source videos,
+  three reviewed assignments, two reviewed exclusions, one `ok` plan, and zero
+  findings or blockers.
+- Atomic v12 audit `62` created course `498`, channel `263`, videos `5470`–
+  `5472`, and memberships `5521`–`5523` in the reviewed source order. They map
+  respectively to Photosynthesis in Higher Plants, Respiration in Plants, and
+  Plant Growth and Development. It reused no video and created no chapter.
+  Transport in Plants and Mineral Nutrition were excluded because neither has
+  a matching chapter in the current live Biology taxonomy.
+- The separately guarded faculty step created verified teacher `95`, `Rakshita
+  Singh`, with only the automatic verified full-name alias. It added exactly
+  the sole primary Dr. Rakshita Singh institute context, Biology subject
+  context, NEET goal context, and one instructor link to course `498`; no
+  additional alias was created.
+- Independent course verification passed 10/10 for both Class 11 and Dropper.
+  The anonymous public postflight confirmed exact metadata and lesson order,
+  three embeddable lectures, unique faculty search, the one-alias public faculty
+  profile, primary channel/Biology/NEET context, instructor link, and exact
+  audit binding. Final counts were 477 courses, 5,368 unique videos, and 5,374
+  memberships; JEE remained 257 courses, while the catalogue report showed 278
+  NEET courses, 104 Biology courses, and zero duplicate candidates. No schema
+  migration, deployment, commit, or push was performed.
+
+## Vedantu Biotonic Plant Kingdom production import — 26 August 2026
+
+- The owner approved the exact Vedantu Biotonic Plant Kingdom manifest for
+  production project `kezelafqhgqrprpadmlf`. The immutable manifest SHA-256 was
+  `5b0d9fcec276100ddb2ab4fc45cf81054d3b6acda1e05748a599d3877cddf86a`,
+  its fresh YouTube source snapshot SHA-256 was
+  `1c1750f55a31c51395bf77d2b9f18b1da9f8c11dcc905e30d94b50057015ce9d`,
+  and its request ID was `570f6c59-dc89-432f-94c6-451fcdc662e3`.
+- The immediately preceding approved import had verified production PITR on the
+  same date. The browser control surface was unavailable for a second dashboard
+  refresh at this checkpoint, so no stronger current-backup claim is made. No
+  backup setting was changed.
+- The immediate fail-closed preflight matched the expected 475-course,
+  5,360-video, and 5,366-membership production baseline; production's empty
+  `app_environment`; Biology `4`, NEET goal/category `2`, and existing Plant
+  Kingdom chapter `121`; and zero playlist, channel, source-video, request,
+  title, faculty, or alias collision. The fresh anonymous dry-run found 6/6
+  usable source videos, five reviewed assignments, one reviewed exclusion, one
+  `ok` plan, and zero findings or blockers.
+- The guarded single-chapter import created course `497`, channel `262`, five
+  videos, and five memberships in the reviewed L1-L5 source order. It reused no
+  video and created no chapter. The general diagram-special Quiztopedia MCQ
+  session at source position 6 was excluded. This legacy merge path emitted no
+  `playlist_import_audit` row, so its exact stored invariants were independently
+  verified before the faculty write.
+- The separately guarded faculty step created verified teacher `94`, `Vani
+  Sood`, with only the automatic verified full-name alias. It added exactly the
+  sole primary Vedantu Biotonic for NEET institute context, Biology subject
+  context, NEET goal context, and one instructor link to course `497`; no
+  additional alias was created.
+- Independent course verification passed 11/11 for both Class 11 and Dropper.
+  The anonymous public postflight confirmed exact metadata and lesson order,
+  five embeddable Plant Kingdom lectures, unique faculty search, the one-alias
+  public faculty profile, primary channel/Biology/NEET context, and instructor
+  link. Final counts were 476 courses, 5,365 unique videos, and 5,371
+  memberships; JEE remained 257 courses, while the catalogue report showed 277
+  NEET courses, 103 Biology courses, and zero duplicate candidates. No schema
+  migration, deployment, commit, or push was performed.
+
+## Dr. Anand Mani Human Physiology production import — 26 August 2026
+
+- The owner approved the exact Dr. Anand Mani Human Physiology in 3D manifest
+  for production project `kezelafqhgqrprpadmlf`. The immutable manifest
+  SHA-256 was
+  `3753735b32688299e36b1d07b90fe37a82478f8eec8a3c2665e26034cfdcfa83`,
+  its fresh YouTube source snapshot SHA-256 was
+  `a03bf4428ae38d25f4f7ce4f67a2b6d20d24291d3efe12fb1259d9c69307b54b`,
+  and its request ID was `e40cdc05-dbac-4c0d-94dd-7d20ebd799dc`.
+- The immediate fail-closed preflight matched the expected 474-course,
+  5,354-video, and 5,360-membership production baseline; production's empty
+  `app_environment`; the exact NEET/Biology taxonomy; six existing Human
+  Physiology chapters; and zero playlist, channel, video, request, faculty, or
+  alias collisions. The fresh anonymous dry-run returned one `ok` plan with
+  zero findings or blockers.
+- Atomic v12 audit `61` created course `496`, channel `261`, six videos
+  (`5459`–`5464`), and six memberships. It reused no video and created no
+  chapter. The reviewed two-minute notes giveaway was excluded. The stored
+  order maps to Neural Control and Coordination, Locomotion and Movement,
+  Excretory Products and Their Elimination, Body Fluids and Circulation,
+  Breathing and Exchange of Gases, and Chemical Coordination and Integration.
+- The separately guarded faculty step created verified teacher `93`, `Anand
+  Mani`. Its first alias call stopped on the unsupported alias type
+  `honorific`; read-only recovery verification confirmed that only the teacher
+  and its automatic verified full-name alias existed and that all contexts and
+  course links remained empty. The resumed step used the allowed `full-name`
+  alias type, added the sole primary Dr. Anand Mani channel context, Biology
+  subject context, NEET goal context, and one instructor link to course `496`.
+  Because faculty normalization strips honorifics, `Dr. Anand Mani` and `Anand
+  Mani` intentionally share one verified normalized alias row; anonymous
+  `search_teachers('Dr. Anand Mani')` resolves exactly to teacher `93` with no
+  ambiguity.
+- Independent course verification passed 10/10 for both Class 11 and Dropper.
+  The anonymous public postflight confirmed all six chapters, exact lesson
+  order, 100% embeddability, the 222-minute average lesson duration, NEET-only
+  scope, public faculty search, primary channel/Biology/NEET context, instructor
+  link, and exact audit binding. Final counts were 475 courses, 5,360 unique
+  videos, and 5,366 memberships; JEE remained 257 courses, while the catalogue
+  report showed 276 NEET courses, 102 Biology courses, and zero duplicate
+  candidates. No chapter, schema migration, deployment, commit, or push was
+  performed.
+
+## Biofairy Ritu Rattewal production import — 26 August 2026
+
+- The owner approved the exact Biofairy Biomolecules for NEET manifest for
+  production project `kezelafqhgqrprpadmlf`. The immutable manifest SHA-256 was
+  `3cbd70280d35ea227931564ecccdb35e1f37f90c884ab9ab3fa6b451a4f130a9`,
+  its fresh YouTube source snapshot SHA-256 was
+  `68d8f3a5db000452fd3a98401ffa93644c19dd085a7b234dc43aa5a1560a81ee`,
+  and its request ID was `b1bd0edf-a88d-4332-8b49-e25721424a6d`.
+- The signed-in Supabase dashboard identified project `youtube`, reference
+  `kezelafqhgqrprpadmlf`, branch `main` (`Production`). Point-in-Time Recovery
+  remained enabled with changes logged every two minutes and up to seven days
+  of retention. In the dashboard timezone `(UTC+05:30)`, the displayed restore
+  window ran from `19 Aug 2026, 00:22:55` through
+  `26 Aug 2026, 00:22:55` after the approved writes. Storage objects remain excluded from database
+  backups. The dashboard still showed an outstanding-invoices warning that the
+  owner should resolve to avoid service disruption.
+- The immediate fail-closed preflight matched the expected 473-course
+  baseline, production's empty `app_environment`, the reviewed NEET/Biology
+  taxonomy and existing Biomolecules chapter `101`, and zero playlist,
+  channel, video, request, faculty, or alias collision. The fresh anonymous
+  dry-run found 9/9 usable and embeddable videos with zero findings, exclusions,
+  or blockers.
+- The guarded import created course `495`, channel `260`, nine videos, and nine
+  memberships in the reviewed 1–9 source order. It reused no video and created
+  no chapter. All lessons map to existing Biology chapter `101`, Biomolecules.
+  This legacy single-chapter path emitted no v12 audit row, so exact source
+  IDs, lesson order, scope, taxonomy, duration, and embeddability were
+  independently verified before the faculty write.
+- The separately guarded faculty step created verified teacher `92`, `Ritu
+  Rattewal`, with only the automatic verified full-name alias. It added exactly
+  the primary Biofairy Ritu Rattewal institute context, Biology subject
+  context, NEET goal context, and one instructor link to course `495`; no
+  additional alias was created. The YouTube API returned the channel title
+  with one trailing space, so channel `260` was fail-closed normalized to the
+  exact approved context label `Biofairy Ritu Rattewal`.
+- Independent course verification passed 11/11 for both Class 11 and Dropper.
+  The anonymous public course/faculty postflight passed all 12 assertions,
+  including exact lesson order, the one-alias faculty profile, context, chapter
+  facet, duration, and embedding checks. Final counts were 474 courses, 5,354
+  unique videos, and 5,360 memberships; JEE remained 257 courses, while the
+  catalogue report showed 275 NEET courses, 101 Biology courses, and zero
+  duplicate candidates. No chapter, schema migration, deployment, commit, or
+  push was performed.
+
+## Biomentors production import — 26 August 2026
+
+- The owner approved the exact Biomentors Biotechnology for NEET manifest for
+  production project `kezelafqhgqrprpadmlf`. The immutable manifest SHA-256 was
+  `5fc121af517a5bfc1f18448988c166b279ddb153b7979e098b0206ac37a11321`,
+  its fresh YouTube source snapshot SHA-256 was
+  `5888702f8bafdf98b4e683d875b04dc8fba3c22d8cf922b3d227610b631bbf37`,
+  and its request ID was `ecf67380-c9ee-4b39-9c1f-59fbbf68cb54`.
+- The signed-in Supabase dashboard identified project `youtube`, reference
+  `kezelafqhgqrprpadmlf`, branch `main` (`Production`). Point-in-Time Recovery
+  remained enabled with changes logged every two minutes and up to seven days
+  of retention. In the dashboard timezone `(UTC+05:30)`, the displayed restore
+  window ran from `19 Aug 2026, 00:04:54` through
+  `26 Aug 2026, 00:04:54`. Storage objects remain excluded from database
+  backups. The dashboard still showed an outstanding-invoices warning that the
+  owner should resolve to avoid service disruption.
+- The immediate fail-closed preflight matched the expected 472-course
+  baseline, production's empty `app_environment`, the reviewed taxonomy and
+  existing Biology chapters `103` and `102`, and zero playlist, channel,
+  video, request, faculty, or alias collision. The fresh anonymous dry-run
+  found 14/14 usable and embeddable videos with zero findings or blockers.
+- The atomic v12 import created course `494`, channel `259`, 14 videos, and 14
+  memberships in the reviewed source order. It reused no video and created no
+  chapter. Positions 1–8 map to `Biotechnology: Principles and Processes` and
+  positions 9–14 map to `Biotechnology and its Applications`. Audit row `60`
+  binds the exact request, manifest hash, source snapshot, empty before-state,
+  and complete stored after-state.
+- The separately guarded faculty step created verified teacher `91`,
+  `Geetendra Singh`, with only the automatic verified full-name alias. It
+  added exactly the primary Biomentors Classes Online institute context,
+  Biology subject context, NEET goal context, and one instructor link to
+  course `494`; no additional alias was created.
+- Independent course verification passed 10/10 for both Class 12 and Dropper.
+  The anonymous public course/faculty postflight passed all 14 assertions,
+  including full-name and honorific-normalized search, the one-alias faculty
+  profile, both chapter facets, exact lesson order, duration, and embedding
+  checks. Final counts were 473 courses, 5,345 unique videos, and 5,351
+  memberships; JEE remained 257 courses, while the catalogue report showed
+  274 NEET courses, 100 Biology courses, and zero duplicate candidates. No
+  chapter, schema migration, deployment, commit, or push was performed.
+
+## Neela Bakore Tutorials production import — 25 August 2026
+
+- The owner approved the exact Neela Bakore Tutorials Microbes in Human Welfare
+  manifest for production project `kezelafqhgqrprpadmlf`. The immutable
+  manifest SHA-256 was
+  `58757bdf40da9081734c6e1b88c03b767e0d211044d1522f71cfd62ef29b0f8e`,
+  its fresh YouTube source snapshot SHA-256 was
+  `116cfe3a77a00fe3e7ca4106da3a2defcc45729d6cbfdd459390721f9520e885`,
+  and its request ID was `03fe025e-6243-4da7-86ad-32b6f3dd7318`.
+- The immediate preflight found six unchanged, usable, and embeddable English
+  source videos, zero playlist, channel, video, faculty, or alias collision,
+  and the expected Biology chapter `115`, `Microbes in Human Welfare`. The two
+  existing same-chapter courses remained distinct sources taught by different
+  faculty. The fresh anonymous dry-run returned one `ok` plan with zero
+  findings or blockers.
+- The guarded import created course `493`, channel `258`, six videos, and six
+  memberships in the reviewed 1–6 source order. It reused no video and created
+  no chapter. This legacy single-chapter path emitted no v12 audit row, so the
+  exact stored source IDs, lesson order, scope, taxonomy, duration, and
+  embeddability were independently verified before the faculty write.
+- The separately guarded faculty step created verified teacher `90`, `Neela
+  Bakore`, with only the automatic verified full-name alias. It added exactly
+  the Neela Bakore Tutorials institute context, Biology subject context, NEET
+  goal context, and one instructor link to course `493`.
+- Independent course verification passed 11/11. The anonymous public
+  course/faculty postflight passed, including unique full-name and honorific
+  search through normalization, the one-alias faculty profile, context, chapter
+  facet, lesson order, and embedding checks. Final counts were 472 courses,
+  5,331 unique videos, and 5,337 memberships; JEE remained 257 courses, while
+  the catalogue report showed 273 NEET courses, 99 Biology courses, and zero
+  duplicate candidates. No chapter, schema migration, deployment, commit, or
+  push was performed.
+
+## Biology at Ease production import — 25 August 2026
+
+- The owner approved the exact Biology at Ease Class 12 Genetics and Evolution
+  manifest for production project `kezelafqhgqrprpadmlf`. The immutable
+  manifest SHA-256 was
+  `c8d0cdc66b855a060f8668055d49894eb8b9b5aec59859012b10d388fd4bc6f6`,
+  its fresh YouTube source snapshot SHA-256 was
+  `d83f4d6ce8b4dcf8b5a6574f1e451d90a97625326b9b0d25eddb3ba740b4142a`,
+  and its request ID was `7c38d888-714f-4cbd-94b3-e613987fbb75`.
+- The immediate preflight found 13/13 usable and embeddable source videos,
+  zero playlist, title, channel, video, faculty, alias, or request collision,
+  and the expected v12 create-only mapped-import capability. The fresh
+  anonymous dry-run returned one `ok` plan with zero findings or blockers.
+- The atomic import created course `492`, channel `257`, 13 videos, and 13
+  memberships. It reused no video and created no chapter. The reviewed mapping
+  stored two lessons in existing Biology chapter `110`, `Evolution`, and eleven
+  in chapter `128`, `Molecular Basis of Inheritance`; its audit record binds the
+  exact request, manifest, source snapshot, and stored after-state.
+- The separately guarded faculty step created verified teacher `89`, `Renuka
+  Anthwal`, with only the automatic verified full-name alias. It added exactly
+  the Biology at Ease institute context, Biology subject context, NEET goal
+  context, and one instructor link to course `492`.
+- Independent course verification passed 10/10. The anonymous public
+  course/faculty postflight passed with the exact 13-lesson chapter
+  distribution and publicly searchable faculty profile. Final counts were 471
+  courses, 5,325 unique videos, and 5,331 memberships; JEE remained 257
+  courses, while the catalogue report showed 272 NEET courses, 98 Biology
+  courses, and zero duplicate candidates. No chapter, schema migration,
+  deployment, commit, or push was performed.
+
+## Dr. Anjulika Gupta production import — 25 August 2026
+
+- Rechecked the signed-in Supabase dashboard for project `youtube`, reference
+  `kezelafqhgqrprpadmlf`, branch `main` (`Production`). The project reported
+  `Healthy` on Small compute in `ap-northeast-1`.
+- Point-in-Time Recovery remained enabled with changes logged every two minutes
+  and up to seven days of retention. In the dashboard timezone `(UTC+05:30)`,
+  the restore window ran from `19 Aug 2026 00:01:23` through
+  `25 Aug 2026 23:25:26` after the approved course and faculty writes.
+- The dashboard still displayed an outstanding-invoices warning and stated
+  that database backups exclude Storage objects. The account owner should
+  resolve the invoice warning to avoid later service disruption.
+- The reviewed manifest was
+  `anjulika-gupta-jee-advanced-probability-problems.json`, SHA-256
+  `9f445e8a1039ad7afcb22cc51504c5d910c65ce6b60cc2d6ef539de209c1b998`.
+  Its fresh YouTube source snapshot SHA-256 was
+  `d63914101293213a60be43e06949ef5e36d801b512a673126d40f583b7ea36cc`,
+  and its request ID was `b6a029d9-1492-493f-ab3b-c30590aa6d7e`.
+- The guarded import created course `491`, channel `256`, 26 videos, and 26
+  memberships in existing Mathematics chapter `66`, `Probability`. It created
+  no chapter and reused no video. Source position 3 is private on YouTube, so
+  the reviewed sequence preserved source positions 1, 2, and 4–27 as lessons
+  1–26. This legacy single-chapter path emitted no `playlist_import_audit` row;
+  exact stored source IDs, lesson order, scope, taxonomy, duration, and
+  embeddability were independently verified before the faculty write.
+- The separately guarded faculty step created verified teacher `88` (`Anjulika
+  Gupta`) with only the automatic verified full-name alias. It added exactly
+  the primary Dr. Anjulika Gupta institute context, Mathematics subject
+  context, JEE goal context, and one instructor link to course `491`. The
+  existing fuzzy `Anu Gupta` candidate was not merged or changed.
+- Independent course verification passed 10/10. The anonymous public
+  course/faculty postflight passed all 21 assertions, including both `Anjulika
+  Gupta` and honorific `Dr. Anjulika Gupta` search, faculty profile, context,
+  chapter facet, lesson order, and embedding checks. Final counts were 470
+  courses, 5,312 unique videos, and 5,318 memberships; the catalogue report
+  showed 257 JEE courses, 96 Mathematics courses, and zero duplicate
+  candidates.
+
+## Manoj Chauhan production import — 25 August 2026
+
+- Rechecked the signed-in Supabase dashboard for project `youtube`, reference
+  `kezelafqhgqrprpadmlf`, branch `main` (`Production`). The project reported
+  `Healthy` on Small compute in `ap-northeast-1`.
+- Point-in-Time Recovery remained enabled with changes logged every two minutes
+  and up to seven days of retention. In the dashboard timezone `(UTC+05:30)`,
+  the restore window ran from `19 Aug 2026 00:01:23` through
+  `25 Aug 2026 23:09:25` after the approved course and faculty writes.
+- The dashboard still displayed an outstanding-invoices warning and stated
+  that database backups exclude Storage objects. The account owner should
+  resolve the invoice warning to avoid later service disruption.
+- The reviewed manifest was `manoj-chauhan-vectors-3d-geometry-jee.json`,
+  SHA-256
+  `191e37a350037ee5b28157617b8d344b455b7537bb875a65193378b69926eedd`.
+  Its fresh YouTube source snapshot SHA-256 was
+  `fe6074c1246fcf44b0b24810928bea835e3e3c49596d12dea0f3544e979c2032`,
+  and its request ID was `e78cda45-2e6d-41a9-96e9-1817b1712ebc`.
+- The guarded import created course `490`, channel `255`, 19 videos, and 19
+  memberships in existing Mathematics chapter `72`, `Vectors and
+  Three-Dimensional Geometry`. It created no chapter and reused no video. The
+  reviewed three-minute overview at source position 20 was excluded and was
+  not stored. This legacy single-chapter path emitted no
+  `playlist_import_audit` row, so exact stored source, lesson order, scope,
+  chapter, duration, embeddability, and exclusion invariants were independently
+  verified before the faculty write.
+- The separately guarded faculty step created verified teacher `87` (`Manoj
+  Chauhan`), verified aliases `Manoj Chauhan` and `MC Sir`, primary Best
+  Approach - Manoj Chauhan Sir institute context, Mathematics subject context,
+  JEE goal context, and exactly one instructor link to course `490`. The
+  creation RPC intentionally staged the supplied nickname as proposed; the
+  exact approved `MC Sir` alias was then promoted through the guarded verified
+  alias RPC and resolved uniquely with no shared use.
+- Anonymous course verification passed 11/11 checks for both Class 12 and
+  Dropper. The independent public course/faculty postflight passed 17/17,
+  including unique full-name and `MC Sir` search, faculty profile, context,
+  chapter facet, lesson order, exclusion, and embedding checks. Final counts
+  were 469 courses, 5,286 unique videos, and 5,292 memberships; the catalogue
+  report showed 256 JEE courses, 95 Mathematics courses, and zero duplicate
+  candidates.
+
+## JEE Nexus production import — 25 August 2026
+
+- Rechecked the signed-in Supabase dashboard for project `youtube`, reference
+  `kezelafqhgqrprpadmlf`, branch `main` (`Production`). No current
+  project-health claim is recorded for this checkpoint.
+- Point-in-Time Recovery was enabled with changes logged every two minutes and
+  up to seven days of retention. In the dashboard timezone `(UTC+05:30)`, the
+  restore window ran from `19 Aug 2026 00:01:23` through
+  `25 Aug 2026 19:13:14` immediately before the approved additive import.
+- The dashboard still displayed an outstanding-invoices warning and stated
+  that database backups exclude Storage objects. The account owner should
+  resolve the invoice warning to avoid later service disruption.
+- The reviewed manifest was
+  `jee-nexus-class-12-mathematics-one-shot-jee.json`, SHA-256
+  `566d314bc4694eaa66b2a9d116656e72bf4453caf0fedb7fc51207c3bdf376ce`.
+  Its fresh YouTube source snapshot SHA-256 was
+  `7dad79a76c0e4edd93c1883894248e375ac5bd2bac2ced09f671415864e1637b`,
+  and its request ID was `d6be573b-2afb-4fc8-8581-3978e0819da8`.
+- The guarded v12 import created course `489`, channel `254`, 12 videos, and 12
+  memberships across ten existing Mathematics chapters. It reused no video
+  and created no chapter. Exact source order, durations, embeddability, JEE
+  goal, Class 12 and Dropper scopes, no-board scope, and every reviewed chapter
+  assignment were independently verified. Audit row `58` records the exact
+  request, both reviewed hashes, the empty before-state, and the complete
+  after-state.
+- The separately guarded faculty step created verified teacher `86` (`Arvind
+  Kalia`) with only the automatic verified full-name alias. It added exactly
+  JEE Nexus by Unacademy institute context, Mathematics subject context, and
+  JEE goal context, then linked exactly course `489`. No `AK Sir` or other
+  additional alias was created.
+- Anonymous course verification passed all eight checks for both Class 12 and
+  Dropper. Anonymous faculty search/profile verification returned the exact
+  course and context without ambiguity, while `AK Sir` did not resolve to this
+  teacher. Final counts were 468 courses, 5,267 unique videos, and 5,273
+  memberships; the catalogue report showed 255 JEE courses, 94 Mathematics
+  courses, and zero duplicate candidates.
+
+## Indian Mathematics Lectures production import — 25 August 2026
+
+- Rechecked the signed-in Supabase dashboard for project `youtube`, reference
+  `kezelafqhgqrprpadmlf`, branch `main` (`Production`). No current
+  project-health claim is recorded for this checkpoint.
+- Point-in-Time Recovery was enabled with changes logged every two minutes and
+  up to seven days of retention. In the dashboard timezone `(UTC+05:30)`, the
+  restore window ran from `19 Aug 2026 00:01:23` through
+  `25 Aug 2026 18:49:14` during the approved additive import checkpoint.
+- The dashboard still displayed an outstanding-invoices warning and stated
+  that database backups exclude Storage objects. The account owner should
+  resolve the invoice warning to avoid later service disruption.
+- The reviewed manifest was
+  `indian-mathematics-lectures-trigonometry-jee.json`, SHA-256
+  `2914cdd216f387ba4a7a60f25e8fe7987719c1f6fb4ea560d00e6f3d81fc85b9`.
+  Its fresh YouTube source snapshot SHA-256 was
+  `a9c6a5cf7cfd0b2cb29d69079752cd6ed834232e2409f882ea65c76d4bce3c95`,
+  and its request ID was `e6481013-afb1-4965-bb92-7ac6af4b3501`.
+- The guarded import created course `488`, channel `253`, 10 videos, and 10
+  memberships in existing Trigonometry chapter `79`. It reused no video and
+  created no chapter. The reviewed lesson order L1–L10 was stored exactly even
+  though the YouTube playlist arrived in reverse order; the source title for
+  reviewed lesson 4 incorrectly labels it as L3. This legacy single-chapter
+  import path does not create a `playlist_import_audit` row, so exact stored
+  source, order, scope, chapter, duration, embeddability, and video-taxonomy
+  invariants were independently verified instead.
+- The separately guarded faculty step created verified teacher `85` (`Ankit
+  Malav`) with the verified full-name alias and approved `Malav Sir` nickname,
+  Indian Mathematics Lectures institute context, Mathematics subject context,
+  and JEE goal context, then linked exactly course `488`. Person-name
+  normalization stores the lookup key for `Malav Sir` as `malav`; the public
+  display alias remains `Malav Sir`. Ambiguous `AM Sir` and `Ankit Sir` aliases
+  were deliberately excluded.
+- Anonymous course verification passed all nine checks for both Class 11 and
+  Dropper. Anonymous faculty searches for `Ankit Malav` and `Malav Sir`, plus
+  the public faculty profile, returned the exact course and context with no
+  ambiguity. Final counts were 467 courses, 5,255 unique videos, and 5,261
+  memberships; the catalogue report showed 254 JEE courses, 93 Mathematics
+  courses, and zero duplicate candidates.
+
+## Arihant Senior production import — 25 August 2026
+
+- Rechecked the signed-in Supabase dashboard for project `youtube`, reference
+  `kezelafqhgqrprpadmlf`, branch `main` (`Production`). The database advisor
+  reported no security or performance issues. The dashboard's project-overview
+  route did not resolve the project reference during this check, so no current
+  project-health claim is recorded here.
+- Point-in-Time Recovery was enabled with changes logged every two minutes and
+  up to seven days of retention. In the dashboard timezone `(UTC+05:30)`, the
+  restore window ran from `19 Aug 2026 00:01:23` through
+  `25 Aug 2026 18:29:14` during the approved additive import checkpoint.
+- The dashboard still displayed an outstanding-invoices warning and stated
+  that database backups exclude Storage objects. The account owner should
+  resolve the invoice warning to avoid later service disruption.
+- The reviewed manifest was
+  `ankit-singhvi-alternating-current-theory-jee.json`, SHA-256
+  `5ead91a235471cc3c75db6058fb9b2f3d2f73225ea3d3169d81c448b7569a1db`.
+  Its fresh YouTube source snapshot SHA-256 was
+  `a3eac149025271908678cdd53b5e05c71790c91e4248ebc33925428b59aa7e2e`,
+  and its request ID was `b1aa8877-1632-48a8-9013-093a18de8b6d`.
+- The guarded import created course `487`, channel `252`, 12 videos, and 12
+  memberships in existing Alternating Current chapter `14`. It reused no video
+  and created no chapter. This legacy single-chapter import path does not create
+  a `playlist_import_audit` row, so exact stored source, order, scope, chapter,
+  duration, embeddability, and video-taxonomy invariants were independently
+  verified instead.
+- The separately guarded faculty step created verified teacher `84`
+  (`Ankit Singhvi`) with only the verified full-name alias, Arihant Senior -
+  Ankit Singhvi (IITM) institute context, Physics subject context, and JEE goal
+  context, then linked exactly course `487`.
+- Anonymous course verification passed all nine checks for both Class 12 and
+  Dropper. Anonymous faculty search/profile verification returned the exact
+  course and context with no ambiguity. Final counts were 466 courses, 5,245
+  unique videos, and 5,251 memberships; the catalogue report showed 253 JEE
+  courses, 105 Physics courses, and zero duplicate candidates.
+
+## Simplified Education production import — 25 August 2026
+
+- Rechecked the signed-in Supabase dashboard for project `youtube`, reference
+  `kezelafqhgqrprpadmlf`, branch `main` (`Production`). Project status was
+  `Healthy` on Small compute in `ap-northeast-1`; the database advisor reported
+  no issues.
+- Point-in-Time Recovery was enabled with changes logged every two minutes and
+  up to seven days of retention. In the dashboard timezone `(UTC+05:30)`, the
+  restore window ran from `19 Aug 2026 00:01:23` through
+  `25 Aug 2026 17:59:13` immediately before this approved additive import.
+- The dashboard still displayed an outstanding-invoices warning. Project
+  health and PITR remained active, but the account owner should resolve the
+  warning to avoid later service disruption.
+- The reviewed manifest was
+  `simplified-education-integrals-problem-series-jee.json`, SHA-256
+  `518cf5b686660d0cc7eda23ea1072eb26d6cbba8cf908f3a9b0fb5f6103a14d0`.
+  Its fresh YouTube source snapshot SHA-256 was
+  `01c8abf63392a4a022119ef5f80815f71eb4db1a35049650d2febb37ba1b3ccd`.
+- The guarded import created course `486`, channel `251`, four videos, and four
+  memberships. It reused no video and created no chapter. Lesson 1 maps to
+  Indefinite Integration (`278`); lessons 2–4 map to Definite Integration
+  (`73`). Audit row `57` records request
+  `2baba383-0edf-425c-9f33-a81b78c48cf9` and both reviewed hashes.
+- The separately guarded faculty step created verified teacher `83`
+  (`Sunil Yadav`) with only the verified full-name alias, Simplified Education
+  institute context, Mathematics subject context, and JEE goal context, then
+  linked exactly course `486`.
+- Anonymous course verification passed all eight checks for both Class 12 and
+  Dropper. Anonymous faculty search/profile verification returned the exact
+  course and context with no ambiguity. Final counts were 465 courses, 5,233
+  unique videos, and 5,239 memberships; the catalogue report showed 252 JEE
+  courses, 92 Mathematics courses, and zero fully-contained duplicate
+  candidates.
+
+## Production import preflight — 25 August 2026
+
+- Rechecked the signed-in Supabase dashboard for project `youtube`, reference
+  `kezelafqhgqrprpadmlf`, branch `main` (`Production`). The project reported
+  `Healthy` on Small compute in `ap-northeast-1`.
+- Point-in-Time Recovery is enabled. Database changes are logged every two
+  minutes with a recovery retention period of up to seven days.
+- In the dashboard timezone `(UTC+05:30) Chennai, Kolkata, Mumbai, New Delhi`,
+  restore coverage was shown from `19 Aug 2026 00:01:23` through
+  `25 Aug 2026 17:43:10` immediately before the approved prepJEET additive
+  course import.
+- The dashboard displayed an outstanding-invoices warning, while project
+  health and PITR both remained active. This warning should be resolved by the
+  account owner to avoid later service disruption.
+- This evidence covers only the approved create-only prepJEET Electrostatics
+  course/faculty write. The existing isolated-restore rehearsal and additive
+  import waiver below remain the restore controls; destructive or corrective
+  writes remain separately gated.
+- Result: the guarded import created course `485`, channel `250`, 21 videos,
+  and 21 lesson memberships in existing Electrostatics chapter `8`; it created
+  no chapter and reused no video. The separately guarded faculty step created
+  verified teacher `82` (`Kailash Sharma` / `Kailash Sir`) and linked exactly
+  that course with prepJEET, Physics, and JEE context.
+- Anonymous postflight passed for metadata, scope, lesson order, embeddability,
+  exclusions, aliases, context, and faculty profile. The final catalogue report
+  showed 464 courses, 5,235 lesson memberships, and zero duplicate candidates.
+
 ## Current production status — 27 July 2026
 
 - Project name: `youtube`.

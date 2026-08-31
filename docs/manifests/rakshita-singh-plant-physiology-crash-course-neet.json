@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "request_id": "e1f672c2-ad81-471a-a1fe-d0e810133f51",
+  "youtube_playlist_id": "PLNna4p28lHsFN5qF5zb89brTyrQQ2x8ZA",
+  "course_title": "Rakshita Singh Plant Physiology Crash Course",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "43EEtSGIF-o",
+      "chapter": "Photosynthesis in Higher Plants",
+      "lesson_number": 1
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "PaSKMNpPF6o",
+      "chapter": "Respiration in Plants",
+      "lesson_number": 2
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "SnAFmx3a3SY",
+      "chapter": "Plant Growth and Development",
+      "lesson_number": 3
+    }
+  ],
+  "exclusions": [
+    {
+      "position": 4,
+      "youtube_video_id": "lubIQD-KQz0",
+      "reason": "Transport in Plants has no matching chapter in the current live Biology taxonomy; excluded rather than misfiled under another chapter"
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "ql9q7ASzBOo",
+      "reason": "Mineral Nutrition has no matching chapter in the current live Biology taxonomy; excluded rather than creating an unapproved production chapter"
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "b0f2f433-5c58-40f3-a10e-51fe80185535",
+    "youtube_playlist_id": "PLNna4p28lHsFN5qF5zb89brTyrQQ2x8ZA",
+    "teacher": "Rakshita Singh",
+    "reviewed_on": "2026-08-26",
+    "reviewed_by": "Codex evidence review",
+    "source_url": "https://www.youtube.com/playlist?list=PLNna4p28lHsFN5qF5zb89brTyrQQ2x8ZA",
+    "source_label": "The official Dr. Rakshita Singh channel owns this Plant Physiology playlist; every retained lecture description is written as her first-person course instruction and every retained video's official tags identify rakshitasingh",
+    "youtube_video_ids": [
+      "43EEtSGIF-o",
+      "PaSKMNpPF6o",
+      "SnAFmx3a3SY"
+    ]
+  }
+}

@@ -33,6 +33,7 @@ import {
   assertProductionWriteAllowed,
   buildImportPayload,
   findDuplicateVideoIds,
+  hasCompleteReviewedLessonOrder,
   isReviewedSingleChapterOrder,
   mappedSourceSnapshotEvidence,
   parseImporterArgs,
@@ -310,6 +311,7 @@ async function main() {
         })
         : null;
       const reviewedSingleChapterOrder = isReviewedSingleChapterOrder(mapped);
+      const reviewedLessonOrder = hasCompleteReviewedLessonOrder(mapped);
       const chapterNames = mapped?.chapterNames ?? [plan.chapterName];
       const chapterRows = await Promise.all(
         chapterNames.map(async (name) => ({
@@ -466,7 +468,7 @@ async function main() {
                 atomic_create_only: true,
                 audit_snapshot: true,
                 request_replay: true,
-                reviewed_lesson_order: false,
+                reviewed_lesson_order: reviewedLessonOrder,
               },
             chapters: chapterRows.map(({ name, chapter }) => ({
               name,

@@ -141,6 +141,25 @@ describe("StudyMaterialsDirectoryView", () => {
     expect(screen.getByRole("option", { name: "Kinematics" })).toBeTruthy();
   });
 
+  it("links the curated JEE Main paper landing from the top of the directory", () => {
+    render(
+      <MemoryRouter initialEntries={["/materials"]}>
+        <StudyMaterialsPage />
+      </MemoryRouter>,
+    );
+
+    const banner = screen.getByRole("link", {
+      name: /JEE Main previous-year papers, by year/i,
+    });
+    expect(banner.getAttribute("href")).toBe("/materials/jee-main/previous-year-papers");
+    expect(banner.textContent).toContain("Official question papers and final answer keys");
+    // The banner sits ABOVE the filters — a link into the deepest paper
+    // shelf, not a card lost below the fold.
+    const filters = screen.getByRole("combobox", { name: "Exam" });
+    expect(banner.compareDocumentPosition(filters) & Node.DOCUMENT_POSITION_FOLLOWING)
+      .toBeTruthy();
+  });
+
   it("writes the same Home to Study material breadcrumb as the edge response", async () => {
     render(
       <MemoryRouter initialEntries={["/materials"]}>

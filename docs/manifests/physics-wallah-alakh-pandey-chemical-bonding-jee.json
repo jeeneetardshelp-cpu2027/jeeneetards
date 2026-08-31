@@ -1,0 +1,133 @@
+{
+  "version": 1,
+  "request_id": "580738bb-e3f8-4881-a0d9-29073db8f299",
+  "youtube_playlist_id": "PLF_7kfnwLFCGzzyaPRyNjSXRRR7W_qmny",
+  "course_title": "Physics Wallah Chemical Bonding",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "daPAcFFSFdY",
+      "chapter": "Chemical Bonding and Molecular Structure",
+      "lesson_number": 1
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "OqdNZTHxPxM",
+      "chapter": "Chemical Bonding and Molecular Structure",
+      "lesson_number": 2
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "ch9HorGagHE",
+      "chapter": "Chemical Bonding and Molecular Structure",
+      "lesson_number": 3
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "d3iFlT8SlvA",
+      "chapter": "Chemical Bonding and Molecular Structure",
+      "lesson_number": 4
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "8-Qs1mnoJ2M",
+      "chapter": "Chemical Bonding and Molecular Structure",
+      "lesson_number": 5
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "8B__xDUKqbM",
+      "chapter": "Chemical Bonding and Molecular Structure",
+      "lesson_number": 6
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "IrX7AcU07To",
+      "chapter": "Chemical Bonding and Molecular Structure",
+      "lesson_number": 7
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "AvhUUY8yD08",
+      "chapter": "Chemical Bonding and Molecular Structure",
+      "lesson_number": 8
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "x2-nP7i6T34",
+      "chapter": "Chemical Bonding and Molecular Structure",
+      "lesson_number": 9
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "TQEhLXkNdmo",
+      "chapter": "Chemical Bonding and Molecular Structure",
+      "lesson_number": 10
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "XCwMrnVvSTU",
+      "chapter": "Chemical Bonding and Molecular Structure",
+      "lesson_number": 11
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "4KDkldXTj6w",
+      "chapter": "Chemical Bonding and Molecular Structure",
+      "lesson_number": 12
+    },
+    {
+      "position": 13,
+      "youtube_video_id": "AjWwHkAlPSo",
+      "chapter": "Chemical Bonding and Molecular Structure",
+      "lesson_number": 13
+    },
+    {
+      "position": 14,
+      "youtube_video_id": "GfKmguqX-2g",
+      "chapter": "Chemical Bonding and Molecular Structure",
+      "lesson_number": 14
+    },
+    {
+      "position": 15,
+      "youtube_video_id": "664YicsoYkg",
+      "chapter": "Chemical Bonding and Molecular Structure",
+      "lesson_number": 15
+    },
+    {
+      "position": 16,
+      "youtube_video_id": "k8tYXDKb2yE",
+      "chapter": "Chemical Bonding and Molecular Structure",
+      "lesson_number": 16
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "0eef10fa-3299-4743-8793-05007dcb30a5",
+    "youtube_playlist_id": "PLF_7kfnwLFCGzzyaPRyNjSXRRR7W_qmny",
+    "teacher": "Alakh Pandey",
+    "reviewed_on": "2026-08-21",
+    "reviewed_by": "Codex evidence review",
+    "source_url": "https://www.youtube.com/@PhysicsWallah",
+    "source_label": "The verified official channel is titled Physics Wallah - Alakh Pandey, owns the playlist, and every retained video is a numbered Class 11 Chemical Bonding lecture for IIT JEE and NEET",
+    "youtube_video_ids": [
+      "daPAcFFSFdY",
+      "OqdNZTHxPxM",
+      "ch9HorGagHE",
+      "d3iFlT8SlvA",
+      "8-Qs1mnoJ2M",
+      "8B__xDUKqbM",
+      "IrX7AcU07To",
+      "AvhUUY8yD08",
+      "x2-nP7i6T34",
+      "TQEhLXkNdmo",
+      "XCwMrnVvSTU",
+      "4KDkldXTj6w",
+      "AjWwHkAlPSo",
+      "GfKmguqX-2g",
+      "664YicsoYkg",
+      "k8tYXDKb2yE"
+    ]
+  }
+}

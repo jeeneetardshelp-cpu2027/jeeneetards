@@ -1,0 +1,42 @@
+{
+  "version": 1,
+  "request_id": "09438907-c55d-4070-a634-8a0b6187de2d",
+  "youtube_playlist_id": "PLqjFFrfKcY5zDRIPwD2tWQY-IdNfH4Qb0",
+  "course_title": "Vedantu Binomial Theorem",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "a7M5EISeLTE",
+      "chapter": "Binomial Theorem",
+      "lesson_number": 1
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "rY1Kjt-QjGY",
+      "chapter": "Binomial Theorem",
+      "lesson_number": 2
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "T-lzYcKC6V0",
+      "chapter": "Binomial Theorem",
+      "lesson_number": 3
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "4378f506-5f9f-4afe-a4c1-f2e326c84ed5",
+    "youtube_playlist_id": "PLqjFFrfKcY5zDRIPwD2tWQY-IdNfH4Qb0",
+    "teacher": "Harsh Priyam",
+    "reviewed_on": "2026-08-19",
+    "reviewed_by": "Codex evidence review",
+    "source_url": "https://www.youtube.com/playlist?list=PLqjFFrfKcY5zDRIPwD2tWQY-IdNfH4Qb0",
+    "source_label": "Official Vedantu playlist; every official video title or description explicitly identifies Harsh Priyam Sir as the master teacher",
+    "youtube_video_ids": [
+      "a7M5EISeLTE",
+      "rY1Kjt-QjGY",
+      "T-lzYcKC6V0"
+    ]
+  }
+}

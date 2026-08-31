@@ -1,0 +1,99 @@
+{
+  "version": 1,
+  "request_id": "7c38d888-714f-4cbd-94b3-e613987fbb75",
+  "youtube_playlist_id": "PLtvLAK4LEZ7r5iJMwDhHYqMAXqcdzjpYC",
+  "course_title": "Biology at Ease Class 12 Genetics and Evolution",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "VNuthqvuGWY",
+      "chapter": "Evolution"
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "HqFYg2QHEVY",
+      "chapter": "Evolution"
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "hiJ5HUfXy4o",
+      "chapter": "Molecular Basis of Inheritance"
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "QvjBmTpcL14",
+      "chapter": "Molecular Basis of Inheritance"
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "0NQMc_XP4ck",
+      "chapter": "Molecular Basis of Inheritance"
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "2CpoWTsEqgI",
+      "chapter": "Molecular Basis of Inheritance"
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "OGP5Bp1bjrA",
+      "chapter": "Molecular Basis of Inheritance"
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "ZAl8ZLDmJX8",
+      "chapter": "Molecular Basis of Inheritance"
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "ttJV8nKPayg",
+      "chapter": "Molecular Basis of Inheritance"
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "gfE5N1OPE1E",
+      "chapter": "Molecular Basis of Inheritance"
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "-ppDRRjYKeA",
+      "chapter": "Molecular Basis of Inheritance"
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "fT2xMTTNKp0",
+      "chapter": "Molecular Basis of Inheritance"
+    },
+    {
+      "position": 13,
+      "youtube_video_id": "PVda6obJIE0",
+      "chapter": "Molecular Basis of Inheritance"
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "64cc87fd-a3b2-4e54-8a56-a3a744a50d1a",
+    "youtube_playlist_id": "PLtvLAK4LEZ7r5iJMwDhHYqMAXqcdzjpYC",
+    "teacher": "Renuka Anthwal",
+    "reviewed_on": "2026-08-25",
+    "reviewed_by": "Codex evidence review",
+    "source_url": "https://www.youtube.com/playlist?list=PLtvLAK4LEZ7r5iJMwDhHYqMAXqcdzjpYC",
+    "source_label": "The official Biology at Ease channel owns this Class 12 Genetics and Evolution playlist; retained-video metadata at positions 5, 7, and 9 explicitly names Renuka Anthwal, while every retained video description links the renuka_biologyatease Telegram identity and the official descriptions connect to @renukaanthwal2049",
+    "youtube_video_ids": [
+      "VNuthqvuGWY",
+      "HqFYg2QHEVY",
+      "hiJ5HUfXy4o",
+      "QvjBmTpcL14",
+      "0NQMc_XP4ck",
+      "2CpoWTsEqgI",
+      "OGP5Bp1bjrA",
+      "ZAl8ZLDmJX8",
+      "ttJV8nKPayg",
+      "gfE5N1OPE1E",
+      "-ppDRRjYKeA",
+      "fT2xMTTNKp0",
+      "PVda6obJIE0"
+    ]
+  }
+}

@@ -29,4 +29,15 @@ describe("Footer contact and feedback", () => {
     );
     expect(screen.getByRole("link", { name: "Student forum" }).getAttribute("href")).toBe("/forum");
   });
+
+  it("lists the curated JEE Main paper landing under Explore", () => {
+    render(
+      <MemoryRouter>
+        <Footer />
+      </MemoryRouter>,
+    );
+
+    const papersLink = screen.getByRole("link", { name: "JEE Main papers by year" });
+    expect(papersLink.getAttribute("href")).toBe("/materials/jee-main/previous-year-papers");
+  });
 });

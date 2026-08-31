@@ -1,0 +1,42 @@
+{
+  "version": 1,
+  "request_id": "37dd0d41-8777-4586-a3f8-968cc0056f16",
+  "youtube_playlist_id": "PL1c2EuoqCmBtAxbcm0MO3iaGg-8iyAEgA",
+  "course_title": "Vikas Gupta Sketching Graphs and Jensen Inequality",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "iRJPGTgtHJM",
+      "chapter": "Modulus and Graphs",
+      "lesson_number": 1
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "XAs1SCnOQrw",
+      "chapter": "Modulus and Graphs",
+      "lesson_number": 3
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "xY6-O5aFsUQ",
+      "chapter": "Modulus and Graphs",
+      "lesson_number": 2
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "69b3c127-1932-4d44-88fe-d04294e524ef",
+    "youtube_playlist_id": "PL1c2EuoqCmBtAxbcm0MO3iaGg-8iyAEgA",
+    "teacher": "Vikas Gupta",
+    "reviewed_on": "2026-08-22",
+    "reviewed_by": "Codex evidence review",
+    "source_url": "https://www.youtube.com/channel/UCJ4Q-4dbX33BeYv63RH883g",
+    "source_label": "The official channel is titled VIKAS GUPTA #VGSIR and all three playlist videos explicitly credit Vikas Gupta Sir or VG Sir; the official Vikas Gupta course site identifies him as the JEE Mathematics educator",
+    "youtube_video_ids": [
+      "iRJPGTgtHJM",
+      "xY6-O5aFsUQ",
+      "XAs1SCnOQrw"
+    ]
+  }
+}

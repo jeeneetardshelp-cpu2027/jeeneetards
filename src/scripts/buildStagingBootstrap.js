@@ -16,6 +16,7 @@ const ORDER = [
   "community_schema.sql",                         // profiles, playlists, ratings, comments + triggers
   "courses_data.sql",                             // tags/teacher + get_chapter_courses v1
   "admin_policies.sql",                           // is_admin() + admin insert policies
+  "src/migrations/profile_public_identity_privacy_v1.sql", // browser roles read profile username only
   "playlist_idempotency.sql",                     // playlists.youtube_playlist_id
   "src/migrations/add_class_levels.sql",
   "src/migrations/learning_goals_and_class_levels.sql",

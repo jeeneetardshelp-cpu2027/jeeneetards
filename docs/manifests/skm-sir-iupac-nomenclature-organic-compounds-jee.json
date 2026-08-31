@@ -1,0 +1,140 @@
+{
+  "version": 1,
+  "request_id": "66bcd390-b320-42c1-bacb-e8b29e27b2fb",
+  "youtube_playlist_id": "PLTUWmMSxzl33BP-alKpLVredEl7NLXLj2",
+  "course_title": "SKM Sir IUPAC Nomenclature of Organic Compounds",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "70s68psesU0",
+      "chapter": "Some Basic Principles of Organic Chemistry",
+      "lesson_number": 1
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "9TzY4Lbltpg",
+      "chapter": "Some Basic Principles of Organic Chemistry",
+      "lesson_number": 2
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "aBi-Q_auw6A",
+      "chapter": "Some Basic Principles of Organic Chemistry",
+      "lesson_number": 3
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "HVLZE_pcz9w",
+      "chapter": "Some Basic Principles of Organic Chemistry",
+      "lesson_number": 4
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "PW0gAx1AvvY",
+      "chapter": "Some Basic Principles of Organic Chemistry",
+      "lesson_number": 5
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "2_x2Agyc4d8",
+      "chapter": "Some Basic Principles of Organic Chemistry",
+      "lesson_number": 6
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "sQq_lyC9INY",
+      "chapter": "Some Basic Principles of Organic Chemistry",
+      "lesson_number": 7
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "oTfOoIzDvNw",
+      "chapter": "Some Basic Principles of Organic Chemistry",
+      "lesson_number": 8
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "KE9bjiX9Cfk",
+      "chapter": "Some Basic Principles of Organic Chemistry",
+      "lesson_number": 9
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "g9WDw9xsWvQ",
+      "chapter": "Some Basic Principles of Organic Chemistry",
+      "lesson_number": 10
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "D7RrlxcdGgw",
+      "chapter": "Some Basic Principles of Organic Chemistry",
+      "lesson_number": 11
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "_c0HwjINjao",
+      "chapter": "Some Basic Principles of Organic Chemistry",
+      "lesson_number": 12
+    },
+    {
+      "position": 13,
+      "youtube_video_id": "LACA13wXE8M",
+      "chapter": "Some Basic Principles of Organic Chemistry",
+      "lesson_number": 13
+    },
+    {
+      "position": 14,
+      "youtube_video_id": "yk3VdfuNxlk",
+      "chapter": "Some Basic Principles of Organic Chemistry",
+      "lesson_number": 14
+    },
+    {
+      "position": 15,
+      "youtube_video_id": "ylklQqMFU-c",
+      "chapter": "Some Basic Principles of Organic Chemistry",
+      "lesson_number": 15
+    },
+    {
+      "position": 16,
+      "youtube_video_id": "DwWavwICoj0",
+      "chapter": "Some Basic Principles of Organic Chemistry",
+      "lesson_number": 16
+    },
+    {
+      "position": 17,
+      "youtube_video_id": "fHGGq_dCc28",
+      "chapter": "Some Basic Principles of Organic Chemistry",
+      "lesson_number": 17
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "1ca0c5c9-188b-442a-b6ce-b1cf628b7f54",
+    "youtube_playlist_id": "PLTUWmMSxzl33BP-alKpLVredEl7NLXLj2",
+    "teacher": "Surendra Kumar Mishra",
+    "reviewed_on": "2026-08-20",
+    "reviewed_by": "Codex evidence review",
+    "source_url": "https://www.youtube.com/@skm-nucleuseduacademy",
+    "source_label": "The official SKM SIR channel owns this ordered 17-lecture IUPAC nomenclature playlist; every lecture title credits SKM SIR, and the channel-owned playlist description links SKM SIR social profiles using the full identity Surendra Kumar Mishra",
+    "youtube_video_ids": [
+      "70s68psesU0",
+      "9TzY4Lbltpg",
+      "aBi-Q_auw6A",
+      "HVLZE_pcz9w",
+      "PW0gAx1AvvY",
+      "2_x2Agyc4d8",
+      "sQq_lyC9INY",
+      "oTfOoIzDvNw",
+      "KE9bjiX9Cfk",
+      "g9WDw9xsWvQ",
+      "D7RrlxcdGgw",
+      "_c0HwjINjao",
+      "LACA13wXE8M",
+      "yk3VdfuNxlk",
+      "ylklQqMFU-c",
+      "DwWavwICoj0",
+      "fHGGq_dCc28"
+    ]
+  }
+}

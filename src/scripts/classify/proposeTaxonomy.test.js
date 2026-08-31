@@ -64,6 +64,26 @@ describe("proposeTaxonomy teacher integration", () => {
     expect(result.summary.manualFields).toEqual([]);
     expect(result.decisions).not.toHaveProperty("chapter_id");
   });
+
+  it("keeps a Chemical Bonding playlist under subject review when the channel name says Physics", () => {
+    const result = proposeTaxonomy({
+      playlistTitle: "11 Chemical Bonding IIT JEE NEET",
+      channelTitle: "Physics Wallah - Alakh Pandey",
+      videoTitles: ["Chemical Bonding and Molecular Structure 01"],
+    }, {
+      ...taxonomy,
+      subjects: [
+        { id: 1, name: "Physics", slug: "physics" },
+        { id: 2, name: "Chemistry", slug: "chemistry" },
+      ],
+    });
+
+    expect(result.decisions.subject_id).toMatchObject({
+      status: "review",
+      confidence: 0.6,
+    });
+    expect(result.decisions.subject_id.evidence).toContain("ambiguous");
+  });
 });
 
 describe("live category and board taxonomy", () => {

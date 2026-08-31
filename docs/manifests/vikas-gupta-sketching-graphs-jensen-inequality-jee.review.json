@@ -1,0 +1,47 @@
+{
+  "subject": "Mathematics",
+  "summary": {
+    "total": 3,
+    "auto": 0,
+    "review": 3,
+    "unmatched": 3
+  },
+  "rows": [
+    {
+      "position": 1,
+      "youtube_video_id": "iRJPGTgtHJM",
+      "title": "Sketch of Graph  : Lecture 1 (Vikas Gupta Sir online batch of class XII - Target 2025)",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "manual review mapped the graph-sketching lecture to the existing Modulus and Graphs chapter",
+      "alternatives": [
+        "Modulus and Graphs"
+      ]
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "XAs1SCnOQrw",
+      "title": "Problems Over Sketching of Graphs : Lecture -3 (VG Sir online batch of class XII - Target 2025)",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "manual review mapped the graph-sketching problem lecture to the existing Modulus and Graphs chapter",
+      "alternatives": [
+        "Modulus and Graphs"
+      ]
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "xY6-O5aFsUQ",
+      "title": "Jensen Inequality & Sketching of Graphs : Lecture -2 (VG Sir online batch of Class XII -Target 2025)",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "manual review kept the combined Jensen inequality and graph-sketching lecture with the coherent graph series",
+      "alternatives": [
+        "Modulus and Graphs"
+      ]
+    }
+  ]
+}

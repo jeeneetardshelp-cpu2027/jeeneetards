@@ -508,14 +508,14 @@ No other columns, tables, or RPC parameters in the ground-truth file were left u
 Origin: `community_schema.sql` creates the base table (`id uuid primary key references auth.users(id) on delete cascade`, `username text unique`, `full_name`, `avatar_url`, `created_at`). `admin_policies.sql` adds `is_admin boolean not null default false` via `alter table ... add column if not exists`.
 
 **RLS** (`community_schema.sql`):
-- SELECT: `"profiles are public"` — `using (true)`. Everyone (including anon) can read every profile row.
+- SELECT: `"profiles are public"` — `using (true)`. The policy makes rows eligible for the separately chosen public username, while column privileges restrict browser roles to `username` only. RLS does not make `full_name`, `avatar_url`, account IDs, timestamps, or admin state public.
 - INSERT: `"user inserts own profile"` — `with check (auth.uid() = id)`.
 - UPDATE: `"user updates own profile"` — `using (auth.uid() = id) with check (auth.uid() = id)`.
 - No DELETE policy exists — rows are only removed via the `on delete cascade` from `auth.users`.
 
 **Column-level grants (defense-in-depth on top of RLS)**:
 - `src/migrations/fix_profile_privilege_escalation.sql`: `revoke update (is_admin), insert (is_admin) on table public.profiles from anon, authenticated` — a signed-in user's own-row UPDATE policy would otherwise let them flip `is_admin` on themselves; this closes that column specifically, backed by trigger `trg_protect_profile_admin_flag` (below).
-- `src/migrations/fix_profile_is_admin_select_disclosure.sql`: `revoke select on table public.profiles from anon, authenticated` then `grant select (id, username, full_name, avatar_url, created_at) on table public.profiles to anon, authenticated` — i.e. `is_admin` is **not** SELECT-able by anon/authenticated at all (table-level SELECT was revoked and re-granted column-by-column, because a column-level revoke alone does nothing when table-level SELECT is already granted — the file's own comments describe this as a fixed prior mistake). `public.is_admin()` (SECURITY DEFINER) remains the sanctioned way for a user to check their own admin status client-side.
+- `src/migrations/profile_public_identity_privacy_v1.sql` (also mirrored by the safe-to-rerun legacy `fix_profile_is_admin_select_disclosure.sql`) revokes table-level and inherited `PUBLIC` SELECT, then grants browser roles `SELECT (username)` only. `id`, `full_name`, `avatar_url`, `created_at`, `is_admin`, and future columns are not directly SELECT-able by `anon` or `authenticated`; `service_role` retains full access. `public.is_admin()` and forum/polls SECURITY DEFINER functions remain the sanctioned interfaces for private/admin checks and public author labels.
 
 **Triggers**:
 - `on_auth_user_created` (`community_schema.sql`) — `after insert on auth.users`, calls `public.handle_new_user()` (SECURITY DEFINER) to auto-create the matching `profiles` row, seeding `full_name`/`avatar_url` from `raw_user_meta_data`.

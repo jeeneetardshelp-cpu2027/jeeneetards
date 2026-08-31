@@ -111,6 +111,41 @@ function unresolvedClassBundle() {
   });
 }
 
+function unresolvedSubjectBundle() {
+  return buildReviewBundle({
+    environment: "production",
+    expectedProjectRef: projectRef,
+    databaseUrl: `https://${projectRef}.supabase.co`,
+    taxonomy: {
+      ...taxonomy,
+      subjects: [
+        ...taxonomy.subjects,
+        { id: 2, name: "Chemistry", slug: "chemistry" },
+      ],
+      chapters: [
+        ...taxonomy.chapters,
+        { id: 54, subject_id: 2, name: "Mole Concept", slug: "mole-concept" },
+      ],
+    },
+    owner: {
+      channelId: "UC_owner",
+      channelTitle: "Example Academy",
+      playlistId: "PL_review",
+      playlistTitle: "JEE Advanced Complete Course",
+      playlistDescription: "Faculty: Alakh Pandey",
+      videoCount: 1,
+    },
+    videos: [{
+      videoId: "abcdefghijk",
+      title: "Mole Concept Lecture 1",
+      description: "Taught by Alakh Pandey Sir",
+      tags: ["JEE"],
+      sourcePosition: 0,
+    }],
+    generatedAt: "2026-08-18T12:00:00.000Z",
+  });
+}
+
 function completedWorksheet(bundle) {
   const worksheet = buildDecisionWorksheet(bundle, {
     generatedAt: "2026-08-18T13:00:00.000Z",
@@ -224,6 +259,27 @@ describe("offline ingestion decision verification", () => {
     teacher.reviewer_action = "replace";
     teacher.reviewer_value = 34;
     teacher.reviewer_notes = "Confirmed against reviewed faculty evidence.";
+    expect(verifyDecisionWorksheet(bundle, worksheet)).toMatchObject({
+      valid: true,
+      complete: true,
+      errors: [],
+    });
+  });
+
+  it("validates replacement chapters against a reviewer-resolved subject", () => {
+    const bundle = unresolvedSubjectBundle();
+    expect(bundle.chapter_review.subject_id).toBeNull();
+    const worksheet = completedWorksheet(bundle);
+    const subject = worksheet.proposal_decisions.find((entry) => entry.field === "subject_id");
+    subject.reviewer_action = "replace";
+    subject.reviewer_value = 2;
+    subject.reviewer_notes = "Confirmed Chemistry from the reviewed source.";
+    for (const chapter of worksheet.chapter_decisions) {
+      chapter.reviewer_action = "replace";
+      chapter.reviewer_chapter_id = 54;
+      chapter.reviewer_notes = "Confirmed Mole Concept in the live Chemistry taxonomy.";
+    }
+
     expect(verifyDecisionWorksheet(bundle, worksheet)).toMatchObject({
       valid: true,
       complete: true,

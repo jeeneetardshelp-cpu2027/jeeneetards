@@ -7,6 +7,7 @@ import {
   assertExpectedRowCount,
   buildImportPayload,
   findDuplicateVideoIds,
+  hasCompleteReviewedLessonOrder,
   isReviewedSingleChapterOrder,
   mappedSourceSnapshotEvidence,
   parseBulkConfirmation,
@@ -132,6 +133,22 @@ describe("channel ingestion metadata", () => {
       chapterNames: ["Electromagnetic Induction"],
       videos: [],
     })).toBe(false);
+  });
+
+  it("reports complete reviewed lesson ordering for multi-chapter imports", () => {
+    const mapped = {
+      chapterNames: ["Periodic Table", "Chemical Bonding"],
+      videos: [{ lessonNumber: 1 }, { lessonNumber: 2 }],
+    };
+    expect(hasCompleteReviewedLessonOrder(mapped)).toBe(true);
+    expect(isReviewedSingleChapterOrder(mapped)).toBe(false);
+    expect(hasCompleteReviewedLessonOrder({
+      ...mapped,
+      videos: [{ lessonNumber: 1 }, {}],
+    })).toBe(false);
+
+    const source = readFileSync(resolve("src/scripts/importChannel.js"), "utf8");
+    expect(source).toMatch(/reviewed_lesson_order: reviewedLessonOrder/);
   });
 
   it("fails closed on reviewed single-chapter source replay and reports its contract", () => {

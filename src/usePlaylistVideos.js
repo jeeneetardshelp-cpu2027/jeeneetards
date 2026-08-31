@@ -15,8 +15,12 @@ const EMPTY = { course: null, lessons: [], loading: true, error: null, forPlayli
 // complete while actually being silently truncated.
 export const COURSE_LESSON_PAGE_SIZE = 500;
 
+// No `description` here on purpose: lesson descriptions are long free text
+// and only the ACTIVE lesson's is ever used (the VideoObject structured data
+// on the watch page). Fetching it for every lesson multiplied the payload on
+// large courses; useLessonDescription below fetches the one row that matters.
 const LESSON_SELECT =
-  "id, position, videos(id, youtube_video_id, title, description, duration_seconds," +
+  "id, position, videos(id, youtube_video_id, title, duration_seconds," +
   " embedding_status, last_verified_at, chapters(id, name, slug), subjects(name))";
 
 const pagingError = (code, message) => ({ data: null, error: { code, message } });
@@ -114,7 +118,6 @@ export function mapCourseDetail(playlist, lessonRows) {
         position: row.position,
         videoId: video.youtube_video_id,
         title: video.title,
-        description: video.description ?? null,
         durationSeconds: video.duration_seconds ?? null,
         embeddingStatus: video.embedding_status ?? "unknown",
         lastVerifiedAt: video.last_verified_at ?? null,
@@ -251,4 +254,43 @@ export function usePlaylistVideos(playlistId) {
   }, [load]);
 
   return { ...state, reload: load };
+}
+
+// The one place a lesson description is ever used is the ACTIVE lesson's
+// VideoObject structured data on the watch page. This fetches exactly that
+// one row (bounded: eq on the primary key + maybeSingle), instead of the old
+// bulk select that shipped every lesson's description on every course load.
+//
+// Returns null until the row resolves — the schema builder simply omits the
+// description property until then, which is honest: an absent field, never an
+// invented one. A failed fetch stays null for the same reason.
+export function useLessonDescription(videoDbId, { enabled = true } = {}) {
+  const [description, setDescription] = useState(null);
+
+  useEffect(() => {
+    // Switching lessons must never show the previous lesson's description.
+    setDescription(null);
+    const id = Number(videoDbId);
+    if (!enabled || !Number.isInteger(id) || id <= 0 || !isSupabaseConfigured) return undefined;
+
+    let active = true;
+    (async () => {
+      try {
+        const { data, error } = await supabase
+          .from("videos")
+          .select("description")
+          .eq("id", id)
+          .maybeSingle();
+        if (!active || error) return; // structured data just omits the field
+        setDescription(data?.description ?? null);
+      } catch {
+        // Unreachable library — the schema stays honest by omitting the field.
+      }
+    })();
+    return () => {
+      active = false;
+    };
+  }, [videoDbId, enabled]);
+
+  return description;
 }

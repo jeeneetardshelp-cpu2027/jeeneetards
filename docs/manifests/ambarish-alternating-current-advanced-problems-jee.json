@@ -1,0 +1,91 @@
+{
+  "version": 1,
+  "request_id": "07316f73-d164-46c1-a7f6-36ae8a2e354e",
+  "youtube_playlist_id": "PLFAFf1KDi96_ojBkPmNXVNfGIM7n5gktl",
+  "course_title": "Ambarish Alternating Current Advanced Problems",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "bVcTkJSAHnw",
+      "chapter": "Alternating Current",
+      "lesson_number": 1
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "Qu_7PL9R85M",
+      "chapter": "Alternating Current",
+      "lesson_number": 2
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "zLQzeUuCEe8",
+      "chapter": "Alternating Current",
+      "lesson_number": 3
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "YIcwoaXIcxk",
+      "chapter": "Alternating Current",
+      "lesson_number": 4
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "bZLREM5S1Eo",
+      "chapter": "Alternating Current",
+      "lesson_number": 5
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "GWrluHghX8s",
+      "chapter": "Alternating Current",
+      "lesson_number": 6
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "aIQUu8rvTrk",
+      "chapter": "Alternating Current",
+      "lesson_number": 7
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "tuvBnzkS0MI",
+      "chapter": "Alternating Current",
+      "lesson_number": 8
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "yfKqacTadGE",
+      "chapter": "Alternating Current",
+      "lesson_number": 9
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "_OqRo0PwaQQ",
+      "chapter": "Alternating Current",
+      "lesson_number": 10
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "a8562d28-f298-4af5-92a0-3177d8d4b63c",
+    "youtube_playlist_id": "PLFAFf1KDi96_ojBkPmNXVNfGIM7n5gktl",
+    "teacher": "Ambarish Srivastava",
+    "reviewed_on": "2026-08-20",
+    "reviewed_by": "Codex evidence review",
+    "source_url": "https://www.youtube.com/@ambarishphysics/about",
+    "source_label": "The official channel owns all ten playlist videos, identifies its instructor as Ambarish Srivastava, and states that its teaching supports IIT JEE Main, JEE Advanced, INPhO, and other Olympiads",
+    "youtube_video_ids": [
+      "bVcTkJSAHnw",
+      "Qu_7PL9R85M",
+      "zLQzeUuCEe8",
+      "YIcwoaXIcxk",
+      "bZLREM5S1Eo",
+      "GWrluHghX8s",
+      "aIQUu8rvTrk",
+      "tuvBnzkS0MI",
+      "yfKqacTadGE",
+      "_OqRo0PwaQQ"
+    ]
+  }
+}

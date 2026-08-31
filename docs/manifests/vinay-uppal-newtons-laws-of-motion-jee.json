@@ -1,0 +1,70 @@
+{
+  "version": 1,
+  "request_id": "6153a801-575c-4c22-8163-cb97252723e6",
+  "youtube_playlist_id": "PLZuY15zJc7Fi2eIkonylXF9QWp9S9L7jK",
+  "course_title": "Vinay Uppal Newton's Laws of Motion",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "wbYoQHPkUhY",
+      "chapter": "Newton's Laws of Motion (NLM)",
+      "lesson_number": 1
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "47NolSM2D1Y",
+      "chapter": "Newton's Laws of Motion (NLM)",
+      "lesson_number": 2
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "Sd-D6QlB7R4",
+      "chapter": "Newton's Laws of Motion (NLM)",
+      "lesson_number": 3
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "7EZQwxFxQvo",
+      "chapter": "Newton's Laws of Motion (NLM)",
+      "lesson_number": 4
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "4_KzNt9VsXk",
+      "chapter": "Newton's Laws of Motion (NLM)",
+      "lesson_number": 5
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "SJ46XsPwiYY",
+      "chapter": "Newton's Laws of Motion (NLM)",
+      "lesson_number": 6
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "R5vQ1eWOztU",
+      "chapter": "Newton's Laws of Motion (NLM)",
+      "lesson_number": 7
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "12d22e5d-3874-4754-8ba5-bb0c98cdea70",
+    "youtube_playlist_id": "PLZuY15zJc7Fi2eIkonylXF9QWp9S9L7jK",
+    "teacher": "Vinay Uppal",
+    "reviewed_on": "2026-08-19",
+    "reviewed_by": "Codex evidence review",
+    "source_url": "https://www.youtube.com/playlist?list=PLZuY15zJc7Fi2eIkonylXF9QWp9S9L7jK",
+    "source_label": "The official Vinay Uppal channel owns the complete ordered playlist; its lecture descriptions use first-person faculty context and direct students to vinayuppal.com",
+    "youtube_video_ids": [
+      "wbYoQHPkUhY",
+      "47NolSM2D1Y",
+      "Sd-D6QlB7R4",
+      "7EZQwxFxQvo",
+      "4_KzNt9VsXk",
+      "SJ46XsPwiYY",
+      "R5vQ1eWOztU"
+    ]
+  }
+}

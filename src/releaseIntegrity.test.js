@@ -19,6 +19,7 @@ function relativeSourceFiles() {
     "LegalPage.jsx",
     "MinimalUI.jsx",
     "PlaylistBrowse.jsx",
+    "PlaylistCard.jsx",
     "PrivacyPolicy.jsx",
     "StudentAuth.jsx",
     "UniversalSearch.jsx",

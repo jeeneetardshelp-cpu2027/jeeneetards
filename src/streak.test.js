@@ -6,6 +6,9 @@ import {
   clearStreak,
   dayKey,
   getDailyGoal,
+  goalMetShownToday,
+  markGoalMetShown,
+  mergeStudyDays,
   recordStudyDay,
   setDailyGoal,
   streakStats,
@@ -103,11 +106,70 @@ describe("daily goal", () => {
   });
 });
 
+describe("mergeStudyDays (the sign-in union)", () => {
+  it("adds server days without removing anything this device already knows", () => {
+    seed(["2026-08-26", "2026-08-27"]);
+    const added = mergeStudyDays(["2026-08-24", "2026-08-25", "2026-08-26"]);
+    expect(added).toBe(2);
+    expect(JSON.parse(localStorage.getItem(KEY)).days).toEqual([
+      "2026-08-24", "2026-08-25", "2026-08-26", "2026-08-27",
+    ]);
+    // The union is what the streak arithmetic now reads: four days in a row.
+    expect(streakStats(at("2026-08-27")).current).toBe(4);
+  });
+
+  it("restores a streak onto an empty store (the post-sign-out case)", () => {
+    // Sign-out wiped ll_streak_v1; the pull brings the server copy back.
+    expect(mergeStudyDays(["2026-08-25", "2026-08-26", "2026-08-27"])).toBe(3);
+    expect(streakStats(at("2026-08-27")).current).toBe(3);
+  });
+
+  it("keeps the student's goal setting through a merge", () => {
+    seed(["2026-08-27"], 3);
+    mergeStudyDays(["2026-08-26"]);
+    expect(getDailyGoal()).toBe(3);
+  });
+
+  it("is idempotent and reports zero when nothing is new", () => {
+    seed(["2026-08-26", "2026-08-27"]);
+    expect(mergeStudyDays(["2026-08-26", "2026-08-27"])).toBe(0);
+    expect(mergeStudyDays([])).toBe(0);
+    expect(JSON.parse(localStorage.getItem(KEY)).days).toEqual([
+      "2026-08-26", "2026-08-27",
+    ]);
+  });
+
+  it("drops garbage instead of storing it", () => {
+    seed(["2026-08-27"]);
+    expect(mergeStudyDays(["not-a-day", null, 42, "2026-08-26"])).toBe(1);
+    expect(JSON.parse(localStorage.getItem(KEY)).days).toEqual([
+      "2026-08-26", "2026-08-27",
+    ]);
+    expect(mergeStudyDays("not-an-array")).toBe(0);
+  });
+});
+
+describe("goal-met moment memory", () => {
+  it("starts unshown, remembers today once marked, and resets on a new day", () => {
+    expect(goalMetShownToday(at("2026-08-27"))).toBe(false);
+    markGoalMetShown(at("2026-08-27"));
+    expect(goalMetShownToday(at("2026-08-27"))).toBe(true);
+    // The next calendar day earns its own moment.
+    expect(goalMetShownToday(at("2026-08-28"))).toBe(false);
+  });
+});
+
 describe("clearStreak", () => {
   it("wipes the shared-device store", () => {
     seed(["2026-08-27"]);
     clearStreak();
     expect(localStorage.getItem(KEY)).toBeNull();
     expect(streakStats(at("2026-08-27")).current).toBe(0);
+  });
+
+  it("also forgets the goal-moment date — it belongs to the same student", () => {
+    markGoalMetShown(at("2026-08-27"));
+    clearStreak();
+    expect(goalMetShownToday(at("2026-08-27"))).toBe(false);
   });
 });

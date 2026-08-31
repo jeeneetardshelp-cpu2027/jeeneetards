@@ -54,9 +54,17 @@ const LEARNING_GOAL_SIGNALS = {
 // alternate spellings the plain name would miss.
 const SUBJECT_SYNONYMS = {
   physics: [/\bphysics\b/i, /\bphy\b/i, /भौतिक/, /फिजिक्स/],
-  chemistry: [/\bchemistry\b/i, /\bchem\b/i, /\borganic\b/i, /\binorganic\b/i, /\bphysical chem/i, /रसायन/, /केमिस्ट्री/],
+  chemistry: [/\bchemistry\b/i, /\bchemical\b/i, /\bchem\b/i, /\borganic\b/i, /\binorganic\b/i, /\bphysical chem/i, /रसायन/, /केमिस्ट्री/],
   mathematics: [/\bmath(?:s|ematics)?\b/i, /गणित/, /मैथ्स/],
-  biology: [/\bbiology\b/i, /\bbio\b/i, /\bbotany\b/i, /\bzoology\b/i, /जीव\s*विज्ञान/, /बायोलॉजी/],
+  biology: [
+    /\bbiology\b/i,
+    /\bbio\b/i,
+    /\bbotany\b/i,
+    /\bzoology\b/i,
+    /\bphysiology\b/i,
+    /जीव\s*विज्ञान/,
+    /बायोलॉजी/,
+  ],
 };
 
 // --- generic matcher -----------------------------------------------------
@@ -149,7 +157,11 @@ export function proposeSubject(text, subjects = []) {
   }
   matched.sort((a, b) => b.hits - a.hits);
   const [top] = matched;
-  const contested = matched.length > 1 && matched[1].hits === top.hits;
+  // Any cross-subject signal is unsafe to auto-accept. Generic channel or
+  // description text can mention another subject, and terms such as
+  // "Chemical Coordination" belong to Biology despite containing a strong
+  // Chemistry keyword. Keep the best prefill, but require human review.
+  const contested = matched.length > 1;
   return {
     value: top.subject.id,
     subjectName: top.subject.name,

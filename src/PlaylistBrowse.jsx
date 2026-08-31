@@ -12,205 +12,33 @@
 //      NOT presented as a resolved faculty identity.
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Link, useSearchParams, useNavigate, useLocation } from "react-router";
+import { useSearchParams, useNavigate, useLocation } from "react-router";
 import {
-  Star, Clock, Layers, SlidersHorizontal, X, AlertTriangle,
+  SlidersHorizontal, X, AlertTriangle,
 } from "lucide-react";
-import { usePlaylistBrowse, formatDuration, PAGE_SIZE } from "./usePlaylistBrowse.js";
-import { COURSE_TYPES, DIFFICULTIES, MIN_COMPARE, MAX_COMPARE, SORTS, DEFAULT_SORT } from "./filterModel.js";
+import { usePlaylistBrowse, PAGE_SIZE } from "./usePlaylistBrowse.js";
+import {
+  LECTURE_SORTS, DEFAULT_LECTURE_SORT, LECTURE_SORT_PARAM, parseLectureSort,
+} from "./useBrowse.js";
+import { MIN_COMPARE, MAX_COMPARE, SORTS, DEFAULT_SORT } from "./filterModel.js";
 import { clearAllChips, dropParam, emptyStateMessage } from "./filterChips.js";
 import { FILTER_PARAMS } from "./filterSchema.js";
 import { makeReturnState } from "./returnTo.js";
-import { ratingDisplay, RATING_CONFIDENCE_MIN } from "./ratingConfidence.js";
 import { useTheme } from "./theme.jsx";
 import { useStructuredData } from "./PageMetadata.jsx";
 import { itemListSchema } from "./structuredData.js";
-import { subjectColor } from "./brandColors.js";
 import { useRatingsAvailability } from "./useRatingsAvailability.js";
 import { usePopularityAvailability } from "./usePopularityAvailability.js";
-import YouTubeThumbnail from "./YouTubeThumbnail.jsx";
-import ChannelAvatar from "./ChannelAvatar.jsx";
-
-// Labels come from the canonical filter vocabulary — a second copy here would
-// drift, and the card would say "Advanced" while the filter said something else.
-const COURSE_TYPE_LABEL = Object.fromEntries(COURSE_TYPES.map((c) => [c.id, c.label]));
-const DIFFICULTY_LABEL = Object.fromEntries(DIFFICULTIES.map((d) => [d.id, d.label]));
+// The ONE course card lives in its own module now (PlaylistCard.jsx), so the
+// homepage can share it without pulling this whole page into its bundle.
+// ratingDisplay's home is ratingConfidence.js — import it from there.
+import { PlaylistCard } from "./PlaylistCard.jsx";
 
 // Two is the minimum that is a comparison at all; beyond four the columns stop
 // being readable on a phone, which is where the comparison matters most.
-// (MIN_COMPARE / MAX_COMPARE now come from filterModel.js — see the import
+// (MIN_COMPARE / MAX_COMPARE come from filterModel.js — see the import
 // above. They are NOT redeclared here: the tray must never offer a selection
 // the comparison page would then reject.)
-
-// Kept as re-exports for existing callers. The pure implementation is shared
-// with course, comparison, and faculty views so those screens cannot drift.
-export { ratingDisplay, RATING_CONFIDENCE_MIN };
-
-// ---------------------------------------------------------------- card
-// The ONE course card (noSecondResultSystem guard). Exported so Home can reuse
-// it — never re-implemented — keeping catalogue and home visually identical.
-export function PlaylistCard({ course, onOpen, to, state, selected, onToggle, disabled, comparisonEnabled = true }) {
-  const { t } = useTheme();
-  const duration = formatDuration(course.durationSeconds);
-  const rating = ratingDisplay(course.rating, course.ratingCount);
-  const color = subjectColor(course.subject);
-  const initials = (course.teacher || "")
-    .split(/\s+/).map((w) => w[0]).filter(Boolean).slice(0, 2).join("").toUpperCase();
-  // Subject leads the kicker; class levels ride alongside it instead of as a
-  // separate chip row, so the card has one clear identity line.
-  const kicker = [course.subject, ...(course.classLevels ?? [])].filter(Boolean).join(" · ");
-
-  // Present facts only. Anything unknown is simply absent — repeating
-  // "Teacher not recorded / Coverage not assessed / Not yet rated" on every
-  // card made the whole catalogue read as broken (rule 2).
-  const facts = [
-    // On a chapter page this counts THIS chapter, not the whole course, so say
-    // so — the bare number read as a course total and overstated the match.
-    course.lectures != null && {
-      icon: Layers,
-      text: `${course.lectures} lecture${course.lectures === 1 ? "" : "s"}${course.chapterScoped ? " on this chapter" : ""}`,
-    },
-    duration && { icon: Clock, text: duration },
-    course.language && { text: cap(course.language) },
-    course.contentType && { text: COURSE_TYPE_LABEL[course.contentType] ?? course.contentType },
-    course.difficulty && { text: DIFFICULTY_LABEL[course.difficulty] ?? course.difficulty },
-    course.coverage != null && { text: `${course.coverage}% coverage` },
-  ].filter(Boolean);
-
-  // One quiet indicator instead of three apologies. Counted on the fields a
-  // student actually decides with.
-  const missing = [
-    course.teacher == null, course.durationSeconds == null,
-    course.coverage == null, course.contentType == null, course.difficulty == null,
-  ].filter(Boolean).length;
-  const limited = missing >= 3;
-
-  return (
-    <div className="edge-glow hover-lift flex h-full min-h-[15rem] flex-col overflow-hidden rounded-xl border border-hairline bg-surface shadow-e1">
-      {/* subject colour spine */}
-      <span className="h-1 w-full shrink-0" style={{ background: color }} />
-      <YouTubeThumbnail
-        videoId={course.coverVideoId}
-        className="aspect-video w-full border-b border-hairline"
-      />
-      <div className="flex flex-1 flex-col p-4 sm:p-5">
-        {kicker && (
-          <span className="text-[0.68rem] font-semibold uppercase tracking-[0.08em]" style={{ color }}>
-            {kicker}
-          </span>
-        )}
-
-        {/* curated title leads; clamped so every card is the same shape */}
-        <h3 className="mt-2 line-clamp-2 text-base font-semibold leading-snug tracking-[-0.015em] text-ink">
-          {course.title}
-        </h3>
-
-        {/* Faculty and institute. Omitted when unknown — an absent line reads
-            as "no data", a placeholder reads as "broken product". */}
-        {(course.teacher || course.institute) && (
-          <div className={`mt-2.5 flex min-w-0 items-center gap-2 text-sm ${t.faint}`}>
-            {course.teacher && (
-              <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full text-[0.6rem] font-bold text-white"
-                style={{ background: color }} aria-hidden="true">
-                {initials || "?"}
-              </span>
-            )}
-            <span className="line-clamp-1 flex min-w-0 items-center gap-1">
-              {course.teacher}
-              {course.teacher && course.institute && <span className={t.muted}>·</span>}
-              {course.institute && (
-                course.instituteId ? (
-                <Link
-                  to={`/browse?channel=${course.instituteId}`}
-                  aria-label={`View all courses from ${course.institute}`}
-                  className={`inline-flex min-w-0 items-center gap-1 rounded-sm ${t.muted} transition-colors hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent`}
-                >
-                  <ChannelAvatar
-                    url={course.instituteLogoUrl}
-                    name={course.institute}
-                    className="h-5 w-5"
-                  />
-                  <span className="truncate">{course.institute}</span>
-                </Link>
-                ) : (
-                  <span className={`inline-flex min-w-0 items-center gap-1 ${t.muted}`}>
-                    <ChannelAvatar
-                      url={course.instituteLogoUrl}
-                      name={course.institute}
-                      className="h-5 w-5"
-                    />
-                    <span className="truncate">{course.institute}</span>
-                  </span>
-                )
-              )}
-            </span>
-          </div>
-        )}
-
-        <div className={`mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs ${t.faint}`}>
-          {facts.map((f, i) => (
-            <span key={i} className="flex items-center gap-1">
-              {f.icon && <f.icon className="h-3.5 w-3.5 shrink-0" />}
-              {f.text}
-            </span>
-          ))}
-        </div>
-
-        {(rating || limited) && (
-          <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
-            {rating?.kind === "scored" && (
-              <span className={`flex items-center gap-1 font-semibold ${t.text}`}
-                style={{ fontVariantNumeric: "tabular-nums" }}>
-                <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
-                {rating.score.toFixed(1)}
-                <span className={`font-normal ${t.muted}`}>({rating.count})</span>
-              </span>
-            )}
-            {/* neutral, unranked, no star — it is a count, not a score */}
-            {rating?.kind === "low" && <span className={t.muted}>{rating.text}</span>}
-            {limited && <span className={t.muted}>Limited metadata</span>}
-          </div>
-        )}
-
-        <div className="mt-auto flex items-center gap-2 pt-4">
-          {/* A real link when the caller supplies `to` (crawlable, open-in-new-tab);
-              the legacy onOpen button is kept for callers that haven't migrated. */}
-          {to ? (
-            <Link
-              to={to}
-              state={state}
-              className="flex min-h-11 w-full items-center justify-center rounded-md bg-accent px-4 text-sm font-semibold text-accent-ink transition duration-300 [transition-timing-function:var(--ease-out-expo)] hover:brightness-110"
-            >
-              View course
-            </Link>
-          ) : (
-            <button
-              onClick={() => onOpen(course)}
-              className="flex min-h-11 w-full items-center justify-center rounded-md bg-accent px-4 text-sm font-semibold text-accent-ink transition duration-300 [transition-timing-function:var(--ease-out-expo)] hover:brightness-110"
-            >
-              View course
-            </button>
-          )}
-          {comparisonEnabled && (
-            <label
-              className={`flex min-h-11 shrink-0 cursor-pointer items-center gap-1.5 rounded-md border px-3 text-xs transition-colors duration-200 ${
-                selected
-                  ? "border-accent-line bg-accent-soft font-medium text-accent"
-                  : `${t.border} ${t.faint} hover:border-hairline-strong`
-              } ${disabled ? "cursor-not-allowed opacity-40" : ""}`}
-            >
-              <input type="checkbox" className="sr-only" checked={selected} disabled={disabled}
-                     onChange={() => onToggle(course)} />
-              Compare
-            </label>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-const cap = (s) => (s ? s[0].toUpperCase() + s.slice(1) : s);
 
 function SkeletonCard() {
   const { t } = useTheme();
@@ -336,6 +164,20 @@ export default function PlaylistBrowse({
     if (sortUnavailable) setSort(DEFAULT_SORT, { replace: true });
   }, [sortUnavailable, setSort]);
 
+  // The lectures tab has its own sort key (?lsort=) and its own, smaller
+  // vocabulary — only orderings videos columns can back (see LECTURE_SORTS in
+  // useBrowse.js). Validation is shared with Dashboard's useVideos call via
+  // parseLectureSort, so the control and the query cannot disagree.
+  const lectureSort = parseLectureSort(params);
+  const setLectureSort = (value) =>
+    setParams((prev) => {
+      const next = new URLSearchParams(prev);
+      if (value && value !== DEFAULT_LECTURE_SORT) next.set(LECTURE_SORT_PARAM, value);
+      else next.delete(LECTURE_SORT_PARAM);
+      next.delete("page"); // reordering invalidates the current page offset
+      return next;
+    });
+
   const { items, total, loading, error, hasMore, reload } = usePlaylistBrowse({
     // goalId was the defect: accepted by the hook, never supplied by the page.
     goalId: filters.goal, subjectId: filters.subject,
@@ -443,8 +285,10 @@ export default function PlaylistBrowse({
               : `${items.length} courses`}
         </p>
         <div className="flex items-center gap-2">
-          {/* Sort applies to the Playlists list (usePlaylistBrowse). The
-              lectures tab has its own hook and is intentionally not wired. */}
+          {/* Each tab gets the sort its own data can honour: ?sort= drives the
+              Playlists list (usePlaylistBrowse), ?lsort= drives the lectures
+              list (useVideos). Separate keys, separate vocabularies — a
+              playlists sort must never silently mean something else here. */}
           {tab === "playlists" && (
             <label className="flex items-center gap-2 text-sm">
               <span className={`hidden sm:inline ${t.muted}`}>Sort</span>
@@ -455,6 +299,21 @@ export default function PlaylistBrowse({
                 className={`min-h-11 rounded-xl border ${t.border} ${t.card} ${t.text} px-3 text-sm`}
               >
                 {sortOptions.map((s) => (
+                  <option key={s.id} value={s.id}>{s.label}</option>
+                ))}
+              </select>
+            </label>
+          )}
+          {tab === "lectures" && (
+            <label className="flex items-center gap-2 text-sm">
+              <span className={`hidden sm:inline ${t.muted}`}>Sort</span>
+              <select
+                value={lectureSort}
+                onChange={(e) => setLectureSort(e.target.value)}
+                aria-label="Sort lessons"
+                className={`min-h-11 rounded-xl border ${t.border} ${t.card} ${t.text} px-3 text-sm`}
+              >
+                {LECTURE_SORTS.map((s) => (
                   <option key={s.id} value={s.id}>{s.label}</option>
                 ))}
               </select>

@@ -1,0 +1,175 @@
+{
+  "version": 1,
+  "request_id": "801dd074-14d7-4bfa-878a-b71aa569b163",
+  "youtube_playlist_id": "PL2dPD7oDhSn_yBc3uXGhqPLUxGUb9M9-r",
+  "course_title": "Maths Unplugged Indefinite Integration",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "wVUy1PLtg1A",
+      "chapter": "Indefinite Integration",
+      "lesson_number": 1
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "PRwwo-1psgI",
+      "chapter": "Indefinite Integration",
+      "lesson_number": 2
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "wiuYL9-vzyk",
+      "chapter": "Indefinite Integration",
+      "lesson_number": 3
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "QGwcM4QfGa0",
+      "chapter": "Indefinite Integration",
+      "lesson_number": 4
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "gjsB5Ekx0hA",
+      "chapter": "Indefinite Integration",
+      "lesson_number": 5
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "K5NrBzjZQ2s",
+      "chapter": "Indefinite Integration",
+      "lesson_number": 6
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "w6D5jkJjBok",
+      "chapter": "Indefinite Integration",
+      "lesson_number": 7
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "jyY2SBuhgjc",
+      "chapter": "Indefinite Integration",
+      "lesson_number": 8
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "HVM2RRWfegM",
+      "chapter": "Indefinite Integration",
+      "lesson_number": 9
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "Tqryekj1Db0",
+      "chapter": "Indefinite Integration",
+      "lesson_number": 10
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "7BJG42dXXv0",
+      "chapter": "Indefinite Integration",
+      "lesson_number": 11
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "GNRWC3AsOJM",
+      "chapter": "Indefinite Integration",
+      "lesson_number": 12
+    },
+    {
+      "position": 13,
+      "youtube_video_id": "4VrI-QdfLrI",
+      "chapter": "Indefinite Integration",
+      "lesson_number": 13
+    },
+    {
+      "position": 14,
+      "youtube_video_id": "C8nSpxOoTnA",
+      "chapter": "Indefinite Integration",
+      "lesson_number": 14
+    },
+    {
+      "position": 15,
+      "youtube_video_id": "bq0Yg1LFZKg",
+      "chapter": "Indefinite Integration",
+      "lesson_number": 15
+    },
+    {
+      "position": 16,
+      "youtube_video_id": "xpWp5teCnVk",
+      "chapter": "Indefinite Integration",
+      "lesson_number": 16
+    },
+    {
+      "position": 17,
+      "youtube_video_id": "6uvU2HPma9g",
+      "chapter": "Indefinite Integration",
+      "lesson_number": 17
+    },
+    {
+      "position": 18,
+      "youtube_video_id": "AQHsjK9dVKE",
+      "chapter": "Indefinite Integration",
+      "lesson_number": 18
+    },
+    {
+      "position": 19,
+      "youtube_video_id": "vGCvT5akPzc",
+      "chapter": "Indefinite Integration",
+      "lesson_number": 19
+    },
+    {
+      "position": 20,
+      "youtube_video_id": "vb8HDIruGz8",
+      "chapter": "Indefinite Integration",
+      "lesson_number": 20
+    },
+    {
+      "position": 21,
+      "youtube_video_id": "NBteqVVijNg",
+      "chapter": "Indefinite Integration",
+      "lesson_number": 21
+    },
+    {
+      "position": 22,
+      "youtube_video_id": "BU_UWvOAHrI",
+      "chapter": "Indefinite Integration",
+      "lesson_number": 22
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "342ed11d-fe70-4f21-b4e2-24f4cba0aafd",
+    "youtube_playlist_id": "PL2dPD7oDhSn_yBc3uXGhqPLUxGUb9M9-r",
+    "teacher": "Sandal Agarwal",
+    "reviewed_on": "2026-08-19",
+    "reviewed_by": "Codex evidence review",
+    "source_url": "https://www.youtube.com/@mathsunpluggedindia",
+    "source_label": "Official Maths Unplugged channel metadata identifies Sandal Agarwal and JEE Mathematics; the exact channel-owned playlist contains the complete ordered Indefinite Integration series",
+    "youtube_video_ids": [
+      "wVUy1PLtg1A",
+      "PRwwo-1psgI",
+      "wiuYL9-vzyk",
+      "QGwcM4QfGa0",
+      "gjsB5Ekx0hA",
+      "K5NrBzjZQ2s",
+      "w6D5jkJjBok",
+      "jyY2SBuhgjc",
+      "HVM2RRWfegM",
+      "Tqryekj1Db0",
+      "7BJG42dXXv0",
+      "GNRWC3AsOJM",
+      "4VrI-QdfLrI",
+      "C8nSpxOoTnA",
+      "bq0Yg1LFZKg",
+      "xpWp5teCnVk",
+      "6uvU2HPma9g",
+      "AQHsjK9dVKE",
+      "vGCvT5akPzc",
+      "vb8HDIruGz8",
+      "NBteqVVijNg",
+      "BU_UWvOAHrI"
+    ]
+  }
+}

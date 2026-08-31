@@ -11,7 +11,9 @@
 //  Edge runtime and must never pull in React or lucide.
 // =====================================================================
 
+import { Link } from "react-router";
 import {
+  ArrowRight,
   ArrowUpRight,
   Atom,
   BadgeCheck,
@@ -172,6 +174,52 @@ export function ResourceCard({ resource }) {
           <span className="ml-auto text-xs text-ink-3">{host}</span>
         </div>
       </a>
+    </Surface>
+  );
+}
+
+/**
+ * A destination on THIS site, shown alongside the external ResourceCards.
+ * Same card anatomy so it reads as a sibling, but where an external card
+ * shows the destination host it carries an "On JEENEETARD" badge — the one
+ * card on these pages that does NOT leave the site must say so as plainly
+ * as the others say where they go. The spine and kicker use the site's own
+ * accent instead of an institute tint for the same reason.
+ */
+export function OnSiteResourceCard({ resource }) {
+  return (
+    <Surface as="li" lift glow padded={false} className="overflow-hidden">
+      <span
+        aria-hidden="true"
+        className="block h-1 w-full"
+        style={{ background: "var(--accent)" }}
+      />
+      <Link to={resource.to} className="group flex h-full flex-col p-6">
+        <p className="text-[0.7rem] font-semibold uppercase tracking-[0.09em] text-accent">
+          JEENEETARD
+        </p>
+
+        <div className="mt-2 flex items-start justify-between gap-3">
+          <h3 className="text-base font-semibold leading-snug text-ink">
+            {resource.name}
+          </h3>
+          <ArrowRight
+            aria-hidden="true"
+            className="mt-0.5 h-4 w-4 shrink-0 text-ink-3 transition group-hover:translate-x-0.5 group-hover:text-accent"
+          />
+        </div>
+
+        <p className="mt-4 text-sm leading-relaxed text-ink-3">
+          {resource.description}
+        </p>
+
+        <div className="mt-6 flex flex-1 flex-wrap items-end gap-2">
+          <AccessBadge access="free" />
+          <Pill tone="accent" className="ml-auto whitespace-nowrap">
+            On JEENEETARD
+          </Pill>
+        </div>
+      </Link>
     </Surface>
   );
 }

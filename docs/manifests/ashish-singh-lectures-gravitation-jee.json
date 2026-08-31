@@ -1,0 +1,56 @@
+{
+  "version": 1,
+  "request_id": "32ed8e03-3863-461a-bb15-0408fcda162a",
+  "youtube_playlist_id": "PLXdr0gv_J2AzHXTDpMhi2OGIzlG1qkQVP",
+  "course_title": "Ashish Singh Lectures Gravitation",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "B1HlGoyj5c4",
+      "chapter": "Gravitation",
+      "lesson_number": 5
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "HNDV58pI0Sc",
+      "chapter": "Gravitation",
+      "lesson_number": 4
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "nZdMJp3Roo8",
+      "chapter": "Gravitation",
+      "lesson_number": 3
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "rVh89j0ec6w",
+      "chapter": "Gravitation",
+      "lesson_number": 2
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "egFF5Sm-1_E",
+      "chapter": "Gravitation",
+      "lesson_number": 1
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "9890d3fe-48ce-4edf-9415-b8c5a0a8c06c",
+    "youtube_playlist_id": "PLXdr0gv_J2AzHXTDpMhi2OGIzlG1qkQVP",
+    "teacher": "Ashish Singh Panwar",
+    "reviewed_on": "2026-08-20",
+    "reviewed_by": "Codex evidence review",
+    "source_url": "https://in.linkedin.com/in/ashish-singh-panwar-8433b4131",
+    "source_label": "The official Ashish Singh Lectures channel owns all five Gravitation videos and credits the instructor as ASP Sir; the Ashish Singh Lectures LinkedIn identity names Ashish Singh Panwar, establishing the canonical faculty name behind that channel attribution",
+    "youtube_video_ids": [
+      "B1HlGoyj5c4",
+      "HNDV58pI0Sc",
+      "nZdMJp3Roo8",
+      "rVh89j0ec6w",
+      "egFF5Sm-1_E"
+    ]
+  }
+}

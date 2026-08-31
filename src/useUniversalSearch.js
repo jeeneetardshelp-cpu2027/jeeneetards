@@ -50,6 +50,26 @@ export function groupRows(rows) {
   return out;
 }
 
+/**
+ * Merge a LATER page's rows into the groups already on screen. Order is still
+ * entirely the server's: earlier pages first, then this page's rows in the
+ * order they arrived. A row the server repeats across pages (the result set
+ * can shift underneath paging) is dropped rather than drawn twice.
+ */
+export function appendGroupRows(prev, rows) {
+  const next = { ...prev };
+  const incoming = groupRows(rows);
+  for (const [key, bucket] of Object.entries(incoming)) {
+    const before = next[key] ?? { rows: [], total: 0 };
+    const seen = new Set(before.rows.map((r) => r.id));
+    next[key] = {
+      rows: [...before.rows, ...bucket.rows.filter((r) => !seen.has(r.id))],
+      total: bucket.total,
+    };
+  }
+  return next;
+}
+
 async function addChannelLogos(rows) {
   const ids = [...new Set(
     (rows ?? [])
@@ -132,14 +152,23 @@ export function useUniversalSearch(query, { type = null, limit = 5 } = {}) {
           if (gen !== generation.current) return;      // obsolete — drop it
           if (error) {
             console.error("universal_search:", error);
-            setState({ groups: EMPTY, loading: false, tooShort: false, query: term,
-                       error: "Search is unavailable. Please try again." });
+            // Page 0 replaces; a failed LATER page keeps the rows already on
+            // screen, so a retry appends instead of restarting from nothing.
+            setState((s) => ({
+              groups: page > 0 ? s.groups : EMPTY,
+              loading: false, tooShort: false, query: term,
+              error: "Search is unavailable. Please try again.",
+            }));
             return;
           }
           const enriched = await addChannelLogos(data);
           if (gen !== generation.current) return;
-          setState({ groups: groupRows(enriched), loading: false, error: null,
-                     tooShort: false, query: term });
+          // "Show more" (page > 0) APPENDS below what is already shown; a new
+          // query or type starts over at page 0 and replaces.
+          setState((s) => ({
+            groups: page > 0 ? appendGroupRows(s.groups, enriched) : groupRows(enriched),
+            loading: false, error: null, tooShort: false, query: term,
+          }));
         });
     }, DEBOUNCE_MS);
 
