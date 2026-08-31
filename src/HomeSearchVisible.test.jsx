@@ -72,7 +72,7 @@ describe("homepage search results are actually visible", () => {
     const { container } = renderSearch();
     await screen.findByText("Relative motion");
     expect(container.querySelector("img")?.getAttribute("src"))
-      .toBe("https://img.youtube.com/vi/CBvaO-uDvs8/hqdefault.jpg");
+      .toBe("https://img.youtube.com/vi/CBvaO-uDvs8/mqdefault.jpg");
   });
 
   it("does not hide any search result inside an unrevealed .reveal wrapper", async () => {

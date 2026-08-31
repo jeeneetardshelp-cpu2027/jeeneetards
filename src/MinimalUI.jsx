@@ -277,6 +277,9 @@ export function LessonList({
                 </span>
                 <YouTubeThumbnail
                   videoId={lesson.videoId}
+                  // Drawn at 80-96px wide — the medium rendition is already
+                  // more pixels than this row can show, at a third the bytes.
+                  quality="mqdefault"
                   className="aspect-video w-20 shrink-0 rounded-md border border-hairline sm:w-24"
                 />
                 <span className={`min-w-0 flex-1 ${active ? `font-semibold ${t.text}` : t.muted}`}>

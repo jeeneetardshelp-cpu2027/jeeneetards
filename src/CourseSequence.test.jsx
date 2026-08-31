@@ -35,14 +35,16 @@ function renderList(props = {}) {
 }
 
 describe("large course lesson sequence", () => {
-  it("shows the lesson's YouTube thumbnail", () => {
+  it("shows the lesson's YouTube thumbnail at the size-appropriate quality", () => {
     const lessons = makeLessons(1);
     lessons[0].videoId = "CBvaO-uDvs8";
     const { container } = renderList({ lessons });
 
     const image = container.querySelector("img");
+    // mqdefault, not hqdefault: these rows draw at 80-96px, and the medium
+    // rendition is a third of the bytes on a phone connection.
     expect(image?.getAttribute("src"))
-      .toBe("https://img.youtube.com/vi/CBvaO-uDvs8/hqdefault.jpg");
+      .toBe("https://img.youtube.com/vi/CBvaO-uDvs8/mqdefault.jpg");
     expect(image?.getAttribute("loading")).toBe("lazy");
   });
 

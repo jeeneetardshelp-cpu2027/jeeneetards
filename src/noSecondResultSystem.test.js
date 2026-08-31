@@ -93,11 +93,13 @@ describe("routes do not mount a second result system", () => {
 });
 
 describe("exactly one playlist card implementation", () => {
-  it("only PlaylistBrowse defines a playlist card", () => {
+  it("only PlaylistCard.jsx defines a playlist card", () => {
+    // The card moved to its own module so the homepage can import it without
+    // pulling the whole browse page into its bundle. Still exactly ONE definer.
     const definers = withCode
       .filter(([, c]) => /(function|const)\s+\w*(PlaylistCard|CourseCard)\b/.test(c))
       .map(([f]) => f);
-    expect(definers).toEqual(["PlaylistBrowse.jsx"]);
+    expect(definers).toEqual(["PlaylistCard.jsx"]);
   });
 });
 

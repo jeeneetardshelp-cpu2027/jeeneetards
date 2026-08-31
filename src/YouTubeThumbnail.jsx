@@ -3,10 +3,15 @@ import { Play } from "lucide-react";
 
 const YOUTUBE_VIDEO_ID = /^[A-Za-z0-9_-]{11}$/;
 
-export function youtubeThumbnailUrl(videoId) {
+// hqdefault (480x360, ~20-40KB) suits the large card images; mqdefault
+// (320x180, roughly a third the bytes) is plenty for thumbnails drawn at
+// ~100px or less — on a cheap phone a 50-lesson list was downloading over a
+// megabyte of pixels nobody could see. Both renditions exist for every
+// public YouTube video, so the fallback behaviour is unchanged.
+export function youtubeThumbnailUrl(videoId, quality = "hqdefault") {
   const id = String(videoId ?? "").trim();
   return YOUTUBE_VIDEO_ID.test(id)
-    ? `https://img.youtube.com/vi/${id}/hqdefault.jpg`
+    ? `https://img.youtube.com/vi/${id}/${quality}.jpg`
     : null;
 }
 
@@ -16,13 +21,16 @@ export default function YouTubeThumbnail({
   className = "",
   imageClassName = "",
   eager = false,
+  // Default keeps every existing call site pixel-identical; small renditions
+  // opt in to "mqdefault" explicitly.
+  quality = "hqdefault",
 }) {
   const [failed, setFailed] = useState(false);
-  const src = youtubeThumbnailUrl(videoId);
+  const src = youtubeThumbnailUrl(videoId, quality);
 
   useEffect(() => {
     setFailed(false);
-  }, [videoId]);
+  }, [videoId, quality]);
 
   return (
     <span className={`relative block overflow-hidden bg-surface-2 ${className}`}>

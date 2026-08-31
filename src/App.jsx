@@ -29,17 +29,21 @@ import { SpeedInsights } from "@vercel/speed-insights/react";
 import { ThemeProvider } from "./theme.jsx";
 import Home from "./Home.jsx";
 import Footer from "./Footer.jsx";
-import LegalPage from "./LegalPage.jsx";
-import PrivacyPolicy from "./PrivacyPolicy.jsx";
-import MethodologyPage from "./MethodologyPage.jsx";
-import PasswordReset from "./PasswordReset.jsx";
-import SignInPage from "./SignInPage.jsx";
 import FeatureUnavailable from "./FeatureUnavailable.jsx";
 import NotFound from "./NotFound.jsx";
 import AppErrorBoundary from "./AppErrorBoundary.jsx";
 import RouteMetadata from "./PageMetadata.jsx";
 import { RELEASE_CAPABILITIES, RELEASE_FEATURES } from "./releaseCapabilities.js";
 
+// Rarely-visited static pages load on demand too — every student paid to
+// parse the terms, privacy, methodology and auth screens on first load.
+// Their routes sit inside <Layout/>, whose Suspense shows the same
+// RouteFallback the other lazy routes use.
+const LegalPage = lazy(() => import("./LegalPage.jsx"));
+const PrivacyPolicy = lazy(() => import("./PrivacyPolicy.jsx"));
+const MethodologyPage = lazy(() => import("./MethodologyPage.jsx"));
+const PasswordReset = lazy(() => import("./PasswordReset.jsx"));
+const SignInPage = lazy(() => import("./SignInPage.jsx"));
 const Explore = lazy(() => import("./Explore.jsx"));
 const FacultyDirectory = lazy(() => import("./FacultyDirectory.jsx"));
 const FacultyProfile = lazy(() => import("./FacultyProfile.jsx"));

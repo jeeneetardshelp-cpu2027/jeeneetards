@@ -29,7 +29,6 @@ const catalogue = vi.hoisted(() => ({
         id: 101, videoId: "video-one", title: "Lesson one", position: 1,
         chapter: { id: 1, name: "Kinematics", slug: "kinematics" },
         durationSeconds: 600, embeddingStatus: "allowed", subject: "Physics",
-        description: null,
       },
     ],
   },
@@ -47,9 +46,15 @@ const catalogue = vi.hoisted(() => ({
         id: 201, videoId: "video-two", title: "Introducing force", position: 1,
         chapter: { id: 5, name: "Laws of Motion", slug: "laws-of-motion" },
         durationSeconds: 500, embeddingStatus: "allowed", subject: "Physics",
-        description: "What a force is and how it changes motion.",
       },
     ],
+  },
+  // Lesson descriptions are no longer bulk-fetched with the lesson list —
+  // useLessonDescription fetches the ACTIVE lesson's row by its video db id.
+  // This map plays the part of that one-row query.
+  descriptions: {
+    101: null,
+    201: "What a force is and how it changes motion.",
   },
 }));
 
@@ -69,6 +74,10 @@ vi.mock("./usePlaylistVideos.js", () => ({
       reload: () => {},
     };
   },
+  // Mirrors the real hook's contract: the active lesson's video db id in,
+  // that one row's description out — and nothing at all while disabled.
+  useLessonDescription: (videoDbId, { enabled = true } = {}) =>
+    enabled ? (catalogue.descriptions[videoDbId] ?? null) : null,
 }));
 
 vi.mock("./progress.js", () => ({
@@ -82,6 +91,8 @@ vi.mock("./progress.js", () => ({
   getPlayerPrefs: () => ({ rate: null }),
   recordLessonPosition: () => null,
   savePlayerPrefs: () => {},
+  // Zero keeps the goal-met line out of these assertions.
+  countLessonsStudiedToday: () => 0,
 }));
 
 vi.mock("./CourseRating.jsx", () => ({ default: () => null }));
@@ -147,6 +158,9 @@ describe("CourseVideoPage structured data wiring", () => {
     expect(video.name).toBe("Lesson one");
     expect(video.embedUrl).toContain("video-one");
     expect(video.uploadDate).toBeUndefined(); // never fabricated — see rule 1
+    // This lesson has no stored description, so the property is absent — the
+    // one-row fetch returns null and the builder omits it (rule 1 again).
+    expect(video.description).toBeUndefined();
 
     const crumbs = schemaFor("BreadcrumbList");
     expect(crumbs.itemListElement).toHaveLength(3);
@@ -169,6 +183,10 @@ describe("CourseVideoPage structured data wiring", () => {
       bestRating: 5,
       worstRating: 1,
     });
+    // The ACTIVE lesson's real description, fetched by the bounded one-row
+    // query (useLessonDescription), still lands on the VideoObject.
+    await waitFor(() => expect(schemaFor("VideoObject").description)
+      .toBe("What a force is and how it changes motion."));
   });
 
   it("replaces rather than duplicates schema when navigating to a different course in place", async () => {
