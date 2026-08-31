@@ -136,3 +136,41 @@ describe("FacultyDirectory", () => {
     expect(screen.queryByText("No faculty match this view")).toBeNull();
   });
 });
+
+// The directory rendered every match at once — 89 cards is 18,438px at 360px,
+// roughly 23 phone screens of near-identical tiles with no way past them. Same
+// unbounded-list pattern already fixed on the homepage channel wall.
+describe("faculty directory is bounded on a phone", () => {
+  const many = (n) => Array.from({ length: n }, (_, i) => ({
+    teacher_id: 100 + i,
+    display_name: `Teacher ${i + 1}`,
+    slug: `teacher-${i + 1}`,
+    verified: false,
+    institutes: "Some Institute",
+    course_count: 1,
+  }));
+
+  it("caps the first view and reveals the rest on request", async () => {
+    facultyHooks.directory = { facets: many(40), loading: false, error: null, retry: vi.fn() };
+    renderAt();
+
+    // Bounded: 24 cards, not 40.
+    await waitFor(() => expect(screen.getAllByRole("link", { name: /faculty profile$/ })).toHaveLength(24));
+    // The true total is still reported, so the cap never understates the match.
+    // Both the result label and the reveal button carry it; one of them is enough
+    // to prove the cap never understates how many actually matched.
+    expect(screen.getAllByText(/40 faculty members/).length).toBeGreaterThan(0);
+    expect(screen.queryByRole("link", { name: /Teacher 40 faculty profile/ })).toBeNull();
+
+    fireEvent.click(screen.getByRole("button", { name: "Show all 40 faculty members" }));
+    await waitFor(() => expect(screen.getAllByRole("link", { name: /faculty profile$/ })).toHaveLength(40));
+    expect(screen.queryByRole("button", { name: /Show all/ })).toBeNull();
+  });
+
+  it("offers no reveal when everything already fits", async () => {
+    facultyHooks.directory = { facets: many(5), loading: false, error: null, retry: vi.fn() };
+    renderAt();
+    await waitFor(() => expect(screen.getAllByRole("link", { name: /faculty profile$/ })).toHaveLength(5));
+    expect(screen.queryByRole("button", { name: /Show all/ })).toBeNull();
+  });
+});

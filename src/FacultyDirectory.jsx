@@ -4,7 +4,7 @@
 // database remains the source of truth for identity, aliases, scope and course
 // counts; this screen never guesses that two similar names are the same person.
 
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router";
 import {
   ArrowRight, BadgeCheck, BookOpen, Search, SlidersHorizontal, X,
@@ -28,6 +28,9 @@ function updateQuery(setParams, key, value) {
     return next;
   }, { replace: true });
 }
+
+// Three rows of three on a laptop, and a bounded first screen on a phone.
+const FACULTY_PER_VIEW = 24;
 
 function FacultyCard({ faculty }) {
   const courseCount = Number(faculty.course_count ?? 0);
@@ -138,9 +141,20 @@ export default function FacultyDirectory() {
       .filter(Boolean);
   }, [debouncedQuery, directory.facets, facultySearch.loading, facultySearch.results, shouldSearch]);
 
+  // The directory rendered every match at once: 89 cards is 18,438px at 360px,
+  // about 23 phone screens of near-identical tiles with no way to skip them.
+  // Same unbounded-list pattern already fixed on the homepage channel wall.
+  const [showAll, setShowAll] = useState(false);
+  // A new search or filter starts from the top again, so an expanded view does
+  // not silently carry over into a different, possibly much larger, result set.
+  useEffect(() => { setShowAll(false); }, [debouncedQuery, goalSlug, subjectSlug]);
+
   const hasFilters = Boolean(query || goalSlug || subjectSlug);
   const resultLabel = `${visibleFaculty.length} facult${visibleFaculty.length === 1 ? "y member" : "y members"}`;
-  const schemaRows = visibleFaculty.map((item, index) => ({
+  const shownFaculty = showAll ? visibleFaculty : visibleFaculty.slice(0, FACULTY_PER_VIEW);
+  const hiddenCount = visibleFaculty.length - shownFaculty.length;
+  // Structured data describes what is actually on the page, never more.
+  const schemaRows = shownFaculty.map((item, index) => ({
     title: item.display_name,
     url: `/faculty/${item.slug}`,
     position: index + 1,
@@ -280,11 +294,20 @@ export default function FacultyDirectory() {
                 action={hasFilters ? <Button variant="secondary" onClick={clearFilters}>Clear filters</Button> : null}
               />
             ) : (
-              <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {visibleFaculty.map((faculty) => (
-                  <FacultyCard key={faculty.teacher_id} faculty={faculty} />
-                ))}
-              </ul>
+              <>
+                <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  {shownFaculty.map((faculty) => (
+                    <FacultyCard key={faculty.teacher_id} faculty={faculty} />
+                  ))}
+                </ul>
+                {hiddenCount > 0 && (
+                  <p className="mt-8 text-center">
+                    <Button variant="secondary" onClick={() => setShowAll(true)}>
+                      Show all {visibleFaculty.length} faculty members
+                    </Button>
+                  </p>
+                )}
+              </>
             )}
           </section>
 
