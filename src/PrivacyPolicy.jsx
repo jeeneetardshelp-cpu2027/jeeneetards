@@ -132,6 +132,16 @@ export default function PrivacyPolicy() {
               device.
             </p>
             <p>
+              Local storage key <code>ll_notes_v1</code> can remember notes
+              written against a lesson. Local storage key{" "}
+              <code>ll_streak_v1</code> can remember the calendar dates on which
+              a lesson was played. Local storage key{" "}
+              <code>ll_revision_v1</code> can remember chapters finished on this
+              device — chapter and course identifiers, chapter and course names,
+              a subject, a lesson count, the date each chapter was finished, and
+              whether it has since been marked as revised.
+            </p>
+            <p>
               Local storage key <code>ll_player_prefs_v1</code> remembers a
               chosen playback speed. Session storage entries beginning with{" "}
               <code>returnTo:</code> can remember the filtered course page to
