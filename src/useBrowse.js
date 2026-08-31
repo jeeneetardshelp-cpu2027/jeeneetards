@@ -18,6 +18,42 @@ const NOT_CONFIGURED = "Supabase isn't configured. Add your keys to .env and res
 // still scale. Every request is one deterministic database page.
 export const LECTURE_PAGE_SIZE = 24;
 
+// Sorts for the Individual Lectures tab. Only orderings the videos table can
+// actually answer are offered (the honest-sorts rule — a control that cannot
+// change the order reads as broken): duration_seconds and created_at are real
+// columns, while per-video rating/popularity rollups do not exist, so those
+// sorts are deliberately absent even though the Playlists tab has them.
+export const LECTURE_SORTS = [
+  { id: "recommended", label: "Recommended" },
+  { id: "shortest", label: "Shortest first" },
+  { id: "longest", label: "Longest first" },
+  { id: "recent", label: "Recently added" },
+];
+export const DEFAULT_LECTURE_SORT = "recommended";
+
+// ?lsort= — its own URL key, not the playlists tab's ?sort=: the two tabs have
+// different honest vocabularies, and sharing one key would make a playlists
+// sort silently mean something else (or nothing) after a tab switch.
+export const LECTURE_SORT_PARAM = "lsort";
+
+/** Read the lectures-tab sort out of the URL. Junk falls back to the default
+ *  rather than producing an unordered (or playlists-flavoured) query. */
+export function parseLectureSort(params) {
+  const raw = params.get(LECTURE_SORT_PARAM);
+  return LECTURE_SORTS.some((s) => s.id === raw) ? raw : DEFAULT_LECTURE_SORT;
+}
+
+// Maps a LECTURE_SORTS id to its .order() chain; the caller's .order("id")
+// tie-break follows every chain so paging stays deterministic. Lessons with an
+// unknown duration go LAST under both duration sorts (nullsFirst: false) — an
+// unknown value must never masquerade as the shortest or the longest.
+const LECTURE_ORDER_BY = {
+  recommended: (q) => q,            // the catalogue order: the id tie-break alone
+  shortest: (q) => q.order("duration_seconds", { ascending: true, nullsFirst: false }),
+  longest: (q) => q.order("duration_seconds", { ascending: false, nullsFirst: false }),
+  recent: (q) => q.order("created_at", { ascending: false }),
+};
+
 export function useDebouncedValue(value, delay = 300) {
   const [debounced, setDebounced] = useState(value);
   useEffect(() => {
@@ -32,7 +68,7 @@ export function useDebouncedValue(value, delay = 300) {
 export function useVideos({
   goalId, subjectId, chapterId, stage, channelId, teacherId,
   chapterClassSlugs = null,
-  language, contentType, difficulty, search, page = 0, enabled = true,
+  language, contentType, difficulty, search, sort, page = 0, enabled = true,
 }) {
   const [state, setState] = useState({
     videos: [], total: null, loading: true, error: null, hasMore: false,
@@ -120,9 +156,10 @@ export function useVideos({
           (teacherId ? ", pt:playlist_teachers!inner(teacher_id)" : "") +
           "))"
         : "");
-    let q = supabase
-      .from("videos")
-      .select(cols, { count: "exact" })
+    // The chosen sort leads; .order("id") always follows as the unique
+    // tie-break, so "recommended" is exactly the order this list always had.
+    const applyOrder = LECTURE_ORDER_BY[sort] ?? LECTURE_ORDER_BY.recommended;
+    let q = applyOrder(supabase.from("videos").select(cols, { count: "exact" }))
       .order("id", { ascending: true })
       .range(page * LECTURE_PAGE_SIZE, page * LECTURE_PAGE_SIZE + LECTURE_PAGE_SIZE - 1);
 
@@ -175,7 +212,7 @@ export function useVideos({
     }
   }, [enabled, goalId, subjectId, chapterId, stage, channelId, teacherId,
       chapterClassKey,
-      languageKey, contentTypeKey, difficultyKey, search, page]);
+      languageKey, contentTypeKey, difficultyKey, search, sort, page]);
 
   useEffect(() => { load(); }, [load]);
   return { ...state, reload: load };
