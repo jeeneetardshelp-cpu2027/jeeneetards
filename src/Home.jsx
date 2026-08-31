@@ -23,7 +23,7 @@
 //  HomeSections.jsx.
 // =====================================================================
 
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, lazy, useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router";
 import {
   ArrowRight, BookOpen, Loader2, PlayCircle, Search, Users, X,
@@ -46,11 +46,16 @@ import { useStructuredData } from "./PageMetadata.jsx";
 import { organizationSchema, websiteSchema } from "./structuredData.js";
 import { Button, EmptyState, Pill, Skeleton, Surface } from "./ui.jsx";
 import {
-  ContinueWatching, ExamGrid, Faq, Features, Hero,
+  ExamGrid, Faq, Features, Hero,
   SocialProof, TopRated, pickTopRated,
 } from "./HomeSections.jsx";
-import ExamCountdown from "./ExamCountdown.jsx";
-import PrepStreak from "./PrepStreak.jsx";
+import PrepToday from "./PrepToday.jsx";
+// Lazy so the polls feed/API modules stay out of the eager entry chunk; the
+// flag gate at the render site means the chunk is not even fetched while
+// polls are unreleased. PollOfTheDay keeps its own internal gate as a second
+// line of defence.
+const PollOfTheDay = lazy(() => import("./PollOfTheDay.jsx"));
+import { RELEASE_FEATURES } from "./releaseCapabilities.js";
 import DueForRevision from "./DueForRevision.jsx";
 import YouTubeThumbnail from "./YouTubeThumbnail.jsx";
 import ChannelAvatar from "./ChannelAvatar.jsx";
@@ -317,24 +322,28 @@ function Landing({
 }) {
   return (
     <>
-      <ContinueWatching entries={continueWatching} />
+      {/* The student's own status — continue-watching, streak, today's goal
+          and days-to-exam — merged into ONE compact band, so a returning
+          student reaches the exam grid a screen sooner. It renders nothing
+          for a brand-new visitor: every piece hides itself without data. */}
+      <PrepToday entries={continueWatching} />
 
       {/* Beside continue-watching, not beside the motivational bands: both are
           actions on work the student has already done. Hides itself until a
           chapter they finished is old enough to be worth going back to. */}
       <DueForRevision />
 
-      {/* The student's own momentum, before anything the site has to say.
-          Hides itself until they have actually watched something. */}
-      <PrepStreak />
-
-      {/* Days-left sits with the student's own progress, above the argument
-          for the product: both answer "where am I?", which is what a
-          returning student opens the site to find out. */}
-      <ExamCountdown />
-
-      {/* The tool comes before any argument for it. */}
+      {/* The tool comes before any argument for it. The student's remembered
+          exam lane (chosen in the countdown above) leads the grid. */}
       <ExamGrid exams={exams} />
+
+      {/* Inert until the polls release flag flips: nothing renders — and the
+          lazy chunk is never even fetched — while polls are unreleased. */}
+      {RELEASE_FEATURES.polls ? (
+        <Suspense fallback={null}>
+          <PollOfTheDay />
+        </Suspense>
+      ) : null}
 
       <SocialProof institutes={institutes} loading={channelsLoading} />
 
@@ -434,6 +443,7 @@ function SearchResults({ groups, loading, error, tooShort, retry, query }) {
                     {g.key === "lecture" && (
                       <YouTubeThumbnail
                         videoId={row.extra?.youtube_video_id}
+                        quality="mqdefault"
                         className="aspect-video w-20 shrink-0 rounded-md border border-hairline sm:w-24"
                       />
                     )}
