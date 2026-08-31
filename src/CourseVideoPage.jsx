@@ -19,6 +19,7 @@ import VideoReport from "./VideoReport.jsx";
 import CourseOverview from "./CourseOverview.jsx";
 import ChapterTeachers from "./ChapterTeachers.jsx";
 import ChapterChampions from "./ChapterChampions.jsx";
+import ChapterCleared from "./ChapterCleared.jsx";
 import StudyMaterialPanel from "./StudyMaterialPanel.jsx";
 import NotesPanel from "./NotesPanel.jsx";
 import { applyPageMetadata, useCourseMetadata, useStructuredData } from "./PageMetadata.jsx";
@@ -568,6 +569,19 @@ export default function CourseVideoPage() {
       }
       moreTeachers={
         <>
+          {/* The reward for finishing a chapter, before anything that asks the
+              student to do more. Renders nothing until the chapter is fully
+              cleared. `allLessons`, not `lessons`: the visible list is a chapter
+              slice, so measuring that would call every one-lesson view a
+              cleared chapter. */}
+          <ChapterCleared
+            lessons={allLessons}
+            completedIds={completedIds}
+            chapterId={activeLesson.chapter?.id ?? scope.chapter?.id ?? null}
+            courseId={course.id}
+            teacher={course.teacher}
+            institute={course.institute}
+          />
           {/* Champions first: "who teaches this chapter best" answers the
               question before "who else teaches it" lists the options. Both
               render nothing at all when they have nothing confident to say. */}
