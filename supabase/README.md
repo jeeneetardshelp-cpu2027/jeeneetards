@@ -6,22 +6,34 @@ staged files waiting on the owner's gate.
 
 ## One-time setup (owner, ~15 minutes)
 
-Run these from the repo root with the [Supabase CLI](https://supabase.com/docs/guides/cli)
-installed and logged in:
+`supabase init` has already been run (config.toml is committed). The remaining
+steps need the owner's credentials, from the repo root (the CLI is available
+as `npx supabase` — no install needed, and no Docker: this CLI version ships
+its own diff engine):
 
 ```
-supabase init            # writes supabase/config.toml (keep defaults)
-supabase link            # pick the PRODUCTION project when prompted
-supabase db pull         # snapshots the LIVE schema as the baseline migration
+npx supabase login                                    # opens the browser to approve
+npx supabase link --project-ref kezelafqhgqrprpadmlf  # asks for the DATABASE password
+npx supabase db pull                                  # snapshots the LIVE schema as the baseline
 ```
+
+The database password is in Dashboard → Project Settings → Database (reset it
+there if forgotten). When `db pull` asks to update the remote migration
+history table, answer Yes — that records the baseline so `db push` never
+tries to re-apply what production already has.
 
 `db pull` writes a timestamped baseline file into `supabase/migrations/` that is
 **dated before** the staged files below, so the chain replays in the right order.
 Commit the baseline. From then on, **every** schema change lands here as a
 numbered migration — never as ad-hoc SQL pasted into the dashboard.
 
-After the baseline exists, `supabase db push` applies any staged migrations that
-production does not have yet. `supabase db diff` is the standing drift detector.
+After the baseline exists, `supabase db push` applies **every** staged
+migration production does not have yet — there is no per-file selection. For
+the two currently staged files that is safe by design: polls_v1 installs
+fail-closed (`poll_mode()` stays `'off'`, nothing student-visible changes
+until the activation runbook's later steps), and study_days only enables the
+streak sync the frontend already ships dormant. Push deliberately, knowing
+both will land together. `supabase db diff` is the standing drift detector.
 
 ## Staged migrations (in order)
 
