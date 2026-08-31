@@ -33,6 +33,13 @@ describe("current production capability contract", () => {
       // Off until the Supabase/Google provider is configured
       // (docs/auth/google_oauth_setup.md); the button is hidden while false.
       googleAuth: true,
+      // Student polls. Off until BOTH src/migrations/polls_v1.sql is installed
+      // in production AND an admin switches poll_mode() to 'open' from the
+      // Polls tab in /admin. This is the same mismatch the forum comment
+      // describes: the pages exist and are tested, but until the RPCs are
+      // actually deployed every call returns "function does not exist", so the
+      // frontend must not claim the capability.
+      polls: false,
     });
     expect(homeTagline()).toMatch(/compare/i);
   });

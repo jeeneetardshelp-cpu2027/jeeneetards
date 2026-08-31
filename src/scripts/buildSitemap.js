@@ -25,6 +25,10 @@ export const STATIC_ROUTES = [
     ? ["/materials", JEE_MAIN_PAPERS_PATH]
     : []),
   ...(RELEASE_FEATURES.forum ? ["/forum"] : []),
+  // Same rule as the forum: while the flag is off, pageMetadata marks /polls
+  // noindex, and advertising a noindex URL is how the forum ended up asking
+  // Google to crawl a dead end for two months.
+  ...(RELEASE_FEATURES.polls ? ["/polls"] : []),
   // One entry per exam that actually has sources. An exam with an empty list
   // is deliberately absent: pageMetadata marks it noindex, and a sitemap must
   // never advertise a URL that tells Google not to index it.

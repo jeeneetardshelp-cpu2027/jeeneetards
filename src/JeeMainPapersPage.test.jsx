@@ -78,7 +78,7 @@ describe("JEE Main previous-year-paper landing", () => {
     expect(screen.getByRole("heading", {
       name: "JEE Main papers, answer keys and solutions",
     })).toBeTruthy();
-    expect(screen.getByText(/final answer keys are listed separately from worked solutions/i)).toBeTruthy();
+    expect(screen.getByText(/official answer keys are listed separately from worked solutions/i)).toBeTruthy();
     expect(screen.getByRole("heading", {
       name: "JEE Main 2024 Session 1 - 27 January Shift 1",
     })).toBeTruthy();

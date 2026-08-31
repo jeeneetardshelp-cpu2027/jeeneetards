@@ -51,6 +51,7 @@ describe("repository onboarding contract", () => {
       reviewDisplay: true,
       contentReporting: true,
       googleAuth: true,
+      polls: false,
     });
     for (const label of [
       "Public student accounts", "Rating submission", "Review display", "Content reporting",
@@ -59,6 +60,12 @@ describe("repository onboarding contract", () => {
       expect(readme).toMatch(new RegExp(`\\| ${label} \\| Enabled \\|`));
     }
     expect(readme).toMatch(/Student forum \| Enabled.*closed beta.*public reading.*invited-member contributions/i);
+    // Polls are the same shape the forum was before its beta: the pages and
+    // their tests exist, but the RPCs they call are not deployed, so the row
+    // must say so rather than letting a reader conclude the feature is live
+    // because the code is here.
+    expect(readme).toMatch(/\| Student polls \| Disabled[^|]*\|/);
+    expect(readme).toMatch(/Student polls \| Disabled.*poll mode still/);
   });
 
   it("keeps privileged keys out of frontend guidance", () => {

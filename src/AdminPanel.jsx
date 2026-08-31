@@ -31,6 +31,7 @@ import { hasAdminAccess } from "./adminAccess.js";
 import ManageCatalogPanel from "./ManageCatalogPanel.jsx";
 import ForumReportsPanel from "./forum/ForumReportsPanel.jsx";
 import ForumBetaAdminPanel from "./forum/ForumBetaAdminPanel.jsx";
+import PollReviewPanel from "./polls/PollReviewPanel.jsx";
 
 export { slugify } from "./adminUI.jsx";
 
@@ -948,6 +949,7 @@ export default function AdminPanel() {
     { id: "faculty", label: "Faculty Review" },
     { id: "reports", label: "Reports" },
     { id: "forum-beta", label: "Forum beta" },
+    { id: "polls", label: "Polls" },
     { id: "reviews", label: "Reviews" },
   ];
 
@@ -1022,6 +1024,13 @@ export default function AdminPanel() {
               Closed-beta access
             </h2>
             <ForumBetaAdminPanel />
+          </section>
+        ) : tab === "polls" ? (
+          <section aria-labelledby="poll-review-heading">
+            <h2 id="poll-review-heading" className={`mb-4 text-lg font-semibold ${t.text}`}>
+              Student polls
+            </h2>
+            <PollReviewPanel />
           </section>
         ) : tab === "reviews" ? (
           <ReviewModerationPanel />

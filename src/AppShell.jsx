@@ -148,6 +148,7 @@ export function GlobalHeader({ crumbs = [], search = null, leading = null, width
     { label: "Mock tests", to: "/tests" },
     ...(RELEASE_CAPABILITIES.studyMaterials ? [{ label: "Study material", to: "/materials" }] : []),
     ...(RELEASE_FEATURES.forum ? [{ label: "Forum", to: "/forum" }] : []),
+    ...(RELEASE_FEATURES.polls ? [{ label: "Polls", to: "/polls" }] : []),
   ];
   // "Courses" also owns the guided /explore funnel, which only redirects into
   // /browse — so the student is never on a page with no active nav item.
