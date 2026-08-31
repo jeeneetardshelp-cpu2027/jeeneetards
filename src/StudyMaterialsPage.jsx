@@ -1,8 +1,9 @@
-import { BookOpen, FileText, RefreshCw, SearchX } from "lucide-react";
-import { useSearchParams } from "react-router";
+import { ArrowRight, BookOpen, FileCheck2, FileText, RefreshCw, SearchX } from "lucide-react";
+import { Link, useSearchParams } from "react-router";
 import { Page } from "./AppShell.jsx";
 import { useStructuredData } from "./PageMetadata.jsx";
 import StudyMaterialCard from "./StudyMaterialCard.jsx";
+import { JEE_MAIN_PAPERS_PATH } from "./studyMaterialLandings.js";
 import { studyMaterialsPageSchemas } from "./studyMaterialsStructuredData.js";
 import { useStudyMaterialCatalog } from "./useStudyMaterialCatalog.js";
 import {
@@ -180,6 +181,26 @@ export default function StudyMaterialsPage() {
           </p>
         </div>
       </section>
+
+      {/* The curated JEE Main paper landing, surfaced from the directory it
+          belongs to instead of being orphaned. A slim banner on purpose: on a
+          phone the filters below must stay within reach, not below the fold. */}
+      <Link
+        to={JEE_MAIN_PAPERS_PATH}
+        className="mt-6 flex min-h-11 flex-wrap items-center gap-3 rounded-xl border border-accent-line bg-accent-soft px-4 py-3 transition-colors hover:bg-surface-2 sm:px-5"
+      >
+        <FileCheck2 aria-hidden="true" className="h-5 w-5 shrink-0 text-accent" />
+        <span className="min-w-0 flex-1 basis-52">
+          <span className="block text-sm font-semibold text-ink">JEE Main previous-year papers, by year</span>
+          <span className="mt-0.5 block text-xs leading-relaxed text-ink-2">
+            Official question papers and final answer keys, organised by year, session and shift.
+          </span>
+        </span>
+        <span className="inline-flex items-center gap-1 text-sm font-semibold text-accent">
+          Browse papers
+          <ArrowRight aria-hidden="true" className="h-4 w-4" />
+        </span>
+      </Link>
 
       <section aria-label="Filter study material" className="my-8 rounded-xl border border-hairline bg-surface-2 p-4 sm:p-5">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">

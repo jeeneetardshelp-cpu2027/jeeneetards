@@ -17,6 +17,7 @@ import { Link } from "react-router";
 import { ArrowUpRight } from "lucide-react";
 import { Container } from "./AppShell.jsx";
 import { RELEASE_CAPABILITIES, RELEASE_FEATURES } from "./releaseCapabilities.js";
+import { JEE_MAIN_PAPERS_PATH } from "./studyMaterialLandings.js";
 
 // The footer is a sitemap, not the cramped top nav, so it still lists the
 // guided funnel and library search as separate crawlable destinations (both
@@ -31,7 +32,12 @@ const EXPLORE = [
     : []),
   { label: "Mock tests", to: "/tests" },
   ...(RELEASE_CAPABILITIES.studyMaterials
-    ? [{ label: "Study material", to: "/materials" }]
+    ? [
+        { label: "Study material", to: "/materials" },
+        // The curated paper landing gets its own crawlable footer entry so
+        // it is reachable from every page, not orphaned behind /materials.
+        { label: "JEE Main papers by year", to: JEE_MAIN_PAPERS_PATH },
+      ]
     : []),
   ...(RELEASE_FEATURES.forum
     ? [{ label: "Student forum", to: "/forum" }]

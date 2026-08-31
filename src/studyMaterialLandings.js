@@ -8,6 +8,20 @@ export const JEE_MAIN_PAPERS_META = Object.freeze({
   heading: "JEE Main papers, answer keys and solutions",
 });
 
+// One optional on-site card per /tests/:examId page, keyed by the exam id
+// used in testPlatforms.js. An exam earns an entry ONLY when a curated
+// destination on THIS site has been checked to exist and hold content —
+// never a guessed /materials filter combination. Today that is just the
+// JEE Main paper landing above.
+export const ON_SITE_TEST_RESOURCES = Object.freeze({
+  "jee-main": Object.freeze({
+    name: "JEE Main previous-year papers, by year",
+    to: JEE_MAIN_PAPERS_PATH,
+    description:
+      "Official question papers and final answer keys, organised by year, session and shift on this site's own papers page. PDFs to read — not a timed test.",
+  }),
+});
+
 const ANSWER_KEY_INCLUDED = /\b(?:final\s+)?answer\s+keys?\b/i;
 const ANSWER_KEY_EXCLUDED = /\b(?:no|without)\b[^.]{0,80}\banswer\s+keys?\b/i;
 const SOLUTION_INCLUDED = /\bwith\s+(?:worked\s+)?solutions?\b|\b(?:worked\s+)?solutions?\s+(?:are\s+)?included\b/i;
