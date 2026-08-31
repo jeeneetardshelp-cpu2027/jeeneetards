@@ -1,0 +1,77 @@
+{
+  "version": 1,
+  "request_id": "be50196d-5035-4064-9bba-b8bb8fe8e7a0",
+  "youtube_playlist_id": "PLb2lQ33Kj041B2E2HpazzDlS8sH8D27V7",
+  "course_title": "Physics with Akash Goyal Work Energy Power Advanced Problems",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "CF0o7jNg44M",
+      "chapter": "Work, Energy and Power",
+      "lesson_number": 1
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "xyzorm2GgFo",
+      "chapter": "Work, Energy and Power",
+      "lesson_number": 2
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "h1cGMEH_Jwc",
+      "chapter": "Work, Energy and Power",
+      "lesson_number": 3
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "G7OXx4BnJVc",
+      "chapter": "Work, Energy and Power",
+      "lesson_number": 4
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "1vP1IUUewyo",
+      "chapter": "Work, Energy and Power",
+      "lesson_number": 5
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "xdKvluK_V2I",
+      "chapter": "Work, Energy and Power",
+      "lesson_number": 6
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "OUsFQAlyEn4",
+      "chapter": "Work, Energy and Power",
+      "lesson_number": 7
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "Ki0aOF7ougw",
+      "chapter": "Work, Energy and Power",
+      "lesson_number": 8
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "ff8cfa83-aabb-4d9f-9174-395ceb8fd362",
+    "youtube_playlist_id": "PLb2lQ33Kj041B2E2HpazzDlS8sH8D27V7",
+    "teacher": "Akash Goyal",
+    "reviewed_on": "2026-08-19",
+    "reviewed_by": "Codex evidence review",
+    "source_url": "https://www.youtube.com/@physicswithakashgoyal",
+    "source_label": "The official channel is titled Physics with Akash Goyal (PWAG), and its About description states that its owner is an IIT Delhi graduate teaching Physics for IIT JEE",
+    "youtube_video_ids": [
+      "CF0o7jNg44M",
+      "xyzorm2GgFo",
+      "h1cGMEH_Jwc",
+      "G7OXx4BnJVc",
+      "1vP1IUUewyo",
+      "xdKvluK_V2I",
+      "OUsFQAlyEn4",
+      "Ki0aOF7ougw"
+    ]
+  }
+}

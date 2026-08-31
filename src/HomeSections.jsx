@@ -12,7 +12,12 @@ import {
   Gauge, GraduationCap, Languages, Layers, ListFilter,
   MonitorPlay, Search, Sparkles, Star,
 } from "lucide-react";
-import { PlaylistCard, ratingDisplay } from "./PlaylistBrowse.jsx";
+// The shared card comes from its own small module — importing it from
+// PlaylistBrowse.jsx dragged the whole browse page into the homepage bundle,
+// which every student paid for on first load.
+import { PlaylistCard } from "./PlaylistCard.jsx";
+import { ratingDisplay } from "./ratingConfidence.js";
+import { orderExamsByLane } from "./examLane.js";
 import { Container } from "./AppShell.jsx";
 import {
   Accordion, Button, Eyebrow, IconTile, Pill, SectionHead, Skeleton,
@@ -324,6 +329,10 @@ const EXAM_ICON = {
 };
 
 export function ExamGrid({ exams }) {
+  // The student's remembered exam (the countdown's persisted JEE/NEET/Boards
+  // choice, examLane.js) leads the grid; everything else keeps its order and
+  // the layout does not change. With nothing remembered this is a no-op.
+  const ordered = orderExamsByLane(exams);
   return (
     <Section id="exams">
       <SectionHead
@@ -339,7 +348,7 @@ export function ExamGrid({ exams }) {
       />
 
       <div className="mt-16 grid grid-cols-2 gap-4 lg:grid-cols-4">
-        {exams.map((exam, i) => {
+        {ordered.map((exam, i) => {
           const tint = EXAM_TINT[exam.id] ?? "var(--accent)";
           const Icon = EXAM_ICON[exam.id] ?? GraduationCap;
           const body = (
@@ -514,56 +523,9 @@ export function Faq() {
   );
 }
 
-/* ==================================================== continue watching */
-
-export function ContinueWatching({ entries }) {
-  const ref = useReveal();
-  if (!entries?.length) return null;
-
-  return (
-    <section ref={ref} className="relative pt-4 pb-8">
-      <Container>
-        <Reveal anim="fade" className="flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <Eyebrow className="mb-3">Pick up where you left off</Eyebrow>
-            <h2 className="text-h3 text-ink">Continue watching</h2>
-          </div>
-        </Reveal>
-        <ul className="mt-6 grid gap-4 sm:grid-cols-3">
-          {entries.map((e, i) => (
-            <Reveal key={e.playlistId} as="li" delay={i}>
-              <Surface
-                as={Link}
-                to={`/course/${e.playlistId}/chapter/${e.chapterId}?v=${e.lastVideoId}`}
-                lift
-                glow
-                padded={false}
-                className="group flex h-full items-center gap-4 p-5"
-              >
-                <IconTile icon={MonitorPlay} />
-                <span className="min-w-0 flex-1">
-                  <span className="block truncate text-sm font-medium text-ink">
-                    {e.lastVideoTitle || e.courseTitle}
-                  </span>
-                  <span className="mt-1 block truncate text-xs text-ink-3">
-                    {e.courseTitle}
-                    {e.totalLessons
-                      ? ` · lesson ${e.lastPosition ?? "?"} of ${e.totalLessons}`
-                      : ""}
-                  </span>
-                </span>
-                <ArrowRight
-                  aria-hidden="true"
-                  className="h-4 w-4 shrink-0 text-ink-3 transition-transform duration-300 [transition-timing-function:var(--ease-out-expo)] group-hover:translate-x-1 group-hover:text-accent"
-                />
-              </Surface>
-            </Reveal>
-          ))}
-        </ul>
-      </Container>
-    </section>
-  );
-}
+/* The old ContinueWatching section moved into PrepToday.jsx (2026-08-31),
+   merged with the streak and countdown into one compact band — gone from
+   here, not just unrendered, the same way the 2026-08-10 trim worked. */
 
 /* ------------------------------------------------------------- utilities */
 

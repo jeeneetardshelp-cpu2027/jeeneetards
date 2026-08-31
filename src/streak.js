@@ -17,6 +17,12 @@
 // Device-local like notes.js and progress.js, and cleared on sign-out with
 // them: ll_streak_v1 is one un-namespaced store shared by whoever uses the
 // browser, so a school-lab machine must not hand one student another's streak.
+// For a SIGNED-IN student the days are also mirrored to the server
+// (streakSync.js, study_days table) and unioned back in on the next sign-in
+// (mergeStudyDays below), so the sign-out wipe no longer costs them the
+// streak — the wipe protects the next person, the pull restores the owner.
+
+import { queueStudyDaySync } from "./streakSync.js";
 
 const KEY = "ll_streak_v1";
 // A year and a bit: enough for "longest streak" to mean something, small
@@ -69,10 +75,33 @@ function write(state) {
 export function recordStudyDay(now = new Date()) {
   const state = read();
   const today = dayKey(now);
+  // Best-effort server copy for signed-in students, fire-and-forget: it can
+  // never block or throw into the playback path, and it runs even when today
+  // is already stored locally — a day earned before signing in (or while
+  // offline) still deserves its server row once a session exists.
+  queueStudyDaySync(today);
   if (state.days.includes(today)) return state.days.length;
   state.days = [...state.days, today].sort();
   write(state);
   return state.days.length;
+}
+
+/**
+ * Union server-side study days into this device's store, called after the
+ * sign-in pull (streakSync.pullServerStudyDays). Only ever ADDS days — a day
+ * this device witnessed is never removed because the server has not heard of
+ * it yet. Garbage is dropped, not stored. Returns how many days were new,
+ * so callers know whether anything on screen needs a re-read.
+ */
+export function mergeStudyDays(days) {
+  const incoming = (Array.isArray(days) ? days : []).filter(isDayKey);
+  if (!incoming.length) return 0;
+  const state = read();
+  const before = state.days.length;
+  state.days = [...new Set([...state.days, ...incoming])].sort();
+  if (state.days.length === before) return 0;
+  write(state);
+  return state.days.length - before;
 }
 
 /** The student's own daily lesson target (1–3). */
@@ -131,10 +160,37 @@ export function streakStats(now = new Date()) {
   return { current, longest: Math.max(longest, current), studiedToday: set.has(today), thisWeek };
 }
 
+// The watch page's one-line "goal met" moment is shown at most once per
+// calendar day; this key remembers the date it last appeared. Its own key
+// (not a field inside ll_streak_v1) so the streak store's shape — and the
+// privacy policy's description of it — stays "dates a lesson was played",
+// nothing else.
+const GOAL_MET_KEY = "ll_goal_met_v1";
+
+/** Whether the goal-met line has already been shown today. */
+export function goalMetShownToday(now = new Date()) {
+  try {
+    return localStorage.getItem(GOAL_MET_KEY) === dayKey(now);
+  } catch {
+    // Blocked storage: claiming "already shown" would silence the moment
+    // forever; "not shown" at worst repeats one gentle line.
+    return false;
+  }
+}
+
+export function markGoalMetShown(now = new Date()) {
+  try {
+    localStorage.setItem(GOAL_MET_KEY, dayKey(now));
+  } catch {
+    /* storage blocked — the moment may show again, which is harmless */
+  }
+}
+
 /** Wipe this device's streak. Called on sign-out beside clearProgress. */
 export function clearStreak() {
   try {
     localStorage.removeItem(KEY);
+    localStorage.removeItem(GOAL_MET_KEY);
   } catch {
     /* storage blocked — nothing to clear */
   }

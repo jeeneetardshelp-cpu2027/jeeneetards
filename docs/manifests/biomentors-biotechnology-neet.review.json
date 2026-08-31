@@ -1,0 +1,153 @@
+{
+  "subject": "Biology",
+  "summary": {
+    "total": 14,
+    "auto": 0,
+    "review": 14,
+    "unmatched": 0,
+    "excluded": 0
+  },
+  "source_note": "The verified Biomentors Classes Online playlist provides 14 usable full lectures numbered 1 through 15, with source position 12 combining lectures 12 and 13. Manual topic review places source positions 1 through 8 in Biotechnology: Principles and Processes and positions 9 through 14 in Biotechnology and its Applications.",
+  "rows": [
+    {
+      "position": 1,
+      "youtube_video_id": "boZ0zUnuZ68",
+      "title": "Biotechnology l Lecture 1 l Biology l NEET",
+      "chapter": "Biotechnology: Principles and Processes",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched the biotechnology introduction and beginnings of genetic engineering to Biotechnology: Principles and Processes",
+      "alternatives": ["Biotechnology: Principles and Processes"]
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "CPMH8C9Y3_w",
+      "title": "Biotechnology l Lecture 2 l Biology l NEET",
+      "chapter": "Biotechnology: Principles and Processes",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched genetic engineering, bioprocess engineering, tools, and enzymes to Biotechnology: Principles and Processes",
+      "alternatives": ["Biotechnology: Principles and Processes"]
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "O6_WFl7UNRc",
+      "title": "Biotechnology l Lecture 3 l Biology l NEET",
+      "chapter": "Biotechnology: Principles and Processes",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched restriction enzymes, palindromic sequences, and recombinant DNA foundations to Biotechnology: Principles and Processes",
+      "alternatives": ["Biotechnology: Principles and Processes"]
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "V6QTBiaikNM",
+      "title": "Biotechnology l Lecture 4 l Biology l NEET",
+      "chapter": "Biotechnology: Principles and Processes",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched restriction-enzyme discovery, nomenclature, function, and types to Biotechnology: Principles and Processes",
+      "alternatives": ["Biotechnology: Principles and Processes"]
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "TCGXZeJNgQM",
+      "title": "Biotechnology l Lecture 5 l Biology l NEET",
+      "chapter": "Biotechnology: Principles and Processes",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched recombinant DNA, gel electrophoresis, gene transfer, and cloning vectors to Biotechnology: Principles and Processes",
+      "alternatives": ["Biotechnology: Principles and Processes"]
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "FFWOVWg2hLc",
+      "title": "Biotechnology l Lecture 6 l Biology l NEET",
+      "chapter": "Biotechnology: Principles and Processes",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched vector features, selectable markers, cloning sites, plasmids, retroviruses, and gene cloning to Biotechnology: Principles and Processes",
+      "alternatives": ["Biotechnology: Principles and Processes"]
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "cgG1zvg1jUs",
+      "title": "Biotechnology l Lecture 7 l Biology l NEET",
+      "chapter": "Biotechnology: Principles and Processes",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched competent cells, upstream processing, fermentation, and downstream processing to Biotechnology: Principles and Processes",
+      "alternatives": ["Biotechnology: Principles and Processes"]
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "Dc-POkxf22I",
+      "title": "Biotechnology l Lecture 8 l Biology l NEET",
+      "chapter": "Biotechnology: Principles and Processes",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched hybrid and shuttle vectors plus genomic and cDNA libraries to Biotechnology: Principles and Processes",
+      "alternatives": ["Biotechnology: Principles and Processes"]
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "OHnzVpwKJEI",
+      "title": "Biotechnology l Lecture 9 l Biology l NEET",
+      "chapter": "Biotechnology and its Applications",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched agricultural biotechnology, Bt crops, cry genes, and GMOs to Biotechnology and its Applications",
+      "alternatives": ["Biotechnology and its Applications"]
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "BAefAxmRQk4",
+      "title": "Biotechnology l Lecture 10 l Biology l NEET",
+      "chapter": "Biotechnology and its Applications",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched transgenic technology, Bt cotton, Flavr Savr, golden rice, and other product applications to Biotechnology and its Applications",
+      "alternatives": ["Biotechnology and its Applications"]
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "jQUdf9OyyEw",
+      "title": "Biotechnology l Lecture 11 l Biology l NEET",
+      "chapter": "Biotechnology and its Applications",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched RNA interference and its applied pest-resistance context to Biotechnology and its Applications",
+      "alternatives": ["Biotechnology and its Applications"]
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "ID_NLH8jLNY",
+      "title": "Biotechnology l Lecture 12 & 13 l Biology l NEET",
+      "chapter": "Biotechnology and its Applications",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched medical biotechnology, Humulin, ADA deficiency, gene therapy, and biomedical products to Biotechnology and its Applications",
+      "alternatives": ["Biotechnology and its Applications"]
+    },
+    {
+      "position": 13,
+      "youtube_video_id": "JoPbXouukek",
+      "title": "Biotechnology l Lecture 14 l Biology l NEET",
+      "chapter": "Biotechnology and its Applications",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched molecular diagnosis, PCR, ELISA, and transgenic animals to Biotechnology and its Applications",
+      "alternatives": ["Biotechnology and its Applications"]
+    },
+    {
+      "position": 14,
+      "youtube_video_id": "XG-oC-X3cfg",
+      "title": "Biotechnology l Lecture 15 l Biology l NEET",
+      "chapter": "Biotechnology and its Applications",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched bioethics, biopiracy, biopatents, GEAC, stem cells, and monoclonal antibodies to Biotechnology and its Applications",
+      "alternatives": ["Biotechnology and its Applications"]
+    }
+  ]
+}

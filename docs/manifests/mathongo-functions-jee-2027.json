@@ -1,0 +1,76 @@
+{
+  "version": 1,
+  "request_id": "a1eb023f-6b08-411e-8c6f-2752181d2c60",
+  "youtube_playlist_id": "PLDJktDT5uc9s0sw8mAqmMs1cmYki_SQHI",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "onEqivNXoMA",
+      "chapter": "Relations and Functions",
+      "lesson_number": 8
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "cpHbNEHehAQ",
+      "chapter": "Relations and Functions",
+      "lesson_number": 7
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "dFBzZi5heDk",
+      "chapter": "Relations and Functions",
+      "lesson_number": 6
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "r4q5oHX1mOU",
+      "chapter": "Relations and Functions",
+      "lesson_number": 5
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "gH8NNWyAtn4",
+      "chapter": "Relations and Functions",
+      "lesson_number": 4
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "diPymJAVzjs",
+      "chapter": "Relations and Functions",
+      "lesson_number": 3
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "wB5HwKgED6w",
+      "chapter": "Relations and Functions",
+      "lesson_number": 2
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "ivrQHq4UoTc",
+      "chapter": "Relations and Functions",
+      "lesson_number": 1
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "0685d84e-f847-4fcc-a2a0-7de624a953bc",
+    "youtube_playlist_id": "PLDJktDT5uc9s0sw8mAqmMs1cmYki_SQHI",
+    "teacher": "Sameer Chincholikar",
+    "reviewed_on": "2026-08-19",
+    "reviewed_by": "Codex evidence review",
+    "source_url": "https://unacademy.com/@sameerchincholikar/batches",
+    "source_label": "Official Sameer Chincholikar educator profile, cross-checked against the official MathonGo lecture visuals and viewer attribution",
+    "youtube_video_ids": [
+      "onEqivNXoMA",
+      "cpHbNEHehAQ",
+      "dFBzZi5heDk",
+      "r4q5oHX1mOU",
+      "gH8NNWyAtn4",
+      "diPymJAVzjs",
+      "wB5HwKgED6w",
+      "ivrQHq4UoTc"
+    ]
+  }
+}

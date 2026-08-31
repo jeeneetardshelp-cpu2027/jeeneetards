@@ -1,0 +1,133 @@
+{
+  "version": 1,
+  "request_id": "d350d5b2-4caa-4494-a41e-3dcf28242e94",
+  "youtube_playlist_id": "PLxb0SzPSaqZ6LMU4Rztz3yA8yBbd2UUt4",
+  "course_title": "Rohit Mishra JEE Advanced Kinematics",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "yhFzjaUAdeo",
+      "chapter": "Kinematics",
+      "lesson_number": 1
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "YgVxgBEQAxk",
+      "chapter": "Kinematics",
+      "lesson_number": 2
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "HktOWd-SnpU",
+      "chapter": "Kinematics",
+      "lesson_number": 3
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "ZrVL0-y043Q",
+      "chapter": "Kinematics",
+      "lesson_number": 4
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "iQAhkSHLacQ",
+      "chapter": "Kinematics",
+      "lesson_number": 5
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "GFXOLX1v25A",
+      "chapter": "Kinematics",
+      "lesson_number": 6
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "SFRduVdd_Ts",
+      "chapter": "Kinematics",
+      "lesson_number": 7
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "f083QSXvY_A",
+      "chapter": "Kinematics",
+      "lesson_number": 9
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "ZTofZEStuXU",
+      "chapter": "Kinematics",
+      "lesson_number": 8
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "GXd62b51Ngo",
+      "chapter": "Kinematics",
+      "lesson_number": 10
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "lu-eUgpYPrg",
+      "chapter": "Kinematics",
+      "lesson_number": 11
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "gcXhfldWrZc",
+      "chapter": "Kinematics",
+      "lesson_number": 13
+    },
+    {
+      "position": 13,
+      "youtube_video_id": "3KPQSyMc58s",
+      "chapter": "Kinematics",
+      "lesson_number": 12
+    },
+    {
+      "position": 14,
+      "youtube_video_id": "8KRl_b9o-2o",
+      "chapter": "Kinematics",
+      "lesson_number": 14
+    },
+    {
+      "position": 15,
+      "youtube_video_id": "dcP5aRX2clQ",
+      "chapter": "Kinematics",
+      "lesson_number": 15
+    },
+    {
+      "position": 16,
+      "youtube_video_id": "1Z8TyK-6lEw",
+      "chapter": "Kinematics",
+      "lesson_number": 16
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "24333049-1461-4f89-b14f-41f6a58763ba",
+    "youtube_playlist_id": "PLxb0SzPSaqZ6LMU4Rztz3yA8yBbd2UUt4",
+    "teacher": "Rohit Mishra",
+    "reviewed_on": "2026-08-19",
+    "reviewed_by": "Codex evidence review",
+    "source_url": "https://www.youtube.com/@physicsforiitjeebyrohitmishra/about",
+    "source_label": "The official Physics For IIT JEE by Rohit Mishra channel owns the playlist and its first-person About description identifies Rohit Mishra as the teacher providing advanced-level JEE Physics coverage",
+    "youtube_video_ids": [
+      "yhFzjaUAdeo",
+      "YgVxgBEQAxk",
+      "HktOWd-SnpU",
+      "ZrVL0-y043Q",
+      "iQAhkSHLacQ",
+      "GFXOLX1v25A",
+      "SFRduVdd_Ts",
+      "ZTofZEStuXU",
+      "f083QSXvY_A",
+      "GXd62b51Ngo",
+      "lu-eUgpYPrg",
+      "3KPQSyMc58s",
+      "gcXhfldWrZc",
+      "8KRl_b9o-2o",
+      "dcP5aRX2clQ",
+      "1Z8TyK-6lEw"
+    ]
+  }
+}

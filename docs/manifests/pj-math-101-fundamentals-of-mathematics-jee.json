@@ -1,0 +1,182 @@
+{
+  "version": 1,
+  "request_id": "f1322f79-7fe5-4663-b878-94374f05a414",
+  "youtube_playlist_id": "PLjZNZ2waIiCg2tM7QIkAtr5-C5sPu24L6",
+  "course_title": "PJ Math 101 Fundamentals of Mathematics",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "kNr1J6S-NuQ",
+      "chapter": "Number Theory",
+      "lesson_number": 1
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "vKbwZKWGrws",
+      "chapter": "Polynomials",
+      "lesson_number": 2
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "JjP6a1c6ycM",
+      "chapter": "Fundamentals of Mathematics",
+      "lesson_number": 3
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "LpCAjVbQLeA",
+      "chapter": "Complex Numbers",
+      "lesson_number": 4
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "n4ng9Y_khHY",
+      "chapter": "Sets",
+      "lesson_number": 5
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "p-jTbBsyHkU",
+      "chapter": "Sets",
+      "lesson_number": 6
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "PlyDka-u3_4",
+      "chapter": "Relations and Functions",
+      "lesson_number": 7
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "567j9gHNNBM",
+      "chapter": "Relations and Functions",
+      "lesson_number": 8
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "mZkijxWs16g",
+      "chapter": "Fundamentals of Mathematics",
+      "lesson_number": 9
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "0RCosDmEsYQ",
+      "chapter": "Fundamentals of Mathematics",
+      "lesson_number": 10
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "HR3FGuhymwk",
+      "chapter": "Polynomials",
+      "lesson_number": 11
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "Db959UkLKHg",
+      "chapter": "Modulus and Graphs",
+      "lesson_number": 12
+    },
+    {
+      "position": 13,
+      "youtube_video_id": "OwTZcYFCV2E",
+      "chapter": "Modulus and Graphs",
+      "lesson_number": 13
+    },
+    {
+      "position": 14,
+      "youtube_video_id": "p1dMcC3jJ6I",
+      "chapter": "Logarithms",
+      "lesson_number": 14
+    },
+    {
+      "position": 15,
+      "youtube_video_id": "SBkfMooyM30",
+      "chapter": "Logarithms",
+      "lesson_number": 15
+    },
+    {
+      "position": 16,
+      "youtube_video_id": "OWL8l-GGYHk",
+      "chapter": "Logarithms",
+      "lesson_number": 16
+    },
+    {
+      "position": 17,
+      "youtube_video_id": "5bcBnv5r7lA",
+      "chapter": "Logarithms",
+      "lesson_number": 17
+    },
+    {
+      "position": 18,
+      "youtube_video_id": "P9LlV7-h__o",
+      "chapter": "Fundamentals of Mathematics",
+      "lesson_number": 18
+    },
+    {
+      "position": 19,
+      "youtube_video_id": "jnyhKg6pHfo",
+      "chapter": "Relations and Functions",
+      "lesson_number": 19
+    },
+    {
+      "position": 20,
+      "youtube_video_id": "4LWKYw7vEds",
+      "chapter": "Relations and Functions",
+      "lesson_number": 20
+    },
+    {
+      "position": 21,
+      "youtube_video_id": "0u_rVgBGKSk",
+      "chapter": "Modulus and Graphs",
+      "lesson_number": 21
+    },
+    {
+      "position": 22,
+      "youtube_video_id": "mgGOLBiHdTY",
+      "chapter": "Relations and Functions",
+      "lesson_number": 22
+    },
+    {
+      "position": 23,
+      "youtube_video_id": "mZHA6M7RQbo",
+      "chapter": "Fundamentals of Mathematics",
+      "lesson_number": 23
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "21fbe927-ead6-4915-b147-36b7d70d84bf",
+    "youtube_playlist_id": "PLjZNZ2waIiCg2tM7QIkAtr5-C5sPu24L6",
+    "teacher": "Prashant Jain",
+    "reviewed_on": "2026-08-25",
+    "reviewed_by": "Codex evidence review",
+    "source_url": "https://pjsir.com/",
+    "source_label": "Prashant Jain's official PJ Sir site identifies the mathematics mentor as PJ Sir; all 23 official PJ Math 101 playlist titles attribute the Class XI Fundamentals of Mathematics course to Prashant Jain, and the video descriptions explicitly refer to him as PJ Sir",
+    "youtube_video_ids": [
+      "kNr1J6S-NuQ",
+      "vKbwZKWGrws",
+      "JjP6a1c6ycM",
+      "LpCAjVbQLeA",
+      "n4ng9Y_khHY",
+      "p-jTbBsyHkU",
+      "PlyDka-u3_4",
+      "567j9gHNNBM",
+      "mZkijxWs16g",
+      "0RCosDmEsYQ",
+      "HR3FGuhymwk",
+      "Db959UkLKHg",
+      "OwTZcYFCV2E",
+      "p1dMcC3jJ6I",
+      "SBkfMooyM30",
+      "OWL8l-GGYHk",
+      "5bcBnv5r7lA",
+      "P9LlV7-h__o",
+      "jnyhKg6pHfo",
+      "4LWKYw7vEds",
+      "0u_rVgBGKSk",
+      "mgGOLBiHdTY",
+      "mZHA6M7RQbo"
+    ]
+  }
+}

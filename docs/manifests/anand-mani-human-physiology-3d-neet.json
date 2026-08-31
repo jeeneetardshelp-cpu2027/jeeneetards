@@ -1,0 +1,64 @@
+{
+  "version": 1,
+  "request_id": "e40cdc05-dbac-4c0d-94dd-7d20ebd799dc",
+  "youtube_playlist_id": "PLyZOjc_8pbAw1E5IHDN_ckcTG2ZJtlP7Z",
+  "course_title": "Dr. Anand Mani Human Physiology in 3D",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "MfYu6RipN6k",
+      "chapter": "Neural Control and Coordination"
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "J-5UY0Wi1-4",
+      "chapter": "Locomotion and Movement"
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "i9cI5rg-ATc",
+      "chapter": "Excretory Products and Their Elimination"
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "16cdvO_pjN4",
+      "chapter": "Body Fluids and Circulation"
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "y2NGRU_kuss",
+      "chapter": "Breathing and Exchange of Gases"
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "o_UEGMf9rLs",
+      "chapter": "Chemical Coordination and Integration"
+    }
+  ],
+  "exclusions": [
+    {
+      "position": 6,
+      "youtube_video_id": "7JhMcVaL7gw",
+      "reason": "Two-minute promotional giveaway for downloadable Human Physiology notes; excluded because it is not a substantive lecture"
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "d3dae35a-bb2c-4599-89f6-95fc1bdff482",
+    "youtube_playlist_id": "PLyZOjc_8pbAw1E5IHDN_ckcTG2ZJtlP7Z",
+    "teacher": "Anand Mani",
+    "reviewed_on": "2026-08-26",
+    "reviewed_by": "Codex evidence review",
+    "source_url": "https://www.youtube.com/playlist?list=PLyZOjc_8pbAw1E5IHDN_ckcTG2ZJtlP7Z",
+    "source_label": "The official Dr. Anand Mani channel owns this Human Physiology in 3D playlist, and every retained long-form lecture title explicitly identifies Dr. Anand Mani as the presenter",
+    "youtube_video_ids": [
+      "MfYu6RipN6k",
+      "J-5UY0Wi1-4",
+      "i9cI5rg-ATc",
+      "16cdvO_pjN4",
+      "y2NGRU_kuss",
+      "o_UEGMf9rLs"
+    ]
+  }
+}

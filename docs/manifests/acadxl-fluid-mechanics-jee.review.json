@@ -1,0 +1,71 @@
+{
+  "subject": "Physics",
+  "summary": {
+    "total": 6,
+    "auto": 0,
+    "review": 0,
+    "unmatched": 6
+  },
+  "rows": [
+    {
+      "position": 1,
+      "youtube_video_id": "Zui0Q2HnJ9k",
+      "title": "Fluid Mechanics – Part 6 | Mohit Bhargava Sir | JEE Physics Live Session | Bottleneck Busters AcadXL",
+      "chapter": "Mechanical Properties of Fluids",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review mapped the final numbered Fluid Mechanics session to the live Mechanical Properties of Fluids chapter",
+      "alternatives": ["Mechanical Properties of Fluids"]
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "W-mcV95EK4s",
+      "title": "Equation of Continuity & Ideal Fluid Flow | Fluid Mechanics Part 5 | JEE 2027 | MB Sir",
+      "chapter": "Mechanical Properties of Fluids",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review mapped continuity and ideal fluid flow to Mechanical Properties of Fluids",
+      "alternatives": ["Mechanical Properties of Fluids"]
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "DgHcgyduRu8",
+      "title": "Hydrostatic Force on Curved & Hemispherical Surfaces | Fluid Mechanics Part 4 | JEE 2027",
+      "chapter": "Mechanical Properties of Fluids",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review mapped hydrostatic force to Mechanical Properties of Fluids",
+      "alternatives": ["Mechanical Properties of Fluids"]
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "Kd3P-WT8cpo",
+      "title": "Buoyancy & Archimedes Principle in Accelerated Frames | Fluid Mechanics Part 3 | JEE 2027",
+      "chapter": "Mechanical Properties of Fluids",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review mapped buoyancy and Archimedes' principle to Mechanical Properties of Fluids",
+      "alternatives": ["Mechanical Properties of Fluids"]
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "3sqFeuHt9bM",
+      "title": "Pressure in Accelerated & Rotating Fluids | Fluid Mechanics Part 2 | JEE 2027 | MB Sir",
+      "chapter": "Mechanical Properties of Fluids",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review mapped pressure in accelerated and rotating fluids to Mechanical Properties of Fluids",
+      "alternatives": ["Mechanical Properties of Fluids"]
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "oSzGqK88koA",
+      "title": "Liquid in Accelerated & Rotating Containers | Fluid Mechanics Part 1 | JEE 2027 | MB Sir",
+      "chapter": "Mechanical Properties of Fluids",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review mapped the opening Fluid Mechanics session to Mechanical Properties of Fluids and restored it as lesson 1",
+      "alternatives": ["Mechanical Properties of Fluids"]
+    }
+  ]
+}

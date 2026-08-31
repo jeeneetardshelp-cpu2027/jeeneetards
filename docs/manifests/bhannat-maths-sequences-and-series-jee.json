@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "request_id": "a0e48b79-1218-47c8-8a02-796f54b6a601",
+  "youtube_playlist_id": "PLm2ZYJCeiM05RSI6DhzMOpIBB_CY-B1l-",
+  "course_title": "Bhannat Maths Sequences and Series",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "q7csw55X3Po",
+      "chapter": "Sequences and Series",
+      "lesson_number": 1
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "1s1jlj3WYmM",
+      "chapter": "Sequences and Series",
+      "lesson_number": 2
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "NbPmjCOmFgU",
+      "chapter": "Sequences and Series",
+      "lesson_number": 3
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "sMWInn5P3Ds",
+      "chapter": "Sequences and Series",
+      "lesson_number": 4
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "jKDf0nuiwZA",
+      "chapter": "Sequences and Series",
+      "lesson_number": 5
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "dXNdt8vnC24",
+      "chapter": "Sequences and Series",
+      "lesson_number": 6
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "07c34607-5672-421a-9231-6323e726fe56",
+    "youtube_playlist_id": "PLm2ZYJCeiM05RSI6DhzMOpIBB_CY-B1l-",
+    "teacher": "Aman Malik",
+    "reviewed_on": "2026-08-25",
+    "reviewed_by": "Codex evidence review",
+    "source_url": "https://www.youtube.com/playlist?list=PLm2ZYJCeiM05RSI6DhzMOpIBB_CY-B1l-",
+    "source_label": "The official BHANNAT MATHS playlist title and description explicitly identify Aman Malik Sir as the teacher; five sequential lecture titles also credit Aman Sir Maths",
+    "youtube_video_ids": [
+      "q7csw55X3Po",
+      "1s1jlj3WYmM",
+      "NbPmjCOmFgU",
+      "sMWInn5P3Ds",
+      "jKDf0nuiwZA",
+      "dXNdt8vnC24"
+    ]
+  }
+}

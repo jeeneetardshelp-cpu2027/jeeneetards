@@ -1,0 +1,91 @@
+{
+  "version": 1,
+  "request_id": "e6481013-afb1-4965-bb92-7ac6af4b3501",
+  "youtube_playlist_id": "PLuwisPYYf-rYQhb3T6jLDZnMKz9cbPP08",
+  "course_title": "Indian Mathematics Lectures Trigonometry Full Syllabus",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "YxIKS4tHd2U",
+      "chapter": "Trigonometry",
+      "lesson_number": 10
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "wCSTlA6u2UU",
+      "chapter": "Trigonometry",
+      "lesson_number": 9
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "Rkp98kt-T_A",
+      "chapter": "Trigonometry",
+      "lesson_number": 8
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "tAiivSSn0zU",
+      "chapter": "Trigonometry",
+      "lesson_number": 7
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "GTwoUdWMULA",
+      "chapter": "Trigonometry",
+      "lesson_number": 6
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "QfVUfWsEpuM",
+      "chapter": "Trigonometry",
+      "lesson_number": 5
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "KpuvYCYtVt4",
+      "chapter": "Trigonometry",
+      "lesson_number": 4
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "UrwO3XnyU4A",
+      "chapter": "Trigonometry",
+      "lesson_number": 3
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "_VdkE3oyBso",
+      "chapter": "Trigonometry",
+      "lesson_number": 2
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "XJXSixAvz1Y",
+      "chapter": "Trigonometry",
+      "lesson_number": 1
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "8bc420a8-d120-437e-8355-48a7f84c79b7",
+    "youtube_playlist_id": "PLuwisPYYf-rYQhb3T6jLDZnMKz9cbPP08",
+    "teacher": "Ankit Malav",
+    "reviewed_on": "2026-08-25",
+    "reviewed_by": "Codex evidence review",
+    "source_url": "https://www.youtube.com/@imlkota/about",
+    "source_label": "The official Indian Mathematics Lectures playlist is labelled as a full JEE Main and Advanced trigonometry syllabus; every retained video is owned by that channel and its official description identifies the presenter through AM Sir, Ankit Sir, Ankit Malav, and Malav Sir tags",
+    "youtube_video_ids": [
+      "YxIKS4tHd2U",
+      "wCSTlA6u2UU",
+      "Rkp98kt-T_A",
+      "tAiivSSn0zU",
+      "GTwoUdWMULA",
+      "QfVUfWsEpuM",
+      "KpuvYCYtVt4",
+      "UrwO3XnyU4A",
+      "_VdkE3oyBso",
+      "XJXSixAvz1Y"
+    ]
+  }
+}

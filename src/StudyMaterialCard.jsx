@@ -1,4 +1,6 @@
-import { BookOpen, ExternalLink, FileText, ShieldCheck } from "lucide-react";
+import { ArrowRight, BookOpen, ExternalLink, FileText, ShieldCheck } from "lucide-react";
+import { Link } from "react-router";
+import { findTestSection } from "./testPlatforms.js";
 import { materialTypeLabel } from "./useStudyMaterials.js";
 
 const GOAL_LABELS = {
@@ -44,6 +46,26 @@ export function studyMaterialScopeLabel(material) {
   return pieces.join(" · ") || "General study material";
 }
 
+// A previous-year paper pairs naturally with a timed attempt at the same
+// exam — but only goals whose /tests/:examId page actually lists timed
+// tests are mapped. Checked against testPlatforms.js, deliberately NOT
+// derived: "jee" is ambiguous between Main and Advanced, and the olympiad
+// and school tests pages list untimed PDF papers, where "timed attempt"
+// would promise something the destination does not offer.
+const TIMED_TESTS_EXAM_BY_GOAL = Object.freeze({
+  "jee-main": "jee-main",
+  neet: "neet",
+});
+
+export function mockTestsPathForMaterial(material) {
+  if (material?.type !== "previous_year_paper") return null;
+  const examId = TIMED_TESTS_EXAM_BY_GOAL[material?.scopes?.[0]?.goal];
+  // findTestSection is the same lookup the route uses, so the link can only
+  // exist when the page does.
+  if (!examId || !findTestSection(examId)) return null;
+  return `/tests/${examId}`;
+}
+
 function Detail({ children }) {
   if (!children) return null;
   return <span className="text-xs text-ink-3">{children}</span>;
@@ -55,6 +77,7 @@ export default function StudyMaterialCard({ material, compact = false }) {
     material.examYear,
     material.pageCount ? `${material.pageCount} pages` : null,
   ].filter(Boolean);
+  const mockTestsPath = mockTestsPathForMaterial(material);
 
   return (
     <article className="group/material overflow-hidden rounded-xl border border-hairline bg-surface transition-colors duration-200 hover:border-accent-line">
@@ -121,6 +144,16 @@ export default function StudyMaterialCard({ material, compact = false }) {
             <ExternalLink aria-hidden="true" className="h-3.5 w-3.5" />
           </a>
         </div>
+
+        {mockTestsPath && (
+          <Link
+            to={mockTestsPath}
+            className="mt-1 inline-flex min-h-11 items-center gap-1 text-xs font-medium text-ink-3 transition-colors hover:text-accent"
+          >
+            Want a timed attempt? Mock tests
+            <ArrowRight aria-hidden="true" className="h-3.5 w-3.5" />
+          </Link>
+        )}
       </div>
     </article>
   );

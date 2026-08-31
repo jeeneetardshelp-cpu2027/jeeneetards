@@ -7,9 +7,10 @@
 
 
 -- ------------------------------------------------------------
--- 0. PROFILES  — public identity for each signed-up student.
---    auth.users holds the private login; profiles holds the public
---    name/avatar shown next to reviews and comments.
+-- 0. PROFILES  — account-linked identity for each signed-up student.
+--    auth.users holds the private login. profiles stores the separately
+--    chosen public forum username plus private account metadata. Browser
+--    roles may read only username; full_name/avatar_url stay private.
 -- ------------------------------------------------------------
 create table public.profiles (
     id         uuid primary key references auth.users(id) on delete cascade,
@@ -198,10 +199,16 @@ alter table public.playlist_videos  enable row level security;
 alter table public.playlist_ratings enable row level security;
 alter table public.video_comments   enable row level security;
 
--- profiles: public read, each user manages their own row
+-- profiles: row visibility is public so the chosen forum username can be
+-- resolved, but column privileges below expose username only. RLS cannot
+-- hide selected columns, so the table-level revoke is required.
 create policy "profiles are public"       on public.profiles for select using (true);
 create policy "user inserts own profile"  on public.profiles for insert with check (auth.uid() = id);
 create policy "user updates own profile"  on public.profiles for update using (auth.uid() = id) with check (auth.uid() = id);
+
+revoke select on table public.profiles from public, anon, authenticated;
+grant select (username) on table public.profiles to anon, authenticated;
+grant select on table public.profiles to service_role;
 
 -- playlists & their videos: public read only (you curate via dashboard)
 create policy "public read" on public.playlists       for select using (true);

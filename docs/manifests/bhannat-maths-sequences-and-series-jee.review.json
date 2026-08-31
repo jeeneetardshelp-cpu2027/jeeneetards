@@ -1,0 +1,71 @@
+{
+  "subject": "Mathematics",
+  "summary": {
+    "total": 6,
+    "auto": 1,
+    "review": 5,
+    "unmatched": 5
+  },
+  "rows": [
+    {
+      "position": 1,
+      "youtube_video_id": "q7csw55X3Po",
+      "title": "Sequence & Series 01  | A.P. | Class 11th | Aman Sir Maths",
+      "chapter": "Sequences and Series",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review mapped the AP lecture to the existing Sequences and Series chapter",
+      "alternatives": ["Sequences and Series"]
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "1s1jlj3WYmM",
+      "title": "Sequence & Series 02 | G.P. | Class 11th | Aman Sir Maths",
+      "chapter": "Sequences and Series",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review mapped the GP lecture to the existing Sequences and Series chapter",
+      "alternatives": ["Sequences and Series"]
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "NbPmjCOmFgU",
+      "title": "Sequence & Series 03 | A.G.P. & H.P.  | Class 11th | Aman Sir Maths",
+      "chapter": "Sequences and Series",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review mapped the AGP and HP lecture to Sequences and Series",
+      "alternatives": ["Sequences and Series"]
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "sMWInn5P3Ds",
+      "title": "Sequence & Series 04 | RMS | AM | GM | HM  | Class 11th | Aman Sir Maths | Bhannat Maths",
+      "chapter": "Sequences and Series",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review mapped the means lecture to Sequences and Series",
+      "alternatives": ["Sequences and Series"]
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "jKDf0nuiwZA",
+      "title": "Sequence & Series 05 | Miscellaneous Sequences | Class 11th | Aman Sir Maths | Bhannat Maths",
+      "chapter": "Sequences and Series",
+      "confidence": 1,
+      "review": false,
+      "reason": "rules-only classifier matched the exact live chapter",
+      "alternatives": ["Sequences and Series"]
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "dXNdt8vnC24",
+      "title": "A.G.P. Question appeared in JEE Main 2024 - 27 Jan - Shift",
+      "chapter": "Sequences and Series",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review included the directly relevant AGP JEE Main application",
+      "alternatives": ["Sequences and Series"]
+    }
+  ]
+}

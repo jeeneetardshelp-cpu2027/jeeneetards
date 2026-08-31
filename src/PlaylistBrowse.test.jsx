@@ -72,7 +72,8 @@ vi.mock("./usePopularityAvailability.js", () => ({
 import {
   usePlaylistBrowse, PAGE_SIZE, formatDuration, isMissingBrowseStatsColumn,
 } from "./usePlaylistBrowse.js";
-import PlaylistBrowse, { PlaylistCard } from "./PlaylistBrowse.jsx";
+import PlaylistBrowse from "./PlaylistBrowse.jsx";
+import { PlaylistCard } from "./PlaylistCard.jsx";
 import { ThemeProvider } from "./theme.jsx";
 
 // Drives the hook and reports nothing — we assert on the recorded query.
@@ -683,5 +684,61 @@ describe("chapter cards count the chapter, not the whole course", () => {
       </ThemeProvider></MemoryRouter>,
     );
     expect(screen.getByText("2 lectures on this chapter")).toBeTruthy();
+  });
+});
+
+// The Individual Lectures tab's sort control (?lsort=). Its vocabulary is the
+// honest subset the videos table can answer — duration and recency — so no
+// option here can ever be decorative.
+describe("lectures-tab sort control", () => {
+  const renderLectures = (url = "/browse?tab=lectures") =>
+    render(
+      <MemoryRouter initialEntries={[url]}>
+        <Routes>
+          <Route path="/browse" element={
+            <>
+              <LocationProbe />
+              <PlaylistBrowse tab="lectures" onTabChange={() => {}}
+                filters={{ search: "" }} lectureView={<div />} />
+            </>
+          } />
+        </Routes>
+      </MemoryRouter>
+    );
+
+  it("offers only sorts the videos table can back", async () => {
+    renderLectures();
+    const sort = await screen.findByRole("combobox", { name: "Sort lessons" });
+    expect([...sort.options].map((o) => o.text)).toEqual([
+      "Recommended", "Shortest first", "Longest first", "Recently added",
+    ]);
+    // the playlists-tab control (and its rating/popularity sorts) is not here
+    expect(screen.queryByRole("combobox", { name: "Sort courses" })).toBeNull();
+  });
+
+  it("writes the sort to the URL and resets the page", async () => {
+    renderLectures("/browse?tab=lectures&page=3");
+    const sort = await screen.findByRole("combobox", { name: "Sort lessons" });
+    fireEvent.change(sort, { target: { value: "shortest" } });
+    await waitFor(() => {
+      const loc = screen.getByTestId("loc").textContent;
+      expect(loc).toContain("lsort=shortest");
+      expect(loc).not.toContain("page=");
+    });
+  });
+
+  it("restores the sort from a shared URL, and drops the param at the default", async () => {
+    renderLectures("/browse?tab=lectures&lsort=longest");
+    const sort = await screen.findByRole("combobox", { name: "Sort lessons" });
+    expect(sort.value).toBe("longest");
+    fireEvent.change(sort, { target: { value: "recommended" } });
+    await waitFor(() =>
+      expect(screen.getByTestId("loc").textContent).not.toContain("lsort"));
+  });
+
+  it("shows a junk ?lsort= as the default rather than an unlabelled state", async () => {
+    renderLectures("/browse?tab=lectures&lsort=wizards");
+    const sort = await screen.findByRole("combobox", { name: "Sort lessons" });
+    expect(sort.value).toBe("recommended");
   });
 });

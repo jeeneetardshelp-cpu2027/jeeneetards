@@ -1,0 +1,91 @@
+{
+  "version": 1,
+  "request_id": "f77c6d05-de98-4ccf-a7a5-ef46c1aaca5b",
+  "youtube_playlist_id": "PLaxCbzDowZRA9RhFJEE6PQpPTiX4olefv",
+  "course_title": "VidyaWise JEE Trigonometry",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "iMPYKJzKKHU",
+      "chapter": "Trigonometry",
+      "lesson_number": 1
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "y0vhAk5rQsc",
+      "chapter": "Trigonometry",
+      "lesson_number": 2
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "jY55vrSaGgQ",
+      "chapter": "Trigonometry",
+      "lesson_number": 3
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "DrjII11hk5w",
+      "chapter": "Trigonometry",
+      "lesson_number": 4
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "Jav2JopZV7c",
+      "chapter": "Trigonometry",
+      "lesson_number": 5
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "wATuFVVje-A",
+      "chapter": "Trigonometry",
+      "lesson_number": 6
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "IqXjZRKZeT4",
+      "chapter": "Trigonometry",
+      "lesson_number": 7
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "gdn7OrNKiuI",
+      "chapter": "Trigonometry",
+      "lesson_number": 8
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "dO1rXnhntiI",
+      "chapter": "Trigonometry",
+      "lesson_number": 9
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "4A3KPbxM4BE",
+      "chapter": "Trigonometry",
+      "lesson_number": 10
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "5f55d719-bbc6-4f0a-93ef-58e52258b9ff",
+    "youtube_playlist_id": "PLaxCbzDowZRA9RhFJEE6PQpPTiX4olefv",
+    "teacher": "Rohit Solanki",
+    "reviewed_on": "2026-08-25",
+    "reviewed_by": "Codex evidence review",
+    "source_url": "https://www.youtube.com/@vidyawisejee",
+    "source_label": "The official VidyaWise JEE channel description identifies Rohit Solanki Sir as its IIT JEE Mathematics teacher; all ten official playlist videos form the numbered Class 11 Trigonometry sequence and their descriptions link Rohit Solanki Sir's official profile",
+    "youtube_video_ids": [
+      "iMPYKJzKKHU",
+      "y0vhAk5rQsc",
+      "jY55vrSaGgQ",
+      "DrjII11hk5w",
+      "Jav2JopZV7c",
+      "wATuFVVje-A",
+      "IqXjZRKZeT4",
+      "gdn7OrNKiuI",
+      "dO1rXnhntiI",
+      "4A3KPbxM4BE"
+    ]
+  }
+}

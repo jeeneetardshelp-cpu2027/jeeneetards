@@ -1,0 +1,105 @@
+{
+  "version": 1,
+  "request_id": "d6be573b-2afb-4fc8-8581-3978e0819da8",
+  "youtube_playlist_id": "PL65T2neerQz9XThDiH2hucDHBQP7cM7U_",
+  "course_title": "JEE Nexus Class 12 Mathematics One-Shot Series",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "j9UeuYDob8Y",
+      "chapter": "Relations and Functions",
+      "lesson_number": 1
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "dKecT2jZkxI",
+      "chapter": "Indefinite Integration",
+      "lesson_number": 2
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "Ing37ETjbCg",
+      "chapter": "Inverse Trigonometric Functions",
+      "lesson_number": 3
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "nQMOsm2WIYA",
+      "chapter": "Matrices",
+      "lesson_number": 4
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "8GQ3nUph_60",
+      "chapter": "Limits, Continuity and Differentiability",
+      "lesson_number": 5
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "4nUwzrpZeY0",
+      "chapter": "Vectors and Three-Dimensional Geometry",
+      "lesson_number": 6
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "uLuZH8kkl4w",
+      "chapter": "Differentiation",
+      "lesson_number": 7
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "EwAHL4SKaIE",
+      "chapter": "Vectors and Three-Dimensional Geometry",
+      "lesson_number": 8
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "xc9fPgylrHE",
+      "chapter": "Determinants",
+      "lesson_number": 9
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "BufySqkwl-g",
+      "chapter": "Applications of Derivatives",
+      "lesson_number": 10
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "LJe2HvfRVZg",
+      "chapter": "Applications of Derivatives",
+      "lesson_number": 11
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "ESHiTnsKLoE",
+      "chapter": "Definite Integration",
+      "lesson_number": 12
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "6902c818-d89e-45ef-9714-d3173158ef62",
+    "youtube_playlist_id": "PL65T2neerQz9XThDiH2hucDHBQP7cM7U_",
+    "teacher": "Arvind Kalia",
+    "reviewed_on": "2026-08-25",
+    "reviewed_by": "Codex evidence review",
+    "source_url": "https://www.youtube.com/playlist?list=PL65T2neerQz9XThDiH2hucDHBQP7cM7U_",
+    "source_label": "The official JEE Nexus by Unacademy playlist description names Arvind Kalia Sir as the Class 12 JEE Mathematics educator; the official descriptions or tags for every retained lesson also identify Arvind Kalia Sir",
+    "youtube_video_ids": [
+      "j9UeuYDob8Y",
+      "dKecT2jZkxI",
+      "Ing37ETjbCg",
+      "nQMOsm2WIYA",
+      "8GQ3nUph_60",
+      "4nUwzrpZeY0",
+      "uLuZH8kkl4w",
+      "EwAHL4SKaIE",
+      "xc9fPgylrHE",
+      "BufySqkwl-g",
+      "LJe2HvfRVZg",
+      "ESHiTnsKLoE"
+    ]
+  }
+}

@@ -1,0 +1,162 @@
+{
+  "version": 1,
+  "request_id": "e78cda45-2e6d-41a9-96e9-1817b1712ebc",
+  "youtube_playlist_id": "PL4B8B_BU0CrOE5riRPpoLiQzdyp-9PLQe",
+  "course_title": "Manoj Chauhan Vectors and 3D Geometry",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "I_TAegehtRU",
+      "chapter": "Vectors and Three-Dimensional Geometry",
+      "lesson_number": 1
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "acgHwgjDWkk",
+      "chapter": "Vectors and Three-Dimensional Geometry",
+      "lesson_number": 2
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "H0ItmJKamIk",
+      "chapter": "Vectors and Three-Dimensional Geometry",
+      "lesson_number": 3
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "V1_reINL-f4",
+      "chapter": "Vectors and Three-Dimensional Geometry",
+      "lesson_number": 4
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "aKLZA7U74vo",
+      "chapter": "Vectors and Three-Dimensional Geometry",
+      "lesson_number": 5
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "Nogse-U4hGk",
+      "chapter": "Vectors and Three-Dimensional Geometry",
+      "lesson_number": 6
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "XY_FjymAoZw",
+      "chapter": "Vectors and Three-Dimensional Geometry",
+      "lesson_number": 7
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "6AEQlvUx5Hk",
+      "chapter": "Vectors and Three-Dimensional Geometry",
+      "lesson_number": 8
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "6aTgCtWCOQg",
+      "chapter": "Vectors and Three-Dimensional Geometry",
+      "lesson_number": 9
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "gNThgmln2_w",
+      "chapter": "Vectors and Three-Dimensional Geometry",
+      "lesson_number": 10
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "mbPaqOel4AM",
+      "chapter": "Vectors and Three-Dimensional Geometry",
+      "lesson_number": 11
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "5a8k6ONk3Sw",
+      "chapter": "Vectors and Three-Dimensional Geometry",
+      "lesson_number": 12
+    },
+    {
+      "position": 13,
+      "youtube_video_id": "UGkLolM9b70",
+      "chapter": "Vectors and Three-Dimensional Geometry",
+      "lesson_number": 13
+    },
+    {
+      "position": 14,
+      "youtube_video_id": "sCzdpyjm4Zo",
+      "chapter": "Vectors and Three-Dimensional Geometry",
+      "lesson_number": 14
+    },
+    {
+      "position": 15,
+      "youtube_video_id": "4qfGnx_h8Qs",
+      "chapter": "Vectors and Three-Dimensional Geometry",
+      "lesson_number": 15
+    },
+    {
+      "position": 16,
+      "youtube_video_id": "-I7PpY46WUk",
+      "chapter": "Vectors and Three-Dimensional Geometry",
+      "lesson_number": 16
+    },
+    {
+      "position": 17,
+      "youtube_video_id": "MFWbY8tGSis",
+      "chapter": "Vectors and Three-Dimensional Geometry",
+      "lesson_number": 17
+    },
+    {
+      "position": 18,
+      "youtube_video_id": "phiB0eMDyz4",
+      "chapter": "Vectors and Three-Dimensional Geometry",
+      "lesson_number": 18
+    },
+    {
+      "position": 19,
+      "youtube_video_id": "Wl2NHd3eiDQ",
+      "chapter": "Vectors and Three-Dimensional Geometry",
+      "lesson_number": 19
+    }
+  ],
+  "exclusions": [
+    {
+      "position": 20,
+      "youtube_video_id": "HySa0CMgryI",
+      "reason": "Three-minute overview appended after the structured Lecture 1-7 series; excluded to keep the reviewed full-course lesson sequence limited to substantive lectures"
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "85b83da8-00ca-4a01-b0eb-99e0644bf5d6",
+    "youtube_playlist_id": "PL4B8B_BU0CrOE5riRPpoLiQzdyp-9PLQe",
+    "teacher": "Manoj Chauhan",
+    "reviewed_on": "2026-08-25",
+    "reviewed_by": "Codex evidence review",
+    "source_url": "https://www.youtube.com/playlist?list=PL4B8B_BU0CrOE5riRPpoLiQzdyp-9PLQe",
+    "source_label": "The official Best Approach - Manoj Chauhan Sir channel owns this Class 12 IIT-JEE Mathematics playlist; every retained lecture title explicitly credits Manoj Chauhan Sir, and nineteen retained descriptions identify MC Sir and link Manoj Chauhan's official profiles",
+    "youtube_video_ids": [
+      "I_TAegehtRU",
+      "acgHwgjDWkk",
+      "H0ItmJKamIk",
+      "V1_reINL-f4",
+      "aKLZA7U74vo",
+      "Nogse-U4hGk",
+      "XY_FjymAoZw",
+      "6AEQlvUx5Hk",
+      "6aTgCtWCOQg",
+      "gNThgmln2_w",
+      "mbPaqOel4AM",
+      "5a8k6ONk3Sw",
+      "UGkLolM9b70",
+      "sCzdpyjm4Zo",
+      "4qfGnx_h8Qs",
+      "-I7PpY46WUk",
+      "MFWbY8tGSis",
+      "phiB0eMDyz4",
+      "Wl2NHd3eiDQ"
+    ]
+  }
+}
+

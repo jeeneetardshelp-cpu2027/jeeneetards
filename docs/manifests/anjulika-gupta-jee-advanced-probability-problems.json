@@ -1,0 +1,203 @@
+{
+  "version": 1,
+  "request_id": "b6a029d9-1492-493f-ab3b-c30590aa6d7e",
+  "youtube_playlist_id": "PLP_DrXP4it1HDwxVf6Y_OEfIZJVA308tk",
+  "course_title": "Dr. Anjulika Gupta JEE Advanced Probability Problems",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "vGY_WbbmWWM",
+      "chapter": "Probability",
+      "lesson_number": 1
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "17TpDTZ4nRI",
+      "chapter": "Probability",
+      "lesson_number": 2
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "GWd-nsiYZs4",
+      "chapter": "Probability",
+      "lesson_number": 3
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "33mwqP7NVas",
+      "chapter": "Probability",
+      "lesson_number": 4
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "XpfSbc8fQQU",
+      "chapter": "Probability",
+      "lesson_number": 5
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "QcIIHkVDy0k",
+      "chapter": "Probability",
+      "lesson_number": 6
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "jJSHfZrCFV8",
+      "chapter": "Probability",
+      "lesson_number": 7
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "dNFC0yUgXWM",
+      "chapter": "Probability",
+      "lesson_number": 8
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "IzO-xzr3d6c",
+      "chapter": "Probability",
+      "lesson_number": 9
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "7bdYGTccdDI",
+      "chapter": "Probability",
+      "lesson_number": 10
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "Hg80fgLMfIg",
+      "chapter": "Probability",
+      "lesson_number": 11
+    },
+    {
+      "position": 13,
+      "youtube_video_id": "wfC3scNML7Q",
+      "chapter": "Probability",
+      "lesson_number": 12
+    },
+    {
+      "position": 14,
+      "youtube_video_id": "XqDmq9P5jIc",
+      "chapter": "Probability",
+      "lesson_number": 13
+    },
+    {
+      "position": 15,
+      "youtube_video_id": "oSLDrQZjLN8",
+      "chapter": "Probability",
+      "lesson_number": 14
+    },
+    {
+      "position": 16,
+      "youtube_video_id": "fmd15sw8fOI",
+      "chapter": "Probability",
+      "lesson_number": 15
+    },
+    {
+      "position": 17,
+      "youtube_video_id": "rBo0-ZmmSRA",
+      "chapter": "Probability",
+      "lesson_number": 16
+    },
+    {
+      "position": 18,
+      "youtube_video_id": "SVrXR1rHxwg",
+      "chapter": "Probability",
+      "lesson_number": 17
+    },
+    {
+      "position": 19,
+      "youtube_video_id": "Z8XFBhVFo3I",
+      "chapter": "Probability",
+      "lesson_number": 18
+    },
+    {
+      "position": 20,
+      "youtube_video_id": "S5n9O6TmJ4M",
+      "chapter": "Probability",
+      "lesson_number": 19
+    },
+    {
+      "position": 21,
+      "youtube_video_id": "HzQ11KbcRC8",
+      "chapter": "Probability",
+      "lesson_number": 20
+    },
+    {
+      "position": 22,
+      "youtube_video_id": "gttB3XGQNAY",
+      "chapter": "Probability",
+      "lesson_number": 21
+    },
+    {
+      "position": 23,
+      "youtube_video_id": "waSmD7uAIpo",
+      "chapter": "Probability",
+      "lesson_number": 22
+    },
+    {
+      "position": 24,
+      "youtube_video_id": "BLZIfqUGokE",
+      "chapter": "Probability",
+      "lesson_number": 23
+    },
+    {
+      "position": 25,
+      "youtube_video_id": "ummTxrLxcI4",
+      "chapter": "Probability",
+      "lesson_number": 24
+    },
+    {
+      "position": 26,
+      "youtube_video_id": "ar-DYysyj-w",
+      "chapter": "Probability",
+      "lesson_number": 25
+    },
+    {
+      "position": 27,
+      "youtube_video_id": "rdSdMz68MYQ",
+      "chapter": "Probability",
+      "lesson_number": 26
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "0ad53fdc-12ca-4ef6-976a-44c8a11dea4c",
+    "youtube_playlist_id": "PLP_DrXP4it1HDwxVf6Y_OEfIZJVA308tk",
+    "teacher": "Anjulika Gupta",
+    "reviewed_on": "2026-08-25",
+    "reviewed_by": "Codex evidence review",
+    "source_url": "https://www.youtube.com/playlist?list=PLP_DrXP4it1HDwxVf6Y_OEfIZJVA308tk",
+    "source_label": "The official Dr. Anjulika Gupta channel owns this JEE Advanced Probability problem-and-solution playlist; the channel title identifies Dr. Anjulika Gupta, its public handle is @anjulika, and every retained video description cites @anjulika",
+    "youtube_video_ids": [
+      "vGY_WbbmWWM",
+      "17TpDTZ4nRI",
+      "GWd-nsiYZs4",
+      "33mwqP7NVas",
+      "XpfSbc8fQQU",
+      "QcIIHkVDy0k",
+      "jJSHfZrCFV8",
+      "dNFC0yUgXWM",
+      "IzO-xzr3d6c",
+      "7bdYGTccdDI",
+      "Hg80fgLMfIg",
+      "wfC3scNML7Q",
+      "XqDmq9P5jIc",
+      "oSLDrQZjLN8",
+      "fmd15sw8fOI",
+      "rBo0-ZmmSRA",
+      "SVrXR1rHxwg",
+      "Z8XFBhVFo3I",
+      "S5n9O6TmJ4M",
+      "HzQ11KbcRC8",
+      "gttB3XGQNAY",
+      "waSmD7uAIpo",
+      "BLZIfqUGokE",
+      "ummTxrLxcI4",
+      "ar-DYysyj-w",
+      "rdSdMz68MYQ"
+    ]
+  }
+}

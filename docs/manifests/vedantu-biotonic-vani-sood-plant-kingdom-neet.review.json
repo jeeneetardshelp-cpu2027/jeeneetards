@@ -1,0 +1,68 @@
+{
+  "subject": "Biology",
+  "summary": {
+    "total": 5,
+    "auto": 0,
+    "review": 5,
+    "unmatched": 0,
+    "excluded": 1
+  },
+  "source_note": "The official playlist contains the complete five-lecture Plant Kingdom sequence taught by Vani Sood plus one general diagram-special Quiztopedia session. Manual review retains L1-L5 in source order and excludes the unrelated quiz.",
+  "rows": [
+    {
+      "position": 1,
+      "youtube_video_id": "2arlcClLU90",
+      "title": "Plant Kingdom  | General Characters of Plant Kingdom and Algae | Class 11 Biology | NEET Preparation",
+      "chapter": "Plant Kingdom",
+      "lesson_number": 1,
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched the general-characters and algae opening lecture to Plant Kingdom and preserved source order",
+      "alternatives": ["Plant Kingdom"]
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "d40mfsnS_h0",
+      "title": "Plant Kingdom | Bryophytes Characters and Economic Importance | Class 11 Biology |NEET  2023|Vedantu",
+      "chapter": "Plant Kingdom",
+      "lesson_number": 2,
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched the Bryophytes lecture to Plant Kingdom and preserved source order",
+      "alternatives": ["Plant Kingdom"]
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "STDYp2IeNcs",
+      "title": "NEET: Plant Kingdom L-3 | Pteridophytes Characters and Economic Importance | Class 11 | Vedantu",
+      "chapter": "Plant Kingdom",
+      "lesson_number": 3,
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched the explicitly numbered Pteridophytes lecture to Plant Kingdom and preserved source order",
+      "alternatives": ["Plant Kingdom"]
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "pDyxxrmC9L0",
+      "title": "NEET: Plant Kingdom L-4 | Gymnosperms Characters and Economic Importance | Class 11 | Vedantu",
+      "chapter": "Plant Kingdom",
+      "lesson_number": 4,
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched the explicitly numbered Gymnosperms lecture to Plant Kingdom and preserved source order",
+      "alternatives": ["Plant Kingdom"]
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "3U9JvxcmNUA",
+      "title": "NEET: Plant Kingdom L-5 | Angiosperm and Plant Life Cycle | Class 11 | Vedantu",
+      "chapter": "Plant Kingdom",
+      "lesson_number": 5,
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched the explicitly numbered Angiosperm and plant-life-cycle lecture to Plant Kingdom and preserved source order",
+      "alternatives": ["Plant Kingdom"]
+    }
+  ]
+}

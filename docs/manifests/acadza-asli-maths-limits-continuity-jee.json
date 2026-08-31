@@ -1,0 +1,182 @@
+{
+  "version": 1,
+  "request_id": "79db65ca-5f1b-4ce3-b12f-3c616e39c1d7",
+  "youtube_playlist_id": "PLdTg6lE1EV8Zl7W2ypFPpER70czKt8kcW",
+  "course_title": "Acadza Asli Maths Limits and Continuity",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "6QknFgyX9KQ",
+      "chapter": "Limits, Continuity and Differentiability",
+      "lesson_number": 1
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "wWdO0GnqUxc",
+      "chapter": "Limits, Continuity and Differentiability",
+      "lesson_number": 2
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "w0iXhMipqDQ",
+      "chapter": "Limits, Continuity and Differentiability",
+      "lesson_number": 3
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "1kIOa1CG3TA",
+      "chapter": "Limits, Continuity and Differentiability",
+      "lesson_number": 4
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "BupFzOAulbE",
+      "chapter": "Limits, Continuity and Differentiability",
+      "lesson_number": 5
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "cmvnBlXMej8",
+      "chapter": "Limits, Continuity and Differentiability",
+      "lesson_number": 6
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "vZyr5EecZBI",
+      "chapter": "Limits, Continuity and Differentiability",
+      "lesson_number": 7
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "QQbRi5pSGHs",
+      "chapter": "Limits, Continuity and Differentiability",
+      "lesson_number": 8
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "inhq4szjFxI",
+      "chapter": "Limits, Continuity and Differentiability",
+      "lesson_number": 9
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "3JPXuC2HBPw",
+      "chapter": "Limits, Continuity and Differentiability",
+      "lesson_number": 10
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "LjszzZ22kzY",
+      "chapter": "Limits, Continuity and Differentiability",
+      "lesson_number": 11
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "TpM9v1Fm278",
+      "chapter": "Limits, Continuity and Differentiability",
+      "lesson_number": 12
+    },
+    {
+      "position": 13,
+      "youtube_video_id": "W6OhGJDhYng",
+      "chapter": "Continuity",
+      "lesson_number": 13
+    },
+    {
+      "position": 14,
+      "youtube_video_id": "sqHLR8e6ak4",
+      "chapter": "Continuity",
+      "lesson_number": 14
+    },
+    {
+      "position": 15,
+      "youtube_video_id": "IG7sQC4pmII",
+      "chapter": "Continuity",
+      "lesson_number": 15
+    },
+    {
+      "position": 16,
+      "youtube_video_id": "nLt6wl-7tm8",
+      "chapter": "Continuity",
+      "lesson_number": 16
+    },
+    {
+      "position": 17,
+      "youtube_video_id": "xGQnnnbWTx4",
+      "chapter": "Continuity",
+      "lesson_number": 17
+    },
+    {
+      "position": 18,
+      "youtube_video_id": "m8N1VKzm5Lo",
+      "chapter": "Limits, Continuity and Differentiability",
+      "lesson_number": 18
+    },
+    {
+      "position": 19,
+      "youtube_video_id": "sm-E7gHpwEA",
+      "chapter": "Limits, Continuity and Differentiability",
+      "lesson_number": 19
+    },
+    {
+      "position": 20,
+      "youtube_video_id": "VPCsiQliOY0",
+      "chapter": "Limits, Continuity and Differentiability",
+      "lesson_number": 20
+    },
+    {
+      "position": 21,
+      "youtube_video_id": "7IZN5BK1TsM",
+      "chapter": "Limits, Continuity and Differentiability",
+      "lesson_number": 21
+    },
+    {
+      "position": 22,
+      "youtube_video_id": "qGPgMrLviwc",
+      "chapter": "Limits, Continuity and Differentiability",
+      "lesson_number": 22
+    },
+    {
+      "position": 23,
+      "youtube_video_id": "odBotxLLUa8",
+      "chapter": "Limits, Continuity and Differentiability",
+      "lesson_number": 23
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "37171926-ae82-4fd0-a06e-3ee24240dacb",
+    "youtube_playlist_id": "PLdTg6lE1EV8Zl7W2ypFPpER70czKt8kcW",
+    "teacher": "Anshul Singhal",
+    "reviewed_on": "2026-08-20",
+    "reviewed_by": "Codex evidence review",
+    "source_url": "https://www.youtube.com/@Acadza",
+    "source_label": "The official channel is titled Acadza - Anshul Sir and describes itself as Acadza by Anshul Sir; the channel-owned playlist is titled as a lecture series by Anshul Sir, and its ordered lecture titles repeatedly identify Anshul Sir or Anshul Singhal as the instructor",
+    "youtube_video_ids": [
+      "6QknFgyX9KQ",
+      "wWdO0GnqUxc",
+      "w0iXhMipqDQ",
+      "1kIOa1CG3TA",
+      "BupFzOAulbE",
+      "cmvnBlXMej8",
+      "vZyr5EecZBI",
+      "QQbRi5pSGHs",
+      "inhq4szjFxI",
+      "3JPXuC2HBPw",
+      "LjszzZ22kzY",
+      "TpM9v1Fm278",
+      "W6OhGJDhYng",
+      "sqHLR8e6ak4",
+      "IG7sQC4pmII",
+      "nLt6wl-7tm8",
+      "xGQnnnbWTx4",
+      "m8N1VKzm5Lo",
+      "sm-E7gHpwEA",
+      "VPCsiQliOY0",
+      "7IZN5BK1TsM",
+      "qGPgMrLviwc",
+      "odBotxLLUa8"
+    ]
+  }
+}

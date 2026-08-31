@@ -1,0 +1,161 @@
+{
+  "version": 1,
+  "request_id": "05b4eaaa-a4a2-4122-b3b7-a48af8bd33c4",
+  "youtube_playlist_id": "PL_A4M5IAkMadwg0cUeLZORu6n-bVjVBBd",
+  "course_title": "NS Sir Structural Identification and Practical Organic Chemistry",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "XYRWTnedxeY",
+      "chapter": "Hydrocarbons",
+      "lesson_number": 1
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "tmbk51DiX70",
+      "chapter": "Hydrocarbons",
+      "lesson_number": 2
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "BinKX7E1pAc",
+      "chapter": "Hydrocarbons",
+      "lesson_number": 3
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "i6KHpoIWD3Q",
+      "chapter": "Hydrocarbons",
+      "lesson_number": 4
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "6p6iVt-2O0E",
+      "chapter": "Structural Isomerism",
+      "lesson_number": 5
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "luNCXadI-MY",
+      "chapter": "Structural Isomerism",
+      "lesson_number": 6
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "A_OWzaZBo08",
+      "chapter": "Structural Isomerism",
+      "lesson_number": 7
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "5e5J_03oOLc",
+      "chapter": "Purification and Characterisation of Organic Compounds",
+      "lesson_number": 8
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "dg6VNDYO_BY",
+      "chapter": "Purification and Characterisation of Organic Compounds",
+      "lesson_number": 9
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "dazTxIX5zxo",
+      "chapter": "Purification and Characterisation of Organic Compounds",
+      "lesson_number": 10
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "Wfy5X8xmFRw",
+      "chapter": "Purification and Characterisation of Organic Compounds",
+      "lesson_number": 11
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "5v_xzleqUYM",
+      "chapter": "Purification and Characterisation of Organic Compounds",
+      "lesson_number": 12
+    },
+    {
+      "position": 13,
+      "youtube_video_id": "_nK9ew-AaW8",
+      "chapter": "Purification and Characterisation of Organic Compounds",
+      "lesson_number": 13
+    },
+    {
+      "position": 14,
+      "youtube_video_id": "Y0ZUDNWxRFk",
+      "chapter": "Purification and Characterisation of Organic Compounds",
+      "lesson_number": 14
+    },
+    {
+      "position": 15,
+      "youtube_video_id": "zeqfH70sDbk",
+      "chapter": "Purification and Characterisation of Organic Compounds",
+      "lesson_number": 15
+    },
+    {
+      "position": 16,
+      "youtube_video_id": "YNczkSXjrmE",
+      "chapter": "Purification and Characterisation of Organic Compounds",
+      "lesson_number": 16
+    },
+    {
+      "position": 17,
+      "youtube_video_id": "kviJ9rJ6Cww",
+      "chapter": "Purification and Characterisation of Organic Compounds",
+      "lesson_number": 17
+    },
+    {
+      "position": 18,
+      "youtube_video_id": "Rw521quw12Q",
+      "chapter": "Purification and Characterisation of Organic Compounds",
+      "lesson_number": 18
+    },
+    {
+      "position": 19,
+      "youtube_video_id": "1W5ZTFKMP64",
+      "chapter": "Purification and Characterisation of Organic Compounds",
+      "lesson_number": 19
+    },
+    {
+      "position": 20,
+      "youtube_video_id": "K6uNqbBfrR0",
+      "chapter": "Purification and Characterisation of Organic Compounds",
+      "lesson_number": 20
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "948a837d-81c5-4bff-b348-cfb881df47cb",
+    "youtube_playlist_id": "PL_A4M5IAkMadwg0cUeLZORu6n-bVjVBBd",
+    "teacher": "Neeraj Saini",
+    "reviewed_on": "2026-08-31",
+    "reviewed_by": "Codex evidence review",
+    "source_url": "https://www.youtube.com/playlist?list=PL_A4M5IAkMadwg0cUeLZORu6n-bVjVBBd",
+    "source_label": "The official Mohit Tyagi channel owns this 20-video Structural Identification playlist; the first 19 retained titles explicitly name NS Sir, and the final retained video's official description and tags name NS Sir, matching existing verified teacher 3 Neeraj Saini and his verified NS Sir alias",
+    "youtube_video_ids": [
+      "XYRWTnedxeY",
+      "tmbk51DiX70",
+      "BinKX7E1pAc",
+      "i6KHpoIWD3Q",
+      "6p6iVt-2O0E",
+      "luNCXadI-MY",
+      "A_OWzaZBo08",
+      "5e5J_03oOLc",
+      "dg6VNDYO_BY",
+      "dazTxIX5zxo",
+      "Wfy5X8xmFRw",
+      "5v_xzleqUYM",
+      "_nK9ew-AaW8",
+      "Y0ZUDNWxRFk",
+      "zeqfH70sDbk",
+      "YNczkSXjrmE",
+      "kviJ9rJ6Cww",
+      "Rw521quw12Q",
+      "1W5ZTFKMP64",
+      "K6uNqbBfrR0"
+    ]
+  }
+}

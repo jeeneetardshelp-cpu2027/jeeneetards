@@ -1,0 +1,181 @@
+{
+  "subject": "Physics",
+  "summary": {
+    "total": 17,
+    "auto": 2,
+    "review": 5,
+    "unmatched": 10
+  },
+  "rows": [
+    {
+      "position": 1,
+      "youtube_video_id": "prcmzFamqJQ",
+      "title": "Lecture-1: Electromagnetic Induction(Magnetic flux, Faraday Law & its questions) by RKH SIR",
+      "chapter": "Electromagnetic Induction",
+      "confidence": 1,
+      "review": false,
+      "reason": "rules-only classifier matched the exact live chapter",
+      "alternatives": ["Electromagnetic Induction"]
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "Dj4ZoGSyYu0",
+      "title": "Lecture-2: Lenz's law and based question explained by RKH SIR",
+      "chapter": "Electromagnetic Induction",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review mapped Lenz's law to Electromagnetic Induction",
+      "alternatives": ["Electromagnetic Induction"]
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "Gt4HsQeaUn4",
+      "title": "Lecture-3: Motional emf theory and questions in EMI explained by RKH SIR",
+      "chapter": "Electromagnetic Induction",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review mapped motional EMF to Electromagnetic Induction",
+      "alternatives": ["Electromagnetic Induction"]
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "I-gxzcmv690",
+      "title": "Lecture-4: Motional emf in scalar dot product form and based questions by RKH SIR",
+      "chapter": "Electromagnetic Induction",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review mapped motional EMF to Electromagnetic Induction",
+      "alternatives": ["Electromagnetic Induction"]
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "hORp7cQ5_9g",
+      "title": "Lecture-5: Motional EMF question( very basic question)",
+      "chapter": "Electromagnetic Induction",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review corrected the false Basic Mathematics match; motional EMF belongs to Electromagnetic Induction",
+      "alternatives": ["Electromagnetic Induction"]
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "VR55udOZh3M",
+      "title": "Lecture-6: Mechanics problem concept and question in EMI by RKH SIR..Continue in next  video",
+      "chapter": "Electromagnetic Induction",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review retained the mechanics application within the playlist's EMI sequence",
+      "alternatives": ["Electromagnetic Induction"]
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "AH__9BBU6eg",
+      "title": "Lecture-7: Continue part.... of Mechanics problems of EMI explained by RKH SIR",
+      "chapter": "Electromagnetic Induction",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review retained the continuation of the EMI mechanics application",
+      "alternatives": ["Electromagnetic Induction"]
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "HtQqv4inOcI",
+      "title": "Lecture-8: IIT 1994 problem of Electromagnetic Induction(Solution is easy but Analysis interesting)",
+      "chapter": "Electromagnetic Induction",
+      "confidence": 1,
+      "review": false,
+      "reason": "rules-only classifier matched the exact live chapter",
+      "alternatives": ["Electromagnetic Induction"]
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "DSaGeHvIXZA",
+      "title": "Lecture-9: Question of EMI based on Mechanics by RKH Sir",
+      "chapter": "Electromagnetic Induction",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review retained the mechanics application within Electromagnetic Induction",
+      "alternatives": ["Electromagnetic Induction"]
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "bXeZYxUWWBA",
+      "title": "Lecture-10: Question of EMI based on rotating rod in uniform magnetic field by RKH SIR",
+      "chapter": "Electromagnetic Induction",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review mapped rotating-rod motional EMF to Electromagnetic Induction",
+      "alternatives": ["Electromagnetic Induction", "Magnetic Effects of Electric Current"]
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "us0um1TGMlY",
+      "title": "Lecture-11: Induced electric field and based questions in EMI by RKH SIR",
+      "chapter": "Electromagnetic Induction",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review mapped induced electric field to Electromagnetic Induction",
+      "alternatives": ["Electromagnetic Induction", "Magnetic Effects of Electric Current"]
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "3ythCh32C78",
+      "title": "Lecture-12: Self Inductance basic definitions,questions and equivalent circuits diagram by RKH SIR",
+      "chapter": "Electromagnetic Induction",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review corrected the false Basic Mathematics match; self-inductance belongs to Electromagnetic Induction",
+      "alternatives": ["Electromagnetic Induction"]
+    },
+    {
+      "position": 13,
+      "youtube_video_id": "zrdTqjpR050",
+      "title": "Lecture-13: Questions based on just after switch closed and at long time of Inductor by RKH SIR",
+      "chapter": "Electromagnetic Induction",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review mapped inductor transient questions to Electromagnetic Induction",
+      "alternatives": ["Electromagnetic Induction"]
+    },
+    {
+      "position": 14,
+      "youtube_video_id": "1AgU1jF225w",
+      "title": "Lecture-14: Current growth, decay in Inductor, Most general equation of L-R questions by RKH SIR",
+      "chapter": "Electromagnetic Induction",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review retained LR transients in the playlist's inductance sequence",
+      "alternatives": ["Electromagnetic Induction", "Current Electricity", "Alternating Current"]
+    },
+    {
+      "position": 15,
+      "youtube_video_id": "DfLr1yCEXxk",
+      "title": "Lecture-15: Mutual Inductance definitions and calculations of basic questions by RKH SIR",
+      "chapter": "Electromagnetic Induction",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review corrected the false Basic Mathematics match; mutual inductance belongs to Electromagnetic Induction",
+      "alternatives": ["Electromagnetic Induction"]
+    },
+    {
+      "position": 16,
+      "youtube_video_id": "R2HYO3oWlzo",
+      "title": "Lecture-16: Questions based on Mutual Inductance by RKH SIR",
+      "chapter": "Electromagnetic Induction",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review mapped mutual-inductance problems to Electromagnetic Induction",
+      "alternatives": ["Electromagnetic Induction"]
+    },
+    {
+      "position": 17,
+      "youtube_video_id": "aFUfwHHU8Qc",
+      "title": "Lecture-17: L-C Oscillations Concepts and questions by RKH SIR",
+      "chapter": "Electromagnetic Induction",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review retained LC oscillations in the playlist's Class 12 EMI sequence",
+      "alternatives": ["Electromagnetic Induction", "Alternating Current", "Oscillations and Waves"]
+    }
+  ]
+}

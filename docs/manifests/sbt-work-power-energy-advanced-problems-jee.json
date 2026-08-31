@@ -1,0 +1,175 @@
+{
+  "version": 1,
+  "request_id": "45ec7bed-3755-4a04-9bfe-db8e7b462166",
+  "youtube_playlist_id": "PLnfr2rapSZH_vlPK9X0O5O1abqf6UEu7C",
+  "course_title": "SBT Work Power Energy Advanced Problems",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "_EbdLTVsjw0",
+      "chapter": "Work, Energy and Power",
+      "lesson_number": 1
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "jTeOI4L4LxI",
+      "chapter": "Work, Energy and Power",
+      "lesson_number": 2
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "wDCjeWIq7Cs",
+      "chapter": "Work, Energy and Power",
+      "lesson_number": 3
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "vMnrKO5OiCU",
+      "chapter": "Work, Energy and Power",
+      "lesson_number": 4
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "-AHgG_JisEI",
+      "chapter": "Work, Energy and Power",
+      "lesson_number": 5
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "NazJTJWPXeg",
+      "chapter": "Rotational Motion",
+      "lesson_number": 6
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "f2oN5G_i14g",
+      "chapter": "Work, Energy and Power",
+      "lesson_number": 7
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "fOIXPx6Qukg",
+      "chapter": "Work, Energy and Power",
+      "lesson_number": 8
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "Sv3W7mFo8hc",
+      "chapter": "System of Particles and Centre of Mass",
+      "lesson_number": 9
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "5lugJ2SRskM",
+      "chapter": "Work, Energy and Power",
+      "lesson_number": 10
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "6kayHc1SIRM",
+      "chapter": "Work, Energy and Power",
+      "lesson_number": 11
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "42pwwvYPzjM",
+      "chapter": "Rotational Motion",
+      "lesson_number": 12
+    },
+    {
+      "position": 13,
+      "youtube_video_id": "faaTbxu9gV4",
+      "chapter": "Work, Energy and Power",
+      "lesson_number": 13
+    },
+    {
+      "position": 14,
+      "youtube_video_id": "Ywncumdztwo",
+      "chapter": "Work, Energy and Power",
+      "lesson_number": 14
+    },
+    {
+      "position": 15,
+      "youtube_video_id": "xmzFyZzmklw",
+      "chapter": "Work, Energy and Power",
+      "lesson_number": 15
+    },
+    {
+      "position": 16,
+      "youtube_video_id": "DkFlRmsWfBU",
+      "chapter": "Work, Energy and Power",
+      "lesson_number": 16
+    },
+    {
+      "position": 17,
+      "youtube_video_id": "h-bItEII-XE",
+      "chapter": "Work, Energy and Power",
+      "lesson_number": 17
+    },
+    {
+      "position": 18,
+      "youtube_video_id": "Bye8YvyPG2w",
+      "chapter": "Work, Energy and Power",
+      "lesson_number": 18
+    },
+    {
+      "position": 19,
+      "youtube_video_id": "9W3rhPXOz-A",
+      "chapter": "Work, Energy and Power",
+      "lesson_number": 19
+    },
+    {
+      "position": 20,
+      "youtube_video_id": "bXfwgnSO16Y",
+      "chapter": "Oscillations and Waves",
+      "lesson_number": 20
+    },
+    {
+      "position": 21,
+      "youtube_video_id": "WkLEI3IuLWI",
+      "chapter": "Work, Energy and Power",
+      "lesson_number": 21
+    },
+    {
+      "position": 22,
+      "youtube_video_id": "quUIAfDv4MU",
+      "chapter": "Newton's Laws of Motion (NLM)",
+      "lesson_number": 22
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "cbfe3bdc-17bb-4bfd-aae6-53d152b9e3f9",
+    "youtube_playlist_id": "PLnfr2rapSZH_vlPK9X0O5O1abqf6UEu7C",
+    "teacher": "Shashi Bhushan Tiwari",
+    "reviewed_on": "2026-08-20",
+    "reviewed_by": "Codex evidence review",
+    "source_url": "https://www.youtube.com/@jeeadvancedphysics",
+    "source_label": "The official Physics by SBT channel About section identifies SBT's books as authored by Shashi Bhushan Tiwari, the owned playlist says all sessions were conducted by SBT, and individual official descriptions repeatedly identify Shashi Bhushan Tiwari as the instructor",
+    "youtube_video_ids": [
+      "_EbdLTVsjw0",
+      "jTeOI4L4LxI",
+      "wDCjeWIq7Cs",
+      "vMnrKO5OiCU",
+      "-AHgG_JisEI",
+      "NazJTJWPXeg",
+      "f2oN5G_i14g",
+      "fOIXPx6Qukg",
+      "Sv3W7mFo8hc",
+      "5lugJ2SRskM",
+      "6kayHc1SIRM",
+      "42pwwvYPzjM",
+      "faaTbxu9gV4",
+      "Ywncumdztwo",
+      "xmzFyZzmklw",
+      "DkFlRmsWfBU",
+      "h-bItEII-XE",
+      "Bye8YvyPG2w",
+      "9W3rhPXOz-A",
+      "bXfwgnSO16Y",
+      "WkLEI3IuLWI",
+      "quUIAfDv4MU"
+    ]
+  }
+}

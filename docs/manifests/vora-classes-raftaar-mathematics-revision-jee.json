@@ -1,0 +1,77 @@
+{
+  "version": 1,
+  "request_id": "fe15949f-d50b-4391-862e-7b4be62a386f",
+  "youtube_playlist_id": "PLnG6YW15b0oS1bdmXQyHbbf6diTg4sss1",
+  "course_title": "Vora Classes Raftaar Mathematics Revision",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "bpUpwLk7F7k",
+      "chapter": "Vectors and Three-Dimensional Geometry",
+      "lesson_number": 1
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "twAcALOBhgU",
+      "chapter": "Vectors and Three-Dimensional Geometry",
+      "lesson_number": 2
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "dvUX8ZXA-mw",
+      "chapter": "Quadratic Equations",
+      "lesson_number": 3
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "LTgcx4SX81A",
+      "chapter": "Matrices",
+      "lesson_number": 4
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "tZ6mQgGmU8o",
+      "chapter": "Probability",
+      "lesson_number": 5
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "3GMSE51Cz60",
+      "chapter": "Complex Numbers",
+      "lesson_number": 6
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "ogZwUAcR_ZU",
+      "chapter": "Binomial Theorem",
+      "lesson_number": 7
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "vhr7uyb0iio",
+      "chapter": "Determinants",
+      "lesson_number": 8
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "0af571c4-cd3c-4c6f-8b96-c8cf3caf1dbe",
+    "youtube_playlist_id": "PLnG6YW15b0oS1bdmXQyHbbf6diTg4sss1",
+    "teacher": "Nishant Vora",
+    "reviewed_on": "2026-08-19",
+    "reviewed_by": "Codex evidence review",
+    "source_url": "https://www.youtube.com/playlist?list=PLnG6YW15b0oS1bdmXQyHbbf6diTg4sss1",
+    "source_label": "The official Vora Classes playlist is named Raftaar - Nishant Vora - Mathematics and all eight ordered video titles identify Nishant Vora as the instructor",
+    "youtube_video_ids": [
+      "bpUpwLk7F7k",
+      "twAcALOBhgU",
+      "dvUX8ZXA-mw",
+      "LTgcx4SX81A",
+      "tZ6mQgGmU8o",
+      "3GMSE51Cz60",
+      "ogZwUAcR_ZU",
+      "vhr7uyb0iio"
+    ]
+  }
+}

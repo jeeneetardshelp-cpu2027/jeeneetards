@@ -1,0 +1,131 @@
+{
+  "subject": "Mathematics",
+  "summary": {
+    "total": 12,
+    "auto": 5,
+    "review": 7,
+    "unmatched": 0
+  },
+  "rows": [
+    {
+      "position": 1,
+      "youtube_video_id": "j9UeuYDob8Y",
+      "title": "Relation & Function  Class 12 | JEE Main & Advanced",
+      "chapter": "Relations and Functions",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched the source title to the live Relations and Functions chapter",
+      "alternatives": ["Relations and Functions"]
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "dKecT2jZkxI",
+      "title": "Integration Class 12 | JEE Main & Advanced",
+      "chapter": "Indefinite Integration",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review selected Indefinite Integration because the lesson covers integration methods and the playlist has a separate Definite Integration lesson",
+      "alternatives": ["Indefinite Integration", "Definite Integration"]
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "Ing37ETjbCg",
+      "title": "Inverse Trigonometric Functions Class 12 | JEE Main & Advanced",
+      "chapter": "Inverse Trigonometric Functions",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": ["Inverse Trigonometric Functions"]
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "nQMOsm2WIYA",
+      "title": "Matrices Class 12 | JEE Main & Advanced",
+      "chapter": "Matrices",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": ["Matrices"]
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "8GQ3nUph_60",
+      "title": "Continuity and Differentiability Class 12 | JEE Main & Advanced",
+      "chapter": "Limits, Continuity and Differentiability",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review used the combined live chapter because the source explicitly covers both continuity and differentiability",
+      "alternatives": ["Limits, Continuity and Differentiability", "Continuity"]
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "4nUwzrpZeY0",
+      "title": "Vectors Class 12 | JEE Main & Advanced",
+      "chapter": "Vectors and Three-Dimensional Geometry",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched Vectors to the live combined Vectors and Three-Dimensional Geometry chapter",
+      "alternatives": ["Vectors and Three-Dimensional Geometry"]
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "uLuZH8kkl4w",
+      "title": "Differentiation Class 12 | JEE Main & Advanced",
+      "chapter": "Differentiation",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": ["Differentiation"]
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "EwAHL4SKaIE",
+      "title": "3D Geometry Class 12 | JEE Main & Advanced",
+      "chapter": "Vectors and Three-Dimensional Geometry",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched 3D Geometry to the live combined Vectors and Three-Dimensional Geometry chapter",
+      "alternatives": ["Vectors and Three-Dimensional Geometry", "Coordinate Geometry"]
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "xc9fPgylrHE",
+      "title": "Determinants Class 12 | JEE Main & Advanced",
+      "chapter": "Determinants",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": ["Determinants"]
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "BufySqkwl-g",
+      "title": "Application of Derivatives Class 12 | Tangents  & Normals, Mean Value Theorems | JEE Main & Advanced",
+      "chapter": "Applications of Derivatives",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched the explicit Application of Derivatives topic to the live chapter",
+      "alternatives": ["Applications of Derivatives"]
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "LJe2HvfRVZg",
+      "title": "Application of Derivatives Class 12 | Monotonicity & Maxima Minima | JEE Main & Advanced",
+      "chapter": "Applications of Derivatives",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched the explicit Application of Derivatives topic to the live chapter",
+      "alternatives": ["Applications of Derivatives"]
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "ESHiTnsKLoE",
+      "title": "Definite Integration Class 12 | JEE Main & Advanced",
+      "chapter": "Definite Integration",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": ["Definite Integration"]
+    }
+  ]
+}

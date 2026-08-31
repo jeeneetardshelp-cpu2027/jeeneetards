@@ -1,0 +1,73 @@
+{
+  "subject": "Biology",
+  "summary": {
+    "total": 6,
+    "auto": 0,
+    "review": 6,
+    "unmatched": 0,
+    "excluded": 1
+  },
+  "source_note": "The official playlist contains six substantive, long-form Class 11 Human Physiology lectures and one two-minute notes giveaway. Manual review corrects the automatic Chemistry false positive, assigns each retained lecture to its exact Biology chapter, and excludes the promotional giveaway.",
+  "rows": [
+    {
+      "position": 1,
+      "youtube_video_id": "MfYu6RipN6k",
+      "title": "Neural Control & Coordination In 3D | Detailed NCERT Review | NEET 2024 | Dr. Anand Mani",
+      "chapter": "Neural Control and Coordination",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review corrected the Chemistry false positive and matched the explicit Biology chapter title",
+      "alternatives": ["Neural Control and Coordination"]
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "J-5UY0Wi1-4",
+      "title": "Locomotion & Movement In 3D | Detailed NCERT Review | NEET 2024 | Dr. Anand Mani",
+      "chapter": "Locomotion and Movement",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched the explicit Biology chapter title",
+      "alternatives": ["Locomotion and Movement"]
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "i9cI5rg-ATc",
+      "title": "Excretory Products and their Elimination In 3D | Detailed NCERT Review | NEET 2024 | Dr. Anand Mani",
+      "chapter": "Excretory Products and Their Elimination",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched the explicit Biology chapter title to the live canonical capitalization",
+      "alternatives": ["Excretory Products and Their Elimination"]
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "16cdvO_pjN4",
+      "title": "Body Fluid And Circulation In 3D | Detailed NCERT Review | NEET 2024 | Dr. Anand Mani",
+      "chapter": "Body Fluids and Circulation",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched the explicit Biology chapter title to the live canonical plural form",
+      "alternatives": ["Body Fluids and Circulation"]
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "y2NGRU_kuss",
+      "title": "Breathing and Exchange of Gases In 3D | Detailed NCERT Review | NEET 2024 | Dr. Anand Mani",
+      "chapter": "Breathing and Exchange of Gases",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched the explicit Biology chapter title",
+      "alternatives": ["Breathing and Exchange of Gases"]
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "o_UEGMf9rLs",
+      "title": "Chemical Coordination & Integration in 3D | Detailed NCERT Review | NEET 2024 | Dr. Anand Mani",
+      "chapter": "Chemical Coordination and Integration",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review corrected the Chemistry false positive and matched the explicit Biology chapter title",
+      "alternatives": ["Chemical Coordination and Integration"]
+    }
+  ]
+}

@@ -7,11 +7,18 @@ let response;
 let rpcResponse;
 
 function builder(table) {
-  const rec = { table, cols: null, opts: null, eq: {}, in: {}, range: null, ilike: null };
+  const rec = { table, cols: null, opts: null, eq: {}, in: {}, range: null, ilike: null, orders: [] };
   calls.push(rec);
   const b = {
     select(cols, opts) { rec.cols = cols; rec.opts = opts; return b; },
-    order() { return b; },
+    order(column, options) {
+      rec.orders.push(
+        column
+          + (options?.ascending === false ? " desc" : "")
+          + (options?.nullsFirst === false ? " nullslast" : ""),
+      );
+      return b;
+    },
     range(a, z) { rec.range = [a, z]; return b; },
     eq(k, v) { rec.eq[k] = v; return b; },
     in(k, v) { rec.in[k] = v; return b; },
@@ -29,7 +36,9 @@ vi.mock("./supabaseClient.js", () => ({
   },
 }));
 
-import { LECTURE_PAGE_SIZE, useVideos } from "./useBrowse.js";
+import {
+  LECTURE_PAGE_SIZE, useVideos, LECTURE_SORTS, DEFAULT_LECTURE_SORT, parseLectureSort,
+} from "./useBrowse.js";
 
 let seen;
 function Probe(props) {
@@ -196,5 +205,48 @@ describe("paged lecture discovery", () => {
     expect(seen.error).toBeNull();
     expect(seen.videos).toEqual([]);
     expect(seen.hasMore).toBe(false);
+  });
+});
+
+// The Individual Lectures tab's sort. Only orderings videos columns can back
+// are offered (honest-sorts rule), and every chain keeps .order("id") as the
+// unique tie-break so paging stays deterministic.
+describe("lectures-tab sort", () => {
+  const orders = async (props) => {
+    render(<Probe {...props} />);
+    await waitFor(() => expect(calls).toHaveLength(1));
+    const seenOrders = calls[0].orders;
+    calls.length = 0;
+    return seenOrders;
+  };
+
+  it("Recommended keeps the order this list always had", async () => {
+    expect(await orders({ sort: "recommended" })).toEqual(["id"]);
+    expect(await orders({})).toEqual(["id"]);   // no sort given: same order
+  });
+
+  it("sorts by duration with unknown durations LAST, never fake-shortest", async () => {
+    expect(await orders({ sort: "shortest" })).toEqual(["duration_seconds nullslast", "id"]);
+    expect(await orders({ sort: "longest" })).toEqual(["duration_seconds desc nullslast", "id"]);
+  });
+
+  it("Recently added reads created_at, newest first", async () => {
+    expect(await orders({ sort: "recent" })).toEqual(["created_at desc", "id"]);
+  });
+
+  it("an unknown sort falls back to the default rather than no order", async () => {
+    expect(await orders({ sort: "wizards" })).toEqual(["id"]);
+  });
+
+  it("parseLectureSort validates ?lsort= against the honest vocabulary", () => {
+    expect(parseLectureSort(new URLSearchParams("lsort=shortest"))).toBe("shortest");
+    expect(parseLectureSort(new URLSearchParams(""))).toBe(DEFAULT_LECTURE_SORT);
+    expect(parseLectureSort(new URLSearchParams("lsort=wizards"))).toBe(DEFAULT_LECTURE_SORT);
+    // Playlists-tab sorts have no meaning here and must not leak across.
+    expect(parseLectureSort(new URLSearchParams("lsort=most_viewed"))).toBe(DEFAULT_LECTURE_SORT);
+    // Everything offered is implemented — no decorative options.
+    for (const s of LECTURE_SORTS) {
+      expect(parseLectureSort(new URLSearchParams(`lsort=${s.id}`))).toBe(s.id);
+    }
   });
 });

@@ -1,0 +1,64 @@
+{
+  "version": 1,
+  "request_id": "a469e1fc-8bd1-4ff1-aeb7-3aafa31b9359",
+  "youtube_playlist_id": "PLYt9_5dB1PfV7zpjDYwmqvFZjAyKWzNXb",
+  "course_title": "Anmol Sharma Molecular Basis of Inheritance NCERT Course",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "90pzvaiyevw",
+      "chapter": "Molecular Basis of Inheritance",
+      "lesson_number": 1
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "TDBVozwG7aY",
+      "chapter": "Molecular Basis of Inheritance",
+      "lesson_number": 2
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "UsnnU7o2m-0",
+      "chapter": "Molecular Basis of Inheritance",
+      "lesson_number": 3
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "UPL3fnimjqY",
+      "chapter": "Molecular Basis of Inheritance",
+      "lesson_number": 4
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "xJCJfL7Fxzc",
+      "chapter": "Molecular Basis of Inheritance",
+      "lesson_number": 5
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "NXRZvWLTHo0",
+      "chapter": "Molecular Basis of Inheritance",
+      "lesson_number": 6
+    }
+  ],
+  "exclusions": [],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "3c546af4-bff7-4238-b9d4-a330233e6afe",
+    "youtube_playlist_id": "PLYt9_5dB1PfV7zpjDYwmqvFZjAyKWzNXb",
+    "teacher": "Anmol Sharma",
+    "reviewed_on": "2026-08-27",
+    "reviewed_by": "Codex evidence review",
+    "source_url": "https://www.youtube.com/playlist?list=PLYt9_5dB1PfV7zpjDYwmqvFZjAyKWzNXb",
+    "source_label": "The official Anmol Sharma Biology channel owns this playlist; every published lecture description explicitly says Anmol Sharma Sir taught the lesson and every video's official tags identify Anmol Sharma",
+    "youtube_video_ids": [
+      "90pzvaiyevw",
+      "TDBVozwG7aY",
+      "UsnnU7o2m-0",
+      "UPL3fnimjqY",
+      "xJCJfL7Fxzc",
+      "NXRZvWLTHo0"
+    ]
+  }
+}

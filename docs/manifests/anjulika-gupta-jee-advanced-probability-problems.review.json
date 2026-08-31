@@ -1,0 +1,359 @@
+{
+  "subject": "Mathematics",
+  "summary": {
+    "total": 26,
+    "auto": 0,
+    "review": 26,
+    "unmatched": 0,
+    "excluded": 0
+  },
+  "source_note": "The YouTube playlist reports 27 items, but source position 3 is a private video and is unavailable to the ingestion reader. The manifest therefore preserves the surviving positions 1, 2, and 4 through 27 while assigning reviewed lesson numbers 1 through 26.",
+  "unavailable_source_items": [
+    {
+      "position": 3,
+      "youtube_video_id": "Bo6j_MUZWT8",
+      "title": "Private video",
+      "reason": "YouTube marks this source item private; it is not a usable video returned by the ingestion reader and is not an import decision."
+    }
+  ],
+  "rows": [
+    {
+      "position": 1,
+      "youtube_video_id": "vGY_WbbmWWM",
+      "title": "#01 | Probability | 2014 | JEE Advance Problem | Hindi",
+      "chapter": "Probability",
+      "lesson_number": 1,
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched this numbered JEE Advanced Probability problem-and-solution lesson to the live Probability chapter and preserved the published lesson sequence",
+      "alternatives": [
+        "Probability"
+      ]
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "17TpDTZ4nRI",
+      "title": "#02 | Probability | 2016 | JEE Advance Problem | Hindi",
+      "chapter": "Probability",
+      "lesson_number": 2,
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched this numbered JEE Advanced Probability problem-and-solution lesson to the live Probability chapter and preserved the published lesson sequence",
+      "alternatives": [
+        "Probability"
+      ]
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "GWd-nsiYZs4",
+      "title": "#03 | Probability | 2016 | JEE Advance Problem | Hindi",
+      "chapter": "Probability",
+      "lesson_number": 3,
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched this numbered JEE Advanced Probability problem-and-solution lesson to the live Probability chapter and preserved the published lesson sequence",
+      "alternatives": [
+        "Probability"
+      ]
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "33mwqP7NVas",
+      "title": "#04 | Probability | 2018 | JEE Advance Problem | Hindi",
+      "chapter": "Probability",
+      "lesson_number": 4,
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched this numbered JEE Advanced Probability problem-and-solution lesson to the live Probability chapter and preserved the published lesson sequence",
+      "alternatives": [
+        "Probability"
+      ]
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "XpfSbc8fQQU",
+      "title": "#05 | Probability | 2017 | JEE Advance Problem | Hindi",
+      "chapter": "Probability",
+      "lesson_number": 5,
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched this numbered JEE Advanced Probability problem-and-solution lesson to the live Probability chapter and preserved the published lesson sequence",
+      "alternatives": [
+        "Probability"
+      ]
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "QcIIHkVDy0k",
+      "title": "#06 | Probability | 2017 | JEE Advance Problem | Hindi",
+      "chapter": "Probability",
+      "lesson_number": 6,
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched this numbered JEE Advanced Probability problem-and-solution lesson to the live Probability chapter and preserved the published lesson sequence",
+      "alternatives": [
+        "Probability"
+      ]
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "jJSHfZrCFV8",
+      "title": "#07 | Probability | 2019 | JEE Advance Problem | Hindi",
+      "chapter": "Probability",
+      "lesson_number": 7,
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched this numbered JEE Advanced Probability problem-and-solution lesson to the live Probability chapter and preserved the published lesson sequence",
+      "alternatives": [
+        "Probability"
+      ]
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "dNFC0yUgXWM",
+      "title": "#08 | Probability | 2019 | JEE Advance Problem | Hindi",
+      "chapter": "Probability",
+      "lesson_number": 8,
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched this numbered JEE Advanced Probability problem-and-solution lesson to the live Probability chapter and preserved the published lesson sequence",
+      "alternatives": [
+        "Probability"
+      ]
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "IzO-xzr3d6c",
+      "title": "#09 | Probability | 2019 | JEE Advance Problem | Hindi",
+      "chapter": "Probability",
+      "lesson_number": 9,
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched this numbered JEE Advanced Probability problem-and-solution lesson to the live Probability chapter and preserved the published lesson sequence",
+      "alternatives": [
+        "Probability"
+      ]
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "7bdYGTccdDI",
+      "title": "#10 || JEE Adv 2020 || Probability || Problem and Solution || Hindi",
+      "chapter": "Probability",
+      "lesson_number": 10,
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched this numbered JEE Advanced Probability problem-and-solution lesson to the live Probability chapter and preserved the published lesson sequence",
+      "alternatives": [
+        "Probability"
+      ]
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "Hg80fgLMfIg",
+      "title": "#11 || JEE Adv 2020 || Probability || Problem and Solution || Hindi",
+      "chapter": "Probability",
+      "lesson_number": 11,
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched this numbered JEE Advanced Probability problem-and-solution lesson to the live Probability chapter and preserved the published lesson sequence",
+      "alternatives": [
+        "Probability"
+      ]
+    },
+    {
+      "position": 13,
+      "youtube_video_id": "wfC3scNML7Q",
+      "title": "#12|| JEE Adv 2020 || Probability || Problem and Solution || Hindi",
+      "chapter": "Probability",
+      "lesson_number": 12,
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched this numbered JEE Advanced Probability problem-and-solution lesson to the live Probability chapter and preserved the published lesson sequence",
+      "alternatives": [
+        "Probability"
+      ]
+    },
+    {
+      "position": 14,
+      "youtube_video_id": "XqDmq9P5jIc",
+      "title": "#13 || JEE Adv 2021 || Probability || Problem and Solution || Hindi",
+      "chapter": "Probability",
+      "lesson_number": 13,
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched this numbered JEE Advanced Probability problem-and-solution lesson to the live Probability chapter and preserved the published lesson sequence",
+      "alternatives": [
+        "Probability"
+      ]
+    },
+    {
+      "position": 15,
+      "youtube_video_id": "oSLDrQZjLN8",
+      "title": "#14 || JEE Adv 2021 || Probability || Problem and Solution || Hindi",
+      "chapter": "Probability",
+      "lesson_number": 14,
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched this numbered JEE Advanced Probability problem-and-solution lesson to the live Probability chapter and preserved the published lesson sequence",
+      "alternatives": [
+        "Probability"
+      ]
+    },
+    {
+      "position": 16,
+      "youtube_video_id": "fmd15sw8fOI",
+      "title": "#15 || JEE Adv 2021 || Probability || Problem and Solution || Hindi",
+      "chapter": "Probability",
+      "lesson_number": 15,
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched this numbered JEE Advanced Probability problem-and-solution lesson to the live Probability chapter and preserved the published lesson sequence",
+      "alternatives": [
+        "Probability"
+      ]
+    },
+    {
+      "position": 17,
+      "youtube_video_id": "rBo0-ZmmSRA",
+      "title": "#16 || JEE Adv 2021 || Probability || Problem and Solution || Hindi",
+      "chapter": "Probability",
+      "lesson_number": 16,
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched this numbered JEE Advanced Probability problem-and-solution lesson to the live Probability chapter and preserved the published lesson sequence",
+      "alternatives": [
+        "Probability"
+      ]
+    },
+    {
+      "position": 18,
+      "youtube_video_id": "SVrXR1rHxwg",
+      "title": "#17 || JEE Adv 2022 || Probability || Problem and Solution || Hindi",
+      "chapter": "Probability",
+      "lesson_number": 17,
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched this numbered JEE Advanced Probability problem-and-solution lesson to the live Probability chapter and preserved the published lesson sequence",
+      "alternatives": [
+        "Probability"
+      ]
+    },
+    {
+      "position": 19,
+      "youtube_video_id": "Z8XFBhVFo3I",
+      "title": "#18 || JEE Adv 2022 || Probability || Problem and Solution || Hindi",
+      "chapter": "Probability",
+      "lesson_number": 18,
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched this numbered JEE Advanced Probability problem-and-solution lesson to the live Probability chapter and preserved the published lesson sequence",
+      "alternatives": [
+        "Probability"
+      ]
+    },
+    {
+      "position": 20,
+      "youtube_video_id": "S5n9O6TmJ4M",
+      "title": "#19 || JEE Adv 2022 || Probability || Problem and Solution || Hindi",
+      "chapter": "Probability",
+      "lesson_number": 19,
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched this numbered JEE Advanced Probability problem-and-solution lesson to the live Probability chapter and preserved the published lesson sequence",
+      "alternatives": [
+        "Probability"
+      ]
+    },
+    {
+      "position": 21,
+      "youtube_video_id": "HzQ11KbcRC8",
+      "title": "#20 || JEE Adv 2023 || Probability || Problem and Solution ||",
+      "chapter": "Probability",
+      "lesson_number": 20,
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched this numbered JEE Advanced Probability problem-and-solution lesson to the live Probability chapter and preserved the published lesson sequence",
+      "alternatives": [
+        "Probability"
+      ]
+    },
+    {
+      "position": 22,
+      "youtube_video_id": "gttB3XGQNAY",
+      "title": "#21 || JEE Adv 2023 || Probability || Problem and Solution ||",
+      "chapter": "Probability",
+      "lesson_number": 21,
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched this numbered JEE Advanced Probability problem-and-solution lesson to the live Probability chapter and preserved the published lesson sequence",
+      "alternatives": [
+        "Probability"
+      ]
+    },
+    {
+      "position": 23,
+      "youtube_video_id": "waSmD7uAIpo",
+      "title": "#22 || JEE Adv 2023 || Probability || Problem and Solution ||",
+      "chapter": "Probability",
+      "lesson_number": 22,
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched this numbered JEE Advanced Probability problem-and-solution lesson to the live Probability chapter and preserved the published lesson sequence",
+      "alternatives": [
+        "Probability"
+      ]
+    },
+    {
+      "position": 24,
+      "youtube_video_id": "BLZIfqUGokE",
+      "title": "#23 || JEE Adv 2023 || Probability || Problem and Solution ||",
+      "chapter": "Probability",
+      "lesson_number": 23,
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched this numbered JEE Advanced Probability problem-and-solution lesson to the live Probability chapter and preserved the published lesson sequence",
+      "alternatives": [
+        "Probability"
+      ]
+    },
+    {
+      "position": 25,
+      "youtube_video_id": "ummTxrLxcI4",
+      "title": "#24 ||  Probability || JEE ADVANCE 2024 ||",
+      "chapter": "Probability",
+      "lesson_number": 24,
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched this numbered JEE Advanced Probability problem-and-solution lesson to the live Probability chapter and preserved the published lesson sequence",
+      "alternatives": [
+        "Probability"
+      ]
+    },
+    {
+      "position": 26,
+      "youtube_video_id": "ar-DYysyj-w",
+      "title": "#25 ||  Probability || JEE ADVANCE 2024 ||",
+      "chapter": "Probability",
+      "lesson_number": 25,
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched this numbered JEE Advanced Probability problem-and-solution lesson to the live Probability chapter and preserved the published lesson sequence",
+      "alternatives": [
+        "Probability"
+      ]
+    },
+    {
+      "position": 27,
+      "youtube_video_id": "rdSdMz68MYQ",
+      "title": "#26 ||  Probability || JEE ADVANCE 2024 ||",
+      "chapter": "Probability",
+      "lesson_number": 26,
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched this numbered JEE Advanced Probability problem-and-solution lesson to the live Probability chapter and preserved the published lesson sequence",
+      "alternatives": [
+        "Probability"
+      ]
+    }
+  ]
+}

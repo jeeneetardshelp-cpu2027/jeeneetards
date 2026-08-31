@@ -24,7 +24,8 @@ import { parseFilterParams, normalizeFilterParams } from "./filterParams.js";
 import {
   Search, X, Play, AlertTriangle,
 } from "lucide-react";
-import { useVideos, useDebouncedValue, LECTURE_PAGE_SIZE } from "./useBrowse.js";
+import { useVideos, useDebouncedValue, LECTURE_PAGE_SIZE, parseLectureSort } from "./useBrowse.js";
+import { useChapterName } from "./useChapterName.js";
 import { GlobalHeader } from "./AppShell.jsx";
 import PlaylistBrowse from "./PlaylistBrowse.jsx";
 import { FacultyFilter } from "./FacultyFilter.jsx";
@@ -321,6 +322,9 @@ export default function Dashboard() {
   const urlQuery = params.get("q") ?? "";
 
   const tab = params.get("tab") === "lectures" ? "lectures" : "playlists";  // playlists by default
+  // Lectures-tab sort (?lsort=). Validated in ONE place (useBrowse.js) so this
+  // page and the select in PlaylistBrowse cannot disagree about what is valid.
+  const lectureSort = parseLectureSort(params);
   const setTab = (t) => setParams((prev) => { const n = new URLSearchParams(prev); if (t === "lectures") n.set("tab", t); else n.delete("tab"); n.delete("page"); return n; });
   const page = Math.max(0, Number(params.get("page") ?? 0) || 0);
   const setPage = (p) => setParams((prev) => {
@@ -381,6 +385,7 @@ export default function Dashboard() {
     difficulty: validated.difficulty,
     teacherId,
     search: urlQuery,
+    sort: lectureSort,
     page,
     enabled: canonical.ready && facultyFilterReady && tab === "lectures",
   });
@@ -432,7 +437,17 @@ export default function Dashboard() {
     : null;
   const goalName = optionName("goal", goalRaw);
   const subjectName = optionName("subject", subjectRaw);
-  const chapterName = optionName("chapter", chapterRaw);
+  // Search results deep-link chapters as /browse?ch=<id> (the search RPC
+  // returns no slugs), and neither the slug resolver nor the subject-scoped
+  // chapter list can label a bare id — the chip read "27" and the heading
+  // stayed "All courses". Look the name up by primary key instead, only when
+  // no other source already knows it; an unresolved name still falls back to
+  // the raw value below rather than a guess.
+  const resolvedChapterName = optionName("chapter", chapterRaw);
+  const legacyChapterName = useChapterName(canonical.chapterId, {
+    enabled: chapterRaw != null && resolvedChapterName == null,
+  });
+  const chapterName = resolvedChapterName ?? legacyChapterName;
   const facetCounts = useBrowseFacets({
     goal: goalValue,
     stage: canonical.stage,
@@ -473,6 +488,12 @@ export default function Dashboard() {
     subject: { ...(canonical.names?.subject ?? {}), ...(subjectName ? { [subjectRaw]: subjectName } : {}) },
     chapter: { ...(canonical.names?.chapter ?? {}), ...(chapterName ? { [chapterRaw]: chapterName } : {}) },
     board: { ...(canonical.names?.board ?? {}) },
+    // Same dead-end as the chapter chip, same cure: an institute search result
+    // lands on /browse?channel=<id>, and without a name the chip read "3".
+    // The channel dimension list is already fetched for the filter panel.
+    channel: Object.fromEntries(
+      (filterOptions.options?.channel ?? []).map((o) => [String(o.value), o.label]),
+    ),
   };
   const chips = buildChips(params, chipNames);
 

@@ -1,0 +1,115 @@
+{
+  "subject": "Mathematics",
+  "summary": {
+    "total": 8,
+    "auto": 0,
+    "review": 8,
+    "unmatched": 0
+  },
+  "rows": [
+    {
+      "position": 1,
+      "youtube_video_id": "onEqivNXoMA",
+      "title": "Functional Equation | Functions | JEE 2027 | MathonGo",
+      "chapter": "Relations and Functions",
+      "confidence": 0.5,
+      "review": true,
+      "reason": "medium confidence",
+      "alternatives": [
+        "Relations and Functions",
+        "Inverse Trigonometric Functions"
+      ]
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "cpHbNEHehAQ",
+      "title": "Odd Even Function | Functions | JEE 2027 | MathonGo",
+      "chapter": "Relations and Functions",
+      "confidence": 0.5,
+      "review": true,
+      "reason": "medium confidence",
+      "alternatives": [
+        "Relations and Functions",
+        "Inverse Trigonometric Functions"
+      ]
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "dFBzZi5heDk",
+      "title": "Inverse Function | Functions | JEE 2027 | MathonGo",
+      "chapter": "Inverse Trigonometric Functions",
+      "confidence": 0.67,
+      "review": true,
+      "reason": "medium confidence",
+      "alternatives": [
+        "Inverse Trigonometric Functions",
+        "Relations and Functions"
+      ]
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "r4q5oHX1mOU",
+      "title": "Composite Function | Functions | JEE 2027 | MathonGo",
+      "chapter": "Relations and Functions",
+      "confidence": 0.5,
+      "review": true,
+      "reason": "medium confidence",
+      "alternatives": [
+        "Relations and Functions",
+        "Inverse Trigonometric Functions"
+      ]
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "gH8NNWyAtn4",
+      "title": "Function Counting | Functions | JEE 2027 | MathonGo",
+      "chapter": "Relations and Functions",
+      "confidence": 0.5,
+      "review": true,
+      "reason": "medium confidence",
+      "alternatives": [
+        "Relations and Functions",
+        "Inverse Trigonometric Functions"
+      ]
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "diPymJAVzjs",
+      "title": "Types of Functions | Functions | JEE 2027 | MathonGo",
+      "chapter": "Relations and Functions",
+      "confidence": 0.5,
+      "review": true,
+      "reason": "medium confidence",
+      "alternatives": [
+        "Relations and Functions",
+        "Inverse Trigonometric Functions"
+      ]
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "wB5HwKgED6w",
+      "title": "Range | Functions | JEE 2027 | MathonGo",
+      "chapter": "Relations and Functions",
+      "confidence": 0.5,
+      "review": true,
+      "reason": "medium confidence",
+      "alternatives": [
+        "Relations and Functions",
+        "Inverse Trigonometric Functions"
+      ]
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "ivrQHq4UoTc",
+      "title": "Domain | Functions | JEE 2027 | MathonGo",
+      "chapter": "Relations and Functions",
+      "confidence": 0.5,
+      "review": true,
+      "reason": "medium confidence",
+      "alternatives": [
+        "Relations and Functions",
+        "Inverse Trigonometric Functions"
+      ]
+    }
+  ]
+}

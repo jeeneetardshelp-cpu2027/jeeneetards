@@ -1,0 +1,255 @@
+{
+  "subject": "Mathematics",
+  "summary": {
+    "total": 19,
+    "auto": 0,
+    "review": 19,
+    "unmatched": 0,
+    "excluded": 1
+  },
+  "rows": [
+    {
+      "position": 1,
+      "youtube_video_id": "I_TAegehtRU",
+      "title": "Vector & 3D L- Part - 1 by Manoj Chauhan Sir",
+      "chapter": "Vectors and Three-Dimensional Geometry",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched the complete Vector and 3D lecture sequence to the live combined chapter and preserved source order",
+      "alternatives": [
+        "Vectors and Three-Dimensional Geometry"
+      ]
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "acgHwgjDWkk",
+      "title": "Vector & 3D L- Part - 2 by Manoj Chauhan Sir",
+      "chapter": "Vectors and Three-Dimensional Geometry",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched the complete Vector and 3D lecture sequence to the live combined chapter and preserved source order",
+      "alternatives": [
+        "Vectors and Three-Dimensional Geometry"
+      ]
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "H0ItmJKamIk",
+      "title": "Vector & 3D L- 2 Part - 1 by Manoj Chauhan Sir",
+      "chapter": "Vectors and Three-Dimensional Geometry",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched the complete Vector and 3D lecture sequence to the live combined chapter and preserved source order",
+      "alternatives": [
+        "Vectors and Three-Dimensional Geometry"
+      ]
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "V1_reINL-f4",
+      "title": "Vector & 3D L- 2 Part - 2 by Manoj Chauhan Sir",
+      "chapter": "Vectors and Three-Dimensional Geometry",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched the complete Vector and 3D lecture sequence to the live combined chapter and preserved source order",
+      "alternatives": [
+        "Vectors and Three-Dimensional Geometry"
+      ]
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "aKLZA7U74vo",
+      "title": "Vector & 3D L-03 Part-01 by Manoj Chauhan Sir",
+      "chapter": "Vectors and Three-Dimensional Geometry",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched the complete Vector and 3D lecture sequence to the live combined chapter and preserved source order",
+      "alternatives": [
+        "Vectors and Three-Dimensional Geometry"
+      ]
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "Nogse-U4hGk",
+      "title": "Vector & 3D L-03 Part-02 by Manoj Chauhan Sir",
+      "chapter": "Vectors and Three-Dimensional Geometry",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched the complete Vector and 3D lecture sequence to the live combined chapter and preserved source order",
+      "alternatives": [
+        "Vectors and Three-Dimensional Geometry"
+      ]
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "XY_FjymAoZw",
+      "title": "Vector & 3D L-03 Part-03 by Manoj Chauhan Sir",
+      "chapter": "Vectors and Three-Dimensional Geometry",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched the complete Vector and 3D lecture sequence to the live combined chapter and preserved source order",
+      "alternatives": [
+        "Vectors and Three-Dimensional Geometry"
+      ]
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "6AEQlvUx5Hk",
+      "title": "Vector & 3D L-04 P-01 by Manoj Chauhan Sir",
+      "chapter": "Vectors and Three-Dimensional Geometry",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched the complete Vector and 3D lecture sequence to the live combined chapter and preserved source order",
+      "alternatives": [
+        "Vectors and Three-Dimensional Geometry"
+      ]
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "6aTgCtWCOQg",
+      "title": "Vector & 3D L-04 P-02 by Manoj Chauhan Sir",
+      "chapter": "Vectors and Three-Dimensional Geometry",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched the complete Vector and 3D lecture sequence to the live combined chapter and preserved source order",
+      "alternatives": [
+        "Vectors and Three-Dimensional Geometry"
+      ]
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "gNThgmln2_w",
+      "title": "Vector & 3D L-04 P-03 by Manoj Chauhan Sir",
+      "chapter": "Vectors and Three-Dimensional Geometry",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched the complete Vector and 3D lecture sequence to the live combined chapter and preserved source order",
+      "alternatives": [
+        "Vectors and Three-Dimensional Geometry"
+      ]
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "mbPaqOel4AM",
+      "title": "Vector & 3D L-05 P-1 by Manoj Chauhan Sir",
+      "chapter": "Vectors and Three-Dimensional Geometry",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched the complete Vector and 3D lecture sequence to the live combined chapter and preserved source order",
+      "alternatives": [
+        "Vectors and Three-Dimensional Geometry"
+      ]
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "5a8k6ONk3Sw",
+      "title": "Vector & 3D L-05 P-2 by Manoj Chauhan Sir",
+      "chapter": "Vectors and Three-Dimensional Geometry",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched the complete Vector and 3D lecture sequence to the live combined chapter and preserved source order",
+      "alternatives": [
+        "Vectors and Three-Dimensional Geometry"
+      ]
+    },
+    {
+      "position": 13,
+      "youtube_video_id": "UGkLolM9b70",
+      "title": "Vector & 3D L-05 P-3 by Manoj Chauhan Sir",
+      "chapter": "Vectors and Three-Dimensional Geometry",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched the complete Vector and 3D lecture sequence to the live combined chapter and preserved source order",
+      "alternatives": [
+        "Vectors and Three-Dimensional Geometry"
+      ]
+    },
+    {
+      "position": 14,
+      "youtube_video_id": "sCzdpyjm4Zo",
+      "title": "Vector & 3D L-06 P-1 by Manoj Chauhan Sir",
+      "chapter": "Vectors and Three-Dimensional Geometry",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched the complete Vector and 3D lecture sequence to the live combined chapter and preserved source order",
+      "alternatives": [
+        "Vectors and Three-Dimensional Geometry"
+      ]
+    },
+    {
+      "position": 15,
+      "youtube_video_id": "4qfGnx_h8Qs",
+      "title": "Vector & 3D L-06 P-2 by Manoj Chauhan Sir",
+      "chapter": "Vectors and Three-Dimensional Geometry",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched the complete Vector and 3D lecture sequence to the live combined chapter and preserved source order",
+      "alternatives": [
+        "Vectors and Three-Dimensional Geometry"
+      ]
+    },
+    {
+      "position": 16,
+      "youtube_video_id": "-I7PpY46WUk",
+      "title": "Vector & 3D L-06 P-3 by Manoj Chauhan Sir",
+      "chapter": "Vectors and Three-Dimensional Geometry",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched the complete Vector and 3D lecture sequence to the live combined chapter and preserved source order",
+      "alternatives": [
+        "Vectors and Three-Dimensional Geometry"
+      ]
+    },
+    {
+      "position": 17,
+      "youtube_video_id": "MFWbY8tGSis",
+      "title": "Vector & 3D L-07 P-1 by Manoj Chauhan Sir",
+      "chapter": "Vectors and Three-Dimensional Geometry",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched the complete Vector and 3D lecture sequence to the live combined chapter and preserved source order",
+      "alternatives": [
+        "Vectors and Three-Dimensional Geometry"
+      ]
+    },
+    {
+      "position": 18,
+      "youtube_video_id": "phiB0eMDyz4",
+      "title": "Vector & 3D L-07 P-2 by Manoj Chauhan Sir",
+      "chapter": "Vectors and Three-Dimensional Geometry",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched the complete Vector and 3D lecture sequence to the live combined chapter and preserved source order",
+      "alternatives": [
+        "Vectors and Three-Dimensional Geometry"
+      ]
+    },
+    {
+      "position": 19,
+      "youtube_video_id": "Wl2NHd3eiDQ",
+      "title": "Vector & 3D L-07 P-3 by Manoj Chauhan Sir",
+      "chapter": "Vectors and Three-Dimensional Geometry",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual review matched the complete Vector and 3D lecture sequence to the live combined chapter and preserved source order",
+      "alternatives": [
+        "Vectors and Three-Dimensional Geometry"
+      ]
+    },
+    {
+      "position": 20,
+      "youtube_video_id": "HySa0CMgryI",
+      "title": "Vectors and 3D | by Manoj Chauhan Sir - Best Approach",
+      "chapter": "Vectors and Three-Dimensional Geometry",
+      "excluded": true,
+      "exclusion_reason": "Three-minute overview appended after the structured Lecture 1-7 series; excluded to keep the reviewed full-course lesson sequence limited to substantive lectures",
+      "confidence": 1,
+      "review": true,
+      "reason": "manual scope review excluded the three-minute appended overview from the substantive lecture sequence",
+      "alternatives": [
+        "Vectors and Three-Dimensional Geometry"
+      ]
+    }
+  ]
+}
+

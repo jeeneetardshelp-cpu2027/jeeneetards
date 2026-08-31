@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "request_id": "2d105738-0607-4018-938c-23b9b1f2390d",
+  "youtube_playlist_id": "PLrHjxIp47OtXLd6EfVVF7NO9CKxR2rWic",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "ktcwGAnlCjY",
+      "chapter": "Principles of Inheritance and Variation",
+      "lesson_number": 1
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "jYXoP_0ZPTw",
+      "chapter": "Principles of Inheritance and Variation",
+      "lesson_number": 2
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "ZPdLodYqBKE",
+      "chapter": "Principles of Inheritance and Variation",
+      "lesson_number": 3
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "FGjNMGhMcO4",
+      "chapter": "Principles of Inheritance and Variation",
+      "lesson_number": 4
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "f1bcd1d9-b2a6-49ae-b5bc-a61cb3643984",
+    "youtube_playlist_id": "PLrHjxIp47OtXLd6EfVVF7NO9CKxR2rWic",
+    "teacher": "Vipin Sharma",
+    "reviewed_on": "2026-08-19",
+    "reviewed_by": "Codex evidence review",
+    "source_url": "https://www.youtube.com/channel/UCUX2NIPzZXT87MI7zLm5vQg",
+    "source_label": "Official Ozone Classes by Vipin Sharma channel, cross-checked against the playlist title and all four lecture titles",
+    "youtube_video_ids": [
+      "ktcwGAnlCjY",
+      "jYXoP_0ZPTw",
+      "ZPdLodYqBKE",
+      "FGjNMGhMcO4"
+    ]
+  }
+}

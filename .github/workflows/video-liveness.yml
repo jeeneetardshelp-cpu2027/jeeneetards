@@ -1,0 +1,66 @@
+# Weekly link-rot check: find lessons whose YouTube videos have been deleted,
+# made private, or had embedding turned off — before a student does.
+#
+# Runs src/scripts/checkVideoLiveness.js (idempotent; --max-age 30 skips videos
+# verified within 30 days, so steady-state runs are cheap). Videos that stopped
+# embedding are marked 'blocked' (the watch UI already shows an honest
+# "YouTube only" link); deleted/private videos are marked 'unavailable' and
+# reported for the owner to review — never auto-removed.
+#
+# Requires three repository secrets (Settings → Secrets and variables → Actions):
+#   LIVENESS_SUPABASE_URL          — the project URL (same value as VITE_SUPABASE_URL)
+#   LIVENESS_SUPABASE_SERVICE_KEY  — the service_role key (never ships to browsers)
+#   LIVENESS_YOUTUBE_API_KEY       — the SERVER YouTube key (never VITE_YOUTUBE_API_KEY)
+# The job fails fast with a clear message if any is missing.
+
+name: video-liveness
+
+on:
+  schedule:
+    - cron: "30 22 * * 0" # Sundays 22:30 UTC = Mondays 04:00 IST, before the study day starts
+  workflow_dispatch: {}
+
+jobs:
+  check:
+    if: github.repository == 'jeeneetardshelp-cpu2027/jeeneetards'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # checkVideoLiveness.js reads ../../.env relative to itself, not process.env,
+      # so materialise the three values it needs into a .env file for this run.
+      - name: Write .env from secrets
+        env:
+          SUPABASE_URL: ${{ secrets.LIVENESS_SUPABASE_URL }}
+          SERVICE_KEY: ${{ secrets.LIVENESS_SUPABASE_SERVICE_KEY }}
+          YT_KEY: ${{ secrets.LIVENESS_YOUTUBE_API_KEY }}
+        run: |
+          if [ -z "$SUPABASE_URL" ] || [ -z "$SERVICE_KEY" ] || [ -z "$YT_KEY" ]; then
+            echo "Missing one of LIVENESS_SUPABASE_URL / LIVENESS_SUPABASE_SERVICE_KEY / LIVENESS_YOUTUBE_API_KEY repo secrets." >&2
+            exit 1
+          fi
+          {
+            echo "VITE_SUPABASE_URL=$SUPABASE_URL"
+            echo "SUPABASE_SERVICE_ROLE_KEY=$SERVICE_KEY"
+            echo "YOUTUBE_API_KEY=$YT_KEY"
+          } > .env
+
+      - name: Check video liveness
+        run: node src/scripts/checkVideoLiveness.js --max-age 30
+
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: video-liveness-report
+          path: tmp/video-liveness-report.json
+          if-no-files-found: ignore
+          retention-days: 90

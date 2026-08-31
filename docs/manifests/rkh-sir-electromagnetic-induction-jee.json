@@ -1,0 +1,140 @@
+{
+  "version": 1,
+  "request_id": "bae0fabf-1bc8-4e95-a421-c2a217b862e2",
+  "youtube_playlist_id": "PLemCS8-l7oSl3ggMe-FqIdF9m7d9TiYN0",
+  "course_title": "RKH Sir Electromagnetic Induction",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "prcmzFamqJQ",
+      "chapter": "Electromagnetic Induction",
+      "lesson_number": 1
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "Dj4ZoGSyYu0",
+      "chapter": "Electromagnetic Induction",
+      "lesson_number": 2
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "Gt4HsQeaUn4",
+      "chapter": "Electromagnetic Induction",
+      "lesson_number": 3
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "I-gxzcmv690",
+      "chapter": "Electromagnetic Induction",
+      "lesson_number": 4
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "hORp7cQ5_9g",
+      "chapter": "Electromagnetic Induction",
+      "lesson_number": 5
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "VR55udOZh3M",
+      "chapter": "Electromagnetic Induction",
+      "lesson_number": 6
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "AH__9BBU6eg",
+      "chapter": "Electromagnetic Induction",
+      "lesson_number": 7
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "HtQqv4inOcI",
+      "chapter": "Electromagnetic Induction",
+      "lesson_number": 8
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "DSaGeHvIXZA",
+      "chapter": "Electromagnetic Induction",
+      "lesson_number": 9
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "bXeZYxUWWBA",
+      "chapter": "Electromagnetic Induction",
+      "lesson_number": 10
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "us0um1TGMlY",
+      "chapter": "Electromagnetic Induction",
+      "lesson_number": 11
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "3ythCh32C78",
+      "chapter": "Electromagnetic Induction",
+      "lesson_number": 12
+    },
+    {
+      "position": 13,
+      "youtube_video_id": "zrdTqjpR050",
+      "chapter": "Electromagnetic Induction",
+      "lesson_number": 13
+    },
+    {
+      "position": 14,
+      "youtube_video_id": "1AgU1jF225w",
+      "chapter": "Electromagnetic Induction",
+      "lesson_number": 14
+    },
+    {
+      "position": 15,
+      "youtube_video_id": "DfLr1yCEXxk",
+      "chapter": "Electromagnetic Induction",
+      "lesson_number": 15
+    },
+    {
+      "position": 16,
+      "youtube_video_id": "R2HYO3oWlzo",
+      "chapter": "Electromagnetic Induction",
+      "lesson_number": 16
+    },
+    {
+      "position": 17,
+      "youtube_video_id": "aFUfwHHU8Qc",
+      "chapter": "Electromagnetic Induction",
+      "lesson_number": 17
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "d29b9f51-69f8-42a9-ba27-340369ce0bb4",
+    "youtube_playlist_id": "PLemCS8-l7oSl3ggMe-FqIdF9m7d9TiYN0",
+    "teacher": "Rajkumar Sharma",
+    "reviewed_on": "2026-08-25",
+    "reviewed_by": "Codex evidence review",
+    "source_url": "https://irodovphysicssolutionrks.blogspot.com/p/about-author.html",
+    "source_label": "RKH's public author page names Rajkumar Sharma as RKH Sir and links his self-introduction; the official APNA PHYSICS playlist is owned by the RKH Sir channel and 16 of its 17 sequential lecture titles explicitly credit RKH Sir",
+    "youtube_video_ids": [
+      "prcmzFamqJQ",
+      "Dj4ZoGSyYu0",
+      "Gt4HsQeaUn4",
+      "I-gxzcmv690",
+      "hORp7cQ5_9g",
+      "VR55udOZh3M",
+      "AH__9BBU6eg",
+      "HtQqv4inOcI",
+      "DSaGeHvIXZA",
+      "bXeZYxUWWBA",
+      "us0um1TGMlY",
+      "3ythCh32C78",
+      "zrdTqjpR050",
+      "1AgU1jF225w",
+      "DfLr1yCEXxk",
+      "R2HYO3oWlzo",
+      "aFUfwHHU8Qc"
+    ]
+  }
+}

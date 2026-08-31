@@ -1,0 +1,119 @@
+{
+  "subject": "Chemistry",
+  "summary": {
+    "total": 9,
+    "auto": 1,
+    "review": 8,
+    "unmatched": 0
+  },
+  "rows": [
+    {
+      "position": 1,
+      "youtube_video_id": "rREjxomNCKE",
+      "title": "#oneshot Types of Chemical Reaction 🔥🔥 | PMS sir",
+      "chapter": null,
+      "confidence": 0.5,
+      "review": true,
+      "reason": "manual review mapped this broad inorganic reaction-types session to General Inorganic Chemistry",
+      "alternatives": [
+        "General Inorganic Chemistry"
+      ]
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "CUVCVccHUQI",
+      "title": "#one shot | Coordination Compounds 🔥🔥| PMS sir",
+      "chapter": "Coordination Compounds",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Coordination Compounds"
+      ]
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "HmnZ2B9iluk",
+      "title": "#oneshot  Advance Chemical Bonding 🔥🔥 | PMS sir",
+      "chapter": "Chemical Bonding and Molecular Structure",
+      "confidence": 0.5,
+      "review": true,
+      "reason": "manual review confirmed the advanced bonding session belongs to Chemical Bonding and Molecular Structure",
+      "alternatives": [
+        "Chemical Bonding and Molecular Structure"
+      ]
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "2r0_x7reTeU",
+      "title": "#one shot | Basic Chemical bonding 🔥🔥| PMS sir",
+      "chapter": "Chemical Bonding and Molecular Structure",
+      "confidence": 0.5,
+      "review": true,
+      "reason": "manual review confirmed the basic bonding session belongs to Chemical Bonding and Molecular Structure",
+      "alternatives": [
+        "Chemical Bonding and Molecular Structure"
+      ]
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "adWYdxCbxRE",
+      "title": "#1shot Classification of elements and periodicity in properties 🔥🔥 | PMS sir #periodic properties",
+      "chapter": null,
+      "confidence": 0.5,
+      "review": true,
+      "reason": "manual review corrected the classifier to the existing Periodic Table chapter",
+      "alternatives": [
+        "Periodic Table"
+      ]
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "9QXJkxGhvZ0",
+      "title": "P Block - One-Shot | Inorganic Chemistry | PMS sir",
+      "chapter": null,
+      "confidence": 0.5,
+      "review": true,
+      "reason": "manual review mapped the explicit P Block session to P-Block Elements",
+      "alternatives": [
+        "P-Block Elements"
+      ]
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "lPxGPsxQaMU",
+      "title": "S Block - One-Shot | Inorganic Chemistry | PMS sir",
+      "chapter": null,
+      "confidence": 0.5,
+      "review": true,
+      "reason": "manual review mapped the explicit S Block session to The s-Block Elements",
+      "alternatives": [
+        "The s-Block Elements"
+      ]
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "ZLnFU0Qspnk",
+      "title": "D and F Block - One-Shot | Inorganic Chemistry | PMS sir",
+      "chapter": null,
+      "confidence": 0.5,
+      "review": true,
+      "reason": "manual review mapped the explicit D and F Block session to The d and f Block Elements",
+      "alternatives": [
+        "The d and f Block Elements"
+      ]
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "N0M9nyxTTmg",
+      "title": "Salt Analysis - One-Shot | Inorganic Chemistry | PMS sir",
+      "chapter": null,
+      "confidence": 0.5,
+      "review": true,
+      "reason": "manual review mapped the salt-analysis session to the existing Qualitative Analysis chapter",
+      "alternatives": [
+        "Qualitative Analysis"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "request_id": "03fe025e-6243-4da7-86ad-32b6f3dd7318",
+  "youtube_playlist_id": "PLKlDmF-iIyAlQWHXrDFJlvSeifdu7bMps",
+  "course_title": "Neela Bakore Tutorials Microbes in Human Welfare",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "rA0O3DhTGQs",
+      "chapter": "Microbes in Human Welfare",
+      "lesson_number": 1
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "j3YJ7jcfDYQ",
+      "chapter": "Microbes in Human Welfare",
+      "lesson_number": 2
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "5mhfvNpLgmo",
+      "chapter": "Microbes in Human Welfare",
+      "lesson_number": 3
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "wOylo7sCY28",
+      "chapter": "Microbes in Human Welfare",
+      "lesson_number": 4
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "iGHqdE8oWDc",
+      "chapter": "Microbes in Human Welfare",
+      "lesson_number": 5
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "47WKmts1X5o",
+      "chapter": "Microbes in Human Welfare",
+      "lesson_number": 6
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "75c3469d-3da1-4cb7-84a2-a668c1e515df",
+    "youtube_playlist_id": "PLKlDmF-iIyAlQWHXrDFJlvSeifdu7bMps",
+    "teacher": "Neela Bakore",
+    "reviewed_on": "2026-08-25",
+    "reviewed_by": "Codex evidence review",
+    "source_url": "https://www.youtube.com/playlist?list=PLKlDmF-iIyAlQWHXrDFJlvSeifdu7bMps",
+    "source_label": "The official Neela Bakore Tutorials channel owns this playlist and explicitly identifies Dr. Neela Bakore as the Biology lecturer; all six retained video titles, descriptions, or metadata tags identify Neela Bakore Tutorials or Neela Bakore and link the same official channel identity",
+    "youtube_video_ids": [
+      "rA0O3DhTGQs",
+      "j3YJ7jcfDYQ",
+      "5mhfvNpLgmo",
+      "wOylo7sCY28",
+      "iGHqdE8oWDc",
+      "47WKmts1X5o"
+    ]
+  }
+}

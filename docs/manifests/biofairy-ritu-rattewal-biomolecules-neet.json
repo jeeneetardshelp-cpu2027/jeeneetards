@@ -1,0 +1,84 @@
+{
+  "version": 1,
+  "request_id": "b1bd0edf-a88d-4332-8b49-e25721424a6d",
+  "youtube_playlist_id": "PL01KQqWdw6KoMZa_4zbTdUGdWTku-CZ6S",
+  "course_title": "Biofairy Biomolecules for NEET",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "P6DARxz1mr4",
+      "chapter": "Biomolecules",
+      "lesson_number": 1
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "m1Zb6Z3X5sU",
+      "chapter": "Biomolecules",
+      "lesson_number": 2
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "MAxHPF1YY6M",
+      "chapter": "Biomolecules",
+      "lesson_number": 3
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "mnzB5EtmDLg",
+      "chapter": "Biomolecules",
+      "lesson_number": 4
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "2MuNAAkoS5g",
+      "chapter": "Biomolecules",
+      "lesson_number": 5
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "dVaxSw03bUQ",
+      "chapter": "Biomolecules",
+      "lesson_number": 6
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "VZ9_4Pt6uDM",
+      "chapter": "Biomolecules",
+      "lesson_number": 7
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "aTAZttrLUBY",
+      "chapter": "Biomolecules",
+      "lesson_number": 8
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "tASLpGtMv1Q",
+      "chapter": "Biomolecules",
+      "lesson_number": 9
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "3756541f-5261-41f4-929a-f1c8a81aa1e2",
+    "youtube_playlist_id": "PL01KQqWdw6KoMZa_4zbTdUGdWTku-CZ6S",
+    "teacher": "Ritu Rattewal",
+    "reviewed_on": "2026-08-26",
+    "reviewed_by": "Codex evidence review",
+    "source_url": "https://www.youtube.com/playlist?list=PL01KQqWdw6KoMZa_4zbTdUGdWTku-CZ6S",
+    "source_label": "The official Biofairy Ritu Rattewal channel owns this playlist; all nine numbered lecture titles explicitly name Ritu Rattewal, and every video description links the same official @biofairyriturattewal YouTube identity plus the riturattewalbiology Instagram and Facebook profiles",
+    "youtube_video_ids": [
+      "P6DARxz1mr4",
+      "m1Zb6Z3X5sU",
+      "MAxHPF1YY6M",
+      "mnzB5EtmDLg",
+      "2MuNAAkoS5g",
+      "dVaxSw03bUQ",
+      "VZ9_4Pt6uDM",
+      "aTAZttrLUBY",
+      "tASLpGtMv1Q"
+    ]
+  }
+}

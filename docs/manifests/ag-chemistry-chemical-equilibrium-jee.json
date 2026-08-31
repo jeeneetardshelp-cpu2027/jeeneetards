@@ -1,0 +1,91 @@
+{
+  "version": 1,
+  "request_id": "7f137c17-0759-4c81-9698-1f06d77752cd",
+  "youtube_playlist_id": "PLDhC71P3Fpuopb1KJfbi7v2lZCfVflA0H",
+  "course_title": "AG Chemistry Chemical Equilibrium",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "kgNELa1nqow",
+      "chapter": "Chemical Equilibrium",
+      "lesson_number": 1
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "6ePh4xHOs_0",
+      "chapter": "Chemical Equilibrium",
+      "lesson_number": 2
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "rmnGfQlEADQ",
+      "chapter": "Chemical Equilibrium",
+      "lesson_number": 3
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "IqlKwjNzvXg",
+      "chapter": "Chemical Equilibrium",
+      "lesson_number": 4
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "6H_fXBTw7m4",
+      "chapter": "Chemical Equilibrium",
+      "lesson_number": 5
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "aV_bZZDxdCU",
+      "chapter": "Chemical Equilibrium",
+      "lesson_number": 6
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "muNMiUHK1t0",
+      "chapter": "Chemical Equilibrium",
+      "lesson_number": 7
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "J9KJuT2-E88",
+      "chapter": "Chemical Equilibrium",
+      "lesson_number": 8
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "fXFnDLS-IkA",
+      "chapter": "Chemical Equilibrium",
+      "lesson_number": 9
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "VSGFXibY5oM",
+      "chapter": "Chemical Equilibrium",
+      "lesson_number": 10
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "31d4b8e9-619b-49f2-9e63-0f61b500180b",
+    "youtube_playlist_id": "PLDhC71P3Fpuopb1KJfbi7v2lZCfVflA0H",
+    "teacher": "Ankit Gaur",
+    "reviewed_on": "2026-08-25",
+    "reviewed_by": "Codex evidence review",
+    "source_url": "https://www.youtube.com/@AGChemistry/about",
+    "source_label": "The official channel is named AG Chemistry [ By - Ankit Gaur ], its About page identifies Ankit Gaur as the channel educator, and all ten ordered playlist videos explicitly credit Ankit Gaur in both their titles and descriptions",
+    "youtube_video_ids": [
+      "kgNELa1nqow",
+      "6ePh4xHOs_0",
+      "rmnGfQlEADQ",
+      "IqlKwjNzvXg",
+      "6H_fXBTw7m4",
+      "aV_bZZDxdCU",
+      "muNMiUHK1t0",
+      "J9KJuT2-E88",
+      "fXFnDLS-IkA",
+      "VSGFXibY5oM"
+    ]
+  }
+}

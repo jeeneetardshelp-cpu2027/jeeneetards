@@ -1,0 +1,68 @@
+{
+  "version": 1,
+  "request_id": "7ac28389-2529-4ee9-be98-fc9101c50490",
+  "youtube_playlist_id": "PLTa2m6WeLW_8RFWXoLBggaqH8q_Uoa8Mg",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "ct-vCt9NU08",
+      "chapter": "Differentiation"
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "cJceE7-8TBY",
+      "chapter": "Logarithms"
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "UJXel5_AOSY",
+      "chapter": "Linear Inequalities"
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "GN9uAEisDtM",
+      "chapter": "Trigonometry"
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "peKwXDIcYss",
+      "chapter": "Relations and Functions"
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "iaK4ukVmFvc",
+      "chapter": "Indefinite Integration"
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "yP0EKKN0zys",
+      "chapter": "Sequences and Series"
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "7_ZpO1hneXk",
+      "chapter": "Probability"
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "7580e276-ba23-43c1-8682-5bd4f27a783a",
+    "youtube_playlist_id": "PLTa2m6WeLW_8RFWXoLBggaqH8q_Uoa8Mg",
+    "teacher": "Neha Agrawal",
+    "reviewed_on": "2026-08-19",
+    "reviewed_by": "Codex evidence review",
+    "source_url": "https://www.youtube.com/channel/UCfSUSGxsZBBE3o8bCQpqYgw",
+    "source_label": "Official Neha Agrawal Mathematically Inclined channel, cross-checked against the playlist and all eight foundation lecture titles",
+    "youtube_video_ids": [
+      "ct-vCt9NU08",
+      "cJceE7-8TBY",
+      "UJXel5_AOSY",
+      "GN9uAEisDtM",
+      "peKwXDIcYss",
+      "iaK4ukVmFvc",
+      "yP0EKKN0zys",
+      "7_ZpO1hneXk"
+    ]
+  }
+}

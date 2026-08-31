@@ -36,7 +36,7 @@ vi.mock("./supabaseClient", () => ({
 }));
 
 const { default: UniversalSearch, highlightParts } = await import("./UniversalSearch.jsx");
-const { DEBOUNCE_MS, groupRows } = await import("./useUniversalSearch.js");
+const { DEBOUNCE_MS, groupRows, appendGroupRows } = await import("./useUniversalSearch.js");
 
 const row = (over = {}) => ({
   group_key: "faculty", entity_id: 1, title: "Amit Bijarnia",
@@ -124,7 +124,7 @@ describe("grouped results (the five groups)", () => {
 
     const image = container.querySelector("img");
     expect(image?.getAttribute("src"))
-      .toBe("https://img.youtube.com/vi/CBvaO-uDvs8/hqdefault.jpg");
+      .toBe("https://img.youtube.com/vi/CBvaO-uDvs8/mqdefault.jpg");
     expect(image?.getAttribute("loading")).toBe("lazy");
   });
 
@@ -354,6 +354,121 @@ describe("server-ranked, paginated, debounced (requirements 4, 5, 7)", () => {
     const g = groupRows([row({ group_total: 43 })]);
     expect(g.faculty.total).toBe(43);
     expect(g.faculty.rows).toHaveLength(1);
+  });
+
+  it("appendGroupRows keeps earlier pages and drops a server-repeated row", () => {
+    const first = groupRows([
+      row({ entity_id: 1, group_total: 3 }),
+      row({ entity_id: 2, group_total: 3 }),
+    ]);
+    // The result set can shift underneath paging; row 2 arrives again.
+    const merged = appendGroupRows(first, [
+      row({ entity_id: 2, group_total: 3 }),
+      row({ entity_id: 3, group_total: 3 }),
+    ]);
+    expect(merged.faculty.rows.map((r) => r.id)).toEqual([1, 2, 3]);
+    expect(merged.faculty.total).toBe(3);
+  });
+});
+
+// ---------------------------------------------------------------- show more
+describe("Show more paging in the single-type view", () => {
+  // "See all 43" used to be a dead end: it narrowed to one group and then
+  // stopped at 20 rows with no way to reach the other 23.
+  const chapterPage = (start, count, total) =>
+    Array.from({ length: count }, (_, i) =>
+      row({
+        group_key: "chapter", entity_id: start + i, title: `Chapter ${start + i}`,
+        aka: null, subtitle: null, group_total: total,
+      }));
+
+  it("appends the next page below the rows already shown", async () => {
+    RPC_ROWS = chapterPage(1, 20, 43);
+    renderSearch("/search?q=kinematics&type=chapter");
+    await settle();
+    expect(await screen.findAllByRole("option")).toHaveLength(20);
+
+    RPC_ROWS = chapterPage(21, 20, 43);
+    fireEvent.click(screen.getByRole("button", { name: /Show more/ }));
+    await settle();
+
+    const opts = await screen.findAllByRole("option");
+    expect(opts).toHaveLength(40);
+    // the first page is still on screen, in place, and page two follows it
+    expect(opts[0].textContent).toContain("Chapter 1");
+    expect(opts[20].textContent).toContain("Chapter 21");
+    // the request asked for the NEXT page, not the catalogue
+    expect(rpcCalls.at(-1).args.p_offset).toBe(20);
+    expect(rpcCalls.at(-1).args.p_limit).toBe(20);
+  });
+
+  it("appended rows join the same keyboard-navigable list", async () => {
+    RPC_ROWS = chapterPage(1, 20, 25);
+    renderSearch("/search?q=kinematics&type=chapter");
+    await settle();
+    RPC_ROWS = chapterPage(21, 5, 25);
+    fireEvent.click(screen.getByRole("button", { name: /Show more/ }));
+    await settle();
+    await waitFor(() => expect(screen.getAllByRole("option")).toHaveLength(25));
+
+    const input = screen.getByRole("combobox");
+    for (let i = 0; i < 21; i++) fireEvent.keyDown(input, { key: "ArrowDown" });
+    // the cursor crossed into the appended page without a seam
+    await waitFor(() =>
+      expect(input.getAttribute("aria-activedescendant")).toBe("usr-opt-20"));
+    expect(screen.getAllByRole("option")[20].getAttribute("aria-selected")).toBe("true");
+  });
+
+  it("shows a loading state on the button and keeps existing rows visible", async () => {
+    RPC_ROWS = chapterPage(1, 20, 43);
+    renderSearch("/search?q=kinematics&type=chapter");
+    await settle();
+
+    rpcDelay = 400;
+    RPC_ROWS = chapterPage(21, 20, 43);
+    fireEvent.click(screen.getByRole("button", { name: /Show more/ }));
+    await act(async () => { vi.advanceTimersByTime(DEBOUNCE_MS + 10); });
+
+    const busy = screen.getByRole("button", { name: /Loading/ });
+    expect(busy.disabled).toBe(true);
+    expect(screen.getAllByRole("option")).toHaveLength(20);   // nothing vanished
+
+    await act(async () => { vi.advanceTimersByTime(500); });
+    await waitFor(() => expect(screen.getAllByRole("option")).toHaveLength(40));
+  });
+
+  it("says when the end is reached instead of silently dropping the button", async () => {
+    RPC_ROWS = chapterPage(1, 20, 25);
+    renderSearch("/search?q=kinematics&type=chapter");
+    await settle();
+    RPC_ROWS = chapterPage(21, 5, 25);
+    fireEvent.click(screen.getByRole("button", { name: /Show more/ }));
+    await settle();
+
+    await waitFor(() => expect(screen.getAllByRole("option")).toHaveLength(25));
+    expect(screen.queryByRole("button", { name: /Show more/ })).toBeNull();
+    expect(screen.getByText(/All 25 results shown/)).toBeTruthy();
+  });
+
+  it("offers no Show more when everything already fits on one page", async () => {
+    RPC_ROWS = chapterPage(1, 12, 12);
+    renderSearch("/search?q=kinematics&type=chapter");
+    await settle();
+    await screen.findAllByRole("option");
+    expect(screen.queryByRole("button", { name: /Show more/ })).toBeNull();
+    expect(screen.queryByText(/results shown/)).toBeNull();
+  });
+
+  it("offers no Show more in the mixed all-groups view", async () => {
+    // Paging a 5-row preview would fight with "See all"; the preview keeps
+    // its header link and paging lives only behind a chosen type.
+    RPC_ROWS = chapterPage(1, 5, 43);
+    renderSearch();
+    type("kinematics");
+    await settle();
+    await screen.findAllByRole("option");
+    expect(screen.queryByRole("button", { name: /Show more/ })).toBeNull();
+    expect(screen.getByRole("button", { name: /See all 43/ })).toBeTruthy();
   });
 });
 

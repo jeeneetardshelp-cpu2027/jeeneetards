@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "request_id": "205aab74-cb0b-43a6-b2e7-38aa917d5148",
+  "youtube_playlist_id": "PLmIhcvR98tZW1x0R49iYlOTXNaokzjoDt",
+  "course_title": "AcadXL Fluid Mechanics",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "Zui0Q2HnJ9k",
+      "chapter": "Mechanical Properties of Fluids",
+      "lesson_number": 6
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "W-mcV95EK4s",
+      "chapter": "Mechanical Properties of Fluids",
+      "lesson_number": 5
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "DgHcgyduRu8",
+      "chapter": "Mechanical Properties of Fluids",
+      "lesson_number": 4
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "Kd3P-WT8cpo",
+      "chapter": "Mechanical Properties of Fluids",
+      "lesson_number": 3
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "3sqFeuHt9bM",
+      "chapter": "Mechanical Properties of Fluids",
+      "lesson_number": 2
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "oSzGqK88koA",
+      "chapter": "Mechanical Properties of Fluids",
+      "lesson_number": 1
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "a4b15f2f-053b-4da9-a2fc-032a47775f75",
+    "youtube_playlist_id": "PLmIhcvR98tZW1x0R49iYlOTXNaokzjoDt",
+    "teacher": "Mohit Bhargava",
+    "reviewed_on": "2026-08-25",
+    "reviewed_by": "Codex evidence review",
+    "source_url": "https://www.acadxl.com/about-mbsir",
+    "source_label": "AcadXL's official faculty profile identifies Mohit Bhargava as MB Sir, Physics teacher and founder of AcadXL; the official AcadXL playlist contains six numbered Fluid Mechanics sessions whose titles or descriptions explicitly credit Mohit Bhargava Sir or MB Sir",
+    "youtube_video_ids": [
+      "Zui0Q2HnJ9k",
+      "W-mcV95EK4s",
+      "DgHcgyduRu8",
+      "Kd3P-WT8cpo",
+      "3sqFeuHt9bM",
+      "oSzGqK88koA"
+    ]
+  }
+}

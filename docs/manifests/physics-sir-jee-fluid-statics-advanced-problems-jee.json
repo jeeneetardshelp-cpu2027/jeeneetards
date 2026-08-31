@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "request_id": "5a2014b8-3207-431a-a232-cacdc7cdff85",
+  "youtube_playlist_id": "PLtzNDt-x8_00dE7tQUWt57dUgboZUJ3yR",
+  "course_title": "Physics Sir JEE Fluid Statics Advanced Problems",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "q0Ktzj9WBB0",
+      "chapter": "Mechanical Properties of Fluids",
+      "lesson_number": 1
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "enxn--vQ6pQ",
+      "chapter": "Mechanical Properties of Fluids",
+      "lesson_number": 2
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "YJNNIFDuXbY",
+      "chapter": "Mechanical Properties of Fluids",
+      "lesson_number": 3
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "NKh5pdz4CV8",
+      "chapter": "Mechanical Properties of Fluids",
+      "lesson_number": 4
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "SLoh6zYQ_Hs",
+      "chapter": "Thermal Properties of Matter",
+      "lesson_number": 5
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "4kdmNXSxuw0",
+      "chapter": "Mechanical Properties of Fluids",
+      "lesson_number": 6
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "29f217ba-9856-42d8-85de-db5871cc6f74",
+    "youtube_playlist_id": "PLtzNDt-x8_00dE7tQUWt57dUgboZUJ3yR",
+    "teacher": "Janardhan Sir",
+    "reviewed_on": "2026-08-19",
+    "reviewed_by": "Codex evidence review",
+    "source_url": "https://www.youtube.com/@physicssirjee",
+    "source_label": "The official channel is titled PHYSICS SIR JEE x UNACADEMY - JANARDHAN SIR, and its About description identifies Janardanudu Thallaparthi as Janardhan Sir among students",
+    "youtube_video_ids": [
+      "q0Ktzj9WBB0",
+      "enxn--vQ6pQ",
+      "YJNNIFDuXbY",
+      "NKh5pdz4CV8",
+      "SLoh6zYQ_Hs",
+      "4kdmNXSxuw0"
+    ]
+  }
+}

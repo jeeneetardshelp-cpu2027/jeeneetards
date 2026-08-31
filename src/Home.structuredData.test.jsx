@@ -16,7 +16,7 @@ vi.mock("./useUniversalSearch.js", () => ({
   }),
   MIN_QUERY: 3,
 }));
-// countLessonsStudiedToday feeds the PrepStreak band, also on the homepage;
+// countLessonsStudiedToday feeds the PrepToday band, also on the homepage;
 // zero keeps it hidden so it cannot disturb these assertions.
 vi.mock("./progress.js", () => ({
   getContinueWatching: () => [],

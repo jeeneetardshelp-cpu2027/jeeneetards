@@ -1,0 +1,99 @@
+{
+  "version": 1,
+  "request_id": "0ab81def-4951-4b89-90f1-7a774b8b9fc4",
+  "youtube_playlist_id": "PL_sKGvMLBwliH9z3RAeSFXcoUk7PIAZmv",
+  "course_title": "IITian Explains Samarpan Organic Chemistry Revision",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "0wzGMhz1Ohw",
+      "chapter": "Some Basic Principles of Organic Chemistry",
+      "lesson_number": 1
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "1QDCFvQge6w",
+      "chapter": "Organic Reaction Mechanisms",
+      "lesson_number": 2
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "6N0v32SjO9E",
+      "chapter": "Some Basic Principles of Organic Chemistry",
+      "lesson_number": 3
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "TpsMn9s31hw",
+      "chapter": "Organic Reaction Mechanisms",
+      "lesson_number": 4
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "k88xDzmEZVk",
+      "chapter": "Hydrocarbons",
+      "lesson_number": 5
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "vBBThJVC638",
+      "chapter": "Aromatic Compounds",
+      "lesson_number": 6
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "ibq8-9DPs6A",
+      "chapter": "Some Basic Principles of Organic Chemistry",
+      "lesson_number": 7
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "L7m581fPjkg",
+      "chapter": "Organic Reaction Mechanisms",
+      "lesson_number": 8
+    }
+  ],
+  "exclusions": [
+    {
+      "position": 9,
+      "youtube_video_id": "ddhQq5uFA-k",
+      "reason": "exam-strategy tips rather than an instructional chemistry lecture"
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "Zl06OvZJTM8",
+      "reason": "full-syllabus Chemistry problem session without a defensible Organic Chemistry chapter scope"
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "i_O6A_fih2w",
+      "reason": "full-syllabus Chemistry problem session without a defensible Organic Chemistry chapter scope"
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "9bS9qA7uTfs",
+      "reason": "full-syllabus Chemistry problem session without a defensible Organic Chemistry chapter scope"
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "1d6ec173-5f74-4dec-bd02-58ee73bd06b9",
+    "youtube_playlist_id": "PL_sKGvMLBwliH9z3RAeSFXcoUk7PIAZmv",
+    "teacher": "Mohammad Kashif Alam",
+    "reviewed_on": "2026-08-22",
+    "reviewed_by": "Codex evidence review",
+    "source_url": "https://www.youtube.com/channel/UCvjRa2jVhKVSbVDG85vKGww",
+    "source_label": "The official IITian explains by Unacademy channel About description directly identifies Mohammad Kashif Alam as MKA Sir and as its Organic Chemistry educator; the retained official playlist lectures also credit MKA Sir",
+    "youtube_video_ids": [
+      "0wzGMhz1Ohw",
+      "1QDCFvQge6w",
+      "6N0v32SjO9E",
+      "TpsMn9s31hw",
+      "k88xDzmEZVk",
+      "vBBThJVC638",
+      "ibq8-9DPs6A",
+      "L7m581fPjkg"
+    ]
+  }
+}
