@@ -1,0 +1,29 @@
+{
+  "preparedOn": "2026-08-31",
+  "officialIndexUrl": "https://jeemain.nta.nic.in/document-category/archive/page/3/",
+  "coverage": "JEE Main 2022 Paper 1 (B.E./B.Tech.) Session 1 and Session 2 official provisional final answer keys.",
+  "exclusions": "Challenge-stage provisional answer keys, answer-key challenge notices, Paper 2 B.Arch/B.Planning keys, question papers and third-party worked solutions are excluded. NTA labels these two result-stage publications PROVISIONAL FINAL KEY, and that designation is preserved.",
+  "hostingPolicy": "Link-only. The PDFs remain on official NIC government infrastructure and are not mirrored by JEENEETARD.",
+  "resources": [
+    {
+      "title": "JEE Main 2022 Session 1 Provisional Final Answer Key (Paper 1 B.E./B.Tech)",
+      "officialTitle": "JEE(Main) - 2022 (Session 1) - PROVISIONAL FINAL KEY B.E/B.Tech.(Paper I)",
+      "officialLandingUrl": "https://jeemain.nta.nic.in/document/jeemain-2022-session-1-provisional-final-key-b-e-b-tech-paper-i/",
+      "session": 1,
+      "examYear": 2022,
+      "pageCount": 13,
+      "sourceUrl": "https://cdnbbsr.s3waas.gov.in/s3f8e59f4b2fe7c5705bf878bbd494ccdf/uploads/2022/07/2022070665.pdf",
+      "sha256": "5DCC37033205CC69714D08514A9BC7C819CD80700A07C67E3709EABB704C41A4"
+    },
+    {
+      "title": "JEE Main 2022 Session 2 Provisional Final Answer Key (Paper 1 B.E./B.Tech)",
+      "officialTitle": "NATIONAL TESTING AGENCY JEE - 2022 (Session 2) - PROVISIONAL FINAL KEY B.E/B.Tech.(Paper I)",
+      "officialLandingUrl": "https://jeemain.nta.nic.in/document/national-testing-agency-jee-2022-session-2-provisional-final-key-b-e-b-tech-paper-i/",
+      "session": 2,
+      "examYear": 2022,
+      "pageCount": 11,
+      "sourceUrl": "https://cdnbbsr.s3waas.gov.in/s3f8e59f4b2fe7c5705bf878bbd494ccdf/uploads/2022/08/2022080776.pdf",
+      "sha256": "A6FC2F3D8FBD1BB5A4BBE6C3D20683D1CDDF082A46EC33FC156E7EC1E88FAB32"
+    }
+  ]
+}

@@ -4,7 +4,7 @@ export const JEE_MAIN_PAPERS_TITLE_PATTERN = "JEE Main%";
 export const JEE_MAIN_PAPERS_META = Object.freeze({
   title: "JEE Main papers, official answer keys and solutions | JEENEETARD",
   description:
-    "Browse JEE Main question papers, official final answer keys and reviewed worked solutions by year, session and shift.",
+    "Browse JEE Main question papers, official answer keys and reviewed worked solutions by year, session and shift.",
   heading: "JEE Main papers, answer keys and solutions",
 });
 

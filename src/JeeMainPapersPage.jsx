@@ -122,10 +122,10 @@ export default function JeeMainPapersPage() {
             {JEE_MAIN_PAPERS_META.heading}
           </h1>
           <p className="mt-3 max-w-2xl text-base leading-relaxed text-ink-2">
-            Browse question papers, official final answer keys and reviewed worked solutions by year, session and shift.
+            Browse question papers, official answer keys and reviewed worked solutions by year, session and shift.
           </p>
           <p className="mt-3 max-w-2xl text-sm leading-relaxed text-ink-3">
-            Final answer keys are listed separately from worked solutions. Every card says exactly what the PDF contains and opens the recorded source.
+            Official answer keys are listed separately from worked solutions. Every card says exactly what the PDF contains and opens the recorded source.
           </p>
           <a
             href="#paper-filters"
@@ -148,7 +148,7 @@ export default function JeeMainPapersPage() {
           <FileCheck2 aria-hidden="true" className="h-5 w-5 text-accent" />
           <p className="mt-4 text-lg font-semibold text-ink">Official answer keys</p>
           <p className="mt-1 text-sm text-ink-3">
-            {papers.loading ? "Checking final answer keys…" : `${groups.answerKeys.length} final answer key${groups.answerKeys.length === 1 ? "" : "s"}`}
+            {papers.loading ? "Checking official answer keys…" : `${groups.answerKeys.length} official answer key${groups.answerKeys.length === 1 ? "" : "s"}`}
           </p>
         </a>
         <a href="#papers-with-solutions" className="rounded-xl border border-hairline bg-surface p-5 transition-colors hover:border-accent-line">
@@ -235,12 +235,12 @@ export default function JeeMainPapersPage() {
           <PapersByYear
             id="official-answer-keys"
             items={filteredAnswerKeys}
-            eyebrow="Official final keys · Newest year first"
+            eyebrow="Official result-stage keys · Newest year first"
             heading="JEE Main official answer keys"
             itemNoun="answer key"
-            typeLabel="Official final answer key"
-            emptyTitle={filtersActive ? "No official answer keys match these filters" : "No official final answer keys are listed yet"}
-            emptyDescription={filtersActive ? "Try another year, session or search term." : "Only final answer keys published by NTA or CBSE will appear here; provisional keys are excluded."}
+            typeLabel="Official answer key"
+            emptyTitle={filtersActive ? "No official answer keys match these filters" : "No official answer keys are listed yet"}
+            emptyDescription={filtersActive ? "Try another year, session or search term." : "Only result-stage answer keys published by NTA or CBSE appear here; challenge-stage provisional drafts are excluded."}
           />
           <PapersByYear
             id="papers-with-solutions"

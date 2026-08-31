@@ -67,7 +67,7 @@ describe("public page metadata", () => {
     expect(page.title).toBe(
       "JEE Main papers, official answer keys and solutions | JEENEETARD",
     );
-    expect(page.description).toContain("official final answer keys");
+    expect(page.description).toContain("official answer keys");
     expect(page.canonicalPath).toBe("/materials/jee-main/previous-year-papers");
     expect(page.robots).toBe("index, follow");
   });
