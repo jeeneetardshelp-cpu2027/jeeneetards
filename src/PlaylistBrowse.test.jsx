@@ -253,6 +253,21 @@ describe("pagination", () => {
     expect(q.range[1] - q.range[0] + 1).toBe(PAGE_SIZE);
   });
 
+  it("honours a caller's page size, so one request can hold a whole chapter", async () => {
+    // The watch page raises this: "Revise in one sitting" and "Other institutes
+    // teaching…" both partition the same chapter's courses, and each used to
+    // run its own query. Sharing one request only works if that request can
+    // hold the chapter whole — the busiest has 22 courses and 18 of 249
+    // populated chapters exceed the default 12, so the default would truncate.
+    const q = await run({ pageSize: 32 });
+    expect(q.range).toEqual([0, 31]);
+  });
+
+  it("offsets by the caller's page size, not the default", async () => {
+    const q = await run({ page: 2, pageSize: 32 });
+    expect(q.range).toEqual([64, 95]);
+  });
+
   it("retries without optional popularity columns when an older schema lacks them", async () => {
     ROWS = [row(11, "Indefinite Integration")];
     COUNT = 1;

@@ -20,7 +20,6 @@
 import { Link } from "react-router";
 import { ArrowRight, Users } from "lucide-react";
 import { useTheme } from "./theme.jsx";
-import { usePlaylistBrowse } from "./usePlaylistBrowse.js";
 import { ratingDisplay } from "./ratingConfidence.js";
 import ChannelAvatar from "./ChannelAvatar.jsx";
 import { BRAND_TEAL } from "./brandColors.js";
@@ -64,16 +63,17 @@ function rankCourse(course) {
 
 export default function ChapterTeachers({
   chapterId, chapterName, currentCourseId, currentInstituteId,
+  // This chapter's courses, fetched ONCE by the watch page and shared with
+  // every panel that needs them. No goal or board scope: a student watching the
+  // chapter should see every institute that teaches it, not only those inside
+  // the exam lane they arrived through.
+  chapterCourses = [], loading = false,
 }) {
   const { t } = useTheme();
   const enabled = Number.isInteger(chapterId) && chapterId > 0;
-  // The same query the browse page runs, filtered to this chapter. No goal or
-  // board scope: a student watching the chapter should see every institute that
-  // teaches it, not only those inside the exam lane they arrived through.
-  const { items, loading } = usePlaylistBrowse({ chapterId, enabled });
 
   if (!enabled || loading) return null;
-  const others = pickOtherTeachers(items, currentCourseId, currentInstituteId);
+  const others = pickOtherTeachers(chapterCourses, currentCourseId, currentInstituteId);
   if (others.length === 0) return null;
 
   const noun = others.length === 1 ? "institute" : "institutes";

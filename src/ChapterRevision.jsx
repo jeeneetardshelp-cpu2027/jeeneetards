@@ -24,7 +24,7 @@ import { Link } from "react-router";
 import { ArrowRight, Zap } from "lucide-react";
 import { useTheme } from "./theme.jsx";
 import { BRAND_TEAL } from "./brandColors.js";
-import { usePlaylistBrowse, formatDuration } from "./usePlaylistBrowse.js";
+import { formatDuration } from "./usePlaylistBrowse.js";
 import { ratingDisplay } from "./ratingConfidence.js";
 
 // One-shots and revision series only. Deliberately NOT pyq or practice: those
@@ -59,15 +59,12 @@ function score(course) {
   return rating * 1000 + brevity;
 }
 
-export default function ChapterRevision({ chapterId, chapterName, currentCourseId }) {
+export default function ChapterRevision({ chapterId, chapterName, currentCourseId, chapterCourses = [], loading = false }) {
   const { t } = useTheme();
   const enabled = Number.isInteger(chapterId) && chapterId > 0;
-  const { items, loading } = usePlaylistBrowse({
-    chapterId, contentType: REVISION_CONTENT_TYPES, enabled,
-  });
 
   if (!enabled || loading) return null;
-  const courses = pickRevisionCourses(items, currentCourseId);
+  const courses = pickRevisionCourses(chapterCourses, currentCourseId);
   if (courses.length === 0) return null;
 
   return (

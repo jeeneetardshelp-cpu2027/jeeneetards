@@ -4,14 +4,9 @@
 // for the same chapter — the one thing this site can do that YouTube cannot,
 // missing exactly where a student decides they dislike the teacher. These tests
 // pin the selection logic and the honesty rule (hide, never show an empty box).
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
-
-const browse = vi.hoisted(() => ({ current: { items: [], loading: false } }));
-vi.mock("./usePlaylistBrowse.js", () => ({
-  usePlaylistBrowse: () => browse.current,
-}));
 
 import ChapterTeachers, { pickOtherTeachers } from "./ChapterTeachers.jsx";
 import { ThemeProvider } from "./theme.jsx";
@@ -73,38 +68,37 @@ const show = (props) => render(
       <ChapterTeachers
         chapterId={82} chapterName="Laws of Motion"
         currentCourseId={1} currentInstituteId={5}
+        chapterCourses={[]} loading={false}
         {...props}
       />
     </MemoryRouter>
   </ThemeProvider>,
 );
 
+// The strip no longer fetches. The watch page makes ONE request for the
+// chapter's courses and hands the same rows to every panel below the player, so
+// these tests feed those rows in directly rather than mocking a query.
 describe("ChapterTeachers rendering", () => {
   it("renders nothing when this chapter has no other institute", () => {
-    browse.current = {
-      items: [course({ id: 1, instituteId: 5 }), course({ id: 2, instituteId: 5 })],
-      loading: false,
-    };
-    const { container } = show();
+    const { container } = show({
+      chapterCourses: [course({ id: 1, instituteId: 5 }), course({ id: 2, instituteId: 5 })],
+    });
     expect(container.textContent).toBe("");
   });
 
-  it("renders nothing while the query is loading", () => {
-    browse.current = { items: [], loading: true };
-    const { container } = show();
+  it("renders nothing while the shared query is loading", () => {
+    const { container } = show({ chapterCourses: [], loading: true });
     expect(container.textContent).toBe("");
   });
 
   it("names the chapter, counts the institutes, and links into each course scoped to the chapter", () => {
-    browse.current = {
-      items: [
+    show({
+      chapterCourses: [
         course({ id: 1, instituteId: 5 }),
         course({ id: 3, instituteId: 8, institute: "ALLEN", lectures: 12 }),
         course({ id: 4, instituteId: 9, institute: "eSaral", lectures: 6 }),
       ],
-      loading: false,
-    };
-    show();
+    });
     expect(screen.getByText(/2 other institutes teach/i)).toBeTruthy();
     expect(screen.getByText("Laws of Motion")).toBeTruthy();
     const allen = screen.getByRole("link", { name: /ALLEN/ });
@@ -116,11 +110,12 @@ describe("ChapterTeachers rendering", () => {
   });
 
   it("uses the singular when exactly one other institute teaches it", () => {
-    browse.current = {
-      items: [course({ id: 1, instituteId: 5 }), course({ id: 3, instituteId: 8, institute: "ALLEN" })],
-      loading: false,
-    };
-    show();
+    show({
+      chapterCourses: [
+        course({ id: 1, instituteId: 5 }),
+        course({ id: 3, instituteId: 8, institute: "ALLEN" }),
+      ],
+    });
     expect(screen.getByText(/1 other institute teaches/i)).toBeTruthy();
   });
 });

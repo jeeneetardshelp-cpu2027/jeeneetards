@@ -2,15 +2,9 @@
 // one-shot/revision courses, so the selection rules are worth pinning: it must
 // not offer the course the student is already on, must not offer full courses,
 // and must not state a length or a rating it does not have.
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
-
-const browseState = vi.hoisted(() => ({ current: { items: [], loading: false } }));
-vi.mock("./usePlaylistBrowse.js", async (importOriginal) => {
-  const actual = await importOriginal();
-  return { ...actual, usePlaylistBrowse: () => browseState.current };
-});
 
 import ChapterRevision, { pickRevisionCourses } from "./ChapterRevision.jsx";
 import { ThemeProvider } from "./theme.jsx";
@@ -27,16 +21,21 @@ const course = (id, extra = {}) => ({
   ...extra,
 });
 
-const show = (items, currentCourseId = 999) => {
-  browseState.current = { items, loading: false };
-  return render(
-    <ThemeProvider>
-      <MemoryRouter initialEntries={["/"]}>
-        <ChapterRevision chapterId={27} chapterName="Rotational Motion" currentCourseId={currentCourseId} />
-      </MemoryRouter>
-    </ThemeProvider>,
-  );
-};
+// The strip no longer fetches: the watch page makes ONE request for the
+// chapter's courses and shares the rows with every panel below the player.
+const show = (chapterCourses, currentCourseId = 999) => render(
+  <ThemeProvider>
+    <MemoryRouter initialEntries={["/"]}>
+      <ChapterRevision
+        chapterId={27}
+        chapterName="Rotational Motion"
+        currentCourseId={currentCourseId}
+        chapterCourses={chapterCourses}
+        loading={false}
+      />
+    </MemoryRouter>
+  </ThemeProvider>,
+);
 
 describe("pickRevisionCourses", () => {
   it("keeps only one-shot and revision courses", () => {
@@ -89,10 +88,11 @@ describe("<ChapterRevision>", () => {
   });
 
   it("renders nothing without a usable chapter id", () => {
-    browseState.current = { items: [course(1)], loading: false };
     const { container } = render(
       <ThemeProvider>
-        <MemoryRouter><ChapterRevision chapterId={null} currentCourseId={999} /></MemoryRouter>
+        <MemoryRouter>
+          <ChapterRevision chapterId={null} currentCourseId={999} chapterCourses={[course(1)]} />
+        </MemoryRouter>
       </ThemeProvider>,
     );
     expect(container.querySelector("section")).toBeNull();
