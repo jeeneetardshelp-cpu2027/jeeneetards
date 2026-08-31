@@ -395,6 +395,8 @@ export default async function middleware(request) {
     const courseMatch = url.pathname.match(/^\/course\/(\d+)(?:\/chapter\/(\d+))?\/?$/);
     const facultyMatch = url.pathname.match(/^\/faculty\/([^/]+)\/?$/);
     const forumPostMatch = url.pathname.match(/^\/forum\/post\/(\d+)\/?$/);
+    // Set from the row fetched for the 404 check below, when there is one.
+    let forumPostTitle = "";
     // Only a real poll slug shape (…-<id>); never /polls or /polls/new.
     const pollMatch = url.pathname.match(/^\/polls\/([a-z0-9]+(?:-[a-z0-9]+)*-\d+)\/?$/);
     const legacyChapterMatch = url.pathname.match(/^\/chapter\/(\d+)\/?$/);
@@ -446,6 +448,13 @@ export default async function middleware(request) {
         if (Array.isArray(found.data) && found.data.length === 0) {
           return notFoundResponse(request, url, "Forum post not found");
         }
+        // We already paid for this row to decide the 404. Keeping its title
+        // costs nothing and stops every thread sharing one generic card: without
+        // it, N discussions look like N duplicate pages to a crawler and every
+        // WhatsApp share of a thread shows only the site name.
+        const row = Array.isArray(found.data) ? found.data[0] : null;
+        const title = typeof row?.title === "string" ? row.title.trim() : "";
+        if (title) forumPostTitle = title;
       }
     }
 
@@ -486,8 +495,18 @@ export default async function middleware(request) {
     // root Explore, and Study material additionally fetch bounded public data
     // for crawler HTML.
     if (!courseMatch && !facultyMatch) {
-      const routeMeta = metadataForLocation(url.pathname, url.search);
+      let routeMeta = metadataForLocation(url.pathname, url.search);
       if (!routeMeta) return next();
+      // A thread describes itself. Everything else about the route's metadata —
+      // canonical, robots, og:type "article" — is already right, so only the
+      // two human-readable strings change.
+      if (forumPostTitle) {
+        routeMeta = {
+          ...routeMeta,
+          title: `${forumPostTitle} | Student forum | ${SITE_NAME}`,
+          description: `A JEE and NEET preparation discussion on JEENEETARD: ${forumPostTitle}`,
+        };
+      }
       const directoryPromise = url.pathname === "/browse" && !url.search && supaUrl && supaKey
         ? Promise.all([
             edgeJson(
