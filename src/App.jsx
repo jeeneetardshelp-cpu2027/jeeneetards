@@ -334,7 +334,23 @@ export default function App() {
       <AppErrorBoundary>
       <RouteMetadata />
       <ScrollToTop />
-      <Analytics />
+      {/* Report the PATH only. By default the script sends location.href, so
+          Vercel received every student's raw /search?q=... text and, on the
+          recovery route, the access_token in the URL fragment. The Privacy
+          Policy promises minors aggregate, cookieless page views with no
+          individual profiles; stripping the query and hash here is what makes
+          that literally true. */}
+      <Analytics
+        beforeSend={(event) => {
+          try {
+            const u = new URL(event.url);
+            return { ...event, url: u.origin + u.pathname };
+          } catch {
+            // Never let a malformed URL drop the pageview entirely.
+            return event;
+          }
+        }}
+      />
       <SpeedInsights />
       <Routes>
         {/* Admin sits OUTSIDE the student layout — no site footer. */}

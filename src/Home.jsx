@@ -50,6 +50,7 @@ import {
   SocialProof, TopRated, pickTopRated,
 } from "./HomeSections.jsx";
 import ExamCountdown from "./ExamCountdown.jsx";
+import PrepStreak from "./PrepStreak.jsx";
 import YouTubeThumbnail from "./YouTubeThumbnail.jsx";
 import ChannelAvatar from "./ChannelAvatar.jsx";
 import { useHomepageChannels } from "./useHomepageChannels.js";
@@ -316,6 +317,10 @@ function Landing({
   return (
     <>
       <ContinueWatching entries={continueWatching} />
+
+      {/* The student's own momentum, before anything the site has to say.
+          Hides itself until they have actually watched something. */}
+      <PrepStreak />
 
       {/* Days-left sits with the student's own progress, above the argument
           for the product: both answer "where am I?", which is what a

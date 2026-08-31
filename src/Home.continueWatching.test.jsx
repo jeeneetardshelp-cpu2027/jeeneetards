@@ -31,6 +31,9 @@ const useSession = vi.fn();
 vi.mock("./progress.js", () => ({
   getContinueWatching: (...a) => getContinueWatching(...a),
   mergeRemoteEntry: (...a) => mergeRemoteEntry(...a),
+  // PrepStreak (also on the homepage) reads today's lesson count from the same
+  // module; zero keeps that band hidden so it cannot disturb these assertions.
+  countLessonsStudiedToday: () => 0,
 }));
 vi.mock("./progressSync.js", () => ({
   pullServerProgress: (...a) => pullServerProgress(...a),

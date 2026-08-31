@@ -1,0 +1,76 @@
+{
+  "evidence_version": 1,
+  "recorded_at": "2026-08-27T18:57:40+05:30",
+  "environment": "production",
+  "project_ref": "kezelafqhgqrprpadmlf",
+  "scope": "credential-free closed-beta browser journey and owner-approved test-content cleanup",
+  "repository": {
+    "main_commit_at_recording": "cfc776ea3099fed4bafa355e1ec817bfe4695cf5",
+    "release_commit_observed": "b173e0769743ec88fc90eb5dbd88dd27036c5f66",
+    "release_deployment_status": "success",
+    "release_deployment_provider": "Vercel"
+  },
+  "pre_journey_state": {
+    "forum_mode": "beta",
+    "beta_member_count": 1,
+    "open_report_count": 0,
+    "visible_post_count": 0
+  },
+  "journey_checks": [
+    {
+      "name": "enrolled tester can create a discussion",
+      "passed": true,
+      "evidence_surface": "owner-supplied production browser screenshot"
+    },
+    {
+      "name": "enrolled tester can create an answer",
+      "passed": true,
+      "evidence_surface": "owner-supplied production browser screenshot"
+    },
+    {
+      "name": "enrolled tester can cast a vote",
+      "passed": true,
+      "evidence_surface": "owner-supplied production browser screenshots"
+    },
+    {
+      "name": "non-enrolled signed-in account can read the discussion but receives no answer composer",
+      "passed": true,
+      "evidence_surface": "owner-supplied production browser screenshot"
+    },
+    {
+      "name": "production page produced no browser console warnings or errors during agent verification",
+      "passed": true,
+      "evidence_surface": "read-only live browser inspection"
+    }
+  ],
+  "cleanup": {
+    "authorized_by_owner": true,
+    "execution_surface": "production admin moderation interface",
+    "report_created_for_exact_test_post": true,
+    "report_resolved_by_permanent_removal": true,
+    "open_report_count_after_cleanup": 0,
+    "direct_post_route_shows_not_found": true,
+    "visible_post_count_after_cleanup": 0,
+    "visible_answer_count_after_cleanup": 0,
+    "forum_feed_empty_after_cleanup": true,
+    "associated_answer_and_votes_removed_by_reviewed_post_delete_cascades": true,
+    "database_residue_counts_directly_queried": false,
+    "forum_mode_changed": false,
+    "beta_membership_changed": false,
+    "suspension_created": false
+  },
+  "limitations": [
+    "Vote removal was not independently recorded as a separate browser assertion before content cleanup.",
+    "A direct production RPC write attempt from the non-enrolled account was not executed; this journey verified the non-member UI gate only.",
+    "Answer and vote cleanup follows the reviewed ON DELETE CASCADE constraints; production residue tables were not queried directly in this browser-only pass."
+  ],
+  "data_minimization": {
+    "contains_email_addresses": false,
+    "contains_user_ids": false,
+    "contains_public_usernames": false,
+    "contains_post_or_answer_text": false,
+    "contains_report_notes": false,
+    "contains_jwts_or_credentials": false
+  },
+  "result": "passed_with_documented_limitations"
+}
