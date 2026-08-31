@@ -10,8 +10,10 @@
 //
 // This is a thin strip under the player: "N other institutes teach {chapter}",
 // then a link per institute straight into that institute's course, scoped to the
-// same chapter. It reuses the chapter-scoped browse query the site already runs
-// (usePlaylistBrowse with a chapterId), so it introduces no new data path.
+// same chapter. It issues no query of its own: the watch page makes ONE
+// chapter-scoped browse request and hands the same rows to every panel below the
+// player, this one keeping the other institutes and ChapterRevision keeping the
+// one-shots.
 //
 // Honesty rule, same as everywhere else: if there is no OTHER institute for this
 // chapter, the strip renders nothing at all rather than an empty panel. 38 of

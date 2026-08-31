@@ -13,10 +13,17 @@
 // fourteen lectures is not revision advice; a 47-minute one-shot by a different
 // teacher is.
 //
-// Data path: the same chapter-scoped browse query ChapterTeachers uses, with a
-// content_type filter — no new query, no new table. Chapter-scoped rows carry a
-// real summed duration, so "47m" is measured rather than guessed; when it is
-// missing the card omits it instead of inventing one.
+// Data path: none of its own. The watch page makes ONE chapter-scoped browse
+// request and hands the same rows to every panel below the player; this one
+// keeps the one-shots and revision series, ChapterTeachers keeps the other
+// institutes. Filtering that set in the database instead would mean a second
+// round trip, and — because the browse query pages at 12 while the busiest
+// chapter has 22 courses — an unfiltered page is not guaranteed to contain a
+// chapter's one-shots anyway. See CHAPTER_COURSES_PAGE_SIZE in CourseVideoPage.
+//
+// Those rows are chapter-scoped, so they carry a real summed duration and "47m"
+// is measured rather than guessed; when it is missing the card omits it instead
+// of inventing one.
 //
 // Renders nothing when the chapter has no revision material (74 of 263
 // chapters), rather than an empty panel.
