@@ -635,7 +635,8 @@ export default function CourseVideoPage() {
   // stack two share affordances on one screen: when the cleared card is
   // showing (measured from the same inputs it measures), its own share button
   // IS the share for that moment, and the row steps aside.
-  const activeChapterId = activeLesson.chapter?.id ?? scope.chapter?.id ?? null;
+  // activeChapterId is declared once above, where the shared chapter-courses
+  // query needs it, and is the Number-coerced form the panels below require.
   const chapterIsCleared = Boolean(
     chapterCompletion(allLessons, completedIds, activeChapterId)?.cleared,
   );
