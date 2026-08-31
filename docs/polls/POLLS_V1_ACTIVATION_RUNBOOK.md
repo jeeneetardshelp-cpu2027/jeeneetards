@@ -117,14 +117,57 @@ Students may only link pictures from an approved host list, stored in
 
 - `i.ytimg.com`, `img.youtube.com` (YouTube thumbnails)
 - `yt3.ggpht.com` (YouTube channel avatars)
-- `upload.wikimedia.org` (Wikimedia Commons)
+- `upload.wikimedia.org` (the image host behind Wikipedia and Commons)
+- `commons.wikimedia.org` (`Special:FilePath` links, which redirect to the above)
+- `assets.openstax.org`, `openstax.org` (CC-BY textbook figures — physics,
+  chemistry and biology diagrams, the closest free match to what these polls
+  actually ask about)
+- `cdn.kastatic.org` (Khan Academy article and exercise images)
+- `ncert.nic.in` (the official syllabus authority these courses follow)
+- `www.jeeneetard.com`, `jeeneetard.com` (this site — anything an admin puts in
+  `public/` is reviewed by definition)
 
 This is not about tidiness. An arbitrary link lets the submitter **swap the
 image after you approve the poll**, and the audience is 14–18. The allowlist
 means a student can only point at hosts where that is not practical.
 
-To add a host later, insert a row into `poll_image_hosts` — no migration
-needed.
+### The rule for adding a host
+
+Ask one question, and it is **not** "is this site reputable":
+
+> Can the student who submitted the poll replace the bytes at that URL after I
+> have approved it?
+
+If yes, it does not belong on the list however respectable the site looks. That
+single test rules out every general-purpose image host — imgur, postimg, ibb,
+Google Drive, Dropbox, Discord CDN — because anyone can upload there and swap
+the file afterwards.
+
+To add one, insert a row — no migration needed:
+
+```sql
+insert into public.poll_image_hosts (host, note)
+values ('example.org', 'why this host cannot be swapped by a submitter');
+```
+
+Two places mirror this list and must stay in step: the seed in
+`src/migrations/polls_v1.sql` and `APPROVED_HOSTS` in
+`src/polls/PollSubmitPage.jsx` (used only to warn the student earlier — the
+database is still the boundary). A test reads the SQL seed and asserts the
+client accepts every host in it, so drift fails the suite rather than silently
+rejecting a legitimate link.
+
+**If the module is already installed**, editing the seed changes nothing on its
+own — run the `insert` above against the database as well.
+
+### Known gap
+
+A student can upload their own YouTube video, use its thumbnail, get the poll
+approved, then change the thumbnail. `i.ytimg.com` is therefore the one seeded
+host where the submitter *can* influence the bytes. It is kept because the
+catalogue already renders YouTube thumbnails everywhere, but it is the reason
+the report button and "Take poll down" exist rather than the allowlist being
+treated as sufficient on its own.
 
 As an admin you are **not** restricted to that list
 (`poll_admin_set_option_image`), because you choosing the URL *is* the review.
