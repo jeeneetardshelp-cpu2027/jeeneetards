@@ -497,6 +497,28 @@ $poll_image_host_allowed$;
 -- parameter forces every caller to cast a CTE row back to the table type,
 -- which is exactly the kind of thing that works in one query and breaks in
 -- the next one someone writes.
+-- THE one definition of "this poll is closed", used by every read path.
+--
+-- A poll can be closed two ways: an admin sets status='closed', or its
+-- closes_at passes. Nothing transitions the column when time runs out, so the
+-- column alone is not the answer -- and when different code answered this
+-- question differently, an expired poll became a permanent dead end (voting
+-- blocked by closes_at, results still hidden because status was 'live').
+-- Every caller now shares this function so the two notions cannot drift apart
+-- again. poll_admin_close_expired() below makes the stored column catch up,
+-- but correctness must not depend on that having run.
+create or replace function public.poll_is_effectively_closed(
+  p_status text,
+  p_closes_at timestamptz
+)
+returns boolean
+language sql
+stable
+as $poll_is_effectively_closed$
+  select p_status = 'closed'
+      or (p_status = 'live' and p_closes_at is not null and p_closes_at <= now());
+$poll_is_effectively_closed$;
+
 create or replace function public.poll_results_visible(
   p_poll_id bigint,
   p_viewer uuid
@@ -507,15 +529,8 @@ stable
 security definer
 set search_path = ''
 as $poll_results_visible$
-  -- "Closed" means closed by an admin OR closed by time. A poll approved with a
-  -- closes_at is never transitioned to status='closed' by any job, so keying
-  -- visibility only on the status column left an expired poll a permanent dead
-  -- end: voting was blocked (poll_cast_vote checks closes_at <= now()) yet
-  -- results stayed hidden from everyone who had not voted. Treat a passed
-  -- closes_at as closed here so the two notions of "closed" agree.
   select coalesce(
-    (select p.status = 'closed'
-            or (p.closes_at is not null and p.closes_at <= now())
+    (select public.poll_is_effectively_closed(p.status, p.closes_at)
      from public.polls p where p.id = p_poll_id),
     false
   )
@@ -636,7 +651,11 @@ as $get_polls_feed$
     t.slug,
     t.name,
     pr.username,
-    f.status,
+    -- The EFFECTIVE status, not the stored column: a poll whose closes_at has
+    -- passed reads as 'closed' to every client, whether or not
+    -- poll_admin_close_expired() has run yet.
+    case when public.poll_is_effectively_closed(f.status, f.closes_at)
+         then 'closed' else f.status end,
     f.published_at,
     f.closes_at,
     f.vote_count,
@@ -690,7 +709,9 @@ as $get_poll$
     t.slug,
     t.name,
     pr.username,
-    p.status,
+    -- Effective status, as in get_polls_feed: an expired poll reads 'closed'.
+    case when public.poll_is_effectively_closed(p.status, p.closes_at)
+         then 'closed' else p.status end,
     p.published_at,
     p.closes_at,
     p.vote_count,
@@ -1104,6 +1125,38 @@ begin
 end;
 $poll_admin_review$;
 
+-- Persist the time-based transition the read paths already apply.
+--
+-- Reads are correct without this (poll_is_effectively_closed), so nothing
+-- breaks if it never runs -- but the stored column would stay 'live' forever
+-- on an expired poll, which misleads anyone querying the table directly and
+-- keeps expired polls out of any status-based admin view. Idempotent by
+-- construction: the WHERE clause matches nothing on a second run.
+--
+-- Returns the polls it closed so the caller can report a real number instead
+-- of claiming success blindly. Safe to call from a scheduled job (pg_cron) or
+-- by hand from the admin panel; see the activation runbook.
+create or replace function public.poll_admin_close_expired()
+returns table (id bigint, question text, closed_at timestamptz)
+language plpgsql
+security definer
+set search_path = ''
+as $poll_admin_close_expired$
+begin
+  if not public.is_admin() then
+    raise exception using errcode = '42501', message = 'admin only';
+  end if;
+
+  return query
+  update public.polls p
+  set status = 'closed'
+  where p.status = 'live'
+    and p.closes_at is not null
+    and p.closes_at <= now()
+  returning p.id, p.question, p.closes_at;
+end;
+$poll_admin_close_expired$;
+
 -- Close (stop voting, keep it readable) or hide (take it off the site).
 create or replace function public.poll_admin_set_status(p_poll_id bigint, p_status text)
 returns text
@@ -1330,6 +1383,8 @@ revoke all on function public.poll_require_voter() from public, anon, authentica
 revoke all on function public.poll_require_reporter() from public, anon, authenticated;
 revoke all on function public.poll_record_rate_event(uuid, text, bigint, integer, integer)
   from public, anon, authenticated;
+revoke all on function public.poll_is_effectively_closed(text, timestamptz)
+  from public, anon, authenticated;
 revoke all on function public.poll_results_visible(bigint, uuid)
   from public, anon, authenticated;
 revoke all on function public.poll_options_json(bigint, uuid)
@@ -1360,6 +1415,7 @@ grant execute on function public.poll_admin_set_mode(text) to authenticated;
 grant execute on function public.poll_admin_list_pending(integer) to authenticated;
 grant execute on function public.poll_admin_review(bigint, text, text, timestamptz) to authenticated;
 grant execute on function public.poll_admin_set_status(bigint, text) to authenticated;
+grant execute on function public.poll_admin_close_expired() to authenticated;
 grant execute on function public.poll_admin_set_option_image(bigint, text) to authenticated;
 grant execute on function public.poll_admin_set_comment_removed(bigint, boolean) to authenticated;
 grant execute on function public.poll_admin_list_reports(integer) to authenticated;

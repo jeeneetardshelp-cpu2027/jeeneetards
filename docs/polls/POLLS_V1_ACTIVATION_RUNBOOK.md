@@ -220,9 +220,35 @@ the git history for the fix set.
 - Nothing has been executed against staging or production.
 - No anonymous production check of the RPCs (the equivalent of
   `npm run verify:production-capabilities`) — that can only run after step 1.
-- **Timed polls need an operational note:** `poll_results_visible` now treats a
-  poll past its `closes_at` as closed (results become visible, voting stops),
-  so an expired poll is no longer a dead end even though its `status` column
-  stays `'live'`. There is still no job that flips the column to `'closed'`;
-  if you want the status itself to reflect expiry (e.g. for the admin list),
-  flip it by hand or add a scheduled task later.
+## Polls that close on a timer
+
+If you approve a poll with a closing date, **nothing is required of you when
+that time passes.** One function, `poll_is_effectively_closed`, defines what
+"closed" means, and every read path uses it, so the moment `closes_at` passes
+the poll stops taking votes, shows its results to everyone, and reports its
+status as `closed` to the site.
+
+The only thing that does *not* update on its own is the stored `status` column,
+which stays `'live'` because no job writes to it. That is cosmetic — it affects
+someone querying the table directly, not students — but it can be tidied two
+ways:
+
+**By hand:** Admin → Polls → *Close expired polls*. It reports exactly what it
+closed, or says nothing needed closing. Running it twice is harmless.
+
+**Automatically**, if you would rather not think about it. Supabase ships
+`pg_cron`; enable it under Database → Extensions and schedule the same RPC —
+it is idempotent, so a frequent schedule costs nothing:
+
+```sql
+select cron.schedule(
+  'close-expired-polls',
+  '*/15 * * * *',
+  $$select public.poll_admin_close_expired()$$
+);
+```
+
+Note `poll_admin_close_expired()` checks `is_admin()`, so a cron job must run
+as a role whose profile has `is_admin = true`, or be wrapped in a small
+`security definer` function that skips that check. Neither is required for
+correctness — reads are already right without any of this.

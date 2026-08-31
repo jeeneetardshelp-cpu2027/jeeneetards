@@ -64,6 +64,7 @@ function apiWith(overrides = {}) {
     adminSetStatus: vi.fn().mockResolvedValue("hidden"),
     adminSetCommentRemoved: vi.fn().mockResolvedValue(undefined),
     adminResolveReport: vi.fn().mockResolvedValue(undefined),
+    adminCloseExpired: vi.fn().mockResolvedValue([]),
     ...overrides,
   };
 }
@@ -176,6 +177,45 @@ describe("the poll mode switch", () => {
   it("says the flag is not the real switch", async () => {
     renderPanel(apiWith());
     expect(await screen.findByText(/The release flag only decides whether the pages are routed/)).toBeTruthy();
+  });
+});
+
+describe("expired polls", () => {
+  it("says plainly when there is nothing to close, rather than implying it acted", async () => {
+    const api = apiWith();
+    renderPanel(api);
+    fireEvent.click(await screen.findByRole("button", { name: /Close expired polls/ }));
+    await waitFor(() => expect(api.adminCloseExpired).toHaveBeenCalled());
+    expect(await screen.findByText(/Nothing to close/)).toBeTruthy();
+  });
+
+  it("reports how many it closed, and which", async () => {
+    const api = apiWith({
+      adminCloseExpired: vi.fn().mockResolvedValue([
+        { id: 3, question: "Which chapter is hardest?", closed_at: "2026-08-30T10:00:00.000Z" },
+        { id: 4, question: "How many hours do you study?", closed_at: "2026-08-30T11:00:00.000Z" },
+      ]),
+    });
+    renderPanel(api);
+    fireEvent.click(await screen.findByRole("button", { name: /Close expired polls/ }));
+    expect(await screen.findByText(/Closed 2 polls/)).toBeTruthy();
+    expect(screen.getByText(/Which chapter is hardest\?/)).toBeTruthy();
+  });
+
+  it("explains that closing is only housekeeping, not what stops the voting", async () => {
+    renderPanel(apiWith());
+    expect(await screen.findByText(/already stops taking votes/)).toBeTruthy();
+  });
+
+  it("surfaces a refusal instead of silently doing nothing", async () => {
+    const api = apiWith({
+      adminCloseExpired: vi.fn().mockRejectedValue({
+        code: "42501", cause: { message: "admin only" },
+      }),
+    });
+    renderPanel(api);
+    fireEvent.click(await screen.findByRole("button", { name: /Close expired polls/ }));
+    expect(await screen.findByText(/session may have expired|Could not close/)).toBeTruthy();
   });
 });
 

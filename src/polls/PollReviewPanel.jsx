@@ -10,7 +10,7 @@
 // Plus the mode switch, which is what actually opens polls to the public.
 
 import { useCallback, useEffect, useState } from "react";
-import { AlertTriangle, Check, EyeOff, X } from "lucide-react";
+import { AlertTriangle, Check, EyeOff, Timer, X } from "lucide-react";
 import { useTheme } from "../theme.jsx";
 import { pollApi } from "./pollApi.js";
 import { pollActionError } from "./pollErrorMessages.js";
@@ -227,6 +227,8 @@ export default function PollReviewPanel({ api = pollApi }) {
   const { t } = useTheme();
   const [mode, setMode] = useState(null);
   const [modeError, setModeError] = useState("");
+  const [closingExpired, setClosingExpired] = useState(false);
+  const [expiredResult, setExpiredResult] = useState("");
 
   const pending = useAsync(() => api.adminListPending(), [api]);
   const reports = useAsync(() => api.adminListReports(), [api]);
@@ -236,6 +238,24 @@ export default function PollReviewPanel({ api = pollApi }) {
     api.getMode().then((value) => { if (active) setMode(value); }).catch(() => {});
     return () => { active = false; };
   }, [api]);
+
+  const closeExpired = async () => {
+    setClosingExpired(true);
+    setExpiredResult("");
+    try {
+      const closed = await api.adminCloseExpired();
+      // Report the real number, including zero — "done" over an empty result
+      // reads as if something happened.
+      setExpiredResult(closed.length === 0
+        ? "Nothing to close — no live poll is past its closing time."
+        : `Closed ${closed.length} ${closed.length === 1 ? "poll" : "polls"}: ${
+          closed.map((row) => row.question).join("; ")}`);
+    } catch (error) {
+      setExpiredResult(pollActionError(error, "close expired polls"));
+    } finally {
+      setClosingExpired(false);
+    }
+  };
 
   const changeMode = async (next) => {
     setModeError("");
@@ -276,6 +296,30 @@ export default function PollReviewPanel({ api = pollApi }) {
           </p>
         )}
         {modeError && <p role="alert" className={`mt-2 text-sm ${t.muted}`}>{modeError}</p>}
+      </section>
+
+      <section aria-labelledby="poll-expired-heading">
+        <h3 id="poll-expired-heading" className={`mb-1 text-sm font-semibold ${t.text}`}>
+          Expired polls
+        </h3>
+        <p className={`mb-3 text-xs ${t.faint}`}>
+          A poll past its closing time already stops taking votes and shows its
+          results to everyone — that part is automatic. This just writes the
+          closed status back to the database so the stored data matches, which
+          is optional housekeeping.
+        </p>
+        <button
+          type="button"
+          disabled={closingExpired}
+          onClick={closeExpired}
+          className={`inline-flex min-h-11 items-center gap-1.5 rounded-md border ${t.border} px-3 text-sm font-medium ${t.text} ${t.hover} disabled:opacity-40`}
+        >
+          <Timer aria-hidden="true" className="h-4 w-4" />
+          {closingExpired ? "Closing…" : "Close expired polls"}
+        </button>
+        {expiredResult && (
+          <p role="status" className={`mt-2 text-sm ${t.muted}`}>{expiredResult}</p>
+        )}
       </section>
 
       <section aria-labelledby="poll-pending-heading">
