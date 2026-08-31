@@ -44,3 +44,32 @@ describe("ForumMathContent", () => {
     expect(source).not.toContain("dark:");
   });
 });
+
+// A Markdown <img> loads automatically for every reader of a page that
+// anonymous minors can read and Google indexes. The renderer used to accept any
+// host whose protocol was http(s), so one invited poster could show arbitrary
+// third-party imagery to children and harvest every reader's IP and user-agent.
+describe("images may only come from approved hosts", () => {
+  it("renders a picture from an approved host", () => {
+    const { container } = renderMath("![diagram](https://upload.wikimedia.org/w/lens.png)");
+    const img = container.querySelector("img");
+    expect(img).not.toBeNull();
+    expect(img.getAttribute("src")).toBe("https://upload.wikimedia.org/w/lens.png");
+  });
+
+  it("drops a picture from any other host", () => {
+    const { container } = renderMath("![x](https://tracker.example.com/pixel.png)");
+    expect(container.querySelector("img")).toBeNull();
+    // Nothing is loaded from that origin at all.
+    expect(container.innerHTML).not.toContain("tracker.example.com");
+  });
+
+  it("still leaves LINKS to any host alone", () => {
+    // A link is a choice the reader makes, and carries noopener/nofollow — the
+    // restriction is about what loads automatically, not about what may be cited.
+    const { container } = renderMath("[a source](https://example.com/article)");
+    const a = container.querySelector("a");
+    expect(a?.getAttribute("href")).toBe("https://example.com/article");
+    expect(a?.getAttribute("rel")).toContain("nofollow");
+  });
+});
