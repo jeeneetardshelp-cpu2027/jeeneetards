@@ -57,6 +57,10 @@ const ForumFeedPage = lazy(() => import("./forum/ForumFeedPage.jsx"));
 const ForumPostPage = lazy(() => import("./forum/ForumPostPage.jsx"));
 const ForumSubmitPage = lazy(() => import("./forum/ForumSubmitPage.jsx"));
 const ForumUsernamePage = lazy(() => import("./forum/ForumUsernamePage.jsx"));
+const PollsFeatureUnavailable = lazy(() => import("./polls/PollsFeatureUnavailable.jsx"));
+const PollsFeedPage = lazy(() => import("./polls/PollsFeedPage.jsx"));
+const PollPage = lazy(() => import("./polls/PollPage.jsx"));
+const PollSubmitPage = lazy(() => import("./polls/PollSubmitPage.jsx"));
 
 function RouteFallback() {
   return (
@@ -323,6 +327,21 @@ function ForumSubmitRoute() {
     : <ForumFeatureUnavailable released={false} />;
 }
 
+// Polls follow the forum's pattern: routed before release so a shared link
+// explains itself, but behind a flag until polls_v1.sql is installed and the
+// database mode is opened. Two independent switches, on purpose.
+function PollsFeedRoute() {
+  return RELEASE_FEATURES.polls ? <PollsFeedPage /> : <PollsFeatureUnavailable />;
+}
+
+function PollRoute() {
+  return RELEASE_FEATURES.polls ? <PollPage /> : <PollsFeatureUnavailable />;
+}
+
+function PollSubmitRoute() {
+  return RELEASE_FEATURES.polls ? <PollSubmitPage /> : <PollsFeatureUnavailable />;
+}
+
 // ---------------------------------------------------------------------
 //  THE APP
 //  ThemeProvider sits above everything, so the light/dark toggle in one
@@ -390,6 +409,12 @@ export default function App() {
               off, so approved beta testers can prepare without opening any
               discussion read or write surface. */}
           <Route path="/forum/username" element={<ForumUsernamePage />} />
+          {/* /polls/new sits BEFORE /polls/:slug so "new" is never read as a
+              poll slug. Slugs are generated with a trailing id, so they can
+              never collide with it, but route order is the cheap guarantee. */}
+          <Route path="/polls" element={<PollsFeedRoute />} />
+          <Route path="/polls/new" element={<PollSubmitRoute />} />
+          <Route path="/polls/:slug" element={<PollRoute />} />
           {/* Both screens are addressed by real database ids. */}
           <Route path="/chapter/:chapterId" element={<LegacyChapterRedirect />} />
           {/* A course opened from the catalogue has no chapter context, so the

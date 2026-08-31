@@ -93,7 +93,8 @@
     "refresh:stats": "node src/scripts/refreshVideoStats.js",
     "check:liveness": "node src/scripts/checkVideoLiveness.js",
     "refresh:channel-logos": "node src/scripts/refreshChannelLogos.js",
-    "verify:course": "node src/scripts/verifyImportedCourse.js"
+    "verify:course": "node src/scripts/verifyImportedCourse.js",
+    "verify:polls-browser": "node src/scripts/verifyPollsBrowser.js"
   },
   "dependencies": {
     "@resvg/resvg-js": "^2.6.2",

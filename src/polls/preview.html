@@ -1,0 +1,20 @@
+<!doctype html>
+<!--
+  Dev-only preview of the poll feed, served by the Vite dev server at
+  /src/polls/preview.html. It mounts PollsBrowserFixture.jsx, which renders the
+  real PollsFeedPage against a stub API, so the UI can be reviewed before
+  polls_v1.sql is installed anywhere. It is never part of a production build:
+  `vite build` only bundles the entry points reachable from index.html.
+-->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Poll UI preview</title>
+    <script src="/theme-init.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/polls/PollsBrowserFixture.jsx"></script>
+  </body>
+</html>

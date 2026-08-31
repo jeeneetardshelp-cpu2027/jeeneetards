@@ -68,6 +68,17 @@ export const RELEASE_FEATURES = Object.freeze({
   // This removes the email+password+confirm wall that is the ratings cold-start
   // bottleneck -- production had ~2 accounts and 0 ratings behind it.
   googleAuth: true,
+  // Student polls: vote, comment and share, with students suggesting polls an
+  // admin approves before they go live. OFF until BOTH of these are true:
+  //   1. src/migrations/polls_v1.sql is installed in production. Until then
+  //      every RPC the poll pages call returns "function does not exist".
+  //   2. An admin has switched poll_mode() to 'open' from the Polls tab in
+  //      /admin. Installing the module does NOT open it -- it ships as 'off',
+  //      the same way forum_v1 did.
+  // Flipping this flag alone changes nothing except which pages are routed,
+  // which is the point: the database is the real boundary.
+  // See docs/polls/POLLS_V1_ACTIVATION_RUNBOOK.md.
+  polls: false,
 });
 
 export const hasReleaseCapability = (name) =>

@@ -96,7 +96,7 @@ const LOOKUP_TIMEOUT_MS = 1500;
 
 const STATIC_APP_ROUTES = new Set([
   "/", "/admin", "/browse", "/compare", "/explore", "/privacy",
-  "/faculty", "/forum", "/forum/submit", "/forum/username", "/materials", JEE_MAIN_PAPERS_PATH, "/methodology", "/reset", "/search", "/signin", "/terms", "/tests",
+  "/faculty", "/forum", "/forum/submit", "/forum/username", "/materials", JEE_MAIN_PAPERS_PATH, "/methodology", "/polls", "/polls/new", "/reset", "/search", "/signin", "/terms", "/tests",
 ]);
 
 /** Mirrors the route shapes in App.jsx. Resource existence is checked later. */
@@ -111,6 +111,11 @@ export function isSupportedAppPath(pathname) {
   }
   if (path.startsWith("/explore/")) return Boolean(parseExplorePath(path));
   if (/^\/forum\/post\/\d+$/.test(path)) return true;
+  // A poll slug is question-slug + "-" + id, so it always ends in a number.
+  // Requiring that here means a mistyped or invented /polls/... link gets a
+  // real 404 instead of an empty shell — and it keeps /polls/new, which has
+  // no trailing id, resolving through STATIC_APP_ROUTES above.
+  if (/^\/polls\/[a-z0-9]+(?:-[a-z0-9]+)*-\d+$/.test(path)) return true;
   if (/^\/faculty\/[^/]+$/.test(path)) return true;
   if (/^\/chapter\/\d+$/.test(path)) return true;
   return /^\/course\/\d+(?:\/chapter\/\d+)?$/.test(path);
@@ -390,6 +395,8 @@ export default async function middleware(request) {
     const courseMatch = url.pathname.match(/^\/course\/(\d+)(?:\/chapter\/(\d+))?\/?$/);
     const facultyMatch = url.pathname.match(/^\/faculty\/([^/]+)\/?$/);
     const forumPostMatch = url.pathname.match(/^\/forum\/post\/(\d+)\/?$/);
+    // Only a real poll slug shape (…-<id>); never /polls or /polls/new.
+    const pollMatch = url.pathname.match(/^\/polls\/([a-z0-9]+(?:-[a-z0-9]+)*-\d+)\/?$/);
     const legacyChapterMatch = url.pathname.match(/^\/chapter\/(\d+)\/?$/);
     const exploreRoute = parseExplorePath(url.pathname);
 
@@ -438,6 +445,34 @@ export default async function middleware(request) {
         if (!found.confirmed) return next();
         if (Array.isArray(found.data) && found.data.length === 0) {
           return notFoundResponse(request, url, "Forum post not found");
+        }
+      }
+    }
+
+    // Same shape for polls: a syntactically valid /polls/<slug> that maps to no
+    // live/closed poll (a fabricated id, or a rejected/taken-down poll) gets a
+    // real 404 instead of a soft-200 shell with a slug-derived title. get_poll
+    // returns no rows while polls are off, so gate on poll_mode first; any
+    // unconfirmed lookup falls through to the normal shell.
+    if (pollMatch && supaUrl && supaKey) {
+      const headers = {
+        apikey: supaKey,
+        Authorization: `Bearer ${supaKey}`,
+        "content-type": "application/json",
+      };
+      const mode = await edgeJson(`${supaUrl}/rest/v1/rpc/poll_mode`, {
+        method: "POST", headers, body: "{}",
+      });
+      if (!mode.confirmed) return next();
+      if (mode.data !== "off") {
+        const found = await edgeJson(`${supaUrl}/rest/v1/rpc/get_poll`, {
+          method: "POST",
+          headers,
+          body: JSON.stringify({ p_slug: pollMatch[1] }),
+        });
+        if (!found.confirmed) return next();
+        if (Array.isArray(found.data) && found.data.length === 0) {
+          return notFoundResponse(request, url, "Poll not found");
         }
       }
     }
