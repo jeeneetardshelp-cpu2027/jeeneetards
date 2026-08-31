@@ -54,7 +54,8 @@ export default function ForumUsernamePage({ api = forumApi, authState = null }) 
               <h2 className="text-lg font-semibold text-ink">Your forum username is ready</h2>
               <p className="mt-2 break-words text-base font-semibold text-accent">@{identity.username}</p>
               <p className="mt-2 text-sm leading-relaxed text-ink-2">
-                This public username cannot be changed. The student forum remains closed until its separately reviewed release is activated.
+                This public username cannot be changed. The forum is open to read;
+                publishing is limited to invited student testers during the closed beta.
               </p>
               <Button to="/browse" variant="secondary" size="sm" className="mt-5">
                 Browse courses

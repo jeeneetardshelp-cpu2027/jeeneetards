@@ -23,6 +23,12 @@ export default function ForumFeedPage({ api = forumApi, authState = null }) {
   const betaWriter = feed.mode === "beta"
     && voteAccess.canVote
     && voteAccess.identity.betaMember;
+  // Whether THIS visitor can actually start a discussion. The lead sentence and
+  // the button are driven by the same value, so the page can never invite an
+  // action it will not honour — the capability-gating rule this project applies
+  // to features, applied to copy.
+  const canPublish = feed.status === "ready" && (feed.mode === "open" || betaWriter);
+  const readOnlyBeta = feed.status === "ready" && feed.mode === "beta" && !betaWriter;
   const voting = feed.mode === "open" || betaWriter ? {
     api,
     canVote: voteAccess.canVote,
@@ -61,11 +67,20 @@ export default function ForumFeedPage({ api = forumApi, authState = null }) {
         as="h1"
         eyebrow="Student discussions"
         title="Ask, explain and prepare together"
-        lead="Read preparation questions and answers from other students, or share a clear doubt of your own."
-        action={feed.status === "ready" && (feed.mode === "open" || betaWriter)
-          ? <Button to="/forum/submit">Start a discussion</Button>
-          : null}
+        lead={canPublish
+          ? "Read preparation questions and answers from other students, or share a clear doubt of your own."
+          : "Read preparation questions and answers from other students."}
+        action={canPublish ? <Button to="/forum/submit">Start a discussion</Button> : null}
       />
+
+      {/* Say WHY there is no compose button, in the same words the submit page
+          and the reply composer already use, instead of leaving a student to
+          wonder where the control went. */}
+      {readOnlyBeta && (
+        <p role="status" className="mt-6 rounded-lg border border-accent-line bg-accent-soft p-4 text-sm text-ink-2">
+          Closed beta: only invited student testers can publish. Everyone can still read visible discussions.
+        </p>
+      )}
 
       <ForumFeedControls
         sort={query ? "new" : sort}
