@@ -112,6 +112,10 @@ export function usePlaylistBrowse({
   goalId, boardId, subjectId, chapterId, stage, channelId, teacherId,
   chapterClassSlugs = null,
   language, contentType, difficulty, search, sort, page = 0,
+  // Rows per request. Defaults to the browse page's PAGE_SIZE; the watch page
+  // raises it so that ONE request can serve every panel that needs this
+  // chapter's courses, instead of each panel issuing its own.
+  pageSize = PAGE_SIZE,
   // GATE. When false, no request is issued at all and the hook reports
   // loading. The caller sets this from useCanonicalFilters().ready, so a URL
   // carrying slugs cannot fire a catalogue query before those slugs are ids.
@@ -254,7 +258,7 @@ export function usePlaylistBrowse({
         .order("position", { ascending: true, referencedTable: "cover" })
         .order("id", { ascending: true, referencedTable: "cover" })
         .range(0, 0, { referencedTable: "cover" })
-        .range(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE - 1);
+        .range(page * pageSize, page * pageSize + pageSize - 1);
 
       // Learning goal was accepted as a prop and never applied, so a JEE view
       // also listed NEET courses. Goal isolation is the point of the journey.
@@ -318,12 +322,12 @@ export function usePlaylistBrowse({
     }
     setState({
       items, total: count ?? null, loading: false, error: null,
-      hasMore: count != null ? (page + 1) * PAGE_SIZE < count : items.length === PAGE_SIZE,
+      hasMore: count != null ? (page + 1) * pageSize < count : items.length === pageSize,
     });
   }, [enabled, goalId, boardId, subjectId, chapterId, stage, channelId, teacherId,
       chapterClassKey,
       languageKey, contentTypeKey, difficultyKey,
-      search, sort, page]);
+      search, sort, page, pageSize]);
 
   useEffect(() => { load(); }, [load]);
   return { ...state, reload: load };
