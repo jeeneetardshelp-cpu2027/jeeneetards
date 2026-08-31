@@ -32,12 +32,17 @@ export function chapterCompletion(lessons, completedIds, chapterId) {
   if (inChapter.length === 0) return null;
 
   const finished = new Set(completedIds ?? []);
-  const done = inChapter.filter((lesson) => finished.has(lesson.videoId)).length;
+  const doneIds = inChapter
+    .filter((lesson) => finished.has(lesson.videoId))
+    .map((lesson) => lesson.videoId);
   return {
     chapter: inChapter[0].chapter,
     total: inChapter.length,
-    done,
-    cleared: done === inChapter.length,
+    done: doneIds.length,
+    // The finished lessons themselves, so a caller can ask progress.js WHEN
+    // they were finished rather than assuming it was now.
+    completedVideoIds: doneIds,
+    cleared: doneIds.length === inChapter.length,
   };
 }
 

@@ -295,6 +295,26 @@ export function getCompletedVideoIds(playlistId) {
   return out;
 }
 
+// WHEN a set of lessons was last recorded as watched, in ms. Used to date a
+// cleared chapter from the evidence rather than from the clock: the record is
+// written the first time the app OBSERVES a chapter complete, which on a second
+// device (or after a sign-out) is the day of the visit, not the day the student
+// finished. mergeRemoteEntry stamps positions[].at with the server row own
+// updated_at, so the merged value is the finish time from the other device.
+//
+// It is a last-touch, not a finish: replaying a lesson moves it forward. That
+// makes it an imperfect date, but it is never LATER than now, so it is strictly
+// closer to the truth than the clock is. Null when nothing is known.
+export function getLastWatchedAt(playlistId, videoIds) {
+  const positions = readAll()[String(playlistId)]?.positions ?? {};
+  let latest = null;
+  for (const videoId of videoIds ?? []) {
+    const at = Number(positions[videoId]?.at);
+    if (Number.isFinite(at) && at > 0 && (latest === null || at > latest)) latest = at;
+  }
+  return latest;
+}
+
 // Full per-course entry for a truthful Continue button. Reading progress does
 // not create it; only genuine YouTube PLAYING events write progress.
 export function getCourseProgress(playlistId) {
