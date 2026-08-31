@@ -144,6 +144,14 @@ export function createPollApi(client = supabase) {
       }), "change the poll status");
     },
 
+    /** Persists the time-based close the read paths already apply. Returns the rows it closed. */
+    async adminCloseExpired() {
+      return asArray(unwrap(
+        await requireClient(client).rpc("poll_admin_close_expired"),
+        "close expired polls",
+      ));
+    },
+
     async adminSetOptionImage(optionId, imageUrl) {
       unwrap(await requireClient(client).rpc("poll_admin_set_option_image", {
         p_option_id: optionId,

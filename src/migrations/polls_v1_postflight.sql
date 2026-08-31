@@ -34,6 +34,8 @@ begin
     'public.poll_submit_report(text,bigint,text,text)',
     'public.poll_admin_list_pending(integer)',
     'public.poll_admin_review(bigint,text,text,timestamptz)',
+    'public.poll_admin_close_expired()',
+    'public.poll_is_effectively_closed(text,timestamptz)',
     'public.poll_admin_set_mode(text)'
   ] loop
     if to_regprocedure(object_name) is null then

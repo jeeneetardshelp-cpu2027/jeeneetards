@@ -40,6 +40,7 @@ drop function if exists public.poll_admin_set_mode(text);
 drop function if exists public.poll_admin_list_pending(integer);
 drop function if exists public.poll_admin_review(bigint, text, text, timestamptz);
 drop function if exists public.poll_admin_set_status(bigint, text);
+drop function if exists public.poll_admin_close_expired();
 drop function if exists public.poll_admin_set_option_image(bigint, text);
 drop function if exists public.poll_admin_set_comment_removed(bigint, boolean);
 drop function if exists public.poll_admin_list_reports(integer);
@@ -50,6 +51,7 @@ drop function if exists public.poll_recount_metrics(boolean);
 -- tables, because they are declared over public.polls.
 drop function if exists public.poll_options_json(bigint, uuid);
 drop function if exists public.poll_results_visible(bigint, uuid);
+drop function if exists public.poll_is_effectively_closed(text, timestamptz);
 drop function if exists public.poll_image_host_allowed(text);
 drop function if exists public.poll_slugify(text);
 drop function if exists public.poll_record_rate_event(uuid, text, bigint, integer, integer);

@@ -705,6 +705,72 @@ describe("audit hardening", () => {
     expect(row.options.every((o) => o.vote_count !== null)).toBe(true);
   });
 
+  it("EXPIRY: reads report an expired poll as closed even before the column catches up", async () => {
+    await clearRateEvents(pg);
+    const id = await submitPoll(pg, IDS.student, "Does an expired poll read as closed?");
+    await setIdentity(pg, IDS.admin);
+    await pg.query("select public.poll_admin_review($1, 'approve', null, $2)", [
+      id, new Date(Date.now() + 3600_000).toISOString(),
+    ]);
+    await asOwner(pg);
+    await pg.query(
+      "update public.polls set published_at = now() - interval '2 hours', closes_at = now() - interval '1 hour' where id = $1",
+      [id],
+    );
+    const slug = (await pg.query("select slug from public.polls where id = $1", [id])).rows[0].slug;
+
+    // The stored column is deliberately still 'live' at this point.
+    const stored = await pg.query("select status from public.polls where id = $1", [id]);
+    expect(stored.rows[0].status).toBe("live");
+
+    // ...but every read path reports the truth.
+    await setIdentity(pg, null, "anon");
+    const single = (await pg.query("select * from public.get_poll($1)", [slug])).rows[0];
+    expect(single.status).toBe("closed");
+    expect(single.can_vote).toBe(false);
+    expect(single.results_visible).toBe(true);
+
+    const feedRow = (await pg.query("select * from public.get_polls_feed()")).rows
+      .find((r) => Number(r.id) === id);
+    expect(feedRow.status).toBe("closed");
+  });
+
+  it("EXPIRY: poll_admin_close_expired persists the transition and is idempotent", async () => {
+    await setIdentity(pg, IDS.admin);
+    const first = await pg.query("select * from public.poll_admin_close_expired()");
+    expect(first.rows.length).toBeGreaterThan(0);
+    expect(first.rows.every((r) => r.question && r.closed_at)).toBe(true);
+
+    // Second run has nothing left to do.
+    const second = await pg.query("select * from public.poll_admin_close_expired()");
+    expect(second.rows).toEqual([]);
+
+    // Nothing still live is past its closing time.
+    await asOwner(pg);
+    const stragglers = await pg.query(
+      "select count(*)::int as n from public.polls where status = 'live' and closes_at is not null and closes_at <= now()",
+    );
+    expect(stragglers.rows[0].n).toBe(0);
+  });
+
+  it("EXPIRY: a non-admin cannot close expired polls", async () => {
+    await setIdentity(pg, IDS.other);
+    await expect(
+      pg.query("select * from public.poll_admin_close_expired()"),
+    ).rejects.toThrow(/admin only/i);
+  });
+
+  it("EXPIRY: a live poll with no closing date is never touched", async () => {
+    await clearRateEvents(pg);
+    const id = await submitPoll(pg, IDS.student, "Does an open ended poll stay open?");
+    await approve(pg, id); // no closes_at
+    await setIdentity(pg, IDS.admin);
+    await pg.query("select * from public.poll_admin_close_expired()");
+    await asOwner(pg);
+    const row = await pg.query("select status from public.polls where id = $1", [id]);
+    expect(row.rows[0].status).toBe("live");
+  });
+
   it("APPROVAL CHECK: a direct UPDATE cannot publish an unreviewed poll", async () => {
     await clearRateEvents(pg);
     const id = await submitPoll(pg, IDS.student, "Can a raw update publish me without review?");
