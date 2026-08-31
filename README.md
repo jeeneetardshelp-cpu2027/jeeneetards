@@ -34,7 +34,7 @@ security controls and release evidence must also be present.
 | Content reporting | Enabled |
 | Student forum | Enabled — limited closed beta; public reading, invited-member contributions |
 | Continue with Google sign-in | Enabled |
-| Student polls | Disabled — UI shipped and tested, `polls_v1.sql` not installed and poll mode still `off` (`docs/polls/POLLS_V1_ACTIVATION_RUNBOOK.md`) |
+| Student polls | Enabled — schema installed on production; the database `poll_mode()` is the live switch (`docs/polls/POLLS_V1_ACTIVATION_RUNBOOK.md`) |
 
 The source of truth is
 [`src/releaseCapabilities.js`](src/releaseCapabilities.js). Do not enable a
