@@ -36,6 +36,7 @@ import { supabase } from "./supabaseClient.js";
 import { RELEASE_CAPABILITIES, RELEASE_FEATURES } from "./releaseCapabilities.js";
 import { clearProgress } from "./progress.js";
 import { clearNotes } from "./notes.js";
+import { clearStreak } from "./streak.js";
 import { prefersReducedMotion } from "./motion.jsx";
 
 // `width` picks the cap. "reading" stays narrow on purpose (guided steps,
@@ -172,6 +173,9 @@ export function GlobalHeader({ crumbs = [], search = null, leading = null, width
     // are device-local too and carry the same shared-machine risk.
     clearProgress();
     clearNotes();
+    // Same shared-machine reasoning: ll_streak_v1 is un-namespaced, so a
+    // school-lab browser must not hand the next student someone else's streak.
+    clearStreak();
   };
 
   return (
