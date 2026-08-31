@@ -25,6 +25,7 @@ import ChapterCleared from "./ChapterCleared.jsx";
 import ChapterRevision from "./ChapterRevision.jsx";
 import ShareControl from "./ShareControl.jsx";
 import { chapterCompletion, courseByline } from "./chapterCompletion.js";
+import { usePlaylistBrowse } from "./usePlaylistBrowse.js";
 import { recordChapterWatched } from "./revision.js";
 import StudyMaterialPanel from "./StudyMaterialPanel.jsx";
 import NotesPanel from "./NotesPanel.jsx";
@@ -34,6 +35,13 @@ import { metadataForCourse } from "./pageMetadata.js";
 import { BRAND_TEAL } from "./brandColors.js";
 
 const TEAL = BRAND_TEAL;
+
+// Enough rows to hold any chapter whole. The busiest chapter in the catalogue
+// has 22 courses and 18 of 249 populated chapters exceed the browse page size
+// of 12, so the default would silently truncate the set the panels below the
+// player partition — and a chapter's one-shots are not guaranteed to be in an
+// unfiltered top-12. Headroom over the observed maximum, still one request.
+const CHAPTER_COURSES_PAGE_SIZE = 32;
 
 export function scopeCourseLessons(lessons, chapterId) {
   if (chapterId == null || chapterId === "") {
@@ -220,6 +228,17 @@ export default function CourseVideoPage() {
       ? lessons.find((lesson) => lesson.videoId === savedProgress.lastVideoId)
       : null) ??
     lessons[0] ?? null;
+
+  // ONE request for this chapter's courses, shared by every panel below the
+  // player. "Revise in one sitting" and "Other institutes teaching..." need the
+  // same rows and each used to fetch its own — two round trips per watch page
+  // for one answer. Partitioning in memory is both correct and cheaper.
+  const activeChapterId = Number(activeLesson?.chapter?.id ?? scope.chapter?.id) || null;
+  const { items: chapterCourses, loading: chapterCoursesLoading } = usePlaylistBrowse({
+    chapterId: activeChapterId,
+    enabled: Boolean(activeChapterId),
+    pageSize: CHAPTER_COURSES_PAGE_SIZE,
+  });
 
   // Never show one lesson while leaving a different (invalid) lesson in the
   // shareable URL. Once the sequence is known, replace only the bad `v` value
@@ -616,7 +635,8 @@ export default function CourseVideoPage() {
   // stack two share affordances on one screen: when the cleared card is
   // showing (measured from the same inputs it measures), its own share button
   // IS the share for that moment, and the row steps aside.
-  const activeChapterId = activeLesson.chapter?.id ?? scope.chapter?.id ?? null;
+  // activeChapterId is declared once above, where the shared chapter-courses
+  // query needs it, and is the Number-coerced form the panels below require.
   const chapterIsCleared = Boolean(
     chapterCompletion(allLessons, completedIds, activeChapterId)?.cleared,
   );
@@ -737,9 +757,11 @@ export default function CourseVideoPage() {
               alternatives below. Hides itself on the 74 of 263 chapters with
               no revision material. */}
           <ChapterRevision
-            chapterId={Number(activeLesson.chapter?.id ?? scope.chapter?.id) || null}
+            chapterId={activeChapterId}
             chapterName={activeLesson.chapter?.name ?? scope.chapter?.name}
             currentCourseId={course.id}
+            chapterCourses={chapterCourses}
+            loading={chapterCoursesLoading}
           />
           {/* Champions first: "who teaches this chapter best" answers the
               question before "who else teaches it" lists the options. Both
@@ -749,10 +771,12 @@ export default function CourseVideoPage() {
             chapterName={activeLesson.chapter?.name ?? scope.chapter?.name}
           />
           <ChapterTeachers
-            chapterId={Number(activeLesson.chapter?.id ?? scope.chapter?.id) || null}
+            chapterId={activeChapterId}
             chapterName={activeLesson.chapter?.name ?? scope.chapter?.name}
             currentCourseId={course.id}
             currentInstituteId={course.instituteId ?? null}
+            chapterCourses={chapterCourses}
+            loading={chapterCoursesLoading}
           />
         </>
       }
