@@ -183,3 +183,46 @@ describe("signed-out forum feed", () => {
     expect(screen.queryByRole("button", { name: "Upvote this discussion" })).toBeNull();
   });
 });
+
+// The forum went public in closed beta while two surfaces still described a
+// forum that was closed. The landing page invited every reader to "share a
+// clear doubt of your own" and then rendered the compose button only for
+// invited testers, with nothing explaining where it went. This is the project's
+// capability-gating rule applied to copy: never promise what this visitor
+// cannot do.
+describe("closed beta says what a reader can actually do", () => {
+  const betaApi = (identity) => ({
+    ...apiWith(),
+    getMode: vi.fn().mockResolvedValue("beta"),
+    getMyIdentity: vi.fn().mockResolvedValue(identity),
+  });
+
+  it("does not invite a non-member to post, and says why there is no button", async () => {
+    const api = betaApi({ username: "reader", needs_username: false, beta_member: false });
+    renderFeed(api, "/forum", { user: { id: "u1" } });
+    await screen.findByRole("heading", { name: "Question 1" });
+
+    expect(screen.queryByRole("link", { name: "Start a discussion" })).toBeNull();
+    // The invitation clause must be gone, not merely unfulfilled.
+    expect(screen.queryByText(/share a clear doubt of your own/i)).toBeNull();
+    // And the absence is explained in the same words the submit page uses.
+    expect(await screen.findByText(/only invited student testers can publish/i)).toBeTruthy();
+  });
+
+  it("still invites an invited tester, who really can post", async () => {
+    const api = betaApi({ username: "tester", needs_username: false, beta_member: true });
+    renderFeed(api, "/forum", { user: { id: "u2" } });
+    await screen.findByRole("heading", { name: "Question 1" });
+
+    if (screen.queryByRole("link", { name: "Start a discussion" })) {
+      expect(screen.getByText(/share a clear doubt of your own/i)).toBeTruthy();
+      expect(screen.queryByText(/only invited student testers can publish/i)).toBeNull();
+    }
+  });
+
+  it("never tells a signed-out reader the forum is closed while it is readable", async () => {
+    renderFeed(betaApi({ username: null, needs_username: true, beta_member: false }));
+    await screen.findByRole("heading", { name: "Question 1" });
+    expect(screen.queryByText(/remains closed/i)).toBeNull();
+  });
+});
