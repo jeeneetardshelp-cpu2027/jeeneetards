@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "request_id": "2baba383-0edf-425c-9f33-a81b78c48cf9",
+  "youtube_playlist_id": "PL_kKL-_jzQhMYHVTwTNTxrJx3VIveuGLP",
+  "course_title": "Simplified Education Integrals Problem Series",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "K7hiJvOkU0M",
+      "chapter": "Indefinite Integration",
+      "lesson_number": 1
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "kImtpinwxMw",
+      "chapter": "Definite Integration",
+      "lesson_number": 2
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "o56QU2pMh_U",
+      "chapter": "Definite Integration",
+      "lesson_number": 3
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "UAs9qOyimf0",
+      "chapter": "Definite Integration",
+      "lesson_number": 4
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "a00d4613-6d7f-4b48-bd49-ebcf2d4d88ed",
+    "youtube_playlist_id": "PL_kKL-_jzQhMYHVTwTNTxrJx3VIveuGLP",
+    "teacher": "Sunil Yadav",
+    "reviewed_on": "2026-08-25",
+    "reviewed_by": "Codex evidence review",
+    "source_url": "https://simplifiededucation.in/",
+    "source_label": "The official Simplified Education site identifies Sunil Yadav as its JEE Mathematics educator, links the official Simplified Education YouTube channel, and describes its free YouTube videos as demonstrations of his teaching method; the retained playlist contains only that channel's Integrals Series lessons",
+    "youtube_video_ids": [
+      "K7hiJvOkU0M",
+      "kImtpinwxMw",
+      "o56QU2pMh_U",
+      "UAs9qOyimf0"
+    ]
+  }
+}

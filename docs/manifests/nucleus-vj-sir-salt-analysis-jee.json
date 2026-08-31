@@ -1,0 +1,189 @@
+{
+  "version": 1,
+  "request_id": "8e957933-43ff-4395-8569-3d8a72ce2acf",
+  "youtube_playlist_id": "PLCDVOq3f2f1uq0rRNe5gui5DRGnG2Z2vv",
+  "course_title": "Nucleus VJ Sir Salt Analysis",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "RGfGRUDHGu8",
+      "chapter": "Qualitative Analysis",
+      "lesson_number": 1
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "7lk-ZNaCRjY",
+      "chapter": "Qualitative Analysis",
+      "lesson_number": 2
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "p_LOpyWfito",
+      "chapter": "Qualitative Analysis",
+      "lesson_number": 3
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "UxA5P_M5OCg",
+      "chapter": "Qualitative Analysis",
+      "lesson_number": 4
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "AnmPrAfTg_U",
+      "chapter": "Qualitative Analysis",
+      "lesson_number": 5
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "9X3waJeIPl0",
+      "chapter": "Qualitative Analysis",
+      "lesson_number": 6
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "1SXpTKo4XKs",
+      "chapter": "Qualitative Analysis",
+      "lesson_number": 7
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "vsKTi2smv6Y",
+      "chapter": "Qualitative Analysis",
+      "lesson_number": 8
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "i8_W08slDeo",
+      "chapter": "Qualitative Analysis",
+      "lesson_number": 9
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "1RL3hsQcI5s",
+      "chapter": "Qualitative Analysis",
+      "lesson_number": 10
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "tJNDeMUq5i4",
+      "chapter": "Qualitative Analysis",
+      "lesson_number": 11
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "hYwnptdtTU8",
+      "chapter": "Qualitative Analysis",
+      "lesson_number": 12
+    },
+    {
+      "position": 13,
+      "youtube_video_id": "m_adv-A2p14",
+      "chapter": "Qualitative Analysis",
+      "lesson_number": 13
+    },
+    {
+      "position": 14,
+      "youtube_video_id": "P3HyZBmeO04",
+      "chapter": "Qualitative Analysis",
+      "lesson_number": 14
+    },
+    {
+      "position": 15,
+      "youtube_video_id": "J9kVfmYRuB0",
+      "chapter": "Qualitative Analysis",
+      "lesson_number": 15
+    },
+    {
+      "position": 16,
+      "youtube_video_id": "TiDkAPNnLx8",
+      "chapter": "Qualitative Analysis",
+      "lesson_number": 16
+    },
+    {
+      "position": 17,
+      "youtube_video_id": "dGoIl30O8Uk",
+      "chapter": "Qualitative Analysis",
+      "lesson_number": 17
+    },
+    {
+      "position": 18,
+      "youtube_video_id": "1h_2Ajjk2AM",
+      "chapter": "Qualitative Analysis",
+      "lesson_number": 18
+    },
+    {
+      "position": 19,
+      "youtube_video_id": "4kTcrAubA44",
+      "chapter": "Qualitative Analysis",
+      "lesson_number": 19
+    },
+    {
+      "position": 20,
+      "youtube_video_id": "uZrMPB8aGss",
+      "chapter": "Qualitative Analysis",
+      "lesson_number": 20
+    },
+    {
+      "position": 21,
+      "youtube_video_id": "_yuS1skKiYo",
+      "chapter": "Qualitative Analysis",
+      "lesson_number": 21
+    },
+    {
+      "position": 22,
+      "youtube_video_id": "YohtT454RjI",
+      "chapter": "Qualitative Analysis",
+      "lesson_number": 22
+    },
+    {
+      "position": 23,
+      "youtube_video_id": "7nHEvKngS08",
+      "chapter": "Qualitative Analysis",
+      "lesson_number": 23
+    },
+    {
+      "position": 24,
+      "youtube_video_id": "TJ684bjhGXQ",
+      "chapter": "Qualitative Analysis",
+      "lesson_number": 24
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "00c09a2f-9d19-4401-a016-248101de9a79",
+    "youtube_playlist_id": "PLCDVOq3f2f1uq0rRNe5gui5DRGnG2Z2vv",
+    "teacher": "Vishal Joshi",
+    "reviewed_on": "2026-08-25",
+    "reviewed_by": "Codex evidence review",
+    "source_url": "https://www.vjnucleus.in/",
+    "source_label": "Vishal Joshi official VJ Nucleus site identifies Vishal Joshi as VJ Sir and an Inorganic Chemistry teacher; all 24 official Nucleus - VJ Sir playlist titles identify the numbered Salt Analysis lecture series and attribute it to Vishal Joshi Sir or VJ Sir",
+    "youtube_video_ids": [
+      "RGfGRUDHGu8",
+      "7lk-ZNaCRjY",
+      "p_LOpyWfito",
+      "UxA5P_M5OCg",
+      "AnmPrAfTg_U",
+      "9X3waJeIPl0",
+      "1SXpTKo4XKs",
+      "vsKTi2smv6Y",
+      "i8_W08slDeo",
+      "1RL3hsQcI5s",
+      "tJNDeMUq5i4",
+      "hYwnptdtTU8",
+      "m_adv-A2p14",
+      "P3HyZBmeO04",
+      "J9kVfmYRuB0",
+      "TiDkAPNnLx8",
+      "dGoIl30O8Uk",
+      "1h_2Ajjk2AM",
+      "4kTcrAubA44",
+      "uZrMPB8aGss",
+      "_yuS1skKiYo",
+      "YohtT454RjI",
+      "7nHEvKngS08",
+      "TJ684bjhGXQ"
+    ]
+  }
+}

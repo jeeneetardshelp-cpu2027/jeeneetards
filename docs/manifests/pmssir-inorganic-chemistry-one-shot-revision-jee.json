@@ -1,0 +1,84 @@
+{
+  "version": 1,
+  "request_id": "0656d07f-c276-48aa-97aa-3700be5a283b",
+  "youtube_playlist_id": "PL9kE9mpUnFJOg3M8fltfhfx-5p9qjw00R",
+  "course_title": "PMSSIR Inorganic Chemistry One-Shot Revision",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "rREjxomNCKE",
+      "chapter": "General Inorganic Chemistry",
+      "lesson_number": 4
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "CUVCVccHUQI",
+      "chapter": "Coordination Compounds",
+      "lesson_number": 8
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "HmnZ2B9iluk",
+      "chapter": "Chemical Bonding and Molecular Structure",
+      "lesson_number": 3
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "2r0_x7reTeU",
+      "chapter": "Chemical Bonding and Molecular Structure",
+      "lesson_number": 2
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "adWYdxCbxRE",
+      "chapter": "Periodic Table",
+      "lesson_number": 1
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "9QXJkxGhvZ0",
+      "chapter": "P-Block Elements",
+      "lesson_number": 6
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "lPxGPsxQaMU",
+      "chapter": "The s-Block Elements",
+      "lesson_number": 5
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "ZLnFU0Qspnk",
+      "chapter": "The d and f Block Elements",
+      "lesson_number": 7
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "N0M9nyxTTmg",
+      "chapter": "Qualitative Analysis",
+      "lesson_number": 9
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "92c15d7e-351f-43dd-ae71-bbb43470aeda",
+    "youtube_playlist_id": "PL9kE9mpUnFJOg3M8fltfhfx-5p9qjw00R",
+    "teacher": "Piyush Maheshwari",
+    "reviewed_on": "2026-08-25",
+    "reviewed_by": "Codex evidence review",
+    "source_url": "https://unacademy.com/a/JEE-2023-INORGANIC-Chemistry-Gateway-to-IIT-by-PMS-Sir.html",
+    "source_label": "The official PMSSIR channel owns this playlist and credits every retained video to PMS Sir; Unacademy's official JEE Inorganic Chemistry course page identifies PMS Sir as Piyush Maheshwari",
+    "youtube_video_ids": [
+      "rREjxomNCKE",
+      "CUVCVccHUQI",
+      "HmnZ2B9iluk",
+      "2r0_x7reTeU",
+      "adWYdxCbxRE",
+      "9QXJkxGhvZ0",
+      "lPxGPsxQaMU",
+      "ZLnFU0Qspnk",
+      "N0M9nyxTTmg"
+    ]
+  }
+}

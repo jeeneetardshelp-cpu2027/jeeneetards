@@ -349,13 +349,17 @@ export function validateChapterManifest({ manifest, playlistId, teacher, videos 
   };
 }
 
-export function isReviewedSingleChapterOrder(mapped) {
-  return mapped?.chapterNames?.length === 1
-    && Array.isArray(mapped.videos)
+export function hasCompleteReviewedLessonOrder(mapped) {
+  return Array.isArray(mapped?.videos)
     && mapped.videos.length > 0
     && mapped.videos.every(
       (video) => Number.isSafeInteger(video.lessonNumber) && video.lessonNumber > 0,
     );
+}
+
+export function isReviewedSingleChapterOrder(mapped) {
+  return mapped?.chapterNames?.length === 1
+    && hasCompleteReviewedLessonOrder(mapped);
 }
 
 export function buildImportPayload({

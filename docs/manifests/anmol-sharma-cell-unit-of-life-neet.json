@@ -1,0 +1,71 @@
+{
+  "version": 1,
+  "request_id": "0ee29858-2b9d-4766-bf17-4d6af6a824fc",
+  "youtube_playlist_id": "PLYt9_5dB1PfUSQYlwwCwFAKY2evwA82AD",
+  "course_title": "Anmol Sharma Cell: The Unit of Life NCERT Course",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "vo_QWOVONGc",
+      "chapter": "Cell: The Unit of Life",
+      "lesson_number": 1
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "dVR03h7eMeE",
+      "chapter": "Cell: The Unit of Life",
+      "lesson_number": 2
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "w_w8O03tv10",
+      "chapter": "Cell: The Unit of Life",
+      "lesson_number": 3
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "jC0a8TgIEXQ",
+      "chapter": "Cell: The Unit of Life",
+      "lesson_number": 4
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "BjSPs004M0c",
+      "chapter": "Cell: The Unit of Life",
+      "lesson_number": 5
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "R6tfhSh7PHQ",
+      "chapter": "Cell: The Unit of Life",
+      "lesson_number": 6
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "psRfLPR_FIQ",
+      "chapter": "Cell: The Unit of Life",
+      "lesson_number": 7
+    }
+  ],
+  "exclusions": [],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "75cf2f57-aa8c-4b3c-8102-6704132be1c2",
+    "youtube_playlist_id": "PLYt9_5dB1PfUSQYlwwCwFAKY2evwA82AD",
+    "teacher": "Anmol Sharma",
+    "reviewed_on": "2026-08-27",
+    "reviewed_by": "Codex evidence review",
+    "source_url": "https://www.youtube.com/playlist?list=PLYt9_5dB1PfUSQYlwwCwFAKY2evwA82AD",
+    "source_label": "The official Anmol Sharma Biology channel owns this playlist; every published lecture description explicitly says Anmol Sharma Sir taught the lesson and every video's official tags identify Anmol Sharma",
+    "youtube_video_ids": [
+      "vo_QWOVONGc",
+      "dVR03h7eMeE",
+      "w_w8O03tv10",
+      "jC0a8TgIEXQ",
+      "BjSPs004M0c",
+      "R6tfhSh7PHQ",
+      "psRfLPR_FIQ"
+    ]
+  }
+}

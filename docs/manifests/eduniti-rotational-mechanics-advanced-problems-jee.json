@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "request_id": "0d747fc8-7aa3-415b-bc99-152e47edbc8b",
+  "youtube_playlist_id": "PLjvx7xqdpePKFBxgxxTjCNJPB0-Djr87J",
+  "course_title": "Eduniti Rotational Mechanics Advanced Problems",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "mKQaBPUyA78",
+      "chapter": "Rotational Motion",
+      "lesson_number": 1
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "Twj-nUqJv80",
+      "chapter": "Rotational Motion",
+      "lesson_number": 2
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "t1z2S45ZIsI",
+      "chapter": "Rotational Motion",
+      "lesson_number": 3
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "L2YF0TLT0LQ",
+      "chapter": "Rotational Motion",
+      "lesson_number": 4
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "RgxFE1OWmCg",
+      "chapter": "Rotational Motion",
+      "lesson_number": 5
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "W2iGxiQGCKM",
+      "chapter": "Rotational Motion",
+      "lesson_number": 6
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "95bb7bb5-992a-45aa-8ea8-6446af79bd97",
+    "youtube_playlist_id": "PLjvx7xqdpePKFBxgxxTjCNJPB0-Djr87J",
+    "teacher": "Mohit Goenka",
+    "reviewed_on": "2026-08-19",
+    "reviewed_by": "Codex evidence review",
+    "source_url": "https://www.youtube.com/channel/UC7px6OmooQLmsJlYACR_n-A",
+    "source_label": "Official Eduniti - Physics by Mohit Goenka_IITKGP channel, cross-checked against all six playlist videos and the Rotation tag on the sixth video",
+    "youtube_video_ids": [
+      "mKQaBPUyA78",
+      "Twj-nUqJv80",
+      "t1z2S45ZIsI",
+      "L2YF0TLT0LQ",
+      "RgxFE1OWmCg",
+      "W2iGxiQGCKM"
+    ]
+  }
+}

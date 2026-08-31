@@ -1,0 +1,211 @@
+{
+  "subject": "Biology",
+  "summary": {
+    "total": 15,
+    "auto": 15,
+    "review": 0,
+    "unmatched": 0
+  },
+  "source_note": "The official LearnoHub playlist contains 15 current, embeddable, NCERT-aligned Class 12 Biology one-shot lessons. All live-taxonomy mappings were exact. The reviewed scope includes the complete Principles of Inheritance and Variation lesson and excludes nothing.",
+  "rows": [
+    {
+      "position": 1,
+      "youtube_video_id": "q_RnPjnHv7k",
+      "title": "Sexual Reproduction in Flowering Plants Class 12 Biology | New NCERT 2026-27 - CBSE NEET",
+      "chapter": "Sexual Reproduction in Flowering Plants",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Sexual Reproduction in Flowering Plants",
+        "Morphology of Flowering Plants",
+        "Anatomy of Flowering Plants"
+      ]
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "Vk6eS07anCs",
+      "title": "Sexual Reproduction in Flowering Plants #2 Class 12 | CBSE & NEET 2027 Strategy | Complete NCERT",
+      "chapter": "Sexual Reproduction in Flowering Plants",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Sexual Reproduction in Flowering Plants",
+        "Morphology of Flowering Plants",
+        "Anatomy of Flowering Plants"
+      ]
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "LenU4UHvO5s",
+      "title": "Human Reproduction Class 12 Biology in 1 Hour | Board Exam 2026-27 - NEET CBSE",
+      "chapter": "Human Reproduction",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Human Reproduction",
+        "Microbes in Human Welfare",
+        "Human Health and Disease"
+      ]
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "AaHSGOYK5hk",
+      "title": "Principles of Inheritance and Variation Class 12 Biology | Chapter 5 | NCERT 2026-27 - CBSE NEET",
+      "chapter": "Principles of Inheritance and Variation",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Principles of Inheritance and Variation",
+        "Biotechnology: Principles and Processes",
+        "Molecular Basis of Inheritance"
+      ]
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "CEsHQExeEQo",
+      "title": "Reproductive Health Class 12 Biology Full Chapter 3 | Class 12 Biology New NCERT 2026-27 CBSE NEET",
+      "chapter": "Reproductive Health",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Reproductive Health",
+        "Human Health and Disease"
+      ]
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "LLN3QDSGpXQ",
+      "title": "Molecular Basis of Inheritance Class 12 Biology | Chapter 6 New NCERT 2026-27 CBSE One Shot NEET #1",
+      "chapter": "Molecular Basis of Inheritance",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Molecular Basis of Inheritance",
+        "Principles of Inheritance and Variation"
+      ]
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "_DWKb_MVSp8",
+      "title": "Molecular Basis of Inheritance Class 12 Biology | Chapter 5 New NCERT 2026-27 CBSE NEET One Shot #2",
+      "chapter": "Molecular Basis of Inheritance",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Molecular Basis of Inheritance",
+        "Principles of Inheritance and Variation"
+      ]
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "GJfuAvL0i9U",
+      "title": "Evolution Class 12 Biology | Chapter 6 New NCERT 2026-27 | CBSE One Shot Full Chapter NEET",
+      "chapter": "Evolution",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Evolution"
+      ]
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "L7Kdbvgltr8",
+      "title": "Human Health and Disease Class 12 Biology | Chapter 7 New NCERT 2026-27 | CBSE One Shot NEET",
+      "chapter": "Human Health and Disease",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Human Health and Disease",
+        "Reproductive Health",
+        "Human Reproduction"
+      ]
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "icMSA6poemE",
+      "title": "Microbes in Human Welfare Class 12 Biology | Chapter 8 New NCERT 2026-27 | CBSE One Shot NEET",
+      "chapter": "Microbes in Human Welfare",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Microbes in Human Welfare",
+        "Human Reproduction",
+        "Human Health and Disease"
+      ]
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "S-SIdczw-hc",
+      "title": "Biotechnology Principles and Processes Class 12 Biology | NCERT Chapter 11 | 2026-27 CBSE NEET",
+      "chapter": "Biotechnology: Principles and Processes",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Biotechnology: Principles and Processes",
+        "Life Processes",
+        "Principles of Inheritance and Variation"
+      ]
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "303EcvaFsmg",
+      "title": "Biotechnology and its Applications Class 12 Biology | NCERT Chapter 12 | Session 2026-27 CBSE NEET",
+      "chapter": "Biotechnology and its Applications",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Biotechnology and its Applications",
+        "Biotechnology: Principles and Processes"
+      ]
+    },
+    {
+      "position": 13,
+      "youtube_video_id": "2cWVFJX6VG0",
+      "title": "Organisms and Populations Class 12 Biology | NCERT Chapter 11 | Session 2026-27 CBSE NEET",
+      "chapter": "Organisms and Populations",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Organisms and Populations",
+        "How do Organisms Reproduce?"
+      ]
+    },
+    {
+      "position": 14,
+      "youtube_video_id": "SyDUFv9ITPk",
+      "title": "Ecosystem Class 12 Biology | NCERT Chapter 12 | Session 2026-27 | Full Chapter CBSE NEET",
+      "chapter": "Ecosystem",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Ecosystem"
+      ]
+    },
+    {
+      "position": 15,
+      "youtube_video_id": "HICoS7grDyg",
+      "title": "Biodiversity and Conservation Class 12 Biology | NCERT Chapter 13 | Session 2026-27 CBSE NEET",
+      "chapter": "Biodiversity and Conservation",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Biodiversity and Conservation"
+      ]
+    }
+  ]
+}

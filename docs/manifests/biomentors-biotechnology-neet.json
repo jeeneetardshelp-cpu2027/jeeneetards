@@ -1,0 +1,105 @@
+{
+  "version": 1,
+  "request_id": "ecf67380-c9ee-4b39-9c1f-59fbbf68cb54",
+  "youtube_playlist_id": "PL2AGQm6bx5CAT0VpSpZQG-q70IevoPUdM",
+  "course_title": "Biomentors Biotechnology for NEET",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "boZ0zUnuZ68",
+      "chapter": "Biotechnology: Principles and Processes"
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "CPMH8C9Y3_w",
+      "chapter": "Biotechnology: Principles and Processes"
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "O6_WFl7UNRc",
+      "chapter": "Biotechnology: Principles and Processes"
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "V6QTBiaikNM",
+      "chapter": "Biotechnology: Principles and Processes"
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "TCGXZeJNgQM",
+      "chapter": "Biotechnology: Principles and Processes"
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "FFWOVWg2hLc",
+      "chapter": "Biotechnology: Principles and Processes"
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "cgG1zvg1jUs",
+      "chapter": "Biotechnology: Principles and Processes"
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "Dc-POkxf22I",
+      "chapter": "Biotechnology: Principles and Processes"
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "OHnzVpwKJEI",
+      "chapter": "Biotechnology and its Applications"
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "BAefAxmRQk4",
+      "chapter": "Biotechnology and its Applications"
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "jQUdf9OyyEw",
+      "chapter": "Biotechnology and its Applications"
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "ID_NLH8jLNY",
+      "chapter": "Biotechnology and its Applications"
+    },
+    {
+      "position": 13,
+      "youtube_video_id": "JoPbXouukek",
+      "chapter": "Biotechnology and its Applications"
+    },
+    {
+      "position": 14,
+      "youtube_video_id": "XG-oC-X3cfg",
+      "chapter": "Biotechnology and its Applications"
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "2b1af997-f091-4a2f-b771-8ce161da770e",
+    "youtube_playlist_id": "PL2AGQm6bx5CAT0VpSpZQG-q70IevoPUdM",
+    "teacher": "Geetendra Singh",
+    "reviewed_on": "2026-08-26",
+    "reviewed_by": "Codex evidence review",
+    "source_url": "https://www.youtube.com/playlist?list=PL2AGQm6bx5CAT0VpSpZQG-q70IevoPUdM",
+    "source_label": "The verified Biomentors Classes Online channel owns this 14-video Biotechnology playlist; every retained video carries the DrGeetendra, Geetendra, and Geetendra sir metadata tags, the visible presenter matches the official Biomentors profile of Dr. Geetendra Singh, and the official Biomentors website identifies him as its Biology HOD",
+    "youtube_video_ids": [
+      "boZ0zUnuZ68",
+      "CPMH8C9Y3_w",
+      "O6_WFl7UNRc",
+      "V6QTBiaikNM",
+      "TCGXZeJNgQM",
+      "FFWOVWg2hLc",
+      "cgG1zvg1jUs",
+      "Dc-POkxf22I",
+      "OHnzVpwKJEI",
+      "BAefAxmRQk4",
+      "jQUdf9OyyEw",
+      "ID_NLH8jLNY",
+      "JoPbXouukek",
+      "XG-oC-X3cfg"
+    ]
+  }
+}

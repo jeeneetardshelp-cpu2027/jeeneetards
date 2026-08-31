@@ -1,0 +1,98 @@
+{
+  "version": 1,
+  "request_id": "ee379ec4-10a6-4eb4-9590-85a2dda77187",
+  "youtube_playlist_id": "PLf4Dr0ouPNP5d1Z6AxNRNcTnPPyhNhaoB",
+  "course_title": "Sachin Rana General Organic Chemistry",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "cM5ouAxuCQ8",
+      "chapter": "Some Basic Principles of Organic Chemistry",
+      "lesson_number": 1
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "cUNCVSXGd5c",
+      "chapter": "Some Basic Principles of Organic Chemistry",
+      "lesson_number": 2
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "PUCYKzcwVLw",
+      "chapter": "Some Basic Principles of Organic Chemistry",
+      "lesson_number": 3
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "YcWvrTKRtjo",
+      "chapter": "Some Basic Principles of Organic Chemistry",
+      "lesson_number": 4
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "sivM-sTxbpw",
+      "chapter": "Some Basic Principles of Organic Chemistry",
+      "lesson_number": 5
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "wEEMWjHxEbI",
+      "chapter": "Some Basic Principles of Organic Chemistry",
+      "lesson_number": 6
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "03FUQy654Ig",
+      "chapter": "Some Basic Principles of Organic Chemistry",
+      "lesson_number": 7
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "qo27I-9Swuo",
+      "chapter": "Some Basic Principles of Organic Chemistry",
+      "lesson_number": 8
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "J7cMv_CTnhM",
+      "chapter": "Some Basic Principles of Organic Chemistry",
+      "lesson_number": 9
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "hkGNlz1lnNU",
+      "chapter": "Some Basic Principles of Organic Chemistry",
+      "lesson_number": 10
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "dvLUye-Qnu0",
+      "chapter": "Some Basic Principles of Organic Chemistry",
+      "lesson_number": 11
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "0a46059b-a125-4caa-b6df-0fcef1ad3244",
+    "youtube_playlist_id": "PLf4Dr0ouPNP5d1Z6AxNRNcTnPPyhNhaoB",
+    "teacher": "Sachin Rana",
+    "reviewed_on": "2026-08-19",
+    "reviewed_by": "Codex evidence review",
+    "source_url": "https://www.youtube.com/playlist?list=PLf4Dr0ouPNP5d1Z6AxNRNcTnPPyhNhaoB",
+    "source_label": "The official Sachin Rana [IITB] channel owns the playlist, and every one of its eleven video descriptions explicitly attributes the General Organic Chemistry analysis to Sachin Rana sir",
+    "youtube_video_ids": [
+      "cM5ouAxuCQ8",
+      "cUNCVSXGd5c",
+      "PUCYKzcwVLw",
+      "YcWvrTKRtjo",
+      "sivM-sTxbpw",
+      "wEEMWjHxEbI",
+      "03FUQy654Ig",
+      "qo27I-9Swuo",
+      "J7cMv_CTnhM",
+      "hkGNlz1lnNU",
+      "dvLUye-Qnu0"
+    ]
+  }
+}

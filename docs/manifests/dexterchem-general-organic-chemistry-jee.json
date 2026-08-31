@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "request_id": "8f13b3d2-00ce-40d7-8851-7c5c66e481ac",
+  "youtube_playlist_id": "PLGhz9ljM7uOJtENTIPUnnY7UlPQXKHadP",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "FgU_PY1W53w",
+      "chapter": "Some Basic Principles of Organic Chemistry",
+      "lesson_number": 1
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "GY0tTqfQZvM",
+      "chapter": "Some Basic Principles of Organic Chemistry",
+      "lesson_number": 2
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "WoP3XP55Lrc",
+      "chapter": "Some Basic Principles of Organic Chemistry",
+      "lesson_number": 3
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "ThSDnfzlU-I",
+      "chapter": "Some Basic Principles of Organic Chemistry",
+      "lesson_number": 4
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "xrU-faP95w4",
+      "chapter": "Some Basic Principles of Organic Chemistry",
+      "lesson_number": 5
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "6e8i_RNl27E",
+      "chapter": "Some Basic Principles of Organic Chemistry",
+      "lesson_number": 6
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "58d14744-325f-4457-aa8a-575bca44b100",
+    "youtube_playlist_id": "PLGhz9ljM7uOJtENTIPUnnY7UlPQXKHadP",
+    "teacher": "Chaitanya Rastogi",
+    "reviewed_on": "2026-08-19",
+    "reviewed_by": "Codex evidence review",
+    "source_url": "https://courses.dexterchem.in/",
+    "source_label": "Official DexterChem site names Chaitanya Rastogi, cross-checked against the official DexterChem channel title and all six lecture titles",
+    "youtube_video_ids": [
+      "FgU_PY1W53w",
+      "GY0tTqfQZvM",
+      "WoP3XP55Lrc",
+      "ThSDnfzlU-I",
+      "xrU-faP95w4",
+      "6e8i_RNl27E"
+    ]
+  }
+}

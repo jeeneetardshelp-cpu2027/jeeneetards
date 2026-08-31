@@ -1,0 +1,31 @@
+{
+  "subject": "Biology",
+  "summary": {
+    "total": 18,
+    "auto": 18,
+    "review": 0,
+    "unmatched": 0,
+    "excluded": 0
+  },
+  "source_note": "The official Biomentors Classes Online playlist contains eighteen continuously numbered, long, embeddable NEET Biology lectures. All eighteen map automatically at full confidence to the live Human Reproduction chapter and are retained in official source order.",
+  "rows": [
+    { "position": 1, "youtube_video_id": "RF67aIxnKuk", "title": "Human Reproduction l Lecture 1 l Biology l NEET", "chapter": "Human Reproduction", "lesson_number": 1, "confidence": 1, "review": false, "reason": "automatic high-confidence match to the exact live Biology chapter", "alternatives": ["Human Reproduction"] },
+    { "position": 2, "youtube_video_id": "86v8gckXn_w", "title": "Human Reproduction l Lecture 2 l Biology l NEET", "chapter": "Human Reproduction", "lesson_number": 2, "confidence": 1, "review": false, "reason": "automatic high-confidence match to the exact live Biology chapter", "alternatives": ["Human Reproduction"] },
+    { "position": 3, "youtube_video_id": "HMcFXODin90", "title": "Human Reproduction l Lecture 3 l Biology l NEET", "chapter": "Human Reproduction", "lesson_number": 3, "confidence": 1, "review": false, "reason": "automatic high-confidence match to the exact live Biology chapter", "alternatives": ["Human Reproduction"] },
+    { "position": 4, "youtube_video_id": "M-o3iTnDcqA", "title": "Human Reproduction l Lecture 4 l Biology l NEET", "chapter": "Human Reproduction", "lesson_number": 4, "confidence": 1, "review": false, "reason": "automatic high-confidence match to the exact live Biology chapter", "alternatives": ["Human Reproduction"] },
+    { "position": 5, "youtube_video_id": "KOAHmHC6CJg", "title": "Human Reproduction l Lecture 5 l Biology l NEET", "chapter": "Human Reproduction", "lesson_number": 5, "confidence": 1, "review": false, "reason": "automatic high-confidence match to the exact live Biology chapter", "alternatives": ["Human Reproduction"] },
+    { "position": 6, "youtube_video_id": "ATZWdl_S5Co", "title": "Human Reproduction l Lecture 6 l Biology l NEET", "chapter": "Human Reproduction", "lesson_number": 6, "confidence": 1, "review": false, "reason": "automatic high-confidence match to the exact live Biology chapter", "alternatives": ["Human Reproduction"] },
+    { "position": 7, "youtube_video_id": "HEZK2ZbPC2c", "title": "Human Reproduction l Lecture 7 l Biology l NEET", "chapter": "Human Reproduction", "lesson_number": 7, "confidence": 1, "review": false, "reason": "automatic high-confidence match to the exact live Biology chapter", "alternatives": ["Human Reproduction"] },
+    { "position": 8, "youtube_video_id": "n_NIXceS_NY", "title": "Human Reproduction l Lecture 8 l Biology l NEET", "chapter": "Human Reproduction", "lesson_number": 8, "confidence": 1, "review": false, "reason": "automatic high-confidence match to the exact live Biology chapter", "alternatives": ["Human Reproduction"] },
+    { "position": 9, "youtube_video_id": "P44r3viD_0g", "title": "Human Reproduction l Lecture 9 l Biology l NEET", "chapter": "Human Reproduction", "lesson_number": 9, "confidence": 1, "review": false, "reason": "automatic high-confidence match to the exact live Biology chapter", "alternatives": ["Human Reproduction"] },
+    { "position": 10, "youtube_video_id": "yzbj7RNlscc", "title": "Human Reproduction l Lecture 10 l Biology l NEET", "chapter": "Human Reproduction", "lesson_number": 10, "confidence": 1, "review": false, "reason": "automatic high-confidence match to the exact live Biology chapter", "alternatives": ["Human Reproduction"] },
+    { "position": 11, "youtube_video_id": "nLA_haC3474", "title": "Human Reproduction l Lecture 11 l Biology l NEET", "chapter": "Human Reproduction", "lesson_number": 11, "confidence": 1, "review": false, "reason": "automatic high-confidence match to the exact live Biology chapter", "alternatives": ["Human Reproduction"] },
+    { "position": 12, "youtube_video_id": "kE1d59jJ_Z4", "title": "Human Reproduction l Lecture 12 l Biology l NEET", "chapter": "Human Reproduction", "lesson_number": 12, "confidence": 1, "review": false, "reason": "automatic high-confidence match to the exact live Biology chapter", "alternatives": ["Human Reproduction"] },
+    { "position": 13, "youtube_video_id": "OWePNDrp4TQ", "title": "Human Reproduction l Lecture 13 l Biology l NEET", "chapter": "Human Reproduction", "lesson_number": 13, "confidence": 1, "review": false, "reason": "automatic high-confidence match to the exact live Biology chapter", "alternatives": ["Human Reproduction"] },
+    { "position": 14, "youtube_video_id": "ZJa-45WUTZc", "title": "Human Reproduction l Lecture 14 l Biology l NEET", "chapter": "Human Reproduction", "lesson_number": 14, "confidence": 1, "review": false, "reason": "automatic high-confidence match to the exact live Biology chapter", "alternatives": ["Human Reproduction"] },
+    { "position": 15, "youtube_video_id": "pfQur-3g8S4", "title": "Human Reproduction l Lecture 15 l Biology l NEET", "chapter": "Human Reproduction", "lesson_number": 15, "confidence": 1, "review": false, "reason": "automatic high-confidence match to the exact live Biology chapter", "alternatives": ["Human Reproduction"] },
+    { "position": 16, "youtube_video_id": "SzIQy6vs2Y8", "title": "Human Reproduction l Lecture 16 l Biology l NEET", "chapter": "Human Reproduction", "lesson_number": 16, "confidence": 1, "review": false, "reason": "automatic high-confidence match to the exact live Biology chapter", "alternatives": ["Human Reproduction"] },
+    { "position": 17, "youtube_video_id": "4FrBXX8dyx0", "title": "Human Reproduction l Lecture 17 l Biology l NEET", "chapter": "Human Reproduction", "lesson_number": 17, "confidence": 1, "review": false, "reason": "automatic high-confidence match to the exact live Biology chapter", "alternatives": ["Human Reproduction"] },
+    { "position": 18, "youtube_video_id": "fhsKhWj1Oyc", "title": "Human Reproduction l Lecture 18 l Biology l NEET", "chapter": "Human Reproduction", "lesson_number": 18, "confidence": 1, "review": false, "reason": "automatic high-confidence match to the exact live Biology chapter", "alternatives": ["Human Reproduction"] }
+  ]
+}

@@ -1,0 +1,459 @@
+{
+  "subject": "Mathematics",
+  "summary": {
+    "total": 34,
+    "auto": 16,
+    "review": 14,
+    "unmatched": 4
+  },
+  "rows": [
+    {
+      "position": 1,
+      "youtube_video_id": "mUyc_zG0Qfs",
+      "title": "Nth root of unity | JEE Advanced | Complex numbers | All theory & illustrations",
+      "chapter": "Complex Numbers",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Complex Numbers",
+        "Number Theory",
+        "Real Numbers"
+      ]
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "SZ9qd1eUpCc",
+      "title": "Geometry of Complex numbers | Lecture 1 | JEE Advanced | Transformation | Triangles",
+      "chapter": "Complex Numbers",
+      "confidence": 1,
+      "review": true,
+      "reason": "ambiguous (close runner-up)",
+      "alternatives": [
+        "Complex Numbers",
+        "Triangles",
+        "Solutions of Triangles"
+      ]
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "Cd3cV_ygtmQ",
+      "title": "Geometry of Complex numbers | Lecture 2 | JEE Advanced | Straight lines | Circles",
+      "chapter": "Complex Numbers",
+      "confidence": 1,
+      "review": true,
+      "reason": "ambiguous (close runner-up)",
+      "alternatives": [
+        "Complex Numbers",
+        "Straight Lines",
+        "Circles"
+      ]
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "GtJriQzELZA",
+      "title": "Geometry of Complex numbers | Lecture 3 | JEE Advanced | Locus | Conic sections",
+      "chapter": "Complex Numbers",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Complex Numbers",
+        "Coordinate Geometry",
+        "Real Numbers"
+      ]
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "673oS_SmuV8",
+      "title": "JEE Advanced Symposium | Complex numbers | ISI | CMI | 65 problems for IIT #JeeAdvanced",
+      "chapter": "Complex Numbers",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Complex Numbers",
+        "Real Numbers",
+        "ISI Entrance Exam PYQs"
+      ]
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "cwGUFttJhIM",
+      "title": "Math Marvels r1,r2..r9 are complex roots of p(x)=x^9-9. Find product (ri+rj) for all i less than j",
+      "chapter": "Complex Numbers",
+      "confidence": 0.5,
+      "review": true,
+      "reason": "medium confidence",
+      "alternatives": [
+        "Complex Numbers"
+      ]
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "-JRq11njzs8",
+      "title": "Math Marvels: A beautiful Complex number question involving multitude of  it's properties & geometry",
+      "chapter": "Coordinate Geometry",
+      "confidence": 0.5,
+      "review": true,
+      "reason": "medium confidence",
+      "alternatives": [
+        "Coordinate Geometry",
+        "Complex Numbers",
+        "Number Theory"
+      ]
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "UQbutVce2_s",
+      "title": "Math Marvels: Summation of series using complex numbers cos2x/1.3+cos4x/3.5+cos6x/5.7... to infinity",
+      "chapter": "Complex Numbers",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Complex Numbers",
+        "Real Numbers"
+      ]
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "gvTKEaIGphA",
+      "title": "B. Stat/B. Math UGB 2019 Q3:  if f(z)=z^2+2, then draw the sketch of f(z) if Im(z) is less than 1",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": []
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "5xj9DKCaorg",
+      "title": "Complex Numbers: Let z be a complex number of maximum amplitude such that |z-3|=Re(z), find |z-3|?",
+      "chapter": "Complex Numbers",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Complex Numbers",
+        "Number Theory",
+        "Real Numbers"
+      ]
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "mdlnBiYAUhY",
+      "title": "Complex Numbers: Let z be a complex number satisfying |z-2|=Re(z), find minimum value of |z-4|?",
+      "chapter": "Complex Numbers",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Complex Numbers",
+        "Number Theory",
+        "Real Numbers"
+      ]
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "haqtZYJy3lM",
+      "title": "CMI 2019 B2: No of complex number w the root of z^2019-1=0 such that |w+1| is ge (2+2^1/2)^1/2",
+      "chapter": "Complex Numbers",
+      "confidence": 0.5,
+      "review": true,
+      "reason": "medium confidence",
+      "alternatives": [
+        "Complex Numbers",
+        "Number Theory"
+      ]
+    },
+    {
+      "position": 13,
+      "youtube_video_id": "d7pw1B8nTnY",
+      "title": "CMI 2018 A6: Complex solutions of the equation z^2018=2018^2018+i",
+      "chapter": "Solutions of Triangles",
+      "confidence": 0.5,
+      "review": true,
+      "reason": "medium confidence",
+      "alternatives": [
+        "Solutions of Triangles",
+        "Complex Numbers",
+        "INMO Solutions"
+      ]
+    },
+    {
+      "position": 14,
+      "youtube_video_id": "iZ0RhWFBf3w",
+      "title": "Complex numbers & Conic sections L20: Complex equation of ellipse & hyperbola with examples",
+      "chapter": "Complex Numbers",
+      "confidence": 1,
+      "review": true,
+      "reason": "ambiguous (close runner-up)",
+      "alternatives": [
+        "Complex Numbers",
+        "Hyperbola",
+        "Ellipse"
+      ]
+    },
+    {
+      "position": 15,
+      "youtube_video_id": "vyFQKeDP5f0",
+      "title": "Complex & Conics SE: Let eccentricity of ellipse with focii z1 and z2 be 1/3. If |z1-z2|=5",
+      "chapter": "Ellipse",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Ellipse",
+        "Complex Numbers"
+      ]
+    },
+    {
+      "position": 16,
+      "youtube_video_id": "alVcnT93dbk",
+      "title": "Complex Conics SE1: minimum & maximum distances of points on the curve 10(zzbar)-3i{z^2-zbar^2}-6=0",
+      "chapter": "Complex Numbers",
+      "confidence": 0.5,
+      "review": true,
+      "reason": "medium confidence",
+      "alternatives": [
+        "Complex Numbers"
+      ]
+    },
+    {
+      "position": 17,
+      "youtube_video_id": "Oo61U_76lmY",
+      "title": "JEE adv 2020 Complex Conics SE2:  If z^4-|z|^4=4iz^2,then the minimum possible value of |z1-z2|^2 is",
+      "chapter": "Complex Numbers",
+      "confidence": 0.5,
+      "review": true,
+      "reason": "medium confidence",
+      "alternatives": [
+        "Complex Numbers"
+      ]
+    },
+    {
+      "position": 18,
+      "youtube_video_id": "M1gf8clrlhU",
+      "title": "Complex Conics : Passage based question (details in description)",
+      "chapter": "Complex Numbers",
+      "confidence": 0.5,
+      "review": true,
+      "reason": "medium confidence",
+      "alternatives": [
+        "Complex Numbers"
+      ]
+    },
+    {
+      "position": 19,
+      "youtube_video_id": "MggN_Dri6-w",
+      "title": "Tell me Why | Complex number method | Sum of the series of sine & cosine when angles are in A.P.",
+      "chapter": "Complex Numbers",
+      "confidence": 0.5,
+      "review": true,
+      "reason": "medium confidence",
+      "alternatives": [
+        "Complex Numbers",
+        "Number Theory"
+      ]
+    },
+    {
+      "position": 20,
+      "youtube_video_id": "rCmTuV9iXIc",
+      "title": "Solved example 2| Complex numbers | Sum of the series of sine & cosine when angles are in A.P.",
+      "chapter": "Complex Numbers",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Complex Numbers",
+        "Real Numbers"
+      ]
+    },
+    {
+      "position": 21,
+      "youtube_video_id": "ZJM8dNxlE1A",
+      "title": "ISI | B Stat | B Math | UGB 2016 | Q4 | The area of square in terms of u and v",
+      "chapter": null,
+      "confidence": 0.33,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": [
+        "ISI Entrance Exam PYQs"
+      ]
+    },
+    {
+      "position": 22,
+      "youtube_video_id": "eUs_NhFTMc8",
+      "title": "ISI | B Stat | B Math | UGA 2020 | Q10 | No of complex roots of polynomial z^5-z^4-1 with modulus 1",
+      "chapter": "Modulus and Graphs",
+      "confidence": 0.5,
+      "review": true,
+      "reason": "medium confidence",
+      "alternatives": [
+        "Modulus and Graphs",
+        "Complex Numbers",
+        "ISI Entrance Exam PYQs"
+      ]
+    },
+    {
+      "position": 23,
+      "youtube_video_id": "kBujAQo4Q4E",
+      "title": "ISI | B Stat | B Math | UGA 2020 | Q16 | Find the value of |z+w|/|z-w|",
+      "chapter": null,
+      "confidence": 0.33,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": [
+        "ISI Entrance Exam PYQs"
+      ]
+    },
+    {
+      "position": 24,
+      "youtube_video_id": "wexXSpigv7w",
+      "title": "MAT UK (Oxford) 2020 | Q1A | A square has center at (3,4) & one corner at (1,5)",
+      "chapter": null,
+      "confidence": 0,
+      "review": true,
+      "reason": "no confident match",
+      "alternatives": []
+    },
+    {
+      "position": 25,
+      "youtube_video_id": "n4wkT-b5Yrc",
+      "title": "L35 Parabola and Complex Numbers: maximum amplitude, shortest distance  & Inequality region",
+      "chapter": "Complex Numbers",
+      "confidence": 1,
+      "review": true,
+      "reason": "ambiguous (close runner-up)",
+      "alternatives": [
+        "Complex Numbers",
+        "Parabola",
+        "Real Numbers"
+      ]
+    },
+    {
+      "position": 26,
+      "youtube_video_id": "gPoHODj1kc4",
+      "title": "Jee Advanced 2021 | Paper 1 | Q4 | Complex numbers #Jeeadvanced #Mathsmerizing",
+      "chapter": "Complex Numbers",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Complex Numbers",
+        "Real Numbers"
+      ]
+    },
+    {
+      "position": 27,
+      "youtube_video_id": "pDZfoY4wlNs",
+      "title": "UGB B1 | Complex numbers | a1/a1-x+a2/a2-x+...+an/an-x= 2015",
+      "chapter": "Complex Numbers",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Complex Numbers",
+        "Real Numbers"
+      ]
+    },
+    {
+      "position": 28,
+      "youtube_video_id": "dC83gBFw3UI",
+      "title": "JEE Advanced 2022 | Paper 1 | Q4 | Mathematics | Complex numbers",
+      "chapter": "Complex Numbers",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Complex Numbers",
+        "Fundamentals of Mathematics",
+        "Real Numbers"
+      ]
+    },
+    {
+      "position": 29,
+      "youtube_video_id": "Yl30xsIzLRw",
+      "title": "JEE Advanced 2022 | Paper 1 | Q5 | Mathematics | Complex numbers",
+      "chapter": "Complex Numbers",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Complex Numbers",
+        "Fundamentals of Mathematics",
+        "Real Numbers"
+      ]
+    },
+    {
+      "position": 30,
+      "youtube_video_id": "4HnFG1IOj5c",
+      "title": "JEE Advanced 2022 | Paper 2 | Q11 | Mathematics | Complex numbers",
+      "chapter": "Complex Numbers",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Complex Numbers",
+        "Fundamentals of Mathematics",
+        "Real Numbers"
+      ]
+    },
+    {
+      "position": 31,
+      "youtube_video_id": "CbrpxC_bK48",
+      "title": "CMI 2022 | Complex numbers | A9 | JEE Delight | Chennai mathematical institute",
+      "chapter": "Complex Numbers",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Complex Numbers",
+        "Real Numbers",
+        "Principle of Mathematical Induction"
+      ]
+    },
+    {
+      "position": 32,
+      "youtube_video_id": "iTVSsmNJmlA",
+      "title": "Math Short(cut)s | Complex numbers | |z|=1 |  5 solved examples #Jeemains #Jeeadvanced #Hindi",
+      "chapter": "Complex Numbers",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Complex Numbers",
+        "Real Numbers"
+      ]
+    },
+    {
+      "position": 33,
+      "youtube_video_id": "KrXkVBuR-Fw",
+      "title": "JEE Delight | B Stat/ B Math | ISI | UGB 2023 | Q7 | Complex numbers | X^n+Y^n+Z^n",
+      "chapter": "Complex Numbers",
+      "confidence": 1,
+      "review": false,
+      "reason": "high confidence",
+      "alternatives": [
+        "Complex Numbers",
+        "Real Numbers",
+        "ISI Entrance Exam PYQs"
+      ]
+    },
+    {
+      "position": 34,
+      "youtube_video_id": "iz_xjblq-Y4",
+      "title": "Math Marvels | Solving Higher-Order Differential Equations with Complex Numbers | y\" + 9y = xcos(x)",
+      "chapter": "Differential Equations",
+      "confidence": 1,
+      "review": true,
+      "reason": "ambiguous (close runner-up)",
+      "alternatives": [
+        "Differential Equations",
+        "Complex Numbers",
+        "Trigonometric Equations"
+      ]
+    }
+  ]
+}

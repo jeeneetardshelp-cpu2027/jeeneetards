@@ -105,6 +105,16 @@ describe("proposeChapter", () => {
     expect(p.chapter).toBeNull();
     expect(p.review).toBe(true);
   });
+
+  it("does not match a chapter name inside a longer word", () => {
+    const p = proposeChapter(
+      "Hydrogenation of Alkenes, Alkynes | Structural Identification",
+      ["Hydrogen", "Structural Isomerism"],
+    );
+    expect(p.chapter).toBe("Structural Isomerism");
+    expect(p.review).toBe(true);
+    expect(p.alternatives.map((entry) => entry.name)).not.toContain("Hydrogen");
+  });
 });
 
 describe("draftAssignments", () => {

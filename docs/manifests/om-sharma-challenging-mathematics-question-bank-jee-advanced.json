@@ -1,0 +1,126 @@
+{
+  "version": 1,
+  "request_id": "0091242a-09c2-4743-915f-a010b041aaef",
+  "youtube_playlist_id": "PLyiKukNVH1DNJwvZa8m7QqBa_4yKSIxih",
+  "course_title": "Om Sharma Challenging Mathematics Question Bank for JEE Advanced",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "TRMYDYKWUSQ",
+      "chapter": "Trigonometric Equations",
+      "lesson_number": 1
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "EaC6lSZBgNM",
+      "chapter": "Relations and Functions",
+      "lesson_number": 2
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "_2y9q_-Ok4A",
+      "chapter": "Definite Integration",
+      "lesson_number": 3
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "H4zqQ2H7a3k",
+      "chapter": "Indefinite Integration",
+      "lesson_number": 4
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "thfEpE3cLic",
+      "chapter": "Indefinite Integration",
+      "lesson_number": 5
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "ILfngfhVE_4",
+      "chapter": "Complex Numbers",
+      "lesson_number": 6
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "hQnLqb1pGfY",
+      "chapter": "Matrices",
+      "lesson_number": 7
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "of-gn8hlyZk",
+      "chapter": "Polynomials",
+      "lesson_number": 8
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "CIB-WEjZ_qc",
+      "chapter": "Sequences and Series",
+      "lesson_number": 9
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "EZCJbWFiVgQ",
+      "chapter": "Definite Integration",
+      "lesson_number": 10
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "T3gTLMLupds",
+      "chapter": "Quadratic Equations",
+      "lesson_number": 11
+    },
+    {
+      "position": 12,
+      "youtube_video_id": "bd_vVrlwU2s",
+      "chapter": "Quadratic Equations",
+      "lesson_number": 12
+    },
+    {
+      "position": 13,
+      "youtube_video_id": "YUrnoI9KjQg",
+      "chapter": "Sequences and Series",
+      "lesson_number": 13
+    },
+    {
+      "position": 14,
+      "youtube_video_id": "LA7kMKSYgvQ",
+      "chapter": "Complex Numbers",
+      "lesson_number": 14
+    },
+    {
+      "position": 15,
+      "youtube_video_id": "9q1MOXbv0Hg",
+      "chapter": "Complex Numbers",
+      "lesson_number": 15
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "2b7db30a-b84a-4ff0-b293-7f78a876e435",
+    "youtube_playlist_id": "PLyiKukNVH1DNJwvZa8m7QqBa_4yKSIxih",
+    "teacher": "Om Sharma Sir",
+    "reviewed_on": "2026-08-19",
+    "reviewed_by": "Codex evidence review",
+    "source_url": "https://www.youtube.com/@omsharmasir",
+    "source_label": "The official channel is titled Om Sharma Sir : Pearson Author | IIT Bombay, its About description identifies Om Sharma Sir as an IIT Bombay graduate and JEE Mathematics author and educator, and the owned playlist description identifies the problem bank as his series",
+    "youtube_video_ids": [
+      "TRMYDYKWUSQ",
+      "EaC6lSZBgNM",
+      "_2y9q_-Ok4A",
+      "H4zqQ2H7a3k",
+      "thfEpE3cLic",
+      "ILfngfhVE_4",
+      "hQnLqb1pGfY",
+      "of-gn8hlyZk",
+      "CIB-WEjZ_qc",
+      "EZCJbWFiVgQ",
+      "T3gTLMLupds",
+      "bd_vVrlwU2s",
+      "YUrnoI9KjQg",
+      "LA7kMKSYgvQ",
+      "9q1MOXbv0Hg"
+    ]
+  }
+}

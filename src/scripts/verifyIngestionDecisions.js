@@ -296,7 +296,11 @@ export function verifyDecisionWorksheet(bundle, worksheet) {
     }
   }
 
-  validateEffectiveRelationships(bundle, effectiveProposalState(bundle, actualProposals), fail);
+  const effectiveState = effectiveProposalState(bundle, actualProposals);
+  validateEffectiveRelationships(bundle, effectiveState, fail);
+  const resolvedSubjectId = effectiveState.subject_id?.final
+    ? effectiveState.subject_id.value
+    : null;
 
   const expectedChapters = bundle.chapter_review.rows
     .filter((row) => row.status !== "auto")
@@ -331,7 +335,7 @@ export function verifyDecisionWorksheet(bundle, worksheet) {
     }
     if (action === "replace") {
       const chapter = chapterById.get(actual.reviewer_chapter_id);
-      if (!chapter || chapter.subject_id !== bundle.chapter_review.subject_id) {
+      if (!chapter || resolvedSubjectId == null || chapter.subject_id !== resolvedSubjectId) {
         fail(`replacement chapter at position ${actual.position} is outside the live subject taxonomy.`);
       }
       if (!hasText(actual.reviewer_notes)) {

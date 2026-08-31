@@ -1,0 +1,77 @@
+{
+  "version": 1,
+  "request_id": "4cdb8320-0e34-40f5-aad1-7e1db415d25f",
+  "youtube_playlist_id": "PLFCTfSE2tR0oZW2CISS3apgdAS3kKPKtH",
+  "course_title": "Gravity Circle Coordination Compounds",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "VhaNTGdaSKs",
+      "chapter": "Coordination Compounds",
+      "lesson_number": 1
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "m0BnNP4Ufus",
+      "chapter": "Coordination Compounds",
+      "lesson_number": 2
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "Ria5RS7eH5s",
+      "chapter": "Coordination Compounds",
+      "lesson_number": 3
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "F9Dl_MtojcM",
+      "chapter": "Coordination Compounds",
+      "lesson_number": 4
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "LqRGJfYAmeU",
+      "chapter": "Coordination Compounds",
+      "lesson_number": 5
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "KnpjKgkqrIs",
+      "chapter": "Coordination Compounds",
+      "lesson_number": 6
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "pA5QbdEj10I",
+      "chapter": "Coordination Compounds",
+      "lesson_number": 7
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "NqLDdOS0-GY",
+      "chapter": "Coordination Compounds",
+      "lesson_number": 8
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "300cdc29-7514-4167-89cb-5cdc17e22f1c",
+    "youtube_playlist_id": "PLFCTfSE2tR0oZW2CISS3apgdAS3kKPKtH",
+    "teacher": "Mritunjay Pandya",
+    "reviewed_on": "2026-08-20",
+    "reviewed_by": "Codex evidence review",
+    "source_url": "https://www.youtube.com/@GravityCircle",
+    "source_label": "The official Gravity Circle channel owns this ordered eight-lecture Coordination Compounds playlist; its video descriptions link Mritunjay Pandya's official YouTube, Instagram, and Unacademy profiles, while the official Unacademy educator page identifies Mritunjay Pandya as the founder of Gravity Circle",
+    "youtube_video_ids": [
+      "VhaNTGdaSKs",
+      "m0BnNP4Ufus",
+      "Ria5RS7eH5s",
+      "F9Dl_MtojcM",
+      "LqRGJfYAmeU",
+      "KnpjKgkqrIs",
+      "pA5QbdEj10I",
+      "NqLDdOS0-GY"
+    ]
+  }
+}

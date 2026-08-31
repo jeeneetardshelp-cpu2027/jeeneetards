@@ -1,0 +1,97 @@
+{
+  "version": 1,
+  "request_id": "438e7b2b-c25a-4197-8ef0-bdecfeb4ce2f",
+  "youtube_playlist_id": "PLSkPdKrFDV7XNEW04xYQ7IfYG2zbnudXI",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "sUps8FZkIXc",
+      "chapter": "Some Basic Principles of Organic Chemistry",
+      "lesson_number": 1
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "3cs_EcNkK8U",
+      "chapter": "Some Basic Principles of Organic Chemistry",
+      "lesson_number": 2
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "5KyMzZsPeVI",
+      "chapter": "Some Basic Principles of Organic Chemistry",
+      "lesson_number": 3
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "wSEmYLZtqyw",
+      "chapter": "Some Basic Principles of Organic Chemistry",
+      "lesson_number": 4
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "8044O85jP_g",
+      "chapter": "Some Basic Principles of Organic Chemistry",
+      "lesson_number": 5
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "WwxONI19KXo",
+      "chapter": "Some Basic Principles of Organic Chemistry",
+      "lesson_number": 6
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "q5GnAYoHIDs",
+      "chapter": "Some Basic Principles of Organic Chemistry",
+      "lesson_number": 7
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "PyGMR5T34Xk",
+      "chapter": "Some Basic Principles of Organic Chemistry",
+      "lesson_number": 8
+    },
+    {
+      "position": 9,
+      "youtube_video_id": "eIonn2G1Pk4",
+      "chapter": "Some Basic Principles of Organic Chemistry",
+      "lesson_number": 9
+    },
+    {
+      "position": 10,
+      "youtube_video_id": "uXcL8ILY5d4",
+      "chapter": "Some Basic Principles of Organic Chemistry",
+      "lesson_number": 10
+    },
+    {
+      "position": 11,
+      "youtube_video_id": "L-blTbQlI_o",
+      "chapter": "Some Basic Principles of Organic Chemistry",
+      "lesson_number": 11
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "615842b3-53c3-41a6-946e-a366e0bc6541",
+    "youtube_playlist_id": "PLSkPdKrFDV7XNEW04xYQ7IfYG2zbnudXI",
+    "teacher": "Pankaj Sijariya",
+    "reviewed_on": "2026-08-19",
+    "reviewed_by": "Codex evidence review",
+    "source_url": "https://static.pw.live/5eb393ee95fab7468a79d189/ADMIN/d1f6130f-b60c-4d84-8bb3-1e2cf32c1b37.pdf",
+    "source_label": "Official PW JEE faculty planner, cross-checked against the verified Pankaj Sir Chemistry channel and playlist metadata",
+    "youtube_video_ids": [
+      "sUps8FZkIXc",
+      "3cs_EcNkK8U",
+      "5KyMzZsPeVI",
+      "wSEmYLZtqyw",
+      "8044O85jP_g",
+      "WwxONI19KXo",
+      "q5GnAYoHIDs",
+      "PyGMR5T34Xk",
+      "eIonn2G1Pk4",
+      "uXcL8ILY5d4",
+      "L-blTbQlI_o"
+    ]
+  }
+}

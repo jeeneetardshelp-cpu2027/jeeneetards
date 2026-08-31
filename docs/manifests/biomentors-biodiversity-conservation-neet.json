@@ -1,0 +1,56 @@
+{
+  "version": 1,
+  "request_id": "ebe699c0-523e-4491-ac70-6c8752f1ad6f",
+  "youtube_playlist_id": "PL2AGQm6bx5CAEWlWE3-fRRFAGFjnbDb8C",
+  "course_title": "Biomentors Biodiversity and Conservation for NEET",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "INav653hNAM",
+      "chapter": "Biodiversity and Conservation",
+      "lesson_number": 1
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "wsM18zjhigA",
+      "chapter": "Biodiversity and Conservation",
+      "lesson_number": 2
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "Qk69H3lkxM0",
+      "chapter": "Biodiversity and Conservation",
+      "lesson_number": 3
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "zqYNnfTHfS0",
+      "chapter": "Biodiversity and Conservation",
+      "lesson_number": 4
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "zKEx8gBvmkU",
+      "chapter": "Biodiversity and Conservation",
+      "lesson_number": 5
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "618e8a92-1768-4cd5-a7fe-a14da8fe9c3b",
+    "youtube_playlist_id": "PL2AGQm6bx5CAEWlWE3-fRRFAGFjnbDb8C",
+    "teacher": "Geetendra Singh",
+    "reviewed_on": "2026-08-31",
+    "reviewed_by": "Codex evidence review",
+    "source_url": "https://www.youtube.com/playlist?list=PL2AGQm6bx5CAEWlWE3-fRRFAGFjnbDb8C",
+    "source_label": "The verified Biomentors Classes Online channel owns this five-video Biodiversity and Conservation playlist; its videos carry DrGeetendra, Geetendra, and Geetendra sir metadata tags, matching the previously verified Biomentors Biology presenter and existing production teacher Geetendra Singh",
+    "youtube_video_ids": [
+      "INav653hNAM",
+      "wsM18zjhigA",
+      "Qk69H3lkxM0",
+      "zqYNnfTHfS0",
+      "zKEx8gBvmkU"
+    ]
+  }
+}

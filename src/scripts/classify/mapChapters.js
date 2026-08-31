@@ -60,6 +60,11 @@ export function tokenize(text) {
     .filter((t) => t.length >= 2 && !/^\d+$/.test(t) && !STOPWORDS.has(t));
 }
 
+function containsNormalizedPhrase(text, phrase) {
+  if (!text || !phrase) return false;
+  return (` ${text} `).includes(` ${phrase} `);
+}
+
 /**
  * Score a chapter name against a title (0..1).
  *   1.0  the whole chapter name appears as a phrase in the title
@@ -68,8 +73,10 @@ export function tokenize(text) {
 export function scoreChapter(titleNorm, titleTokenSet, chapterName) {
   const cNorm = normalizeForMatch(chapterName);
   if (!cNorm) return 0;
-  if (cNorm.length >= 4 && titleNorm.includes(cNorm)) return 1;
-  if ((CHAPTER_ALIASES.get(cNorm) ?? []).some((alias) => titleNorm.includes(alias))) {
+  if (cNorm.length >= 4 && containsNormalizedPhrase(titleNorm, cNorm)) return 1;
+  if ((CHAPTER_ALIASES.get(cNorm) ?? []).some(
+    (alias) => containsNormalizedPhrase(titleNorm, normalizeForMatch(alias)),
+  )) {
     return 1;
   }
   const cTokens = tokenize(cNorm);

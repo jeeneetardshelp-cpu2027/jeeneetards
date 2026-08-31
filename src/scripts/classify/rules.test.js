@@ -106,6 +106,15 @@ describe("proposeSubject", () => {
     expect(r.value).toBeNull();
     expect(r.confidence).toBe(CONFIDENCE.NONE);
   });
+
+  it("requires review whenever metadata carries cross-subject signals", () => {
+    const r = proposeSubject(
+      "NEET Human Physiology | Chemical Coordination | Chemistry courses also available",
+      SUBJECTS,
+    );
+    expect(r.confidence).toBe(CONFIDENCE.MEDIUM);
+    expect(r.evidence).toContain("ambiguous");
+  });
 });
 
 describe("deriveAudienceFocus", () => {

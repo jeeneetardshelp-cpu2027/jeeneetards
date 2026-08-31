@@ -1,0 +1,69 @@
+{
+  "version": 1,
+  "request_id": "a7e702f8-c51d-4509-9f31-602501042c06",
+  "youtube_playlist_id": "PLYVDsiuOZP5qt0BkKvCDueIMyvibRvFX1",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "Bojocka_IFU",
+      "chapter": "Electrostatics",
+      "lesson_number": 1
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "Mqo8YfjnjnI",
+      "chapter": "Electrostatics",
+      "lesson_number": 2
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "p9f8W0ACIQw",
+      "chapter": "Electrostatics",
+      "lesson_number": 3
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "uqyWTn7YVaM",
+      "chapter": "Electrostatics",
+      "lesson_number": 4
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "CHU4qxAOhvg",
+      "chapter": "Electrostatics",
+      "lesson_number": 5
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "kixDjFOKcEA",
+      "chapter": "Electrostatics",
+      "lesson_number": 6
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "CcDbKPl8oWk",
+      "chapter": "Electrostatics",
+      "lesson_number": 7
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "525c06c7-a2f5-484c-ab29-e0542d5f8d04",
+    "youtube_playlist_id": "PLYVDsiuOZP5qt0BkKvCDueIMyvibRvFX1",
+    "teacher": "Ashish Arora",
+    "reviewed_on": "2026-08-19",
+    "reviewed_by": "Codex evidence review",
+    "source_url": "https://www.youtube.com/playlist?list=PLYVDsiuOZP5qt0BkKvCDueIMyvibRvFX1",
+    "source_label": "Official Physics Galaxy playlist title names Ashish Arora Sir, cross-checked against the descriptions and titles of all seven official lectures",
+    "youtube_video_ids": [
+      "Bojocka_IFU",
+      "Mqo8YfjnjnI",
+      "p9f8W0ACIQw",
+      "uqyWTn7YVaM",
+      "CHU4qxAOhvg",
+      "kixDjFOKcEA",
+      "CcDbKPl8oWk"
+    ]
+  }
+}

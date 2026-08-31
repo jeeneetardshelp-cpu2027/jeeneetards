@@ -1,0 +1,77 @@
+{
+  "version": 1,
+  "request_id": "d46ac158-7728-4f2d-9435-389c6b71b9f5",
+  "youtube_playlist_id": "PLMAc6Ye5aNvsA5neeUgJFHB1MuBjcNCta",
+  "course_title": "ChemIIT Mole Concept for JEE Advanced",
+  "assignments": [
+    {
+      "position": 1,
+      "youtube_video_id": "dZD3DZ2pSr8",
+      "chapter": "Mole Concept",
+      "lesson_number": 1
+    },
+    {
+      "position": 2,
+      "youtube_video_id": "ARBnJhcSjBc",
+      "chapter": "Mole Concept",
+      "lesson_number": 2
+    },
+    {
+      "position": 3,
+      "youtube_video_id": "MirSN4S8W3s",
+      "chapter": "Mole Concept",
+      "lesson_number": 3
+    },
+    {
+      "position": 4,
+      "youtube_video_id": "ierXsufJbqY",
+      "chapter": "Mole Concept",
+      "lesson_number": 4
+    },
+    {
+      "position": 5,
+      "youtube_video_id": "qPdHsrpqoVI",
+      "chapter": "Mole Concept",
+      "lesson_number": 5
+    },
+    {
+      "position": 6,
+      "youtube_video_id": "N-K4AsDMjbY",
+      "chapter": "Mole Concept",
+      "lesson_number": 6
+    },
+    {
+      "position": 7,
+      "youtube_video_id": "F6IDGJ-HqZo",
+      "chapter": "Mole Concept",
+      "lesson_number": 7
+    },
+    {
+      "position": 8,
+      "youtube_video_id": "5lT51qRkB80",
+      "chapter": "Mole Concept",
+      "lesson_number": 8
+    }
+  ],
+  "teacher_evidence": {
+    "version": 1,
+    "kind": "reviewed_external_source",
+    "decision_id": "4201d5c7-8c44-48b2-bcbf-31970d0f60ba",
+    "youtube_playlist_id": "PLMAc6Ye5aNvsA5neeUgJFHB1MuBjcNCta",
+    "teacher": "Vishal Singh",
+    "reviewed_on": "2026-08-19",
+    "reviewed_by": "Codex evidence review",
+    "source_url": "https://www.youtube.com/playlist?list=PLMAc6Ye5aNvsA5neeUgJFHB1MuBjcNCta",
+    "source_label": "The official ChemIIT x Unacademy (Vishal Singh) channel owns the playlist and all eight ordered lecture titles identify Vishal Sir as the Mole Concept instructor",
+    "youtube_video_ids": [
+      "dZD3DZ2pSr8",
+      "ARBnJhcSjBc",
+      "MirSN4S8W3s",
+      "ierXsufJbqY",
+      "qPdHsrpqoVI",
+      "N-K4AsDMjbY",
+      "F6IDGJ-HqZo",
+      "5lT51qRkB80"
+    ]
+  }
+}
