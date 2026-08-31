@@ -65,6 +65,8 @@ vi.mock("./progress.js", () => ({
   getPlayerPrefs: () => ({ rate: null }),
   recordLessonPosition: () => null,
   savePlayerPrefs: () => null,
+  // Zero keeps the goal-met line out of these assertions.
+  countLessonsStudiedToday: () => 0,
 }));
 
 vi.mock("./usePlaylistVideos.js", () => ({
@@ -73,6 +75,9 @@ vi.mock("./usePlaylistVideos.js", () => ({
     course: watch.course, lessons: watch.lessons,
     forPlaylistId: "1", reload: () => {},
   }),
+  // The active lesson's description now arrives via its own one-row hook;
+  // nothing in this suite asserts on it, so the honest stub is "no row".
+  useLessonDescription: () => null,
 }));
 
 vi.mock("./CourseRating.jsx", () => ({ default: () => null }));

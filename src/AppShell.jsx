@@ -28,7 +28,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router";
 import {
-  AtSign, ChevronRight, LogIn, LogOut, Moon, Search, Sun, X,
+  AtSign, ChevronRight, Flame, LogIn, LogOut, Moon, Search, Sun, X,
 } from "lucide-react";
 import { useTheme } from "./theme.jsx";
 import { useSession } from "./useSession.js";
@@ -36,9 +36,17 @@ import { supabase } from "./supabaseClient.js";
 import { RELEASE_CAPABILITIES, RELEASE_FEATURES } from "./releaseCapabilities.js";
 import { clearProgress } from "./progress.js";
 import { clearNotes } from "./notes.js";
-import { clearStreak } from "./streak.js";
+import { clearStreak, mergeStudyDays, streakStats } from "./streak.js";
+import { pullServerStudyDays } from "./streakSync.js";
 import { clearRevision } from "./revision.js";
 import { prefersReducedMotion } from "./motion.jsx";
+
+// Study days are pulled once per user per PAGE LOAD, not per navigation: the
+// header remounts on every route change, and re-fetching an unchanging set
+// each time would be pure noise. Module-level, like progressSync's throttle
+// map. Cleared on sign-out so the same browser signing back in (without a
+// full reload) pulls again.
+const pulledStudyDaysFor = new Set();
 
 // `width` picks the cap. "reading" stays narrow on purpose (guided steps,
 // legal text); "catalogue" is for grids that benefit from more columns.
@@ -134,6 +142,30 @@ export function GlobalHeader({ crumbs = [], search = null, leading = null, width
   const scrolled = useScrolled();
   const [signingOut, setSigningOut] = useState(false);
   const [signOutError, setSignOutError] = useState("");
+  // The streak chip's numbers, read once per mount (the header remounts on
+  // every route change, so navigation keeps it current) and re-read after
+  // the sign-in pull below or a sign-out wipe.
+  const [streak, setStreak] = useState(() => streakStats());
+  const userId = session?.user?.id ?? null;
+
+  // A signed-in student's study days live on the server too (streakSync /
+  // study_days). Sign-out deliberately wipes the local streak for shared
+  // machines, so on the next sign-in this pull unions the server copy back
+  // into ll_streak_v1 — the streak returns. mergeStudyDays only ever ADDS
+  // days, so running after progress this device already made is safe. A
+  // quiet no-op until the owner applies the study_days migration.
+  useEffect(() => {
+    if (!userId || pulledStudyDaysFor.has(userId)) return undefined;
+    pulledStudyDaysFor.add(userId);
+    let active = true;
+    pullServerStudyDays(userId).then((days) => {
+      if (!days.length || mergeStudyDays(days) === 0) return;
+      if (active) setStreak(streakStats());
+    });
+    return () => {
+      active = false;
+    };
+  }, [userId]);
 
   // ONE discovery door. "Find a course" (/explore, a guided wizard that just
   // redirects into /browse), "Browse courses" (/browse) and "Search" (/search)
@@ -182,6 +214,11 @@ export function GlobalHeader({ crumbs = [], search = null, leading = null, width
     // finished, which is exactly the kind of thing a shared machine must not
     // hand to whoever signs in next.
     clearRevision();
+    // The chip above reads the store this just wiped, and the next sign-in
+    // (even in this same tab, without a reload) must be allowed to pull the
+    // server copy back down.
+    setStreak(streakStats());
+    pulledStudyDaysFor.clear();
   };
 
   return (
@@ -206,6 +243,23 @@ export function GlobalHeader({ crumbs = [], search = null, leading = null, width
               JEENEETARD
             </span>
           </Link>
+
+          {/* The streak, where studying actually happens — a compact flame +
+              day count beside the brand, on every page including the watch
+              page. Links home, where the full "Your prep today" band lives.
+              Hidden at zero: a "0 days" badge is guilt, not information, and
+              it keeps the crowded mobile row (brand + three icon buttons)
+              free for the students the chip has nothing to say to. */}
+          {streak.current >= 1 && (
+            <Link
+              to="/"
+              aria-label={`Study streak: ${streak.current} day${streak.current === 1 ? "" : "s"}`}
+              className="flex min-h-11 shrink-0 items-center gap-1 rounded-md px-1.5 text-sm font-semibold tabular-nums text-ink-2 transition-colors duration-200 hover:bg-surface-2 hover:text-ink"
+            >
+              <Flame className="h-4 w-4 text-accent" aria-hidden="true" />
+              {streak.current}
+            </Link>
+          )}
 
           <nav aria-label="Primary navigation" className="ml-3 hidden items-center gap-1 lg:flex">
             {nav.map((n) => {

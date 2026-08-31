@@ -2,14 +2,16 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   useLocation, useNavigate, useParams, useSearchParams,
 } from "react-router";
+import { Flame, X } from "lucide-react";
 import { VideoView } from "./MinimalUI.jsx";
 import { useTheme } from "./theme.jsx";
-import { usePlaylistVideos } from "./usePlaylistVideos.js";
+import { useLessonDescription, usePlaylistVideos } from "./usePlaylistVideos.js";
 import {
-  getCompletedVideoIds, getCourseProgress, getLessonPosition, getPlayerPrefs,
-  getWatchedVideoIds, mergeRemoteEntry, recordLessonPosition, recordLessonView,
-  savePlayerPrefs,
+  countLessonsStudiedToday, getCompletedVideoIds, getCourseProgress,
+  getLessonPosition, getPlayerPrefs, getWatchedVideoIds, mergeRemoteEntry,
+  recordLessonPosition, recordLessonView, savePlayerPrefs,
 } from "./progress.js";
+import { getDailyGoal, goalMetShownToday, markGoalMetShown, streakStats } from "./streak.js";
 import { pullServerProgress, queueProgressSync } from "./progressSync.js";
 import { useSession } from "./useSession.js";
 import { readReturnUrl, rememberReturn, resolveBack } from "./returnTo.js";
@@ -21,6 +23,8 @@ import ChapterTeachers from "./ChapterTeachers.jsx";
 import ChapterChampions from "./ChapterChampions.jsx";
 import ChapterCleared from "./ChapterCleared.jsx";
 import ChapterRevision from "./ChapterRevision.jsx";
+import ShareControl from "./ShareControl.jsx";
+import { chapterCompletion, courseByline } from "./chapterCompletion.js";
 import { recordChapterWatched } from "./revision.js";
 import StudyMaterialPanel from "./StudyMaterialPanel.jsx";
 import NotesPanel from "./NotesPanel.jsx";
@@ -70,6 +74,68 @@ export function scopeCourseMetadata(course, lessons, chapter) {
       (lesson) => lesson.embeddingStatus === "blocked",
     ).length,
   };
+}
+
+// The link a student sends when they want a friend on this course: always the
+// course's CANONICAL address — the bare /course/:id that the sitemap, the
+// <link rel="canonical"> and the /api/og preview all use — never the chapter
+// sub-URL or the active lesson's ?v=, so every share lands on one indexable
+// page. ?ref=share is attribution only and cannot fork that canonical: the
+// client computes canonicalPath from the pathname alone (pageMetadata.js) and
+// middleware.js matches courses on url.pathname, so the query never reaches
+// either.
+export function courseShareUrl(playlistId, origin = typeof window === "undefined" ? "" : window.location.origin) {
+  return `${origin}/course/${playlistId}?ref=share`;
+}
+
+// Honest and specific: states only what the page has actually loaded, and
+// drops whichever part (lecture count, teacher) is missing rather than
+// inventing it. The URL travels separately — navigator.share takes it as its
+// own field, and ShareControl appends it for the wa.me path.
+export function courseShareText({ title, lectures, teacher, institute }) {
+  const count = Number(lectures);
+  const counted = Number.isFinite(count) && count > 0
+    ? `${count} lecture${count === 1 ? "" : "s"}`
+    : null;
+  const byline = courseByline(teacher, institute);
+  const detail = [counted, byline ? `by ${byline}` : null].filter(Boolean).join(" ");
+  const name = title || "this course";
+  return detail
+    ? `Watch ${name} free — ${detail} on JEENEETARD`
+    : `Watch ${name} free on JEENEETARD`;
+}
+
+// The one-line copy for the daily-goal moment. Plain and gentle, in
+// PrepToday's streakMessage voice: the streak is "kept", never "don't lose
+// it" — the audience is 14–18 and the number is theirs, not a scoreboard.
+export function goalMetMessage({ today, goal, current }) {
+  const done = `${today} of ${goal} done`;
+  if (current > 1) return `${done} — day ${current} kept.`;
+  return `${done} — day 1 of a new streak.`;
+}
+
+// The daily-goal moment: one quiet line in the same slot the rating ask uses
+// (directly under the lesson title and prev/next row), never a second card
+// competing with it. No red, no guilt, dismissible.
+function GoalMetLine({ message, onDismiss }) {
+  const { t } = useTheme();
+  return (
+    <div
+      role="status"
+      className={`mt-4 flex items-center gap-2 rounded-xl border ${t.border} ${t.card} px-4 py-2`}
+    >
+      <Flame className="h-4 w-4 shrink-0" style={{ color: TEAL }} aria-hidden="true" />
+      <p className={`min-w-0 flex-1 text-sm ${t.text}`}>{message}</p>
+      <button
+        type="button"
+        onClick={onDismiss}
+        aria-label="Dismiss streak message"
+        className={`-mr-2 flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-md ${t.faint}`}
+      >
+        <X className="h-4 w-4" aria-hidden="true" />
+      </button>
+    </div>
+  );
 }
 
 function CenteredNotice({ title, detail, onBack, onRetry }) {
@@ -208,6 +274,7 @@ export default function CourseVideoPage() {
     setAutoplayNext(false);
     setPlaySignal(0);
     setShowRatingPrompt(false);
+    setGoalMoment(null);
     ratingPromptDoneRef.current = false;
   }, [playlistId]);
   // Saved playback rate is read once per mount; rate changes made in the
@@ -232,6 +299,11 @@ export default function CourseVideoPage() {
     ratingPromptDoneRef.current = true;
     setShowRatingPrompt(false);
   }, []);
+  // The one-line "goal met — day N kept" acknowledgement, set when a finished
+  // lesson has today's count at or past the student's own daily goal. Shown
+  // at most once per calendar day (ll_goal_met_v1, streak.js) and dismissed
+  // for the rest of the visit by its own close button.
+  const [goalMoment, setGoalMoment] = useState(null);
 
   const activeVideoId = activeLesson?.videoId ?? null;
   // The resume point recomputes only when the lesson changes: positions
@@ -355,6 +427,21 @@ export default function CourseVideoPage() {
     // Finishing a lesson is the moment to ask "was this helpful?" — once per
     // visit, and RatingPrompt itself stays quiet for anyone who already rated.
     if (!ratingPromptDoneRef.current) setShowRatingPrompt(true);
+    // The gentle goal-met moment: only at a finish that has today's count at
+    // or past the student's own goal, and at most once per calendar day. When
+    // the rating ask above is also on screen, the ask keeps the card slot and
+    // this renders as a single quiet line beneath it — never a second stacked
+    // card (see the ratingPrompt slot below).
+    const dailyGoal = getDailyGoal();
+    const todayCount = countLessonsStudiedToday();
+    if (!goalMetShownToday() && todayCount >= dailyGoal) {
+      markGoalMetShown();
+      setGoalMoment(goalMetMessage({
+        today: todayCount,
+        goal: dailyGoal,
+        current: streakStats().current,
+      }));
+    }
   };
 
   const persistPlaybackRate = (rate) => {
@@ -382,6 +469,14 @@ export default function CourseVideoPage() {
   // hooks cannot follow those returns.
   const canDescribeCourse =
     !loading && !error && Boolean(course) && scope.valid && Boolean(activeLesson);
+
+  // The ACTIVE lesson's description, fetched as one bounded row only when the
+  // structured data below can actually use it. The bulk lesson query no longer
+  // carries descriptions — on a big course that shipped pages of free text to
+  // phones that never read it.
+  const activeLessonDescription = useLessonDescription(activeLesson?.id, {
+    enabled: canDescribeCourse,
+  });
 
   // The SAME three levels VideoView's own crumbsProp fallback renders
   // (MinimalUI.jsx) — course title or chapter name in the middle, current
@@ -433,7 +528,7 @@ export default function CourseVideoPage() {
           // changes, via the deps array below.
           videoObjectSchema({
             title: activeLesson.title,
-            description: activeLesson.description,
+            description: activeLessonDescription,
             youtubeVideoId: activeLesson.videoId,
             durationSeconds: activeLesson.durationSeconds,
           }),
@@ -442,7 +537,9 @@ export default function CourseVideoPage() {
       : [],
     // displayedCourse (Course.description) and back (the breadcrumb's real
     // return URL) are both read inside this effect now — both belong here.
-    [canDescribeCourse, playlistId, course, displayedCourse, scope.chapter, activeLesson, back],
+    // activeLessonDescription arrives a beat after the lesson resolves, so it
+    // must re-run this effect to upsert the VideoObject with it.
+    [canDescribeCourse, playlistId, course, displayedCourse, scope.chapter, activeLesson, activeLessonDescription, back],
   );
 
   if (loading) return <CenteredNotice title="Loading course…" />;
@@ -515,6 +612,15 @@ export default function CourseVideoPage() {
     }
   };
 
+  // The always-available share row and the ChapterCleared card below must not
+  // stack two share affordances on one screen: when the cleared card is
+  // showing (measured from the same inputs it measures), its own share button
+  // IS the share for that moment, and the row steps aside.
+  const activeChapterId = activeLesson.chapter?.id ?? scope.chapter?.id ?? null;
+  const chapterIsCleared = Boolean(
+    chapterCompletion(allLessons, completedIds, activeChapterId)?.cleared,
+  );
+
   const continueLesson = savedProgress?.lastVideoId
     ? lessons.find((lesson) => lesson.videoId === savedProgress.lastVideoId) ?? null
     : null;
@@ -548,9 +654,40 @@ export default function CourseVideoPage() {
       onEnded={recordLessonFinished}
       seekTo={seekRequest}
       ratingPrompt={
-        showRatingPrompt
-          ? <RatingPrompt playlistId={playlistId} onDismiss={dismissRatingPrompt} />
-          : null
+        <>
+          {/* One-tap share at the moment of enthusiasm — the /api/og card
+              makes the link preview branded in WhatsApp/Telegram. Rendered
+              through this slot because it is the layout position directly
+              under the lesson title and prev/next row (reachable on mobile
+              without scrolling past the player) that this page already
+              controls. Hidden while ChapterCleared below shows its own share
+              button, so the two never stack. */}
+          {!chapterIsCleared && (
+            <ShareControl
+              className="mt-4"
+              subject="this course"
+              url={courseShareUrl(playlistId)}
+              title={course.title}
+              text={courseShareText({
+                title: course.title,
+                lectures: allLessons.length || course.lectures,
+                teacher: course.teacher,
+                institute: course.institute,
+              })}
+            />
+          )}
+          {showRatingPrompt
+            ? <RatingPrompt playlistId={playlistId} onDismiss={dismissRatingPrompt} />
+            : null}
+          {/* When both trigger on the same finish, the rating ask wins the
+              slot's card position and this stays one short line beneath it —
+              the least-noisy merge, and it cannot be lost the way "wait until
+              the prompt is dismissed" would lose it for students the prompt
+              silently skips (already rated → RatingPrompt renders null). */}
+          {goalMoment && (
+            <GoalMetLine message={goalMoment} onDismiss={() => setGoalMoment(null)} />
+          )}
+        </>
       }
       notesPanel={
         <NotesPanel

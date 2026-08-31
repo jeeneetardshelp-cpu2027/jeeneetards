@@ -37,10 +37,16 @@ describe("legal release truth", () => {
       // policy previously said browser progress was "not attached to a
       // Supabase account", which the sync made false.
       "video_progress",
+      // Server-side study days (study_days). Added 31 August 2026 alongside
+      // the streak sync — the dates behind the streak now reach the server
+      // for signed-in students, and the policy must say so by name.
+      "study_days",
       "ll_player_prefs_v1",
       "ll_notes_v1",
       "ll_streak_v1",
       "ll_revision_v1",
+      "ll_exam_lane_v1",
+      "ll_goal_met_v1",
     ]) {
       expect(privacy).toContain(fact);
     }
@@ -62,6 +68,34 @@ describe("legal release truth", () => {
       expect(privacy()).not.toContain("not attached to a Supabase account");
       // Server-side data survives "clear site data" — students must be told.
       expect(privacy()).toMatch(/clearing site data does not delete it/i);
+    });
+
+    it("discloses server-side study days whenever the streak sync is wired up", () => {
+      // Same property as the video_progress check above: if recordStudyDay
+      // pushes days to the server, shipping without the disclosure fails.
+      const syncIsLive = read("src/streak.js").includes("queueStudyDaySync");
+      if (!syncIsLive) return;
+      expect(privacy()).toContain("study_days");
+      // The dates leave the browser only for signed-in students, and the
+      // policy must say exactly that rather than implying always-on sync.
+      expect(privacy()).toMatch(/syncs only for signed-in students/i);
+    });
+
+    it("discloses the goal-moment date whenever the watch page persists it", () => {
+      // ll_goal_met_v1 remembers the date the daily-goal line was last shown.
+      // Derived from the code that writes the key, like the checks around it.
+      const writesMoment = read("src/CourseVideoPage.jsx").includes("markGoalMetShown");
+      if (!writesMoment) return;
+      expect(privacy()).toContain("ll_goal_met_v1");
+    });
+
+    it("discloses the remembered exam lane whenever the homepage persists it", () => {
+      // ll_exam_lane_v1 remembers which exam a student chose. Same reasoning
+      // as the revision check: derive the disclosure from the code that
+      // writes the key, so shipping the store without the policy line fails.
+      const writesLane = read("src/examLane.js").includes("ll_exam_lane_v1");
+      if (!writesLane) return;
+      expect(privacy()).toContain("ll_exam_lane_v1");
     });
 
     it("discloses the revision queue whenever a chapter clear is recorded", () => {

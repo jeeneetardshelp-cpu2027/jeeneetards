@@ -77,7 +77,7 @@ export default function PrivacyPolicy() {
               Student accounts, course ratings, written reviews, and content
               reporting are enabled. An account is only needed to rate a
               course, write a review, report a problem, or sync watch progress
-              across devices — never to browse or watch.
+              and study days across devices — never to browse or watch.
             </p>
             {forumAvailable ? (
               <p>
@@ -143,7 +143,12 @@ export default function PrivacyPolicy() {
             </p>
             <p>
               Local storage key <code>ll_player_prefs_v1</code> remembers a
-              chosen playback speed. Session storage entries beginning with{" "}
+              chosen playback speed. Local storage key{" "}
+              <code>ll_exam_lane_v1</code> remembers which exam (JEE, NEET, or
+              boards) was last chosen for the countdown and exam ordering on
+              the home page. Local storage key <code>ll_goal_met_v1</code>{" "}
+              remembers the date the daily-goal message was last shown, so it
+              appears at most once a day. Session storage entries beginning with{" "}
               <code>returnTo:</code> can remember the filtered course page to
               return to. Entries beginning with <code>scroll:</code> can
               remember a page&apos;s scroll position.
@@ -167,9 +172,20 @@ export default function PrivacyPolicy() {
               on this site.
             </p>
             <p>
+              While signed in, the study dates behind the streak counter are
+              saved the same way. The database table <code>study_days</code>{" "}
+              stores only the Supabase user identifier and each calendar date
+              on which a lesson was played — no lesson names, no durations, no
+              times of day. This table syncs only for signed-in students:
+              while signed out, those dates exist solely in this browser
+              (<code>ll_streak_v1</code> above) and nothing is sent to the
+              server.
+            </p>
+            <p>
               Database rules restrict every row to the account that created it:
               one student cannot read or change another student&apos;s watch
-              progress, and signed-out visitors cannot read any of it.
+              progress or study days, and signed-out visitors cannot read any
+              of it.
             </p>
             <p>
               Because this copy lives on the server rather than in the browser,
@@ -237,9 +253,9 @@ export default function PrivacyPolicy() {
             <p>
               Browser data remains until the user or browser removes it.
               Server-side records — an account, its ratings and reviews, its
-              content reports, and its <code>video_progress</code> rows —
-              remain until deletion is requested. Provider logs remain
-              according to provider settings.
+              content reports, and its <code>video_progress</code> and{" "}
+              <code>study_days</code> rows — remain until deletion is
+              requested. Provider logs remain according to provider settings.
             </p>
             <p>
               To delete an account and everything attached to it, email{" "}
