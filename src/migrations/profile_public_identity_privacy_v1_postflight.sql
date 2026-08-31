@@ -1,15 +1,6 @@
--- Legacy rerunnable profile-read hardening.
---
--- This file originally made every profile column except is_admin public.
--- That still exposed OAuth full_name/avatar_url and stable account IDs. Keep
--- the historical migration safe to re-run by enforcing the current contract:
--- only the separately claimed forum username is browser-readable.
-
-begin;
-
-revoke select on table public.profiles from public, anon, authenticated;
-grant select (username) on table public.profiles to anon, authenticated;
-grant select on table public.profiles to service_role;
+-- Public profile identity privacy v1 postflight.
+-- Read-only verification of effective privileges after the migration.
+begin transaction read only;
 
 do $$
 declare
@@ -22,7 +13,7 @@ begin
 
   if not has_column_privilege('anon', 'public.profiles', 'username', 'select')
      or not has_column_privilege('authenticated', 'public.profiles', 'username', 'select') then
-    raise exception 'public forum username is not readable by both browser roles';
+    raise exception 'username-only public access is missing';
   end if;
 
   select string_agg(c.column_name, ', ' order by c.ordinal_position)
@@ -46,5 +37,12 @@ begin
 end
 $$;
 
-notify pgrst, 'reload schema';
-commit;
+select
+  has_column_privilege('anon', 'public.profiles', 'username', 'select') as anon_username_public,
+  not has_column_privilege('anon', 'public.profiles', 'full_name', 'select') as anon_full_name_private,
+  not has_column_privilege('anon', 'public.profiles', 'avatar_url', 'select') as anon_avatar_url_private,
+  not has_column_privilege('authenticated', 'public.profiles', 'full_name', 'select') as authenticated_full_name_private,
+  not has_column_privilege('authenticated', 'public.profiles', 'avatar_url', 'select') as authenticated_avatar_url_private,
+  has_table_privilege('service_role', 'public.profiles', 'select') as service_role_profile_access;
+
+rollback;
