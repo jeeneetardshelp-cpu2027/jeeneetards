@@ -166,6 +166,10 @@ export function Hero({ searchField, chips, stats }) {
 export function SocialProof({ institutes, loading }) {
   const ref = useReveal();
   if (!loading && institutes.length === 0) return null;
+  const shown = pickFeaturedChannels(institutes);
+  // "All N" is only true when nothing was left out. When it is, the count still
+  // reports the real total and the link goes where every channel is reachable.
+  const showingAll = shown.length === institutes.length;
 
   return (
     <section ref={ref} className="relative py-16 sm:py-20">
@@ -174,7 +178,9 @@ export function SocialProof({ institutes, loading }) {
           <p className="text-eyebrow text-ink-3">
             {loading
               ? "YouTube channels in this library"
-              : `All ${institutes.length} YouTube channels in this library`}
+              : showingAll
+                ? `All ${institutes.length} YouTube channels in this library`
+                : `${institutes.length} YouTube channels in this library`}
           </p>
         </Reveal>
       </Container>
@@ -191,22 +197,35 @@ export function SocialProof({ institutes, loading }) {
         ) : (
           <Container>
             <nav aria-label="Trusted YouTube channels" className="flex flex-wrap justify-center gap-3">
-              {institutes.map((institute) => (
+              {shown.map((institute) => (
                 <Link
                   key={institute.id}
                   to={institute.to ?? `/browse?channel=${institute.id}`}
                   aria-label={`View all courses from ${institute.name}`}
-                  className="inline-flex min-h-11 items-center gap-2.5 rounded-sm border border-hairline bg-surface px-5 py-3 text-sm font-medium whitespace-nowrap text-ink-2 transition-colors duration-200 hover:border-accent-line hover:bg-surface-2 hover:text-accent"
+                  className="inline-flex min-h-11 min-w-0 max-w-full items-center gap-2.5 rounded-sm border border-hairline bg-surface px-5 py-3 text-sm font-medium text-ink-2 transition-colors duration-200 hover:border-accent-line hover:bg-surface-2 hover:text-accent"
                 >
                   <ChannelAvatar
                     url={institute.logoUrl}
                     name={institute.name}
-                    className="h-8 w-8"
+                    className="h-8 w-8 shrink-0"
                   />
-                  {institute.name}
+                  {/* min-w-0 + truncate: the longest channel name is 437px, wider
+                      than a 360px phone. Without this the chip pushed the page
+                      39px sideways on every screen, hero included. */}
+                  <span className="min-w-0 truncate">{institute.name}</span>
                 </Link>
               ))}
             </nav>
+            {!showingAll && (
+              <p className="mt-6 text-center">
+                <Link
+                  to="/browse"
+                  className="inline-flex min-h-11 items-center rounded-md px-3 text-sm font-semibold text-accent"
+                >
+                  See all {institutes.length} channels
+                </Link>
+              </p>
+            )}
           </Container>
         )}
       </Reveal>
@@ -562,6 +581,25 @@ export function pickTopRated(items, limit = 3) {
       b.rating.score - a.rating.score || (b.course.ratingCount ?? 0) - (a.course.ratingCount ?? 0))
     .slice(0, limit)
     .map((row) => row.course);
+}
+
+/**
+ * The channels worth showing on the homepage, densest first.
+ *
+ * Rendering all of them was 5,171px — 44% of a 17.6-screen homepage, a flat
+ * wall of names between the exam grid and everything below it. The source
+ * orders by NAME (useHomepageChannels), so a plain slice would have shown three
+ * ALLENs and whatever else sorts early. Ranking by how much of the library each
+ * channel actually contributes makes the sample representative instead of
+ * alphabetical, and the counts are already in the payload.
+ */
+export function pickFeaturedChannels(channels, limit = 8) {
+  return [...(channels ?? [])]
+    .sort((a, b) =>
+      (Number(b?.videoCount) || 0) - (Number(a?.videoCount) || 0)
+      || (Number(b?.playlistCount) || 0) - (Number(a?.playlistCount) || 0)
+      || String(a?.name ?? "").localeCompare(String(b?.name ?? "")))
+    .slice(0, limit);
 }
 
 /** Distinct clickable channels from whatever the catalogue actually returned. */
