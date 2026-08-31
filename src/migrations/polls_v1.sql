@@ -84,12 +84,18 @@ create table public.poll_image_hosts (
 -- image host -- imgur, postimg, ibb, Google Drive, Dropbox, Discord CDN --
 -- because anyone can upload there and swap the file afterwards. The hosts
 -- below all serve content the submitter does not control.
+--
+-- commons.wikimedia.org was REMOVED on 2026-09-01. Its Special:FilePath links
+-- redirect into upload.wikimedia.org, which is still allowed, so the useful
+-- diagrams remain reachable — but Commons is itself a user-upload surface that
+-- carries explicit material, and this audience is 14-18. Losing the redirect
+-- form costs a submitter one extra click; allowing it would have put the one
+-- genuinely user-generated image host in front of children.
 insert into public.poll_image_hosts (host, note) values
   ('i.ytimg.com', 'YouTube video thumbnails -- already the catalogue image source'),
   ('img.youtube.com', 'YouTube thumbnail alias'),
   ('yt3.ggpht.com', 'YouTube channel avatars'),
   ('upload.wikimedia.org', 'Wikimedia -- serves the images for Wikipedia and Commons'),
-  ('commons.wikimedia.org', 'Wikimedia Commons Special:FilePath links, which redirect to upload.wikimedia.org'),
   ('assets.openstax.org', 'OpenStax CC-BY textbook figures -- physics, chemistry and biology diagrams'),
   ('openstax.org', 'OpenStax apex, for figures not served from the assets subdomain'),
   ('cdn.kastatic.org', 'Khan Academy article and exercise images'),

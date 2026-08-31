@@ -50,7 +50,6 @@ describe("imageLinkProblem", () => {
       "https://img.youtube.com/vi/abc/0.jpg",
       "https://yt3.ggpht.com/a/avatar.jpg",
       "https://upload.wikimedia.org/w/x.png",
-      "https://commons.wikimedia.org/wiki/Special:FilePath/Lens.svg",
       "https://assets.openstax.org/oscms/media/figure.png",
       "https://openstax.org/figure.png",
       "https://cdn.kastatic.org/ka-content-images/diagram.png",
@@ -60,6 +59,16 @@ describe("imageLinkProblem", () => {
     ]) {
       expect(imageLinkProblem(url), url).toBeNull();
     }
+  });
+
+  it("refuses commons.wikimedia.org, a user-upload surface", () => {
+    // Dropped 2026-09-01. Its Special:FilePath links redirect into
+    // upload.wikimedia.org, which IS still approved, so the diagrams a student
+    // actually wants stay reachable — but Commons is a user-upload host that
+    // carries explicit material, and these students are 14-18.
+    expect(imageLinkProblem("https://commons.wikimedia.org/wiki/Special:FilePath/Lens.svg"))
+      .not.toBeNull();
+    expect(imageLinkProblem("https://upload.wikimedia.org/w/x.png")).toBeNull();
   });
 
   it("names recognisable sources rather than listing every hostname", () => {
