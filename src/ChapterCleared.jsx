@@ -53,7 +53,9 @@ export default function ChapterCleared({
     });
     try {
       if (navigator.share) {
-        await navigator.share({ text, url });
+        // chapterShareMessage already ends with the link, so passing `url` as
+        // well makes Android paste it twice.
+        await navigator.share({ text });
       } else {
         await navigator.clipboard.writeText(text);
         setShared(true);

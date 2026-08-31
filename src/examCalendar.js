@@ -113,10 +113,17 @@ export function targetDay(exam) {
 export function examCountdown(exam, today = new Date()) {
   const target = targetDay(exam);
   if (target == null) return null;
+  // The student's LOCAL calendar day, not the UTC one. Targets are midnight
+  // UTC, so reading "today" in UTC made the countdown one day too high for
+  // every Indian student between 00:00 and 05:30 IST. Harmless while every
+  // date is hedged with "about", but this file documents flipping status to
+  // "announced" as its intended edit — and that turns it into an exact-looking
+  // wrong number ("1 day to JEE Main" at 1am on exam morning). Matches the
+  // local-day convention dayKey() already uses in streak.js.
   const now = Date.UTC(
-    today.getUTCFullYear(),
-    today.getUTCMonth(),
-    today.getUTCDate(),
+    today.getFullYear(),
+    today.getMonth(),
+    today.getDate(),
   );
   const days = Math.round((target - now) / DAY_MS);
   if (days < 0) return null;

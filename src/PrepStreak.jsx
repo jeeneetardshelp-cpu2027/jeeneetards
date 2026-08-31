@@ -24,6 +24,18 @@ import { BRAND_TEAL } from "./brandColors.js";
 
 const GOALS = [1, 2, 3];
 
+/**
+ * True when today's play data says the student studied but the local streak
+ * store has no record of it — the streak is device-local and cleared on
+ * sign-out (deliberately, for shared school machines), while progress IS
+ * restored from the server on the next sign-in. Asserting "0 days in a row" at
+ * a student who demonstrably studied today is simply false, so the panel says
+ * what it actually knows instead.
+ */
+export function streakUncounted({ current, studiedToday, studiedTodayCount }) {
+  return current === 0 && studiedTodayCount > 0 && !studiedToday;
+}
+
 /** The encouraging line under the number — never a reprimand. */
 export function streakMessage({ current, studiedToday, done, goal }) {
   if (done) return current === 1 ? "Goal met. First day of a new streak." : "Goal met today.";
@@ -54,6 +66,9 @@ export default function PrepStreak() {
   // Nothing to celebrate yet, and nothing to nag about.
   if (stats.longest === 0 && today === 0) return null;
 
+  const uncounted = streakUncounted({
+    current: stats.current, studiedToday: stats.studiedToday, studiedTodayCount: today,
+  });
   const done = today >= goal;
   const pct = Math.min(100, Math.round((today / goal) * 100));
   const chooseGoal = (next) => setGoal(setDailyGoal(next));
@@ -70,13 +85,21 @@ export default function PrepStreak() {
             />
             <div>
               <h2 id="prep-streak-heading" className={`text-2xl font-bold tabular-nums ${t.text}`}>
-                {stats.current}{" "}
-                <span className={`text-sm font-medium ${t.muted}`}>
-                  day{stats.current === 1 ? "" : "s"} in a row
-                </span>
+                {uncounted ? (
+                  <span className={`text-base font-semibold ${t.text}`}>Today&apos;s progress</span>
+                ) : (
+                  <>
+                    {stats.current}{" "}
+                    <span className={`text-sm font-medium ${t.muted}`}>
+                      day{stats.current === 1 ? "" : "s"} in a row
+                    </span>
+                  </>
+                )}
               </h2>
               <p className={`mt-0.5 text-xs ${t.muted}`}>
-                {streakMessage({ current: stats.current, studiedToday: stats.studiedToday, done, goal })}
+                {uncounted
+                  ? "Your streak is kept on the device you watch on."
+                  : streakMessage({ current: stats.current, studiedToday: stats.studiedToday, done, goal })}
               </p>
             </div>
           </div>
