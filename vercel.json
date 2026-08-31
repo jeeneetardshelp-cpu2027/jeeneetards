@@ -9,6 +9,19 @@
       "destination": "/index.html"
     }
   ],
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "^jeeneetards-nine\\.vercel\\.app$"
+        }
+      ],
+      "destination": "https://www.jeeneetard.com/:path*",
+      "permanent": true
+    }
+  ],
   "headers": [
     {
       "source": "/search",
