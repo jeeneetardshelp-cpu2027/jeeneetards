@@ -52,13 +52,37 @@ describe("public page metadata", () => {
     expect(page.title).toBe("Browse free courses | JEENEETARD");
   });
 
-  it("keeps every filtered catalogue variant out of the index", () => {
-    const filtered = metadataForLocation(
+  // The chapter view is the ONE filtered shape that earns its own identity.
+  // Collapsing it too meant all 249 populated chapters shared a single
+  // canonical and a single title, so the only screen this site has that YouTube
+  // does not — every course on a chapter, side by side — could not be found in
+  // a search engine.
+  it("gives the canonical chapter view its own title and canonical", () => {
+    const chapter = metadataForLocation(
       "/browse",
       "?goal=jee&class=11&subject=physics&chapter=kinematics",
     );
-    expect(filtered.robots).toBe("noindex, follow");
-    expect(filtered.canonicalPath).toBe("/browse");
+    expect(chapter.robots).toBe("index, follow");
+    expect(chapter.canonicalPath)
+      .toBe("/browse?goal=jee&class=11&subject=physics&chapter=kinematics");
+    expect(chapter.title).toBe("Kinematics — JEE Class 11 Physics | JEENEETARD");
+  });
+
+  it("keeps every OTHER filtered catalogue variant out of the index", () => {
+    // The exception above is exact, which is what keeps the faceted URL space
+    // finite: a chapter plus anything else is a facet, and facets are endless.
+    for (const query of [
+      "?goal=jee&class=11&subject=physics",
+      "?goal=jee&class=11&subject=physics&chapter=kinematics&page=2",
+      "?goal=jee&class=11&subject=physics&chapter=kinematics&sort=rating",
+      "?goal=jee&class=11&subject=physics&chapter=kinematics&tab=lectures",
+      "?chapter=kinematics",
+      "?q=friction",
+    ]) {
+      const filtered = metadataForLocation("/browse", query);
+      expect(filtered.robots, query).toBe("noindex, follow");
+      expect(filtered.canonicalPath, query).toBe("/browse");
+    }
     expect(metadataForLocation("/browse").robots).toBe("index, follow");
   });
 
