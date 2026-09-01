@@ -333,29 +333,11 @@ export function Skeleton({ className = "", rounded = "rounded-md" }) {
   );
 }
 
-/**
- * Edge-to-edge scrolling row for the social-proof strip. Duplicated content
- * plus a 50% translate gives a seamless loop; the copy is aria-hidden so a
- * screen reader hears the names once, not twice.
- *
- * data-allow-horizontal-scroll marks this as an intentional overflow region
- * for the responsive audit, which otherwise fails any element past the
- * viewport edge.
- */
-/**
- * Skip-to-content. First focusable element on every page; visually hidden
- * until focused, at which point it becomes a real 44px control.
- */
-export function SkipLink({ to = "#main-content" }) {
-  return (
-    <a
-      href={to}
-      className="sr-only z-50 focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:inline-flex focus:min-h-11 focus:items-center focus:rounded-md focus:border focus:border-accent-line focus:bg-surface focus:px-4 focus:text-sm focus:font-medium focus:text-ink focus:shadow-e3"
-    >
-      Skip to main content
-    </a>
-  );
-}
+// REMOVED: a second SkipLink. It targeted the same #main-content as the real
+// one in AppShell.jsx, had no call sites, and carried a different class chain —
+// so if anything had ever imported it the page would have offered a student two
+// "Skip to main content" links to the same place. AppShell owns the skip link,
+// as it owns the header.
 
 /** Icon + text metadata, the shape used on every card and detail header. */
 export function MetaItem({ icon: Icon, children, className = "" }) {
@@ -586,6 +568,15 @@ export function Note({ icon: Icon, children, className = "" }) {
   );
 }
 
+/**
+ * Edge-to-edge scrolling row for the social-proof strip. Duplicated content
+ * plus a 50% translate gives a seamless loop; the copy is aria-hidden so a
+ * screen reader hears the names once, not twice.
+ *
+ * data-allow-horizontal-scroll marks this as an intentional overflow region
+ * for the responsive audit, which otherwise fails any element past the
+ * viewport edge.
+ */
 export function Marquee({ children, className = "" }) {
   return (
     <div

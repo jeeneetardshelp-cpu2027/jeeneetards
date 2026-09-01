@@ -14,12 +14,16 @@
 //  Tailwind's `dark:` variant. Brand accents are applied via inline style.
 // =====================================================================
 
-import { GlobalHeader, Container } from "./AppShell.jsx";
+import { GlobalHeader, Container, MAIN_CONTENT_ID } from "./AppShell.jsx";
 import {
   AlertCircle, ArrowLeft, Check, ChevronLeft, ChevronRight, ExternalLink, Search, X,
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import YouTubePlayer from "./YouTubePlayer.jsx";
+// The catalogue's Devanagari titles are rendered under the document's
+// lang="en" without this — see lang.js for what a screen reader does with
+// that, and for the limits of the test.
+import { langAttrs } from "./lang.js";
 import { useTheme } from "./theme.jsx";
 import { formatDuration } from "./metadata.js";
 import { BRAND_TEAL, BRAND_SERIF } from "./brandColors.js";
@@ -194,7 +198,11 @@ export function LessonList({
               className={`min-h-11 w-full rounded-xl border ${t.border} ${t.card} ${t.text} px-3 text-sm outline-none focus:ring-2 focus:ring-teal-500`}
             >
               <option value="">All chapters</option>
-              {chapters.map((chapter) => <option key={chapter.id} value={chapter.id}>{chapter.name}</option>)}
+              {chapters.map((chapter) => (
+                <option key={chapter.id} value={chapter.id} {...langAttrs(chapter.name)}>
+                  {chapter.name}
+                </option>
+              ))}
             </select>
           </label>
         )}
@@ -243,7 +251,10 @@ export function LessonList({
           return (
             <li key={lesson.id} className={`border-b last:border-b-0 ${t.divider}`}>
               {startsChapter && (
-                <p className={`border-b ${t.divider} px-4 py-2 text-xs font-semibold uppercase tracking-wide ${t.faint}`}>
+                <p
+                  {...langAttrs(lesson.chapter.name)}
+                  className={`border-b ${t.divider} px-4 py-2 text-xs font-semibold uppercase tracking-wide ${t.faint}`}
+                >
                   {lesson.chapter.name}
                 </p>
               )}
@@ -283,7 +294,7 @@ export function LessonList({
                   className="aspect-video w-20 shrink-0 rounded-md border border-hairline sm:w-24"
                 />
                 <span className={`min-w-0 flex-1 ${active ? `font-semibold ${t.text}` : t.muted}`}>
-                  <span className="block">{lesson.title}</span>
+                  <span className="block" {...langAttrs(lesson.title)}>{lesson.title}</span>
                   <span className={`mt-1 flex flex-wrap items-center gap-2 text-xs font-normal ${t.faint}`}>
                     {lesson.durationSeconds > 0 && <span>{formatDuration(lesson.durationSeconds)}</span>}
                     {lesson.embeddingStatus === "blocked" && (
@@ -481,7 +492,7 @@ export function VideoView({
       {/* top bar */}
       <GlobalHeader crumbs={crumbs} />
 
-      <main className="py-6 sm:py-8">
+      <main id={MAIN_CONTENT_ID} className="py-6 sm:py-8">
        {/* An explicit way back to the results. `onBack` was previously accepted
            as a prop and never rendered, so the course page had no return
            affordance at all beyond the breadcrumb. */}
@@ -504,8 +515,9 @@ export function VideoView({
        <Container>
         {/* The document's h1 stays first in reading order even though the
             course overview card (which shows the title visually) now renders
-            below the player. */}
-        <h1 className="sr-only">{course.title}</h1>
+            below the player. It is sr-only, so its lang tag is not a nicety:
+            this heading exists only to be spoken. */}
+        <h1 className="sr-only" {...langAttrs(course.title)}>{course.title}</h1>
         <div className="flex flex-col gap-8 xl:grid xl:grid-cols-[minmax(0,1fr)_400px] xl:items-start">
           <div
             id="course-player"
@@ -542,7 +554,11 @@ export function VideoView({
                     <p className={`text-base font-semibold ${t.text}`} style={{ fontFamily: BRAND_SERIF }}>
                       Lesson complete
                     </p>
-                    <p className={`mt-2 text-sm ${t.muted}`}>
+                    {/* Tagged on the whole line rather than a span around the
+                        title: lang.js is deliberate that a mixed string is
+                        tagged as a whole, and splitting this into two text
+                        nodes buys nothing a listener can hear. */}
+                    <p className={`mt-2 text-sm ${t.muted}`} {...langAttrs(nextLesson.title)}>
                       Up next: Lesson {nextLesson.position} · {nextLesson.title}
                     </p>
                     <p className={`mt-1 text-xs ${t.faint}`}>Playing in {countdown}s</p>
@@ -608,7 +624,13 @@ export function VideoView({
                 </PlayerOverlay>
               )}
             </div>
-            <h2 className={`mt-5 text-2xl font-semibold leading-snug ${t.text}`} style={{ fontFamily: BRAND_SERIF }}>{videoTitle}</h2>
+            <h2
+              {...langAttrs(videoTitle)}
+              className={`mt-5 text-2xl font-semibold leading-snug ${t.text}`}
+              style={{ fontFamily: BRAND_SERIF }}
+            >
+              {videoTitle}
+            </h2>
             <p className={`mt-1 text-sm ${t.muted}`}>
               {/* On a chapter-scoped page the slice position alone reads as
                   "Lesson 1 of 1" on 55% of pages, which looks like a
