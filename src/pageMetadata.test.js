@@ -96,6 +96,28 @@ describe("public page metadata", () => {
     expect(page.robots).toBe("index, follow");
   });
 
+  it("gives each exam year its own self-canonical search result", () => {
+    const page = metadataForLocation("/materials/jee-main/previous-year-papers/2024");
+    expect(page.title).toBe(
+      "JEE Main 2024 question papers, session by session | JEENEETARD",
+    );
+    expect(page.description).toContain("JEE Main 2024");
+    expect(page.canonicalPath).toBe("/materials/jee-main/previous-year-papers/2024");
+    expect(page.robots).toBe("index, follow");
+  });
+
+  it.each([
+    // Not a four-digit year.
+    "/materials/jee-main/previous-year-papers/20244",
+    "/materials/jee-main/previous-year-papers/latest",
+    // No landing is registered for this exam, so there is no such page.
+    "/materials/neet/previous-year-papers/2024",
+  ])("treats the invented paper URL %s as a 404, not a year page", (path) => {
+    const page = metadataForLocation(path);
+    expect(page.title).toBe("Page not found | JEENEETARD");
+    expect(page.robots).toBe("noindex, nofollow");
+  });
+
   it("keeps restricted routes out and publishes only readable forum routes", () => {
     expect(metadataForLocation("/admin").robots).toBe("noindex, nofollow");
     expect(metadataForLocation("/admin/").robots).toBe("noindex, nofollow");

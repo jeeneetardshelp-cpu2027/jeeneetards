@@ -25,8 +25,22 @@ vi.mock("./useExplore.js", () => ({
   useLearningGoals: () => ({ goals: [], loading: false, error: null }),
 }));
 vi.mock("./useUniversalSearch.js", () => ({
+  // The renderer walks GROUPS, so the mock has to carry it: the hero hands its
+  // query to the shared <UniversalSearch/>, which is driven entirely off this
+  // list. Same keys and order as the real module.
+  GROUPS: [
+    { key: "faculty", label: "Faculty" },
+    { key: "chapter", label: "Chapters" },
+    { key: "playlist", label: "Playlists" },
+    { key: "lecture", label: "Lectures" },
+    { key: "institute", label: "Institutes" },
+    { key: "material", label: "Notes & sheets" },
+    { key: "paper", label: "Previous-year papers" },
+  ],
   useUniversalSearch: () => ({
-    // "chapter" (singular) is the real group key HOME_GROUPS filters on.
+    page: 0,
+    setPage: () => {},
+    // "chapter" (singular) is the real group key.
     groups: {
       chapter: {
         total: 1,

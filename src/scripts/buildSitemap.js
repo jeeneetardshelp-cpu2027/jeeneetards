@@ -17,7 +17,12 @@ import { CLASS_LEVELS_BY_GOAL } from "../classLevels.js";
 import { isIndexableChapter } from "../chapterLanding.js";
 import { canonicalBrowseUrl } from "../canonicalUrl.js";
 import { RELEASE_CAPABILITIES, RELEASE_FEATURES } from "../releaseCapabilities.js";
-import { JEE_MAIN_PAPERS_PATH } from "../studyMaterialLandings.js";
+import {
+  JEE_MAIN_PAPERS_PATH,
+  PAPER_LANDINGS,
+  paperYearPath,
+  paperYears,
+} from "../studyMaterialLandings.js";
 
 export const BASE = "https://www.jeeneetard.com";
 export const STATIC_ROUTES = [
@@ -89,6 +94,42 @@ export function writeSitemap(entries, out = DEFAULT_OUT) {
   writeFileSync(out, sitemapXml(entries), "utf8");
 }
 
+/**
+ * The per-year paper pages that actually have papers.
+ *
+ * Deliberately NON-FATAL, unlike the catalogue queries: the paper tier is a
+ * small side branch, and letting a transient failure there downgrade the whole
+ * sitemap to "preserved" would hold back every course and chapter URL too. A
+ * year is emitted only when the catalogue returned a paper for it, so this can
+ * never advertise a year that renders a 404.
+ */
+export async function paperYearPaths(db) {
+  if (!RELEASE_CAPABILITIES.studyMaterials) return [];
+  const paths = [];
+  for (const landing of PAPER_LANDINGS) {
+    let result;
+    try {
+      result = await db.from("study_materials")
+        .select("exam_year")
+        .eq("material_type", "previous_year_paper")
+        .ilike("title", landing.titlePattern)
+        .limit(2000);
+    } catch (error) {
+      // A thrown network error is the same event as a returned one here, and
+      // letting it escape would defeat the whole point of this being skippable.
+      result = { data: null, error };
+    }
+    if (result.error) {
+      console.warn(`! sitemap: ${landing.id} paper years skipped (${result.error.message})`);
+      continue;
+    }
+    for (const year of paperYears(result.data ?? [])) {
+      paths.push(paperYearPath(landing, year));
+    }
+  }
+  return paths;
+}
+
 export function hasUsableSitemap(out = DEFAULT_OUT) {
   if (!existsSync(out)) return false;
   try {
@@ -119,7 +160,10 @@ export async function buildSitemap({
 
   if (!url || !key || !url.startsWith("http")) {
     console.warn("! sitemap: Supabase env not set");
-    return { outcome: preserveOrWriteStatic(out), courses: 0, faculty: 0, explore: 0 };
+    return {
+      outcome: preserveOrWriteStatic(out),
+      courses: 0, faculty: 0, explore: 0, paperYears: 0,
+    };
   }
 
   try {
@@ -261,11 +305,16 @@ export async function buildSitemap({
       urlEntry(`/faculty/${encodeURIComponent(slug)}`),
     );
     const exploreEntries = [...explorePaths].sort().map((path) => urlEntry(path));
+    const paperEntries = (await paperYearPaths(db)).map((path) => urlEntry(path));
 
-    writeSitemap([...staticEntries, ...exploreEntries, ...courseEntries, ...facultyEntries], out);
+    writeSitemap(
+      [...staticEntries, ...exploreEntries, ...paperEntries, ...courseEntries, ...facultyEntries],
+      out,
+    );
     console.log(
       `sitemap: ${courseEntries.length} courses + ${facultyEntries.length} faculty + ` +
-        `${exploreEntries.length} deep Explore + ${staticEntries.length} static routes`,
+        `${exploreEntries.length} deep Explore + ${paperEntries.length} paper years + ` +
+        `${staticEntries.length} static routes`,
     );
     console.log(`sitemap: wrote ${out}`);
     return {
@@ -273,10 +322,14 @@ export async function buildSitemap({
       courses: courseEntries.length,
       faculty: facultyEntries.length,
       explore: exploreEntries.length,
+      paperYears: paperEntries.length,
     };
   } catch (error) {
     console.warn(`! sitemap: catalogue fetch failed (${error.message})`);
-    return { outcome: preserveOrWriteStatic(out), courses: 0, faculty: 0, explore: 0 };
+    return {
+      outcome: preserveOrWriteStatic(out),
+      courses: 0, faculty: 0, explore: 0, paperYears: 0,
+    };
   }
 }
 

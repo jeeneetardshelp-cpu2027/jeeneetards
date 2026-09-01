@@ -12,6 +12,9 @@
 import { createClient } from "@supabase/supabase-js";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
+// The REAL edge matcher, not a copy of its regex. If middleware.js ever changes
+// what it accepts, this check changes with it rather than silently disagreeing.
+import { isSupportedAppPath } from "../../middleware.js";
 
 const root = process.cwd();
 const parseEnv = (t = "") => Object.fromEntries(
@@ -71,6 +74,22 @@ record(`public feed matches mode "${mode.data}"`, !feed.error && consistent,
   mode.data === "off"
     ? `${rows.length} public polls (must be 0 while closed)`
     : `${rows.length} public polls, all published`);
+
+// 3b. EVERY POLL THE FEED ADVERTISES MUST BE REACHABLE.
+//
+// The feed links to /polls/<slug>, but the edge only serves a slug shaped like
+// poll_submit produces it: question-words + "-" + id. A poll seeded by hand
+// with a tidier slug is listed and then 404s when clicked — which is exactly
+// what shipped, and every other check here passed while it was broken. The
+// database was perfect; the journey from feed to page was not.
+const unreachable = rows
+  .map((r) => r.slug)
+  .filter((slug) => !isSupportedAppPath(`/polls/${slug}`));
+record("every listed poll is reachable at its own URL",
+  unreachable.length === 0,
+  unreachable.length
+    ? `${unreachable.length} would 404 at the edge: ${unreachable.join(", ")}`
+    : `${rows.length} checked against the real middleware matcher`);
 
 // 4. THE SECURITY BOUNDARY — a browser must not read any poll table directly.
 for (const table of ["poll_settings", "poll_image_hosts", "polls", "poll_options",

@@ -1,9 +1,15 @@
+import { useEffect } from "react";
 import { ArrowRight, BookOpen, FileCheck2, FileText, RefreshCw, SearchX } from "lucide-react";
 import { Link, useSearchParams } from "react-router";
 import { Page } from "./AppShell.jsx";
 import { useStructuredData } from "./PageMetadata.jsx";
 import StudyMaterialCard from "./StudyMaterialCard.jsx";
 import { JEE_MAIN_PAPERS_PATH } from "./studyMaterialLandings.js";
+import {
+  applyMaterialScopeChange,
+  normalizeMaterialScopeParams,
+  readMaterialScope,
+} from "./studyMaterialScope.js";
 import { studyMaterialsPageSchemas } from "./studyMaterialsStructuredData.js";
 import { useStudyMaterialCatalog } from "./useStudyMaterialCatalog.js";
 import {
@@ -21,15 +27,44 @@ const FALLBACK_GOALS = [
 
 const SELECT_CLASS = "min-h-11 w-full rounded-lg border border-hairline bg-surface px-3 text-sm text-ink outline-none transition-colors focus:border-accent-line";
 
-function Filter({ label, value, onChange, children, disabled = false }) {
+function Filter({ label, value, onChange, children, disabled = false, hint = null }) {
+  const hintId = hint ? `material-filter-${label.toLowerCase()}-hint` : undefined;
   return (
-    <label className="block min-w-0">
-      <span className="mb-1.5 block text-xs font-semibold uppercase tracking-[0.12em] text-ink-3">{label}</span>
-      <select className={SELECT_CLASS} value={value} onChange={onChange} disabled={disabled}>
-        {children}
-      </select>
-    </label>
+    <div className="min-w-0">
+      <label className="block min-w-0">
+        <span className="mb-1.5 block text-xs font-semibold uppercase tracking-[0.12em] text-ink-3">{label}</span>
+        <select
+          className={SELECT_CLASS}
+          value={value}
+          onChange={onChange}
+          disabled={disabled}
+          aria-describedby={hintId}
+        >
+          {children}
+        </select>
+      </label>
+      {/* A greyed-out control with no explanation reads as broken. Say what
+          has to be chosen first instead of leaving the student tapping it.
+          Outside the <label> on purpose: inside, it would be read as part of
+          the control's name rather than as its description. */}
+      {hint && <p id={hintId} className="mt-1 text-xs leading-relaxed text-ink-3">{hint}</p>}
+    </div>
   );
+}
+
+/**
+ * The options for one level, with the active value guaranteed to be among
+ * them.
+ *
+ * A selection that is no longer offered — ?subject=biology on a JEE link, a
+ * chapter whose subject was just changed — would otherwise leave the <select>
+ * showing "All subjects" while the query still filters by biology: a control
+ * lying about what the page is doing. The slug is shown, never a made-up
+ * name, because an unlisted value is one we could not resolve.
+ */
+function optionsFor(items, active) {
+  if (!active || items.some((item) => item.slug === active)) return items;
+  return [{ id: `active-${active}`, slug: active, name: active }, ...items];
 }
 
 export function StudyMaterialsDirectoryView({
@@ -130,14 +165,29 @@ export function StudyMaterialsDirectoryView({
 
 export default function StudyMaterialsPage() {
   const [params, setParams] = useSearchParams();
-  const goal = params.get("goal") ?? "";
-  const board = params.get("board") ?? "";
-  const stage = params.get("class") ?? "";
-  const subject = params.get("subject") ?? "";
-  const chapter = params.get("chapter") ?? "";
-  const chapterId = params.get("chapterId") ?? "";
-  const type = params.get("type") ?? "";
+  // The URL is the state: goal / class / subject / chapter / type are the same
+  // keys /browse uses, so a scope carries between the two pages, a filtered
+  // view is a link, refresh keeps it and Back walks it backwards. Everything
+  // is validated first — see studyMaterialScope.js.
+  const scope = readMaterialScope(params);
+  const goal = scope.goal ?? "";
+  const board = scope.board ?? "";
+  const stage = scope.stage ?? "";
+  const subject = scope.subject ?? "";
+  const chapter = scope.chapter ?? "";
+  const chapterId = scope.chapterId ?? "";
+  const type = scope.type ?? "";
   const isSchool = goal === "school";
+
+  // A link is allowed to be wrong: a typo, an old bookmark, a /browse scope
+  // whose ?type= means something else here. Whatever we refused to act on
+  // leaves the address bar too, so the controls and the URL cannot disagree
+  // about what is being filtered. Replace, not push — a correction is not a
+  // step the student took, and Back must not walk back into the bad URL.
+  useEffect(() => {
+    const normalized = normalizeMaterialScopeParams(params);
+    if (normalized) setParams(normalized, { replace: true });
+  }, [params, setParams]);
 
   const catalog = useStudyMaterialCatalog({
     goal: goal || null,
@@ -159,12 +209,10 @@ export default function StudyMaterialsPage() {
   });
   useStructuredData(studyMaterialsPageSchemas(materials.items), [materials.items]);
 
-  const update = (key, value, clear = []) => {
-    const next = new URLSearchParams(params);
-    if (value) next.set(key, value); else next.delete(key);
-    clear.forEach((name) => next.delete(name));
-    setParams(next, { replace: true });
-  };
+  // Push, not replace: each choice is a step the student took, so Back has to
+  // undo it. The cascade (which dependent levels a change clears) lives in
+  // studyMaterialScope.js so no control here can forget one.
+  const update = (key, value) => setParams(applyMaterialScopeChange(params, key, value));
 
   return (
     <Page crumbs={[{ label: "Study material" }]}>
@@ -204,27 +252,54 @@ export default function StudyMaterialsPage() {
 
       <section aria-label="Filter study material" className="my-8 rounded-xl border border-hairline bg-surface-2 p-4 sm:p-5">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-          <Filter label="Exam" value={goal} onChange={(event) => update("goal", event.target.value, ["board", "class", "subject", "chapter", "chapterId"])}>
+          <Filter
+            label="Exam"
+            value={goal}
+            hint={goal ? null : "Start here — the class, subject and chapter lists follow your exam."}
+            onChange={(event) => update("goal", event.target.value)}
+          >
             <option value="">All exams</option>
             {shownGoals.map((item) => <option key={item.slug} value={item.slug}>{item.name}</option>)}
           </Filter>
           {isSchool && (
-            <Filter label="Board" value={board} onChange={(event) => update("board", event.target.value, ["class", "subject", "chapter", "chapterId"])}>
+            <Filter label="Board" value={board} onChange={(event) => update("board", event.target.value)}>
               <option value="">All boards</option>
-              {catalog.boards.map((item) => <option key={item.id} value={item.slug}>{item.name}</option>)}
+              {optionsFor(catalog.boards, board).map((item) => <option key={item.id} value={item.slug}>{item.name}</option>)}
             </Filter>
           )}
-          <Filter label="Class" value={stage} disabled={!goal || catalog.loading} onChange={(event) => update("class", event.target.value, ["subject", "chapter", "chapterId"])}>
+          <Filter
+            label="Class"
+            value={stage}
+            disabled={!goal || catalog.loading}
+            onChange={(event) => update("class", event.target.value)}
+          >
             <option value="">All classes</option>
-            {catalog.classes.map((item) => <option key={item.id} value={item.slug}>{item.name}</option>)}
+            {optionsFor(catalog.classes, stage).map((item) => <option key={item.id} value={item.slug}>{item.name}</option>)}
           </Filter>
-          <Filter label="Subject" value={subject} disabled={!goal || catalog.loading} onChange={(event) => update("subject", event.target.value, ["chapter", "chapterId"])}>
+          <Filter
+            label="Subject"
+            value={subject}
+            disabled={!goal || catalog.loading}
+            onChange={(event) => update("subject", event.target.value)}
+          >
             <option value="">All subjects</option>
-            {catalog.subjects.map((item) => <option key={item.id} value={item.slug}>{item.name}</option>)}
+            {optionsFor(catalog.subjects, subject).map((item) => <option key={item.id} value={item.slug}>{item.name}</option>)}
           </Filter>
-          <Filter label="Chapter" value={chapter} disabled={!subject || catalog.loading} onChange={(event) => update("chapter", event.target.value, ["chapterId"])}>
+          {/* Chapters are listed for the chosen subject and nothing else. The
+              list is scoped in useStudyMaterialCatalog.js, not merely hidden
+              behind `disabled`, so an unscoped chapter can never reach this
+              select — a chapter slug is only unique WITHIN a subject
+              (chapters_subject_id_slug_key), so a chapter offered without one
+              is not a filter the student can reason about. */}
+          <Filter
+            label="Chapter"
+            value={chapter}
+            disabled={!subject || catalog.loading}
+            hint={subject ? null : "Choose a subject to see its chapters."}
+            onChange={(event) => update("chapter", event.target.value)}
+          >
             <option value="">All chapters</option>
-            {catalog.chapters.map((item) => <option key={item.id} value={item.slug}>{item.name}</option>)}
+            {optionsFor(catalog.chapters, chapter).map((item) => <option key={item.id} value={item.slug}>{item.name}</option>)}
           </Filter>
         </div>
 

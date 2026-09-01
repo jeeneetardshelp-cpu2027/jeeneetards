@@ -14,16 +14,25 @@ function temporarySitemap() {
 
 function clientWith({
   courses = [], faculty = [], goals = [], boards = [], curriculum = () => [],
-  courseError = null, facultyError = null, goalError = null,
-  boardError = null, curriculumError = null,
+  papers = [], courseError = null, facultyError = null, goalError = null,
+  boardError = null, curriculumError = null, paperError = null,
 }) {
+  // study_materials is queried with a filter chain and awaited directly;
+  // playlists/boards end in .order(). One builder covers both shapes.
+  const paperQuery = {
+    eq() { return this; },
+    ilike() { return this; },
+    limit: async () => ({ data: papers, error: paperError }),
+  };
   return () => ({
     from: (table) => ({
-      select: () => ({
-        order: async () => table === "boards"
-          ? ({ data: boards, error: boardError })
-          : ({ data: courses, error: courseError }),
-      }),
+      select: () => table === "study_materials"
+        ? paperQuery
+        : {
+            order: async () => table === "boards"
+              ? ({ data: boards, error: boardError })
+              : ({ data: courses, error: courseError }),
+          },
     }),
     rpc: async (name, args) => {
       if (name === "get_faculty_facets") return { data: faculty, error: facultyError };
@@ -123,7 +132,9 @@ describe("sitemap generation", () => {
     });
 
     const xml = readFileSync(out, "utf8");
-    expect(result).toEqual({ outcome: "written", courses: 1, faculty: 2, explore: 7 });
+    expect(result).toEqual({
+      outcome: "written", courses: 1, faculty: 2, explore: 7, paperYears: 0,
+    });
     expect(xml).toContain("<loc>https://www.jeeneetard.com/course/5</loc>");
     expect(xml).toContain("<lastmod>2026-07-20</lastmod>");
     expect(xml).toContain("<loc>https://www.jeeneetard.com/faculty/amit-bijarnia</loc>");
@@ -155,6 +166,56 @@ describe("sitemap generation", () => {
 
     expect(result.outcome).toBe("preserved");
     expect(readFileSync(out, "utf8")).toBe(previous);
+  });
+
+  // Only years the catalogue actually returned a paper for. A URL shape alone
+  // is never evidence that a year exists — the edge 404s an empty year, and a
+  // sitemap must not advertise a 404.
+  it("advertises one page per exam year that has papers", async () => {
+    const out = temporarySitemap();
+    const result = await buildSitemap({
+      env: { VITE_SUPABASE_URL: "https://example.supabase.co", VITE_SUPABASE_ANON_KEY: "anon" },
+      out,
+      clientFactory: clientWith({
+        courses: [{ id: 5 }],
+        goals: [],
+        papers: [
+          { exam_year: 2024 },
+          { exam_year: 2024 },
+          { exam_year: 2022 },
+          { exam_year: null },
+        ],
+      }),
+    });
+
+    const xml = readFileSync(out, "utf8");
+    expect(result.paperYears).toBe(2);
+    expect(xml).toContain(
+      "<loc>https://www.jeeneetard.com/materials/jee-main/previous-year-papers/2024</loc>",
+    );
+    expect(xml).toContain(
+      "<loc>https://www.jeeneetard.com/materials/jee-main/previous-year-papers/2022</loc>",
+    );
+    expect(xml).not.toContain("previous-year-papers/2023");
+  });
+
+  // The paper tier is a side branch. A failure there must not downgrade the
+  // whole sitemap and hold back every course and chapter URL.
+  it("keeps writing the catalogue when the paper-year query fails", async () => {
+    const out = temporarySitemap();
+    const result = await buildSitemap({
+      env: { VITE_SUPABASE_URL: "https://example.supabase.co", VITE_SUPABASE_ANON_KEY: "anon" },
+      out,
+      clientFactory: clientWith({
+        courses: [{ id: 5 }],
+        goals: [],
+        paperError: { message: "temporary timeout" },
+      }),
+    });
+
+    expect(result.outcome).toBe("written");
+    expect(result.paperYears).toBe(0);
+    expect(readFileSync(out, "utf8")).toContain("<loc>https://www.jeeneetard.com/course/5</loc>");
   });
 
   it("writes a static sitemap only when no prior sitemap exists", async () => {

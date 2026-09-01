@@ -1,4 +1,4 @@
-import { GlobalHeader, Container } from "./AppShell.jsx";
+import { GlobalHeader, Container, MAIN_CONTENT_ID } from "./AppShell.jsx";
 import { useTheme } from "./theme.jsx";
 import { BRAND_TEAL } from "./brandColors.js";
 import {
@@ -14,7 +14,7 @@ export default function MethodologyPage() {
   return (
     <div className={`min-h-screen ${t.page} ${t.text}`}>
       <GlobalHeader crumbs={[{ label: "How courses are curated" }]} />
-      <main className="py-10">
+      <main id={MAIN_CONTENT_ID} className="py-10">
         <Container width="reading">
           <p className={`text-xs font-semibold uppercase tracking-[0.16em] ${t.muted}`}>
             Curation methodology

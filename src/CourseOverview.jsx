@@ -7,6 +7,9 @@ import {
   CONTENT_TYPE_LABELS, DIFFICULTY_LABELS, LANGUAGE_LABELS, formatDuration,
 } from "./metadata.js";
 import { ratingDisplay } from "./ratingConfidence.js";
+// Course and chapter names in this catalogue are sometimes Devanagari, and the
+// document declares lang="en". See lang.js.
+import { hasDevanagari, langAttrs } from "./lang.js";
 import { BRAND_TEAL, BRAND_SERIF, subjectColor } from "./brandColors.js";
 import ChannelAvatar from "./ChannelAvatar.jsx";
 
@@ -67,7 +70,8 @@ export default function CourseOverview({
           {/* h2, not h1: the overview card renders below the player now, and
               the page's h1 (sr-only, in VideoView) must stay first in
               reading order. */}
-          <h2 id="course-title" className={`mt-3 text-2xl font-semibold tracking-tight sm:text-3xl ${t.text}`}
+          <h2 id="course-title" {...langAttrs(course.title)}
+            className={`mt-3 text-2xl font-semibold tracking-tight sm:text-3xl ${t.text}`}
             style={{ fontFamily: BRAND_SERIF }}>
             {course.title}
           </h2>
@@ -166,7 +170,15 @@ export default function CourseOverview({
           <div className="mt-3 flex flex-wrap gap-2">
             {course.syllabus.map((chapter) => (
               <span key={chapter.id} className={`rounded-lg border ${t.border} px-3 py-1.5 text-xs ${t.muted}`}>
-                {chapter.name}{chapter.subject && chapter.subject !== course.subject ? ` · ${chapter.subject}` : ""}
+                {/* A Devanagari chapter name needs its own lang so the
+                    English subject suffix beside it does not inherit it.
+                    A Latin name needs no wrapper at all, so none is
+                    emitted — an inert <span> around every chapter name
+                    changes the shape of the page for no listener. */}
+                {hasDevanagari(chapter.name)
+                  ? <span lang="hi">{chapter.name}</span>
+                  : chapter.name}
+                {chapter.subject && chapter.subject !== course.subject ? ` · ${chapter.subject}` : ""}
               </span>
             ))}
           </div>

@@ -10,6 +10,7 @@
 // =====================================================================
 
 import { useState, useEffect, useMemo } from "react";
+import { MAIN_CONTENT_ID } from "./AppShell.jsx";
 import { supabase, isSupabaseConfigured } from "./supabaseClient";
 import { useAdminData } from "./useAdminData";
 import { useReports } from "./useReports.js";
@@ -920,7 +921,7 @@ export default function AdminPanel() {
 
   if (access === "denied" || access === "error") {
     return (
-      <main className={`flex min-h-screen items-center justify-center ${t.page} p-6`}>
+      <main id={MAIN_CONTENT_ID} className={`flex min-h-screen items-center justify-center ${t.page} p-6`}>
         <div className={`w-full max-w-md rounded-2xl border ${t.card} ${t.border} p-6`}>
           <h1 className={`text-lg font-semibold ${t.text}`}>
             {access === "denied" ? "Administrator access required" : "Access check failed"}
@@ -975,7 +976,7 @@ export default function AdminPanel() {
         </div>
       </header>
 
-      <main className={`mx-auto px-6 py-8 ${
+      <main id={MAIN_CONTENT_ID} className={`mx-auto px-6 py-8 ${
         tab === "manage" ? "max-w-6xl" : "max-w-3xl"
       }`}>
         {/* Tabs */}

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router";
-import { Container, GlobalHeader } from "./AppShell.jsx";
+import { Container, GlobalHeader, MAIN_CONTENT_ID } from "./AppShell.jsx";
 import { BRAND_TEAL } from "./brandColors.js";
 import { isSupabaseConfigured, supabase } from "./supabaseClient.js";
 import { useTheme } from "./theme.jsx";
@@ -90,7 +90,7 @@ export default function PasswordReset() {
   return (
     <div className={`min-h-screen ${t.page} ${t.text}`}>
       <GlobalHeader crumbs={[{ label: "Password reset" }]} width="reading" />
-      <main className="py-10">
+      <main id={MAIN_CONTENT_ID} className="py-10">
         <Container width="reading">
           <h1 className="text-2xl font-bold">Reset your password</h1>
           {!isSupabaseConfigured ? (

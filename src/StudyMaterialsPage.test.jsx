@@ -1,25 +1,51 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { MemoryRouter } from "react-router";
+import { MemoryRouter, useLocation, useNavigate } from "react-router";
 import { describe, expect, it, vi } from "vitest";
 
-vi.mock("./AppShell.jsx", () => ({ Page: ({ children }) => <>{children}</> }));
-vi.mock("./useStudyMaterialCatalog.js", () => ({
-  useStudyMaterialCatalog: () => ({
+// The whole library, as the RPC answers when a level is unfiltered. The mock
+// below runs it through the REAL scoping rule, so these tests exercise the
+// cascade rather than a hand-written picture of it.
+const { LIBRARY } = vi.hoisted(() => ({
+  LIBRARY: {
     goals: [{ id: 4, slug: "school", name: "School Boards", count: 1 }],
     boards: [{ id: 1, slug: "cbse", name: "CBSE", count: 1 }],
     classes: [{ id: 11, slug: "class-11", name: "Class 11", count: 1 }],
-    subjects: [{ id: 1, slug: "physics", name: "Physics", count: 1 }],
-    chapters: [{ id: 1, slug: "kinematics", name: "Kinematics", count: 1 }],
-    loading: false,
-    error: null,
-    unavailable: false,
-  }),
+    subjects: [
+      { id: 1, slug: "physics", name: "Physics", count: 1 },
+      { id: 2, slug: "chemistry", name: "Chemistry", count: 1 },
+    ],
+    chapters: [
+      { id: 1, slug: "kinematics", name: "Kinematics", count: 1 },
+      { id: 2, slug: "the-p-block-elements", name: "The p-Block Elements", count: 1 },
+    ],
+  },
 }));
+
+vi.mock("./AppShell.jsx", () => ({ Page: ({ children }) => <>{children}</> }));
+vi.mock("./useStudyMaterialCatalog.js", async (importOriginal) => {
+  const { scopeStudyMaterialCatalog } = await importOriginal();
+  return {
+    scopeStudyMaterialCatalog,
+    useStudyMaterialCatalog: (filters) => ({
+      ...scopeStudyMaterialCatalog(LIBRARY, filters),
+      loading: false,
+      error: null,
+      unavailable: false,
+      retry: () => {},
+    }),
+  };
+});
+// Every filter set the page handed to the query, so a test can assert what
+// actually reached get_study_materials — not merely what the controls show.
+const { queried } = vi.hoisted(() => ({ queried: [] }));
 vi.mock("./useStudyMaterials.js", async (importOriginal) => {
   const actual = await importOriginal();
   return {
     ...actual,
-    useStudyMaterials: () => ({ items: [], total: 0, loading: false, error: null, unavailable: false }),
+    useStudyMaterials: (filters) => {
+      queried.push(filters);
+      return { items: [], total: 0, loading: false, error: null, unavailable: false };
+    },
   };
 });
 
@@ -44,6 +70,19 @@ const MATERIAL = {
     chapter: { name: "Motion in a Straight Line", slug: "motion-in-a-straight-line" },
   }],
 };
+
+// Shows the address bar the page is actually producing, and offers the Back
+// button, so a shareable scope and a working history can both be asserted.
+function ScopeProbe() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  return (
+    <>
+      <p data-testid="scope">{location.search}</p>
+      <button type="button" onClick={() => navigate(-1)}>go back</button>
+    </>
+  );
+}
 
 describe("StudyMaterialsDirectoryView", () => {
   it("shows a pictorial, syllabus-labelled material card with its reviewed source", () => {
@@ -158,6 +197,126 @@ describe("StudyMaterialsDirectoryView", () => {
     const filters = screen.getByRole("combobox", { name: "Exam" });
     expect(banner.compareDocumentPosition(filters) & Node.DOCUMENT_POSITION_FOLLOWING)
       .toBeTruthy();
+  });
+
+  // ---- the curriculum controls cascade ----
+  //
+  // The chapter control used to be a single <select> holding every chapter of
+  // every subject of every exam that had material: hundreds of options, in an
+  // order that only means something inside one subject. Hiding it behind
+  // `disabled` left the options in the page; these tests hold the list itself
+  // to the chosen subject.
+
+  it("offers no chapters until a subject is chosen, and says why", () => {
+    render(
+      <MemoryRouter initialEntries={["/materials?goal=school"]}>
+        <StudyMaterialsPage />
+      </MemoryRouter>,
+    );
+
+    const chapter = screen.getByRole("combobox", { name: "Chapter" });
+    expect(chapter.disabled).toBe(true);
+    expect(screen.queryByRole("option", { name: "Kinematics" })).toBeNull();
+    expect(screen.getByText("Choose a subject to see its chapters.")).toBeTruthy();
+    // The explanation is the control's description, not part of its name.
+    expect(chapter.getAttribute("aria-describedby"))
+      .toBe(screen.getByText("Choose a subject to see its chapters.").id);
+  });
+
+  it("lists chapters of the chosen subject only", () => {
+    render(
+      <MemoryRouter initialEntries={["/materials?goal=school&class=class-11&subject=physics"]}>
+        <StudyMaterialsPage />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByRole("combobox", { name: "Chapter" }).disabled).toBe(false);
+    expect(screen.getByRole("option", { name: "Kinematics" })).toBeTruthy();
+  });
+
+  it("clears the levels below the one that changed, and keeps the rest", () => {
+    render(
+      <MemoryRouter initialEntries={[
+        "/materials?goal=school&class=class-11&subject=physics&chapter=kinematics&type=short_notes",
+      ]}>
+        <StudyMaterialsPage />
+        <ScopeProbe />
+      </MemoryRouter>,
+    );
+
+    fireEvent.change(screen.getByRole("combobox", { name: "Subject" }), {
+      target: { value: "chemistry" },
+    });
+
+    const scope = new URLSearchParams(screen.getByTestId("scope").textContent);
+    expect(scope.get("subject")).toBe("chemistry");
+    expect(scope.get("chapter")).toBeNull();
+    expect(scope.get("goal")).toBe("school");
+    expect(scope.get("class")).toBe("class-11");
+    expect(scope.get("type")).toBe("short_notes");
+  });
+
+  it("keeps a filtered view shareable, and lets Back undo one choice", () => {
+    render(
+      <MemoryRouter initialEntries={["/materials?goal=school&class=class-11&subject=physics"]}>
+        <StudyMaterialsPage />
+        <ScopeProbe />
+      </MemoryRouter>,
+    );
+
+    fireEvent.change(screen.getByRole("combobox", { name: "Subject" }), {
+      target: { value: "chemistry" },
+    });
+    expect(screen.getByTestId("scope").textContent).toContain("subject=chemistry");
+
+    fireEvent.click(screen.getByRole("button", { name: "go back" }));
+    expect(screen.getByTestId("scope").textContent).toContain("subject=physics");
+  });
+
+  it("carries a /browse scope instead of emptying the page over it", () => {
+    // /browse spells the class `11` and uses ?type= for a COURSE type. Both
+    // reach get_study_materials here, so the class is translated and the
+    // course type is dropped — dropping widens the page; forwarding it would
+    // return nothing and look like a broken library.
+    queried.length = 0;
+    render(
+      <MemoryRouter initialEntries={["/materials?goal=school&class=11&subject=physics&type=full-course"]}>
+        <StudyMaterialsPage />
+        <ScopeProbe />
+      </MemoryRouter>,
+    );
+
+    expect(queried.at(-1)).toMatchObject({ stage: "class-11", subject: "physics", type: null });
+    const scope = new URLSearchParams(screen.getByTestId("scope").textContent);
+    expect(scope.get("class")).toBe("class-11");
+    expect(scope.get("type")).toBeNull();
+  });
+
+  it("still shows a selection the narrowed list no longer offers", () => {
+    // Otherwise the select reads "All subjects" while the query filters by
+    // biology — a control lying about what the page is doing.
+    render(
+      <MemoryRouter initialEntries={["/materials?goal=school&subject=biology"]}>
+        <StudyMaterialsPage />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByRole("combobox", { name: "Subject" }).value).toBe("biology");
+    expect(screen.getByRole("option", { name: "biology" })).toBeTruthy();
+  });
+
+  it("keeps the watch page's chapter hand-off", () => {
+    queried.length = 0;
+    render(
+      <MemoryRouter initialEntries={["/materials?chapterId=42"]}>
+        <StudyMaterialsPage />
+        <ScopeProbe />
+      </MemoryRouter>,
+    );
+
+    expect(queried.at(-1)).toMatchObject({ chapterId: 42 });
+    expect(screen.getByTestId("scope").textContent).toContain("chapterId=42");
+    expect(screen.getByText(/Showing material linked to the chapter you were watching/)).toBeTruthy();
   });
 
   it("writes the same Home to Study material breadcrumb as the edge response", async () => {

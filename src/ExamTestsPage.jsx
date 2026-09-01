@@ -16,7 +16,7 @@
 
 import { useParams, Link } from "react-router";
 import { ArrowLeft } from "lucide-react";
-import { GlobalHeader, Container } from "./AppShell.jsx";
+import { GlobalHeader, Container, MAIN_CONTENT_ID } from "./AppShell.jsx";
 import { Eyebrow, Pill, Surface } from "./ui.jsx";
 import { Reveal, useReveal } from "./motion.jsx";
 import { useStructuredData } from "./PageMetadata.jsx";
@@ -62,7 +62,7 @@ export default function ExamTestsPage() {
       <GlobalHeader
         crumbs={[{ label: "Mock tests", to: "/tests" }, { label: section.label }]}
       />
-      <main ref={revealRoot} className="pb-24">
+      <main id={MAIN_CONTENT_ID} ref={revealRoot} className="pb-24">
         <Container>
           <Reveal className="pt-10 sm:pt-14">
             <div className="flex items-center gap-3">

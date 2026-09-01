@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import {
   fetchStudyMaterialCatalog,
   mapStudyMaterialCatalog,
+  scopeStudyMaterialCatalog,
 } from "./useStudyMaterialCatalog.js";
 
 const rows = [
@@ -36,5 +37,34 @@ describe("study-material curriculum", () => {
       p_subject_slug: "physics",
     });
     expect(result.data.chapters[0].slug).toBe("kinematics");
+  });
+
+  // The RPC answers for the whole library when a level is unfiltered, so with
+  // no subject chosen `chapters` was every chapter of every subject of every
+  // exam — the hundreds of options that made the chapter control unusable.
+  it("offers no chapters until a subject is chosen", () => {
+    const full = mapStudyMaterialCatalog(rows);
+
+    expect(scopeStudyMaterialCatalog(full, { goal: "school" }).chapters).toEqual([]);
+    expect(scopeStudyMaterialCatalog(full, { goal: "school", subject: "physics" }).chapters)
+      .toEqual(full.chapters);
+  });
+
+  it("offers no class, board or subject list until an exam is chosen", () => {
+    const scoped = scopeStudyMaterialCatalog(mapStudyMaterialCatalog(rows), {});
+
+    expect(scoped.goals).toHaveLength(1);
+    expect(scoped.boards).toEqual([]);
+    expect(scoped.classes).toEqual([]);
+    expect(scoped.subjects).toEqual([]);
+    expect(scoped.chapters).toEqual([]);
+  });
+
+  it("scopes what the hook hands components, not only what a select renders", async () => {
+    const rpc = vi.fn(() => Promise.resolve({ data: rows, error: null }));
+    const result = await fetchStudyMaterialCatalog({ rpc }, { goal: "school" });
+
+    expect(result.data.chapters).toEqual([]);
+    expect(result.data.subjects).toHaveLength(1);
   });
 });

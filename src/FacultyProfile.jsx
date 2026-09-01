@@ -9,7 +9,7 @@ import { useEffect } from "react";
 import { Link, useParams } from "react-router";
 import { BadgeCheck, ExternalLink, Star } from "lucide-react";
 import { useFacultyProfile } from "./useFaculty.js";
-import { GlobalHeader, Container } from "./AppShell.jsx";
+import { GlobalHeader, Container, MAIN_CONTENT_ID } from "./AppShell.jsx";
 import { ratingDisplay } from "./ratingConfidence.js";
 import { useTheme } from "./theme.jsx";
 import { applyPageMetadata, useStructuredData } from "./PageMetadata.jsx";
@@ -85,7 +85,7 @@ export default function FacultyProfile() {
           only the admin shell is allowed its own. */}
       <GlobalHeader crumbs={crumbs} />
 
-      <main className="py-8">
+      <main id={MAIN_CONTENT_ID} className="py-8">
         <Container width="reading">
         {error ? (
           <p className={`text-sm ${t.muted}`}>{error}</p>

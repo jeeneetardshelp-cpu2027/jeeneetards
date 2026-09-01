@@ -16,7 +16,16 @@ const EMPTY = {
 
 export async function fetchJeeMainPapers(
   client,
-  { limit = 100, offset = 0 } = {},
+  // `year` narrows the same query to one exam year for the per-year child
+  // page. Null means the whole collection, which is what the landing shows.
+  // `titlePattern` comes from the paper-landing registry so a sibling exam
+  // reuses this fetcher instead of growing a near-identical copy.
+  {
+    limit = 100,
+    offset = 0,
+    year = null,
+    titlePattern = JEE_MAIN_PAPERS_TITLE_PATTERN,
+  } = {},
   { signal } = {},
 ) {
   const start = Math.max(Number(offset), 0);
@@ -25,7 +34,13 @@ export async function fetchJeeMainPapers(
     .from("study_materials")
     .select(SELECT, { count: "exact" })
     .eq("material_type", "previous_year_paper")
-    .ilike("title", JEE_MAIN_PAPERS_TITLE_PATTERN)
+    .ilike("title", titlePattern);
+  // Number(null) is 0, so the null check has to come first — otherwise the
+  // landing would silently ask for exam_year = 0 and list nothing.
+  if (year != null && Number.isInteger(Number(year))) {
+    query = query.eq("exam_year", Number(year));
+  }
+  query = query
     .order("exam_year", { ascending: false, nullsFirst: false })
     .order("title", { ascending: true })
     .range(start, start + size - 1);
@@ -41,7 +56,16 @@ export async function fetchJeeMainPapers(
   };
 }
 
-export function useJeeMainPapers() {
+/**
+ * The JEE Main paper collection, optionally narrowed to ONE exam year for the
+ * per-year child page. `year` is part of the load callback's identity, so
+ * navigating between year pages re-queries instead of showing the last year's
+ * papers under the new heading.
+ */
+export function useJeeMainPapers({
+  year = null,
+  titlePattern = JEE_MAIN_PAPERS_TITLE_PATTERN,
+} = {}) {
   const [state, setState] = useState(() => ({ ...EMPTY, loading: true }));
   const generation = useRef(0);
   const request = useRef(null);
@@ -64,7 +88,7 @@ export function useJeeMainPapers() {
     try {
       const result = await fetchJeeMainPapers(
         supabase,
-        { limit: 100, offset },
+        { limit: 100, offset, year, titlePattern },
         { signal: controller.signal },
       );
       if (!current()) return;
@@ -93,7 +117,7 @@ export function useJeeMainPapers() {
         ? { ...previous, loadingMore: false, loadMoreError: "Couldn't reach the next page of JEE Main papers." }
         : { ...EMPTY, error: "Couldn't reach the JEE Main paper library." });
     }
-  }, []);
+  }, [year, titlePattern]);
 
   useEffect(() => {
     load();
