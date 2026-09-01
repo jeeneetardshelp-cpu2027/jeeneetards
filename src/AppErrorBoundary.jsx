@@ -1,11 +1,12 @@
 import { Component } from "react";
+import { MAIN_CONTENT_ID } from "./AppShell.jsx";
 import { useTheme } from "./theme.jsx";
 import { reportError } from "./lib/errorReporter.js";
 
 function ErrorFallback() {
   const { t } = useTheme();
   return (
-    <main className={`flex min-h-screen items-center justify-center ${t.page} p-6`}>
+    <main id={MAIN_CONTENT_ID} className={`flex min-h-screen items-center justify-center ${t.page} p-6`}>
       <div role="alert" className={`w-full max-w-lg rounded-2xl border ${t.card} ${t.border} p-6`}>
         <h1 className={`text-xl font-semibold ${t.text}`}>This page could not be displayed</h1>
         <p className={`mt-2 text-sm leading-relaxed ${t.muted}`}>

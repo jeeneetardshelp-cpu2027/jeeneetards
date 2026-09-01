@@ -27,16 +27,22 @@
 
 import { useState } from "react";
 import { Link, useParams, Navigate } from "react-router";
-import { BookOpen, PlayCircle } from "lucide-react";
 import {
   useLearningGoals, useClassLevels, useGoalCatalog, useBoards, usePopulatedClasses,
 } from "./useExplore.js";
 import { CLASS_LEVELS_BY_GOAL } from "./classLevels.js";
-import { useDebouncedValue } from "./useBrowse.js";
-import { useScopedSearch } from "./useScopedSearch.js";
+// ONE search surface, ONE renderer. Explore used to run its own useScopedSearch
+// hook (raw ilike against `chapters` and `videos`) through its own ScopedResults
+// component. That meant a query the homepage answered — "projctile motin",
+// "kabir ki sakhi" — silently returned nothing once the student was inside the
+// guided journey, because the scoped hook had no typo tolerance, no
+// Devanagari/Hinglish bridge and none of universal_search's filler-token work.
+// Both the hook and the renderer are deleted; this box now calls the same
+// component /search and the homepage hero call.
+import UniversalSearch from "./UniversalSearch.jsx";
 import { canonicalBrowseUrl } from "./canonicalUrl.js";
 import { exploreStepHeading } from "./exploreHeading.js";
-import { GlobalHeader, HeaderSearch, Container } from "./AppShell.jsx";
+import { GlobalHeader, HeaderSearch, Container, MAIN_CONTENT_ID } from "./AppShell.jsx";
 import { useTheme } from "./theme.jsx";
 import { useStructuredData } from "./PageMetadata.jsx";
 import {
@@ -50,16 +56,6 @@ import { getSubjectGuide } from "./subjectGuides.js";
 const BRAND = { navy: BRAND_NAVY, teal: BRAND_TEAL };
 
 const path = (...parts) => "/explore/" + parts.filter(Boolean).join("/");
-
-export function scopedChapterUrl(chapter, context) {
-  return canonicalBrowseUrl({
-    goal: context.goal,
-    cls: context.cls,
-    board: context.board,
-    subject: chapter.subjectSlug ?? context.subject,
-    chapter: chapter.slug,
-  });
-}
 
 export default function Explore() {
   const { t } = useTheme();
@@ -126,17 +122,19 @@ export default function Explore() {
     chapterNode && { label: chapterNode.name, to: p(cls, subject, chapter) },
   ].filter(Boolean);
 
-  // Context search — scoped to whatever the student has selected so far.
+  // Context search. NOT scoped any more, and it says so on screen rather than
+  // implying otherwise — see the note beside the results below and the
+  // `universal_search` signature in
+  // supabase/migrations/20260831140005_production_baseline.sql, which takes
+  // (p_query, p_types, p_limit, p_offset) and nothing else.
+  //
+  // No local debounce: useUniversalSearch already debounces, cancels obsolete
+  // responses and enforces the database's minimum length, so a second timer
+  // here would only add ~250ms of lag before the first request.
   const [searchInput, setSearchInput] = useState("");
-  const debouncedSearch = useDebouncedValue(searchInput, 250);
   const stepScope = crumbs.slice(1).map((c) => c.label);
   const scopeLabel = stepScope.join(" › ");
-  const scoped = useScopedSearch(debouncedSearch, {
-    goalId: goalNode?.id,
-    subjectId: subjectNode?.id,
-    chapterId: chapterNode?.id,
-  });
-  const searching = Boolean(goalNode) && debouncedSearch.trim().length > 0;
+  const searching = Boolean(goalNode) && searchInput.trim().length > 0;
 
   // A slug that matches nothing must not render a lying step: /explore/boards
   // used to show the exam picker under an "Explore Boards courses" title — a
@@ -266,26 +264,18 @@ export default function Explore() {
               value={searchInput}
               onChange={(ev) => setSearchInput(ev.target.value)}
               onClear={() => setSearchInput("")}
-              placeholder={`Search within ${scopeLabel}`}
+              // It used to say "Search within JEE › Class 11 › Physics". It no
+              // longer narrows to that, so it no longer claims to.
+              placeholder="Search the library"
             />
           ) : null
         }
       />
 
-      <main className="py-6 sm:py-8">
+      <main id={MAIN_CONTENT_ID} className="py-6 sm:py-8">
         <Container>
         {searching ? (
-          <ScopedResults
-            scoped={scoped}
-            scopeLabel={scopeLabel}
-            query={debouncedSearch.trim()}
-            context={{
-              goal: goalNode?.slug,
-              cls: classNode?.slug,
-              board: boardNode?.slug,
-              subject: subjectNode?.slug,
-            }}
-          />
+          <SearchWithin query={searchInput} scopeLabel={scopeLabel} />
         ) : !goalNode ? (
           <Step
             title="What are you preparing for?"
@@ -438,102 +428,59 @@ export function SubjectGuide({ guide }) {
 }
 
 // ---------------------------------------------------------------------
-//  Context search results — chapters + lectures within the current scope,
-//  with an escape hatch to search the whole library.
+//  Context search — the ONE renderer, and an honest label above it.
+//
+//  This box USED to promise scoping: "Search within JEE › Class 11 › Physics",
+//  a result count "in" that scope, and rows built from a goal/subject-filtered
+//  ilike query. Two things were wrong with keeping that promise here.
+//
+//  1. universal_search() takes (p_query, p_types, p_limit, p_offset). There is
+//     no scope parameter — see the function body in
+//     supabase/migrations/20260831140005_production_baseline.sql. Chapter rows
+//     come back carrying only a chapter_id, so there is nothing on a returned
+//     row to filter a goal or a class against either.
+//  2. Filtering the returned PAGE client-side would be worse than not scoping.
+//     The RPC ranks, counts and pages on the server, so dropping rows after the
+//     fact would print a group total the list does not contain, and would show
+//     "nothing here" whenever the in-scope matches sat past the first page.
+//     That is inventing a result the backend never gave us.
+//
+//  So the search is library-wide, and the copy says library-wide. The student
+//  keeps the typo tolerance, the Devanagari/Hinglish bridge and the correct
+//  destinations they get everywhere else — which is what they were actually
+//  missing here. Restoring true scoping needs a scoped RPC parameter; that is
+//  recorded for the owner, not faked in the client.
 // ---------------------------------------------------------------------
-function ScopedResults({ scoped, scopeLabel, query, context }) {
-  const { results, loading, total } = scoped;
+function SearchWithin({ query, scopeLabel }) {
   const { t } = useTheme();
-
   return (
     <section>
-      <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <h1 className={`text-sm ${t.muted}`}>
-          {loading ? "Searching…" : `${total} result${total === 1 ? "" : "s"}`} in{" "}
-          <span className={`font-semibold ${t.text}`}>{scopeLabel}</span>
-        </h1>
-        <Link
-          to={`/?q=${encodeURIComponent(query)}`}
-          className="inline-flex min-h-11 items-center px-2 text-xs font-medium"
-          style={{ color: BRAND.teal }}
-        >
-          Search the entire library →
-        </Link>
+      <h1 className={`text-sm ${t.muted}`}>
+        Searching the whole library
+        {scopeLabel ? (
+          <>
+            {" "}— not only{" "}
+            <span className={`font-semibold ${t.text}`}>{scopeLabel}</span>
+          </>
+        ) : null}
+        .
+      </h1>
+
+      <div className="mt-4">
+        <UniversalSearch
+          query={query}
+          footer={
+            <Link
+              to={`/search?q=${encodeURIComponent(query.trim())}`}
+              className="inline-flex min-h-11 items-center px-2 text-xs font-medium"
+              style={{ color: BRAND.teal }}
+            >
+              Open this search on its own page →
+            </Link>
+          }
+        />
       </div>
-
-      {!loading && total === 0 && (
-        <p className={`mt-6 text-sm ${t.muted}`}>
-          Nothing in this section matches “{query}”. Try the entire library.
-        </p>
-      )}
-
-      {results.chapters.length > 0 && (
-        <ResultGroup title="Chapters" icon={BookOpen}>
-          {results.chapters.map((c) => (
-            <ResultRow
-              key={`ch-${c.id}`}
-              title={c.name}
-              subtitle={c.subject}
-              // Scoped search already knows the goal and subject the student
-              // is inside, so emit the full canonical URL, not a bare ?ch=.
-              to={scopedChapterUrl(c, context)}
-            />
-          ))}
-        </ResultGroup>
-      )}
-
-      {results.lectures.length > 0 && (
-        <ResultGroup title="Lectures" icon={PlayCircle}>
-          {results.lectures.map((v) => (
-            <ResultRow
-              key={`v-${v.id}`}
-              title={v.title}
-              subtitle="Lecture"
-              // Browse's top level is a learning goal now. A search row
-              // carries a category_id, not a goal, and inventing one would be
-              // a guess — so link by subject/chapter and leave the goal
-              // filter unset rather than pre-selecting the wrong branch.
-              to={
-                `/browse?sub=${v.subjectId}` +
-                (v.chapterId ? `&ch=${v.chapterId}` : "")
-              }
-            />
-          ))}
-        </ResultGroup>
-      )}
     </section>
-  );
-}
-
-function ResultGroup({ title, icon: Icon, children }) {
-  const { t } = useTheme();
-  return (
-    <div className="mt-6">
-      <h2 className={`mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide ${t.muted}`}>
-        {Icon && <Icon className="h-4 w-4" />}
-        {title}
-      </h2>
-      <ul className={`divide-y overflow-hidden rounded-xl border ${t.divider} ${t.border} ${t.card}`}>
-        {children}
-      </ul>
-    </div>
-  );
-}
-
-function ResultRow({ title, subtitle, to }) {
-  const { t } = useTheme();
-  return (
-    <li>
-      <Link
-        to={to}
-        className={`flex min-h-11 w-full items-center gap-3 px-4 py-3 text-left transition ${t.hover}`}
-      >
-        <span className="min-w-0 flex-1">
-          <span className={`block truncate text-sm font-medium ${t.text}`}>{title}</span>
-          {subtitle && <span className={`block truncate text-xs ${t.muted}`}>{subtitle}</span>}
-        </span>
-      </Link>
-    </li>
   );
 }
 

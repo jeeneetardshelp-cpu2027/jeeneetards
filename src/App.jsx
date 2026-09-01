@@ -26,6 +26,9 @@ import { Analytics } from "@vercel/analytics/react";
 // page-load performance (Core Web Vitals) instead of page views.
 import { SpeedInsights } from "@vercel/speed-insights/react";
 
+// RouteFallback below renders a <main> while a lazy route chunk loads, so the
+// skip link still has its landmark to reach mid-navigation.
+import { MAIN_CONTENT_ID } from "./AppShell.jsx";
 import { ThemeProvider } from "./theme.jsx";
 import Home from "./Home.jsx";
 import Footer from "./Footer.jsx";
@@ -56,6 +59,7 @@ const TestsPage = lazy(() => import("./TestsPage.jsx"));
 const ExamTestsPage = lazy(() => import("./ExamTestsPage.jsx"));
 const StudyMaterialsPage = lazy(() => import("./StudyMaterialsPage.jsx"));
 const JeeMainPapersPage = lazy(() => import("./JeeMainPapersPage.jsx"));
+const PaperYearPage = lazy(() => import("./PaperYearPage.jsx"));
 const ForumFeatureUnavailable = lazy(() => import("./forum/ForumFeatureUnavailable.jsx"));
 const ForumFeedPage = lazy(() => import("./forum/ForumFeedPage.jsx"));
 const ForumPostPage = lazy(() => import("./forum/ForumPostPage.jsx"));
@@ -69,6 +73,7 @@ const PollSubmitPage = lazy(() => import("./polls/PollSubmitPage.jsx"));
 function RouteFallback() {
   return (
     <main
+      id={MAIN_CONTENT_ID}
       role="status"
       aria-label="Loading page"
       className="min-h-[60vh] bg-canvas px-4 py-10 sm:px-6"
@@ -313,6 +318,16 @@ function JeeMainPapersRoute() {
   );
 }
 
+function PaperYearRoute() {
+  if (RELEASE_CAPABILITIES.studyMaterials) return <PaperYearPage />;
+  return (
+    <FeatureUnavailable
+      title="Previous-year papers are coming soon"
+      detail="Official previous-year papers are being checked before they are published."
+    />
+  );
+}
+
 function ForumFeedRoute() {
   return RELEASE_FEATURES.forum
     ? <ForumFeedPage />
@@ -402,6 +417,13 @@ export default function App() {
           <Route
             path="/materials/jee-main/previous-year-papers"
             element={<JeeMainPapersRoute />}
+          />
+          {/* One page per exam year. The year is validated against the paper
+              landing registry, and the page renders NotFound for a year the
+              catalogue has nothing in — the edge gives that URL a real 404. */}
+          <Route
+            path="/materials/jee-main/previous-year-papers/:year"
+            element={<PaperYearRoute />}
           />
           {/* The forum is deliberately routeable before release so its edge
               contract and review builds cannot silently 404. The feature flag

@@ -9,7 +9,7 @@ import { Link, useSearchParams } from "react-router";
 import {
   ArrowRight, BadgeCheck, BookOpen, Search, SlidersHorizontal, X,
 } from "lucide-react";
-import { GlobalHeader, Container } from "./AppShell.jsx";
+import { GlobalHeader, Container, MAIN_CONTENT_ID } from "./AppShell.jsx";
 import {
   useFacultyDirectoryOptions,
   useFacultyFacets,
@@ -182,7 +182,7 @@ export default function FacultyDirectory() {
     <div className="min-h-screen bg-canvas text-ink">
       <GlobalHeader crumbs={[{ label: "Faculty" }]} />
 
-      <main id="main-content" className="pb-20 pt-10 sm:pt-14">
+      <main id={MAIN_CONTENT_ID} className="pb-20 pt-10 sm:pt-14">
         <Container>
           <div className="max-w-3xl">
             <Pill tone="accent">Reviewed faculty registry</Pill>

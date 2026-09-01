@@ -20,12 +20,18 @@ import { getFacultyGuide } from "./src/facultyGuides.js";
 import { TEST_SECTIONS, ACCESS, findTestSection } from "./src/testPlatforms.js";
 import { buildCourseMetadata } from "./src/courseMetadata.js";
 import {
+  paperYearSchemas,
   studyMaterialLandingSchemas,
   studyMaterialsPageSchemas,
 } from "./src/studyMaterialsStructuredData.js";
 import {
   JEE_MAIN_PAPERS_META,
   JEE_MAIN_PAPERS_PATH,
+  findPaperLanding,
+  paperYearMeta,
+  paperYearPath,
+  paperYears,
+  parsePaperYearPath,
   splitJeeMainPapers,
 } from "./src/studyMaterialLandings.js";
 import { testPageSchemas } from "./src/testPageStructuredData.js";
@@ -120,6 +126,15 @@ export function injectRouteMeta(html, meta) {
   const d = escapeHtml(meta.description);
   const u = escapeHtml(`${SITE}${meta.canonicalPath || "/"}`);
   const r = escapeHtml(meta.robots || "index, follow");
+  // pageMetadata declares a type per route — "article" for a forum post or a
+  // single poll, "website" for everything else — and the CLIENT sets it. The
+  // edge did not, so a shared poll or forum link unfurled as og:type "website"
+  // while the same page said "article" once React took over: two sources of
+  // truth disagreeing about the same URL, and the crawler only ever sees the
+  // edge's answer. injectCourseMeta has always set this; the omission here was
+  // the reason /course got it right and every other article route did not.
+  // Defaults to "website", so no existing caller changes behaviour.
+  const ty = escapeHtml(meta.type || "website");
   const out = html
     .replace(/<title>[\s\S]*?<\/title>/, () => `<title>${t}</title>`)
     .replace(/(<meta name="description" content=")[^"]*(")/, (m, a, z) => `${a}${d}${z}`)
@@ -127,6 +142,7 @@ export function injectRouteMeta(html, meta) {
     .replace(/(<meta property="og:title" content=")[^"]*(")/, (m, a, z) => `${a}${t}${z}`)
     .replace(/(<meta property="og:description" content=")[^"]*(")/, (m, a, z) => `${a}${d}${z}`)
     .replace(/(<meta property="og:url" content=")[^"]*(")/, (m, a, z) => `${a}${u}${z}`)
+    .replace(/(<meta property="og:type" content=")[^"]*(")/, (m, a, z) => `${a}${ty}${z}`)
     .replace(/(<meta name="twitter:title" content=")[^"]*(")/, (m, a, z) => `${a}${t}${z}`)
     .replace(/(<meta name="twitter:description" content=")[^"]*(")/, (m, a, z) => `${a}${d}${z}`);
   const canonicalTag = `<link rel="canonical" href="${u}" />`;
@@ -143,14 +159,15 @@ export function landingSchemas(pathname, materials = []) {
       { key: "Organization", schema: organizationSchema() },
     ];
   }
+  const paperLanding = findPaperLanding(pathname);
+  const paperYear = parsePaperYearPath(pathname);
   const schemas = pathname === "/materials"
     ? studyMaterialsPageSchemas(materials)
-    : pathname === JEE_MAIN_PAPERS_PATH
-      ? studyMaterialLandingSchemas(materials, {
-          label: "JEE Main previous year papers",
-          path: JEE_MAIN_PAPERS_PATH,
-        })
-      : testPageSchemas(pathname);
+    : paperLanding
+      ? studyMaterialLandingSchemas(materials, paperLanding)
+      : paperYear
+        ? paperYearSchemas(materials, paperYear)
+        : testPageSchemas(pathname);
   return schemas.map((schema) => ({
     key: schema["@type"],
     schema,
@@ -162,11 +179,15 @@ export function landingSchemas(pathname, materials = []) {
  * request. The RPC already limits this input to approved, published records;
  * this layer additionally refuses non-HTTPS destinations before rendering.
  */
-export function renderStudyMaterialsBody(meta, materials = []) {
-  const safeMaterials = materials
-    .filter((material) => material?.title &&
-      /^https:\/\//i.test(material.sourceUrl ?? material.source_url ?? ""));
-  const renderItems = (collection) => collection
+const STUDY_RESOURCE_NAV =
+  '<nav aria-label="Study resources"><a href="/materials">All study material</a> ' +
+  '<a href="/explore">Find a course</a> ' +
+  '<a href="/tests">Mock tests</a> ' +
+  '<a href="/methodology">How resources are curated</a></nav>';
+
+/** One <li> per reviewed material, linking the recorded source. */
+function renderMaterialItems(collection) {
+  return collection
     .map((material) => {
       const url = material.sourceUrl ?? material.source_url;
       const source = material.sourceName ?? material.source_name;
@@ -178,11 +199,29 @@ export function renderStudyMaterialsBody(meta, materials = []) {
         `${source ? ` — ${escapeHtml(source)}.` : ""}${description}</li>`;
     })
     .join("");
+}
+
+/** Only approved records with an https source are ever rendered. */
+const publicMaterials = (materials) => materials
+  .filter((material) => material?.title &&
+    /^https:\/\//i.test(material.sourceUrl ?? material.source_url ?? ""));
+
+const paperYearOf = (material) => {
+  const year = Number(material?.examYear ?? material?.exam_year);
+  return Number.isFinite(year) ? year : null;
+};
+
+export function renderStudyMaterialsBody(meta, materials = []) {
+  const safeMaterials = publicMaterials(materials);
+  const landing = findPaperLanding(meta.canonicalPath);
+  // Group a paper collection by year, with each year's heading linking to that
+  // year's own page — the landing's job is to send a crawler INTO its children,
+  // not to be the only page on the site that ranks.
   const renderYearGroups = (collection) => {
     const byYear = new Map();
     for (const material of collection) {
-      const year = Number(material.examYear ?? material.exam_year);
-      const label = Number.isFinite(year) ? String(year) : "Year not listed";
+      const year = paperYearOf(material);
+      const label = year == null ? "Year not listed" : String(year);
       if (!byYear.has(label)) byYear.set(label, []);
       byYear.get(label).push(material);
     }
@@ -192,50 +231,104 @@ export function renderStudyMaterialsBody(meta, materials = []) {
         if (yearB === "Year not listed") return -1;
         return Number(yearB) - Number(yearA);
       })
-      .map(([year, collectionForYear]) => (
-        `<section><h3>${escapeHtml(year)}</h3><ul>${renderItems(collectionForYear)}</ul></section>`
-      ))
+      .map(([year, collectionForYear]) => {
+        const heading = year === "Year not listed" || !landing
+          ? escapeHtml(year)
+          : `<a href="${escapeHtml(paperYearPath(landing, year))}">${escapeHtml(year)}</a>`;
+        return `<section><h3>${heading}</h3>` +
+          `<ul>${renderMaterialItems(collectionForYear)}</ul></section>`;
+      })
       .join("");
   };
 
   if (!safeMaterials.length) return renderLandingBody(meta.canonicalPath || "/materials", meta);
-  const jeeMain = meta.canonicalPath === JEE_MAIN_PAPERS_PATH;
+  if (!landing) {
+    return [
+      "<main>",
+      '<nav aria-label="Breadcrumb"><a href="/">Home</a> - <span>Study material</span></nav>',
+      `<h1>${escapeHtml("Find study material by your syllabus.")}</h1>`,
+      `<p>${escapeHtml(meta.description)}</p>`,
+      "<h2>Reviewed resources</h2>",
+      `<ul>${renderMaterialItems(safeMaterials)}</ul>`,
+      STUDY_RESOURCE_NAV,
+      "</main>",
+    ].join("");
+  }
+
+  const exam = landing.examLabel;
   const groups = splitJeeMainPapers(safeMaterials);
-  const items = renderItems(safeMaterials);
-  const questionOnlyItems = jeeMain
-    ? renderYearGroups(groups.questionOnly)
-    : renderItems(groups.questionOnly);
-  const answerKeyItems = jeeMain
-    ? renderYearGroups(groups.answerKeys)
-    : renderItems(groups.answerKeys);
-  const solutionItems = jeeMain
-    ? renderYearGroups(groups.withSolutions)
-    : renderItems(groups.withSolutions);
+  const years = paperYears(safeMaterials);
+  const yearLinks = years
+    .map((year) => `<a href="${escapeHtml(paperYearPath(landing, year))}">` +
+      `${escapeHtml(`${exam} ${year}`)}</a>`)
+    .join(" ");
+  const answerKeyItems = renderYearGroups(groups.answerKeys);
+  const solutionItems = renderYearGroups(groups.withSolutions);
   return [
     "<main>",
-    jeeMain
-      ? '<nav aria-label="Breadcrumb"><a href="/">Home</a> - <a href="/materials">Study material</a> - <span>JEE Main papers</span></nav>'
-      : '<nav aria-label="Breadcrumb"><a href="/">Home</a> - <span>Study material</span></nav>',
-    `<h1>${escapeHtml(jeeMain ? JEE_MAIN_PAPERS_META.heading : "Find study material by your syllabus.")}</h1>`,
+    '<nav aria-label="Breadcrumb"><a href="/">Home</a> - ' +
+      `<a href="/materials">Study material</a> - <span>${escapeHtml(landing.crumbLabel)}</span></nav>`,
+    `<h1>${escapeHtml(landing.meta.heading)}</h1>`,
     `<p>${escapeHtml(meta.description)}</p>`,
-    jeeMain ? "<h2>JEE Main question papers</h2>" : "<h2>Reviewed resources</h2>",
-    jeeMain ? questionOnlyItems : `<ul>${items}</ul>`,
-    jeeMain ? "<h2>JEE Main official answer keys</h2>" : "",
-    jeeMain && answerKeyItems
-      ? answerKeyItems
-      : jeeMain
-        ? "<p>No official final answer keys are listed yet. Provisional keys are excluded.</p>"
-        : "",
-    jeeMain ? "<h2>JEE Main papers with solutions</h2>" : "",
-    jeeMain && solutionItems
-      ? solutionItems
-      : jeeMain
-        ? "<p>No reviewed papers with worked solutions are listed yet. Official answer keys are not labelled as worked solutions.</p>"
-        : "",
-    '<nav aria-label="Study resources"><a href="/materials">All study material</a> ' +
-      '<a href="/explore">Find a course</a> ' +
-      '<a href="/tests">Mock tests</a> ' +
-      '<a href="/methodology">How resources are curated</a></nav>',
+    yearLinks
+      ? `<nav aria-label="${escapeHtml(`${exam} papers by year`)}">${yearLinks}</nav>`
+      : "",
+    `<h2>${escapeHtml(`${exam} question papers`)}</h2>`,
+    renderYearGroups(groups.questionOnly),
+    `<h2>${escapeHtml(`${exam} official answer keys`)}</h2>`,
+    answerKeyItems ||
+      "<p>No official final answer keys are listed yet. Provisional keys are excluded.</p>",
+    `<h2>${escapeHtml(`${exam} papers with solutions`)}</h2>`,
+    solutionItems ||
+      "<p>No reviewed papers with worked solutions are listed yet. Official answer keys are not labelled as worked solutions.</p>",
+    STUDY_RESOURCE_NAV,
+    "</main>",
+  ].join("");
+}
+
+/**
+ * Crawler-readable body for ONE exam year, e.g. JEE Main 2024.
+ *
+ * The leaf of the paper tier: every reviewed paper for that year, grouped by
+ * what it actually contains, with the recorded source link. The PDF is the
+ * resource at this level, so this is where those outbound links belong.
+ */
+export function renderPaperYearBody(meta, { landing, year }, materials = []) {
+  const safeMaterials = publicMaterials(materials);
+  const groups = splitJeeMainPapers(safeMaterials);
+  const exam = landing.examLabel;
+  const section = (heading, collection, empty) => [
+    `<h2>${escapeHtml(heading)}</h2>`,
+    collection.length ? `<ul>${renderMaterialItems(collection)}</ul>` : `<p>${escapeHtml(empty)}</p>`,
+  ].join("");
+
+  return [
+    "<main>",
+    '<nav aria-label="Breadcrumb"><a href="/">Home</a> - ' +
+      '<a href="/materials">Study material</a> - ' +
+      `<a href="${escapeHtml(landing.path)}">${escapeHtml(landing.crumbLabel)}</a> - ` +
+      `<span>${escapeHtml(String(year))}</span></nav>`,
+    `<h1>${escapeHtml(paperYearMeta(landing, year).heading)}</h1>`,
+    `<p>${escapeHtml(meta.description)}</p>`,
+    section(
+      `${exam} ${year} question papers`,
+      groups.questionOnly,
+      `No question-only ${exam} ${year} paper is listed yet.`,
+    ),
+    section(
+      `${exam} ${year} official answer keys`,
+      groups.answerKeys,
+      `No official final answer key is listed for ${exam} ${year}. Provisional keys are excluded.`,
+    ),
+    section(
+      `${exam} ${year} papers with solutions`,
+      groups.withSolutions,
+      "No reviewed paper with worked solutions is listed for this year. Official answer keys are not labelled as worked solutions.",
+    ),
+    `<nav aria-label="${escapeHtml(`All ${exam} papers`)}">` +
+      `<a href="${escapeHtml(landing.path)}">${escapeHtml(`All ${exam} papers by year`)}</a> ` +
+      '<a href="/materials">All study material</a> ' +
+      '<a href="/tests">Mock tests</a></nav>',
     "</main>",
   ].join("");
 }

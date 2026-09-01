@@ -40,12 +40,16 @@ vi.mock("./useExplore.js", () => ({
   useGoalCatalog: () => catalog.state,
 }));
 
-vi.mock("./useScopedSearch.js", () => ({
-  useScopedSearch: () => ({
-    results: { chapters: [], lectures: [] },
-    loading: false,
-    total: 0,
+// Explore's search box is the shared <UniversalSearch/> now, so this stubs
+// universal search rather than the deleted useScopedSearch. These tests never
+// type into it; the stub only keeps the module graph off the network.
+vi.mock("./useUniversalSearch.js", () => ({
+  useUniversalSearch: () => ({
+    groups: {}, loading: false, error: null, tooShort: false,
+    retry: () => {}, page: 0, setPage: () => {},
   }),
+  GROUPS: [{ key: "chapter", label: "Chapters" }],
+  MIN_QUERY: 2,
 }));
 
 import Explore from "./Explore.jsx";

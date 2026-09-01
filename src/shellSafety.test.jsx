@@ -17,8 +17,18 @@ import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
 
 vi.mock("./useUniversalSearch.js", () => ({
+  GROUPS: [
+    { key: "faculty", label: "Faculty" },
+    { key: "chapter", label: "Chapters" },
+    { key: "playlist", label: "Playlists" },
+    { key: "lecture", label: "Lectures" },
+    { key: "institute", label: "Institutes" },
+    { key: "material", label: "Notes & sheets" },
+    { key: "paper", label: "Previous-year papers" },
+  ],
   useUniversalSearch: () => ({
     groups: {}, loading: false, error: null, tooShort: false, retry: () => {},
+    page: 0, setPage: () => {},
   }),
   MIN_QUERY: 3,
 }));

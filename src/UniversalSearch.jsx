@@ -1,4 +1,4 @@
-// UniversalSearch.jsx — one search box for the whole library.
+// UniversalSearch.jsx — THE search result renderer. There is no other one.
 //
 // Results are grouped: Faculty · Chapters · Playlists · Lectures · Institutes ·
 // Notes & sheets · Previous-year papers — the whole library, not only the videos.
@@ -10,6 +10,24 @@
 //   Also known as: ABJ Sir
 //   Competishun · Physics · JEE
 //
+// ONE SEARCH SURFACE (architecture rule 2). Until 2026-09-01 three different
+// components drew search results — this one, a private SearchResults inside
+// Home.jsx, and a ScopedResults inside Explore.jsx that ran raw ilike queries
+// with no typo tolerance and no Devanagari bridge, so "projctile motin" worked
+// on the homepage and silently failed mid-journey. They are gone. This file is
+// the only renderer, and it runs in two modes:
+//
+//   • STANDALONE (/search, via SearchPage.jsx). It owns its input, mirrors the
+//     query and the chosen type in the URL so a search is shareable, and is a
+//     combobox driving a listbox with arrow-key navigation.
+//   • EMBEDDED (`query` prop supplied — Home's hero, Explore's header box).
+//     The CALLER owns the text field, so this renders results only. Rows become
+//     ordinary links (right-click, open-in-new-tab, crawlable) instead of
+//     listbox options, because without an input there is no combobox to own
+//     them. The type filter lives in component state rather than the URL:
+//     deep-linking a search is /search's job, and rewriting `/` or an
+//     /explore/… path as the student types would poison the Back button.
+//
 // Two rules dominate the interaction design:
 //
 //   * NEVER AUTO-SELECT AN AMBIGUOUS IDENTITY (requirement 2). When two real
@@ -20,7 +38,7 @@
 //     client-side re-ranking (requirement 4/5).
 
 import { useState, useRef, useEffect, useMemo, useCallback } from "react";
-import { useSearchParams, useNavigate } from "react-router";
+import { useSearchParams, useNavigate, Link } from "react-router";
 import { Search, X, Loader2, AlertTriangle, Users } from "lucide-react";
 import { useUniversalSearch, GROUPS, MIN_QUERY } from "./useUniversalSearch.js";
 import { resultHref } from "./searchDestinations.js";
@@ -69,34 +87,27 @@ function Highlight({ text, query }) {
 }
 
 // ---------------------------------------------------------------- one result
-function Row({ item, group, query, active, onPick, id }) {
+function Row({ item, group, query, active, onPick, id, asLink }) {
   const { t, dark } = useTheme();
-  return (
-    <li>
-      <button
-        id={id}
-        role="option"
-        aria-selected={active}
-        onClick={() => onPick(item, group)}
-        className={`flex min-h-11 w-full items-center gap-3 px-4 py-2.5 text-left ${
-          active ? t.input : t.hover
-        }`}
-      >
-        {group === "lecture" && (
-          <YouTubeThumbnail
-            videoId={item.extra?.youtube_video_id}
-            quality="mqdefault"
-            className="aspect-video w-20 shrink-0 rounded-md border border-hairline sm:w-24"
-          />
-        )}
-        {group === "institute" && (
-          <ChannelAvatar
-            url={item.extra?.logo_url}
-            name={item.title}
-            className="h-10 w-10 sm:h-11 sm:w-11"
-          />
-        )}
-        <span className="min-w-0 flex-1">
+  // Identical content in both modes — only the element that carries it
+  // differs, so a result reads the same wherever it was typed.
+  const content = (
+    <>
+      {group === "lecture" && (
+        <YouTubeThumbnail
+          videoId={item.extra?.youtube_video_id}
+          quality="mqdefault"
+          className="aspect-video w-20 shrink-0 rounded-md border border-hairline sm:w-24"
+        />
+      )}
+      {group === "institute" && (
+        <ChannelAvatar
+          url={item.extra?.logo_url}
+          name={item.title}
+          className="h-10 w-10 sm:h-11 sm:w-11"
+        />
+      )}
+      <span className="min-w-0 flex-1">
         <span className="flex w-full items-center gap-2">
           <span className={`truncate text-sm font-medium ${t.text}`}>
             <Highlight text={item.title} query={query} />
@@ -121,35 +132,75 @@ function Row({ item, group, query, active, onPick, id }) {
         {item.subtitle && (
           <span className={`truncate text-xs ${t.muted}`}>{item.subtitle}</span>
         )}
-        </span>
-      </button>
+      </span>
+    </>
+  );
+
+  const shape = `flex min-h-11 w-full items-center gap-3 px-4 py-2.5 text-left ${
+    active ? t.input : t.hover
+  }`;
+
+  // searchDestinations.js decides where this lands — in BOTH modes, from the
+  // same call. That is the whole point of the module: a lecture row opens the
+  // lesson from the homepage, from Explore and from /search alike.
+  return (
+    <li>
+      {asLink ? (
+        <Link to={resultHref(group, item)} className={shape}>{content}</Link>
+      ) : (
+        <button
+          id={id}
+          role="option"
+          aria-selected={active}
+          onClick={() => onPick(item, group)}
+          className={shape}
+        >
+          {content}
+        </button>
+      )}
     </li>
   );
 }
 
 // ---------------------------------------------------------------- page
-export default function UniversalSearch() {
+/**
+ * @param {string} [query]  Supplied by the caller in EMBEDDED mode (Home's
+ *                          hero, Explore's header box). Omit it on /search,
+ *                          where this component owns the input.
+ * @param {node}   [footer] Rendered under the results — the caller's escape
+ *                          hatch, e.g. "Open the full search page".
+ */
+export default function UniversalSearch({ query: controlledQuery, footer = null }) {
+  const embedded = controlledQuery !== undefined;
   const navigate = useNavigate();
   const { t, dark } = useTheme();
   const [params, setParams] = useSearchParams();
 
-  // Requirement 9: the query and the selected entity type live in the URL, so
-  // a search is shareable, survives a refresh, and Back works.
+  // Requirement 9: on /search the query and the selected entity type live in
+  // the URL, so a search is shareable, survives a refresh, and Back works.
   const urlQuery = params.get("q") ?? "";
   const urlType = params.get("type");
-  const type = GROUPS.some((g) => g.key === urlType) ? urlType : null;
+  const [localType, setLocalType] = useState(null);
+  const requestedType = embedded ? localType : urlType;
+  const type = GROUPS.some((g) => g.key === requestedType) ? requestedType : null;
 
   // The input is local so typing stays instant; the URL is updated on a
   // trailing edge. Writing every keystroke to history would make the browser
   // Back button walk backwards through the letters of the word.
   const [text, setText] = useState(urlQuery);
-  useEffect(() => { setText(urlQuery); }, [urlQuery]);
+  useEffect(() => { if (!embedded) setText(urlQuery); }, [embedded, urlQuery]);
 
-  const { groups, loading, error, tooShort, retry, page, setPage } = useUniversalSearch(text, {
+  // ONE query value, whoever owns the box.
+  const term = embedded ? controlledQuery : text;
+
+  const { groups, loading, error, tooShort, retry, page, setPage } = useUniversalSearch(term, {
     type, limit: type ? 20 : 5,       // one group open -> show more of it
   });
 
   useEffect(() => {
+    // Embedded, the caller's page owns its own address. Writing ?q= onto `/`
+    // or onto an /explore/… path would rewrite history under the student.
+    if (embedded) return undefined;
     const id = setTimeout(() => {
       setParams((prev) => {
         const next = new URLSearchParams(prev);
@@ -158,14 +209,16 @@ export default function UniversalSearch() {
       }, { replace: true });
     }, 400);
     return () => clearTimeout(id);
-  }, [text, setParams]);
+  }, [embedded, text, setParams]);
 
-  const setType = (key) =>
+  const setType = (key) => {
+    if (embedded) { setLocalType(key); return; }
     setParams((prev) => {
       const next = new URLSearchParams(prev);
       if (key) next.set("type", key); else next.delete("type");
       return next;
     });
+  };
 
   // ---- flatten for keyboard navigation ----
   // Arrow keys move through results as ONE list even though they are drawn in
@@ -184,11 +237,11 @@ export default function UniversalSearch() {
   // -1, not 0: nothing is preselected. Pressing Enter after typing must not
   // open whichever result happened to sort first — that is auto-selecting an
   // identity the student never chose (requirement 2).
-  useEffect(() => { setCursor(-1); }, [text, type]);
+  useEffect(() => { setCursor(-1); }, [term, type]);
 
   const listRef = useRef(null);
 
-  // Destinations are shared with the homepage search (searchDestinations.js).
+  // Destinations are shared with every other search box (searchDestinations.js).
   // This used to be a second copy that had drifted: lecture rows here went to
   // a filtered catalogue instead of the lesson.
   const pick = useCallback((item, group) => {
@@ -234,41 +287,47 @@ export default function UniversalSearch() {
   let index = -1;   // running index across groups, matches `flat`
 
   return (
-    <div className="mx-auto w-full max-w-2xl">
-      {/* ---- input ---- */}
-      <div className="relative">
-        <Search className={`pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 ${t.muted}`} />
-        <input
-          autoFocus
-          type="search"
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          onKeyDown={onKeyDown}
-          placeholder="Search teachers, chapters, courses, notes and papers…"
-          aria-label="Search the library"
-          role="combobox"
-          aria-expanded={hasResults}
-          aria-controls="usr-listbox"
-          aria-activedescendant={activeId}
-          aria-autocomplete="list"
-          className={`min-h-11 w-full rounded-xl border ${t.border} ${t.card} ${t.text} py-2 pl-9 pr-10 text-sm outline-none focus:ring-2 focus:ring-teal-500`}
-        />
-        {/* Clear button: a 44px tap target, not the 32px the icon implies —
-            it sits inside the input, where a mis-tap lands on the text field. */}
-        {text && (
-          <button
-            onClick={() => setText("")}
-            aria-label="Clear search"
-            className={`absolute right-0 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-lg ${t.muted} ${t.hover}`}
-          >
-            <X className="h-4 w-4" />
-          </button>
-        )}
-      </div>
+    <div className={embedded ? "w-full" : "mx-auto w-full max-w-2xl"}>
+      {/* ---- input (standalone only; embedded, the caller owns the box) ---- */}
+      {!embedded && (
+        <div className="relative">
+          <Search className={`pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 ${t.muted}`} />
+          <input
+            autoFocus
+            // The shell's "/" and Ctrl/Cmd-K shortcut finds a page's search box
+            // by this attribute rather than by guessing at selectors. See
+            // AppShell.jsx.
+            data-search-input="library"
+            type="search"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            onKeyDown={onKeyDown}
+            placeholder="Search teachers, chapters, courses, notes and papers…"
+            aria-label="Search the library"
+            role="combobox"
+            aria-expanded={hasResults}
+            aria-controls="usr-listbox"
+            aria-activedescendant={activeId}
+            aria-autocomplete="list"
+            className={`min-h-11 w-full rounded-xl border ${t.border} ${t.card} ${t.text} py-2 pl-9 pr-10 text-sm outline-none focus:ring-2 focus:ring-teal-500`}
+          />
+          {/* Clear button: a 44px tap target, not the 32px the icon implies —
+              it sits inside the input, where a mis-tap lands on the text field. */}
+          {text && (
+            <button
+              onClick={() => setText("")}
+              aria-label="Clear search"
+              className={`absolute right-0 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-lg ${t.muted} ${t.hover}`}
+            >
+              <X className="h-4 w-4" />
+            </button>
+          )}
+        </div>
+      )}
 
-      {/* ---- type filter, mirrored in the URL ---- */}
+      {/* ---- type filter (mirrored in the URL on /search) ---- */}
       {(hasResults || type) && (
-        <div className="mt-3 flex flex-wrap gap-2">
+        <div className={`flex flex-wrap gap-2 ${embedded ? "" : "mt-3"}`}>
           <button
             onClick={() => setType(null)}
             className={`min-h-11 rounded-full border px-3 text-xs ${
@@ -320,10 +379,10 @@ export default function UniversalSearch() {
           <div className={`flex items-center justify-center gap-2 py-8 text-sm ${t.muted}`}>
             <Loader2 className="h-4 w-4 animate-spin" /> Searching…
           </div>
-        ) : text.trim().length >= MIN_QUERY && !hasResults ? (
+        ) : (term ?? "").trim().length >= MIN_QUERY && !hasResults ? (
           <div className={`rounded-xl border border-dashed ${t.border} ${t.card} p-8 text-center`}>
             <p className={`text-sm font-medium ${t.text}`}>
-              Nothing matches “{text.trim()}”.
+              Nothing matches “{(term ?? "").trim()}”.
             </p>
             <p className={`mt-1 text-sm ${t.muted}`}>
               Try a teacher’s name, a chapter, an institute, or an exam year.
@@ -332,9 +391,9 @@ export default function UniversalSearch() {
         ) : hasResults ? (
           <div
             ref={listRef}
-            id="usr-listbox"
-            role="listbox"
-            aria-label="Search results"
+            id={embedded ? undefined : "usr-listbox"}
+            role={embedded ? undefined : "listbox"}
+            aria-label={embedded ? undefined : "Search results"}
             aria-busy={loading}
             className={`overflow-hidden rounded-xl border ${t.border} ${t.card}`}
           >
@@ -366,9 +425,10 @@ export default function UniversalSearch() {
                           id={`usr-opt-${index}`}
                           item={item}
                           group={g.key}
-                          query={text}
-                          active={cursor === index}
+                          query={term}
+                          active={!embedded && cursor === index}
                           onPick={pick}
+                          asLink={embedded}
                         />
                       );
                     })}
@@ -408,6 +468,8 @@ export default function UniversalSearch() {
           </div>
         ) : null}
       </div>
+
+      {footer ? <div className="mt-3">{footer}</div> : null}
     </div>
   );
 }

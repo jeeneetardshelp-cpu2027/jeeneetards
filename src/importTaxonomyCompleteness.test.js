@@ -2,7 +2,7 @@
 // and a class level.
 //
 // Why this test exists: on 2026-08-03 a live check found 670 of 3,088 lessons
-// (21.7%) had no row in video_learning_goals. src/useScopedSearch.js joins that
+// (21.7%) had no row in video_learning_goals. The goal-scoped lecture query
 // junction with `!inner`, so those lessons could never appear in a goal-scoped
 // search -- including one titled "The Living World Class 11 Biology NEET
 // Concepts (L 1)", invisible to a student searching NEET Biology. The cause was
@@ -84,7 +84,12 @@ describe("every lesson import files its lessons under a goal and a class level",
 
 describe("goal-scoped search is the reason this matters", () => {
   it("still uses an inner join on video_learning_goals", () => {
-    const src = readFileSync("src/useScopedSearch.js", "utf8");
+    // This guard used to read src/useScopedSearch.js. That file was deleted
+    // when the four search surfaces were collapsed into one, but the join it
+    // documented did not go away -- it lives in the goal-scoped lecture query
+    // in useBrowse.js. The invariant is unchanged, so the guard follows it
+    // rather than being dropped along with the file that used to hold it.
+    const src = readFileSync("src/useBrowse.js", "utf8");
     // If this ever becomes a left join, a missing junction row stops hiding
     // lessons and the urgency of the test above drops -- but until then, an
     // unfiled lesson is an invisible lesson.

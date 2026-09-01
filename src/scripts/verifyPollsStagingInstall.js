@@ -19,6 +19,9 @@
 import { createClient } from "@supabase/supabase-js";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
+// The REAL edge matcher, not a copy of its regex, so this cannot drift from
+// what middleware.js actually serves.
+import { isSupportedAppPath } from "../../middleware.js";
 import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
@@ -128,7 +131,7 @@ function writeEvidence() {
 let lastMode = "unknown";
 
 async function check() {
-  // 1. Every table exists and is empty. A fresh install has no content at all.
+  // 1. Every table exists, and the seeded ones are populated.
   for (const table of pollTables) {
     const { error, count } = await tableCount(admin, table);
     if (error) { record(`installed: ${table}`, false, error.message); continue; }
@@ -204,6 +207,22 @@ async function check() {
   }
 
   // 6. An admin-only RPC must refuse the anon key.
+  // Every poll the feed advertises must be reachable at its own URL. The edge
+  // only serves a slug shaped the way poll_submit builds it (words + "-" + id),
+  // so a poll seeded by hand with a tidier slug is listed and then 404s when
+  // clicked. That shipped to production once; staging is where hand-seeding
+  // happens most, so the check belongs here too.
+  const listed = await browser.rpc("get_polls_feed", {
+    p_sort: "new", p_topic_slug: null, p_limit: 50, p_offset: 0,
+  });
+  const badSlugs = (listed.data ?? [])
+    .map((r) => r.slug)
+    .filter((slug) => !isSupportedAppPath(`/polls/${slug}`));
+  record("every listed poll is reachable at its own URL", badSlugs.length === 0,
+    badSlugs.length
+      ? `${badSlugs.length} would 404 at the edge: ${badSlugs.join(", ")}`
+      : `${(listed.data ?? []).length} checked against the real middleware matcher`);
+
   const forbidden = await browser.rpc("poll_admin_list_pending", { p_limit: 1 });
   const refused = Boolean(forbidden.error)
     || (Array.isArray(forbidden.data) && forbidden.data.length === 0);

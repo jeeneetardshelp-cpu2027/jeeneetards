@@ -8,10 +8,14 @@
 //
 // Only filters in filterSchema.AVAILABLE are rendered. Deferred ones are
 // absent, not disabled — see filterSchema.js for why.
+//
+// One filter is rendered differently rather than differently defined:
+// LANGUAGE leads the panel as a chip row instead of a checkbox group. Same
+// schema entry, same URL parameter, same applyFilterChange — see LanguageChips.
 
 import { useState, useMemo } from "react";
 import { ChevronDown, Search } from "lucide-react";
-import { AVAILABLE } from "./filterSchema.js";
+import { AVAILABLE, filterByKey } from "./filterSchema.js";
 import { applyFilterChange } from "./filterChips.js";
 import { STAGES_BY_EXAM, SUBJECT_SLUGS_BY_GOAL } from "./filterModel.js";
 import { classSlugToStage } from "./canonicalUrl.js";
@@ -132,6 +136,70 @@ function OptionList({ filter, options, selected, onToggle, counts }) {
 }
 
 /**
+ * LANGUAGE, PROMOTED OUT OF THE CHECKBOX LIST.
+ *
+ * The catalogue genuinely is multilingual — `playlists.language` is hindi,
+ * english or hinglish — but as one more collapsible group below Exam, Class,
+ * Subject, Chapter and Channel, that fact was invisible. A Hindi-medium
+ * student had to already suspect the filter existed in order to find it, and
+ * Hindi-medium students are most of the NEET cohort outside the metros.
+ *
+ * So language leads the panel as a row of chips: no disclosure to open, no
+ * checkbox to aim at, one 44px tap. It writes through the SAME
+ * applyFilterChange as every other enum filter, so the URL, the removable
+ * chips above the results and the catalogue query are all unchanged — this is
+ * a change of prominence, not a second filter model.
+ *
+ * The honest-filters rule still holds: a language this view has no courses in
+ * is not offered at all (see optionsFor).
+ */
+function LanguageChips({ filter, variant, options, selected, onToggle, counts }) {
+  const { t } = useTheme();
+  if (options.length === 0) return null;
+  // Both variants are mounted at once on /browse (desktop column + mobile
+  // sheet), so the heading id must be per-variant or the two collide.
+  const headingId = `filter-language-${variant}`;
+  return (
+    <section className={`border-b ${t.border} py-3 last:border-b-0`} aria-labelledby={headingId}>
+      <h3 id={headingId} className={`px-1 text-sm font-medium ${t.text}`}>{filter.label}</h3>
+      <div className="mt-2 flex flex-wrap gap-2 px-1">
+        {options.map((o) => {
+          const active = selected.includes(String(o.value));
+          const count = optionCount(counts, filter.key, o.value);
+          return (
+            <button
+              key={o.value}
+              type="button"
+              onClick={() => onToggle(filter, o.value)}
+              aria-pressed={active}
+              aria-label={count == null
+                ? undefined
+                : `${o.label}, ${count} course${count === 1 ? "" : "s"}`}
+              className={`inline-flex min-h-11 items-center gap-1.5 rounded-full border px-3 text-sm transition ${
+                active
+                  ? "border-transparent font-medium text-white"
+                  : `${t.border} ${t.card} ${t.faint} ${t.hover}`
+              }`}
+              style={active ? { backgroundColor: BRAND.teal } : undefined}
+            >
+              {o.label}
+              {count != null && (
+                <span
+                  className={`tabular-nums ${active ? "text-white/80" : t.muted}`}
+                  aria-hidden="true"
+                >
+                  {count}
+                </span>
+              )}
+            </button>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+/**
  * @param variant  "sidebar" | "sheet"
  * @param options  { goal: [{value,label}], class: [...], ... } — dimension rows
  *                 already loaded by the caller. Enum filters supply their own.
@@ -190,6 +258,19 @@ export default function FilterPanel({
         Number(counts.chapter[String(option.value)] ?? 0) > 0
       );
     }
+    // Same honesty as the chapter list, applied to the promoted language row:
+    // once the contextual counts have settled, a language with no courses in
+    // this view is not offered. Chips sit at the top of the panel where they
+    // are read as "what this catalogue has", so a dead-end chip there is a
+    // worse lie than a dead-end checkbox further down. An already-selected
+    // value is preserved so a shared or stale URL can still be cleared.
+    if (filter.key === "language" && counts?.language && !countsLoading) {
+      const chosen = selectedFor(filter);
+      return raw.filter((option) =>
+        chosen.includes(String(option.value)) ||
+        Number(counts.language[String(option.value)] ?? 0) > 0
+      );
+    }
     if (!goalSlug) return raw;
     if (filter.key === "class") {
       const allowed = STAGES_BY_EXAM[goalSlug] ?? [];
@@ -206,6 +287,9 @@ export default function FilterPanel({
   // chosen yet (chapter without a subject) is HIDDEN rather than shown empty:
   // an empty list invites the student to conclude there are no chapters.
   const visible = AVAILABLE.filter((f) => {
+    // Language is still an AVAILABLE filter — it just renders above the groups
+    // as its own chip row, so it must not also appear as a checkbox group.
+    if (f.key === "language") return false;
     if (f.dependsOn && !params.get(f.dependsOn)) return false;
     if (f.scopedBy && !params.get(f.scopedBy)) return false;
     if (f.kind === "dimension" && optionsFor(f).length === 0) return false;
@@ -217,6 +301,12 @@ export default function FilterPanel({
       return false;
     return true;
   });
+
+  // Language leads the panel, above the groups. Read through filterByKey
+  // rather than written as a literal, so removing it from AVAILABLE removes
+  // the row too — filterSchema stays the single answer to "which filters exist".
+  const languageFilter = filterByKey("language");
+  const languageOptions = languageFilter ? optionsFor(languageFilter) : [];
 
   if (error) {
     return (
@@ -253,6 +343,16 @@ export default function FilterPanel({
       data-variant={variant}
       aria-busy={countsLoading || undefined}
     >
+      {languageFilter && (
+        <LanguageChips
+          filter={languageFilter}
+          variant={variant}
+          options={languageOptions}
+          selected={selectedFor(languageFilter)}
+          onToggle={toggle}
+          counts={counts}
+        />
+      )}
       {visible.map((f) => {
         const opts = optionsFor(f);
         return (
@@ -271,7 +371,7 @@ export default function FilterPanel({
           </Group>
         );
       })}
-      {visible.length === 0 && (
+      {visible.length === 0 && languageOptions.length === 0 && (
         <p className={`px-2 py-4 text-sm ${t.muted}`}>No filters apply here yet.</p>
       )}
     </div>

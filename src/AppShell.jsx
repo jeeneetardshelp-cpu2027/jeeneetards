@@ -25,8 +25,8 @@
 //   text grid, so "Browse courses" no longer wraps to two lines at 360px.
 //   Its label text is unchanged — the audit matches nav items by textContent.
 
-import { useEffect, useRef, useState } from "react";
-import { Link, useLocation } from "react-router";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router";
 import {
   AtSign, ChevronRight, Flame, LogIn, LogOut, Moon, Search, Sun, X,
 } from "lucide-react";
@@ -58,6 +58,55 @@ const WIDTHS = {
 
 export function Container({ width = "catalogue", className = "", children }) {
   return <div className={`${WIDTHS[width] ?? WIDTHS.catalogue} ${className}`}>{children}</div>;
+}
+
+// ---------------------------------------------------------------------
+//  The global search shortcut
+// ---------------------------------------------------------------------
+//
+// "/" and Ctrl-K / Cmd-K open search from anywhere. Two things make this safe
+// to bind on `window`:
+//
+//   * A keystroke aimed at a text field is never stolen. Typing "and/or" into
+//     the notes panel, a chapter title into the browse filter, or "/" into a
+//     forum reply must reach that field. isTypingTarget() below is the guard,
+//     and it is exported so its behaviour can be tested directly rather than
+//     inferred from a rendered page.
+//   * An event another handler already claimed (defaultPrevented) is left
+//     alone.
+//
+// WHERE IT LANDS. A page that hands the shell a search box (Browse's catalogue
+// filter, Explore's library box) owns the query the student is most likely to
+// want, so the shortcut reveals and focuses THAT box. Otherwise it looks for
+// the page's own search field — Home's hero and /search's own input both mark
+// themselves with `data-search-input` — and failing that navigates to /search,
+// the one search surface.
+const SEARCH_INPUT_SELECTOR = "[data-search-input]";
+
+/**
+ * True when a keystroke belongs to whatever the student is typing in.
+ * Covers <input>, <textarea>, <select> and contenteditable regions, including
+ * a click target nested inside a contenteditable.
+ */
+export function isTypingTarget(target) {
+  const el = target && typeof target === "object" && "tagName" in target ? target : null;
+  if (!el) return false;
+  if (el.isContentEditable) return true;
+  if (typeof el.closest === "function" &&
+      el.closest('[contenteditable]:not([contenteditable="false"])')) return true;
+  const tag = String(el.tagName ?? "").toLowerCase();
+  return tag === "input" || tag === "textarea" || tag === "select";
+}
+
+/** True when this keystroke is a request to open search. */
+export function isSearchShortcut(event) {
+  if (!event || event.defaultPrevented) return false;
+  if (event.key === "/" && !event.ctrlKey && !event.metaKey && !event.altKey) return true;
+  return Boolean(
+    (event.key === "k" || event.key === "K") &&
+    (event.ctrlKey || event.metaKey) &&
+    !event.altKey
+  );
 }
 
 /** True once the page has scrolled past `offset`. Passive, rAF-free. */
@@ -114,8 +163,9 @@ function ProgressLine() {
   );
 }
 
-// The id the skip link targets. Exported so a page that renders its own
-// <main> can carry it explicitly — FacultyDirectory already does.
+// The id the skip link targets. Exported so every page that renders its own
+// <main> can carry it explicitly. Import this constant — never retype the
+// string, or a rename here silently unhooks the skip link on that page.
 export const MAIN_CONTENT_ID = "main-content";
 
 /**
@@ -128,39 +178,24 @@ export const MAIN_CONTENT_ID = "main-content";
  * categories, so that is a real student, not a hypothetical one.
  *
  * WHERE THE TARGET LIVES: the <main> landmark is rendered by each page
- * component (Home, Explore, MinimalUI, TestsPage, …), not by this file, and
- * only AppShell's own <Page> and FacultyDirectory set an id on it. So:
+ * component (Home, Explore, MinimalUI, TestsPage, …), not by this file. Every
+ * one of them now sets id={MAIN_CONTENT_ID} on its own <main>, as does this
+ * file's <Page> frame, so the shell owns nothing it has to mutate. An earlier
+ * version of this component reached into the page on mount and assigned the id
+ * itself; that was always a temporary measure, and it is gone.
  *
- *   • On mount this adopts the page's first UNNAMED <main>, giving it the id.
- *     A <main> that already carries an id is left alone — clobbering it would
- *     break whatever links to it.
- *   • The click handler resolves the target AGAIN at click time (pages that
- *     swap their <main> between a loading and a loaded state would otherwise
- *     lose the id) and moves focus there. This part is not optional: a bare
- *     hash jump scrolls the viewport but leaves focus in the header, so the
- *     next Tab lands back in the nav — the exact problem the link exists to
- *     solve. <main> is not focusable by default, hence tabindex="-1".
- *
- * A follow-up should put id="main-content" on each page's own <main>, at
- * which point the adoption effect quietly becomes a no-op.
+ * The click handler still resolves the target at click time and falls back to
+ * the first <main> on the page, so a page that has not been given the id yet —
+ * or one that swaps its <main> between a loading and a loaded state — still
+ * works. Moving focus is not optional: a bare hash jump scrolls the viewport
+ * but leaves focus in the header, so the next Tab lands back in the nav — the
+ * exact problem the link exists to solve. <main> is not focusable by default,
+ * hence tabindex="-1".
  *
  * The visuals (hidden until focused, then a real 44px control in both themes)
  * live in the .skip-link rule in index.css.
  */
 function SkipLink() {
-  const { pathname } = useLocation();
-
-  useEffect(() => {
-    if (document.getElementById(MAIN_CONTENT_ID)) return undefined;
-    const main = document.querySelector("main");
-    if (!main || main.id) return undefined;
-    main.id = MAIN_CONTENT_ID;
-    return () => {
-      // Only ever unset the id this effect set.
-      if (main.id === MAIN_CONTENT_ID) main.removeAttribute("id");
-    };
-  }, [pathname]);
-
   const skipToContent = (event) => {
     const target =
       document.getElementById(MAIN_CONTENT_ID) ?? document.querySelector("main");
@@ -205,11 +240,63 @@ function BrandMark() {
  */
 export function GlobalHeader({ crumbs = [], search = null, leading = null, width = "catalogue" }) {
   const { pathname } = useLocation();
+  const navigate = useNavigate();
   const { dark, toggle } = useTheme();
   const { session } = useSession();
   const scrolled = useScrolled();
   const [signingOut, setSigningOut] = useState(false);
   const [signOutError, setSignOutError] = useState("");
+  // Below 640px the top row is brand + controls only: a search box there pushed
+  // ~53px past the viewport at 360. It used to be simply hidden, which left
+  // /browse's search reachable on a phone ONLY from inside the Filters bottom
+  // sheet — two taps and a scroll away from a control that is right there on a
+  // laptop. It now folds onto its own full-width line under the top row,
+  // revealed by the magnifier beside the theme toggle. One instance of the
+  // node, moved by CSS (flex-wrap + basis), so there is no duplicate field for
+  // a screen reader to read out twice.
+  const [searchRowOpen, setSearchRowOpen] = useState(false);
+  const searchBoxRef = useRef(null);
+  // A counter rather than a boolean: pressing "/" twice must focus twice, and
+  // a boolean that is already true would not re-run the effect.
+  const [focusRequest, setFocusRequest] = useState(0);
+
+  useEffect(() => {
+    if (!focusRequest) return;
+    // Runs after the row has been revealed, because both state updates land in
+    // the same render — a display:none field cannot take focus.
+    const field = searchBoxRef.current?.querySelector("input, textarea");
+    if (!field) return;
+    field.focus();
+    if (typeof field.select === "function") field.select();
+  }, [focusRequest]);
+
+  const openSearch = useCallback(() => {
+    if (searchBoxRef.current?.querySelector("input, textarea")) {
+      setSearchRowOpen(true);
+      setFocusRequest((n) => n + 1);
+      return;
+    }
+    // No shell search box on this page: Home's hero and /search's own field
+    // announce themselves instead.
+    const onPage = document.querySelector(SEARCH_INPUT_SELECTOR);
+    if (onPage) {
+      onPage.focus();
+      if (typeof onPage.select === "function") onPage.select();
+      return;
+    }
+    navigate("/search");
+  }, [navigate]);
+
+  useEffect(() => {
+    const onKeyDown = (event) => {
+      if (!isSearchShortcut(event)) return;
+      if (isTypingTarget(event.target)) return;   // they are typing, not navigating
+      event.preventDefault();
+      openSearch();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [openSearch]);
   // The streak chip's numbers, read once per mount (the header remounts on
   // every route change, so navigation keeps it current) and re-read after
   // the sign-in pull below or a sign-out wipe.
@@ -304,7 +391,9 @@ export function GlobalHeader({ crumbs = [], search = null, leading = null, width
         style={scrolled ? undefined : { backgroundColor: "color-mix(in oklab, var(--canvas) 72%, transparent)", backdropFilter: "blur(12px)" }}
       >
         <Container width={width}>
-          <div className="flex min-h-14 items-center gap-2 sm:gap-3">
+          {/* flex-wrap so the search field can drop onto its own full-width
+              line on a phone (see searchRowOpen) without a second instance. */}
+          <div className="flex min-h-14 flex-wrap items-center gap-2 sm:flex-nowrap sm:gap-3">
             {leading}
             <Link
               to="/"
@@ -360,10 +449,37 @@ export function GlobalHeader({ crumbs = [], search = null, leading = null, width
               })}
             </nav>
 
-            {/* Below 640px the row is brand + controls; a search box pushed ~53px
-                past the viewport at 360. Hidden here rather than clipped — every
-                screen that passes a search also offers it in the page body. */}
-            <div className="ml-auto hidden min-w-0 flex-1 sm:block sm:max-w-sm">{search}</div>
+            {/* ONE search node. Inline in the top row from 640px up; below that
+                it wraps onto its own full-width line and is shown only once the
+                student opens it (or presses "/" or Ctrl/Cmd-K). */}
+            <div
+              ref={searchBoxRef}
+              className={`order-last w-full basis-full pb-2 sm:order-none sm:ml-auto sm:block sm:w-auto sm:min-w-0 sm:flex-1 sm:basis-auto sm:pb-0 sm:max-w-sm ${
+                searchRowOpen ? "block" : "hidden"
+              }`}
+            >
+              {search}
+            </div>
+
+            {/* The phone's way in to that field. Only offered when this page
+                actually passes one, and only below 640px, where it is hidden. */}
+            {search && (
+              <button
+                type="button"
+                onClick={() => {
+                  if (searchRowOpen) { setSearchRowOpen(false); return; }
+                  setSearchRowOpen(true);
+                  setFocusRequest((n) => n + 1);
+                }}
+                aria-expanded={searchRowOpen}
+                aria-label={searchRowOpen ? "Hide the search box" : "Show the search box"}
+                className="flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-md text-ink-2 transition-colors duration-200 hover:bg-surface-2 hover:text-ink sm:hidden"
+              >
+                {searchRowOpen
+                  ? <X className="h-5 w-5" aria-hidden="true" />
+                  : <Search className="h-5 w-5" aria-hidden="true" />}
+              </button>
+            )}
 
             {/* The library search now lives as one persistent icon on EVERY page,
                 instead of a nav pill that only reached it from a menu. Sits in the
@@ -528,7 +644,7 @@ export function Page({ crumbs, search, width = "catalogue", children }) {
     <div className="min-h-screen bg-canvas text-ink">
       <GlobalHeader crumbs={crumbs} search={search} width={width} />
       {/* The id the header's skip link points at. Pages that render their own
-          <main> instead of using <Page> get it assigned by SkipLink. */}
+          <main> instead of using <Page> set the same id themselves. */}
       <main id={MAIN_CONTENT_ID} className="py-8 sm:py-12">
         <Container width={width}>{children}</Container>
       </main>
@@ -553,6 +669,10 @@ export function HeaderSearch({ value, onChange, placeholder = "Search…", onCle
         className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-3 transition-colors duration-300 group-focus-within/hs:text-accent"
       />
       <input
+        // How the "/" and Ctrl/Cmd-K shortcut finds a search field on pages
+        // that do not hand one to the shell. See "The global search shortcut"
+        // above.
+        data-search-input="header"
         value={value}
         onChange={onChange}
         placeholder={placeholder}

@@ -25,17 +25,17 @@
 
 import { Suspense, lazy, useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router";
-import {
-  ArrowRight, BookOpen, FileCheck2, FileText, Loader2, PlayCircle, Search, Users, X,
-} from "lucide-react";
+import { Search, X } from "lucide-react";
 import { usePlaylistBrowse } from "./usePlaylistBrowse.js";
-import { Container, GlobalHeader } from "./AppShell.jsx";
-// ONE search system. The hero box used to run its own ilike queries against
-// raw columns — no index use, no typo tolerance, no Devanagari bridge, and a
-// separate ranking that disagreed with /search. It now calls the same
-// server-ranked universal_search RPC that /search does.
-import { useUniversalSearch, MIN_QUERY } from "./useUniversalSearch.js";
-import { resultHref } from "./searchDestinations.js";
+import { Container, GlobalHeader, MAIN_CONTENT_ID } from "./AppShell.jsx";
+// ONE search system, and now ONE renderer for it. The hero box used to run its
+// own ilike queries against raw columns — no index use, no typo tolerance, no
+// Devanagari bridge, and a separate ranking that disagreed with /search — and
+// then, once that was fixed, it still drew the RPC's rows through a private
+// SearchResults component of its own. That second UI is gone: the hero keeps
+// its input and hands the query straight to the component /search uses, so the
+// same query behaves identically wherever a student types it.
+import UniversalSearch from "./UniversalSearch.jsx";
 import { getContinueWatching, mergeRemoteEntry } from "./progress.js";
 import { pullServerProgress } from "./progressSync.js";
 import { useSession } from "./useSession.js";
@@ -44,7 +44,6 @@ import { useLearningGoals } from "./useExplore.js";
 import { RELEASE_CAPABILITIES } from "./releaseCapabilities.js";
 import { useStructuredData } from "./PageMetadata.jsx";
 import { organizationSchema, websiteSchema } from "./structuredData.js";
-import { Button, EmptyState, Pill, Skeleton, Surface } from "./ui.jsx";
 import {
   ExamGrid, Faq, Features, Hero,
   SocialProof, TopRated, pickTopRated,
@@ -57,8 +56,6 @@ import PrepToday from "./PrepToday.jsx";
 const PollOfTheDay = lazy(() => import("./PollOfTheDay.jsx"));
 import { RELEASE_FEATURES } from "./releaseCapabilities.js";
 import DueForRevision from "./DueForRevision.jsx";
-import YouTubeThumbnail from "./YouTubeThumbnail.jsx";
-import ChannelAvatar from "./ChannelAvatar.jsx";
 import { useHomepageChannels } from "./useHomepageChannels.js";
 
 export function homeTagline(capabilities = RELEASE_CAPABILITIES) {
@@ -91,9 +88,10 @@ export default function Home() {
   // Seed from ?q= so "search the entire library" from Explore lands here
   // with the query already run.
   const [input, setInput] = useState(searchParams.get("q") ?? "");
-  // The hook debounces, cancels obsolete requests and enforces the same
-  // minimum length the database does, so no local debounce is needed.
-  const { groups, loading, error, tooShort, retry } = useUniversalSearch(input, { limit: 6 });
+  // No hook call here. <UniversalSearch> owns the request — it debounces,
+  // cancels obsolete responses and enforces the database's own minimum length —
+  // and running the hook here as well would double every request just to draw a
+  // spinner. The component says "Searching…" below the field instead.
   const searching = input.trim().length > 0;
 
   const [continueWatching, setContinueWatching] = useState(() => getContinueWatching(3));
@@ -187,23 +185,29 @@ export default function Home() {
             value={input}
             onChange={setInput}
             onClear={() => setInput("")}
-            busy={loading}
           />
         }
         chips={searching ? null : <TrustChips />}
         stats={searching ? [] : heroStats}
       />
 
-      <main>
+      <main id={MAIN_CONTENT_ID}>
         {searching ? (
           <Container className="py-12 sm:py-16">
-            <SearchResults
-              groups={groups}
-              loading={loading}
-              error={error}
-              tooShort={tooShort}
-              retry={retry}
-              query={input.trim()}
+            {/* The ONE result renderer. Not a copy of it, not a homepage
+                variant of it — the same component /search and Explore use, so
+                a lecture row opens the lesson and a note opens /materials
+                identically from all three. */}
+            <UniversalSearch
+              query={input}
+              footer={
+                <Link
+                  to={`/search?q=${encodeURIComponent(input.trim())}`}
+                  className="inline-flex min-h-11 items-center text-sm font-semibold text-accent transition-opacity hover:opacity-80"
+                >
+                  Open this search on its own page →
+                </Link>
+              }
             />
           </Container>
         ) : (
@@ -225,7 +229,7 @@ export default function Home() {
 //  Hero search — the page's primary control, so it is the only input on
 //  the site that gets display sizing and a focus glow.
 // ---------------------------------------------------------------------
-function HeroSearch({ value, onChange, onClear, busy }) {
+function HeroSearch({ value, onChange, onClear }) {
   return (
     <form
       role="search"
@@ -255,17 +259,16 @@ function HeroSearch({ value, onChange, onClear, busy }) {
           seeds the field, so a hand-off from Explore behaves as before. */}
       <input
         aria-label="Search the library"
+        // How AppShell's "/" and Ctrl/Cmd-K shortcut finds this field — see
+        // "The global search shortcut" in AppShell.jsx. Without it the
+        // shortcut would send a student who is already looking at the hero
+        // off to /search.
+        data-search-input="hero"
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder="Search chapters, courses, teachers or lectures"
         className="relative min-h-16 w-full rounded-lg border border-hairline-strong bg-surface pl-14 pr-14 text-base text-ink shadow-e2 outline-none transition-colors duration-300 placeholder:text-ink-3 focus:border-accent-line"
       />
-      {busy && (
-        <Loader2
-          aria-hidden="true"
-          className="anim-spin absolute right-14 top-1/2 z-10 h-4 w-4 -translate-y-1/2 text-ink-3"
-        />
-      )}
       {value && (
         <button
           type="button"
@@ -354,158 +357,5 @@ function Landing({
 
       <Faq />
     </>
-  );
-}
-
-// ---------------------------------------------------------------------
-//  Grouped search results
-// ---------------------------------------------------------------------
-// Appended, not inserted: the study-material groups only appear once
-// supabase/migrations/20260901160000_universal_search_materials.sql is applied,
-// and until then universal_search returns no rows for them — `visible` below
-// already drops any group with no rows, so this page looks exactly as it does
-// today. The five video groups keep their existing order either way.
-const HOME_GROUPS = [
-  { key: "chapter", label: "Chapters", icon: BookOpen },
-  { key: "playlist", label: "Courses", icon: PlayCircle },
-  { key: "lecture", label: "Lectures", icon: PlayCircle },
-  { key: "faculty", label: "Teachers", icon: Users, gated: "facultyRegistry" },
-  { key: "institute", label: "Channels", icon: Users },
-  { key: "material", label: "Notes & sheets", icon: FileText },
-  { key: "paper", label: "Previous-year papers", icon: FileCheck2 },
-];
-
-function SearchResults({ groups, loading, error, tooShort, retry, query }) {
-  if (loading) return <SkeletonRows />;
-
-  if (error) {
-    return (
-      <EmptyState
-        title="Search is unavailable"
-        detail={error}
-        action={<Button variant="secondary" onClick={retry}>Try again</Button>}
-      />
-    );
-  }
-
-  if (tooShort) {
-    return (
-      <EmptyState
-        title={`Type at least ${MIN_QUERY} characters`}
-        detail="Search looks across chapters, courses, teachers, individual lectures, notes and previous-year papers."
-      />
-    );
-  }
-
-  const visible = HOME_GROUPS.filter(
-    (g) => (groups[g.key]?.rows?.length ?? 0) > 0 &&
-           (!g.gated || RELEASE_CAPABILITIES[g.gated]),
-  );
-
-  if (visible.length === 0) {
-    return (
-      <EmptyState
-        title={`No results for “${query}”`}
-        detail="Try a chapter name, a course, a channel or a teacher — spelling variations are handled."
-        action={<Button variant="secondary" to="/browse">Browse the catalogue instead</Button>}
-      />
-    );
-  }
-
-  return (
-    <div className="space-y-12">
-      {visible.map((g) => {
-        const group = groups[g.key];
-        // Deliberately NOT wrapped in <Reveal>: results answer a question the
-        // student just typed, so they must paint immediately and must never
-        // depend on an IntersectionObserver firing. A .reveal starts at
-        // opacity 0 and only becomes visible once a useReveal() root observes
-        // it — and <main> has no such root, which silently made every homepage
-        // search result invisible in production. Same reasoning as
-        // SearchPage.jsx, which has never animated its results.
-        return (
-          <div key={g.key} className="space-y-4">
-            <div className="flex items-baseline justify-between gap-4">
-              <h2 className="text-h3 flex items-center gap-2.5 text-ink">
-                <g.icon aria-hidden="true" className="h-5 w-5 text-accent" />
-                {g.label}
-              </h2>
-              {group.total > group.rows.length && (
-                <Link
-                  to={`/search?q=${encodeURIComponent(query)}`}
-                  className="inline-flex min-h-11 items-center gap-1.5 text-sm font-semibold text-accent transition-opacity hover:opacity-80"
-                >
-                  All {group.total}
-                  <ArrowRight aria-hidden="true" className="h-4 w-4" />
-                </Link>
-              )}
-            </div>
-            <ul className="divide-y divide-hairline overflow-hidden rounded-xl border border-hairline bg-surface">
-              {group.rows.map((row) => (
-                <li key={`${g.key}-${row.id}`}>
-                  <Link
-                    to={resultHref(g.key, row)}
-                    className="group/row flex min-h-14 w-full items-center gap-4 px-5 py-4 text-left transition-colors duration-200 hover:bg-surface-2"
-                  >
-                    {g.key === "lecture" && (
-                      <YouTubeThumbnail
-                        videoId={row.extra?.youtube_video_id}
-                        quality="mqdefault"
-                        className="aspect-video w-20 shrink-0 rounded-md border border-hairline sm:w-24"
-                      />
-                    )}
-                    {g.key === "institute" && (
-                      <ChannelAvatar
-                        url={row.extra?.logo_url}
-                        name={row.title}
-                        className="h-10 w-10 sm:h-11 sm:w-11"
-                      />
-                    )}
-                    <span className="min-w-0 flex-1">
-                      <span className="block truncate text-sm font-medium text-ink">
-                        {row.title}
-                      </span>
-                      {row.subtitle && (
-                        <span className="mt-0.5 block truncate text-xs text-ink-3">
-                          {row.subtitle}
-                        </span>
-                      )}
-                    </span>
-                    {/* Verified aliases, e.g. "also ABJ Sir" — faculty only. */}
-                    {row.aka && <Pill tone="accent" className="hidden sm:inline-flex">{row.aka}</Pill>}
-                    <ArrowRight
-                      aria-hidden="true"
-                      className="h-4 w-4 shrink-0 text-ink-3 transition-transform duration-300 [transition-timing-function:var(--ease-out-expo)] group-hover/row:translate-x-1 group-hover/row:text-accent"
-                    />
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        );
-      })}
-    </div>
-  );
-}
-
-function SkeletonRows() {
-  return (
-    <div className="space-y-12" aria-hidden="true">
-      {Array.from({ length: 2 }).map((_, group) => (
-        <div key={group} className="space-y-4">
-          <Skeleton className="h-6 w-40" />
-          <Surface padded={false} className="divide-y divide-hairline">
-            {Array.from({ length: 3 }).map((_, row) => (
-              <div key={row} className="flex items-center gap-4 px-5 py-4">
-                <div className="min-w-0 flex-1 space-y-2">
-                  <Skeleton className="h-4 w-2/3" />
-                  <Skeleton className="h-3 w-1/3" />
-                </div>
-              </div>
-            ))}
-          </Surface>
-        </div>
-      ))}
-    </div>
   );
 }
