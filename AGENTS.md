@@ -9,7 +9,7 @@ A free, independent directory of curriculum-organised YouTube courses for
 JEE / NEET / CBSE students. Students browse exam → class → subject → chapter,
 compare courses, and watch lessons through YouTube's privacy-enhanced embed.
 Around that sits a community layer: course ratings and reviews, a closed-beta
-forum, polls (built, not open), a reviewed study-material library, a faculty
+forum, student polls, a reviewed study-material library, a faculty
 directory, previous-year papers, and a gentle study streak.
 
 Content is embedded, never hosted — we store YouTube ids and descriptive

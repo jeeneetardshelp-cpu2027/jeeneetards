@@ -43,12 +43,11 @@ will run.
   exact dump recipe (`supabase db dump --dry-run`) through the portable
   PostgreSQL 17.6 `pg_dump` in `C:\Users\itiso\tools\pgsql-17` (kept for
   future pulls; safe to delete otherwise).
-- The **polls backend is already live in production** (all `poll_*` tables are
-  in the baseline), so no polls migration is staged here. Activating polls is
-  now only the runbook's remaining steps: switch `poll_mode()` to `'open'`
-  from the admin panel, then flip `polls: true` in
-  `src/releaseCapabilities.js` and deploy
-  (see `docs/polls/POLLS_V1_ACTIVATION_RUNBOOK.md`).
+- The **polls backend was already live in production** (all `poll_*` tables
+  are in the baseline), so no polls migration is staged here. Polls have
+  since been switched on: `poll_mode()` is open and `RELEASE_FEATURES.polls`
+  is `true` (see `docs/polls/POLLS_V1_ACTIVATION_RUNBOOK.md`). The database
+  mode remains the real switch — the flag only decides which pages route.
 - The long-mysterious `rls_auto_enable` production RPC is captured in the
   baseline and is benign: an event-trigger function that auto-enables row
   level security on any new table created in `public` (SECURITY DEFINER,
