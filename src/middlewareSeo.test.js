@@ -366,6 +366,113 @@ describe("edge-rendered discovery landings", () => {
     expect(dataUrl.searchParams.get("limit")).toBe("100");
   });
 
+  // ------------------------------------------------------------------
+  // Per-year paper pages: the child that can win "<exam> <year> question
+  // paper", instead of one landing competing for every year at once.
+  // ------------------------------------------------------------------
+  const paperCatalogue = (rows) => vi.fn(async (input) => {
+    const url = String(input);
+    if (url.includes("/rest/v1/study_materials?")) {
+      if (typeof rows === "function") return rows(new URL(url));
+      return Response.json(rows);
+    }
+    return new Response(shell, { status: 200 });
+  });
+
+  it("serves one exam year as its own page, listing that year's papers", async () => {
+    vi.stubEnv("VITE_SUPABASE_URL", "https://catalog.example");
+    vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
+    const fetchSpy = paperCatalogue([
+      {
+        id: 81,
+        title: "JEE Main 2024 Session 1 - 27 January Shift 1",
+        description: "Official NTA question paper.",
+        source_name: "National Testing Agency (JEE Main)",
+        source_url: "https://nta.example/2024-s1.pdf",
+        exam_year: 2024,
+      },
+      {
+        id: 82,
+        title: "JEE Main 2024 Session 1 Final Answer Key",
+        description: "Official final answer key only; no worked solutions.",
+        source_name: "National Testing Agency (JEE Main)",
+        source_url: "https://nta.example/2024-key.pdf",
+        exam_year: 2024,
+      },
+    ]);
+    vi.stubGlobal("fetch", fetchSpy);
+
+    const pathname = "/materials/jee-main/previous-year-papers/2024";
+    const response = await middleware(new Request(`https://www.jeeneetard.com${pathname}`));
+    const html = await response.text();
+
+    expect(response.status).toBe(200);
+    expect(html).toContain(
+      "<title>JEE Main 2024 question papers, session by session | JEENEETARD</title>",
+    );
+    expect(html).toContain(
+      `<link rel="canonical" href="https://www.jeeneetard.com${pathname}" />`,
+    );
+    expect(html).toContain('name="robots" content="index, follow"');
+    expect(html).toContain("<h1>JEE Main 2024 papers, session by session</h1>");
+    expect(html).toContain('<a href="https://nta.example/2024-s1.pdf" rel="noopener">');
+    expect(html).toContain("<h2>JEE Main 2024 official answer keys</h2>");
+    expect(html).toContain(
+      '<a href="/materials/jee-main/previous-year-papers">All JEE Main papers by year</a>',
+    );
+    expect(html).toContain('data-schema-key="BreadcrumbList"');
+    expect(html).toContain('data-schema-key="ItemList"');
+    expect(html).not.toContain('class="boot"');
+
+    const dataUrl = new URL(String(fetchSpy.mock.calls.find(([input]) =>
+      String(input).includes("/rest/v1/study_materials?"))[0]));
+    expect(dataUrl.searchParams.get("exam_year")).toBe("eq.2024");
+    expect(dataUrl.searchParams.get("title")).toBe("ilike.JEE Main%");
+  });
+
+  it("returns a real 404 for an exam year with no reviewed paper", async () => {
+    vi.stubEnv("VITE_SUPABASE_URL", "https://catalog.example");
+    vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
+    vi.stubGlobal("fetch", paperCatalogue([]));
+
+    const response = await middleware(new Request(
+      "https://www.jeeneetard.com/materials/jee-main/previous-year-papers/1999",
+    ));
+    const html = await response.text();
+
+    expect(response.status).toBe(404);
+    expect(response.headers.get("x-robots-tag")).toBe("noindex, nofollow");
+    expect(html).toContain("<h1>JEE Main 1999 papers not found</h1>");
+  });
+
+  it("keeps a paper year available when its lookup is unconfirmed", async () => {
+    vi.stubEnv("VITE_SUPABASE_URL", "https://catalog.example");
+    vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
+    vi.stubGlobal("fetch", paperCatalogue(() =>
+      new Response("temporarily unavailable", { status: 503 })));
+
+    const response = await middleware(new Request(
+      "https://www.jeeneetard.com/materials/jee-main/previous-year-papers/2024",
+    ));
+
+    expect(response.headers.get("x-middleware-next")).toBe("1");
+  });
+
+  it.each([
+    "/materials/jee-main/previous-year-papers/20244",
+    "/materials/jee-main/previous-year-papers/latest",
+    "/materials/neet/previous-year-papers/2024",
+  ])("404s the invented paper URL %s without a lookup", async (pathname) => {
+    const fetchSpy = vi.fn(async () => new Response(shell, { status: 200 }));
+    vi.stubGlobal("fetch", fetchSpy);
+
+    const response = await middleware(new Request(`https://www.jeeneetard.com${pathname}`));
+
+    expect(response.status).toBe(404);
+    expect(fetchSpy.mock.calls.some(([input]) =>
+      String(input).includes("/rest/v1/"))).toBe(false);
+  });
+
   it("serves canonical Browse as a linked course and faculty directory", async () => {
     vi.stubEnv("VITE_SUPABASE_URL", "https://catalog.example");
     vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");

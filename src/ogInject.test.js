@@ -21,8 +21,10 @@ import {
   landingSchemas,
   renderLandingBody,
   renderStudyMaterialsBody,
+  renderPaperYearBody,
 } from "../ogInject.js";
 import { metadataForLocation } from "./pageMetadata.js";
+import { parsePaperYearPath } from "./studyMaterialLandings.js";
 
 const shell = readFileSync(resolve(import.meta.dirname, "../index.html"), "utf8");
 
@@ -200,11 +202,80 @@ describe("server-rendered discovery landings", () => {
       ],
     );
 
+    const year = (value) =>
+      `<h3><a href="/materials/jee-main/previous-year-papers/${value}">${value}</a></h3>`;
+
     expect(html).toContain("<h2>JEE Main question papers</h2>");
     expect(html).toContain("<h2>JEE Main official answer keys</h2>");
     expect(html).toContain('href="https://example.edu/2025-key.pdf"');
-    expect(html).toContain("<h3>2024</h3>");
-    expect(html.indexOf("<h3>2024</h3>")).toBeLessThan(html.indexOf("<h3>2022</h3>"));
+    // Every year heading is a link into that year's own page: the landing's
+    // job is to send a crawler INTO its children, not to hold all the signal.
+    expect(html).toContain(year(2024));
+    expect(html.indexOf(year(2024))).toBeLessThan(html.indexOf(year(2022)));
+    expect(html).toContain(
+      '<nav aria-label="JEE Main papers by year">' +
+        '<a href="/materials/jee-main/previous-year-papers/2025">JEE Main 2025</a>',
+    );
+  });
+
+  it("names this site's year pages in the landing ItemList, not the source PDFs", () => {
+    const schemas = landingSchemas("/materials/jee-main/previous-year-papers", [
+      { title: "JEE Main 2024 Session 1 paper", exam_year: 2024, source_url: "https://example.edu/a.pdf" },
+      { title: "JEE Main 2024 Session 2 paper", exam_year: 2024, source_url: "https://example.edu/b.pdf" },
+      { title: "JEE Main 2022 Session 1 paper", exam_year: 2022, source_url: "https://example.edu/c.pdf" },
+    ]);
+    const list = schemas.find((entry) => entry.key === "ItemList").schema;
+
+    expect(list.itemListElement.map(({ url }) => url)).toEqual([
+      "https://www.jeeneetard.com/materials/jee-main/previous-year-papers/2024",
+      "https://www.jeeneetard.com/materials/jee-main/previous-year-papers/2022",
+    ]);
+    expect(JSON.stringify(list)).not.toContain("example.edu");
+  });
+
+  it("renders one exam year with its papers grouped by what they contain", () => {
+    const pathname = "/materials/jee-main/previous-year-papers/2024";
+    const meta = metadataForLocation(pathname);
+    const materials = [
+      {
+        title: "JEE Main 2024 Session 1 - 27 January Shift 1",
+        description: "Official NTA question paper.",
+        source_name: "National Testing Agency (JEE Main)",
+        exam_year: 2024,
+        source_url: "https://nta.example/2024-s1.pdf",
+      },
+      {
+        title: "JEE Main 2024 Session 1 Final Answer Key",
+        description: "Official final answer key only; no worked solutions.",
+        exam_year: 2024,
+        source_url: "https://nta.example/2024-key.pdf",
+      },
+      { title: "Unsafe destination", exam_year: 2024, source_url: "javascript:alert(1)" },
+    ];
+    const body = renderPaperYearBody(meta, parsePaperYearPath(pathname), materials);
+
+    expect(meta.title).toBe(
+      "JEE Main 2024 question papers, session by session | JEENEETARD",
+    );
+    expect(meta.canonicalPath).toBe(pathname);
+    expect(body).toContain("<h1>JEE Main 2024 papers, session by session</h1>");
+    expect(body).toContain("<h2>JEE Main 2024 question papers</h2>");
+    expect(body).toContain('href="https://nta.example/2024-s1.pdf"');
+    expect(body).toContain("<h2>JEE Main 2024 official answer keys</h2>");
+    expect(body).toContain('href="https://nta.example/2024-key.pdf"');
+    // Nothing worth claiming for this section, so it says so rather than
+    // leaving a heading a crawler would read as "this exists".
+    expect(body).toContain("No reviewed paper with worked solutions is listed for this year.");
+    expect(body).not.toContain("javascript:");
+    expect(body).toContain(
+      '<a href="/materials/jee-main/previous-year-papers">All JEE Main papers by year</a>',
+    );
+
+    const schemas = landingSchemas(pathname, materials);
+    expect(schemas.map((entry) => entry.key)).toEqual(["BreadcrumbList", "ItemList"]);
+    expect(schemas[0].schema.itemListElement.map(({ name }) => name)).toEqual([
+      "Home", "Study material", "JEE Main papers", "2024",
+    ]);
   });
 
   it.each([

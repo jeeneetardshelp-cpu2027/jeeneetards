@@ -40,11 +40,14 @@ import {
   renderFacultyDirectoryBody,
   renderStudyMaterialsBody,
   renderNotFoundBody,
+  renderPaperYearBody,
 } from "./ogInject.js";
 import { getFacultyGuide } from "./src/facultyGuides.js";
+import { RELEASE_CAPABILITIES } from "./src/releaseCapabilities.js";
 import {
   JEE_MAIN_PAPERS_PATH,
-  JEE_MAIN_PAPERS_TITLE_PATTERN,
+  findPaperLanding,
+  parsePaperYearPath,
 } from "./src/studyMaterialLandings.js";
 
 // Inspect every application path so an unknown SPA URL can carry a real HTTP
@@ -110,6 +113,10 @@ export function isSupportedAppPath(pathname) {
     return Boolean(findTestSection(path.slice("/tests/".length)));
   }
   if (path.startsWith("/explore/")) return Boolean(parseExplorePath(path));
+  // A per-year paper page, e.g. /materials/jee-main/previous-year-papers/2024.
+  // Only a real four-digit year under a registered landing; whether that year
+  // actually HAS papers is confirmed against the database further down.
+  if (parsePaperYearPath(path)) return true;
   if (/^\/forum\/post\/\d+$/.test(path)) return true;
   // A poll slug is question-slug + "-" + id, so it always ends in a number.
   // Requiring that here means a mistyped or invented /polls/... link gets a
@@ -171,6 +178,25 @@ async function edgeJson(url, options = {}) {
   } finally {
     clearTimeout(timer);
   }
+}
+
+const PAPER_SELECT = "id,title,description,material_type,source_name,source_url," +
+  "preview_image_url,file_format,language,exam_year,page_count,is_downloadable,rights_status";
+
+/**
+ * Reviewed previous-year papers for one landing, optionally narrowed to a
+ * single exam year. Same columns and ordering the React page selects, so the
+ * served HTML and the hydrated page can never list different papers.
+ */
+function paperMaterialsEndpoint(supaUrl, landing, year = null) {
+  const endpoint = new URL(`${supaUrl}/rest/v1/study_materials`);
+  endpoint.searchParams.set("select", PAPER_SELECT);
+  endpoint.searchParams.set("material_type", "eq.previous_year_paper");
+  endpoint.searchParams.set("title", `ilike.${landing.titlePattern}`);
+  if (year != null) endpoint.searchParams.set("exam_year", `eq.${year}`);
+  endpoint.searchParams.set("order", "exam_year.desc.nullslast,title.asc");
+  endpoint.searchParams.set("limit", "100");
+  return endpoint;
 }
 
 function className(slug) {
@@ -361,6 +387,41 @@ async function deepExploreResponse(request, url, route, supaUrl, supaKey) {
   return htmlResponse(html);
 }
 
+/**
+ * One exam year of previous-year papers, e.g.
+ * /materials/jee-main/previous-year-papers/2024.
+ *
+ * The landing lists every year at once, which is one page competing for every
+ * "<exam> <year> question paper" search. This is the child that can win one.
+ *
+ * A year with no reviewed paper is a real 404, never an empty page: the URL
+ * shape alone cannot tell us a year exists, so the catalogue does. An
+ * unconfirmed lookup falls through to the normal shell, as everywhere else.
+ */
+async function paperYearResponse(request, url, route, supaUrl, supaKey) {
+  const materials = await edgeJson(
+    paperMaterialsEndpoint(supaUrl, route.landing, route.year),
+    { headers: { apikey: supaKey, Authorization: `Bearer ${supaKey}` } },
+  );
+  if (!materials.confirmed) return next();
+  const items = Array.isArray(materials.data) ? materials.data : [];
+  if (!items.length) {
+    return notFoundResponse(
+      request,
+      url,
+      `${route.landing.examLabel} ${route.year} papers not found`,
+    );
+  }
+
+  const shell = await fetchAppShell(request);
+  if (!shell) return next();
+  const meta = metadataForLocation(url.pathname, url.search);
+  let html = injectRouteMeta(shell, meta);
+  html = injectStructuredData(html, landingSchemas(url.pathname, items));
+  html = injectRootContent(html, renderPaperYearBody(meta, route, items));
+  return htmlResponse(html);
+}
+
 async function notFoundResponse(request, url, heading = "Page not found") {
   const shell = await fetchAppShell(request);
   if (!shell) return next();
@@ -491,6 +552,15 @@ export default async function middleware(request) {
       return deepExploreResponse(request, url, exploreRoute, supaUrl, supaKey);
     }
 
+    // Per-year paper pages. Skipped entirely while the study-material
+    // capability is off — the React route renders "coming soon" then, and
+    // pageMetadata already marks it noindex, so there is nothing to render.
+    const paperYearRoute = parsePaperYearPath(url.pathname);
+    if (paperYearRoute && RELEASE_CAPABILITIES.studyMaterials) {
+      if (!supaUrl || !supaKey) return next();
+      return paperYearResponse(request, url, paperYearRoute, supaUrl, supaKey);
+    }
+
     // Static routes share the client's metadata. Canonical Browse, Faculty,
     // root Explore, and Study material additionally fetch bounded public data
     // for crawler HTML.
@@ -540,7 +610,7 @@ export default async function middleware(request) {
           })
         : Promise.resolve(null);
       const isMaterialsDirectory = url.pathname === "/materials" && !url.search;
-      const isJeeMainPapers = url.pathname === JEE_MAIN_PAPERS_PATH && !url.search;
+      const paperLanding = url.search ? null : findPaperLanding(url.pathname);
       let materialsPromise = Promise.resolve(null);
       if (isMaterialsDirectory && supaUrl && supaKey) {
         materialsPromise = edgeJson(`${supaUrl}/rest/v1/rpc/get_study_materials`, {
@@ -563,14 +633,8 @@ export default async function middleware(request) {
               p_offset: 0,
             }),
           });
-      } else if (isJeeMainPapers && supaUrl && supaKey) {
-        const endpoint = new URL(`${supaUrl}/rest/v1/study_materials`);
-        endpoint.searchParams.set("select", "id,title,description,material_type,source_name,source_url,preview_image_url,file_format,language,exam_year,page_count,is_downloadable,rights_status");
-        endpoint.searchParams.set("material_type", "eq.previous_year_paper");
-        endpoint.searchParams.set("title", `ilike.${JEE_MAIN_PAPERS_TITLE_PATTERN}`);
-        endpoint.searchParams.set("order", "exam_year.desc.nullslast,title.asc");
-        endpoint.searchParams.set("limit", "100");
-        materialsPromise = edgeJson(endpoint, {
+      } else if (paperLanding && supaUrl && supaKey) {
+        materialsPromise = edgeJson(paperMaterialsEndpoint(supaUrl, paperLanding), {
           headers: { apikey: supaKey, Authorization: `Bearer ${supaKey}` },
         });
       }
@@ -635,7 +699,7 @@ export default async function middleware(request) {
               crumbs: [],
               options: exploreRootOptions,
             })
-          : (isMaterialsDirectory || isJeeMainPapers)
+          : (isMaterialsDirectory || paperLanding)
             ? renderStudyMaterialsBody(routeMeta, materialItems)
           : isFacultyDirectory
             ? renderFacultyDirectoryBody(routeMeta, facultyDirectoryItems)

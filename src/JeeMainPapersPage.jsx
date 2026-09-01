@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { Link } from "react-router";
 import { FileCheck2, FileText, ListChecks, RefreshCw, Search, X } from "lucide-react";
 import { Page } from "./AppShell.jsx";
 import { useStructuredData } from "./PageMetadata.jsx";
@@ -8,9 +9,13 @@ import { studyMaterialLandingSchemas } from "./studyMaterialsStructuredData.js";
 import {
   JEE_MAIN_PAPERS_META,
   JEE_MAIN_PAPERS_PATH,
+  findPaperLanding,
+  paperYearPath,
   splitJeeMainPapers,
 } from "./studyMaterialLandings.js";
 import { useJeeMainPapers } from "./useJeeMainPapers.js";
+
+const JEE_MAIN_LANDING = findPaperLanding(JEE_MAIN_PAPERS_PATH);
 
 export function groupPapersByYear(items) {
   const groups = new Map();
@@ -101,10 +106,10 @@ export default function JeeMainPapersPage() {
   const filteredWithSolutions = groups.withSolutions.filter(matchesFilters);
   const visibleCount = filteredQuestionOnly.length + filteredAnswerKeys.length + filteredWithSolutions.length;
   const filtersActive = Boolean(selectedYear || normalizedQuery);
-  useStructuredData(studyMaterialLandingSchemas(papers.items, {
-    label: "JEE Main papers, answer keys and solutions",
-    path: JEE_MAIN_PAPERS_PATH,
-  }), [papers.items]);
+  useStructuredData(
+    studyMaterialLandingSchemas(papers.items, JEE_MAIN_LANDING),
+    [papers.items],
+  );
 
   return (
     <Page crumbs={[
@@ -135,6 +140,26 @@ export default function JeeMainPapersPage() {
           </a>
         </div>
       </section>
+
+      {years.length > 0 && (
+        <nav aria-label="JEE Main papers by year" className="mt-8">
+          <h2 className="text-sm font-semibold uppercase tracking-[0.16em] text-accent">
+            Jump to a year
+          </h2>
+          <ul className="mt-3 flex flex-wrap gap-2">
+            {years.map((year) => (
+              <li key={year}>
+                <Link
+                  to={paperYearPath(JEE_MAIN_LANDING, year)}
+                  className="inline-flex min-h-11 items-center rounded-lg border border-hairline bg-surface px-4 text-sm font-semibold text-ink"
+                >
+                  JEE Main {year}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      )}
 
       <nav aria-label="JEE Main resource collections" className="my-8 grid gap-4 sm:grid-cols-3">
         <a href="#question-papers" className="rounded-xl border border-hairline bg-surface p-5 transition-colors hover:border-accent-line">

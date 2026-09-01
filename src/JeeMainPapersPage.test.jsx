@@ -104,11 +104,45 @@ describe("JEE Main previous-year-paper landing", () => {
       expect(script).not.toBeNull();
       const schema = JSON.parse(script.textContent);
       expect(schema.itemListElement.map(({ name }) => name)).toEqual([
-        "Home", "Study material", "JEE Main papers, answer keys and solutions",
+        "Home", "Study material", "JEE Main papers",
       ]);
       expect(schema.itemListElement[2].item).toBe(
         "https://www.jeeneetard.com/materials/jee-main/previous-year-papers",
       );
+    });
+  });
+
+  // The landing's outbound signal now goes to its own year pages instead of
+  // to files hosted somewhere else. The PDFs are still listed on each year
+  // page, which is the level where the PDF really is the resource.
+  it("links every year to its own page and lists those pages in the ItemList", async () => {
+    render(
+      <MemoryRouter initialEntries={["/materials/jee-main/previous-year-papers"]}>
+        <JeeMainPapersPage />
+      </MemoryRouter>,
+    );
+
+    const yearNav = screen.getByRole("navigation", { name: "JEE Main papers by year" });
+    expect([...yearNav.querySelectorAll("a")].map((link) => link.getAttribute("href"))).toEqual([
+      "/materials/jee-main/previous-year-papers/2025",
+      "/materials/jee-main/previous-year-papers/2024",
+      "/materials/jee-main/previous-year-papers/2023",
+      "/materials/jee-main/previous-year-papers/2022",
+    ]);
+
+    await waitFor(() => {
+      const script = document.head.querySelector(
+        'script[type="application/ld+json"][data-schema-key="ItemList"]',
+      );
+      expect(script).not.toBeNull();
+      const schema = JSON.parse(script.textContent);
+      expect(schema.itemListElement.map(({ url }) => url)).toEqual([
+        "https://www.jeeneetard.com/materials/jee-main/previous-year-papers/2025",
+        "https://www.jeeneetard.com/materials/jee-main/previous-year-papers/2024",
+        "https://www.jeeneetard.com/materials/jee-main/previous-year-papers/2023",
+        "https://www.jeeneetard.com/materials/jee-main/previous-year-papers/2022",
+      ]);
+      expect(script.textContent).not.toContain("nta.example");
     });
   });
 

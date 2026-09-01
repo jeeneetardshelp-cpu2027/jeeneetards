@@ -7,6 +7,8 @@ import { buildCourseMetadata } from "./courseMetadata.js";
 import {
   JEE_MAIN_PAPERS_META,
   JEE_MAIN_PAPERS_PATH,
+  paperYearMeta,
+  parsePaperYearPath,
 } from "./studyMaterialLandings.js";
 
 export const SITE_NAME = "JEENEETARD";
@@ -359,6 +361,22 @@ export function metadataForLocation(pathname = "/", search = "") {
       title: JEE_MAIN_PAPERS_META.title,
       description: JEE_MAIN_PAPERS_META.description,
       canonicalPath: JEE_MAIN_PAPERS_PATH,
+      robots: "index, follow",
+    };
+  }
+
+  // One page per exam year, so "jee main 2024 question paper" has somewhere on
+  // this site to land. Self-canonical: the year page is not a filtered view of
+  // the landing, it is the child the landing links to.
+  const paperYear = parsePaperYearPath(path);
+  if (paperYear) {
+    if (!RELEASE_CAPABILITIES.studyMaterials) return comingSoon(base);
+    const yearMeta = paperYearMeta(paperYear.landing, paperYear.year);
+    return {
+      ...base,
+      title: yearMeta.title,
+      description: yearMeta.description,
+      canonicalPath: path,
       robots: "index, follow",
     };
   }
