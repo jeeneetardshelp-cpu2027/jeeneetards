@@ -8,7 +8,7 @@
 import { describe, expect, it } from "vitest";
 
 import {
-  MIN_INDEXABLE_COURSES, chapterLandingMeta, chapterLandingPath, isIndexableChapter,
+  MIN_INDEXABLE_COURSES, chapterLandingMeta, isIndexableChapter,
 } from "./chapterLanding.js";
 
 const SCOPE = {
@@ -85,22 +85,3 @@ describe("what the page says about itself", () => {
   });
 });
 
-describe("chapterLandingPath", () => {
-  it("builds the exam path", () => {
-    expect(chapterLandingPath({
-      goal: "jee", cls: "class-11", subject: "physics", chapter: "kinematics",
-    })).toBe("/explore/jee/class-11/physics/kinematics");
-  });
-
-  it("keeps the board segment for school, which shifts every later part", () => {
-    expect(chapterLandingPath({
-      goal: "school", board: "cbse", cls: "class-10", subject: "science", chapter: "motion",
-    })).toBe("/explore/school/cbse/class-10/science/motion");
-  });
-
-  it("drops absent segments rather than emitting an empty one", () => {
-    expect(chapterLandingPath({
-      goal: "jee", board: null, cls: "class-11", subject: "physics", chapter: "kinematics",
-    })).not.toContain("//");
-  });
-});

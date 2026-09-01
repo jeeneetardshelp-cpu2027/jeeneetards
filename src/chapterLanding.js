@@ -109,10 +109,3 @@ export function canonicalChapterView(params, readable = (v) => v) {
   return { ...meta, robots: "index, follow", query };
 }
 
-/** The canonical path for a chapter page. School carries a board segment. */
-export function chapterLandingPath({ goal, board, cls, subject, chapter }) {
-  const parts = [goal, board, cls, subject, chapter]
-    .map((part) => String(part ?? "").trim())
-    .filter(Boolean);
-  return `/explore/${parts.join("/")}`;
-}
