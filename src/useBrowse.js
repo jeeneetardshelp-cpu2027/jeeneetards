@@ -147,20 +147,31 @@ export function useVideos({
         }
       }
     }
+    // `membership` is ALWAYS embedded, because a lecture's only watchable home
+    // is /course/:playlistId?v=:youtubeVideoId and `videos` has no playlist_id
+    // column — the course id exists solely in playlist_videos. Bounded to ONE
+    // row per lecture (a video belongs to one course in practice, a handful at
+    // most), ordered so the same card always links to the same course.
+    // When playlist filters are active the embed is the !inner one, so the
+    // course we link to is one that MATCHES the student's filters.
     const cols =
       "id, youtube_video_id, title, institutes_channels(id, name, logo_url), subjects(name), chapters(name)" +
       (goalId ? ", video_learning_goals!inner(learning_goal_id)" : "") +
       (needsPlaylistContext
-        ? ", membership:playlist_videos!inner(playlists!inner(language, content_type, difficulty" +
+        ? ", membership:playlist_videos!inner(playlist_id, playlists!inner(language, content_type, difficulty" +
           (classSlugs ? ", pcl:playlist_class_levels!inner(class_levels!inner(slug))" : "") +
           (teacherId ? ", pt:playlist_teachers!inner(teacher_id)" : "") +
           "))"
-        : "");
+        : ", membership:playlist_videos(playlist_id)");
     // The chosen sort leads; .order("id") always follows as the unique
     // tie-break, so "recommended" is exactly the order this list always had.
     const applyOrder = LECTURE_ORDER_BY[sort] ?? LECTURE_ORDER_BY.recommended;
     let q = applyOrder(supabase.from("videos").select(cols, { count: "exact" }))
       .order("id", { ascending: true })
+      // Referenced-table order + limit: the course embed above, bounded to the
+      // lowest-numbered matching course so the link is stable across reloads.
+      .order("playlist_id", { referencedTable: "membership", ascending: true })
+      .limit(1, { referencedTable: "membership" })
       .range(page * LECTURE_PAGE_SIZE, page * LECTURE_PAGE_SIZE + LECTURE_PAGE_SIZE - 1);
 
     if (goalId) q = q.eq("video_learning_goals.learning_goal_id", goalId);
@@ -198,6 +209,10 @@ export function useVideos({
         instituteLogoUrl: r.institutes_channels?.logo_url ?? null,
         subject: r.subjects?.name ?? "—",
         chapter: r.chapters?.name ?? "—",
+        // The course this lesson is watched inside. null only if a lesson
+        // belongs to no course at all — then there is no watch page to link to,
+        // and the card says so rather than promising a destination.
+        playlistId: r.membership?.[0]?.playlist_id ?? null,
       }));
       setState({
         videos, total: count ?? null, loading: false, error: null,

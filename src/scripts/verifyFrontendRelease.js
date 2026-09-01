@@ -149,11 +149,24 @@ for (const asset of [
   else pass(`production build includes ${asset}`);
 }
 
-for (const file of ["src/YouTubePlayer.jsx", "src/Dashboard.jsx"]) {
+// One player, and it must be the privacy-enhanced host. src/Dashboard.jsx was
+// checked here too, because the browse "Individual lectures" tab used to play
+// in a bare iframe of its own — a second player that recorded no progress and
+// fed no streak. That player was deleted (the cards are links to the real
+// watch page now), so the gate checks the surviving player and then asserts
+// the second one does not come back.
+for (const file of ["src/YouTubePlayer.jsx"]) {
   const source = exists(file) ? read(file) : "";
   if (!source.includes("https://www.youtube-nocookie.com/embed/"))
     fail(`${file} does not use YouTube privacy-enhanced embeds`);
   else pass(`${file} uses YouTube privacy-enhanced embeds`);
+}
+
+for (const file of ["src/Dashboard.jsx"]) {
+  const source = exists(file) ? read(file) : "";
+  if (source.includes("youtube.com/embed/") || source.includes("youtube-nocookie.com/embed/"))
+    fail(`${file} embeds YouTube again — browse lectures must link to the watch page, not play in place`);
+  else pass(`${file} has no second player`);
 }
 
 // Never publish a legal template as if it were a real policy. These values
