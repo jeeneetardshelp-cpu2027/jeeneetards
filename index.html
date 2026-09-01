@@ -25,8 +25,15 @@
          canonical would tell crawlers every page is really the homepage.
          Course pages get their canonical from the edge middleware (ogInject.js);
          all routes get it client-side from PageMetadata.jsx. -->
-    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff" />
-    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0a0a0a" />
+    <!-- ONE theme-color, matching what is actually painted.
+         This used to be two tags gated on prefers-color-scheme, which
+         contradicted the app: public/theme-init.js forces DARK for any visitor
+         with no stored choice, so a light-OS first-time visitor got a dark page
+         under a white address bar. The value below is the product default
+         (dark, = --canvas in src/index.css). theme-init.js rewrites it from the
+         stored choice before the first paint, and keeps it in step afterwards
+         when the student uses the header's theme toggle. -->
+    <meta name="theme-color" content="#0a0a0a" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="JEENEETARD" />
     <meta property="og:title" content="Free JEE &amp; NEET video lectures, chapter by chapter | JEENEETARD" />

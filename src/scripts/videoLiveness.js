@@ -99,13 +99,19 @@ export function buildLivenessSql(updates, nowIso) {
  */
 export function planLivenessUpdate(videos, details, nowIso) {
   const summary = { checked: 0, embeddable: 0, blocked: 0, unavailable: 0, changed: 0 };
+  // Every status actually seen, including labels outside LIVE_STATUSES (the
+  // catalogue still carries a legacy "allowed" that means the same as
+  // "embeddable"). Without this the printed summary silently loses those rows
+  // and the operator cannot reconcile it against "checked".
+  const byStatus = new Map();
   const updates = []; // every checked video: refresh last_verified_at (+ status)
   const dead = []; // the unavailable ones, for the operator's report
 
   for (const v of videos) {
     const d = classifyVideo(v.embedding_status, details.get(v.youtube_video_id));
     summary.checked += 1;
-    summary[d.status] += 1;
+    byStatus.set(d.status, (byStatus.get(d.status) ?? 0) + 1);
+    if (LIVE_STATUSES.includes(d.status)) summary[d.status] += 1;
     if (d.changed) summary.changed += 1;
     updates.push({
       id: v.id,
@@ -117,5 +123,5 @@ export function planLivenessUpdate(videos, details, nowIso) {
     });
     if (!d.alive) dead.push({ id: v.id, youtube_video_id: v.youtube_video_id });
   }
-  return { summary, updates, dead };
+  return { summary, byStatus, updates, dead };
 }

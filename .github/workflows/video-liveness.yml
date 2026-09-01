@@ -18,7 +18,12 @@ name: video-liveness
 on:
   schedule:
     - cron: "30 22 * * 0" # Sundays 22:30 UTC = Mondays 04:00 IST, before the study day starts
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Report what would change, without writing to the database"
+        type: boolean
+        default: true
 
 jobs:
   check:
@@ -53,8 +58,12 @@ jobs:
             echo "YOUTUBE_API_KEY=$YT_KEY"
           } > .env
 
+      # Manual runs default to --dry-run so the plumbing can be tested without
+      # touching production; the weekly schedule always runs for real.
       - name: Check video liveness
-        run: node src/scripts/checkVideoLiveness.js --max-age 30
+        env:
+          DRY_RUN_FLAG: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run && '--dry-run' || '' }}
+        run: node src/scripts/checkVideoLiveness.js --max-age 30 $DRY_RUN_FLAG
 
       - name: Upload report
         if: always()

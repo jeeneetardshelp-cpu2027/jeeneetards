@@ -39,7 +39,26 @@
     U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
-/* ------------------------------------------------------------- palettes */
+/* ------------------------------------------------------------- palettes
+
+   CONTRAST AUDIT (2026-09-01, WCAG 2.1 relative-luminance formula). Dark is
+   the forced default for anyone who has never chosen, so it was measured
+   first. Ink tokens against each background, worst case shown:
+
+     dark   --ink   on --surface-2   17.35:1   pass AA and AAA
+            --ink-2 on --surface-2    8.27:1   pass AA and AAA
+            --ink-3 on --surface-2    4.61:1   pass AA (normal text)
+
+   No dark-theme failure, so nothing here was changed.
+
+   The light palette is NOT clean: --ink-3 (#75757c) is below AA on the
+   tinted backgrounds — 4.38:1 on --canvas-2, 4.23:1 on --surface-2, 4.09:1
+   on --surface-inset (AA needs 4.5:1). It passes only on plain white
+   (4.57:1). --ink-3 carries card metadata, which is small text, so this is a
+   real failure, not a rounding argument. Darkening it to #6e6e75 clears every
+   surface (4.53–5.06:1) and is a one-value change. Left for the owner to
+   decide because it moves the look of every card in light mode, and this
+   pass was scoped to the dark default. */
 :root,
 html[data-theme="dark"] {
   color-scheme: dark;
@@ -250,6 +269,52 @@ html[data-theme="light"] {
   ::-webkit-scrollbar-thumb:hover {
     background: var(--hairline-glow);
   }
+}
+
+/* ---------------------------------------------------------- skip link
+   The "Skip to main content" control in AppShell's GlobalHeader. Hidden from
+   sight (but not from the accessibility tree, and not from Tab) until it takes
+   focus, then a real, opaque control.
+
+   Written as one hand-rolled class rather than the usual
+   `sr-only focus:not-sr-only focus:fixed …` chain because that chain sets
+   `position` twice under the same variant (static, then fixed) and which one
+   wins depends on Tailwind's utility ordering — too fragile for the one
+   control a keyboard user meets first on every page.
+
+   Both themes are covered because every colour is a token. The hidden state
+   is out of flow, so it adds no layout and cannot cause horizontal overflow. */
+.skip-link {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 100;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  clip-path: inset(50%);
+}
+
+.skip-link:focus {
+  position: fixed;
+  display: inline-flex;
+  align-items: center;
+  width: auto;
+  height: auto;
+  /* 44px — the same tap target as every min-h-11 control in the header. */
+  min-height: 2.75rem;
+  padding: 0 1rem;
+  overflow: visible;
+  clip-path: none;
+  border: 1px solid var(--accent-line);
+  border-radius: var(--radius-md);
+  background-color: var(--surface);
+  color: var(--ink);
+  font-size: 0.875rem;
+  font-weight: 500;
+  box-shadow: var(--shadow-3);
 }
 
 /* --------------------------------------------------------- type scale */

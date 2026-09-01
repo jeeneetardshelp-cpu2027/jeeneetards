@@ -3,13 +3,16 @@
 //  React + Tailwind CSS.  Beginner-friendly, split into small pieces.
 //
 //  HOW IT'S ORGANISED (read top to bottom):
-//    1. SAMPLE_VIDEOS  -> fake data so the page works right now.
-//                         Later you replace this with rows from Supabase.
-//    2. helpers        -> build the YouTube thumbnail + embed URLs.
-//    3. VideoCard      -> one card in the grid.
-//    4. VideoModal     -> the pop-up player with the disclaimer.
-//    6. SearchBar      -> the top search box.
-//    7. Dashboard      -> puts everything together (this is exported).
+//    1. VideoCard      -> one card in the grid; a link to the watch page.
+//    2. SearchBar      -> the top search box.
+//    3. Dashboard      -> puts everything together (this is exported).
+//
+//  REMOVED: VideoModal, a second bare-iframe player that opened here. It
+//  recorded no progress, so a lesson watched in it earned no Continue
+//  watching entry, no streak day and no watched tick, and it offered none of
+//  the lesson sequence, notes, materials, rating or report controls. Every
+//  lecture already has a real home at /course/:playlistId?v=:youtubeVideoId,
+//  so the cards link there instead of playing in place.
 // =====================================================================
 
 import { useState, useEffect } from "react";
@@ -36,38 +39,57 @@ import ChannelAvatar from "./ChannelAvatar.jsx";
 
 
 // ---------------------------------------------------------------------
-// 2. HELPERS  — turn a video ID into YouTube URLs
+// 1. VIDEO CARD
 // ---------------------------------------------------------------------
-const embedUrl = (id) => `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0`;
+// The card is a LINK, not a player. The watch page is where progress is
+// recorded, so opening a lesson from here counts towards Continue watching,
+// the streak and the watched ticks — and arrives with the lesson sequence,
+// notes, materials and the rating/report controls beside it.
+//
+// ?v= selects the lesson on that page and takes the YouTube id, not the row
+// id (see how CourseVideoPage matches lesson.videoId).
+export function watchHref(video) {
+  return video?.playlistId
+    ? `/course/${video.playlistId}?v=${encodeURIComponent(video.youtubeVideoId)}`
+    : null;
+}
 
-// ---------------------------------------------------------------------
-// 3. VIDEO CARD
-// ---------------------------------------------------------------------
-export function VideoCard({ video, onOpen }) {
+export function VideoCard({ video }) {
   const { t } = useTheme();
+  const href = watchHref(video);
 
   return (
     <div className={`group flex flex-col overflow-hidden rounded-xl border ${t.border} ${t.card} shadow-sm transition hover:shadow-md`}>
-      {/* Thumbnail (click to open) */}
-      <button
-        onClick={() => onOpen(video)}
-        aria-label={`Watch ${video.title}`}
-        className="relative block aspect-video w-full overflow-hidden"
-      >
-        <YouTubeThumbnail
-          videoId={video.youtubeVideoId}
-          alt={video.title}
-          className="h-full w-full"
-          imageClassName="transition duration-300 group-hover:scale-105"
-        />
-        {/* Play overlay on hover */}
-        <span
-          className="absolute inset-0 flex items-center justify-center opacity-0 transition group-hover:opacity-100"
-          style={{ backgroundColor: "rgba(15,23,42,0.35)" }}
+      {/* Thumbnail (click to open the lesson) */}
+      {href ? (
+        <Link
+          to={href}
+          aria-label={`Watch ${video.title}`}
+          className="relative block aspect-video w-full overflow-hidden focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-accent"
         >
-          <Play className="h-12 w-12 text-white" fill="white" />
-        </span>
-      </button>
+          <YouTubeThumbnail
+            videoId={video.youtubeVideoId}
+            alt={video.title}
+            className="h-full w-full"
+            imageClassName="transition duration-300 group-hover:scale-105"
+          />
+          {/* Play overlay on hover */}
+          <span
+            className="absolute inset-0 flex items-center justify-center opacity-0 transition group-hover:opacity-100"
+            style={{ backgroundColor: "rgba(15,23,42,0.35)" }}
+          >
+            <Play className="h-12 w-12 text-white" fill="white" />
+          </span>
+        </Link>
+      ) : (
+        <div className="relative block aspect-video w-full overflow-hidden">
+          <YouTubeThumbnail
+            videoId={video.youtubeVideoId}
+            alt={video.title}
+            className="h-full w-full"
+          />
+        </div>
+      )}
 
       {/* Text + button */}
       <div className="flex flex-1 flex-col gap-2 p-4">
@@ -103,124 +125,29 @@ export function VideoCard({ video, onOpen }) {
           {video.subject} · {video.chapter}
         </p>
 
-        <button
-          onClick={() => onOpen(video)}
-          className="mt-auto inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-accent-ink transition hover:brightness-110"
-        >
-          <Play className="h-4 w-4" fill="currentColor" />
-          Watch Lesson
-        </button>
-      </div>
-    </div>
-  );
-}
-
-// ---------------------------------------------------------------------
-// 4. VIDEO MODAL  — the YouTube pop-up player
-// ---------------------------------------------------------------------
-export function VideoModal({ video, onClose }) {
-  const { t } = useTheme();
-  // Close on Escape key, and stop the page behind from scrolling.
-  useEffect(() => {
-    const onKey = (e) => e.key === "Escape" && onClose();
-    document.addEventListener("keydown", onKey);
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.removeEventListener("keydown", onKey);
-      document.body.style.overflow = "";
-    };
-  }, [onClose]);
-
-  return (
-    // Dark backdrop — clicking it closes the modal.
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="video-modal-title"
-    >
-      <button
-        type="button"
-        aria-label="Dismiss video dialog"
-        tabIndex={-1}
-        className="absolute inset-0 cursor-default"
-        style={{ backgroundColor: "rgba(15,23,42,0.75)" }}
-        onClick={onClose}
-      />
-      <div
-        className={`relative w-full max-w-3xl overflow-hidden rounded-2xl ${t.card} ${t.text} shadow-2xl`}
-      >
-        {/* Header */}
-        <div className={`flex items-start justify-between gap-4 border-b ${t.border} p-4`}>
-          <div>
-            <h2 id="video-modal-title" className={`font-semibold leading-snug ${t.text}`}>{video.title}</h2>
-            <div className={`mt-1 flex flex-wrap items-center gap-1 text-xs ${t.muted}`}>
-              {video.instituteId ? (
-                <Link
-                  to={`/browse?channel=${video.instituteId}`}
-                  onClick={onClose}
-                  aria-label={`View all courses from ${video.institute}`}
-                  className="inline-flex items-center gap-1 rounded-sm font-medium hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-                >
-                  <ChannelAvatar
-                    url={video.instituteLogoUrl}
-                    name={video.institute}
-                    className="h-5 w-5"
-                  />
-                  {video.institute}
-                </Link>
-              ) : (
-                <span className="inline-flex items-center gap-1">
-                  <ChannelAvatar
-                    url={video.instituteLogoUrl}
-                    name={video.institute}
-                    className="h-5 w-5"
-                  />
-                  {video.institute}
-                </span>
-              )}
-              <span aria-hidden="true">·</span>
-              <span>{video.subject}</span>
-              <span aria-hidden="true">·</span>
-              <span>{video.chapter}</span>
-            </div>
-          </div>
-          <button
-            onClick={onClose}
-            aria-label="Close"
-            className={`flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-lg ${t.muted} ${t.hover} transition`}
+        {href ? (
+          <Link
+            to={href}
+            className="mt-auto inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-accent-ink transition hover:brightness-110 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
           >
-            <X className="h-5 w-5" />
-          </button>
-        </div>
-
-        {/* Official YouTube embed */}
-        <div className="aspect-video w-full bg-black">
-          <iframe
-            className="h-full w-full"
-            src={embedUrl(video.youtubeVideoId)}
-            title={video.title}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            referrerPolicy="strict-origin-when-cross-origin"
-            allowFullScreen
-          />
-        </div>
-
-        {/* Disclaimer */}
-        <div className="p-4">
-          <p className={`text-xs leading-relaxed ${t.muted}`}>
-            This content belongs to {video.institute} and is streamed via
-            YouTube's official embed API.
+            <Play className="h-4 w-4" fill="currentColor" />
+            Watch Lesson
+          </Link>
+        ) : (
+          // No course contains this lesson, so there is no page that can play
+          // it and record the progress. Say that instead of offering a button
+          // that leads nowhere.
+          <p className={`mt-auto text-xs ${t.muted}`}>
+            This lesson isn’t part of a course yet, so there’s no lesson page to open.
           </p>
-        </div>
+        )}
       </div>
     </div>
   );
 }
 
-
 // ---------------------------------------------------------------------
-// 6. SEARCH BAR
+// 2. SEARCH BAR
 // ---------------------------------------------------------------------
 function SearchBar({ value, onChange, ariaLabel = "Search courses and lessons" }) {
   const { t } = useTheme();
@@ -258,7 +185,7 @@ function SearchBar({ value, onChange, ariaLabel = "Search courses and lessons" }
 }
 
 // ---------------------------------------------------------------------
-// 7. DASHBOARD  — the main component (this is what you export/use)
+// 3. DASHBOARD  — the main component (this is what you export/use)
 // ---------------------------------------------------------------------
 // A stable skeleton that matches VideoCard's shape, so the layout doesn't
 // jump when the real cards arrive.
@@ -332,7 +259,6 @@ export default function Dashboard() {
     if (p > 0) next.set("page", String(p)); else next.delete("page");
     return next;
   });
-  const [activeVideo, setActiveVideo] = useState(null); // video shown in modal
 
   // Search: type into a local box, debounce, THEN push into the URL, so the
   // database query (and the shareable link) only update once typing settles.
@@ -724,7 +650,7 @@ export default function Dashboard() {
             <>
               <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
                 {videos.map((v) => (
-                  <VideoCard key={v.id} video={v} onOpen={setActiveVideo} />
+                  <VideoCard key={v.id} video={v} />
                 ))}
               </div>
               {(page > 0 || hasMore) && (
@@ -759,11 +685,6 @@ export default function Dashboard() {
       </div>
 
       {/* ---------- MOBILE SIDEBAR DRAWER ---------- */}
-
-      {/* ---------- VIDEO MODAL ---------- */}
-      {activeVideo && (
-        <VideoModal video={activeVideo} onClose={() => setActiveVideo(null)} />
-      )}
     </div>
   );
 }

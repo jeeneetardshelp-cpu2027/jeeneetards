@@ -26,7 +26,7 @@
 import { Suspense, lazy, useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router";
 import {
-  ArrowRight, BookOpen, Loader2, PlayCircle, Search, Users, X,
+  ArrowRight, BookOpen, FileCheck2, FileText, Loader2, PlayCircle, Search, Users, X,
 } from "lucide-react";
 import { usePlaylistBrowse } from "./usePlaylistBrowse.js";
 import { Container, GlobalHeader } from "./AppShell.jsx";
@@ -360,12 +360,19 @@ function Landing({
 // ---------------------------------------------------------------------
 //  Grouped search results
 // ---------------------------------------------------------------------
+// Appended, not inserted: the study-material groups only appear once
+// supabase/migrations/20260901160000_universal_search_materials.sql is applied,
+// and until then universal_search returns no rows for them — `visible` below
+// already drops any group with no rows, so this page looks exactly as it does
+// today. The five video groups keep their existing order either way.
 const HOME_GROUPS = [
   { key: "chapter", label: "Chapters", icon: BookOpen },
   { key: "playlist", label: "Courses", icon: PlayCircle },
   { key: "lecture", label: "Lectures", icon: PlayCircle },
   { key: "faculty", label: "Teachers", icon: Users, gated: "facultyRegistry" },
   { key: "institute", label: "Channels", icon: Users },
+  { key: "material", label: "Notes & sheets", icon: FileText },
+  { key: "paper", label: "Previous-year papers", icon: FileCheck2 },
 ];
 
 function SearchResults({ groups, loading, error, tooShort, retry, query }) {
@@ -385,7 +392,7 @@ function SearchResults({ groups, loading, error, tooShort, retry, query }) {
     return (
       <EmptyState
         title={`Type at least ${MIN_QUERY} characters`}
-        detail="Search looks across chapters, courses, teachers and individual lectures."
+        detail="Search looks across chapters, courses, teachers, individual lectures, notes and previous-year papers."
       />
     );
   }

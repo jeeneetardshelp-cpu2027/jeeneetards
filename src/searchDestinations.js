@@ -11,6 +11,31 @@
 // navigates to a bare /browse throws away the very thing the student searched
 // for, which was the original complaint.
 
+import { JEE_MAIN_PAPERS_PATH } from "./studyMaterialLandings.js";
+
+/**
+ * Where a study-material result goes on THIS site. /materials reads exactly
+ * these query keys (StudyMaterialsPage.jsx) and hands them to
+ * get_study_materials as p_goal_slug / p_class_slug / p_subject_slug /
+ * p_chapter_slug / p_material_type.
+ *
+ * The RPC satisfies those four slugs from a SINGLE study_material_scopes row,
+ * and universal_search built this row's slugs from one such row, so the
+ * combination is guaranteed to list the material the student just clicked —
+ * never a filter set we have not verified renders content. Anything the RPC
+ * did not send is simply left out, which only widens the page.
+ */
+function materialsHref(extra) {
+  const params = new URLSearchParams();
+  if (extra.goal_slug) params.set("goal", extra.goal_slug);
+  if (extra.class_slug) params.set("class", extra.class_slug);
+  if (extra.subject_slug) params.set("subject", extra.subject_slug);
+  if (extra.chapter_slug) params.set("chapter", extra.chapter_slug);
+  if (extra.material_type) params.set("type", extra.material_type);
+  const query = params.toString();
+  return query ? `/materials?${query}` : "/materials";
+}
+
 export function resultHref(groupKey, row) {
   const extra = row?.extra ?? {};
   switch (groupKey) {
@@ -42,6 +67,19 @@ export function resultHref(groupKey, row) {
         ? `${base}?v=${encodeURIComponent(extra.youtube_video_id)}`
         : base;
     }
+    case "material":
+      // Notes, formula sheets and full lecture notes: the /materials directory
+      // is the only page that lists them, narrowed to this material's own
+      // syllabus scope.
+      return materialsHref(extra);
+    case "paper":
+      // A JEE Main previous-year paper belongs on the curated papers landing —
+      // organised by year, session and shift, which the flat directory is not.
+      // jee_main_landing is set by the RPC using the same title test the
+      // landing page itself queries with (JEE_MAIN_PAPERS_TITLE_PATTERN), so
+      // the paper is definitely on the page we send them to. Every other paper
+      // falls back to the directory.
+      return extra.jee_main_landing ? JEE_MAIN_PAPERS_PATH : materialsHref(extra);
     case "institute":
       return `/browse?channel=${extra.institute_id ?? row.id}`;
     case "faculty":

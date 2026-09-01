@@ -1,6 +1,10 @@
 // UniversalSearch.jsx — one search box for the whole library.
 //
-// Results are grouped: Faculty · Chapters · Playlists · Lectures · Institutes.
+// Results are grouped: Faculty · Chapters · Playlists · Lectures · Institutes ·
+// Notes & sheets · Previous-year papers — the whole library, not only the videos.
+// The group list itself lives in useUniversalSearch.js; everything here (the
+// type chips, the sections, the arrow-key list) is driven off it, so a group
+// the deployed RPC does not yet return costs nothing and shows nothing.
 //
 //   Amit Bijarnia
 //   Also known as: ABJ Sir
@@ -240,7 +244,7 @@ export default function UniversalSearch() {
           value={text}
           onChange={(e) => setText(e.target.value)}
           onKeyDown={onKeyDown}
-          placeholder="Search teachers, chapters, courses…"
+          placeholder="Search teachers, chapters, courses, notes and papers…"
           aria-label="Search the library"
           role="combobox"
           aria-expanded={hasResults}
@@ -322,7 +326,7 @@ export default function UniversalSearch() {
               Nothing matches “{text.trim()}”.
             </p>
             <p className={`mt-1 text-sm ${t.muted}`}>
-              Try a teacher’s name, a chapter, or an institute.
+              Try a teacher’s name, a chapter, an institute, or an exam year.
             </p>
           </div>
         ) : hasResults ? (

@@ -5,12 +5,13 @@ This directory is the **ordered migration chain** for the production database
 live schema on 31 Aug 2026 and recorded in the remote migration history, so
 `supabase db push` applies only what production does not already have.
 
-## Current state (31 Aug 2026)
+## Current state (1 Sep 2026)
 
 | File | Status |
 | --- | --- |
 | `20260831140005_production_baseline.sql` | **Applied** (it IS production — 66 tables, 181 functions, 98 RLS policies, recorded via `migration repair`). |
-| `20260901120000_study_days.sql` | **Pending.** Server copy of prep-streak study days (owner-only RLS, mirrors `video_progress`). The frontend ships with this sync dormant; applying the migration switches it on. |
+| `20260901120000_study_days.sql` | **Applied** 31 Aug 2026. Server copy of prep-streak study days (owner-only RLS, mirrors `video_progress`); the frontend sync woke up on its own when this landed. |
+| `20260901160000_universal_search_materials.sql` | **Pending.** Adds `material` and `paper` groups to `universal_search`, so study notes, formula sheets and previous-year papers become findable from the main search box. The client half already ships and degrades to today's behaviour until this is pushed. |
 
 `npx supabase migration list` shows this local-vs-remote state at any time.
 
@@ -42,12 +43,11 @@ will run.
   exact dump recipe (`supabase db dump --dry-run`) through the portable
   PostgreSQL 17.6 `pg_dump` in `C:\Users\itiso\tools\pgsql-17` (kept for
   future pulls; safe to delete otherwise).
-- The **polls backend is already live in production** (all `poll_*` tables are
-  in the baseline), so no polls migration is staged here. Activating polls is
-  now only the runbook's remaining steps: switch `poll_mode()` to `'open'`
-  from the admin panel, then flip `polls: true` in
-  `src/releaseCapabilities.js` and deploy
-  (see `docs/polls/POLLS_V1_ACTIVATION_RUNBOOK.md`).
+- The **polls backend was already live in production** (all `poll_*` tables
+  are in the baseline), so no polls migration is staged here. Polls have
+  since been switched on: `poll_mode()` is open and `RELEASE_FEATURES.polls`
+  is `true` (see `docs/polls/POLLS_V1_ACTIVATION_RUNBOOK.md`). The database
+  mode remains the real switch — the flag only decides which pages route.
 - The long-mysterious `rls_auto_enable` production RPC is captured in the
   baseline and is benign: an event-trigger function that auto-enables row
   level security on any new table created in `public` (SECURITY DEFINER,

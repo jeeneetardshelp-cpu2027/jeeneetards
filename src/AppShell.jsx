@@ -40,6 +40,7 @@ import { clearStreak, mergeStudyDays, streakStats } from "./streak.js";
 import { pullServerStudyDays } from "./streakSync.js";
 import { clearRevision } from "./revision.js";
 import { prefersReducedMotion } from "./motion.jsx";
+import { langAttrs } from "./lang.js";
 
 // Study days are pulled once per user per PAGE LOAD, not per navigation: the
 // header remounts on every route change, and re-fetching an unchanging set
@@ -110,6 +111,73 @@ function ProgressLine() {
       style={{ transform: "scaleX(0)" }}
       ref={ref}
     />
+  );
+}
+
+// The id the skip link targets. Exported so a page that renders its own
+// <main> can carry it explicitly — FacultyDirectory already does.
+export const MAIN_CONTENT_ID = "main-content";
+
+/**
+ * Skip to main content — the first focusable element on every page.
+ *
+ * WHY: on a phone this header stacks up to three rows (brand + controls, the
+ * scrollable nav rail, breadcrumbs). Without a skip link a keyboard or screen
+ * reader user tabs through the brand, every nav pill and every crumb before
+ * reaching the page body — on EVERY route. JEE and NEET both have PwD
+ * categories, so that is a real student, not a hypothetical one.
+ *
+ * WHERE THE TARGET LIVES: the <main> landmark is rendered by each page
+ * component (Home, Explore, MinimalUI, TestsPage, …), not by this file, and
+ * only AppShell's own <Page> and FacultyDirectory set an id on it. So:
+ *
+ *   • On mount this adopts the page's first UNNAMED <main>, giving it the id.
+ *     A <main> that already carries an id is left alone — clobbering it would
+ *     break whatever links to it.
+ *   • The click handler resolves the target AGAIN at click time (pages that
+ *     swap their <main> between a loading and a loaded state would otherwise
+ *     lose the id) and moves focus there. This part is not optional: a bare
+ *     hash jump scrolls the viewport but leaves focus in the header, so the
+ *     next Tab lands back in the nav — the exact problem the link exists to
+ *     solve. <main> is not focusable by default, hence tabindex="-1".
+ *
+ * A follow-up should put id="main-content" on each page's own <main>, at
+ * which point the adoption effect quietly becomes a no-op.
+ *
+ * The visuals (hidden until focused, then a real 44px control in both themes)
+ * live in the .skip-link rule in index.css.
+ */
+function SkipLink() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    if (document.getElementById(MAIN_CONTENT_ID)) return undefined;
+    const main = document.querySelector("main");
+    if (!main || main.id) return undefined;
+    main.id = MAIN_CONTENT_ID;
+    return () => {
+      // Only ever unset the id this effect set.
+      if (main.id === MAIN_CONTENT_ID) main.removeAttribute("id");
+    };
+  }, [pathname]);
+
+  const skipToContent = (event) => {
+    const target =
+      document.getElementById(MAIN_CONTENT_ID) ?? document.querySelector("main");
+    if (!target) return;
+    event.preventDefault();
+    if (!target.hasAttribute("tabindex")) target.setAttribute("tabindex", "-1");
+    target.focus({ preventScroll: true });
+    // scrollIntoView (not focus's own scrolling) because it honours the
+    // `scroll-padding-top` in index.css, which keeps the sticky header from
+    // covering the first line of content.
+    target.scrollIntoView?.();
+  };
+
+  return (
+    <a href={`#${MAIN_CONTENT_ID}`} className="skip-link" onClick={skipToContent}>
+      Skip to main content
+    </a>
   );
 }
 
@@ -222,46 +290,161 @@ export function GlobalHeader({ crumbs = [], search = null, leading = null, width
   };
 
   return (
-    <header
-      className={`sticky top-0 z-40 transition-[background-color,border-color,box-shadow] duration-500 [transition-timing-function:var(--ease-out-expo)] ${
-        scrolled
-          ? "glass border-b border-hairline shadow-e2"
-          : "border-b border-transparent"
-      }`}
-      style={scrolled ? undefined : { backgroundColor: "color-mix(in oklab, var(--canvas) 72%, transparent)", backdropFilter: "blur(12px)" }}
-    >
-      <Container width={width}>
-        <div className="flex min-h-14 items-center gap-2 sm:gap-3">
-          {leading}
-          <Link
-            to="/"
-            aria-label="JEENEETARD home"
-            className="group/brand flex min-h-11 shrink-0 items-center gap-3 rounded-md px-1"
-          >
-            <BrandMark />
-            <span className="hidden text-[1.0625rem] font-semibold tracking-[-0.03em] text-ink transition-opacity duration-300 group-hover/brand:opacity-80 sm:inline">
-              JEENEETARD
-            </span>
-          </Link>
-
-          {/* The streak, where studying actually happens — a compact flame +
-              day count beside the brand, on every page including the watch
-              page. Links home, where the full "Your prep today" band lives.
-              Hidden at zero: a "0 days" badge is guilt, not information, and
-              it keeps the crowded mobile row (brand + three icon buttons)
-              free for the students the chip has nothing to say to. */}
-          {streak.current >= 1 && (
+    <>
+      {/* First focusable element on the page — the header is the first thing
+          every route renders, so this is the first thing every keyboard user
+          reaches. It is out of flow until focused, so it changes no layout. */}
+      <SkipLink />
+      <header
+        className={`sticky top-0 z-40 transition-[background-color,border-color,box-shadow] duration-500 [transition-timing-function:var(--ease-out-expo)] ${
+          scrolled
+            ? "glass border-b border-hairline shadow-e2"
+            : "border-b border-transparent"
+        }`}
+        style={scrolled ? undefined : { backgroundColor: "color-mix(in oklab, var(--canvas) 72%, transparent)", backdropFilter: "blur(12px)" }}
+      >
+        <Container width={width}>
+          <div className="flex min-h-14 items-center gap-2 sm:gap-3">
+            {leading}
             <Link
               to="/"
-              aria-label={`Study streak: ${streak.current} day${streak.current === 1 ? "" : "s"}`}
-              className="flex min-h-11 shrink-0 items-center gap-1 rounded-md px-1.5 text-sm font-semibold tabular-nums text-ink-2 transition-colors duration-200 hover:bg-surface-2 hover:text-ink"
+              aria-label="JEENEETARD home"
+              className="group/brand flex min-h-11 shrink-0 items-center gap-3 rounded-md px-1"
             >
-              <Flame className="h-4 w-4 text-accent" aria-hidden="true" />
-              {streak.current}
+              <BrandMark />
+              <span className="hidden text-[1.0625rem] font-semibold tracking-[-0.03em] text-ink transition-opacity duration-300 group-hover/brand:opacity-80 sm:inline">
+                JEENEETARD
+              </span>
             </Link>
+
+            {/* The streak, where studying actually happens — a compact flame +
+                day count beside the brand, on every page including the watch
+                page. Links home, where the full "Your prep today" band lives.
+                Hidden at zero: a "0 days" badge is guilt, not information, and
+                it keeps the crowded mobile row (brand + three icon buttons)
+                free for the students the chip has nothing to say to. */}
+            {streak.current >= 1 && (
+              <Link
+                to="/"
+                aria-label={`Study streak: ${streak.current} day${streak.current === 1 ? "" : "s"}`}
+                className="flex min-h-11 shrink-0 items-center gap-1 rounded-md px-1.5 text-sm font-semibold tabular-nums text-ink-2 transition-colors duration-200 hover:bg-surface-2 hover:text-ink"
+              >
+                <Flame className="h-4 w-4 text-accent" aria-hidden="true" />
+                {streak.current}
+              </Link>
+            )}
+
+            <nav aria-label="Primary navigation" className="ml-3 hidden items-center gap-1 lg:flex">
+              {nav.map((n) => {
+                const active = isActive(n.to);
+                return (
+                  <Link
+                    key={n.to}
+                    to={n.to}
+                    aria-current={active ? "page" : undefined}
+                    className={`relative flex min-h-11 items-center rounded-md px-3.5 text-sm transition-colors duration-300 ${
+                      active
+                        ? "font-medium text-ink"
+                        : "text-ink-2 hover:bg-surface-2 hover:text-ink"
+                    }`}
+                  >
+                    {active && (
+                      <span
+                        aria-hidden="true"
+                        className="absolute inset-0 rounded-md border border-hairline bg-surface-2"
+                      />
+                    )}
+                    <span className="relative">{n.label}</span>
+                  </Link>
+                );
+              })}
+            </nav>
+
+            {/* Below 640px the row is brand + controls; a search box pushed ~53px
+                past the viewport at 360. Hidden here rather than clipped — every
+                screen that passes a search also offers it in the page body. */}
+            <div className="ml-auto hidden min-w-0 flex-1 sm:block sm:max-w-sm">{search}</div>
+
+            {/* The library search now lives as one persistent icon on EVERY page,
+                instead of a nav pill that only reached it from a menu. Sits in the
+                controls cluster (right-aligned by the ml-auto box above), visible
+                on mobile too where the old pill scrolled off-screen. */}
+            {RELEASE_CAPABILITIES.universalSearch && (
+              <Link
+                to="/search"
+                aria-label="Search the library"
+                aria-current={pathname.startsWith("/search") ? "page" : undefined}
+                className="flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-md text-ink-2 transition-colors duration-200 hover:bg-surface-2 hover:text-ink"
+              >
+                <Search className="h-5 w-5" aria-hidden="true" />
+              </Link>
+            )}
+
+            {session?.user ? (
+              <div className="flex shrink-0 items-center">
+                {RELEASE_FEATURES.studentAccounts && pathname !== "/forum/username" && (
+                  <Link
+                    to="/forum/username"
+                    aria-label="Forum username"
+                    className="flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-md px-2.5 text-sm text-ink-2 transition-colors duration-200 hover:bg-surface-2 hover:text-ink"
+                  >
+                    <AtSign className="h-4 w-4" aria-hidden="true" />
+                    <span className="hidden lg:inline">Forum username</span>
+                  </Link>
+                )}
+                <button
+                  type="button"
+                  onClick={signOut}
+                  disabled={signingOut}
+                  aria-label="Sign out"
+                  className="flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-md px-2.5 text-sm text-ink-2 transition-colors duration-200 hover:bg-surface-2 hover:text-ink disabled:opacity-50"
+                >
+                  <LogOut className="h-4 w-4" aria-hidden="true" />
+                  <span className="hidden lg:inline">{signingOut ? "Signing out…" : "Sign out"}</span>
+                </button>
+              </div>
+            ) : (
+              // The front door for an account. Only shown when accounts are a
+              // real release feature; carries the current path so signing in
+              // returns the student to where they were, not to the homepage.
+              // /signin is itself excluded from this, or the return would loop.
+              RELEASE_FEATURES.studentAccounts && pathname !== "/signin" && (
+                <Link
+                  to={`/signin?next=${encodeURIComponent(pathname)}`}
+                  aria-label="Sign in"
+                  className="flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-md px-2.5 text-sm text-ink-2 transition-colors duration-200 hover:bg-surface-2 hover:text-ink"
+                >
+                  <LogIn className="h-4 w-4" aria-hidden="true" />
+                  <span className="hidden lg:inline">Sign in</span>
+                </Link>
+              )
+            )}
+
+            <button
+              type="button"
+              onClick={toggle}
+              aria-label={dark ? "Use light theme" : "Use dark theme"}
+              aria-pressed={dark}
+              className="group/theme relative ml-auto flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-md text-ink-2 transition-colors duration-200 hover:bg-surface-2 hover:text-ink sm:ml-0"
+            >
+              {dark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+            </button>
+          </div>
+
+          {signOutError && (
+            <p role="alert" className="pb-2 text-right text-xs text-rose-500">
+              {signOutError}
+            </p>
           )}
 
-          <nav aria-label="Primary navigation" className="ml-3 hidden items-center gap-1 lg:flex">
+          {/* Mobile / tablet nav: a scrollable segmented rail. Labels are the
+              full strings the audit matches on, so nothing wraps or truncates.
+              Marked as an intentional horizontal scroller. */}
+          <nav
+            aria-label="Primary navigation"
+            data-allow-horizontal-scroll="true"
+            className="scrollbar-none -mx-4 flex gap-2 overflow-x-auto border-t border-hairline px-4 py-2 lg:hidden"
+          >
             {nav.map((n) => {
               const active = isActive(n.to);
               return (
@@ -269,174 +452,73 @@ export function GlobalHeader({ crumbs = [], search = null, leading = null, width
                   key={n.to}
                   to={n.to}
                   aria-current={active ? "page" : undefined}
-                  className={`relative flex min-h-11 items-center rounded-md px-3.5 text-sm transition-colors duration-300 ${
+                  className={`flex min-h-11 shrink-0 items-center whitespace-nowrap rounded-md border px-4 text-sm transition-colors duration-200 ${
                     active
-                      ? "font-medium text-ink"
-                      : "text-ink-2 hover:bg-surface-2 hover:text-ink"
+                      ? "border-accent-line bg-accent-soft font-medium text-accent"
+                      : "border-hairline text-ink-2"
                   }`}
                 >
-                  {active && (
-                    <span
-                      aria-hidden="true"
-                      className="absolute inset-0 rounded-md border border-hairline bg-surface-2"
-                    />
-                  )}
-                  <span className="relative">{n.label}</span>
+                  {n.label}
                 </Link>
               );
             })}
           </nav>
 
-          {/* Below 640px the row is brand + controls; a search box pushed ~53px
-              past the viewport at 360. Hidden here rather than clipped — every
-              screen that passes a search also offers it in the page body. */}
-          <div className="ml-auto hidden min-w-0 flex-1 sm:block sm:max-w-sm">{search}</div>
-
-          {/* The library search now lives as one persistent icon on EVERY page,
-              instead of a nav pill that only reached it from a menu. Sits in the
-              controls cluster (right-aligned by the ml-auto box above), visible
-              on mobile too where the old pill scrolled off-screen. */}
-          {RELEASE_CAPABILITIES.universalSearch && (
-            <Link
-              to="/search"
-              aria-label="Search the library"
-              aria-current={pathname.startsWith("/search") ? "page" : undefined}
-              className="flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-md text-ink-2 transition-colors duration-200 hover:bg-surface-2 hover:text-ink"
+          {crumbs.length > 0 && (
+            // Breadcrumbs scroll horizontally on a phone rather than wrapping
+            // into a three-line stack or forcing the page wider than the screen.
+            <nav
+              aria-label="Breadcrumb"
+              data-allow-horizontal-scroll="true"
+              className="scrollbar-none -mx-4 flex items-center gap-1 overflow-x-auto px-4 pb-2 text-sm sm:mx-0 sm:px-0"
             >
-              <Search className="h-5 w-5" aria-hidden="true" />
-            </Link>
+              {/* langAttrs marks a Devanagari crumb — a course or chapter title
+                  like "कबीर की साखी" — as lang="hi". The document is lang="en",
+                  so without this a screen reader reads those titles with English
+                  phonetics. It returns {} for Latin text, so English crumbs are
+                  untouched. See src/lang.js. */}
+              {crumbs.map((c, i) => (
+                <span key={`${c.to ?? c.label}-${i}`} className="flex shrink-0 items-center gap-1">
+                  {i > 0 && <ChevronRight aria-hidden="true" className="h-3.5 w-3.5 text-ink-3" />}
+                  {c.onClick ? (
+                    <button
+                      // A crumb may carry an explicit handler instead of a URL:
+                      // the course page returns to the exact filtered results it
+                      // came from, which a hardcoded /browse would discard.
+                      onClick={() => c.onClick()}
+                      {...langAttrs(c.label)}
+                      className="flex min-h-11 items-center rounded-md px-1.5 text-ink-2 transition-colors duration-200 hover:text-ink"
+                    >
+                      {c.label}
+                    </button>
+                  ) : c.to ? (
+                    <Link
+                      to={c.to}
+                      {...langAttrs(c.label)}
+                      className="flex min-h-11 items-center rounded-md px-1.5 text-ink-2 transition-colors duration-200 hover:text-ink"
+                    >
+                      {c.label}
+                    </Link>
+                  ) : (
+                    <span
+                      aria-current={i === crumbs.length - 1 ? "page" : undefined}
+                      {...langAttrs(c.label)}
+                      className={`flex min-h-11 items-center px-1.5 ${
+                        i === crumbs.length - 1 ? "font-medium text-ink" : "text-ink-2"
+                      }`}
+                    >
+                      {c.label}
+                    </span>
+                  )}
+                </span>
+              ))}
+            </nav>
           )}
+        </Container>
 
-          {session?.user ? (
-            <div className="flex shrink-0 items-center">
-              {RELEASE_FEATURES.studentAccounts && pathname !== "/forum/username" && (
-                <Link
-                  to="/forum/username"
-                  aria-label="Forum username"
-                  className="flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-md px-2.5 text-sm text-ink-2 transition-colors duration-200 hover:bg-surface-2 hover:text-ink"
-                >
-                  <AtSign className="h-4 w-4" aria-hidden="true" />
-                  <span className="hidden lg:inline">Forum username</span>
-                </Link>
-              )}
-              <button
-                type="button"
-                onClick={signOut}
-                disabled={signingOut}
-                aria-label="Sign out"
-                className="flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-md px-2.5 text-sm text-ink-2 transition-colors duration-200 hover:bg-surface-2 hover:text-ink disabled:opacity-50"
-              >
-                <LogOut className="h-4 w-4" aria-hidden="true" />
-                <span className="hidden lg:inline">{signingOut ? "Signing out…" : "Sign out"}</span>
-              </button>
-            </div>
-          ) : (
-            // The front door for an account. Only shown when accounts are a
-            // real release feature; carries the current path so signing in
-            // returns the student to where they were, not to the homepage.
-            // /signin is itself excluded from this, or the return would loop.
-            RELEASE_FEATURES.studentAccounts && pathname !== "/signin" && (
-              <Link
-                to={`/signin?next=${encodeURIComponent(pathname)}`}
-                aria-label="Sign in"
-                className="flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-md px-2.5 text-sm text-ink-2 transition-colors duration-200 hover:bg-surface-2 hover:text-ink"
-              >
-                <LogIn className="h-4 w-4" aria-hidden="true" />
-                <span className="hidden lg:inline">Sign in</span>
-              </Link>
-            )
-          )}
-
-          <button
-            type="button"
-            onClick={toggle}
-            aria-label={dark ? "Use light theme" : "Use dark theme"}
-            aria-pressed={dark}
-            className="group/theme relative ml-auto flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-md text-ink-2 transition-colors duration-200 hover:bg-surface-2 hover:text-ink sm:ml-0"
-          >
-            {dark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-          </button>
-        </div>
-
-        {signOutError && (
-          <p role="alert" className="pb-2 text-right text-xs text-rose-500">
-            {signOutError}
-          </p>
-        )}
-
-        {/* Mobile / tablet nav: a scrollable segmented rail. Labels are the
-            full strings the audit matches on, so nothing wraps or truncates.
-            Marked as an intentional horizontal scroller. */}
-        <nav
-          aria-label="Primary navigation"
-          data-allow-horizontal-scroll="true"
-          className="scrollbar-none -mx-4 flex gap-2 overflow-x-auto border-t border-hairline px-4 py-2 lg:hidden"
-        >
-          {nav.map((n) => {
-            const active = isActive(n.to);
-            return (
-              <Link
-                key={n.to}
-                to={n.to}
-                aria-current={active ? "page" : undefined}
-                className={`flex min-h-11 shrink-0 items-center whitespace-nowrap rounded-md border px-4 text-sm transition-colors duration-200 ${
-                  active
-                    ? "border-accent-line bg-accent-soft font-medium text-accent"
-                    : "border-hairline text-ink-2"
-                }`}
-              >
-                {n.label}
-              </Link>
-            );
-          })}
-        </nav>
-
-        {crumbs.length > 0 && (
-          // Breadcrumbs scroll horizontally on a phone rather than wrapping
-          // into a three-line stack or forcing the page wider than the screen.
-          <nav
-            aria-label="Breadcrumb"
-            data-allow-horizontal-scroll="true"
-            className="scrollbar-none -mx-4 flex items-center gap-1 overflow-x-auto px-4 pb-2 text-sm sm:mx-0 sm:px-0"
-          >
-            {crumbs.map((c, i) => (
-              <span key={`${c.to ?? c.label}-${i}`} className="flex shrink-0 items-center gap-1">
-                {i > 0 && <ChevronRight aria-hidden="true" className="h-3.5 w-3.5 text-ink-3" />}
-                {c.onClick ? (
-                  <button
-                    // A crumb may carry an explicit handler instead of a URL:
-                    // the course page returns to the exact filtered results it
-                    // came from, which a hardcoded /browse would discard.
-                    onClick={() => c.onClick()}
-                    className="flex min-h-11 items-center rounded-md px-1.5 text-ink-2 transition-colors duration-200 hover:text-ink"
-                  >
-                    {c.label}
-                  </button>
-                ) : c.to ? (
-                  <Link
-                    to={c.to}
-                    className="flex min-h-11 items-center rounded-md px-1.5 text-ink-2 transition-colors duration-200 hover:text-ink"
-                  >
-                    {c.label}
-                  </Link>
-                ) : (
-                  <span
-                    aria-current={i === crumbs.length - 1 ? "page" : undefined}
-                    className={`flex min-h-11 items-center px-1.5 ${
-                      i === crumbs.length - 1 ? "font-medium text-ink" : "text-ink-2"
-                    }`}
-                  >
-                    {c.label}
-                  </span>
-                )}
-              </span>
-            ))}
-          </nav>
-        )}
-      </Container>
-
-      <ProgressLine />
-    </header>
+        <ProgressLine />
+      </header>
+    </>
   );
 }
 
@@ -445,7 +527,9 @@ export function Page({ crumbs, search, width = "catalogue", children }) {
   return (
     <div className="min-h-screen bg-canvas text-ink">
       <GlobalHeader crumbs={crumbs} search={search} width={width} />
-      <main className="py-8 sm:py-12">
+      {/* The id the header's skip link points at. Pages that render their own
+          <main> instead of using <Page> get it assigned by SkipLink. */}
+      <main id={MAIN_CONTENT_ID} className="py-8 sm:py-12">
         <Container width={width}>{children}</Container>
       </main>
     </div>
