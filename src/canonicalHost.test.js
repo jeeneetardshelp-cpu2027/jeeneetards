@@ -13,8 +13,10 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 const vercel = JSON.parse(readFileSync("vercel.json", "utf8"));
-const rule = (vercel.redirects ?? []).find((r) =>
+const hostRules = (vercel.redirects ?? []).filter((r) =>
   (r.has ?? []).some((h) => h.type === "host"));
+const rule = hostRules.find((r) => r.source !== "/") ?? hostRules[0];
+const rootRule = hostRules.find((r) => r.source === "/");
 
 describe("non-canonical hosts redirect to the real domain", () => {
   it("declares a host-conditional redirect at all", () => {
@@ -61,5 +63,25 @@ describe("non-canonical hosts redirect to the real domain", () => {
     expect(value.endsWith("$")).toBe(true);
     // An unescaped dot matches any character; a host-shaped near-miss must fail.
     expect(new RegExp(value).test("jeeneetards-nineXvercelYapp")).toBe(false);
+  });
+});
+
+// Found by checking the LIVE site, not the config: Vercel's "/:path*" did not
+// match the bare root, so every sub-path redirected while the HOMEPAGE — the
+// page most likely to be indexed and shared — kept serving 200 on the alias.
+// A config test cannot know the platform's matching semantics; only a request
+// can. This pins the explicit rule that closes it.
+describe("the homepage redirects too, not just sub-paths", () => {
+  it("declares an explicit root rule", () => {
+    expect(rootRule, "no redirect with source '/' — the homepage will leak").toBeTruthy();
+    expect(rootRule.destination).toBe("https://www.jeeneetard.com/");
+    expect(rootRule.permanent).toBe(true);
+  });
+
+  it("scopes the root rule to the same non-canonical host", () => {
+    const re = new RegExp(rootRule.has.find((h) => h.type === "host").value);
+    expect(re.test("jeeneetards-nine.vercel.app")).toBe(true);
+    expect(re.test("www.jeeneetard.com")).toBe(false);
+    expect(re.test("jeeneetards-git-main-jeeneet.vercel.app")).toBe(false);
   });
 });

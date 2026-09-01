@@ -11,6 +11,17 @@
   ],
   "redirects": [
     {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "^jeeneetards-nine\\.vercel\\.app$"
+        }
+      ],
+      "destination": "https://www.jeeneetard.com/",
+      "permanent": true
+    },
+    {
       "source": "/:path*",
       "has": [
         {
