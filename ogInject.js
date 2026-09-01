@@ -120,6 +120,15 @@ export function injectRouteMeta(html, meta) {
   const d = escapeHtml(meta.description);
   const u = escapeHtml(`${SITE}${meta.canonicalPath || "/"}`);
   const r = escapeHtml(meta.robots || "index, follow");
+  // pageMetadata declares a type per route — "article" for a forum post or a
+  // single poll, "website" for everything else — and the CLIENT sets it. The
+  // edge did not, so a shared poll or forum link unfurled as og:type "website"
+  // while the same page said "article" once React took over: two sources of
+  // truth disagreeing about the same URL, and the crawler only ever sees the
+  // edge's answer. injectCourseMeta has always set this; the omission here was
+  // the reason /course got it right and every other article route did not.
+  // Defaults to "website", so no existing caller changes behaviour.
+  const ty = escapeHtml(meta.type || "website");
   const out = html
     .replace(/<title>[\s\S]*?<\/title>/, () => `<title>${t}</title>`)
     .replace(/(<meta name="description" content=")[^"]*(")/, (m, a, z) => `${a}${d}${z}`)
@@ -127,6 +136,7 @@ export function injectRouteMeta(html, meta) {
     .replace(/(<meta property="og:title" content=")[^"]*(")/, (m, a, z) => `${a}${t}${z}`)
     .replace(/(<meta property="og:description" content=")[^"]*(")/, (m, a, z) => `${a}${d}${z}`)
     .replace(/(<meta property="og:url" content=")[^"]*(")/, (m, a, z) => `${a}${u}${z}`)
+    .replace(/(<meta property="og:type" content=")[^"]*(")/, (m, a, z) => `${a}${ty}${z}`)
     .replace(/(<meta name="twitter:title" content=")[^"]*(")/, (m, a, z) => `${a}${t}${z}`)
     .replace(/(<meta name="twitter:description" content=")[^"]*(")/, (m, a, z) => `${a}${d}${z}`);
   const canonicalTag = `<link rel="canonical" href="${u}" />`;

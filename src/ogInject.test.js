@@ -376,3 +376,26 @@ describe("injectRouteMeta (non-course routes)", () => {
     expect(injectRouteMeta(shell, null)).toBe(shell);
   });
 });
+
+describe("og:type follows the route's declared type", () => {
+  // pageMetadata declares "article" for a forum post and a single poll, and the
+  // client sets it — but the edge did not, so a shared link unfurled as
+  // "website" while the same page said "article" once React took over. A
+  // crawler only ever sees the edge's answer, so that was the one that mattered.
+  it.each([
+    ["/polls/how-many-hours-do-you-actually-study-1", "article"],
+    ["/forum/post/42", "article"],
+    ["/browse", "website"],
+    ["/tests", "website"],
+  ])("%s unfurls as og:type %s", (pathname, expected) => {
+    const meta = metadataForLocation(pathname);
+    const html = injectRouteMeta(shell, meta);
+    expect(meta.type).toBe(expected);
+    expect(html).toContain(`<meta property="og:type" content="${expected}" />`);
+  });
+
+  it("defaults to website when a caller supplies no type", () => {
+    const html = injectRouteMeta(shell, { title: "T", description: "D", canonicalPath: "/x" });
+    expect(html).toContain('<meta property="og:type" content="website" />');
+  });
+});
