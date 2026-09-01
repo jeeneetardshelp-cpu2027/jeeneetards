@@ -112,15 +112,21 @@ export async function getPlaylistVideos(key, playlistId) {
 }
 
 // videos.list part=statistics, 50 ids per call. Returns a Map of
-// youtubeVideoId -> { viewCount, likeCount }. Used by the popularity refresh
+// youtubeVideoId -> { viewCount, likeCount, publishedAt }. Used by the popularity refresh
 // job; likeCount is null when the creator hides likes. An id missing from the
 // result means the video is deleted/private on YouTube (skip / purge it).
 export async function getVideoStats(key, ids) {
   const map = new Map();
   for (let i = 0; i < ids.length; i += 50) {
     const chunk = ids.slice(i, i + 50);
+    // `snippet` rides along on the SAME request as `statistics` — one call, not
+    // two. It carries publishedAt, without which the popularity score is not
+    // what it claims to be: viewsPerDay divides by an age of 1 and returns raw
+    // views, and recencyFactor returns its unknown-age constant, so the
+    // age-fair ranking collapses to "most total views" — precisely the
+    // big-old-channel bias this site positions itself against.
     const json = await call(key, "videos", {
-      part: "statistics",
+      part: "statistics,snippet",
       id: chunk.join(","),
     });
     for (const it of json.items ?? []) {
@@ -128,6 +134,7 @@ export async function getVideoStats(key, ids) {
       map.set(it.id, {
         viewCount: stats.viewCount == null ? null : Number(stats.viewCount),
         likeCount: stats.likeCount == null ? null : Number(stats.likeCount),
+        publishedAt: it.snippet?.publishedAt ?? null,
       });
     }
   }
