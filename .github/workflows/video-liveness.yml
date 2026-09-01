@@ -1,11 +1,20 @@
-# Weekly link-rot check: find lessons whose YouTube videos have been deleted,
-# made private, or had embedding turned off — before a student does.
+# Link-rot check: find lessons whose YouTube videos have been deleted, made
+# private, or had embedding turned off — before a student does.
 #
-# Runs src/scripts/checkVideoLiveness.js (idempotent; --max-age 30 skips videos
-# verified within 30 days, so steady-state runs are cheap). Videos that stopped
+# CADENCE: the trigger is weekly but each video is checked about MONTHLY. The
+# --max-age 30 flag skips anything verified within 30 days, so a weekly run only
+# picks up what has aged past the cutoff; a run with nothing due exits before it
+# calls YouTube at all, and costs one paginated read. Polling weekly rather than
+# monthly just means newly-due videos wait at most 7 days instead of 30. Every
+# row was stamped at once on 2026-09-01, so they currently all fall due together.
+#
+# Runs src/scripts/checkVideoLiveness.js (idempotent). Videos that stopped
 # embedding are marked 'blocked' (the watch UI already shows an honest
 # "YouTube only" link); deleted/private videos are marked 'unavailable' and
 # reported for the owner to review — never auto-removed.
+#
+# The job then FAILS when anything needs a human, because checkVideoLiveness.js
+# itself always exits 0 — see the last step.
 #
 # Requires three repository secrets (Settings → Secrets and variables → Actions):
 #   LIVENESS_SUPABASE_URL          — the project URL (same value as VITE_SUPABASE_URL)
@@ -73,3 +82,14 @@ jobs:
           path: tmp/video-liveness-report.json
           if-no-files-found: ignore
           retention-days: 90
+
+      # checkVideoLiveness.js exits 0 whether or not it found rot, so without
+      # this a scheduled run that discovered dead lessons would show a green
+      # tick and tell nobody. Exiting non-zero re-uses GitHub's existing
+      # "your scheduled workflow failed" email as the notification — no bot
+      # token, no issue permissions, nothing new to configure:
+      #   green = catalogue clean, red = go and look.
+      # It also fails when the report is unreadable: not knowing whether the
+      # catalogue is healthy must never be reported as healthy.
+      - name: Fail if any lesson needs review
+        run: node src/scripts/checkLivenessReport.js
