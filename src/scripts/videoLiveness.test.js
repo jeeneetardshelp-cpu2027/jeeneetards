@@ -102,6 +102,35 @@ describe("planLivenessUpdate", () => {
     ["ddd", embeddable],
   ]);
 
+  // Regression: the catalogue carries a legacy "allowed" status that means the
+  // same as "embeddable" (1,812 of 5,471 rows in production on 2026-09-01).
+  // The summary used to count it into a key it never printed, so a real run
+  // reported "checking 3085" then listed only 2375 — 710 rows silently lost.
+  it("accounts for every checked row, including legacy status labels", () => {
+    const mixed = [
+      { id: 10, youtube_video_id: "aaa", embedding_status: "embeddable" },
+      { id: 11, youtube_video_id: "aaa", embedding_status: "allowed" },
+      { id: 12, youtube_video_id: "aaa", embedding_status: "allowed" },
+    ];
+    const { summary, byStatus } = planLivenessUpdate(
+      mixed,
+      new Map([["aaa", embeddable]]),
+      "2026-09-01T00:00:00.000Z",
+    );
+
+    // The healthy legacy rows are not churned into a status change...
+    expect(summary.changed).toBe(0);
+    // ...and the summary keys stay exactly the documented five.
+    expect(Object.keys(summary).sort()).toEqual(
+      ["blocked", "changed", "checked", "embeddable", "unavailable"],
+    );
+    // The breakdown accounts for all three rows, so an operator can
+    // reconcile the printed lines against "checked".
+    expect(byStatus.get("embeddable")).toBe(1);
+    expect(byStatus.get("allowed")).toBe(2);
+    const counted = [...byStatus.values()].reduce((a, b) => a + b, 0);
+    expect(counted).toBe(summary.checked);
+  });
   it("counts each outcome and refreshes last_verified_at on every checked video", () => {
     const now = "2026-08-21T00:00:00.000Z";
     const { summary, updates, dead } = planLivenessUpdate(videos, details, now);
