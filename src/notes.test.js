@@ -111,6 +111,30 @@ describe("resilience", () => {
     vi.spyOn(Storage.prototype, "setItem").mockImplementation(() => { throw new Error("blocked"); });
     expect(() => addNote({ playlistId: 5, videoId: "abc", text: "x" })).not.toThrow();
   });
+
+  // Not throwing is not the same as telling the truth. writeAll used to
+  // swallow the failure and addNote returned the note anyway, so the panel
+  // took it as saved, cleared the textarea, and the note was gone with nothing
+  // said. These pin the report, not just the survival.
+  it("addNote returns null when the device refuses the write", () => {
+    vi.spyOn(Storage.prototype, "setItem").mockImplementation(() => { throw new Error("blocked"); });
+    expect(addNote({ playlistId: 5, videoId: "abc", text: "lost?" })).toBeNull();
+  });
+
+  it("updateNote returns null when the device refuses the write", () => {
+    const note = addNote({ playlistId: 5, videoId: "abc", text: "before" });
+    vi.spyOn(Storage.prototype, "setItem").mockImplementation(() => { throw new Error("blocked"); });
+    expect(updateNote({ playlistId: 5, videoId: "abc", id: note.id, text: "after" })).toBeNull();
+  });
+
+  it("deleteNote reports false and leaves the note in place when the write is refused", () => {
+    const note = addNote({ playlistId: 5, videoId: "abc", text: "keep me" });
+    vi.spyOn(Storage.prototype, "setItem").mockImplementation(() => { throw new Error("blocked"); });
+    expect(deleteNote({ playlistId: 5, videoId: "abc", id: note.id })).toBe(false);
+    vi.restoreAllMocks();
+    // Still on the device: a UI that had hidden it would have been lying.
+    expect(getNotes(5, "abc").map((x) => x.text)).toEqual(["keep me"]);
+  });
 });
 
 describe("clearNotes", () => {

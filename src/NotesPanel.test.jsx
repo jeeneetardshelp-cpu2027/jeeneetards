@@ -88,3 +88,119 @@ describe("NotesPanel", () => {
     expect(screen.getByText("note for abc")).toBeTruthy();
   });
 });
+
+// A course auto-advances a few seconds after a lesson ends, so the lesson can
+// change under a student who is still typing. The draft used to follow them
+// forward, and the next "Add note" filed it against the wrong lesson.
+describe("NotesPanel: a draft when the lesson changes underneath", () => {
+  const typeDraft = (value) =>
+    fireEvent.change(screen.getByLabelText(/add a note/i), { target: { value } });
+
+  it("files the note against the lesson it was written on, not the new one", () => {
+    const { rerender } = render(
+      <NotesPanel playlistId={5} videoId="abc" getCurrentTime={() => 12} />,
+    );
+    typeDraft("half a thought about abc");
+
+    // The course moves on mid-sentence.
+    rerender(<NotesPanel playlistId={5} videoId="xyz" getCurrentTime={() => 3} />);
+    fireEvent.click(screen.getByRole("button", { name: /add note/i }));
+
+    // Not on the lesson now on screen...
+    expect(screen.queryByText("half a thought about abc")).toBeNull();
+    // ...but on the one it was written against.
+    rerender(<NotesPanel playlistId={5} videoId="abc" getCurrentTime={() => 12} />);
+    expect(screen.getByText("half a thought about abc")).toBeTruthy();
+  });
+
+  it("keeps the half-typed text rather than throwing the student's work away", () => {
+    const { rerender } = render(<NotesPanel playlistId={5} videoId="abc" />);
+    typeDraft("mid-sentence");
+    rerender(<NotesPanel playlistId={5} videoId="xyz" />);
+    expect(screen.getByLabelText(/add a note/i).value).toBe("mid-sentence");
+  });
+
+  it("says where the note is going, but only once the lesson has actually moved", () => {
+    const { rerender } = render(<NotesPanel playlistId={5} videoId="abc" />);
+    typeDraft("still on abc");
+    expect(screen.queryByText(/lesson moved on/i)).toBeNull();
+
+    rerender(<NotesPanel playlistId={5} videoId="xyz" />);
+    expect(screen.getByText(/lesson moved on/i)).toBeTruthy();
+  });
+
+  it("does not stamp the new lesson's playback second onto the old lesson's note", () => {
+    // getCurrentTime() reports whatever is on screen NOW. Timestamping a note
+    // for lesson abc with lesson xyz's position would seek the student to a
+    // second that means nothing, so a moved-on note is saved untimed instead.
+    const { rerender } = render(
+      <NotesPanel playlistId={5} videoId="abc" getCurrentTime={() => 12} />,
+    );
+    typeDraft("no bogus timestamp");
+    rerender(<NotesPanel playlistId={5} videoId="xyz" getCurrentTime={() => 999} />);
+    fireEvent.click(screen.getByRole("button", { name: /add note/i }));
+
+    rerender(<NotesPanel playlistId={5} videoId="abc" getCurrentTime={() => 12} />);
+    expect(screen.getByText("no bogus timestamp")).toBeTruthy();
+    expect(screen.queryByText("16:39")).toBeNull(); // the new lesson's 999s
+    expect(screen.queryByText("0:12")).toBeNull(); // nor the old one, which is stale
+  });
+
+  it("releases the lesson again when the box is emptied", () => {
+    const { rerender } = render(<NotesPanel playlistId={5} videoId="abc" />);
+    typeDraft("abandoned");
+    typeDraft("");
+    rerender(<NotesPanel playlistId={5} videoId="xyz" />);
+    typeDraft("about xyz now");
+    fireEvent.click(screen.getByRole("button", { name: /add note/i }));
+    expect(screen.getByText("about xyz now")).toBeTruthy();
+  });
+});
+
+// The device can refuse a write: quota full, or storage blocked in private
+// mode. Saying nothing and clearing the box destroyed the only copy.
+describe("NotesPanel: when the device refuses to store", () => {
+  // The file-level afterEach clears storage but does not restore spies, so a
+  // blocked setItem would leak into the next test and fail it somewhere
+  // confusing. Restore here rather than widening the shared hook.
+  afterEach(() => vi.restoreAllMocks());
+
+  it("keeps the text and says so instead of silently losing the note", () => {
+    render(<NotesPanel playlistId={5} videoId="abc" />);
+    fireEvent.change(screen.getByLabelText(/add a note/i), { target: { value: "precious" } });
+    vi.spyOn(Storage.prototype, "setItem").mockImplementation(() => { throw new Error("full"); });
+    fireEvent.click(screen.getByRole("button", { name: /add note/i }));
+
+    expect(screen.getByRole("alert").textContent).toMatch(/could not save|couldn.t save/i);
+    // The only copy is still in the box.
+    expect(screen.getByLabelText(/add a note/i).value).toBe("precious");
+  });
+
+  it("does not pretend a note was deleted when the removal did not stick", () => {
+    render(<NotesPanel playlistId={5} videoId="abc" />);
+    fireEvent.change(screen.getByLabelText(/add a note/i), { target: { value: "stays put" } });
+    fireEvent.click(screen.getByRole("button", { name: /add note/i }));
+    expect(screen.getByText("stays put")).toBeTruthy();
+
+    vi.spyOn(Storage.prototype, "setItem").mockImplementation(() => { throw new Error("full"); });
+    fireEvent.click(screen.getByRole("button", { name: /delete note/i }));
+
+    expect(screen.getByRole("alert").textContent).toMatch(/could not delete|couldn.t delete/i);
+    expect(screen.getByText("stays put")).toBeTruthy();
+  });
+
+  it("clears the failure once a later save works", () => {
+    render(<NotesPanel playlistId={5} videoId="abc" />);
+    fireEvent.change(screen.getByLabelText(/add a note/i), { target: { value: "try one" } });
+    const spy = vi.spyOn(Storage.prototype, "setItem").mockImplementation(() => {
+      throw new Error("full");
+    });
+    fireEvent.click(screen.getByRole("button", { name: /add note/i }));
+    expect(screen.getByRole("alert")).toBeTruthy();
+
+    spy.mockRestore();
+    fireEvent.click(screen.getByRole("button", { name: /add note/i }));
+    expect(screen.queryByRole("alert")).toBeNull();
+    expect(screen.getByText("try one")).toBeTruthy();
+  });
+});

@@ -77,11 +77,18 @@ function readAll() {
   }
 }
 
+// Returns whether the write actually landed. localStorage throws when the
+// quota is full or when the browser is blocking storage (private mode, or a
+// "block third-party data" setting), and swallowing that silently is how a
+// student's note disappeared: the panel took the empty return as success,
+// cleared the textarea, and the note was gone with nothing said. Callers
+// propagate this so the UI can keep the text and tell the truth.
 function writeAll(obj) {
   try {
     localStorage.setItem(KEY, JSON.stringify(obj));
+    return true;
   } catch {
-    /* storage full or blocked — notes are best-effort */
+    return false;
   }
 }
 
@@ -107,7 +114,8 @@ function newId() {
 
 // Add a note to a lesson. `t` is the playback second (or null for an untimed
 // note). Empty text is rejected (returns null) — the panel disables the button,
-// this is the last line of defence. Returns the created note.
+// this is the last line of defence. Returns the created note, or null if the
+// text was empty OR the device refused to store it.
 export function addNote({ playlistId, videoId, text, t = null }) {
   if (!isPositiveInteger(playlistId) || !isVideoId(videoId)) return null;
   const clean = typeof text === "string" ? text.trim() : "";
@@ -120,12 +128,13 @@ export function addNote({ playlistId, videoId, text, t = null }) {
   const bucket = all[key] ?? {};
   bucket[videoId] = [...(bucket[videoId] ?? []), note];
   all[key] = bucket;
-  writeAll(all);
-  return note;
+  // null, not the note: the caller's truthiness check is what keeps the
+  // student's text in the box when the device refused to store it.
+  return writeAll(all) ? note : null;
 }
 
-// Replace a note's text. Returns the updated note, or null if it does not exist
-// or the new text is empty.
+// Replace a note's text. Returns the updated note, or null if it does not
+// exist, the new text is empty, or the device refused to store the change.
 export function updateNote({ playlistId, videoId, id, text }) {
   if (!isPositiveInteger(playlistId) || !isVideoId(videoId)) return null;
   const clean = typeof text === "string" ? text.trim() : "";
@@ -137,11 +146,12 @@ export function updateNote({ playlistId, videoId, id, text }) {
   if (idx === -1) return null;
   const updated = { ...list[idx], text: clean };
   list[idx] = updated;
-  writeAll(all);
-  return updated;
+  return writeAll(all) ? updated : null;
 }
 
-// Remove one note. Returns true if it was there.
+// Remove one note. Returns true only if it was there AND the removal was
+// actually stored — a false means the note is still on the device, so the
+// panel must not pretend it is gone.
 export function deleteNote({ playlistId, videoId, id }) {
   if (!isPositiveInteger(playlistId) || !isVideoId(videoId)) return false;
   const all = readAll();
@@ -155,8 +165,7 @@ export function deleteNote({ playlistId, videoId, id }) {
     delete all[key][videoId];
     if (!Object.keys(all[key]).length) delete all[key];
   }
-  writeAll(all);
-  return true;
+  return writeAll(all);
 }
 
 // Wipe this device's notes. Called on sign-out for the same reason
