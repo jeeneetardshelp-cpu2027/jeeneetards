@@ -1,4 +1,8 @@
-import { createHash } from "node:crypto";
+// The PDFs themselves moved to Supabase Storage, so the sha256 and %PDF-
+// checks that used to live here now run against the bucket in
+// src/scripts/verifyStudyMaterialStorage.js (npm run verify:study-materials).
+// Everything that does not need the PDF bytes - the manifest's shape, the
+// preview images, and the seed SQL agreeing with the manifest - stays here.
 import { existsSync, readFileSync, statSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
@@ -10,24 +14,22 @@ const seed = readFileSync(
   "docs/sql/study_materials_nsep_previous_year_papers_seed_2026-08-21.sql",
   "utf8",
 );
-const pdfRoot = "public/study-materials/previous-year-papers/nsep";
 const previewRoot = "public/study-materials/previews/previous-year-papers/nsep";
 
 describe("NSEP previous-year paper release", () => {
-  it("ships nine verified source PDFs unchanged with valid previews", () => {
+  it("ships nine manifested papers with valid previews", () => {
     expect(manifest).toHaveLength(9);
     expect(new Set(manifest.map((item) => item.file)).size).toBe(9);
     expect(manifest.reduce((sum, item) => sum + item.pageCount, 0)).toBe(283);
 
     for (const item of manifest) {
-      const pdfPath = `${pdfRoot}/${item.file}`;
       const previewPath = `${previewRoot}/${item.file.replace(/\.pdf$/, ".jpg")}`;
-      expect(existsSync(pdfPath), pdfPath).toBe(true);
       expect(existsSync(previewPath), previewPath).toBe(true);
 
-      const pdf = readFileSync(pdfPath);
-      expect(pdf.subarray(0, 5).toString("ascii")).toBe("%PDF-");
-      expect(createHash("sha256").update(pdf).digest("hex").toUpperCase()).toBe(item.sha256);
+      // Every entry must still carry the digest the storage check verifies
+      // against; a manifest row with no sha256 would make that check vacuous.
+      expect(item.sha256, item.file).toMatch(/^[0-9A-Fa-f]{64}$/);
+
 
       const preview = readFileSync(previewPath);
       expect(preview[0]).toBe(0xff);

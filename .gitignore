@@ -48,3 +48,11 @@ npm-debug.log*
 .idea/
 .DS_Store
 Thumbs.db
+
+# Study-material PDFs live in Supabase Storage (bucket: study-materials), not
+# in the repo. 207 MB of them used to be committed here, so every clone, CI
+# checkout and build paid for them, and the corpus only grows. The published
+# /study-materials/... URLs are unchanged - vercel.json redirects them.
+# Preview images are deliberately NOT ignored: they are 3.3 MB, same-origin,
+# and keeping them local avoids a CSP change.
+public/study-materials/**/*.pdf
