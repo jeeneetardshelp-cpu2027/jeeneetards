@@ -26,6 +26,15 @@ export default function NotesPanel({
   const pid = Number(playlistId);
   const [notes, setNotes] = useState([]);
   const [text, setText] = useState("");
+  // The lesson a half-written note belongs to. The course auto-advances a few
+  // seconds after a video ends, so the lesson can change under a student who is
+  // still typing. Before this, the draft simply followed them forward and the
+  // next "Add note" filed it against a lesson they were not writing about.
+  // Clearing the box instead would be the other kind of wrong — it throws away
+  // what they wrote. So the draft stays put and remembers where it came from.
+  const [anchor, setAnchor] = useState(null);
+  // A save or delete the device refused. Empty when there is nothing to say.
+  const [failure, setFailure] = useState("");
 
   const refresh = useCallback(() => {
     setNotes(getNotes(pid, videoId));
@@ -37,6 +46,17 @@ export default function NotesPanel({
   // nothing rather than an orphaned, un-saveable panel.
   if (!Number.isInteger(pid) || pid <= 0 || !videoId) return null;
 
+  // The first character typed claims the lesson on screen; emptying the box
+  // releases it, so an abandoned draft does not pin a stale lesson forever.
+  const onChangeText = (value) => {
+    setText(value);
+    setFailure("");
+    setAnchor((prev) => (value.trim() ? prev ?? { pid, videoId } : null));
+  };
+
+  const target = anchor ?? { pid, videoId };
+  const movedOn = target.pid !== pid || target.videoId !== videoId;
+
   const submit = (event) => {
     event?.preventDefault?.();
     const clean = text.trim();
@@ -44,17 +64,36 @@ export default function NotesPanel({
     // Capture the playback second at the moment of saving. Exact when the
     // student paused to write (the common case); at most a few seconds stale
     // while the video plays. null when the player has not started yet.
-    const raw = typeof getCurrentTime === "function" ? getCurrentTime() : null;
+    //
+    // Only when the note is still being filed against the lesson on screen:
+    // once the course has moved on, getCurrentTime() reports the NEW lesson's
+    // position, and stamping that on the note would send the student to a
+    // second that means nothing. Untimed is honest; a wrong timestamp is not.
+    const raw = !movedOn && typeof getCurrentTime === "function" ? getCurrentTime() : null;
     const t = Number.isFinite(raw) && raw >= 0 ? raw : null;
-    if (addNote({ playlistId: pid, videoId, text: clean, t })) {
+    if (addNote({ playlistId: target.pid, videoId: target.videoId, text: clean, t })) {
       setText("");
+      setAnchor(null);
+      setFailure("");
       refresh();
+    } else {
+      // Keep the text. It is the only copy.
+      setFailure("Couldn't save. Your browser is out of space or is blocking storage — your note is still here, so you can copy it somewhere safe.");
     }
   };
 
   const remove = (id) => {
     deleteNote({ playlistId: pid, videoId, id });
-    refresh();
+    // Check what the device actually holds rather than trusting the return
+    // value: if the note is still there, the delete did not stick and saying
+    // otherwise would be a lie.
+    const remaining = getNotes(pid, videoId);
+    setNotes(remaining);
+    setFailure(
+      remaining.some((note) => note.id === id)
+        ? "Couldn't delete that note. Your browser is blocking storage, so it is still saved on this device."
+        : "",
+    );
   };
 
   const onKeyDown = (event) => {
@@ -81,12 +120,18 @@ export default function NotesPanel({
         <textarea
           id="lesson-note-input"
           value={text}
-          onChange={(event) => setText(event.target.value)}
+          onChange={(event) => onChangeText(event.target.value)}
           onKeyDown={onKeyDown}
           rows={2}
           placeholder="Jot a formula, a doubt, or the minute it finally clicks…"
           className="w-full resize-y rounded-lg border border-hairline bg-surface p-3 text-sm text-ink placeholder:text-ink-3 focus:outline-none focus:ring-2 focus:ring-accent/40"
         />
+        {movedOn && canSave && (
+          <p role="status" className="mt-2 text-xs text-ink-3">
+            The lesson moved on while you were writing. This note will be saved to
+            the lesson you started it on.
+          </p>
+        )}
         <div className="mt-2 flex items-center justify-end">
           <button
             type="submit"
@@ -97,6 +142,10 @@ export default function NotesPanel({
           </button>
         </div>
       </form>
+
+      {failure && (
+        <p role="alert" className="mt-2 text-sm text-danger">{failure}</p>
+      )}
 
       {notes.length === 0 ? (
         <p className="mt-4 rounded-lg border border-hairline bg-surface p-4 text-sm leading-relaxed text-ink-2">
