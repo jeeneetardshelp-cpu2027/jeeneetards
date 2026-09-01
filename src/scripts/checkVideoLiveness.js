@@ -32,7 +32,7 @@ import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
 import { getVideoDetails } from "./youtubeNode.js";
-import { planLivenessUpdate, groupUpdates, buildLivenessSql } from "./videoLiveness.js";
+import { planLivenessUpdate, groupUpdates, buildLivenessSql, LIVE_STATUSES } from "./videoLiveness.js";
 
 const WRITE_CHUNK = 500; // rows per update round-trip
 
@@ -129,12 +129,24 @@ async function main() {
   }
 
   // 4. Decide each video's fate (pure, unit-tested in videoLiveness.test.js).
-  const { summary, updates, dead } = planLivenessUpdate(due, details, nowIso);
+  const { summary, byStatus, updates, dead } = planLivenessUpdate(due, details, nowIso);
+  // Any status outside LIVE_STATUSES is still healthy — the catalogue carries a
+  // legacy "allowed" label alongside "embeddable". Print those too, plus the
+  // total, so these lines always reconcile against the number checked instead
+  // of quietly dropping rows the operator cannot account for.
+  const extras = [...byStatus.entries()].filter(([st]) => !LIVE_STATUSES.includes(st));
+  const row = (label, n) => `  ${label.padEnd(18, " ")}: ${n}`;
   console.log(
-    `\n  live & embeddable : ${summary.embeddable}\n` +
-    `  embedding blocked : ${summary.blocked}\n` +
-    `  dead (unavailable): ${summary.unavailable}\n` +
-    `  status changed    : ${summary.changed}\n`,
+    [
+      "",
+      row("live & embeddable", summary.embeddable),
+      ...extras.map(([st, n]) => row(`live ("${st}")`, n)),
+      row("embedding blocked", summary.blocked),
+      row("dead (unavailable)", summary.unavailable),
+      row("status changed", summary.changed),
+      row("total checked", summary.checked),
+      "",
+    ].join("\n"),
   );
 
   // 5. Write a report of everything that needs attention, always (even in a dry

@@ -7,18 +7,24 @@ let response;
 let rpcResponse;
 
 function builder(table) {
-  const rec = { table, cols: null, opts: null, eq: {}, in: {}, range: null, ilike: null, orders: [] };
+  const rec = {
+    table, cols: null, opts: null, eq: {}, in: {}, range: null, ilike: null,
+    orders: [], embedOrders: [], limits: [],
+  };
   calls.push(rec);
   const b = {
     select(cols, opts) { rec.cols = cols; rec.opts = opts; return b; },
     order(column, options) {
-      rec.orders.push(
+      // A referencedTable order sorts an EMBED, not the page. Keeping the two
+      // apart is the point: the page's ordering is what paging depends on.
+      (options?.referencedTable ? rec.embedOrders : rec.orders).push(
         column
           + (options?.ascending === false ? " desc" : "")
           + (options?.nullsFirst === false ? " nullslast" : ""),
       );
       return b;
     },
+    limit(count, options) { rec.limits.push([count, options?.referencedTable ?? null]); return b; },
     range(a, z) { rec.range = [a, z]; return b; },
     eq(k, v) { rec.eq[k] = v; return b; },
     in(k, v) { rec.in[k] = v; return b; },
@@ -72,6 +78,29 @@ describe("paged lecture discovery", () => {
     ]);
     expect(calls[0].cols).toContain("youtube_video_id");
     expect(calls[0].cols).toContain("institutes_channels(id, name, logo_url)");
+  });
+
+  // A lecture is watched at /course/:playlistId?v=:youtubeVideoId, and `videos`
+  // has no playlist_id column — the course id only exists in playlist_videos.
+  // Without this embed the card has nowhere to send the student.
+  it("fetches the course each lecture is watched inside, bounded to one row", async () => {
+    render(<Probe />);
+    await waitFor(() => expect(calls).toHaveLength(1));
+    expect(calls[0].cols).toContain("membership:playlist_videos(playlist_id)");
+    expect(calls[0].limits).toContainEqual([1, "membership"]);
+    expect(calls[0].embedOrders).toEqual(["playlist_id"]);
+    // The embed's order is not the page's order: paging still ties on id.
+    expect(calls[0].orders).toEqual(["id"]);
+  });
+
+  it("keeps the course id on the inner join playlist filters already use", async () => {
+    render(<Probe language={["hindi"]} />);
+    await waitFor(() => expect(calls).toHaveLength(1));
+    // ONE embed, not a second copy: the filtered join carries playlist_id too,
+    // so the course we link to is one that matches the student's filters.
+    expect(calls[0].cols)
+      .toContain("membership:playlist_videos!inner(playlist_id, playlists!inner(");
+    expect(calls[0].cols).not.toContain("membership:playlist_videos(playlist_id)");
   });
 
   it("applies goal, subject, chapter in PostgREST and search through the id RPC", async () => {
@@ -178,6 +207,7 @@ describe("paged lecture discovery", () => {
           logo_url: "https://yt3.ggpht.com/institute=s88",
         },
         subjects: { name: "Physics" }, chapters: { name: "Vectors" },
+        membership: [{ playlist_id: 5 }],
       }],
       error: null,
       count: LECTURE_PAGE_SIZE + 1,
@@ -192,7 +222,24 @@ describe("paged lecture discovery", () => {
       chapter: "Vectors",
       instituteId: 8,
       instituteLogoUrl: "https://yt3.ggpht.com/institute=s88",
+      // What the card's watch link is built from.
+      playlistId: 5,
     });
+  });
+
+  it("reports no course rather than a guess when a lecture is in none", async () => {
+    response = {
+      data: [{
+        id: 9, youtube_video_id: "abc", title: "Vectors",
+        institutes_channels: null, subjects: null, chapters: null,
+        membership: [],
+      }],
+      error: null,
+      count: 1,
+    };
+    render(<Probe page={0} />);
+    await waitFor(() => expect(seen.loading).toBe(false));
+    expect(seen.videos[0].playlistId).toBeNull();
   });
 
   it("treats a stale out-of-range URL as an empty page, not an outage", async () => {

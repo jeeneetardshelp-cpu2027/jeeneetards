@@ -5,6 +5,9 @@ on:
     branches:
       - main
   pull_request:
+  # An escape hatch for re-running the SQL and migration tests by hand after a
+  # push to main skipped them. Not for routine use: a push already triggers CI.
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -42,6 +45,8 @@ jobs:
       - name: Run static checks
         run: npm run lint
 
+      # The `app` vitest project: components, hooks and pure logic. The
+      # one-off SQL and ingestion checks run in the `sql-tests` job below.
       - name: Run tests
         run: npm test
 
@@ -50,3 +55,88 @@ jobs:
 
       - name: Verify frontend release safeguards
         run: npm run verify:frontend-release
+
+  sql-tests:
+    # The `sql` vitest project: the one-off ingestion, seed, SQL-package and
+    # SQL-rehearsal checks. Most of them boot an in-memory Postgres, so this is
+    # the slow half of the suite and it only changes meaning when a SQL or
+    # migration artifact changes.
+    #
+    # It always runs on a pull request, so nothing can be merged without it.
+    # The path check below only ever skips work on a direct push to main.
+    name: SQL and migration tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      VITE_SUPABASE_URL: https://ci-placeholder.supabase.co
+      VITE_SUPABASE_ANON_KEY: ci-public-anon-key
+      VITE_YOUTUBE_API_KEY: ci-public-youtube-key
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+        with:
+          # Full history so a push can be compared against its previous commit.
+          fetch-depth: 0
+
+      - name: Decide whether the SQL project must run
+        id: decide
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BEFORE: ${{ github.event.before }}
+          AFTER: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+
+          # Pull requests and manual runs always run the SQL project. This is
+          # the guarantee that a schema-affecting change cannot reach main
+          # without these tests: every merge goes through a pull request.
+          if [ "$EVENT_NAME" != "push" ]; then
+            echo "Event is '$EVENT_NAME', not a push - running the SQL project."
+            echo "run=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # A first push, a force push, or a missing base commit gives nothing
+          # to compare against. Run rather than guess.
+          if [ -z "${BEFORE:-}" ] \
+            || [ "$BEFORE" = "0000000000000000000000000000000000000000" ] \
+            || ! git cat-file -e "${BEFORE}^{commit}" 2>/dev/null; then
+            echo "No comparable previous commit - running the SQL project."
+            echo "run=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          changed="$(git diff --name-only "$BEFORE" "$AFTER")"
+          echo "Changed files:"
+          echo "$changed"
+
+          # Deliberately generous. These tests read SQL, manifests, readiness
+          # notes and review bundles from docs/, the migration chains, the
+          # ingestion scripts, and the top-level src modules they import, so
+          # anything in those trees counts. Skipping is only a saving on direct
+          # pushes; a wrong skip would be a hole, so the list errs towards
+          # running.
+          if printf '%s\n' "$changed" | grep -Eq \
+            '^(docs/|supabase/|src/migrations/|src/scripts/|src/[^/]+\.js$|package\.json$|package-lock\.json$|vite\.config\.js$|\.github/workflows/ci\.yml$)'; then
+            echo "A SQL or migration path changed - running the SQL project."
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "No SQL or migration path changed - skipping the SQL project."
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Set up Node.js
+        if: steps.decide.outputs.run == 'true'
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        if: steps.decide.outputs.run == 'true'
+        run: npm ci
+
+      - name: Run SQL and migration tests
+        if: steps.decide.outputs.run == 'true'
+        run: npm run test:sql

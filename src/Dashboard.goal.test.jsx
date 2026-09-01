@@ -22,6 +22,10 @@ function builder(table) {
   const b = {
     select(cols, opts) { rec.cols = cols; rec.opts = opts; return b; },
     order(column, options) {
+      // A referencedTable order sorts an embedded resource (the lecture query
+      // bounds its course embed that way), not the page itself. Only the
+      // page's own ordering belongs in `orders`.
+      if (options?.referencedTable) return b;
       rec.orders.push(
         column
           + (options?.ascending === false ? " desc" : "")

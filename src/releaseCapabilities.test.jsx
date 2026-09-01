@@ -39,7 +39,7 @@ describe("current production capability contract", () => {
       // describes: the pages exist and are tested, but until the RPCs are
       // actually deployed every call returns "function does not exist", so the
       // frontend must not claim the capability.
-      polls: false,
+      polls: true,
     });
     expect(homeTagline()).toMatch(/compare/i);
   });
