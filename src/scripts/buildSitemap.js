@@ -14,6 +14,8 @@ import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
 import { TEST_SECTIONS } from "../testPlatforms.js";
 import { CLASS_LEVELS_BY_GOAL } from "../classLevels.js";
+import { isIndexableChapter } from "../chapterLanding.js";
+import { canonicalBrowseUrl } from "../canonicalUrl.js";
 import { RELEASE_CAPABILITIES, RELEASE_FEATURES } from "../releaseCapabilities.js";
 import { JEE_MAIN_PAPERS_PATH } from "../studyMaterialLandings.js";
 
@@ -54,9 +56,21 @@ export function loadEnv() {
   return env;
 }
 
+// <loc> is XML text, so the five predefined entities must be escaped. This
+// never mattered while every URL was a bare path; the chapter URLs are the
+// first to carry a query string, and a raw "&" makes the whole document
+// unparseable — a sitemap Google rejects outright, which would have silently
+// undone the point of listing them.
+const xmlText = (value) => String(value)
+  .replace(/&/g, "&amp;")
+  .replace(/</g, "&lt;")
+  .replace(/>/g, "&gt;")
+  .replace(/"/g, "&quot;")
+  .replace(/'/g, "&apos;");
+
 export function urlEntry(path, lastmod) {
   return (
-    `  <url>\n    <loc>${BASE}${path}</loc>` +
+    `  <url>\n    <loc>${xmlText(`${BASE}${path}`)}</loc>` +
     (lastmod ? `\n    <lastmod>${lastmod}</lastmod>` : "") +
     "\n  </url>"
   );
@@ -142,9 +156,14 @@ export async function buildSitemap({
     );
 
     // A class URL is indexable only when it exposes at least one subject, and
-    // a subject URL only when it exposes at least one chapter. Final chapter
-    // paths intentionally stay out: middleware redirects those to the one
-    // canonical Browse results URL.
+    // a subject URL only when it exposes at least one chapter.
+    //
+    // Chapter paths ARE listed now. They used to be excluded because the edge
+    // redirected them into /browse, which is noindex — so the one screen that
+    // compares every course on a chapter had no address of its own. They are
+    // real pages now, and only those holding a real comparison
+    // (MIN_INDEXABLE_COURSES) are offered, so a two-course chapter does not
+    // compete with its own subject page.
     const subjectScopes = await Promise.all(activeGoals.flatMap((goal) =>
       CLASS_LEVELS_BY_GOAL[goal.slug].map(async (classSlug) => {
         const result = await db.rpc("get_browse_curriculum", {
@@ -174,9 +193,18 @@ export async function buildSitemap({
           ...scope,
           subject: subject.slug,
           hasChapters: (result.data ?? []).length > 0,
+          chapters: result.data ?? [],
         };
       }),
     ));
+
+    // Only chapters carrying a real comparison earn a URL. A one- or
+    // two-course chapter page still WORKS for anyone following a link; it is
+    // simply not offered to search engines, because a thin page competing with
+    // its own subject page is worse than no page.
+    const indexableChapters = (scope) =>
+      (scope.chapters ?? []).filter((chapter) =>
+        chapter?.slug && isIndexableChapter(chapter.course_count));
 
     const explorePaths = new Set();
     for (const goal of activeGoals) {
@@ -192,7 +220,14 @@ export async function buildSitemap({
           for (const scope of populated) {
             const classBase = `${boardBase}/${encodeURIComponent(scope.classSlug)}`;
             explorePaths.add(classBase);
-            explorePaths.add(`${classBase}/${encodeURIComponent(scope.subject)}`);
+            const subjectBase = `${classBase}/${encodeURIComponent(scope.subject)}`;
+            explorePaths.add(subjectBase);
+            for (const chapter of indexableChapters(scope)) {
+              explorePaths.add(canonicalBrowseUrl({
+                goal: goal.slug, board: board.slug, cls: scope.classSlug,
+                subject: scope.subject, chapter: chapter.slug,
+              }));
+            }
           }
         }
       } else {
@@ -200,7 +235,14 @@ export async function buildSitemap({
         for (const scope of populated) {
           const classBase = `${goalBase}/${encodeURIComponent(scope.classSlug)}`;
           explorePaths.add(classBase);
-          explorePaths.add(`${classBase}/${encodeURIComponent(scope.subject)}`);
+          const subjectBase = `${classBase}/${encodeURIComponent(scope.subject)}`;
+          explorePaths.add(subjectBase);
+          for (const chapter of indexableChapters(scope)) {
+            explorePaths.add(canonicalBrowseUrl({
+              goal: goal.slug, cls: scope.classSlug,
+              subject: scope.subject, chapter: chapter.slug,
+            }));
+          }
         }
       }
     }

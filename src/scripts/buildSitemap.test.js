@@ -38,6 +38,55 @@ afterEach(() => {
 });
 
 describe("sitemap generation", () => {
+  // Chapter pages used to be excluded on purpose, because the edge redirected
+  // them into a noindex /browse. They are real pages now — but only the ones
+  // holding a real comparison are offered, so a two-course chapter does not
+  // compete with its own subject page.
+  it("escapes the query string so the document is valid XML", async () => {
+    // A raw "&" in <loc> makes the whole sitemap unparseable and Google
+    // rejects it — which would silently undo the point of listing chapters.
+    const { urlEntry } = await import("./buildSitemap.js");
+    const entry = urlEntry("/browse?goal=jee&class=11&subject=physics&chapter=kinematics");
+    expect(entry).toContain("chapter=kinematics");
+    expect(entry).toContain("&amp;");
+    expect(entry).not.toMatch(/&(?!amp;|lt;|gt;|quot;|apos;)/);
+  });
+
+  it("lists chapters that hold a comparison, and withholds thin ones", async () => {
+    const out = temporarySitemap();
+    await buildSitemap({
+      env: { VITE_SUPABASE_URL: "https://example.supabase.co", VITE_SUPABASE_ANON_KEY: "anon" },
+      out,
+      clientFactory: clientWith({
+        courses: [], faculty: [],
+        goals: [{ slug: "jee", course_count: 10 }],
+        boards: [],
+        curriculum: ({ p_class, p_subject }) => {
+          if (p_subject === "physics") {
+            return [
+              { slug: "kinematics", course_count: 13 },
+              { slug: "rotational-motion", course_count: 3 },
+              { slug: "errors-in-measurement", course_count: 2 },
+              { slug: "unnamed", course_count: 9, ...{ slug: undefined } },
+            ];
+          }
+          if (p_class === "class-11") return [{ slug: "physics", course_count: 20 }];
+          return [];
+        },
+      }),
+    });
+
+    const xml = readFileSync(out, "utf8");
+    const base = "https://www.jeeneetard.com/browse?goal=jee&amp;class=11&amp;subject=physics&amp;chapter=";
+    expect(xml).toContain(`<loc>${base}kinematics</loc>`);
+    expect(xml).toContain(`<loc>${base}rotational-motion</loc>`);
+    // Two courses is not a comparison worth indexing.
+    expect(xml).not.toContain(`<loc>${base}errors-in-measurement</loc>`);
+    // A chapter with no slug can produce no URL at all.
+    expect(xml).not.toContain(`${base}undefined`);
+    expect(xml).not.toContain("//</loc>");
+  });
+
   it("includes canonical course, faculty and populated Explore URLs", async () => {
     const out = temporarySitemap();
     const result = await buildSitemap({

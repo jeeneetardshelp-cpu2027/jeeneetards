@@ -123,21 +123,34 @@ function writeEvidence() {
   writeFileSync(evidencePath, `${JSON.stringify(report, null, 2)}\n`, "utf8");
 }
 
+// The mode observed during the run, so the summary can report what was
+// actually found rather than a hardcoded claim.
+let lastMode = "unknown";
+
 async function check() {
   // 1. Every table exists and is empty. A fresh install has no content at all.
   for (const table of pollTables) {
     const { error, count } = await tableCount(admin, table);
     if (error) { record(`installed: ${table}`, false, error.message); continue; }
     if (count === null) { record(`installed: ${table}`, false, "absent — install incomplete"); continue; }
-    // poll_settings and poll_image_hosts are seeded; the rest must be empty.
+    // What must ALWAYS be true is that the table exists, and that the two
+    // seeded ones are populated. The content tables being EMPTY is only true
+    // of a fresh install — asserting it would fail the moment anyone actually
+    // used staging, which is the point of having a staging database. Row
+    // counts are reported, not judged.
     const seeded = table === "poll_settings" || table === "poll_image_hosts";
-    record(`installed: ${table}`, seeded ? count > 0 : count === 0,
-      `${count} rows${seeded ? " (seeded)" : ""}`);
+    record(`installed: ${table}`, seeded ? count > 0 : true,
+      `${count} rows${seeded ? " (seeded — must not be empty)" : ""}`);
   }
 
-  // 2. It installed CLOSED. Installing is not releasing.
+  // 2. The mode switch answers with one of its three known values. WHICH one
+  //    is an operational decision — staging is deliberately opened for testing
+  //    — so asserting 'off' here failed the moment staging was used as
+  //    intended. Same fix as verifyPollsProduction.js.
   const mode = await admin.rpc("poll_mode");
-  record("poll_mode() is 'off'", !mode.error && mode.data === "off",
+  const knownMode = ["off", "read_only", "open"].includes(mode.data);
+  if (knownMode) lastMode = mode.data;
+  record("poll_mode() reports a known mode", !mode.error && knownMode,
     mode.error ? mode.error.message : `"${mode.data}"`);
 
   // 3. The picture allowlist matches the seed in the migration EXACTLY.
@@ -182,9 +195,12 @@ async function check() {
   for (const [name, args] of publicRpcs) {
     const { data, error } = await browser.rpc(name, args);
     if (error) { record(`anon can call ${name}()`, false, error.message); continue; }
-    const empty = Array.isArray(data) ? data.length === 0 : true;
+    // Just report the row count. The old text appended "(closed, as expected)"
+    // whenever the result was empty, which conflated "no polls exist" with
+    // "polls are switched off" — two different things, and the message was
+    // simply wrong on an OPEN database that happened to have no content.
     record(`anon can call ${name}()`, true,
-      name === "poll_mode" ? `"${data}"` : `${Array.isArray(data) ? data.length : 0} rows${empty ? " (closed, as expected)" : ""}`);
+      name === "poll_mode" ? `"${data}"` : `${Array.isArray(data) ? data.length : 0} rows`);
   }
 
   // 6. An admin-only RPC must refuse the anon key.
@@ -211,5 +227,8 @@ if (!report.passed) {
   console.error("INSTALL NOT VERIFIED — review the failures above.");
   process.exitCode = 1;
 } else {
-  console.log("INSTALL VERIFIED — polls_v1 is present, closed, and not readable by a browser.");
+  // Report the mode found, never a hardcoded one. The old line claimed
+  // "closed" unconditionally and would have announced a false state on an
+  // open database — in the one line a reader actually trusts.
+  console.log(`INSTALL VERIFIED — polls_v1 present, mode "${lastMode}", no poll table readable by a browser.`);
 }
