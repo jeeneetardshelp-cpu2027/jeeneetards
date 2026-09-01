@@ -35,9 +35,16 @@ const record = (name, ok, detail) => {
   console.log(`${ok ? "PASS" : "FAIL"}  ${name}${detail ? ` — ${detail}` : ""}`);
 };
 
-// 1. Installed, and installed CLOSED.
+// 1. Installed, and reporting a mode we recognise.
+//
+// This used to assert mode === 'off', which was true only until launch. Once
+// the mode was legitimately opened, the check went red on a healthy system —
+// the same trap as pinning a host count or a release flag. What is permanently
+// true is that the module answers, with one of its three known modes. WHAT the
+// mode should be is an operational decision, not something a verifier decides.
 const mode = await browser.rpc("poll_mode");
-record("poll_mode() exists and is 'off'", !mode.error && mode.data === "off",
+const knownMode = ["off", "read_only", "open"].includes(mode.data);
+record("poll_mode() exists and reports a known mode", !mode.error && knownMode,
   mode.error ? String(mode.error.message).slice(0, 70) : `"${mode.data}"`);
 
 // 2. The public read RPCs exist and are callable by anon.
@@ -51,10 +58,19 @@ for (const [name, args] of [
     r.error ? String(r.error.message).slice(0, 70) : `${rows} rows`);
 }
 
-// 3. Nothing is public while closed.
+// 3. The feed agrees with the mode. This is the invariant that holds at every
+//    stage, unlike "the feed is empty", which was only true before launch:
+//      mode off        -> a browser must see NOTHING, whatever is in the table
+//      read_only/open  -> whatever it returns must be genuinely published
 const feed = await browser.rpc("get_polls_feed", { p_sort: "new", p_topic_slug: null, p_limit: 5, p_offset: 0 });
-record("no polls are public while the mode is off",
-  !feed.error && (feed.data ?? []).length === 0, `${(feed.data ?? []).length} public polls`);
+const rows = feed.data ?? [];
+const consistent = mode.data === "off"
+  ? rows.length === 0
+  : rows.every((r) => ["live", "closed"].includes(r.status));
+record(`public feed matches mode "${mode.data}"`, !feed.error && consistent,
+  mode.data === "off"
+    ? `${rows.length} public polls (must be 0 while closed)`
+    : `${rows.length} public polls, all published`);
 
 // 4. THE SECURITY BOUNDARY — a browser must not read any poll table directly.
 for (const table of ["poll_settings", "poll_image_hosts", "polls", "poll_options",
@@ -71,7 +87,10 @@ record("anon gets nothing from poll_admin_list_pending()",
   pending.error ? "refused" : `${(pending.data ?? []).length} rows`);
 
 const failed = results.filter((r) => !r.ok);
+// Report the mode we actually found. Hardcoding "closed" here would have made
+// the script announce a false state the moment polls were opened — the same
+// mistake as the assertions above, in the one line a reader trusts most.
 console.log(failed.length === 0
-  ? "\nPRODUCTION VERIFIED — polls_v1 present, closed, and invisible to browsers."
+  ? `\nPRODUCTION VERIFIED — polls_v1 present, mode "${mode.data}", no poll table readable by a browser.`
   : `\nNOT VERIFIED — ${failed.length} check(s) failed.`);
 if (failed.length) process.exitCode = 1;
