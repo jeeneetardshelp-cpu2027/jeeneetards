@@ -1,4 +1,5 @@
 import { RELEASE_CAPABILITIES, RELEASE_FEATURES } from "./releaseCapabilities.js";
+import { canonicalChapterView } from "./chapterLanding.js";
 // Pure data (no React), so this stays safe for the edge middleware, which
 // imports this module to compute the same metadata the client will.
 import { findTestSection, sectionIsAllFree } from "./testPlatforms.js";
@@ -81,6 +82,32 @@ export function metadataForLocation(pathname = "/", search = "") {
   if (path === "/browse") {
     const isLectureView = params.get("tab") === "lectures";
     const hasQuery = [...params.keys()].length > 0;
+
+    // ONE indexable filtered shape: a chapter.
+    //
+    // Every other query variant still collapses to /browse, for the reason
+    // below. But collapsing the CHAPTER view too meant all 249 populated
+    // chapters shared one canonical and one title, so the only screen this
+    // site has that YouTube does not — every course on Kinematics, side by
+    // side — could not be found in a search engine. The site was indexable for
+    // "Rectilinear Motion by ABJ Sir", competing with the YouTube video using
+    // the video's own title, and not at all for "kinematics lectures for JEE".
+    //
+    // This is not a hole in the rule below: the shape is exact and bounded —
+    // goal + class + subject + chapter (+ board for school) and NOTHING else,
+    // so a sort, a page, a tab or a search term still drops out of the index
+    // and the faceted space stays finite.
+    const chapterView = canonicalChapterView(params, readablePathSegment);
+    if (chapterView) {
+      return {
+        ...base,
+        title: `${chapterView.title} | ${SITE_NAME}`,
+        description: chapterView.description,
+        robots: chapterView.robots,
+        canonicalPath: `${path}?${chapterView.query}`,
+      };
+    }
+
     return {
       ...base,
       title: `${isLectureView ? "Browse free lectures" : "Browse free courses"} | ${SITE_NAME}`,

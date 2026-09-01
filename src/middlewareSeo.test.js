@@ -505,11 +505,41 @@ describe("edge-rendered discovery landings", () => {
     );
   });
 
-  it("marks structured Browse filters noindex before JavaScript runs", async () => {
+  // ONE indexable filtered shape: a chapter. Collapsing this one too meant all
+  // 249 populated chapters shared a single canonical and a single title, so the
+  // only screen this site has that YouTube does not could not be found in
+  // search. The exception is exact, so the faceted space stays finite — which
+  // is what the rule below still guards.
+  it("gives the canonical chapter view its own identity before JavaScript runs", async () => {
     vi.stubGlobal("fetch", vi.fn(async () => new Response(shell, { status: 200 })));
 
     const response = await middleware(new Request(
       "https://www.jeeneetard.com/browse?goal=jee&class=11&subject=physics&chapter=kinematics",
+    ));
+    const html = await response.text();
+
+    expect(html).toContain("<title>Kinematics — JEE Class 11 Physics | JEENEETARD</title>");
+    expect(html).toContain('name="robots" content="index, follow"');
+    expect(html).toContain(
+      '<link rel="canonical" href="https://www.jeeneetard.com/browse'
+      + "?goal=jee&amp;class=11&amp;subject=physics&amp;chapter=kinematics\" />",
+    );
+  });
+
+  it.each([
+    // One filter short of a chapter — nothing distinctive to index.
+    "?goal=jee&class=11&subject=physics",
+    // A chapter plus anything else is a facet, and facets are unbounded.
+    "?goal=jee&class=11&subject=physics&chapter=kinematics&page=2",
+    "?goal=jee&class=11&subject=physics&chapter=kinematics&sort=rating",
+    "?goal=jee&class=11&subject=physics&chapter=kinematics&tab=lectures",
+    // A personal search must never become a public URL.
+    "?q=friction+problems",
+  ])("keeps every other Browse filter shape out of the index (%s)", async (query) => {
+    vi.stubGlobal("fetch", vi.fn(async () => new Response(shell, { status: 200 })));
+
+    const response = await middleware(new Request(
+      `https://www.jeeneetard.com/browse${query}`,
     ));
     const html = await response.text();
 
