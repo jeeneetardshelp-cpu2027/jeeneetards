@@ -32,6 +32,31 @@ export function mapStudyMaterialCatalog(rows = []) {
   return result;
 }
 
+/**
+ * Keep each list inside the level above it.
+ *
+ * get_study_material_curriculum answers for the WHOLE library when a level is
+ * unfiltered, so with no subject chosen `chapters` is every chapter of every
+ * subject of every exam that has approved material — hundreds of rows, English
+ * and Hindi together, ordered by a display_order that only means something
+ * within one subject. A <select> is not allowed to hold that list, and hiding
+ * it behind `disabled` is not enough: the options are still in the page.
+ *
+ * So the cascade is enforced on the DATA, where no component can forget it.
+ * A level with no parent chosen has no list — the control says "choose a
+ * subject first" instead of offering a choice that cannot mean anything.
+ */
+export function scopeStudyMaterialCatalog(catalog = {}, filters = {}) {
+  const { goal = null, subject = null } = filters;
+  return {
+    goals: catalog.goals ?? [],
+    boards: goal ? catalog.boards ?? [] : [],
+    classes: goal ? catalog.classes ?? [] : [],
+    subjects: goal ? catalog.subjects ?? [] : [],
+    chapters: subject ? catalog.chapters ?? [] : [],
+  };
+}
+
 export async function fetchStudyMaterialCatalog(client, filters = {}, { signal } = {}) {
   let query = client.rpc("get_study_material_curriculum", {
     p_goal_slug: filters.goal ?? null,
@@ -48,7 +73,11 @@ export async function fetchStudyMaterialCatalog(client, filters = {}, { signal }
       unavailable: isMissingStudyMaterialsRpc(result.error),
     };
   }
-  return { data: mapStudyMaterialCatalog(result.data), error: null, unavailable: false };
+  return {
+    data: scopeStudyMaterialCatalog(mapStudyMaterialCatalog(result.data), filters),
+    error: null,
+    unavailable: false,
+  };
 }
 
 export function useStudyMaterialCatalog(filters = {}) {
