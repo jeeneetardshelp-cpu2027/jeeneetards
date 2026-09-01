@@ -35,16 +35,30 @@ const show = (props) => render(
 
 afterEach(() => cleanup());
 
-describe("PollOfTheDay before launch", () => {
-  it("renders nothing and calls nothing while the release flag is off", () => {
-    // This is the live production state: the flag is genuinely off today.
-    expect(RELEASE_FEATURES.polls).toBe(false);
-
+describe("PollOfTheDay while the flag is off", () => {
+  it("renders nothing and calls nothing", () => {
+    // Injects the off state rather than asserting the LIVE flag value. The
+    // original pinned `RELEASE_FEATURES.polls === false`, which made this test
+    // fail the moment the flag was legitimately flipped on — a red test on a
+    // correct system. What matters is the behaviour: flag off means inert.
     const api = fakeApi();
-    const { container } = show({ api }); // real RELEASE_FEATURES by default
+    const { container } = show({ features: { polls: false }, api });
     expect(container.querySelector("section")).toBeNull();
     expect(api.getMode).not.toHaveBeenCalled();
     expect(api.getFeed).not.toHaveBeenCalled();
+  });
+
+  it("uses the real release flag when none is injected", async () => {
+    // The default really is RELEASE_FEATURES, so a future flip genuinely
+    // changes the homepage — without this, every test could pass while the
+    // component ignored the flag entirely.
+    const api = fakeApi();
+    show({ api });
+    if (RELEASE_FEATURES.polls) {
+      await waitFor(() => expect(api.getMode).toHaveBeenCalled());
+    } else {
+      expect(api.getMode).not.toHaveBeenCalled();
+    }
   });
 });
 

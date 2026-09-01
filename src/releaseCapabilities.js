@@ -69,16 +69,22 @@ export const RELEASE_FEATURES = Object.freeze({
   // bottleneck -- production had ~2 accounts and 0 ratings behind it.
   googleAuth: true,
   // Student polls: vote, comment and share, with students suggesting polls an
-  // admin approves before they go live. OFF until BOTH of these are true:
-  //   1. src/migrations/polls_v1.sql is installed in production. Until then
-  //      every RPC the poll pages call returns "function does not exist".
-  //   2. An admin has switched poll_mode() to 'open' from the Polls tab in
-  //      /admin. Installing the module does NOT open it -- it ships as 'off',
-  //      the same way forum_v1 did.
-  // Flipping this flag alone changes nothing except which pages are routed,
-  // which is the point: the database is the real boundary.
-  // See docs/polls/POLLS_V1_ACTIVATION_RUNBOOK.md.
-  polls: false,
+  // admin approves before they go live.
+  //
+  // polls_v1.sql is installed on production (verified: 13/13 anon-surface
+  // checks, npm run verify:polls-production) and on staging.
+  //
+  // DO NOT SHIP THIS FLAG ON WHILE PRODUCTION poll_mode() IS 'off'. It is not
+  // harmless: with the flag on, "Polls" appears in the top nav, /polls goes in
+  // the sitemap, and pageMetadata marks it index,follow -- while every click
+  // lands on "Polls are temporarily unavailable" because the database is shut.
+  // That is precisely what happened to the forum, which was turned back off on
+  // 2026-08-10 for exactly this ("Google was being asked to index a dead end").
+  //
+  // The correct order is: open production's poll_mode FIRST, then deploy this.
+  // Turning this on to preview staging is not a reason -- run the dev server
+  // against the staging keys instead, which costs production nothing.
+  polls: true,
 });
 
 export const hasReleaseCapability = (name) =>

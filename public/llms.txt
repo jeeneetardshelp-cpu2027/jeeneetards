@@ -13,6 +13,9 @@ official YouTube player instead of hosting video files.
 - A study-material directory and exam-specific mock-test source pages.
 - A public student forum in limited closed beta, with contributions restricted
   to invited signed-in members.
+- Student polls: single-question polls students vote on, with results hidden
+  until you vote, and a comment thread under each one. Polls are suggested by
+  students and published only after an administrator approves them.
 - Two source-checked subject study guides inside the Explore directory.
 - A curation-methodology page that explains catalogue labels and corrections.
 - Legal pages for terms and privacy.
@@ -40,6 +43,7 @@ official YouTube player instead of hosting video files.
 - `/tests/class-10`
 - `/tests/class-12`
 - `/forum`
+- `/polls`
 - `/methodology`
 - `/terms`
 - `/privacy`
