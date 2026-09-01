@@ -14,6 +14,11 @@ staging_bootstrap.sql
 !.env.example
 !.env.staging.example
 
+# Local scratch: liveness reports, SQL diagnostics, rehearsal output. The
+# liveness workflow writes tmp/video-liveness-report.json and uploads it as a
+# CI artifact; none of it belongs in the repository.
+tmp/
+
 # Generated verification and browser-audit output
 *-test-report.json
 test-report.json
