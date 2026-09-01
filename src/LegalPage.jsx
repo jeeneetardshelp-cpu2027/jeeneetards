@@ -1,4 +1,4 @@
-import { GlobalHeader, Container } from "./AppShell.jsx";
+import { GlobalHeader, Container, MAIN_CONTENT_ID } from "./AppShell.jsx";
 import { useTheme } from "./theme.jsx";
 import { BRAND_TEAL } from "./brandColors.js";
 
@@ -35,7 +35,7 @@ export default function LegalPage() {
   return (
     <div className={`min-h-screen ${t.page} ${t.text}`}>
       <GlobalHeader crumbs={[{ label: "Terms & Disclaimer" }]} />
-      <main className="py-10">
+      <main id={MAIN_CONTENT_ID} className="py-10">
         <Container width="reading">
           <h1 className={`text-2xl font-bold ${t.text}`}>
             Terms of Service &amp; Disclaimer

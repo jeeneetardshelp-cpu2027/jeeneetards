@@ -20,7 +20,7 @@
 
 import { Link } from "react-router";
 import { ArrowRight } from "lucide-react";
-import { GlobalHeader, Container } from "./AppShell.jsx";
+import { GlobalHeader, Container, MAIN_CONTENT_ID } from "./AppShell.jsx";
 import { Eyebrow, Pill, Surface, IconTile } from "./ui.jsx";
 import { Reveal, useReveal } from "./motion.jsx";
 import { useStructuredData } from "./PageMetadata.jsx";
@@ -100,7 +100,7 @@ export default function TestsPage() {
   return (
     <div className="min-h-screen bg-canvas text-ink">
       <GlobalHeader crumbs={[{ label: "Mock tests" }]} />
-      <main ref={revealRoot} className="pb-24">
+      <main id={MAIN_CONTENT_ID} ref={revealRoot} className="pb-24">
         <Container>
           <Reveal className="pt-10 sm:pt-14">
             <Eyebrow>Practice</Eyebrow>

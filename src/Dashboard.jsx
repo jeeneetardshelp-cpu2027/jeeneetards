@@ -29,7 +29,7 @@ import {
 } from "lucide-react";
 import { useVideos, useDebouncedValue, LECTURE_PAGE_SIZE, parseLectureSort } from "./useBrowse.js";
 import { useChapterName } from "./useChapterName.js";
-import { GlobalHeader } from "./AppShell.jsx";
+import { GlobalHeader, MAIN_CONTENT_ID } from "./AppShell.jsx";
 import PlaylistBrowse from "./PlaylistBrowse.jsx";
 import { FacultyFilter } from "./FacultyFilter.jsx";
 import { useTheme } from "./theme.jsx";
@@ -462,7 +462,7 @@ export default function Dashboard() {
         </aside>
 
         {/* main content */}
-        <main className="flex-1 p-4 sm:p-6">
+        <main id={MAIN_CONTENT_ID} className="flex-1 p-4 sm:p-6">
           <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
             <h1 className={`text-lg font-semibold ${t.text}`}>{heading}</h1>
             {/* The video count describes the LECTURES tab only. On Playlists it

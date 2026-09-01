@@ -21,8 +21,10 @@ const FOCUSABLE =
   'a[href], button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])';
 
 // The shape almost every page in this repo actually uses: GlobalHeader as a
-// sibling of the page's own <main>, not AppShell's <Page> wrapper.
-function renderPage({ crumbs = [], mainProps = {} } = {}) {
+// sibling of the page's own <main>, not AppShell's <Page> wrapper. The page
+// carries the id itself — that is now true of every routed page, and
+// mainLandmark.test.jsx is what keeps it true.
+function renderPage({ crumbs = [], mainProps = { id: MAIN_CONTENT_ID } } = {}) {
   return render(
     <ThemeProvider>
       <MemoryRouter initialEntries={["/browse"]}>
@@ -56,7 +58,7 @@ describe("skip to main content", () => {
     expect(order.length).toBeGreaterThan(8);
   });
 
-  it("targets a real element: the page's own <main> gets the id", () => {
+  it("targets a real element: the page's own <main> carries the id", () => {
     renderPage();
     const main = document.querySelector("main");
     expect(main.id).toBe(MAIN_CONTENT_ID);
@@ -76,13 +78,29 @@ describe("skip to main content", () => {
     expect(document.activeElement).toBe(main);
   });
 
-  it("does not clobber an id a page already put on its own <main>", () => {
+  it("never writes to a <main> the shell does not own", () => {
+    // The shell used to reach into the page on mount and assign the id itself.
+    // That is retired: every page sets it, so the header must leave the
+    // landmark exactly as the page rendered it — including a page that gave
+    // its <main> a different id for its own reasons.
     renderPage({ mainProps: { id: "faculty-directory" } });
     const main = document.querySelector("main");
     expect(main.id).toBe("faculty-directory");
+  });
 
-    // The link still works — it re-resolves the landmark when clicked.
+  it("still reaches a page that has not been given the id yet", () => {
+    // Fail safe, not broken: a page whose <main> carries no id at all is the
+    // one case the retired effect used to cover. The click handler's fallback
+    // has to keep that page working.
+    renderPage({ mainProps: {} });
+    const main = document.querySelector("main");
+    // Nothing added the id behind the page's back...
+    expect(main.hasAttribute("id")).toBe(false);
+    expect(document.getElementById(MAIN_CONTENT_ID)).toBeNull();
+
+    // ...and the link still lands focus in the landmark.
     fireEvent.click(skipLink());
+    expect(main.getAttribute("tabindex")).toBe("-1");
     expect(document.activeElement).toBe(main);
   });
 

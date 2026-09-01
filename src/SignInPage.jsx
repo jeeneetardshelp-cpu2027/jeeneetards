@@ -12,7 +12,7 @@
 // and honours ?next= so the header link returns the student to where they were.
 import { useEffect } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router";
-import { Container, GlobalHeader } from "./AppShell.jsx";
+import { Container, GlobalHeader, MAIN_CONTENT_ID } from "./AppShell.jsx";
 import { useTheme } from "./theme.jsx";
 import { useSession } from "./useSession.js";
 import { isSupabaseConfigured } from "./supabaseClient.js";
@@ -48,7 +48,7 @@ export default function SignInPage() {
   return (
     <div className={`min-h-screen ${t.page} ${t.text}`}>
       <GlobalHeader crumbs={[{ label: "Sign in" }]} width="reading" />
-      <main className="py-10">
+      <main id={MAIN_CONTENT_ID} className="py-10">
         <Container width="reading">
           <div className="max-w-md">
             <h1 className="text-2xl font-bold">Sign in</h1>

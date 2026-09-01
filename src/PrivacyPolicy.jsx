@@ -1,4 +1,4 @@
-import { GlobalHeader, Container } from "./AppShell.jsx";
+import { GlobalHeader, Container, MAIN_CONTENT_ID } from "./AppShell.jsx";
 import { useTheme } from "./theme.jsx";
 import { BRAND_TEAL } from "./brandColors.js";
 import { RELEASE_FEATURES } from "./releaseCapabilities.js";
@@ -37,7 +37,7 @@ export default function PrivacyPolicy() {
   return (
     <div className={`min-h-screen ${t.page} ${t.text}`}>
       <GlobalHeader crumbs={[{ label: "Privacy Policy" }]} />
-      <main className="py-10">
+      <main id={MAIN_CONTENT_ID} className="py-10">
         <Container width="reading">
           <h1 className={`text-2xl font-bold ${t.text}`}>Privacy Policy</h1>
           <p className={`mt-1 text-xs ${t.muted}`}>
