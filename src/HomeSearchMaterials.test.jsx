@@ -9,7 +9,7 @@
 // Mocking follows HomeSearchVisible.test.jsx: the hook is replaced wholesale,
 // so what is under test is the renderer and nothing else.
 
-import { render, screen, cleanup } from "@testing-library/react";
+import { render, screen, cleanup, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
@@ -24,12 +24,25 @@ vi.mock("./useExplore.js", () => ({
 let GROUPS_FROM_SERVER = {};
 
 vi.mock("./useUniversalSearch.js", () => ({
+  // The shared renderer walks GROUPS. Same keys and order as the real module,
+  // so the assertions below are about the page, not about the mock.
+  GROUPS: [
+    { key: "faculty", label: "Faculty" },
+    { key: "chapter", label: "Chapters" },
+    { key: "playlist", label: "Playlists" },
+    { key: "lecture", label: "Lectures" },
+    { key: "institute", label: "Institutes" },
+    { key: "material", label: "Notes & sheets" },
+    { key: "paper", label: "Previous-year papers" },
+  ],
   useUniversalSearch: () => ({
     groups: GROUPS_FROM_SERVER,
     loading: false,
     error: null,
     tooShort: false,
     retry: () => {},
+    page: 0,
+    setPage: () => {},
   }),
   MIN_QUERY: 2,
 }));
@@ -86,7 +99,18 @@ const renderSearch = (groups) => {
   );
 };
 
-const hrefFor = (text) => screen.getByText(text).closest("a")?.getAttribute("href");
+// The shared renderer marks the matched span, so a title can be split across a
+// <mark> and a <span> and no single node holds the whole string. Match on the
+// row's rendered text instead — same technique UniversalSearch.test.jsx uses.
+const rowFor = (text) =>
+  [...document.querySelectorAll("a")]
+    .find((a) => a.textContent.replace(/\s+/g, " ").includes(text));
+const hrefFor = (text) => rowFor(text)?.getAttribute("href");
+const findRow = (text) => waitFor(() => {
+  const row = rowFor(text);
+  if (!row) throw new Error(`no result row for ${text}`);
+  return row;
+});
 
 afterEach(() => { cleanup(); GROUPS_FROM_SERVER = {}; });
 
@@ -99,14 +123,14 @@ describe("the homepage search shows study material", () => {
 
   it("links a note to /materials with its own syllabus filters", async () => {
     renderSearch(MATERIAL_GROUPS);
-    await screen.findByText("Kinematics Short Notes");
+    await findRow("Kinematics Short Notes");
     expect(hrefFor("Kinematics Short Notes"))
       .toBe("/materials?goal=jee&class=class-11&subject=physics&chapter=kinematics&type=short_notes");
   });
 
   it("links a JEE Main paper to the curated papers landing", async () => {
     renderSearch(MATERIAL_GROUPS);
-    await screen.findByText("JEE Main 2024 Session 1 Shift 1 Question Paper");
+    await findRow("JEE Main 2024 Session 1 Shift 1 Question Paper");
     expect(hrefFor("JEE Main 2024 Session 1 Shift 1 Question Paper"))
       .toBe("/materials/jee-main/previous-year-papers");
   });
@@ -135,6 +159,6 @@ describe("degrades to today's homepage until the migration is applied", () => {
     renderSearch(LEGACY_GROUPS);
     await screen.findByText("Kinematics");
     expect(screen.queryByText(/Search is unavailable/)).toBeNull();
-    expect(screen.queryByText(/No results for/)).toBeNull();
+    expect(screen.queryByText(/Nothing matches/)).toBeNull();
   });
 });

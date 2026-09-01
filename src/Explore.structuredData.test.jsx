@@ -33,12 +33,19 @@ vi.mock("./useExplore.js", () => ({
   }),
 }));
 
-vi.mock("./useScopedSearch.js", () => ({
-  useScopedSearch: () => ({
-    results: { chapters: [], lectures: [] },
-    loading: false,
-    total: 0,
+// Explore's search box is the shared <UniversalSearch/> now — the same
+// component /search and the homepage hero render — so the engine to stub is
+// universal search, not the deleted useScopedSearch.
+vi.mock("./useUniversalSearch.js", () => ({
+  useUniversalSearch: () => ({
+    groups: {}, loading: false, error: null, tooShort: false,
+    retry: () => {}, page: 0, setPage: () => {},
   }),
+  GROUPS: [
+    { key: "chapter", label: "Chapters" },
+    { key: "lecture", label: "Lectures" },
+  ],
+  MIN_QUERY: 2,
 }));
 
 import Explore from "./Explore.jsx";
@@ -135,7 +142,7 @@ describe("Explore structured data wiring", () => {
     });
     expect(breadcrumbSchema()).not.toBeNull();
 
-    fireEvent.change(screen.getByPlaceholderText(/Search within/i), {
+    fireEvent.change(screen.getByPlaceholderText("Search the library"), {
       target: { value: "kinematics" },
     });
     await waitFor(() => expect(breadcrumbSchema()).toBeNull());
