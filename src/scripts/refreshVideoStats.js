@@ -22,6 +22,31 @@ import { computeVideoStats, isStale, rollupPlaylist } from "./statsMath.js";
 
 const REFRESH_INTERVAL_DAYS = 7; // re-fetch anything older than this
 const PURGE_AFTER_DAYS = 30; // ToS ceiling for keeping unrefreshed stats
+const PAGE = 1000; // PostgREST's own ceiling per request
+
+/**
+ * Read a whole table, not the first page of it.
+ *
+ * PostgREST caps an unbounded select at 1000 rows and says nothing about it.
+ * That silently made this job a no-op for most of the catalogue: 5,471 videos
+ * and 5,477 playlist_videos rows, of which it saw 1,000 each — so 82% of the
+ * library never got stats, and the rollup that decides course popularity was
+ * computed from a fifth of its members. Both failures look exactly like
+ * success in the console output.
+ */
+async function readAll(db, table, columns, orderBy = "id") {
+  const rows = [];
+  for (let from = 0; ; from += PAGE) {
+    const { data, error } = await db
+      .from(table)
+      .select(columns)
+      .order(orderBy, { ascending: true })
+      .range(from, from + PAGE - 1);
+    if (error) fail(`reading ${table}: ${error.message}`);
+    rows.push(...data);
+    if (data.length < PAGE) return rows;
+  }
+}
 
 function loadEnv() {
   const here = dirname(fileURLToPath(import.meta.url));
@@ -58,16 +83,10 @@ async function main() {
   console.log(dryRun ? "DRY RUN — no writes will be made.\n" : "");
 
   // 1. Which videos need a fetch (never-fetched or older than the interval).
-  const { data: videos, error: vErr } = await db
-    .from("videos")
-    .select("id, youtube_video_id, published_at");
-  if (vErr) fail(`reading videos: ${vErr.message}`);
+  const videos = await readAll(db, "videos", "id, youtube_video_id, published_at");
   if (!videos.length) { ok("No videos in catalog — nothing to do."); process.exit(0); }
 
-  const { data: existing, error: sErr } = await db
-    .from("video_stats")
-    .select("video_id, fetched_at");
-  if (sErr) fail(`reading video_stats: ${sErr.message}`);
+  const existing = await readAll(db, "video_stats", "video_id, fetched_at", "video_id");
   const fetchedAt = new Map(existing.map((r) => [r.video_id, r.fetched_at]));
 
   const stale = videos.filter((v) => isStale(fetchedAt.get(v.id), now, REFRESH_INTERVAL_DAYS));
@@ -80,17 +99,44 @@ async function main() {
     const stats = await getVideoStats(ytKey, [...byYtId.keys()]);
 
     const rows = [];
+    // Publish dates we learned from YouTube for videos the catalogue had none
+    // for. Backfilled below so the NEXT run — and anything else that wants a
+    // video's age — does not have to ask YouTube again.
+    const backfill = [];
     for (const [ytId, video] of byYtId) {
       const s = stats.get(ytId);
       if (!s) { gone += 1; continue; } // deleted/private on YouTube
+      // Prefer what YouTube just told us over what the row holds: published_at
+      // is null on every video in production today, and passing that null is
+      // what silently reduced popularity_score to a raw view count.
+      const publishedAt = s.publishedAt ?? video.published_at ?? null;
+      if (s.publishedAt && !video.published_at) {
+        backfill.push({ id: video.id, published_at: s.publishedAt });
+      }
       rows.push({
         video_id: video.id,
         ...computeVideoStats(
-          { viewCount: s.viewCount, likeCount: s.likeCount, publishedAt: video.published_at },
+          { viewCount: s.viewCount, likeCount: s.likeCount, publishedAt },
           now,
         ),
         fetched_at: now.toISOString(),
       });
+    }
+
+    if (backfill.length) {
+      if (dryRun) {
+        console.log(`Would backfill published_at on ${backfill.length} video(s).`);
+      } else {
+        // Chunked: one upsert of several thousand rows is a request large
+        // enough to be refused, and a half-written backfill is worse than none.
+        for (let i = 0; i < backfill.length; i += 500) {
+          const { error } = await db
+            .from("videos")
+            .upsert(backfill.slice(i, i + 500), { onConflict: "id" });
+          if (error) fail(`backfilling published_at: ${error.message}`);
+        }
+        console.log(`Backfilled published_at on ${backfill.length} video(s).`);
+      }
     }
 
     if (dryRun) {
@@ -116,15 +162,9 @@ async function main() {
   }
 
   // 4. Recompute the popularity rollup on every playlist from member stats.
-  const { data: members, error: mErr } = await db
-    .from("playlist_videos")
-    .select("playlist_id, video_id");
-  if (mErr) fail(`reading playlist_videos: ${mErr.message}`);
+  const members = await readAll(db, "playlist_videos", "playlist_id, video_id");
 
-  const { data: allStats, error: aErr } = await db
-    .from("video_stats")
-    .select("video_id, view_count, popularity_score, fetched_at");
-  if (aErr) fail(`reading video_stats for rollup: ${aErr.message}`);
+  const allStats = await readAll(db, "video_stats", "video_id, view_count, popularity_score, fetched_at", "video_id");
   const statById = new Map(allStats.map((s) => [s.video_id, s]));
 
   const byPlaylist = new Map();
