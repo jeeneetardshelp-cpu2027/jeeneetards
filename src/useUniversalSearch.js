@@ -16,12 +16,20 @@ export const MIN_QUERY = 2;
 // a typed word is one request rather than six, short enough to feel live.
 export const DEBOUNCE_MS = 275;
 
+// The order here is the order results are drawn in and the order the arrow
+// keys walk. `material` and `paper` are APPENDED, never inserted: a group the
+// deployed universal_search does not know about simply returns no rows, and a
+// group with no rows renders nothing at all — so this list is safe to ship
+// before supabase/migrations/20260901160000_universal_search_materials.sql is
+// applied, and the five video groups keep their existing positions either way.
 export const GROUPS = [
   { key: "faculty",   label: "Faculty" },
   { key: "chapter",   label: "Chapters" },
   { key: "playlist",  label: "Playlists" },
   { key: "lecture",   label: "Lectures" },
   { key: "institute", label: "Institutes" },
+  { key: "material",  label: "Notes & sheets" },
+  { key: "paper",     label: "Previous-year papers" },
 ];
 
 const EMPTY = Object.freeze({});
