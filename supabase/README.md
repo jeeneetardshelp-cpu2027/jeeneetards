@@ -5,12 +5,13 @@ This directory is the **ordered migration chain** for the production database
 live schema on 31 Aug 2026 and recorded in the remote migration history, so
 `supabase db push` applies only what production does not already have.
 
-## Current state (31 Aug 2026)
+## Current state (1 Sep 2026)
 
 | File | Status |
 | --- | --- |
 | `20260831140005_production_baseline.sql` | **Applied** (it IS production — 66 tables, 181 functions, 98 RLS policies, recorded via `migration repair`). |
-| `20260901120000_study_days.sql` | **Pending.** Server copy of prep-streak study days (owner-only RLS, mirrors `video_progress`). The frontend ships with this sync dormant; applying the migration switches it on. |
+| `20260901120000_study_days.sql` | **Applied** 31 Aug 2026. Server copy of prep-streak study days (owner-only RLS, mirrors `video_progress`); the frontend sync woke up on its own when this landed. |
+| `20260901160000_universal_search_materials.sql` | **Pending.** Adds `material` and `paper` groups to `universal_search`, so study notes, formula sheets and previous-year papers become findable from the main search box. The client half already ships and degrades to today's behaviour until this is pushed. |
 
 `npx supabase migration list` shows this local-vs-remote state at any time.
 

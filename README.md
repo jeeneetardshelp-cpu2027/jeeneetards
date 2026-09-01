@@ -77,9 +77,11 @@ VITE_SUPABASE_URL=https://your-project-ref.supabase.co
 VITE_SUPABASE_ANON_KEY=your-anon-public-key
 ```
 
-The browser YouTube key is needed only for the admin playlist importer. The
-server YouTube key and Supabase service-role key are needed only by specific
-local administrative scripts.
+There is no browser YouTube key. The admin playlist importer calls YouTube
+through `api/youtube.js`, a server-side proxy that reads the server-only
+`YOUTUBE_API_KEY` and requires an admin Supabase session. That key and the
+Supabase service-role key are needed only by that proxy and by specific local
+administrative scripts.
 
 Vite prints the local URL, normally `http://localhost:5173`. Public catalogue
 browsing must work without signing in.
@@ -94,8 +96,10 @@ These are release-blocking rules:
    Supabase Row Level Security.
 3. `SUPABASE_SERVICE_ROLE_KEY` bypasses RLS. Keep it local, never add it to
    Git, and never configure it in the frontend deployment.
-4. `VITE_YOUTUBE_API_KEY` is a public browser key restricted by HTTP referrer.
-   `YOUTUBE_API_KEY` is a separate server/script key restricted by IP.
+4. `VITE_YOUTUBE_API_KEY` no longer exists. It was removed on 2026-08-10 because
+   Vite inlines every `VITE_` value into the public bundle, so an HTTP-referrer
+   restriction did not protect it. `YOUTUBE_API_KEY` is the single server/script
+   key, restricted by IP, used by `api/youtube.js` and the Node scripts.
 5. Real `.env` and `.env.staging` files are ignored. Only the example files
    belong in Git.
 6. Do not paste credentials into issues, pull requests, screenshots or chat.
@@ -153,12 +157,16 @@ duplicate course can be reviewed before removal. Its sanitized JSON report is wr
 | `src/App.jsx` | Routing, shared layout and capability-gated routes |
 | `src/Home.jsx` | Student landing page and guided entry points |
 | `src/Explore.jsx` | Curriculum exploration flow |
-| `src/Dashboard.jsx` | Canonical browse and filter page |
+| `src/Dashboard.jsx` | The `/browse` catalogue and filter page, routed as `BrowsePage`; the filename is a leftover |
 | `src/PlaylistBrowse.jsx` | Course and lecture results |
 | `src/CourseVideoPage.jsx` | Course detail and lesson playback |
+| `src/searchDestinations.js` | Where a search result lands; one definition for every search surface |
 | `src/releaseCapabilities.js` | Current production capability contract |
-| `src/migrations/` | Migration source files; not an instruction to run them |
+| `supabase/migrations/` | The ordered migration chain — the schema source of truth |
+| `docs/schema_reference.md` | Generated reference for the production schema |
+| `src/migrations/` | Historical migration sources; not a status report and not an instruction to run them |
 | `production/` | Production packages, evidence, hashes and runbooks |
+| `middleware.js`, `ogInject.js` | Edge-rendered metadata and crawler-visible content for SPA routes |
 | `docs/` | Security, deployment, staging and scale evidence |
 | `public/` | Favicon, social preview, robots policy and early theme script |
 | `.github/workflows/ci.yml` | Automated test/build/release gate |
@@ -169,8 +177,21 @@ Tailwind's `dark:` variant. Brand accents are navy `#142A4F` and teal
 
 ## Database and production safety
 
-Most development does not require a database migration. Treat everything in
-`src/migrations/` and `production/` as potentially production-changing.
+Schema truth is the ordered Supabase CLI migration chain in
+`supabase/migrations/` — see [`supabase/README.md`](supabase/README.md). The baseline
+`20260831140005_production_baseline.sql` **is** the live production schema (66
+tables, 181 functions, 98 RLS policies); a schema change ships as a new
+timestamped file in that directory and is applied with `npx supabase db push`.
+`db push` applies every pending migration at once, so review
+`npx supabase migration list` first. The Supabase SQL Editor is for reading —
+audits and verification — not schema writes.
+[`docs/schema_reference.md`](docs/schema_reference.md) is a generated, grouped
+reference for that baseline.
+
+`src/migrations/`, `production/` and the loose `.sql` files at the repository
+root are history. Several still carry "not applied to production" headers that
+are no longer true, so never read live status from them. Most development does
+not require a database migration at all.
 
 Before any production database operation:
 
@@ -196,15 +217,20 @@ Read [`docs/frontend_deployment.md`](docs/frontend_deployment.md) before a
 public deployment. The repository contains SPA rewrites and security headers
 for both Vercel and Netlify.
 
-The deployment platform needs only the real browser-safe values required by the
-frontend:
+The deployment platform needs these browser-safe build values:
 
 - `VITE_SUPABASE_URL`
 - `VITE_SUPABASE_ANON_KEY`
-- `VITE_YOUTUBE_API_KEY` when the admin importer is used
 
-Never configure `SUPABASE_SERVICE_ROLE_KEY` or the server
-`YOUTUBE_API_KEY` in the frontend deployment.
+`api/youtube.js` is a server-side function, so the deployed admin importer also
+needs `YOUTUBE_API_KEY` configured as a **server** variable — never with a
+`VITE_` prefix, which would inline it into the public bundle. Leave it unset if
+the deployed importer is not used.
+
+Never configure `SUPABASE_SERVICE_ROLE_KEY` in the frontend deployment, and
+never expose any server key through a `VITE_` variable.
+(`docs/frontend_deployment.md` still lists the removed `VITE_YOUTUBE_API_KEY`
+here and has not been updated.)
 
 Before promotion, confirm the GitHub Actions run is green and run the
 read-only production capability check against the intended production project.
