@@ -1,0 +1,48 @@
+{
+  "exam": "NEET UG 2025",
+  "sourceName": "National Testing Agency (NEET UG)",
+  "officialApiUrl": "https://www.nta.ac.in/downloads/getlist",
+  "officialNoticeUrl": "https://neet.nta.nic.in/document-category/neetug-2025-public-notices/",
+  "sourceQuery": {
+    "Year": "2025",
+    "ExamType": "3",
+    "PaperType": "0"
+  },
+  "verifiedOn": "2026-08-16",
+  "distribution": "Linked from the official NTA host; not mirrored by JEENEETARD.",
+  "coverageNote": "The NTA catalogue exposes 52 unique NEET UG 2025 files across language editions. This package deliberately includes only the four English booklet codes 45-48 for the single-shift examination held on 4 May 2025. Each accepted PDF contains questions 1-180; pages 31-32 are intentional rough-work pages. Other language editions remain outside this English-only batch and are not replaced with third-party copies.",
+  "papers": [
+    {
+      "title": "NEET UG 2025 - Set 45 (English)",
+      "setCode": "45",
+      "examDate": "2025-05-04",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20251004204701_227d5d1f.pdf",
+      "pageCount": 32,
+      "sha256": "87C534CAD98B7B4E0B1FC7C74134F2043CEAC60A8E7756AEFC915A8F3426A324"
+    },
+    {
+      "title": "NEET UG 2025 - Set 46 (English)",
+      "setCode": "46",
+      "examDate": "2025-05-04",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20251004204701_62e8e606.pdf",
+      "pageCount": 32,
+      "sha256": "2B2BC0F64B041D1139556733DFDB03337051FC9E9C566A725EA77E04AC48D712"
+    },
+    {
+      "title": "NEET UG 2025 - Set 47 (English)",
+      "setCode": "47",
+      "examDate": "2025-05-04",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20251004204701_d35f908c.pdf",
+      "pageCount": 32,
+      "sha256": "7E4DABB5A199588D433E77360860BCDA61574E363DD571513901FF778B50004F"
+    },
+    {
+      "title": "NEET UG 2025 - Set 48 (English)",
+      "setCode": "48",
+      "examDate": "2025-05-04",
+      "sourceUrl": "https://www.nta.ac.in/Download/ExamPaper/Paper_20251004204701_b008f0fd.pdf",
+      "pageCount": 32,
+      "sha256": "F7A45C960EDE2F29D81DF2D6FA789391872668CD71121780A861A04A53EDAD87"
+    }
+  ]
+}
