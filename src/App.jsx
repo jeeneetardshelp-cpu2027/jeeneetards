@@ -303,7 +303,7 @@ function StudyMaterialsRoute() {
   return (
     <FeatureUnavailable
       title="Study material is coming soon"
-      detail="Short notes, formula sheets, lecture notes and previous-year papers are being checked before they are published."
+      detail="Formula sheets, lecture notes and previous-year papers are being checked before they are published."
     />
   );
 }

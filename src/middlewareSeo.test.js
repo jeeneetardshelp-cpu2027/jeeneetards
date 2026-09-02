@@ -230,7 +230,12 @@ describe("edge-rendered discovery landings", () => {
       expect(html).toContain('href="mailto:jeeneetardshelp@gmail.com"');
     }
     if (pathname === "/materials") {
-      expect(html).toContain("Short notes, formula sheets, full lecture notes");
+      expect(html).toContain("Formula sheets, full lecture notes");
+      // Zero short-notes rows exist (0 of 408 on 2026-09-01). The page must
+      // not promise them anywhere a crawler reads — this covers the edge body
+      // AND the <meta name="description"> in one assertion, so the two copy
+      // sites cannot drift back independently.
+      expect(html.toLowerCase()).not.toContain("short notes");
       expect(html).toContain('href="/explore"');
       expect(html).toContain('href="/tests"');
       expect(html).toContain('href="/methodology"');

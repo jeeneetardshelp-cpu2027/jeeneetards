@@ -348,7 +348,7 @@ export function metadataForLocation(pathname = "/", search = "") {
     return {
       ...base,
       title: `Free study material by exam and chapter | ${SITE_NAME}`,
-      description: "Find reviewed short notes, formula sheets, full lecture notes and previous-year papers by exam, class, subject and chapter.",
+      description: "Find reviewed formula sheets, full lecture notes and previous-year papers by exam, class, subject and chapter.",
       canonicalPath: "/materials",
       robots: hasFilters ? "noindex, follow" : "index, follow",
     };

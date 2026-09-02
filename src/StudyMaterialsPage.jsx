@@ -14,7 +14,7 @@ import { studyMaterialsPageSchemas } from "./studyMaterialsStructuredData.js";
 import { useStudyMaterialCatalog } from "./useStudyMaterialCatalog.js";
 import {
   STUDY_MATERIAL_PAGE_SIZE,
-  STUDY_MATERIAL_TYPES,
+  OFFERED_MATERIAL_TYPES,
   useStudyMaterials,
 } from "./useStudyMaterials.js";
 
@@ -225,7 +225,7 @@ export default function StudyMaterialsPage() {
           <p className="mt-5 text-xs font-semibold uppercase tracking-[0.16em] text-accent">Learn beyond the video</p>
           <h1 className="mt-2 text-3xl font-semibold tracking-tight text-ink sm:text-4xl">Find study material by your syllabus.</h1>
           <p className="mt-3 max-w-2xl text-base leading-relaxed text-ink-2">
-            Short notes, formula sheets, full lecture notes and previous-year papers—organised by exam, class, subject and chapter.
+            Formula sheets, full lecture notes and previous-year papers—organised by exam, class, subject and chapter.
           </p>
         </div>
       </section>
@@ -311,7 +311,7 @@ export default function StudyMaterialsPage() {
           <legend className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-3">Material type</legend>
           <div className="mt-3 flex flex-wrap gap-2">
             <button type="button" aria-pressed={!type} onClick={() => update("type", "")} className={`min-h-11 rounded-lg border px-4 text-sm font-medium ${!type ? "border-accent-line bg-accent-soft text-accent" : "border-hairline bg-surface text-ink-2"}`}>All material</button>
-            {STUDY_MATERIAL_TYPES.map((item) => (
+            {OFFERED_MATERIAL_TYPES.map((item) => (
               <button key={item.value} type="button" aria-pressed={type === item.value} onClick={() => update("type", type === item.value ? "" : item.value)} className={`min-h-11 rounded-lg border px-4 text-sm font-medium ${type === item.value ? "border-accent-line bg-accent-soft text-accent" : "border-hairline bg-surface text-ink-2"}`}>
                 {item.label}
               </button>

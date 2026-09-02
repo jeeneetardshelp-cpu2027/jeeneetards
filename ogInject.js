@@ -401,7 +401,7 @@ export function renderLandingBody(pathname, meta) {
     "/materials": {
       heading: "Find study material by your syllabus.",
       description:
-        "Short notes, formula sheets, full lecture notes and previous-year papers—organised by exam, class, subject and chapter.",
+        "Formula sheets, full lecture notes and previous-year papers—organised by exam, class, subject and chapter.",
       links: [
         ["Find a course", "/explore"],
         ["Mock tests", "/tests"],

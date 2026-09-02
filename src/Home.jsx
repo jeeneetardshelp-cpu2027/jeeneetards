@@ -64,6 +64,19 @@ export function homeTagline(capabilities = RELEASE_CAPABILITIES) {
     : "Find free courses by exam, class, subject and chapter.";
 }
 
+// The caption under the "Exam tracks" figure names exactly the tracks the
+// figure counts. It was a hardcoded "JEE, NEET, Boards": three names under a
+// number that read 4 once Olympiad went live, so the number and its own
+// caption disagreed on the highest-traffic screen. Deriving both from the same
+// list means they cannot drift apart again — and when a track is not live, it
+// is neither counted nor named.
+export function examTracksCaption(exams) {
+  return (exams ?? [])
+    .filter((exam) => exam.available)
+    .map((exam) => exam.label)
+    .join(", ");
+}
+
 export function examCardState(
   exam,
   goals,
@@ -165,7 +178,7 @@ export default function Home() {
         {
           value: liveTracks,
           label: "Exam tracks",
-          note: "JEE, NEET, Boards",
+          note: examTracksCaption(exams),
           to: "/explore",
         },
         { value: "₹0", numeric: false, label: "Forever", note: "No account needed" },

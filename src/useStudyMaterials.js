@@ -7,12 +7,27 @@ import { isSupabaseConfigured, supabase } from "./supabaseClient.js";
 
 export const STUDY_MATERIAL_PAGE_SIZE = 60;
 
+// The full vocabulary — it mirrors the database's material_type check
+// constraint. Every value stays here even when the library holds no rows of
+// it, because two things need the whole set: materialTypeLabel() must still
+// name a row of any type, and studyMaterialScope.js validates ?type= against
+// these values, so a link that names a type must parse rather than be dropped.
 export const STUDY_MATERIAL_TYPES = Object.freeze([
-  { value: "short_notes", label: "Short notes" },
+  // Zero rows in production (0 of 408 on 2026-09-01), so it is known but not
+  // offered: the page must not hand a student a filter that can only ever
+  // return nothing, and the copy must not promise it. Flip `offered` when the
+  // first short note is approved — nothing else needs to change.
+  { value: "short_notes", label: "Short notes", offered: false },
   { value: "formula_sheet", label: "Formula sheets" },
   { value: "full_notes", label: "Full lecture notes" },
   { value: "previous_year_paper", label: "Previous-year papers" },
 ]);
+
+// What the page actually offers as a filter: the types a student can find
+// something under. Derived, so the two lists cannot drift apart.
+export const OFFERED_MATERIAL_TYPES = Object.freeze(
+  STUDY_MATERIAL_TYPES.filter((item) => item.offered !== false),
+);
 
 const TYPE_LABELS = new Map(STUDY_MATERIAL_TYPES.map((item) => [item.value, item.label]));
 const MISSING_RPC = /PGRST202|could not find the function|schema cache|does not exist/i;
