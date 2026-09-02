@@ -11,6 +11,28 @@ import { supabase, isSupabaseConfigured } from "./supabaseClient";
 
 const REVIEW_LIMIT = 20;
 
+/**
+ * Is there anything to read in this review?
+ *
+ * The query asks the database for a review that is not null, which is not the
+ * same question. On 2026-09-02 production held exactly one rating, and its
+ * review was the string ",," — two commas, rendered verbatim under "What
+ * students are saying" as the only thing any student had ever said about the
+ * site. Punctuation is not a review, and quoting it as one is the same kind of
+ * claim as an invented count.
+ *
+ * A review is readable when it contains at least one letter or digit in ANY
+ * script — \p{L} covers Devanagari, so a review written in Hindi counts, which
+ * a naive /[a-z0-9]/ test would have silently discarded.
+ *
+ * The star rating is NOT affected. A student who rated three stars and typed
+ * nothing meaningful still rated three stars, and that still counts towards
+ * the average. Only the quote is withheld.
+ */
+export function hasReadableReview(review) {
+  return typeof review === "string" && /[\p{L}\p{N}]/u.test(review);
+}
+
 export function useVisibleReviews(playlistId) {
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -29,7 +51,11 @@ export function useVisibleReviews(playlistId) {
       .not("review", "is", null)
       .order("created_at", { ascending: false })
       .limit(REVIEW_LIMIT);
-    setReviews(data ?? []);
+    // The NOT NULL check is the database's; this is the one that decides
+    // whether a human wrote anything. Filtering here rather than in the list
+    // component keeps every consumer — and the hook's own promise above —
+    // honest.
+    setReviews((data ?? []).filter((row) => hasReadableReview(row?.review)));
     setLoading(false);
   }, [playlistId]);
 

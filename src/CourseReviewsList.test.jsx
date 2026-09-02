@@ -69,6 +69,40 @@ describe("public review display", () => {
     expect(screen.queryByText(/anonymous/i)).toBeNull();
   });
 
+  // Production held exactly ONE rating on 2026-09-02 and its review was ",," —
+  // two commas, shown verbatim as the site's only social proof. The database
+  // filter is `review is not null`, which is a different question from "did a
+  // human write something".
+  it("does not quote a review that is only punctuation", async () => {
+    reviewRows.current = [
+      { id: 3, rating: 3, review: ",,", difficulty: null, best_for: null, created_at: "2026-08-01T00:00:00Z" },
+    ];
+    show();
+    // Nothing readable is left, so the section hides rather than showing an
+    // empty quote under a heading promising what students are saying.
+    expect(screen.queryByText("What students are saying")).toBeNull();
+    expect(screen.queryByText(",,")).toBeNull();
+  });
+
+  it("keeps a Devanagari review, which a naive a-z filter would have dropped", async () => {
+    reviewRows.current = [
+      { id: 4, rating: 5, review: "बहुत अच्छा कोर्स है", difficulty: null, best_for: null, created_at: "2026-08-01T00:00:00Z" },
+    ];
+    show();
+    expect(await screen.findByText("What students are saying")).toBeTruthy();
+    expect(screen.getByText("बहुत अच्छा कोर्स है")).toBeTruthy();
+  });
+
+  it("shows the readable reviews and drops only the empty ones", async () => {
+    reviewRows.current = [
+      { id: 3, rating: 3, review: ",,", difficulty: null, best_for: null, created_at: "2026-08-02T00:00:00Z" },
+      { id: 8, rating: 5, review: "Genuinely helpful.", difficulty: null, best_for: null, created_at: "2026-08-01T00:00:00Z" },
+    ];
+    show();
+    expect(await screen.findByText("Genuinely helpful.")).toBeTruthy();
+    expect(screen.queryByText(",,")).toBeNull();
+  });
+
   it("only ever queries for non-hidden reviews with real text", async () => {
     // Asserts on the QUERY, not just on what rendered. Admin-hidden reviews
     // must never reach the client in the first place: the server filter is the

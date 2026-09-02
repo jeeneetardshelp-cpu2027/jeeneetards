@@ -198,6 +198,32 @@ describe("poll page states", () => {
   });
 });
 
+describe("poll page tab title", () => {
+  // The edge serves the real question in the HTML, but RouteMetadata then
+  // applied the slug-derived title on navigation and the tab silently reverted
+  // to "Is coaching worth it if you are already self studying" — no hyphen, no
+  // question mark. Two sources of truth for one page; the row is the truthful
+  // one.
+  it("uses the question, punctuation and all, once the poll loads", async () => {
+    renderPoll(apiWith());
+    await screen.findByRole("heading", { name: unvoted.question });
+    await waitFor(() =>
+      expect(document.title).toBe(`${unvoted.question} | JEENEETARD polls`));
+    const og = document.head.querySelector('meta[property="og:title"]');
+    expect(og.getAttribute("content")).toBe(`${unvoted.question} | JEENEETARD polls`);
+  });
+
+  it("leaves the slug-derived title alone when the row has no question", async () => {
+    const api = apiWith({
+      getPoll: vi.fn().mockResolvedValue({ ...unvoted, question: "   " }),
+    });
+    renderPoll(api);
+    await waitFor(() => expect(api.getPoll).toHaveBeenCalled());
+    expect(document.title).not.toContain("undefined");
+    expect(document.title).not.toBe(" | JEENEETARD polls");
+  });
+});
+
 describe("poll page breadcrumb", () => {
   // The current-page crumb, not the h1: both hold the question once the poll
   // loads, so a plain text query would pass against the old generic "Poll".

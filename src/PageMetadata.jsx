@@ -6,6 +6,7 @@ import {
   SITE_NAME,
   metadataForCourse,
   metadataForLocation,
+  pollMetadataForQuestion,
 } from "./pageMetadata.js";
 // Only the serializer, never the schema builders: this file's job is DOM
 // upsert/cleanup, not deciding what a Course or VideoObject looks like.
@@ -94,6 +95,26 @@ export function useCourseMetadata(course) {
       robots: "index, follow",
     });
   }, [course, pathname, search]);
+}
+
+/**
+ * Refine a poll page's title and description once the row arrives.
+ *
+ * RouteMetadata has already applied the slug-derived metadata on navigation —
+ * lowercased, punctuation stripped, cut at 60 characters — and without this
+ * the tab kept that degraded text even though the edge had served the real
+ * question in the HTML. Same shape as useCourseMetadata: the route's own
+ * canonical, robots and og:type stay, only the two human-readable strings
+ * change, and they come from the builder the edge uses.
+ */
+export function usePollMetadata(poll) {
+  const { pathname, search } = useLocation();
+
+  useEffect(() => {
+    const pollMeta = pollMetadataForQuestion(poll?.question);
+    if (!pollMeta) return;
+    applyPageMetadata({ ...metadataForLocation(pathname, search), ...pollMeta });
+  }, [poll, pathname, search]);
 }
 
 const STRUCTURED_DATA_ATTR = "data-schema-key";
