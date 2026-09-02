@@ -17,7 +17,7 @@ describe("browse-only legal disclosures", () => {
   it("publishes product-specific terms without inventing owner-only facts", () => {
     show(<LegalPage />);
     expect(screen.getByRole("heading", { name: "Terms of Service & Disclaimer" })).toBeTruthy();
-    expect(screen.getByText(/effective date: 31 August 2026/i)).toBeTruthy();
+    expect(screen.getByText(/effective date: 2 September 2026/i)).toBeTruthy();
     expect(document.body.textContent).toMatch(/browsing does not require an account/i);
     expect(document.body.textContent).toMatch(/operated by JEENEETARD/i);
     expect(document.body.textContent).toMatch(/jeeneetardshelp@gmail\.com/i);
@@ -35,7 +35,7 @@ describe("browse-only legal disclosures", () => {
   it("accurately discloses accounts, submissions, storage, providers, and under-18 use", () => {
     show(<PrivacyPolicy />);
     const text = document.body.textContent;
-    expect(screen.getByText(/effective date: 31 August 2026/i)).toBeTruthy();
+    expect(screen.getByText(/effective date: 2 September 2026/i)).toBeTruthy();
     expect(text).toMatch(/Supabase Auth/i);
     expect(text).toMatch(/overall, clarity, and question ratings/i);
     expect(text).toMatch(/ll_progress_v1/i);

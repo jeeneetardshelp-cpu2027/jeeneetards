@@ -41,7 +41,7 @@ export default function PrivacyPolicy() {
         <Container width="reading">
           <h1 className={`text-2xl font-bold ${t.text}`}>Privacy Policy</h1>
           <p className={`mt-1 text-xs ${t.muted}`}>
-            Effective date: 31 August 2026
+            Effective date: 2 September 2026
           </p>
 
           <Section title="1. Scope and operator details">
@@ -57,7 +57,7 @@ export default function PrivacyPolicy() {
               >
                 jeeneetardshelp@gmail.com
               </a>
-              . This version is effective 31 August 2026.
+              . This version is effective 2 September 2026.
             </p>
           </Section>
 
@@ -201,7 +201,45 @@ export default function PrivacyPolicy() {
             </p>
           </Section>
 
-          <Section title="6. Providers, video playback, and logs">
+          <Section title="6. Searches that find nothing">
+            <p>
+              When a search returns no results at all, the words searched for
+              are sent to the server and kept. Nothing is sent when a search
+              finds something. The purpose is to learn what students look for
+              and do not find, so that missing courses, missing notes, and
+              missing shorthand can be added.
+            </p>
+            <p>
+              The database table <code>search_gap_log</code> stores the words
+              searched for (trimmed, and cut off after 120 characters), a
+              simplified form of those words used to group the same search
+              written different ways, the number of results found, and the time
+              it happened. It stores nothing else. There is no account
+              identifier, no session identifier, no IP address, no device or
+              browser fingerprint, and no record of the page or filters in use.
+              The database function that writes these rows accepts no identity
+              of any kind, so there is nothing to link one row to another or to
+              a person.
+            </p>
+            <p>
+              This is the only server-side record on this site that is kept for
+              signed-out visitors as well as signed-in students. Only site
+              administrators can read it; other students and signed-out
+              visitors cannot.
+            </p>
+            <p>
+              <strong>
+                Because these rows carry nothing that identifies who typed
+                them, they cannot be found and deleted on request
+              </strong>{" "}
+              the way an account&apos;s watch progress can. That is a
+              consequence of collecting no identity rather than an oversight.
+              Please do not type anything into the search box that you would
+              not want recorded without a name attached.
+            </p>
+          </Section>
+
+          <Section title="7. Providers, video playback, and logs">
             <p>
               Vercel and Supabase deliver the site, database, API, and
               authentication services. They may process standard request and security logs,
@@ -225,7 +263,7 @@ export default function PrivacyPolicy() {
             </p>
           </Section>
 
-          <Section title="7. Purposes and sharing">
+          <Section title="8. Purposes and sharing">
             <p>
               Information is used to deliver and secure the service, maintain
               sessions, recover accounts, remember on-device preferences and
@@ -249,7 +287,7 @@ export default function PrivacyPolicy() {
             </p>
           </Section>
 
-          <Section title="8. Retention and deletion">
+          <Section title="9. Retention and deletion">
             <p>
               Browser data remains until the user or browser removes it.
               Server-side records — an account, its ratings and reviews, its
@@ -272,7 +310,7 @@ export default function PrivacyPolicy() {
             </p>
           </Section>
 
-          <Section title="9. Students under 18">
+          <Section title="10. Students under 18">
             <p>
               The catalogue is likely to be used by students under 18. A parent
               or guardian should be involved when an under-18 student creates an
@@ -295,7 +333,7 @@ export default function PrivacyPolicy() {
             </p>
           </Section>
 
-          <Section title="10. Choices, security, and contact">
+          <Section title="11. Choices, security, and contact">
             <p>
               Users can clear local or session storage, avoid loading a video,
               sign out of an enabled account, and use the password-reset flow.
