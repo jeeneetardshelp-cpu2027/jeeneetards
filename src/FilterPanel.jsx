@@ -158,26 +158,54 @@ function OptionList({ filter, options, selected, onToggle, counts }) {
  * a change of prominence, not a second filter model.
  *
  * The honest-filters rule still holds: a language this view has no courses in
- * is not offered at all (see optionsFor).
+ * is not offered at all (see optionsFor, and honestLanguageOptions below).
+ *
+ * This is the ONE chip row, exported: both FilterPanel variants render it, and
+ * so does the row BrowsePage surfaces on /browse itself at phone width — the
+ * markup used to be duplicated there and could drift.
+ *
+ * @param headingId Every caller supplies its own id: both FilterPanel variants
+ *                  are mounted at once on /browse (desktop column + mobile
+ *                  sheet) and the surfaced /browse row makes a third copy, so
+ *                  a shared id would collide.
+ * @param counts    value→count map the figures are drawn from, or null to
+ *                  withhold them (counts unavailable, or an upper bound that
+ *                  may prune but must never be printed).
+ * @param onToggle  (value) => void — the caller writes through its own
+ *                  applyFilterChange call, so URL handling stays in one place.
+ * @param appearance "panel" inside FilterPanel; "page" for the row surfaced on
+ *                  /browse beside the results — an h2 in the page outline,
+ *                  hidden from lg up where the sidebar's copy is already
+ *                  showing.
  */
-function LanguageChips({ filter, variant, options, selected, onToggle, counts }) {
+export function LanguageChips({
+  filter, headingId, options, selected, onToggle,
+  counts = null, appearance = "panel",
+}) {
   const { t } = useTheme();
   if (options.length === 0) return null;
-  // Both variants are mounted at once on /browse (desktop column + mobile
-  // sheet), so the heading id must be per-variant or the two collide.
-  const headingId = `filter-language-${variant}`;
+  const page = appearance === "page";
+  const Heading = page ? "h2" : "h3";
   return (
-    <section className={`border-b ${t.border} py-3 last:border-b-0`} aria-labelledby={headingId}>
-      <h3 id={headingId} className={`px-1 text-sm font-medium ${t.text}`}>{filter.label}</h3>
-      <div className="mt-2 flex flex-wrap gap-2 px-1">
+    <section
+      className={page ? "mb-4 lg:hidden" : `border-b ${t.border} py-3 last:border-b-0`}
+      aria-labelledby={headingId}
+    >
+      <Heading
+        id={headingId}
+        className={page ? `text-xs font-medium ${t.muted}` : `px-1 text-sm font-medium ${t.text}`}
+      >
+        {filter.label}
+      </Heading>
+      <div className={page ? "mt-2 flex flex-wrap gap-2" : "mt-2 flex flex-wrap gap-2 px-1"}>
         {options.map((o) => {
           const active = selected.includes(String(o.value));
-          const count = optionCount(counts, filter.key, o.value);
+          const count = counts == null ? null : Number(counts[String(o.value)] ?? 0);
           return (
             <button
               key={o.value}
               type="button"
-              onClick={() => onToggle(filter, o.value)}
+              onClick={() => onToggle(o.value)}
               aria-pressed={active}
               aria-label={count == null
                 ? undefined
@@ -204,6 +232,27 @@ function LanguageChips({ filter, variant, options, selected, onToggle, counts })
       </div>
     </section>
   );
+}
+
+/**
+ * The honest-filters rule for the language chips, in ONE place: once the
+ * contextual counts have settled, a language this view has no courses in is
+ * not offered at all — a chip at the top of a panel or page reads as "what
+ * this catalogue has", so a dead-end chip is a worse lie than a dead-end
+ * checkbox. An already-selected value is preserved so a shared or stale URL
+ * can still be cleared.
+ *
+ * `known` is the settled language→count map, or null while counts are still
+ * loading or unavailable (then every language is offered). Shared by
+ * FilterPanel and BrowsePage's /browse row so the two cannot apply the rule
+ * differently and offer different languages.
+ */
+export function honestLanguageOptions(filter, selected, known) {
+  const raw = filter.options.map((option) => ({ value: option.id, label: option.label }));
+  if (known == null) return raw;
+  return raw.filter((option) =>
+    selected.includes(String(option.value)) ||
+    Number(known[String(option.value)] ?? 0) > 0);
 }
 
 /**
@@ -269,18 +318,11 @@ export default function FilterPanel({
         Number(counts.chapter[String(option.value)] ?? 0) > 0
       );
     }
-    // Same honesty as the chapter list, applied to the promoted language row:
-    // once the contextual counts have settled, a language with no courses in
-    // this view is not offered. Chips sit at the top of the panel where they
-    // are read as "what this catalogue has", so a dead-end chip there is a
-    // worse lie than a dead-end checkbox further down. An already-selected
-    // value is preserved so a shared or stale URL can still be cleared.
+    // Same honesty as the chapter list, applied to the promoted language row.
+    // The predicate lives in honestLanguageOptions (shared with the row
+    // BrowsePage surfaces on /browse) — see its comment for the reasoning.
     if (filter.key === "language" && counts?.language && !countsLoading) {
-      const chosen = selectedFor(filter);
-      return raw.filter((option) =>
-        chosen.includes(String(option.value)) ||
-        Number(counts.language[String(option.value)] ?? 0) > 0
-      );
+      return honestLanguageOptions(filter, selectedFor(filter), counts.language);
     }
     if (!goalSlug) return raw;
     if (filter.key === "class") {
@@ -379,11 +421,15 @@ export default function FilterPanel({
       {languageFilter && (
         <LanguageChips
           filter={languageFilter}
-          variant={variant}
+          headingId={`filter-language-${variant}`}
           options={languageOptions}
           selected={selectedFor(languageFilter)}
-          onToggle={toggle}
-          counts={displayCounts}
+          onToggle={(value) => toggle(languageFilter, value)}
+          // The language slice of the display counts, or null to withhold the
+          // figures entirely (counts unavailable, or an unprintable upper
+          // bound). `?? {}` keeps the missing-slice case rendering honest
+          // zeros, exactly as optionCount always did.
+          counts={displayCounts && (displayCounts.language ?? {})}
         />
       )}
       {visible.map((f) => {
