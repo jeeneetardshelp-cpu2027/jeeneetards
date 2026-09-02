@@ -784,6 +784,12 @@ export default function CourseVideoPage() {
         <StudyMaterialPanel
           chapterId={activeLesson.chapter?.id ?? scope.chapter?.id}
           chapterName={activeLesson.chapter?.name ?? scope.chapter?.name}
+          // The course's learning goals, so the panel can offer this exam's
+          // previous-year papers. Papers are scoped at goal level only (no
+          // paper carries a chapter scope), so this is the only thing that can
+          // route a student from a lecture to practice. An unmapped goal —
+          // School Boards, Olympiad — renders nothing there.
+          goals={course.learningGoals}
           videoId={activeLesson.id}
         />
       }
