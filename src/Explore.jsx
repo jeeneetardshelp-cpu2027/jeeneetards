@@ -54,10 +54,8 @@ import {
   itemListSchema,
   learningResourceSchema,
 } from "./structuredData.js";
-import { BRAND_NAVY, BRAND_TEAL } from "./brandColors.js";
 import { getSubjectGuide } from "./subjectGuides.js";
 
-const BRAND = { navy: BRAND_NAVY, teal: BRAND_TEAL };
 
 const path = (...parts) => "/explore/" + parts.filter(Boolean).join("/");
 
@@ -405,8 +403,7 @@ export function SubjectGuide({ guide }) {
                 href={source.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex min-h-11 items-center text-sm font-medium underline underline-offset-4"
-                style={{ color: BRAND.teal }}
+                className="inline-flex min-h-11 items-center text-sm font-medium text-accent underline underline-offset-4"
               >
                 {source.label}
               </a>
@@ -420,8 +417,7 @@ export function SubjectGuide({ guide }) {
         Read{" "}
         <Link
           to="/methodology"
-          className="font-medium underline underline-offset-4"
-          style={{ color: BRAND.teal }}
+          className="font-medium text-accent underline underline-offset-4"
         >
           how JEENEETARD classifies and checks courses
         </Link>
@@ -476,8 +472,7 @@ function SearchWithin({ query, scopeLabel }) {
           footer={
             <Link
               to={`/search?q=${encodeURIComponent(query.trim())}`}
-              className="inline-flex min-h-11 items-center px-2 text-xs font-medium"
-              style={{ color: BRAND.teal }}
+              className="inline-flex min-h-11 items-center px-2 text-xs font-medium text-accent"
             >
               Open this search on its own page →
             </Link>
