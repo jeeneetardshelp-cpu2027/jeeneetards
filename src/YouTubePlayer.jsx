@@ -8,6 +8,19 @@
 //  everywhere, so we say so plainly and offer no dead link).
 //
 //  Usage:  <YouTubePlayer videoId="dQw4w9WgXcQ" title="My lesson" />
+//
+//  COLOUR: this file deliberately does NOT use the theme tokens. Everything
+//  here is painted on the video stage — a black rectangle in BOTH themes,
+//  because a video is a video — so the surfaces (bg-black, bg-slate-900/950),
+//  the text on them (text-white, text-slate-200/300) and YouTube's own red are
+//  fixed on purpose. A token like text-ink would flip to near-black in the
+//  light theme and vanish against the player.
+//
+//  Until 2026-09-02 the LEGACY BRIDGE in index.css re-coloured .text-slate-300
+//  to --ink-3 inside the student surface, which dimmed "Play lesson"'s caption
+//  and "Loading player…" to a mid grey on near-black in the dark default. That
+//  rule is gone; these literals now render as written, which is what they were
+//  chosen for. src/releaseIntegrity.test.js allows them by name.
 // =====================================================================
 
 import { useEffect, useRef, useState } from "react";

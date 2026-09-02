@@ -17,6 +17,10 @@ import {
 // which every student paid for on first load.
 import { PlaylistCard } from "./PlaylistCard.jsx";
 import { ratingDisplay } from "./ratingConfidence.js";
+// Channel names come from the catalogue, and some are written in Devanagari
+// under a document that declares lang="en". See lang.js. (Course titles on this
+// page are tagged inside PlaylistCard, which renders them.)
+import { langAttrs } from "./lang.js";
 import { orderExamsByLane } from "./examLane.js";
 import { Container } from "./AppShell.jsx";
 import {
@@ -217,7 +221,7 @@ export function SocialProof({ institutes, loading }) {
                   {/* min-w-0 + truncate: the longest channel name is 437px, wider
                       than a 360px phone. Without this the chip pushed the page
                       39px sideways on every screen, hero included. */}
-                  <span className="min-w-0 truncate">{institute.name}</span>
+                  <span {...langAttrs(institute.name)} className="min-w-0 truncate">{institute.name}</span>
                 </Link>
               ))}
             </nav>

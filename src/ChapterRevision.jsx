@@ -33,6 +33,10 @@ import { useTheme } from "./theme.jsx";
 import { BRAND_TEAL } from "./brandColors.js";
 import { formatDuration } from "./usePlaylistBrowse.js";
 import { ratingDisplay } from "./ratingConfidence.js";
+// Chapter names, course titles and faculty names are catalogue text, and this
+// catalogue writes plenty of it in Devanagari under a document that declares
+// lang="en". See lang.js.
+import { hasDevanagari, langAttrs } from "./lang.js";
 
 // One-shots and revision series only. Deliberately NOT pyq or practice: those
 // are worth their own surface and are a different study action.
@@ -83,7 +87,9 @@ export default function ChapterRevision({ chapterId, chapterName, currentCourseI
         <Zap className="h-4 w-4" style={{ color: BRAND_TEAL }} aria-hidden="true" />
         <h2 className={`text-sm font-semibold ${t.text}`}>
           Revise in one sitting{" "}
-          {chapterName ? <span className={t.muted}>{chapterName}</span> : null}
+          {chapterName
+            ? <span {...langAttrs(chapterName)} className={t.muted}>{chapterName}</span>
+            : null}
         </h2>
       </div>
       <p className={`mt-1 text-xs ${t.muted}`}>
@@ -97,6 +103,15 @@ export default function ChapterRevision({ chapterId, chapterName, currentCourseI
           // Chapter-scoped, so this is the time for THIS chapter, not the
           // whole course. Null when the rows carried no duration.
           const length = formatDuration(course.durationSeconds);
+          // "Manish Raj · 47m · 4.6/5". Only the credit is catalogue text —
+          // tagging the whole line would read the duration and the score in
+          // Hindi phonetics too — so the name gets its own element, and only
+          // when it needs one.
+          const credit = course.teacher || course.institute || null;
+          const facts = [
+            length,
+            score2 != null ? `${score2.toFixed(1)}/5` : null,
+          ].filter(Boolean).join(" · ");
           return (
             <li key={course.id}>
               <Link
@@ -104,15 +119,16 @@ export default function ChapterRevision({ chapterId, chapterName, currentCourseI
                 className={`group flex min-h-11 items-center gap-3 rounded-xl border ${t.border} p-3 transition-colors hover:border-accent-line`}
               >
                 <span className="min-w-0 flex-1">
-                  <span className={`block truncate text-sm font-medium ${t.text}`}>
+                  <span
+                    {...langAttrs(course.title)}
+                    className={`block truncate text-sm font-medium ${t.text}`}
+                  >
                     {course.title}
                   </span>
                   <span className={`block truncate text-xs ${t.muted}`}>
-                    {[
-                      course.teacher || course.institute,
-                      length,
-                      score2 != null ? `${score2.toFixed(1)}/5` : null,
-                    ].filter(Boolean).join(" · ")}
+                    {hasDevanagari(credit) ? <span lang="hi">{credit}</span> : credit}
+                    {credit && facts ? " · " : ""}
+                    {facts}
                   </span>
                 </span>
                 <ArrowRight

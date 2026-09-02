@@ -245,3 +245,27 @@ describe("Back returns to the filtered catalogue", () => {
     expect(back.getAttribute("href")).toBeNull();
   });
 });
+
+// ------------------------------------------------------- Devanagari (lang.js)
+// The comparison table is a wall of catalogue text under a document that
+// declares lang="en" — course titles across the header, faculty and institute
+// down the rows. See lang.js and catalogueDevanagari.test.jsx.
+describe("Devanagari cells are tagged for a screen reader", () => {
+  it("tags the column title and the faculty cell, and only those", async () => {
+    EXISTING = [
+      course(1, { title: "कबीर की साखी", teacher: "अमित बिजारणिया" }),
+      course(2, { title: "Complete Kinematics", teacher: "A. Sharma" }),
+    ];
+    CHAPTER_OF = { 1: [77], 2: [77] };
+    renderAt("/compare?chapter=77&ids=1,2");
+    await screen.findByRole("table");
+
+    expect(screen.getByText("कबीर की साखी").getAttribute("lang")).toBe("hi");
+    expect(screen.getByText("अमित बिजारणिया").getAttribute("lang")).toBe("hi");
+    // A Latin course keeps the document's own lang, and gains no wrapper.
+    expect(screen.getByText("Complete Kinematics").getAttribute("lang")).toBeNull();
+    expect(screen.getByText("A. Sharma").getAttribute("lang")).toBeNull();
+    // Numbers are never claimed as Hindi.
+    expect(screen.getAllByText("10")[0].getAttribute("lang")).toBeNull();
+  });
+});

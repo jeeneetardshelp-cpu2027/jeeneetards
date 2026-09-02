@@ -105,3 +105,43 @@ describe("ChapterChampions board", () => {
     expect(container.querySelector("section")).toBeNull();
   });
 });
+
+// ------------------------------------------------------- Devanagari (lang.js)
+// Chapter names, course titles and teacher names here are catalogue text under
+// a document that declares lang="en". See lang.js.
+describe("Devanagari on the champions board", () => {
+  it("tags the chapter, the title and the teacher, but not the score", async () => {
+    rpc.mockResolvedValue({
+      data: [{
+        playlist_id: 1, title: "कबीर की साखी", teacher: "अमित बिजारणिया",
+        institute: "Competishun", clarity_avg: "4.50", clarity_n: 6,
+        question_avg: null, question_n: 0,
+      }],
+      error: null,
+    });
+    render(
+      <ThemeProvider>
+        <MemoryRouter>
+          <ChapterChampions chapterId={27} chapterName="गति" />
+        </MemoryRouter>
+      </ThemeProvider>,
+    );
+
+    expect(await screen.findByText("कबीर की साखी")).toBeTruthy();
+    expect(screen.getByText("गति").getAttribute("lang")).toBe("hi");
+    expect(screen.getByText("कबीर की साखी").getAttribute("lang")).toBe("hi");
+    const credit = screen.getByText("अमित बिजारणिया — Competishun");
+    expect(credit.getAttribute("lang")).toBe("hi");
+    // The score sits outside the Hindi element, so "4.5/5 clarity (6 ratings)"
+    // is never read with Hindi phonetics.
+    expect(credit.parentElement.textContent)
+      .toBe("अमित बिजारणिया — Competishun · 4.5/5 clarity (6 ratings)");
+  });
+
+  it("adds no wrapper and no lang to an all-Latin board", async () => {
+    rpc.mockResolvedValue({ data: ROWS, error: null });
+    const { container } = renderBoard();
+    await screen.findByText("Chapter champions");
+    expect(container.querySelector("[lang]")).toBeNull();
+  });
+});

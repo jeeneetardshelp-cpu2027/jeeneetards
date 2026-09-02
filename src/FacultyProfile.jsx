@@ -11,6 +11,10 @@ import { BadgeCheck, ExternalLink, Star } from "lucide-react";
 import { useFacultyProfile } from "./useFaculty.js";
 import { GlobalHeader, Container, MAIN_CONTENT_ID } from "./AppShell.jsx";
 import { ratingDisplay } from "./ratingConfidence.js";
+// A teacher's name, their aliases and their course titles are catalogue text,
+// and some of it is written in Devanagari under a document that declares
+// lang="en". See lang.js.
+import { hasDevanagari, langAttrs } from "./lang.js";
 import { useTheme } from "./theme.jsx";
 import { applyPageMetadata, useStructuredData } from "./PageMetadata.jsx";
 import { breadcrumbListSchema, personSchema } from "./structuredData.js";
@@ -26,6 +30,7 @@ export default function FacultyProfile() {
     .filter((item) => item?.status === "verified")
     .map((item) => item.alias)
     .filter((alias) => alias && alias !== profile?.display_name);
+  const aliasLine = verifiedAliases.join(", ");
 
   // Breadcrumb instead of a bare Back link: it says WHERE you are, and every
   // crumb is a real destination rather than a guess about history.
@@ -117,7 +122,12 @@ export default function FacultyProfile() {
               )}
               <div>
                 <h1 className={`flex items-center gap-2 text-2xl font-semibold ${t.text}`}>
-                  {profile.display_name}
+                  {/* The "Verified" badge shares this heading, so the name gets
+                      its own element rather than the whole h1 being tagged —
+                      and only when the name actually needs one. */}
+                  {hasDevanagari(profile.display_name)
+                    ? <span lang="hi">{profile.display_name}</span>
+                    : profile.display_name}
                   {profile.verified && (
                     <span className={`flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ${dark ? "bg-emerald-950 text-emerald-300" : "bg-emerald-50 text-emerald-700"}`}>
                       <BadgeCheck className="h-3.5 w-3.5" /> Verified
@@ -129,7 +139,12 @@ export default function FacultyProfile() {
                 </p>
                 {verifiedAliases.length > 0 && (
                   <p className={`mt-1 text-xs ${t.muted}`}>
-                    Also known as {verifiedAliases.join(", ")}
+                    {/* "Also known as" is interface English; the aliases are
+                        names. Same split, same guard. */}
+                    Also known as{" "}
+                    {hasDevanagari(aliasLine)
+                      ? <span lang="hi">{aliasLine}</span>
+                      : aliasLine}
                   </p>
                 )}
               </div>
@@ -186,7 +201,7 @@ export default function FacultyProfile() {
                       className={`flex min-h-14 items-center justify-between gap-4 rounded-xl border ${t.border} ${t.card} ${t.cardHover} px-4 py-3 transition`}
                     >
                       <div>
-                        <p className={`text-sm font-medium ${t.text}`}>{c.title}</p>
+                        <p {...langAttrs(c.title)} className={`text-sm font-medium ${t.text}`}>{c.title}</p>
                         {(c.subject || (c.role && c.role !== "instructor")) && (
                           <p className={`text-xs ${t.muted}`}>
                             {c.subject ?? ""}

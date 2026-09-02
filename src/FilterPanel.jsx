@@ -70,6 +70,13 @@ function Option({ selected, onClick, count, label, imageUrl = null }) {
         }`}
         style={selected ? { backgroundColor: BRAND.teal } : undefined}
       >
+        {/* Fixed white on purpose, not a token: this dot sits on BRAND.teal
+            (#0F6F78), which is the same colour in both themes, so the tick has
+            to be the same colour in both themes too. bg-surface would make it
+            near-black in the dark default. Until 2026-09-02 the index.css
+            LEGACY BRIDGE rewrote .bg-white to var(--surface) inside the
+            student surface, which did exactly that — the tick was all but
+            invisible in dark mode. That rule is gone. */}
         {selected && <span className="block h-1.5 w-1.5 rounded-sm bg-white" />}
       </span>
       {imageUrl && <ChannelAvatar url={imageUrl} name={label} className="h-7 w-7" />}
