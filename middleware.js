@@ -486,6 +486,7 @@ export default async function middleware(request) {
     const forumPostMatch = url.pathname.match(/^\/forum\/post\/(\d+)\/?$/);
     // Set from the row fetched for the 404 check below, when there is one.
     let forumPostTitle = "";
+    let pollQuestion = "";
     // Only a real poll slug shape (…-<id>); never /polls or /polls/new.
     const pollMatch = url.pathname.match(/^\/polls\/([a-z0-9]+(?:-[a-z0-9]+)*-\d+)\/?$/);
     const legacyChapterMatch = url.pathname.match(/^\/chapter\/(\d+)\/?$/);
@@ -572,6 +573,16 @@ export default async function middleware(request) {
         if (Array.isArray(found.data) && found.data.length === 0) {
           return notFoundResponse(request, url, "Poll not found");
         }
+        // Same reasoning as the forum row above: this row is already paid for.
+        // Without it the card is built from the SLUG, which pageMetadata can
+        // only guess at — it is lowercased, punctuation is gone, and a question
+        // longer than the 60-char slug stem is cut mid-word, so
+        // "…how JEE or NEET is run, what would it be?" unfurled as
+        // "…how JEE or NEET is run w". The question is the one string a shared
+        // poll has to get right.
+        const row = Array.isArray(found.data) ? found.data[0] : null;
+        const question = typeof row?.question === "string" ? row.question.trim() : "";
+        if (question) pollQuestion = question;
       }
     }
 
@@ -603,6 +614,16 @@ export default async function middleware(request) {
           ...routeMeta,
           title: `${forumPostTitle} | Student forum | ${SITE_NAME}`,
           description: `A JEE and NEET preparation discussion on JEENEETARD: ${forumPostTitle}`,
+        };
+      }
+      // A poll asks a question, so the card shows the question, punctuation and
+      // all. Only the two human-readable strings change; canonical, robots and
+      // og:type "article" are already right for the route.
+      if (pollQuestion) {
+        routeMeta = {
+          ...routeMeta,
+          title: `${pollQuestion} | ${SITE_NAME} polls`,
+          description: `Vote and see how other JEE and NEET students answered: ${pollQuestion}`,
         };
       }
       const directoryPromise = url.pathname === "/browse" && !url.search && supaUrl && supaKey

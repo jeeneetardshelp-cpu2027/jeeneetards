@@ -178,6 +178,50 @@ describe("edge-rendered discovery landings", () => {
     expect(response.status).toBe(200);
   });
 
+  // The slug is a lossy encoding of the question: lowercased, punctuation
+  // stripped, and cut to a 60-character stem. Building the share card from it
+  // shipped "…how JEE or NEET is run w" to WhatsApp. The edge already holds the
+  // real row, so these pin the card to the question, not the URL.
+  it("builds a poll's share card from the question, not the slug", async () => {
+    const question = "If you could change one thing about how JEE or NEET is run, what would it be?";
+    vi.stubEnv("VITE_SUPABASE_URL", "https://polls.example");
+    vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
+    vi.stubGlobal("fetch", vi.fn(async (input) => {
+      const url = String(input);
+      if (url.endsWith("/rpc/poll_mode")) return Response.json("open");
+      if (url.endsWith("/rpc/get_poll")) return Response.json([{ id: 5, question }]);
+      return new Response(shell, { status: 200 });
+    }));
+
+    const response = await middleware(new Request(
+      "https://www.jeeneetard.com/polls/if-you-could-change-one-thing-about-how-jee-or-neet-is-run-w-5",
+    ));
+    const html = await response.text();
+    expect(response.status).toBe(200);
+    // The whole question, punctuation intact — and no truncated slug tail.
+    expect(html).toContain(`<meta property="og:title" content="${question} | JEENEETARD polls"`);
+    expect(html).not.toContain("is run w |");
+    expect(html).toContain(`content="Vote and see how other JEE and NEET students answered: ${question}"`);
+    expect(html).toContain('<meta property="og:type" content="article"');
+  });
+
+  it("falls back to the slug-derived card when the poll row has no question", async () => {
+    vi.stubEnv("VITE_SUPABASE_URL", "https://polls.example");
+    vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
+    vi.stubGlobal("fetch", vi.fn(async (input) => {
+      const url = String(input);
+      if (url.endsWith("/rpc/poll_mode")) return Response.json("open");
+      if (url.endsWith("/rpc/get_poll")) return Response.json([{ id: 3 }]);
+      return new Response(shell, { status: 200 });
+    }));
+
+    const response = await middleware(new Request(
+      "https://www.jeeneetard.com/polls/how-many-hours-do-you-study-3",
+    ));
+    expect(response.status).toBe(200);
+    expect(await response.text()).toContain('<meta property="og:type" content="article"');
+  });
+
   it("does not hard-404 forum posts while the forum is off", async () => {
     vi.stubEnv("VITE_SUPABASE_URL", "https://forum.example");
     vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
