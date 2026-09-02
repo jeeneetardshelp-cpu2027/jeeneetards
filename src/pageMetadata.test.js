@@ -108,7 +108,7 @@ describe("public page metadata", () => {
 
     const neet = metadataForLocation("/materials/neet/previous-year-papers");
     expect(neet.title).toBe(
-      "NEET question papers: 2024 and the 2026 re-exam | JEENEETARD",
+      "NEET question papers: 2024, 2025 and the 2026 re-exam | JEENEETARD",
     );
     expect(neet.description).toMatch(/partial/i);
     expect(neet.canonicalPath).toBe("/materials/neet/previous-year-papers");

@@ -246,7 +246,7 @@ describe("edge-rendered discovery landings", () => {
     ["/materials", "Find study material by your syllabus."],
     ["/materials/jee-main/previous-year-papers", "JEE Main papers, answer keys and solutions"],
     ["/materials/jee-advanced/previous-year-papers", "JEE Advanced question papers, 2007 to 2026"],
-    ["/materials/neet/previous-year-papers", "NEET question papers: 2024 and the 2026 re-exam"],
+    ["/materials/neet/previous-year-papers", "NEET question papers: 2024, 2025 and the 2026 re-exam"],
     ["/tests", "Mock tests"],
     ["/methodology", "How JEENEETARD curates courses"],
     ["/terms", "Terms of Service &amp; Disclaimer"],
