@@ -48,12 +48,14 @@ export default function EditorialTitleField({
       )}
 
       {warnings.length > 0 && (
+        // Amber stays literal: the palette has no warning token, and fg + bg
+        // are set together here, so the notice reads in both themes.
         <ul className="space-y-1 rounded-lg border border-amber-200 bg-amber-50 p-3 text-xs text-amber-900">
           {warnings.map((issue) => <li key={issue.code}><AlertTriangle className="mr-1 inline h-3.5 w-3.5" />{issue.message}</li>)}
         </ul>
       )}
 
-      <label className={`flex min-h-11 items-center gap-3 rounded-lg border px-3 text-sm ${blocking ? "border-rose-200 bg-rose-50 text-rose-800" : `${t.border} ${t.text}`}`}>
+      <label className={`flex min-h-11 items-center gap-3 rounded-lg border px-3 text-sm ${blocking ? "border-danger-line bg-danger-soft text-danger" : `${t.border} ${t.text}`}`}>
         <input
           type="checkbox"
           checked={reviewed}
