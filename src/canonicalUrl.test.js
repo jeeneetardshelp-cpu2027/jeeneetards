@@ -8,6 +8,7 @@ import { describe, it, expect } from "vitest";
 import {
   canonicalBrowseUrl, parseCanonical, sameSelection,
   toClassSlug, classSlugToStage, classSlugToLabel,
+  courseSlug, canonicalCoursePath, parseCoursePath,
 } from "./canonicalUrl.js";
 
 const P = (qs) => new URLSearchParams(qs);
@@ -113,5 +114,91 @@ describe("legacy id links keep working", () => {
     expect(c.goal.raw).toBeNull();
     expect(c.classSlug).toBeNull();
     expect(c.stage).toBeNull();
+  });
+});
+
+// ---------------------------------------------------------------------------
+// A course's own address. The failure these guard against is different from
+// the one above: not two systems disagreeing, but a URL that stops working
+// because someone renamed a course.
+// ---------------------------------------------------------------------------
+
+describe("a course's canonical address", () => {
+  it("carries the title as searchable, readable keywords", () => {
+    expect(canonicalCoursePath(398, "Rectilinear Motion (Kinematics)"))
+      .toBe("/course/398/rectilinear-motion-kinematics");
+  });
+
+  it("keeps the id as the only thing that resolves the course", () => {
+    // A retitled course: the slug changes, the address still points at 398.
+    expect(parseCoursePath("/course/398/rectilinear-motion-kinematics").id).toBe("398");
+    expect(parseCoursePath("/course/398/an-old-title-nobody-uses").id).toBe("398");
+    expect(parseCoursePath("/course/398").id).toBe("398");
+  });
+
+  it("emits only URL-safe ASCII, whatever the title contains", () => {
+    for (const title of [
+      "Physics — Class 11 (2026) 100% PYQs!",
+      "  spaced  out  ",
+      "C++ & $199 // tricks",
+      "Résumé of Ångström units",
+    ]) {
+      expect(courseSlug(title)).toMatch(/^[a-z0-9]+(?:-[a-z0-9]+)*$/);
+    }
+    // Accents survive as their base letter rather than vanishing.
+    expect(courseSlug("Résumé of Ångström units")).toBe("resume-of-angstrom-units");
+  });
+
+  // The deliberate decision, written down: a Devanagari title gets NO slug.
+  // Transliterating it would mint a permanent public address from a guess, and
+  // percent-encoded Devanagari is more opaque in a WhatsApp message than the
+  // bare id it would replace.
+  it("falls back to the bare id for a title with no ASCII to slugify", () => {
+    expect(courseSlug("कबीर की साखी")).toBe("");
+    expect(canonicalCoursePath(212, "कबीर की साखी")).toBe("/course/212");
+    expect(canonicalCoursePath(212, null)).toBe("/course/212");
+    expect(canonicalCoursePath(212, "   ")).toBe("/course/212");
+  });
+
+  it("keeps a mixed-script title's Latin half instead of dropping the course", () => {
+    expect(canonicalCoursePath(7, "Class 10 हिंदी")).toBe("/course/7/class-10");
+  });
+
+  it("caps the slug and never cuts a word in half", () => {
+    const slug = courseSlug(
+      "Complete Physics Full Course for JEE Advanced Two Thousand Twenty Six Batch",
+    );
+    expect(slug.length).toBeLessThanOrEqual(60);
+    expect(slug.endsWith("-")).toBe(false);
+    // Every retained word is a whole word from the title.
+    for (const part of slug.split("-")) {
+      expect("complete physics full course for jee advanced two thousand twenty six batch")
+        .toContain(part);
+    }
+  });
+
+  it("refuses a slug that would collide with the chapter sub-route", () => {
+    expect(courseSlug("Chapter")).toBe("");
+    expect(canonicalCoursePath(5, "Chapter")).toBe("/course/5");
+  });
+
+  it("reads every /course shape the site answers", () => {
+    expect(parseCoursePath("/course/13")).toEqual({ id: "13", slug: null, chapterId: null });
+    expect(parseCoursePath("/course/13/kinematics"))
+      .toEqual({ id: "13", slug: "kinematics", chapterId: null });
+    expect(parseCoursePath("/course/13/chapter/8"))
+      .toEqual({ id: "13", slug: null, chapterId: "8" });
+    expect(parseCoursePath("/course/13/kinematics/chapter/8"))
+      .toEqual({ id: "13", slug: "kinematics", chapterId: "8" });
+    expect(parseCoursePath("/course/13/")).toEqual({ id: "13", slug: null, chapterId: null });
+  });
+
+  it("rejects shapes that are not a course at all", () => {
+    expect(parseCoursePath("/course/nope")).toBeNull();
+    expect(parseCoursePath("/course")).toBeNull();
+    expect(parseCoursePath("/course/13/a/b/c")).toBeNull();
+    expect(parseCoursePath("/course/13/chapter/nope")).toBeNull();
+    // A slug is a stale title, not a payload: cap the accepted space.
+    expect(parseCoursePath(`/course/13/${"x".repeat(121)}`)).toBeNull();
   });
 });

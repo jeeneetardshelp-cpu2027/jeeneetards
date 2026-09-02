@@ -227,5 +227,5 @@ describe("Unacademy NEET thirteenth-batch faculty-link package", () => {
       "select count(*)::int as count from public.playlist_teachers where playlist_id in (418, 419)",
     )).rows[0].count).toBe(0);
     await drifted.close();
-  }, 30_000);
+  });
 });

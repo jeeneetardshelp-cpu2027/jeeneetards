@@ -156,7 +156,7 @@ describe("forum report-dismissal SQL delta", () => {
       await pg.exec("reset role").catch(() => {});
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("denies non-admin and anonymous roles and rejects repeat dismissal", async () => {
     const pg = await database();
@@ -192,7 +192,7 @@ describe("forum report-dismissal SQL delta", () => {
       await pg.exec("reset role").catch(() => {});
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("can close a pending report whose polymorphic target has been removed", async () => {
     const pg = await database();
@@ -214,7 +214,7 @@ describe("forum report-dismissal SQL delta", () => {
       await pg.exec("reset role").catch(() => {});
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("removes only the RPC during guarded rollback and refuses production", async () => {
     const pg = await database();

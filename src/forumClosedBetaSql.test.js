@@ -122,7 +122,7 @@ describe("forum closed-beta SQL delta", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("allows only beta members to write in beta mode while public reads and reports remain available", async () => {
     const pg = await database();

@@ -116,6 +116,14 @@ describe("the watch page's exam-level papers link", () => {
     // The lead-in states the scope outright, and says why.
     expect(screen.getByText(/whole exam/i).textContent)
       .toMatch(/aren’t tagged chapter by chapter/);
+    // And it must say WHY, because the reason is permanent: a paper covers
+    // every subject, so chapter-scoping one would be false rather than merely
+    // missing. Copy that implied tagging was coming would promise the wrong
+    // thing (the honest chapter-scoped unit is a question, not a paper).
+    expect(screen.getByText(/whole exam/i).textContent)
+      .toMatch(/covering every subject/i);
+    expect(screen.getByText(/whole exam/i).textContent.toLowerCase())
+      .not.toContain(" yet");
     expect(screen.queryByText(/from this chapter/i)).toBeNull();
     expect(screen.queryByText(/for this chapter/i)).toBeNull();
   });

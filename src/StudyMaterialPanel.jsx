@@ -109,13 +109,26 @@ export function StudyMaterialPanelView({
 
       {/* Exam level, below the chapter's own material and plainly separated
           from it. The sentence carries the whole claim: these are the exam's
-          papers, and the reason they are not this chapter's. Rendered at all
-          only when the course's goal has a registered landing. */}
+          papers, and the reason they are not this chapter's.
+
+          That reason is permanent, not a gap waiting to be filled. Every row
+          here is a whole exam paper — 'covering Mathematics, Physics and
+          Chemistry', as the catalogue's own descriptions put it — so scoping
+          one to a chapter would be false: it would match nearly every chapter
+          and tell a student a three-subject paper is about rotational motion.
+          The chapter-scoped materials above are notes and formula sheets,
+          which really are about one chapter. The unit that could honestly be
+          chapter-scoped is a QUESTION, not a paper, and extracting questions
+          is gated on docs/legal/question-bank-copyright-2026-09-02.md.
+
+          Rendered at all only when the course's goal has a registered
+          landing. */}
       {examLandings.length > 0 && (
         <div className="mt-5 border-t border-hairline pt-4">
           <p className="text-sm leading-relaxed text-ink-2">
-            Papers on this site aren’t tagged chapter by chapter yet. These are the
-            whole exam’s papers, year by year — not a selection matching this lecture.
+            Papers aren’t tagged chapter by chapter: each one is a whole exam
+            paper covering every subject. These are the whole exam’s papers,
+            year by year — not a selection matching this lecture.
           </p>
           <ul className="mt-1">
             {examLandings.map((landing) => (

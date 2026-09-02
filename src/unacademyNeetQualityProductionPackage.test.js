@@ -425,7 +425,7 @@ describe("Unacademy NEET first-batch quality-review production package", () => {
       missing: [[], [], []],
     });
     await pg.close();
-  }, 30_000);
+  });
 
   it("rolls back without reviews when an exact baseline guard differs", async () => {
     const pg = await seedProductionShape();
@@ -446,5 +446,5 @@ describe("Unacademy NEET first-batch quality-review production package", () => {
       faculty_statuses: ["pending", "pending", "pending"],
     });
     await pg.close();
-  }, 30_000);
+  });
 });
