@@ -245,5 +245,5 @@ describe("Unacademy NEET second-batch faculty production package", () => {
       ],
     });
     await pg.close();
-  }, 30_000);
+  });
 });

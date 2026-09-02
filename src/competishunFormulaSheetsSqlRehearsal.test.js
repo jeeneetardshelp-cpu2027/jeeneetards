@@ -130,7 +130,7 @@ describe("Competishun formula-sheet SQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("makes chapter scopes visible beside matching lectures", async () => {
     const pg = await formulaSheetDatabase();
@@ -166,7 +166,7 @@ describe("Competishun formula-sheet SQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("exposes material-backed chapter filters for both goal pages", async () => {
     const pg = await formulaSheetDatabase();
@@ -187,5 +187,5 @@ describe("Competishun formula-sheet SQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 });

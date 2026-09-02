@@ -123,7 +123,7 @@ describe("forum username claim SQL delta", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("lets a claimed hyphenated handle pass the real publishing gate", async () => {
     const pg = await database();
@@ -143,7 +143,7 @@ describe("forum username claim SQL delta", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("restores the original forum contract through the guarded test rollback", async () => {
     const pg = await database();
@@ -159,5 +159,5 @@ describe("forum username claim SQL delta", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 });

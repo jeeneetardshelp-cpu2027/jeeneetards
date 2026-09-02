@@ -108,7 +108,7 @@ describe("forum v1 ephemeral PostgreSQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("enforces mode, public reads, identity, votes, karma, and recount integrity", async () => {
     const pg = await forumDatabase();
@@ -151,7 +151,7 @@ describe("forum v1 ephemeral PostgreSQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("searches LIKE metacharacters literally and rejects incomplete cursors", async () => {
     const pg = await forumDatabase();
@@ -179,7 +179,7 @@ describe("forum v1 ephemeral PostgreSQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("enforces same-post parents, maximum depth, and author tombstones", async () => {
     const pg = await forumDatabase();
@@ -220,7 +220,7 @@ describe("forum v1 ephemeral PostgreSQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("keeps self-harm reports visible but auto-hides after three other distinct reports", async () => {
     const pg = await forumDatabase();
@@ -244,7 +244,7 @@ describe("forum v1 ephemeral PostgreSQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("allows safety reports but blocks publishing in read-only mode", async () => {
     const pg = await forumDatabase();
@@ -267,7 +267,7 @@ describe("forum v1 ephemeral PostgreSQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("anonymizes account content and clears its karma attribution without breaking threads", async () => {
     const pg = await forumDatabase();
@@ -295,7 +295,7 @@ describe("forum v1 ephemeral PostgreSQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("removes vote karma transactionally when an admin permanently removes a target", async () => {
     const pg = await forumDatabase();
@@ -315,7 +315,7 @@ describe("forum v1 ephemeral PostgreSQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("denies direct browser table access and the guarded rollback removes only forum objects", async () => {
     const pg = await forumDatabase();
@@ -335,5 +335,5 @@ describe("forum v1 ephemeral PostgreSQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 });

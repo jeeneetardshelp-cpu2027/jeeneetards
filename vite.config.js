@@ -131,6 +131,13 @@ export default defineConfig({
           // 120s is the budget the work actually needs when the whole project
           // runs at once. It still bounds a genuine hang — a broken assertion
           // fails immediately, and only something stuck waits this out.
+          // NOTE (2026-09-02): 39 files in this project used to pin their own
+          // 30s per-test timeout. That was a RAISE when everything ran under
+          // the 15s app budget, but inside this project it silently LOWERED
+          // the budget below — and once the two new SQL rehearsals landed,
+          // eleven of those tests timed out in a full run while every one
+          // passed in isolation in ~10s. The overrides are gone, so this is
+          // the single budget again.
           testTimeout: 120000,
           hookTimeout: 120000,
         },

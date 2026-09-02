@@ -176,5 +176,5 @@ describe("public profile identity privacy v1", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 });

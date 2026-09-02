@@ -227,5 +227,5 @@ describe("Unacademy NEET ninth-batch faculty-link production package", () => {
       reviews: 14,
     });
     await pg.close();
-  }, 30_000);
+  });
 });
