@@ -103,6 +103,37 @@ describe("sitemap generation", () => {
     expect(xml).not.toContain("//</loc>");
   });
 
+  // A Dropper chapter page is a twin of its class page (171 of 177 identical
+  // in production), so the sitemap offers each chapter once, under its class.
+  // Explore's Dropper step pages are its own navigation and are still listed.
+  it("lists a chapter under its class but never under Dropper", async () => {
+    const out = temporarySitemap();
+    await buildSitemap({
+      env: { VITE_SUPABASE_URL: "https://example.supabase.co", VITE_SUPABASE_ANON_KEY: "anon" },
+      out,
+      clientFactory: clientWith({
+        courses: [], faculty: [],
+        goals: [{ slug: "jee", course_count: 10 }],
+        boards: [],
+        curriculum: ({ p_class, p_subject }) => {
+          if (p_subject === "physics") return [{ slug: "kinematics", course_count: 13 }];
+          if (p_class === "class-11" || p_class === "dropper") {
+            return [{ slug: "physics", course_count: 20 }];
+          }
+          return [];
+        },
+      }),
+    });
+
+    const xml = readFileSync(out, "utf8");
+    const chapter = (cls) =>
+      `<loc>https://www.jeeneetard.com/browse?goal=jee&amp;class=${cls}&amp;subject=physics&amp;chapter=kinematics</loc>`;
+    expect(xml).toContain(chapter("11"));
+    expect(xml).not.toContain(chapter("dropper"));
+    // Only the chapter results URL is withheld; the Dropper journey itself stays.
+    expect(xml).toContain("<loc>https://www.jeeneetard.com/explore/jee/dropper/physics</loc>");
+  });
+
   it("includes canonical course, faculty and populated Explore URLs", async () => {
     const out = temporarySitemap();
     const result = await buildSitemap({
