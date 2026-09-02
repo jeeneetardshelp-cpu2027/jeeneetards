@@ -90,7 +90,13 @@ export function pollMetadataForQuestion(question) {
   };
 }
 
-export function metadataForLocation(pathname = "/", search = "") {
+/**
+ * @param verifiedChapter { chapterName, courseCount } from the catalogue, when
+ *   the caller has confirmed the chapter exists. A URL alone never can, so
+ *   without this a chapter view is described honestly but asks not to be
+ *   indexed — see canonicalChapterView.
+ */
+export function metadataForLocation(pathname = "/", search = "", verifiedChapter = null) {
   const rawPath = pathname || "/";
   const path = rawPath.length > 1 ? rawPath.replace(/\/+$/, "") : rawPath;
   const params = new URLSearchParams(search);
@@ -122,7 +128,7 @@ export function metadataForLocation(pathname = "/", search = "") {
     // goal + class + subject + chapter (+ board for school) and NOTHING else,
     // so a sort, a page, a tab or a search term still drops out of the index
     // and the faceted space stays finite.
-    const chapterView = canonicalChapterView(params, readablePathSegment);
+    const chapterView = canonicalChapterView(params, readablePathSegment, verifiedChapter);
     if (chapterView) {
       return {
         ...base,

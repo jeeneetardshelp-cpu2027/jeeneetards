@@ -104,36 +104,56 @@ export const CHAPTER_QUERY_KEYS = ["goal", "board", "class", "subject", "chapter
  * Exactness is the whole point: it is what keeps one useful page indexable
  * without opening the door to an unbounded faceted URL space. A sort, a page,
  * a tab or a search term makes this return null.
+ *
+ * A URL IS NOT EVIDENCE THAT A CHAPTER EXISTS. That is why indexing is opt-in
+ * here: the shape check bounds the query KEYS, and for a while that was
+ * mistaken for bounding the whole space — so
+ * ?goal=banana&class=11&subject=physics&chapter=not-a-real-chapter came back
+ * `index, follow` under the title "Not a real chapter — Banana Class 11
+ * Physics". Anyone could mint unlimited indexable soft-404s, which is the
+ * precise failure the boundedness rule exists to prevent.
+ *
+ * So a caller that has CONFIRMED the chapter against the catalogue passes
+ * `verified`, and only then can the page be indexed. Two callers can:
+ * middleware.js, from the curriculum row it already fetches, and BrowsePage,
+ * once its filters resolve. Both must agree — the edge writes the head and the
+ * client rewrites it on hydration, and Google's rendered pass believes the
+ * client. Without `verified` the page still renders and its links still count;
+ * it simply asks not to be indexed.
+ *
+ * @param verified { chapterName, courseCount } — from the catalogue, not the URL.
  */
-export function canonicalChapterView(params, readable = (v) => v) {
+export function canonicalChapterView(params, readable = (v) => v, verified = null) {
   const keys = [...params.keys()];
   if (keys.some((key) => !CHAPTER_QUERY_KEYS.includes(key))) return null;
   for (const required of ["goal", "class", "subject", "chapter"]) {
     if (!params.get(required)) return null;
   }
-  const chapterName = readable(params.get("chapter"));
+  // The real name when a caller has it — "Rotational Motion", not the URL's
+  // "rotational-motion" prettified — and the real count, which no URL knows.
+  const courseCount = Number(verified?.courseCount ?? 0);
   const meta = chapterLandingMeta({
-    chapterName,
+    chapterName: String(verified?.chapterName ?? "").trim() || readable(params.get("chapter")),
     subjectName: readable(params.get("subject")),
     className: params.get("class") === "dropper" ? "Dropper" : `Class ${params.get("class")}`,
     // For school the BOARD is the meaningful label — "CBSE Class 10 Science"
     // reads like the thing a student searches for; "SCHOOL Class 10" does not.
     goalName: readable(params.get("board") || params.get("goal")),
-    // The count is not knowable from a URL. chapterLandingMeta degrades to an
-    // honest title without one, and the SITEMAP is what decides which chapter
-    // URLs are offered at all, using the real count.
-    courseCount: 0,
+    courseCount,
   });
   if (!meta) return null;
   const query = CHAPTER_QUERY_KEYS
     .filter((key) => params.get(key))
     .map((key) => `${key}=${encodeURIComponent(params.get(key))}`)
     .join("&");
-  // The count is unknowable here, so this cannot apply the count rule — the
-  // sitemap does that. The SCOPE rule it can apply: a Dropper chapter view is
-  // a twin of its class page and stays out of the index. noindex, not
-  // nofollow: the page works and its links still count.
-  const robots = isIndexableChapterScope(params.get("class")) ? "index, follow" : "noindex, follow";
-  return { ...meta, robots, query };
+  // All three rules, in one place, so the edge, the client and the sitemap
+  // cannot disagree about the same URL:
+  //   1. the chapter is confirmed to exist        (verified)
+  //   2. its scope is the canonical one           (not Dropper — a twin page)
+  //   3. it holds a real comparison               (meta.indexable, >= 3 courses)
+  const indexable = Boolean(verified)
+    && isIndexableChapterScope(params.get("class"))
+    && meta.indexable;
+  return { ...meta, robots: indexable ? "index, follow" : "noindex, follow", query };
 }
 

@@ -733,6 +733,30 @@ export default async function middleware(request) {
           chapterPromise,
         ]);
       if (!shell) return next();
+      // Only a CONFIRMED lookup that actually contains this chapter produces a
+      // chapter body. An unconfirmed fetch, or a slug the curriculum does not
+      // know, falls through to the generic landing below — never to a page
+      // asserting a count or a sibling list it could not verify.
+      const chapterRows = chapterScope && chapterCurriculum?.confirmed &&
+        Array.isArray(chapterCurriculum.data)
+        ? chapterCurriculum.data.filter((row) => row?.level === "chapter" || row?.level == null)
+        : [];
+      const chapterRow = chapterScope
+        ? chapterRows.find((row) => row?.slug === chapterScope.chapter)
+        : null;
+
+      // The HEAD is written from the same confirmed row as the body. It used to
+      // be injected before this lookup, from the URL alone, with two results:
+      // a fabricated slug came back "index, follow" under an invented title —
+      // unlimited indexable soft-404s — and a REAL chapter shipped the
+      // count-less fallback, so "Kinematics — 13 free courses for JEE Class 11
+      // Physics" was computed and thrown away on every page Google reads.
+      if (chapterScope) {
+        const verifiedMeta = metadataForLocation(url.pathname, url.search, chapterRow
+          ? { chapterName: chapterRow.name, courseCount: Number(chapterRow.course_count ?? 0) }
+          : null);
+        if (verifiedMeta) routeMeta = { ...routeMeta, ...verifiedMeta };
+      }
       let html = injectRouteMeta(shell, routeMeta);
       const [courseResult, facultyResult] = directory ?? [];
       const hasDirectory = courseResult?.confirmed && facultyResult?.confirmed &&
@@ -752,17 +776,6 @@ export default async function middleware(request) {
       const facultyDirectoryItems = facultyDirectory?.confirmed && Array.isArray(facultyDirectory.data)
         ? facultyDirectory.data
         : [];
-      // Only a CONFIRMED lookup that actually contains this chapter produces a
-      // chapter body. An unconfirmed fetch, or a slug the curriculum does not
-      // know, falls through to the generic landing below — never to a page
-      // asserting a count or a sibling list it could not verify.
-      const chapterRows = chapterScope && chapterCurriculum?.confirmed &&
-        Array.isArray(chapterCurriculum.data)
-        ? chapterCurriculum.data.filter((row) => row?.level === "chapter" || row?.level == null)
-        : [];
-      const chapterRow = chapterScope
-        ? chapterRows.find((row) => row?.slug === chapterScope.chapter)
-        : null;
       const chapterSiblings = chapterRow
         ? chapterRows
             .filter((row) => row.slug && row.slug !== chapterScope.chapter)

@@ -25,7 +25,7 @@ import { clearAllChips, dropParam, emptyStateMessage } from "./filterChips.js";
 import { FILTER_PARAMS } from "./filterSchema.js";
 import { makeReturnState } from "./returnTo.js";
 import { useTheme } from "./theme.jsx";
-import { useStructuredData } from "./PageMetadata.jsx";
+import { useStructuredData, useChapterMetadata } from "./PageMetadata.jsx";
 import { itemListSchema } from "./structuredData.js";
 import { useRatingsAvailability } from "./useRatingsAvailability.js";
 import { usePopularityAvailability } from "./usePopularityAvailability.js";
@@ -64,6 +64,7 @@ function SkeletonCard() {
 export default function PlaylistBrowse({
   tab, onTabChange, filters, lectureView, lectureTotal = null, lectureLoading = false,
   comparisonEnabled = true, mobileSearch = null, onResetFilters = null,
+  chapterName = null,
 }) {
   const navigate = useNavigate();
   const [params, setParams] = useSearchParams();
@@ -194,6 +195,18 @@ export default function PlaylistBrowse({
     contentType: filters.contentType, difficulty: filters.difficulty,
     teacherId: filters.teacherId,
     chapterId: filters.chapter, search: filters.search, sort, page,
+  });
+
+  // A chapter view is the one indexable filtered shape, and the shared rule
+  // defaults it to noindex because a URL cannot prove the chapter exists. This
+  // is the only place on the client that holds the confirmed count, so this is
+  // where the head is re-stated — otherwise RouteMetadata's URL-derived pass
+  // would overwrite the edge's good head and every real chapter page would ask
+  // not to be indexed on the render Google actually judges.
+  useChapterMetadata({
+    chapterName,
+    courseCount: total,
+    ready: Boolean(filters.chapter) && !loading && !error,
   });
 
   // Selection lives in ?compare= so a comparison is shareable and survives a
