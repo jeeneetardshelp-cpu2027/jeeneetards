@@ -9,6 +9,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   MIN_INDEXABLE_COURSES, chapterLandingMeta, isIndexableChapter,
+  isIndexableChapterScope, canonicalChapterView,
 } from "./chapterLanding.js";
 
 const SCOPE = {
@@ -30,6 +31,28 @@ describe("which chapters are worth offering to a search engine", () => {
     for (const value of [undefined, null, 0, "", NaN, "many"]) {
       expect(isIndexableChapter(value), String(value)).toBe(false);
     }
+  });
+
+  // Dropper is the union of Class 11 and Class 12, so a Dropper chapter page
+  // is nearly always a second address for a class page: 171 of 177 in
+  // production rendered identical courses. One address per chapter, and it
+  // is the class one — that is what a student types into a search box.
+  it("offers a chapter under its class, never under Dropper", () => {
+    expect(isIndexableChapterScope("class-11")).toBe(true);
+    expect(isIndexableChapterScope("11")).toBe(true);
+    expect(isIndexableChapterScope("class-12")).toBe(true);
+    expect(isIndexableChapterScope("dropper")).toBe(false);
+  });
+
+  it("marks the Dropper chapter view noindex while the class view stays indexable", () => {
+    const view = (cls) => canonicalChapterView(
+      new URLSearchParams(`goal=jee&class=${cls}&subject=physics&chapter=kinematics`),
+    );
+    expect(view("11").robots).toBe("index, follow");
+    // Crawlable, not indexed: the page works for anyone who follows a link.
+    expect(view("dropper").robots).toBe("noindex, follow");
+    // Still a canonical chapter shape — the title and query are unchanged.
+    expect(view("dropper").query).toBe("goal=jee&class=dropper&subject=physics&chapter=kinematics");
   });
 
   it("keeps a thin chapter crawlable so its links still count", () => {
