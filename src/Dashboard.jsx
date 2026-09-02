@@ -18,7 +18,8 @@
 import { useState, useEffect } from "react";
 import { Link, useSearchParams } from "react-router";
 import { useCanonicalFilters } from "./useCanonicalFilters.js";
-import { buildChips, removeChip, clearAllChips } from "./filterChips.js";
+import { applyFilterChange, buildChips, removeChip, clearAllChips } from "./filterChips.js";
+import { filterByKey } from "./filterSchema.js";
 import FilterPanel from "./FilterPanel.jsx";
 import { useFilterOptions } from "./useFilterOptions.js";
 import { useBrowseFacets } from "./useBrowseFacets.js";
@@ -34,6 +35,11 @@ import PlaylistBrowse from "./PlaylistBrowse.jsx";
 import { FacultyFilter } from "./FacultyFilter.jsx";
 import { useTheme } from "./theme.jsx";
 import { RELEASE_CAPABILITIES } from "./releaseCapabilities.js";
+// Lesson titles, chapter names and the scope heading are catalogue text, and
+// this catalogue writes plenty of it in Devanagari under a document that
+// declares lang="en". See lang.js.
+import { langAttrs } from "./lang.js";
+import { BRAND_TEAL } from "./brandColors.js";
 import YouTubeThumbnail from "./YouTubeThumbnail.jsx";
 import ChannelAvatar from "./ChannelAvatar.jsx";
 
@@ -117,11 +123,20 @@ export function VideoCard({ video }) {
           </div>
         )}
 
-        <h3 className={`line-clamp-2 font-semibold leading-snug ${t.text}`}>
+        <h3
+          {...langAttrs(video.title)}
+          className={`line-clamp-2 font-semibold leading-snug ${t.text}`}
+        >
           {video.title}
         </h3>
 
-        <p className={`text-xs ${t.muted}`}>
+        {/* Subject and chapter are both catalogue text and read as one line, so
+            the tag goes on the <p> rather than splitting it into spans — the
+            same call lang.js documents for a mixed string. */}
+        <p
+          {...langAttrs(`${video.subject ?? ""} ${video.chapter ?? ""}`)}
+          className={`text-xs ${t.muted}`}
+        >
           {video.subject} · {video.chapter}
         </p>
 
@@ -202,6 +217,89 @@ function SkeletonCard() {
         <div className={`mt-2 h-9 w-full animate-pulse rounded-lg ${t.input}`} />
       </div>
     </div>
+  );
+}
+
+// ---------------------------------------------------------------------
+// LANGUAGE, VISIBLE ON /browse ITSELF AT PHONE WIDTH
+// ---------------------------------------------------------------------
+// FilterPanel already promotes language out of the checkbox list and leads with
+// it as a chip row. On a desktop that row is on screen the moment /browse
+// loads, in the sidebar. On a phone the same panel lives inside the Filters
+// bottom sheet, so the row is one tap away behind a button — and a student who
+// does not know a language filter exists has no reason to make that tap. The
+// Hindi-medium student it was promoted for is precisely the student who never
+// finds out.
+//
+// So the row is surfaced here too, beside the active-filter chips, and hidden
+// from lg up where the sidebar's copy is already showing.
+//
+// THIS IS NOT A SECOND FILTER MODEL. The values come from filterSchema (remove
+// language from AVAILABLE and this row disappears with it), the click writes
+// through the SAME applyFilterChange as the panel, and the URL parameter is
+// unchanged — so this row, the sheet's row, the removable chips below and the
+// catalogue query cannot disagree about what is selected.
+function BrowseLanguageChips({ params, counts, countsLoading, onChange }) {
+  const { t } = useTheme();
+  const filter = filterByKey("language");
+  if (!filter) return null;
+
+  const selected = (params.get(filter.param) ?? "").split(",").filter(Boolean);
+  // The honest-filters rule, applied exactly as FilterPanel applies it: once
+  // the contextual counts have settled, a language this view has no courses in
+  // is not offered at all. A chip at the top of the results reads as "what this
+  // catalogue has", so a dead end here is a worse lie than one buried in a
+  // panel. An already-selected value survives so a shared or stale URL can
+  // still be cleared.
+  const known = !countsLoading && counts?.language ? counts.language : null;
+  const options = filter.options
+    .map((option) => ({ value: option.id, label: option.label }))
+    .filter((option) => (
+      known == null
+      || selected.includes(String(option.value))
+      || Number(known[String(option.value)] ?? 0) > 0
+    ));
+  if (options.length === 0) return null;
+
+  return (
+    <section aria-labelledby="browse-language-heading" className="mb-4 lg:hidden">
+      <h2 id="browse-language-heading" className={`text-xs font-medium ${t.muted}`}>
+        {filter.label}
+      </h2>
+      <div className="mt-2 flex flex-wrap gap-2">
+        {options.map((option) => {
+          const active = selected.includes(String(option.value));
+          const count = known == null ? null : Number(known[String(option.value)] ?? 0);
+          return (
+            <button
+              key={option.value}
+              type="button"
+              onClick={() => onChange(applyFilterChange(params, filter, option.value))}
+              aria-pressed={active}
+              aria-label={count == null
+                ? undefined
+                : `${option.label}, ${count} course${count === 1 ? "" : "s"}`}
+              className={`inline-flex min-h-11 items-center gap-1.5 rounded-full border px-3 text-sm transition ${
+                active
+                  ? "border-transparent font-medium text-white"
+                  : `${t.border} ${t.card} ${t.faint} ${t.hover}`
+              }`}
+              style={active ? { backgroundColor: BRAND_TEAL } : undefined}
+            >
+              {option.label}
+              {count != null && (
+                <span
+                  className={`tabular-nums ${active ? "text-white/80" : t.muted}`}
+                  aria-hidden="true"
+                >
+                  {count}
+                </span>
+              )}
+            </button>
+          );
+        })}
+      </div>
+    </section>
   );
 }
 
@@ -423,6 +521,11 @@ export default function Dashboard() {
   };
   const chips = buildChips(params, chipNames);
 
+  // One "are the counts still settling?" answer, shared by the panel and the
+  // mobile language row, so the two cannot apply the honest-filters rule at
+  // different moments and offer different languages.
+  const countsLoading = facetCounts.loading || (shouldScopeChapters && chapterCatalog.loading);
+
   // ONE FilterPanel, rendered in two places (desktop column + mobile sheet).
   // Both read and write the same URLSearchParams, so they cannot disagree —
   // there is no second copy of the option lists or the cascade to drift.
@@ -434,7 +537,7 @@ export default function Dashboard() {
       error={filterOptions.error}
       onRetry={filterOptions.retry}
       counts={facetCounts.counts}
-      countsLoading={facetCounts.loading || (shouldScopeChapters && chapterCatalog.loading)}
+      countsLoading={countsLoading}
       chapterScopeValues={chapterScopeValues}
       params={params}
       onChange={(next) => setParams(next)}
@@ -464,7 +567,10 @@ export default function Dashboard() {
         {/* main content */}
         <main id={MAIN_CONTENT_ID} className="flex-1 p-4 sm:p-6">
           <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
-            <h1 className={`text-lg font-semibold ${t.text}`}>{heading}</h1>
+            {/* The heading names the chapter or subject in view, so it carries
+                catalogue text — and on a Devanagari chapter it is the first
+                thing a screen reader reaches on this page. */}
+            <h1 {...langAttrs(heading)} className={`text-lg font-semibold ${t.text}`}>{heading}</h1>
             {/* The video count describes the LECTURES tab only. On Playlists it
                 would contradict the course count PlaylistBrowse renders. */}
             {tab === "lectures" && !loading && !error && (
@@ -496,14 +602,14 @@ export default function Dashboard() {
                   <button
                     key={u.key}
                     onClick={() => setParams(removeChip(params, u.key))}
-                    className={`min-h-11 rounded-xl border ${dark ? "border-amber-800 bg-neutral-900" : "border-amber-300 bg-white"} px-4 text-sm font-medium`}
+                    className={`min-h-11 rounded-xl border ${dark ? "border-amber-800" : "border-amber-300"} ${t.card} px-4 text-sm font-medium`}
                   >
                     Remove {u.key} filter
                   </button>
                 ))}
                 <button
                   onClick={() => setParams(clearAllChips(params))}
-                  className={`min-h-11 rounded-xl border ${dark ? "border-amber-800 bg-neutral-900" : "border-amber-300 bg-white"} px-4 text-sm font-medium`}
+                  className={`min-h-11 rounded-xl border ${dark ? "border-amber-800" : "border-amber-300"} ${t.card} px-4 text-sm font-medium`}
                 >
                   Clear all filters
                 </button>
@@ -524,6 +630,13 @@ export default function Dashboard() {
             </div>
           )}
 
+          <BrowseLanguageChips
+            params={params}
+            counts={facetCounts.counts}
+            countsLoading={countsLoading}
+            onChange={(next) => setParams(next)}
+          />
+
           {chips.length > 0 && (
             <div className="mb-4 flex flex-wrap items-center gap-2">
               {chips.map((c) => (
@@ -531,6 +644,11 @@ export default function Dashboard() {
                   key={`${c.key}-${c.value}`}
                   onClick={() => setParams(removeChip(params, c.key, c.value))}
                   aria-label={`Remove filter ${c.label}`}
+                  // The tag goes on the button, not on a span around the visible
+                  // label: aria-label wins over the contents, so the announced
+                  // name is what needs the language, and only the element
+                  // carrying that name can supply it.
+                  {...langAttrs(c.label)}
                   className={`inline-flex min-h-11 items-center gap-1.5 rounded-full border ${t.border} ${t.card} ${t.text} ${t.cardHover} px-3 text-sm transition`}
                 >
                   {c.label}

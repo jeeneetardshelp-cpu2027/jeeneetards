@@ -97,3 +97,42 @@ describe("FacultyProfile", () => {
       .not.toContain("Legacy database bio.");
   });
 });
+
+// ------------------------------------------------------- Devanagari (lang.js)
+// A teacher's name, their aliases and their course titles are catalogue text
+// under a document that declares lang="en". See lang.js.
+describe("Devanagari on a faculty profile", () => {
+  it("tags the name, the aliases and the course titles, and nothing else", () => {
+    profileHook.value = {
+      loading: false, error: null,
+      profile: {
+        slug: "amit", display_name: "अमित बिजारणिया", verified: true, course_count: 1,
+        aliases: [{ alias: "एबीजे सर", status: "verified" }],
+        courses: [{ playlist_id: 1, title: "कबीर की साखी", average_rating: null, ratings_count: 0 }],
+      },
+    };
+    const { container } = renderProfile();
+
+    // The breadcrumb already tags its own copy of the name (AppShell), so ask
+    // for the one in the page heading specifically.
+    expect(container.querySelector("h1 [lang='hi']").textContent).toBe("अमित बिजारणिया");
+    expect(screen.getByText("एबीजे सर").getAttribute("lang")).toBe("hi");
+    expect(screen.getByText("कबीर की साखी").getAttribute("lang")).toBe("hi");
+    // The Verified badge shares the h1 and must not inherit Hindi.
+    expect(screen.getByText("Verified").closest("[lang]")).toBeNull();
+  });
+
+  it("leaves a Latin profile untagged and unwrapped", () => {
+    profileHook.value = {
+      loading: false, error: null,
+      profile: {
+        slug: "someone", display_name: "A. Sharma", verified: false, course_count: 1,
+        aliases: [{ alias: "AS Sir", status: "verified" }],
+        courses: [{ playlist_id: 1, title: "Complete Kinematics", average_rating: null, ratings_count: 0 }],
+      },
+    };
+    const { container } = renderProfile();
+    expect(container.querySelector("[lang]")).toBeNull();
+    expect(screen.getByText(/Also known as AS Sir/)).toBeDefined();
+  });
+});

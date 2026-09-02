@@ -43,6 +43,10 @@ import { Search, X, Loader2, AlertTriangle, Users } from "lucide-react";
 import { useUniversalSearch, GROUPS, MIN_QUERY } from "./useUniversalSearch.js";
 import { resultHref } from "./searchDestinations.js";
 import { normalizeForHighlight } from "./searchHighlight.js";
+// Every row here is catalogue text — a teacher, a chapter, a course, a lesson —
+// and plenty of it is Devanagari under a document that declares lang="en".
+// See lang.js.
+import { hasDevanagari, langAttrs } from "./lang.js";
 import { useTheme } from "./theme.jsx";
 import { BRAND_NAVY, BRAND_TEAL } from "./brandColors.js";
 import YouTubeThumbnail from "./YouTubeThumbnail.jsx";
@@ -109,7 +113,7 @@ function Row({ item, group, query, active, onPick, id, asLink }) {
       )}
       <span className="min-w-0 flex-1">
         <span className="flex w-full items-center gap-2">
-          <span className={`truncate text-sm font-medium ${t.text}`}>
+          <span {...langAttrs(item.title)} className={`truncate text-sm font-medium ${t.text}`}>
             <Highlight text={item.title} query={query} />
           </span>
           {/* Requirement 2 made visible: this row is one of several people who
@@ -125,12 +129,23 @@ function Row({ item, group, query, active, onPick, id, asLink }) {
             sends an unreviewed one to a student. */}
         {item.aka && (
           <span className={`truncate text-xs ${t.muted}`}>
-            Also known as: <Highlight text={item.aka} query={query} />
+            {/* "Also known as:" is interface English and the alias is a name.
+                Tagging the whole line would hand the label to Hindi phonetics
+                too, so the alias gets its own element — and only when it needs
+                one, so a Latin alias adds no wrapper. */}
+            Also known as:{" "}
+            {hasDevanagari(item.aka) ? (
+              <span lang="hi"><Highlight text={item.aka} query={query} /></span>
+            ) : (
+              <Highlight text={item.aka} query={query} />
+            )}
           </span>
         )}
 
+        {/* "Competishun · Physics · JEE" — institute, subject and exam, all
+            catalogue text, read as one line. */}
         {item.subtitle && (
-          <span className={`truncate text-xs ${t.muted}`}>{item.subtitle}</span>
+          <span {...langAttrs(item.subtitle)} className={`truncate text-xs ${t.muted}`}>{item.subtitle}</span>
         )}
       </span>
     </>

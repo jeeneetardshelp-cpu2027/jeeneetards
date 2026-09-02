@@ -1,6 +1,9 @@
 import { ArrowRight, BookOpen, ExternalLink, FileText, ShieldCheck } from "lucide-react";
 import { Link } from "react-router";
 import { findTestSection } from "./testPlatforms.js";
+// Material titles, and the chapter/subject scope line under them, are catalogue
+// text — often Devanagari under a document that declares lang="en". See lang.js.
+import { langAttrs } from "./lang.js";
 import { materialTypeLabel } from "./useStudyMaterials.js";
 
 const GOAL_LABELS = {
@@ -72,6 +75,7 @@ function Detail({ children }) {
 }
 
 export default function StudyMaterialCard({ material, compact = false }) {
+  const scopeLabel = studyMaterialScopeLabel(material);
   const details = [
     material.language,
     material.examYear,
@@ -107,14 +111,22 @@ export default function StudyMaterialCard({ material, compact = false }) {
             {material.typeLabel ?? materialTypeLabel(material.type)}
           </p>
         )}
-        <h3 className={`${compact ? "mt-1 text-base" : "text-lg"} font-semibold leading-snug text-ink`}>
+        <h3
+          {...langAttrs(material.title)}
+          className={`${compact ? "mt-1 text-base" : "text-lg"} font-semibold leading-snug text-ink`}
+        >
           {material.title}
         </h3>
-        <p className="mt-2 text-xs leading-relaxed text-ink-3">
-          {studyMaterialScopeLabel(material)}
+        {/* "JEE · Class 11 · Physics · गति" — the chapter and subject names in
+            this line come straight from the catalogue. */}
+        <p {...langAttrs(scopeLabel)} className="mt-2 text-xs leading-relaxed text-ink-3">
+          {scopeLabel}
         </p>
         {!compact && material.description && (
-          <p className="mt-3 line-clamp-2 text-sm leading-relaxed text-ink-2">
+          <p
+            {...langAttrs(material.description)}
+            className="mt-3 line-clamp-2 text-sm leading-relaxed text-ink-2"
+          >
             {material.description}
           </p>
         )}

@@ -27,6 +27,10 @@ import { Page } from "./AppShell.jsx";
 import { formatDuration } from "./usePlaylistBrowse.js";
 import { ratingDisplay } from "./ratingConfidence.js";
 import { COURSE_TYPES, DIFFICULTIES, MIN_COMPARE, MAX_COMPARE } from "./filterModel.js";
+// Course titles, and the faculty/institute/subject cells below them, are
+// catalogue text — often Devanagari under a document that declares lang="en".
+// See lang.js.
+import { langAttrs } from "./lang.js";
 import { useTheme } from "./theme.jsx";
 
 export { MIN_COMPARE, MAX_COMPARE };
@@ -337,7 +341,7 @@ function ComparisonTable({ rows }) {
             </th>
             {rows.map((c) => (
               <th key={c.playlist_id} className={`min-w-[11rem] rounded-t-xl border border-b-0 ${t.border} ${t.card} p-3 text-left align-bottom`}>
-                <span className={`line-clamp-2 font-semibold ${t.text}`}>{c.title}</span>
+                <span {...langAttrs(c.title)} className={`line-clamp-2 font-semibold ${t.text}`}>{c.title}</span>
               </th>
             ))}
           </tr>
@@ -358,6 +362,11 @@ function ComparisonTable({ rows }) {
                 return (
                   <td
                     key={c.playlist_id}
+                    // A cell holds exactly one value, so the tag belongs on the
+                    // cell — that covers the Faculty, Institute and Subject rows
+                    // without wrapping the Latin ones in an inert span, and it
+                    // is a no-op for the numeric rows.
+                    {...langAttrs(v)}
                     className={`border-x ${t.border} p-3 align-top ${
                       differing.has(a.key)
                         ? dark ? "bg-amber-950/25 text-neutral-100" : "bg-amber-50/40 text-slate-800"
@@ -378,7 +387,7 @@ function ComparisonTable({ rows }) {
               {rows.map((c) => {
                 const b = bestFor(c);
                 return (
-                  <td key={c.playlist_id} className={`rounded-b-xl border-x border-b ${t.border} ${t.card} ${t.faint} p-3 align-top`}>
+                  <td key={c.playlist_id} {...langAttrs(b)} className={`rounded-b-xl border-x border-b ${t.border} ${t.card} ${t.faint} p-3 align-top`}>
                     {b ?? <span className={t.muted}>Not enough information</span>}
                   </td>
                 );
