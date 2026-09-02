@@ -26,6 +26,8 @@ catalogue data only. Live at jeeneetard.com.
   than showing a placeholder.
 - Users are 14–18. Mobile matters: 44px touch targets, no horizontal overflow,
   and both light and dark themes.
+- Never put visible navigation inside an inert marquee clone; test every
+  repeated channel shortcut, not only the first one.
 
 ## Tech stack
 
