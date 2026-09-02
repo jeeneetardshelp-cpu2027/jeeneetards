@@ -14,7 +14,7 @@
 // falls back to next() — the normal shell — so a course page can never break.
 
 import { next } from "@vercel/edge";
-import { metadataForLocation, SITE_NAME } from "./src/pageMetadata.js";
+import { metadataForLocation, pollMetadataForQuestion, SITE_NAME } from "./src/pageMetadata.js";
 import { findTestSection } from "./src/testPlatforms.js";
 import { CLASS_LEVELS_BY_GOAL } from "./src/classLevels.js";
 import { canonicalBrowseUrl, classSlugToStage } from "./src/canonicalUrl.js";
@@ -621,15 +621,11 @@ export default async function middleware(request) {
         };
       }
       // A poll asks a question, so the card shows the question, punctuation and
-      // all. Only the two human-readable strings change; canonical, robots and
-      // og:type "article" are already right for the route.
-      if (pollQuestion) {
-        routeMeta = {
-          ...routeMeta,
-          title: `${pollQuestion} | ${SITE_NAME} polls`,
-          description: `Vote and see how other JEE and NEET students answered: ${pollQuestion}`,
-        };
-      }
+      // all. The strings come from pageMetadata so the client applies exactly
+      // the same ones once usePoll resolves. Only those two change; canonical,
+      // robots and og:type "article" are already right for the route.
+      const pollMeta = pollMetadataForQuestion(pollQuestion);
+      if (pollMeta) routeMeta = { ...routeMeta, ...pollMeta };
       const directoryPromise = url.pathname === "/browse" && !url.search && supaUrl && supaKey
         ? Promise.all([
             edgeJson(
