@@ -5,8 +5,7 @@ import { canonicalChapterView } from "./chapterLanding.js";
 import { findTestSection, sectionIsAllFree } from "./testPlatforms.js";
 import { buildCourseMetadata } from "./courseMetadata.js";
 import {
-  JEE_MAIN_PAPERS_META,
-  JEE_MAIN_PAPERS_PATH,
+  findPaperLanding,
   paperYearMeta,
   parsePaperYearPath,
 } from "./studyMaterialLandings.js";
@@ -354,13 +353,17 @@ export function metadataForLocation(pathname = "/", search = "") {
     };
   }
 
-  if (path === JEE_MAIN_PAPERS_PATH) {
+  // One landing per registered exam (PAPER_LANDINGS): the registry entry
+  // owns the title and description, so an exam's honest coverage wording is
+  // stated once and served identically by client and edge.
+  const paperLanding = findPaperLanding(path);
+  if (paperLanding) {
     if (!RELEASE_CAPABILITIES.studyMaterials) return comingSoon(base);
     return {
       ...base,
-      title: JEE_MAIN_PAPERS_META.title,
-      description: JEE_MAIN_PAPERS_META.description,
-      canonicalPath: JEE_MAIN_PAPERS_PATH,
+      title: paperLanding.meta.title,
+      description: paperLanding.meta.description,
+      canonicalPath: paperLanding.path,
       robots: "index, follow",
     };
   }

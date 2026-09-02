@@ -18,7 +18,6 @@ import { isIndexableChapter } from "../chapterLanding.js";
 import { canonicalBrowseUrl } from "../canonicalUrl.js";
 import { RELEASE_CAPABILITIES, RELEASE_FEATURES } from "../releaseCapabilities.js";
 import {
-  JEE_MAIN_PAPERS_PATH,
   PAPER_LANDINGS,
   paperYearPath,
   paperYears,
@@ -28,8 +27,11 @@ export const BASE = "https://www.jeeneetard.com";
 export const STATIC_ROUTES = [
   "/", "/browse", "/explore", "/tests", "/methodology", "/terms", "/privacy",
   ...(RELEASE_CAPABILITIES.facultyRegistry ? ["/faculty"] : []),
+  // Every registered paper landing rides the same capability gate as
+  // /materials — the registry is the sitemap's source of truth, so a landing
+  // that exists for the router exists here too.
   ...(RELEASE_CAPABILITIES.studyMaterials
-    ? ["/materials", JEE_MAIN_PAPERS_PATH]
+    ? ["/materials", ...PAPER_LANDINGS.map((landing) => landing.path)]
     : []),
   ...(RELEASE_FEATURES.forum ? ["/forum"] : []),
   // Same rule as the forum: while the flag is off, pageMetadata marks /polls

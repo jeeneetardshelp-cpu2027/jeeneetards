@@ -96,6 +96,25 @@ describe("public page metadata", () => {
     expect(page.robots).toBe("index, follow");
   });
 
+  // The sibling landings read the same registry, with honest coverage
+  // wording: NEET says PARTIAL rather than implying completeness.
+  it("gives the JEE Advanced and NEET paper collections registry-driven results", () => {
+    const advanced = metadataForLocation("/materials/jee-advanced/previous-year-papers");
+    expect(advanced.title).toBe(
+      "JEE Advanced question papers by year, 2007 to 2026 | JEENEETARD",
+    );
+    expect(advanced.canonicalPath).toBe("/materials/jee-advanced/previous-year-papers");
+    expect(advanced.robots).toBe("index, follow");
+
+    const neet = metadataForLocation("/materials/neet/previous-year-papers");
+    expect(neet.title).toBe(
+      "NEET question papers: 2024 and the 2026 re-exam | JEENEETARD",
+    );
+    expect(neet.description).toMatch(/partial/i);
+    expect(neet.canonicalPath).toBe("/materials/neet/previous-year-papers");
+    expect(neet.robots).toBe("index, follow");
+  });
+
   it("gives each exam year its own self-canonical search result", () => {
     const page = metadataForLocation("/materials/jee-main/previous-year-papers/2024");
     expect(page.title).toBe(
@@ -104,14 +123,21 @@ describe("public page metadata", () => {
     expect(page.description).toContain("JEE Main 2024");
     expect(page.canonicalPath).toBe("/materials/jee-main/previous-year-papers/2024");
     expect(page.robots).toBe("index, follow");
+
+    // No "session by session" claim for exams whose titles have no sessions.
+    const neetYear = metadataForLocation("/materials/neet/previous-year-papers/2024");
+    expect(neetYear.title).toBe("NEET 2024 question papers | JEENEETARD");
+    expect(neetYear.description).not.toMatch(/session/i);
+    expect(neetYear.canonicalPath).toBe("/materials/neet/previous-year-papers/2024");
   });
 
   it.each([
     // Not a four-digit year.
     "/materials/jee-main/previous-year-papers/20244",
     "/materials/jee-main/previous-year-papers/latest",
-    // No landing is registered for this exam, so there is no such page.
-    "/materials/neet/previous-year-papers/2024",
+    // No landing is registered for these exams, so there is no such page.
+    "/materials/neet-pg/previous-year-papers/2024",
+    "/materials/nsep/previous-year-papers/2024",
   ])("treats the invented paper URL %s as a 404, not a year page", (path) => {
     const page = metadataForLocation(path);
     expect(page.title).toBe("Page not found | JEENEETARD");

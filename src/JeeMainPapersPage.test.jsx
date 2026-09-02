@@ -3,9 +3,82 @@ import { MemoryRouter } from "react-router";
 import { describe, expect, it, vi } from "vitest";
 
 vi.mock("./AppShell.jsx", () => ({ Page: ({ children }) => <>{children}</> }));
+
+// One fixture per landing, keyed by title prefix exactly as the real hook
+// queries (registry titlePattern), so each landing's test sees its own exam.
+// vi.hoisted, because the vi.mock factory below is hoisted above module code.
+const FIXTURES = vi.hoisted(() => ({
+  "JEE Advanced%": [
+    {
+      id: 21,
+      title: "JEE Advanced 2013 Paper 1 (English + Hindi)",
+      description: "Official question paper.",
+      type: "previous_year_paper",
+      typeLabel: "Previous-year papers",
+      sourceName: "IIT JEE archive",
+      sourceUrl: "https://jeeadv.example/2013-p1.pdf",
+      fileFormat: "pdf",
+      examYear: 2013,
+      scopes: [{ goal: "jee" }],
+    },
+  ],
+  "NEET%": [
+    {
+      id: 31,
+      title: "NEET UG 2024 - Set T1 (English)",
+      description: "Official question paper.",
+      type: "previous_year_paper",
+      typeLabel: "Previous-year papers",
+      sourceName: "National Testing Agency (NEET)",
+      sourceUrl: "https://nta.example/neet-2024-t1.pdf",
+      fileFormat: "pdf",
+      examYear: 2024,
+      scopes: [{ goal: "neet" }],
+    },
+  ],
+}));
+
 vi.mock("./useJeeMainPapers.js", () => ({
-  useJeeMainPapers: () => ({
+  useJeeMainPapers: ({ landing } = {}) => {
+    const fixture = FIXTURES[landing?.titlePattern];
+    if (fixture) {
+      return {
+        items: fixture,
+        total: fixture.length,
+        loading: false,
+        loadingMore: false,
+        error: null,
+        loadMoreError: null,
+        unavailable: false,
+        hasMore: false,
+      };
+    }
+    return {
     items: [
+      {
+        id: 12,
+        title: "JEE Main 2026 Session 1 - 22 January Shift 1",
+        description: "Official NTA question paper. No worked solutions are included.",
+        type: "previous_year_paper",
+        typeLabel: "Previous-year papers",
+        sourceName: "National Testing Agency (JEE Main)",
+        sourceUrl: "https://nta.example/2026-s1.pdf",
+        fileFormat: "pdf",
+        examYear: 2026,
+        scopes: [{ goal: "jee-main" }],
+      },
+      {
+        id: 13,
+        title: "JEE Main 2026 Session 1 Final Answer Key (Paper 1 B.E./B.Tech)",
+        description: "Official NTA final answer key for Paper 1.",
+        type: "previous_year_paper",
+        typeLabel: "Previous-year papers",
+        sourceName: "National Testing Agency (JEE Main)",
+        sourceUrl: "https://nta.example/2026-key.pdf",
+        fileFormat: "pdf",
+        examYear: 2026,
+        scopes: [{ goal: "jee-main" }],
+      },
       {
         id: 7,
         title: "JEE Main 2024 Session 1 - 27 January Shift 1",
@@ -55,14 +128,15 @@ vi.mock("./useJeeMainPapers.js", () => ({
         scopes: [{ goal: "jee-main" }],
       },
     ],
-    total: 4,
+    total: 6,
     loading: false,
     loadingMore: false,
     error: null,
     loadMoreError: null,
     unavailable: false,
     hasMore: false,
-  }),
+    };
+  },
 }));
 
 import JeeMainPapersPage from "./JeeMainPapersPage.jsx";
@@ -89,7 +163,7 @@ describe("JEE Main previous-year-paper landing", () => {
     expect(screen.getByRole("heading", { name: "JEE Main 2023 paper with solutions" })).toBeTruthy();
     expect(screen.getByRole("link", { name: "Browse JEE Main resources by year" })
       .getAttribute("href")).toBe("#paper-filters");
-    expect(screen.getAllByText("JEE Main", { exact: true })).toHaveLength(4);
+    expect(screen.getAllByText("JEE Main", { exact: true })).toHaveLength(6);
 
     const newestQuestionYear = screen.getByRole("heading", { name: "2024" });
     const olderQuestionYear = screen.getByRole("heading", { name: "2022" });
@@ -124,6 +198,7 @@ describe("JEE Main previous-year-paper landing", () => {
 
     const yearNav = screen.getByRole("navigation", { name: "JEE Main papers by year" });
     expect([...yearNav.querySelectorAll("a")].map((link) => link.getAttribute("href"))).toEqual([
+      "/materials/jee-main/previous-year-papers/2026",
       "/materials/jee-main/previous-year-papers/2025",
       "/materials/jee-main/previous-year-papers/2024",
       "/materials/jee-main/previous-year-papers/2023",
@@ -137,6 +212,7 @@ describe("JEE Main previous-year-paper landing", () => {
       expect(script).not.toBeNull();
       const schema = JSON.parse(script.textContent);
       expect(schema.itemListElement.map(({ url }) => url)).toEqual([
+        "https://www.jeeneetard.com/materials/jee-main/previous-year-papers/2026",
         "https://www.jeeneetard.com/materials/jee-main/previous-year-papers/2025",
         "https://www.jeeneetard.com/materials/jee-main/previous-year-papers/2024",
         "https://www.jeeneetard.com/materials/jee-main/previous-year-papers/2023",
@@ -156,12 +232,73 @@ describe("JEE Main previous-year-paper landing", () => {
     fireEvent.change(screen.getByLabelText("Year"), { target: { value: "2024" } });
     expect(screen.getByRole("heading", { name: "JEE Main 2024 Session 1 - 27 January Shift 1" })).toBeTruthy();
     expect(screen.queryByRole("heading", { name: "JEE Main 2022 Session 2 - 28 July Shift 2" })).toBeNull();
-    expect(screen.getByText("Showing 1 of 4 resources")).toBeTruthy();
+    expect(screen.getByText("Showing 1 of 6 resources")).toBeTruthy();
 
     fireEvent.click(screen.getByRole("button", { name: "Clear" }));
     fireEvent.change(screen.getByLabelText("Resource search"), { target: { value: "Shift 2" } });
     expect(screen.getByRole("heading", { name: "JEE Main 2022 Session 2 - 28 July Shift 2" })).toBeTruthy();
     expect(screen.queryByRole("heading", { name: "JEE Main 2024 Session 1 - 27 January Shift 1" })).toBeNull();
-    expect(screen.getByText("Showing 1 of 4 resources")).toBeTruthy();
+    expect(screen.getByText("Showing 1 of 6 resources")).toBeTruthy();
+  });
+
+  // The loaded data holds keys for 2026 and 2025; the question-paper year
+  // groups are 2026, 2024 and 2022. Only 2026 may carry the affordance —
+  // absent means nothing, never a dead link.
+  it("marks a year group with its official answer keys only when one is loaded", () => {
+    render(
+      <MemoryRouter initialEntries={["/materials/jee-main/previous-year-papers"]}>
+        <JeeMainPapersPage />
+      </MemoryRouter>,
+    );
+
+    const links = screen.queryAllByRole("link", { name: "Official answer keys below" });
+    expect(links).toHaveLength(1);
+    expect(links[0].getAttribute("href")).toBe("#official-answer-keys");
+    // It sits inside the 2026 year group of the question-papers section.
+    const questionSection = document.getElementById("question-papers");
+    expect(questionSection.contains(links[0])).toBe(true);
+  });
+});
+
+// The same page file serves every registered landing: the registry entry for
+// the current path decides the heading, the intro and the honest coverage
+// wording. NEET must say PARTIAL plainly.
+describe("sibling paper landings through the registry", () => {
+  it("renders the NEET landing with its plain partial-coverage statement", () => {
+    render(
+      <MemoryRouter initialEntries={["/materials/neet/previous-year-papers"]}>
+        <JeeMainPapersPage />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByRole("heading", {
+      level: 1,
+      name: "NEET question papers: 2024 and the 2026 re-exam",
+    })).toBeTruthy();
+    expect(screen.getByText(/this collection is partial/i)).toBeTruthy();
+    expect(screen.getByText(/no official answer keys yet/i)).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "NEET UG 2024 - Set T1 (English)" })).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "NEET question papers" })).toBeTruthy();
+    // The empty answer-key section says questions-only, honestly.
+    expect(screen.getByText(/question papers only so far/i)).toBeTruthy();
+    const yearLink = screen.getByRole("link", { name: "NEET 2024" });
+    expect(yearLink.getAttribute("href")).toBe("/materials/neet/previous-year-papers/2024");
+  });
+
+  it("renders the JEE Advanced landing with its 2007 to 2026 coverage", () => {
+    render(
+      <MemoryRouter initialEntries={["/materials/jee-advanced/previous-year-papers"]}>
+        <JeeMainPapersPage />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByRole("heading", {
+      level: 1,
+      name: "JEE Advanced question papers, 2007 to 2026",
+    })).toBeTruthy();
+    expect(screen.getByText(/covers 2007 to 2026/i)).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "JEE Advanced 2013 Paper 1 (English + Hindi)" })).toBeTruthy();
+    const yearLink = screen.getByRole("link", { name: "JEE Advanced 2013" });
+    expect(yearLink.getAttribute("href")).toBe("/materials/jee-advanced/previous-year-papers/2013");
   });
 });

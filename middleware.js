@@ -47,7 +47,7 @@ import {
 import { getFacultyGuide } from "./src/facultyGuides.js";
 import { RELEASE_CAPABILITIES } from "./src/releaseCapabilities.js";
 import {
-  JEE_MAIN_PAPERS_PATH,
+  PAPER_LANDINGS,
   findPaperLanding,
   parsePaperYearPath,
 } from "./src/studyMaterialLandings.js";
@@ -57,7 +57,7 @@ import {
 // negative lookaheads; keep this list aligned with public/ and Vite's assets/.
 export const config = {
   matcher: [
-    "/((?!api/|assets/|fonts/|study-materials/|favicon\\.svg|robots\\.txt|sitemap\\.xml|llms\\.txt|social-preview\\.(?:png|svg)|theme-init\\.js|index\\.html).*)",
+    "/((?!api/|assets/|fonts/|study-materials/|icons/|favicon\\.svg|robots\\.txt|sitemap\\.xml|llms\\.txt|social-preview\\.(?:png|svg)|theme-init\\.js|sw\\.js|manifest\\.webmanifest|index\\.html).*)",
   ],
 };
 
@@ -101,7 +101,10 @@ const LOOKUP_TIMEOUT_MS = 1500;
 
 const STATIC_APP_ROUTES = new Set([
   "/", "/admin", "/browse", "/compare", "/explore", "/privacy",
-  "/faculty", "/forum", "/forum/submit", "/forum/username", "/materials", JEE_MAIN_PAPERS_PATH, "/methodology", "/polls", "/polls/new", "/reset", "/search", "/signin", "/terms", "/tests",
+  "/faculty", "/forum", "/forum/submit", "/forum/username", "/materials", "/methodology", "/polls", "/polls/new", "/reset", "/search", "/signin", "/terms", "/tests",
+  // Every registered paper landing (JEE Main, JEE Advanced, NEET) — the same
+  // registry the router, sitemap and metadata read, so they cannot disagree.
+  ...PAPER_LANDINGS.map((landing) => landing.path),
 ]);
 
 /** Mirrors the route shapes in App.jsx. Resource existence is checked later. */

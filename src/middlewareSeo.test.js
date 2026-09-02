@@ -201,6 +201,8 @@ describe("edge-rendered discovery landings", () => {
     ["/faculty", "Find courses by faculty"],
     ["/materials", "Find study material by your syllabus."],
     ["/materials/jee-main/previous-year-papers", "JEE Main papers, answer keys and solutions"],
+    ["/materials/jee-advanced/previous-year-papers", "JEE Advanced question papers, 2007 to 2026"],
+    ["/materials/neet/previous-year-papers", "NEET question papers: 2024 and the 2026 re-exam"],
     ["/tests", "Mock tests"],
     ["/methodology", "How JEENEETARD curates courses"],
     ["/terms", "Terms of Service &amp; Disclaimer"],
@@ -435,6 +437,41 @@ describe("edge-rendered discovery landings", () => {
     expect(dataUrl.searchParams.get("title")).toBe("ilike.JEE Main%");
   });
 
+  // The new registry entries ride the same edge path: the NEET year page
+  // queries with the NEET pattern and renders without any exam-specific code.
+  it("serves a NEET exam year through the same registry-driven edge path", async () => {
+    vi.stubEnv("VITE_SUPABASE_URL", "https://catalog.example");
+    vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
+    const fetchSpy = paperCatalogue([
+      {
+        id: 91,
+        title: "NEET UG 2024 - Set T1 (English)",
+        description: "Official NTA question paper.",
+        source_name: "National Testing Agency (NEET)",
+        source_url: "https://nta.example/neet-2024-t1.pdf",
+        exam_year: 2024,
+      },
+    ]);
+    vi.stubGlobal("fetch", fetchSpy);
+
+    const pathname = "/materials/neet/previous-year-papers/2024";
+    const response = await middleware(new Request(`https://www.jeeneetard.com${pathname}`));
+    const html = await response.text();
+
+    expect(response.status).toBe(200);
+    expect(html).toContain("<title>NEET 2024 question papers | JEENEETARD</title>");
+    expect(html).toContain("<h1>NEET 2024 question papers</h1>");
+    expect(html).toContain('<a href="https://nta.example/neet-2024-t1.pdf" rel="noopener">');
+    expect(html).toContain(
+      '<a href="/materials/neet/previous-year-papers">All NEET papers by year</a>',
+    );
+
+    const dataUrl = new URL(String(fetchSpy.mock.calls.find(([input]) =>
+      String(input).includes("/rest/v1/study_materials?"))[0]));
+    expect(dataUrl.searchParams.get("exam_year")).toBe("eq.2024");
+    expect(dataUrl.searchParams.get("title")).toBe("ilike.NEET%");
+  });
+
   it("returns a real 404 for an exam year with no reviewed paper", async () => {
     vi.stubEnv("VITE_SUPABASE_URL", "https://catalog.example");
     vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
@@ -466,7 +503,10 @@ describe("edge-rendered discovery landings", () => {
   it.each([
     "/materials/jee-main/previous-year-papers/20244",
     "/materials/jee-main/previous-year-papers/latest",
-    "/materials/neet/previous-year-papers/2024",
+    // Unregistered exams: NSEP is deliberately absent (season titles), and
+    // NEET PG was never reviewed at all.
+    "/materials/nsep/previous-year-papers/2024",
+    "/materials/neet-pg/previous-year-papers/2024",
   ])("404s the invented paper URL %s without a lookup", async (pathname) => {
     const fetchSpy = vi.fn(async () => new Response(shell, { status: 200 }));
     vi.stubGlobal("fetch", fetchSpy);

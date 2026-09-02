@@ -25,8 +25,7 @@ import {
   studyMaterialsPageSchemas,
 } from "./src/studyMaterialsStructuredData.js";
 import {
-  JEE_MAIN_PAPERS_META,
-  JEE_MAIN_PAPERS_PATH,
+  PAPER_LANDINGS,
   findPaperLanding,
   paperYearMeta,
   paperYearPath,
@@ -408,15 +407,18 @@ export function renderLandingBody(pathname, meta) {
         ["How resources are curated", "/methodology"],
       ],
     },
-    [JEE_MAIN_PAPERS_PATH]: {
-      heading: JEE_MAIN_PAPERS_META.heading,
-      description: JEE_MAIN_PAPERS_META.description,
+    // One fallback body per registered paper landing (JEE Main, JEE Advanced,
+    // NEET), built from the same registry the live page renders from, so the
+    // crawler-visible heading and honest coverage wording can never drift.
+    ...Object.fromEntries(PAPER_LANDINGS.map((landing) => [landing.path, {
+      heading: landing.meta.heading,
+      description: landing.meta.description,
       links: [
         ["All study material", "/materials"],
         ["Mock tests", "/tests"],
         ["How resources are curated", "/methodology"],
       ],
-    },
+    }])),
     "/terms": {
       heading: "Terms of Service & Disclaimer",
       description: meta.description,
