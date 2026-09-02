@@ -7,6 +7,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { supabase, isSupabaseConfigured } from "./supabaseClient";
+import { expandSearchQuery } from "./searchAliases.js";
 
 // Requirement 6. Two characters is the floor the database enforces too; the
 // client checks as well so we don't spend a round trip learning it.
@@ -151,7 +152,10 @@ export function useUniversalSearch(query, { type = null, limit = 5 } = {}) {
     const timer = setTimeout(() => {
       supabase
         .rpc("universal_search", {
-          p_query: term,
+          // The words a student types, in the language they type them. An
+          // exact alias becomes its English equivalent; anything else reaches
+          // the RPC exactly as typed. See searchAliases.js.
+          p_query: expandSearchQuery(term),
           p_types: type ? [type] : null,
           p_limit: limit,
           p_offset: page * limit,
