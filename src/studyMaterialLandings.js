@@ -92,15 +92,15 @@ export const PAPER_LANDINGS = Object.freeze([
     scopeGoal: "neet",
     sessionGrammar: false,
     meta: Object.freeze({
-      title: "NEET question papers: 2024 and the 2026 re-exam | JEENEETARD",
+      title: "NEET question papers: 2024, 2025 and the 2026 re-exam | JEENEETARD",
       description:
-        "Official NEET UG question papers: 2024 and the 2026 re-examination, question papers only. Coverage is partial — other years and official answer keys are not listed yet.",
-      heading: "NEET question papers: 2024 and the 2026 re-exam",
+        "Official NEET UG question papers: 2024, 2025 and the 2026 re-examination, question papers only. Coverage is partial — other years and official answer keys are not listed yet.",
+      heading: "NEET question papers: 2024, 2025 and the 2026 re-exam",
     }),
     heroIntro:
       "Official NEET UG question papers, each opening the recorded source PDF.",
     coverageNote:
-      "This collection is partial: only the NEET UG 2024 papers and the 2026 re-examination papers have been reviewed, and they are question papers only — no official answer keys yet. Other years are not listed rather than linked unchecked.",
+      "This collection is partial: only the NEET UG 2024 and 2025 papers and the 2026 re-examination papers have been reviewed, and they are question papers only — no official answer keys yet. Other years are not listed rather than linked unchecked.",
     emptyAnswerKeysCopy:
       "No official NEET answer key is listed — this collection is question papers only so far. This section stays empty rather than linking unchecked files.",
   }),

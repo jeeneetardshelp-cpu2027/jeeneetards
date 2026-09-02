@@ -77,6 +77,17 @@ html[data-theme="dark"] {
   --ink-2: #b3b3b3;
   --ink-3: #83838a;
 
+  /* Subject colours as TEXT on --surface (#131316). The base palette in
+     brandColors.js stays the BACKGROUND colour for spines and avatars; these
+     are its readable counterparts. Physics +4 and mathematics +3 lightness,
+     accent +7; the rest already cleared 4.5:1 here. */
+  --subject-physics: #4d7ce3;
+  --subject-chemistry: #cf8526;
+  --subject-mathematics: #8568f1;
+  --subject-biology: #d85b84;
+  --subject-botany: #2e9e6b;
+  --subject-accent: #138c98;
+
   --accent: #24d3c4;
   --accent-hover: #45ded1;
   --accent-ink: #04191b;
@@ -123,6 +134,16 @@ html[data-theme="light"] {
   --ink: #0a0a0a;
   --ink-2: #57575d;
   --ink-3: #75757c;
+
+  /* Subject colours as TEXT on --surface (#ffffff). Chemistry was the worst
+     failure anywhere at 2.98:1 and moves -11 lightness; biology -8, botany -7.
+     Physics, mathematics and the accent already cleared 4.5:1 on white. */
+  --subject-physics: #3b6fe0;
+  --subject-chemistry: #a0671d;
+  --subject-mathematics: #7a5af0;
+  --subject-biology: #d03a6b;
+  --subject-botany: #268258;
+  --subject-accent: #0f6f78;
 
   /* #0F6F78 is the release-pinned brand teal: 5.89:1 under white text. */
   --accent: #0f6f78;
