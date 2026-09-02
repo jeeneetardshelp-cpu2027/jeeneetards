@@ -13,13 +13,17 @@ live schema on 31 Aug 2026 and recorded in the remote migration history, so
 | `20260901120000_study_days.sql` | **Applied** 31 Aug 2026. Server copy of prep-streak study days (owner-only RLS, mirrors `video_progress`); the frontend sync woke up on its own when this landed. |
 | `20260901160000_universal_search_materials.sql` | **Applied** 1 Sep 2026. `material` and `paper` groups in `universal_search`; notes, formula sheets and previous-year papers are findable from the main search box (verified live). |
 | `20260902093000_study_material_paper_metadata.sql` | **Applied** 2 Sep 2026, verified live: all 183 paper rows classified (160 question papers / 14 answer keys / 9 with solutions), zero unclassified. The client column flip is the marked FOLLOW-UP in `src/useJeeMainPapers.js` / `src/studyMaterialLandings.js`. |
-| `20260902122500_neet_ug_2025_papers.sql` | **PENDING** — the only unapplied file. Data seed, no schema: the four official NTA NEET UG 2025 English booklets. Verified live 2 Sep 2026 that production has 2 papers for 2024 and 4 for 2026 but **zero for 2025**. Body is the reviewed `docs/sql` package verbatim; `src/neetUg2025PapersSeed.test.js` fails if the copies drift. Safe to rerun. |
+| `20260902122500_neet_ug_2025_papers.sql` | **Data applied** 2 Sep 2026, verified live: NEET UG 2025 went 0 → 4 papers (2024 stayed 2, 2026 stayed 4) and all four official NTA URLs are present. Data seed, no schema. **But `db push` has not run it.** The rows were applied by hand from the `docs/sql` copy at 12:20 UTC, before this file existed, so the remote migration history does not record it and `migration list` still shows it pending. Pushing it is a safe no-op (`on conflict … do update`, and its postflight aborts on any mismatch) and is what actually closes the record. Body is the reviewed `docs/sql` package verbatim; `src/neetUg2025PapersSeed.test.js` fails if the copies drift. |
 
 `npx supabase migration list` shows this local-vs-remote state at any time.
 
-Earlier paper seeds (NEET UG 2024/2026, the JEE sets) were applied by hand
-straight from `docs/sql`, so nothing records whether they ran. The 2025 seed is
-staged in the chain instead, which is what makes that question answerable.
+Every paper seed so far — NEET UG 2024/2026, the JEE sets, and 2025 — was applied
+by hand straight from `docs/sql`, so nothing in the repository records whether
+they ran; the answer has to be fetched from production each time. Staging 2025 in
+the chain does not by itself change that, because the rows were already in by the
+time the file existed. It changes it from the next push onward: once `db push`
+records this one, `migration list` can answer for it, and later seeds staged the
+same way start out answerable.
 
 ## How to apply what is pending
 
