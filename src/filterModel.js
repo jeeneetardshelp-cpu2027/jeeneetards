@@ -78,20 +78,15 @@ export const LANGUAGES = [
   { id: "hinglish", label: "Hinglish" },
 ];
 
-// Buckets, not free numbers — a slider produces unshareable URLs and unbounded
-// facet permutations. Seconds, inclusive lower bound, exclusive upper.
-export const TOTAL_DURATION = [
-  { id: "lt5h", label: "Under 5 hours", min: 0, max: 5 * 3600 },
-  { id: "5to15h", label: "5–15 hours", min: 5 * 3600, max: 15 * 3600 },
-  { id: "15to40h", label: "15–40 hours", min: 15 * 3600, max: 40 * 3600 },
-  { id: "gt40h", label: "40+ hours", min: 40 * 3600, max: null },
-];
-
-export const AVG_LECTURE = [
-  { id: "short", label: "Under 20 min", min: 0, max: 20 * 60 },
-  { id: "medium", label: "20–45 min", min: 20 * 60, max: 45 * 60 },
-  { id: "long", label: "45+ min", min: 45 * 60, max: null },
-];
+// FOUR FILTERS WERE REMOVED HERE: totalDuration (dur=), avgLecture (avg=),
+// updated (updated=1) and completeOnly (complete=1). Each was parsed from the
+// URL, rendered as a removable chip, and counted as result-changing — and
+// usePlaylistBrowse applied NONE of them. So ?dur=lt5h showed an "Under 5
+// hours" chip over an unfiltered result set, and removing the chip changed
+// nothing, because nothing had been filtered. No control anywhere in the UI
+// ever offered them; they were reachable only from a stale or hand-typed link.
+// A control that lies is worse than no control. Old links carrying these keys
+// still parse — the keys are simply ignored, which is what was true all along.
 
 // Comparison bounds live here, in the pure module, because BOTH the catalogue
 // tray and the comparison page need them. Defining them in either component
@@ -124,8 +119,7 @@ export const KEYS = {
   exam: "exam", stage: "stage", board: "board", subject: "sub",
   unit: "unit", chapter: "ch", faculty: "teacher", institute: "inst",
   language: "lang", courseType: "type", difficulty: "level",
-  totalDuration: "dur", avgLecture: "avg", updated: "updated",
-  completeOnly: "complete", sort: "sort", page: "page", q: "q", tab: "tab",
+  sort: "sort", page: "page", q: "q", tab: "tab",
 };
 
 // Multi-select filters are comma-joined; single-select are scalar.
@@ -161,10 +155,6 @@ export function parseFilters(params) {
     language: asList(get("language")).filter((v) => LANGUAGES.some((l) => l.id === v)),
     courseType: asList(get("courseType")).filter((v) => COURSE_TYPES.some((c) => c.id === v)),
     difficulty: asList(get("difficulty")).filter((v) => DIFFICULTIES.some((d) => d.id === v)),
-    totalDuration: oneOf(get("totalDuration"), TOTAL_DURATION),
-    avgLecture: oneOf(get("avgLecture"), AVG_LECTURE),
-    updated: get("updated") === "1",
-    completeOnly: get("completeOnly") === "1",
     sort: oneOf(get("sort"), SORTS) ?? DEFAULT_SORT,
     page: Math.max(0, Number(params.get(KEYS.page) ?? 0) || 0),
     q: (params.get(KEYS.q) ?? "").trim(),
@@ -177,8 +167,7 @@ export function parseFilters(params) {
 // filter looks broken when it is working.
 export const RESULT_CHANGING = [
   "exam", "stage", "board", "subject", "unit", "chapter", "faculty", "institute",
-  "language", "courseType", "difficulty", "totalDuration", "avgLecture",
-  "updated", "completeOnly", "q",
+  "language", "courseType", "difficulty", "q",
 ];
 
 /**
@@ -249,10 +238,6 @@ export function toChips(filters, names = {}) {
   for (const v of filters.language) push("language", v, labelOf(LANGUAGES, v));
   for (const v of filters.courseType) push("courseType", v, labelOf(COURSE_TYPES, v));
   for (const v of filters.difficulty) push("difficulty", v, labelOf(DIFFICULTIES, v));
-  if (filters.totalDuration) push("totalDuration", filters.totalDuration, labelOf(TOTAL_DURATION, filters.totalDuration));
-  if (filters.avgLecture) push("avgLecture", filters.avgLecture, labelOf(AVG_LECTURE, filters.avgLecture));
-  if (filters.updated) push("updated", true, "Updated recently");
-  if (filters.completeOnly) push("completeOnly", true, "Metadata complete");
   if (filters.q) push("q", filters.q, `“${filters.q}”`);
   return chips;
 }
@@ -309,9 +294,8 @@ export function likelyCulprit(filters) {
     ["chapter", filters.chapter], ["faculty", filters.faculty?.length],
     ["board", filters.board], ["stage", filters.stage],
     ["difficulty", filters.difficulty?.length], ["courseType", filters.courseType?.length],
-    ["totalDuration", filters.totalDuration], ["avgLecture", filters.avgLecture],
-    ["language", filters.language?.length], ["completeOnly", filters.completeOnly],
-    ["updated", filters.updated], ["q", filters.q], ["subject", filters.subject],
+    ["language", filters.language?.length],
+    ["q", filters.q], ["subject", filters.subject],
     ["exam", filters.exam],
   ];
   const hit = order.find(([, v]) => Boolean(v));
