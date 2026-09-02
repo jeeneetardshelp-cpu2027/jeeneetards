@@ -28,10 +28,14 @@ describe("URL is the state", () => {
     expect(f.language).toEqual(["hindi", "hinglish"]);
     expect(f.courseType).toEqual(["one-shot"]);
     expect(f.difficulty).toEqual(["advanced"]);
-    expect(f.totalDuration).toBe("5to15h");
-    expect(f.avgLecture).toBe("short");
-    expect(f.updated).toBe(true);
-    expect(f.completeOnly).toBe(true);
+    // dur=, avg=, updated=1 and complete=1 are still in the query string above
+    // on purpose. They were filters nothing ever applied — a chip over an
+    // unfiltered list — so they were removed. An old link carrying them must
+    // still parse, and must not resurrect them.
+    expect(f.totalDuration).toBeUndefined();
+    expect(f.avgLecture).toBeUndefined();
+    expect(f.updated).toBeUndefined();
+    expect(f.completeOnly).toBeUndefined();
     expect(f.sort).toBe("popular");
     expect(f.page).toBe(2);
     expect(f.q).toBe("kine");
@@ -191,9 +195,9 @@ describe("curriculum class does not infer teaching audience", () => {
 
 describe("page reset (rule 8)", () => {
   it.each(["exam", "stage", "subject", "chapter", "language", "courseType",
-           "difficulty", "totalDuration", "avgLecture", "completeOnly", "q"])(
+           "difficulty", "q"])(
     "changing %s resets the page", (key) => {
-      const next = applyFilter(P("page=5"), key, key === "completeOnly" ? true : "jee");
+      const next = applyFilter(P("page=5"), key, "jee");
       expect(next.get(KEYS.page)).toBeNull();
     });
 
@@ -225,11 +229,22 @@ describe("multi-select toggling", () => {
 
 describe("chips (rules 2 and 10)", () => {
   it("produces one removable chip per selection", () => {
-    const f = parse("exam=jee&stage=class-11&lang=hindi,english&complete=1");
+    const f = parse("exam=jee&stage=class-11&lang=hindi,english");
     const chips = toChips(f);
     expect(chips.map((c) => c.label)).toEqual(
-      expect.arrayContaining(["JEE", "Class 11", "Hindi", "English", "Metadata complete"])
+      expect.arrayContaining(["JEE", "Class 11", "Hindi", "English"])
     );
+  });
+
+  it("never renders a chip for a filter that is not applied", () => {
+    // dur=, avg=, updated=1 and complete=1 used to produce "Under 5 hours",
+    // "Under 20 min", "Updated recently" and "Metadata complete" chips — over a
+    // result set that none of them had filtered, because usePlaylistBrowse
+    // never read them. Removing such a chip changed nothing. A control that
+    // lies is worse than no control, so an old link carrying these keys now
+    // produces no chip at all.
+    const f = parse("exam=jee&dur=lt5h&avg=short&updated=1&complete=1");
+    expect(toChips(f).map((c) => c.label)).toEqual(["JEE"]);
   });
 
   it("uses supplied names for id-based filters, and stays honest without them", () => {
