@@ -5,13 +5,14 @@ This directory is the **ordered migration chain** for the production database
 live schema on 31 Aug 2026 and recorded in the remote migration history, so
 `supabase db push` applies only what production does not already have.
 
-## Current state (1 Sep 2026)
+## Current state (2 Sep 2026)
 
 | File | Status |
 | --- | --- |
 | `20260831140005_production_baseline.sql` | **Applied** (it IS production — 66 tables, 181 functions, 98 RLS policies, recorded via `migration repair`). |
 | `20260901120000_study_days.sql` | **Applied** 31 Aug 2026. Server copy of prep-streak study days (owner-only RLS, mirrors `video_progress`); the frontend sync woke up on its own when this landed. |
-| `20260901160000_universal_search_materials.sql` | **Pending.** Adds `material` and `paper` groups to `universal_search`, so study notes, formula sheets and previous-year papers become findable from the main search box. The client half already ships and degrades to today's behaviour until this is pushed. |
+| `20260901160000_universal_search_materials.sql` | **Applied** 1 Sep 2026. `material` and `paper` groups in `universal_search`; notes, formula sheets and previous-year papers are findable from the main search box (verified live). |
+| `20260902093000_study_material_paper_metadata.sql` | **Pending.** Adds `paper_kind`/`paper_year`/`exam_session`/`exam_shift` to `study_materials` with a deterministic title backfill and abort-on-unclassified self-check. The client keeps its title parsing until this is applied; the flip points are marked FOLLOW-UP in `src/useJeeMainPapers.js` and `src/studyMaterialLandings.js`. |
 
 `npx supabase migration list` shows this local-vs-remote state at any time.
 

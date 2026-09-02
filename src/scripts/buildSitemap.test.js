@@ -19,10 +19,17 @@ function clientWith({
 }) {
   // study_materials is queried with a filter chain and awaited directly;
   // playlists/boards end in .order(). One builder covers both shapes.
+  // `papers` may be a function of the landing's ilike pattern, because the
+  // sitemap now runs one query per registered landing (JEE Main, JEE
+  // Advanced, NEET) and each must see only its own exam's rows.
   const paperQuery = {
+    pattern: null,
     eq() { return this; },
-    ilike() { return this; },
-    limit: async () => ({ data: papers, error: paperError }),
+    ilike(column, value) { this.pattern = value; return this; },
+    limit: async function () {
+      const data = typeof papers === "function" ? papers(this.pattern) : papers;
+      return { data, error: paperError };
+    },
   };
   return () => ({
     from: (table) => ({
@@ -171,7 +178,7 @@ describe("sitemap generation", () => {
   // Only years the catalogue actually returned a paper for. A URL shape alone
   // is never evidence that a year exists — the edge 404s an empty year, and a
   // sitemap must not advertise a 404.
-  it("advertises one page per exam year that has papers", async () => {
+  it("advertises one page per exam year that has papers, per landing", async () => {
     const out = temporarySitemap();
     const result = await buildSitemap({
       env: { VITE_SUPABASE_URL: "https://example.supabase.co", VITE_SUPABASE_ANON_KEY: "anon" },
@@ -179,24 +186,41 @@ describe("sitemap generation", () => {
       clientFactory: clientWith({
         courses: [{ id: 5 }],
         goals: [],
-        papers: [
-          { exam_year: 2024 },
-          { exam_year: 2024 },
-          { exam_year: 2022 },
-          { exam_year: null },
-        ],
+        papers: (pattern) => {
+          if (pattern === "JEE Main%") {
+            return [
+              { exam_year: 2024 },
+              { exam_year: 2024 },
+              { exam_year: 2022 },
+              { exam_year: null },
+            ];
+          }
+          if (pattern === "JEE Advanced%") return [{ exam_year: 2013 }];
+          if (pattern === "NEET%") return [{ exam_year: 2024 }, { exam_year: 2026 }];
+          return [];
+        },
       }),
     });
 
     const xml = readFileSync(out, "utf8");
-    expect(result.paperYears).toBe(2);
+    expect(result.paperYears).toBe(5);
     expect(xml).toContain(
       "<loc>https://www.jeeneetard.com/materials/jee-main/previous-year-papers/2024</loc>",
     );
     expect(xml).toContain(
       "<loc>https://www.jeeneetard.com/materials/jee-main/previous-year-papers/2022</loc>",
     );
+    expect(xml).toContain(
+      "<loc>https://www.jeeneetard.com/materials/jee-advanced/previous-year-papers/2013</loc>",
+    );
+    expect(xml).toContain(
+      "<loc>https://www.jeeneetard.com/materials/neet/previous-year-papers/2026</loc>",
+    );
     expect(xml).not.toContain("previous-year-papers/2023");
+    // Each landing lists only ITS years: JEE Main's 2022 must not leak into
+    // the NEET tree, and Advanced's 2013 must not appear under JEE Main.
+    expect(xml).not.toContain("/materials/neet/previous-year-papers/2022");
+    expect(xml).not.toContain("/materials/jee-main/previous-year-papers/2013");
   });
 
   // The paper tier is a side branch. A failure there must not downgrade the
@@ -229,6 +253,12 @@ describe("sitemap generation", () => {
     expect(xml).toContain("<loc>https://www.jeeneetard.com/methodology</loc>");
     expect(xml).toContain(
       "<loc>https://www.jeeneetard.com/materials/jee-main/previous-year-papers</loc>",
+    );
+    expect(xml).toContain(
+      "<loc>https://www.jeeneetard.com/materials/jee-advanced/previous-year-papers</loc>",
+    );
+    expect(xml).toContain(
+      "<loc>https://www.jeeneetard.com/materials/neet/previous-year-papers</loc>",
     );
     expect(xml).toContain("<loc>https://www.jeeneetard.com/forum</loc>");
     expect(xml).not.toContain("/course/");

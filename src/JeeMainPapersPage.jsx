@@ -1,5 +1,10 @@
+// JeeMainPapersPage.jsx — the paper LANDING for one registered exam
+// (/materials/<exam>/previous-year-papers). Named for its first exam; the
+// page itself reads the PAPER_LANDINGS registry entry for the current path,
+// so JEE Advanced and NEET render through this same file.
+
 import { useMemo, useState } from "react";
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
 import { FileCheck2, FileText, ListChecks, RefreshCw, Search, X } from "lucide-react";
 import { Page } from "./AppShell.jsx";
 import { useStructuredData } from "./PageMetadata.jsx";
@@ -7,15 +12,15 @@ import StudyMaterialCard from "./StudyMaterialCard.jsx";
 import { StudyMaterialsDirectoryView } from "./StudyMaterialsPage.jsx";
 import { studyMaterialLandingSchemas } from "./studyMaterialsStructuredData.js";
 import {
-  JEE_MAIN_PAPERS_META,
   JEE_MAIN_PAPERS_PATH,
   findPaperLanding,
+  parsePaperTitle,
   paperYearPath,
   splitJeeMainPapers,
 } from "./studyMaterialLandings.js";
 import { useJeeMainPapers } from "./useJeeMainPapers.js";
 
-const JEE_MAIN_LANDING = findPaperLanding(JEE_MAIN_PAPERS_PATH);
+const DEFAULT_LANDING = findPaperLanding(JEE_MAIN_PAPERS_PATH);
 
 export function groupPapersByYear(items) {
   const groups = new Map();
@@ -41,6 +46,11 @@ function PapersByYear({
   emptyDescription,
   itemNoun = "paper",
   typeLabel,
+  // Years (as Numbers) that have an official answer key somewhere in the
+  // loaded data. When a year group's year is in the set, its heading row
+  // links down to the answer-key section — the cheap surfacing of the
+  // paper↔key pairing on this aggregate landing. Absent means show nothing.
+  answerKeyYears = null,
 }) {
   const yearGroups = groupPapersByYear(items);
 
@@ -54,9 +64,20 @@ function PapersByYear({
         <div className="mt-6 space-y-10">
           {yearGroups.map(([year, papers]) => (
             <div key={year} aria-labelledby={`${id}-${year}`}>
-              <div className="mb-4 flex items-baseline justify-between gap-4 border-b border-hairline pb-3">
+              <div className="mb-4 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b border-hairline pb-3">
                 <h3 id={`${id}-${year}`} className="text-xl font-semibold text-ink">{year}</h3>
                 <p className="text-sm text-ink-3">
+                  {answerKeyYears?.has(Number(year)) && (
+                    <>
+                      <a
+                        href="#official-answer-keys"
+                        className="inline-flex min-h-11 items-center font-semibold text-accent"
+                      >
+                        Official answer keys below
+                      </a>
+                      <span aria-hidden="true"> · </span>
+                    </>
+                  )}
                   {papers.length} {itemNoun}{papers.length === 1 ? "" : "s"}
                 </p>
               </div>
@@ -82,7 +103,10 @@ function PapersByYear({
 }
 
 export default function JeeMainPapersPage() {
-  const papers = useJeeMainPapers();
+  const { pathname } = useLocation();
+  const landing = findPaperLanding(pathname) ?? DEFAULT_LANDING;
+  const exam = landing.examLabel;
+  const papers = useJeeMainPapers({ landing });
   const groups = splitJeeMainPapers(papers.items);
   const [query, setQuery] = useState("");
   const [selectedYear, setSelectedYear] = useState("");
@@ -91,6 +115,14 @@ export default function JeeMainPapersPage() {
       .map((paper) => Number(paper.examYear))
       .filter(Number.isFinite),
   )].sort((yearA, yearB) => yearB - yearA), [papers.items]);
+  // Which years have an official answer key in the loaded data. Derived from
+  // the same title grammar the database backfill uses (parsePaperTitle), so
+  // the landing and the staged paper_kind column can never disagree.
+  const answerKeyYears = useMemo(() => new Set(
+    groups.answerKeys
+      .map((key) => parsePaperTitle(key.title).year ?? Number(key.examYear))
+      .filter(Number.isFinite),
+  ), [groups.answerKeys]);
   const normalizedQuery = query.trim().toLocaleLowerCase();
   const matchesFilters = (paper) => {
     if (selectedYear && String(paper.examYear) !== selectedYear) return false;
@@ -107,14 +139,14 @@ export default function JeeMainPapersPage() {
   const visibleCount = filteredQuestionOnly.length + filteredAnswerKeys.length + filteredWithSolutions.length;
   const filtersActive = Boolean(selectedYear || normalizedQuery);
   useStructuredData(
-    studyMaterialLandingSchemas(papers.items, JEE_MAIN_LANDING),
+    studyMaterialLandingSchemas(papers.items, landing),
     [papers.items],
   );
 
   return (
     <Page crumbs={[
       { label: "Study material", to: "/materials" },
-      { label: "JEE Main papers" },
+      { label: landing.crumbLabel },
     ]}>
       <section className="relative overflow-hidden rounded-2xl border border-hairline bg-surface px-5 py-8 sm:px-8 sm:py-10">
         <div aria-hidden="true" className="absolute -right-12 -top-16 h-48 w-48 rounded-full bg-accent-soft blur-3xl" />
@@ -122,13 +154,18 @@ export default function JeeMainPapersPage() {
           <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-accent-line bg-accent-soft text-accent">
             <FileCheck2 aria-hidden="true" className="h-5 w-5" />
           </span>
-          <p className="mt-5 text-xs font-semibold uppercase tracking-[0.16em] text-accent">JEE Main · Year-wise resources</p>
+          <p className="mt-5 text-xs font-semibold uppercase tracking-[0.16em] text-accent">{exam} · Year-wise resources</p>
           <h1 className="mt-2 text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
-            {JEE_MAIN_PAPERS_META.heading}
+            {landing.meta.heading}
           </h1>
           <p className="mt-3 max-w-2xl text-base leading-relaxed text-ink-2">
-            Browse question papers, official answer keys and reviewed worked solutions by year, session and shift.
+            {landing.heroIntro}
           </p>
+          {landing.coverageNote && (
+            <p className="mt-3 max-w-2xl text-sm leading-relaxed text-ink-3">
+              {landing.coverageNote}
+            </p>
+          )}
           <p className="mt-3 max-w-2xl text-sm leading-relaxed text-ink-3">
             Official answer keys are listed separately from worked solutions. Every card says exactly what the PDF contains and opens the recorded source.
           </p>
@@ -136,13 +173,13 @@ export default function JeeMainPapersPage() {
             href="#paper-filters"
             className="mt-5 inline-flex min-h-11 items-center rounded-lg border border-accent-line bg-accent-soft px-4 text-sm font-semibold text-accent"
           >
-            Browse JEE Main resources by year
+            Browse {exam} resources by year
           </a>
         </div>
       </section>
 
       {years.length > 0 && (
-        <nav aria-label="JEE Main papers by year" className="mt-8">
+        <nav aria-label={`${exam} papers by year`} className="mt-8">
           <h2 className="text-sm font-semibold uppercase tracking-[0.16em] text-accent">
             Jump to a year
           </h2>
@@ -150,10 +187,10 @@ export default function JeeMainPapersPage() {
             {years.map((year) => (
               <li key={year}>
                 <Link
-                  to={paperYearPath(JEE_MAIN_LANDING, year)}
+                  to={paperYearPath(landing, year)}
                   className="inline-flex min-h-11 items-center rounded-lg border border-hairline bg-surface px-4 text-sm font-semibold text-ink"
                 >
-                  JEE Main {year}
+                  {exam} {year}
                 </Link>
               </li>
             ))}
@@ -161,7 +198,7 @@ export default function JeeMainPapersPage() {
         </nav>
       )}
 
-      <nav aria-label="JEE Main resource collections" className="my-8 grid gap-4 sm:grid-cols-3">
+      <nav aria-label={`${exam} resource collections`} className="my-8 grid gap-4 sm:grid-cols-3">
         <a href="#question-papers" className="rounded-xl border border-hairline bg-surface p-5 transition-colors hover:border-accent-line">
           <FileText aria-hidden="true" className="h-5 w-5 text-accent" />
           <p className="mt-4 text-lg font-semibold text-ink">Question papers only</p>
@@ -242,7 +279,7 @@ export default function JeeMainPapersPage() {
           <StudyMaterialsDirectoryView
             {...papers}
             eyebrow="Official paper directory"
-            heading="JEE Main papers"
+            heading={`${exam} papers`}
           />
         </div>
       )}
@@ -253,7 +290,8 @@ export default function JeeMainPapersPage() {
             id="question-papers"
             items={filteredQuestionOnly}
             eyebrow="Questions only · Newest year first"
-            heading="JEE Main question papers"
+            heading={`${exam} question papers`}
+            answerKeyYears={answerKeyYears}
             emptyTitle={filtersActive ? "No question papers match these filters" : "No question-only papers are listed yet"}
             emptyDescription={filtersActive ? "Try another year, session or shift." : "Only reviewed official papers appear here."}
           />
@@ -261,17 +299,17 @@ export default function JeeMainPapersPage() {
             id="official-answer-keys"
             items={filteredAnswerKeys}
             eyebrow="Official result-stage keys · Newest year first"
-            heading="JEE Main official answer keys"
+            heading={`${exam} official answer keys`}
             itemNoun="answer key"
             typeLabel="Official answer key"
             emptyTitle={filtersActive ? "No official answer keys match these filters" : "No official answer keys are listed yet"}
-            emptyDescription={filtersActive ? "Try another year, session or search term." : "Only result-stage answer keys published by NTA or CBSE appear here; challenge-stage provisional drafts are excluded."}
+            emptyDescription={filtersActive ? "Try another year, session or search term." : landing.emptyAnswerKeysCopy}
           />
           <PapersByYear
             id="papers-with-solutions"
             items={filteredWithSolutions}
             eyebrow="Questions and worked answers · Newest year first"
-            heading="JEE Main papers with solutions"
+            heading={`${exam} papers with solutions`}
             typeLabel="Paper with worked solutions"
             emptyTitle={filtersActive ? "No solved papers match these filters" : "No reviewed papers with worked solutions yet"}
             emptyDescription={filtersActive ? "Try another year, session or shift." : "Official answer keys are not labelled as worked solutions. This section will fill only when a paper includes explained answers and redistribution rights have been checked."}

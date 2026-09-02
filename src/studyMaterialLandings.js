@@ -22,6 +22,26 @@ export const JEE_MAIN_PAPERS_META = Object.freeze({
 // files in docs/sql are history, not evidence: several say "NOT applied to
 // production" and are wrong either way. Adding an entry on the strength of a
 // seed file is how you ship a landing page with nothing on it.
+//
+// Verified against production 2026-09-02 (read-only count by title prefix on
+// material_type = 'previous_year_paper'): 112 'JEE Main%', 44 'JEE Advanced%',
+// 6 'NEET%', 9 'NSEP%'. The first three are registered below. NSEP is NOT:
+// its titles carry a season ('NSEP 2024-25 Physics Paper with Solutions'),
+// and a four-digit /…/2024 year page would rename that season and promise
+// "question papers" a solutions collection does not match. Registering NSEP
+// needs season-aware year pages first.
+//
+// Per-entry fields beyond the original five:
+//   scopeGoal          the goal slug stamped on each fetched row's scope, so
+//                      StudyMaterialCard's scope line and mock-test pairing
+//                      stay honest per exam ("jee-main" → JEE Main tests link,
+//                      "jee" → no link, Advanced has no timed source here).
+//   sessionGrammar     true only where titles carry Session/Shift wording —
+//                      drives the "session by session" copy on year pages.
+//   heroIntro          the landing hero's one-line promise.
+//   coverageNote       honest scope statement rendered in the hero. NEET's
+//                      says PARTIAL plainly instead of implying completeness.
+//   emptyAnswerKeysCopy shown when the landing's answer-key section is empty.
 // ---------------------------------------------------------------------------
 export const PAPER_LANDINGS = Object.freeze([
   Object.freeze({
@@ -31,10 +51,71 @@ export const PAPER_LANDINGS = Object.freeze([
     titlePattern: JEE_MAIN_PAPERS_TITLE_PATTERN,
     crumbLabel: "JEE Main papers",
     listLabel: "JEE Main previous year papers",
+    scopeGoal: "jee-main",
+    sessionGrammar: true,
     meta: JEE_MAIN_PAPERS_META,
+    heroIntro:
+      "Browse question papers, official answer keys and reviewed worked solutions by year, session and shift.",
+    coverageNote: null,
+    emptyAnswerKeysCopy:
+      "Only result-stage answer keys published by NTA or CBSE appear here; challenge-stage provisional drafts are excluded.",
+  }),
+  Object.freeze({
+    id: "jee-advanced",
+    examLabel: "JEE Advanced",
+    path: "/materials/jee-advanced/previous-year-papers",
+    titlePattern: "JEE Advanced%",
+    crumbLabel: "JEE Advanced papers",
+    listLabel: "JEE Advanced previous year papers",
+    scopeGoal: "jee",
+    sessionGrammar: false,
+    meta: Object.freeze({
+      title: "JEE Advanced question papers by year, 2007 to 2026 | JEENEETARD",
+      description:
+        "Browse official JEE Advanced question papers from 2007 to 2026 by year. Each paper opens the recorded source PDF and says exactly what it contains.",
+      heading: "JEE Advanced question papers, 2007 to 2026",
+    }),
+    heroIntro:
+      "Browse official JEE Advanced question papers by year, from 2007 to 2026.",
+    coverageNote:
+      "This collection covers 2007 to 2026. Answer keys and worked solutions appear only when a reviewed copy exists — an empty section below means none is listed yet, not that none exists.",
+    emptyAnswerKeysCopy:
+      "No official JEE Advanced answer key has been reviewed yet, so none is listed. This section stays empty rather than linking unchecked files.",
+  }),
+  Object.freeze({
+    id: "neet",
+    examLabel: "NEET",
+    path: "/materials/neet/previous-year-papers",
+    titlePattern: "NEET%",
+    crumbLabel: "NEET papers",
+    listLabel: "NEET previous year papers",
+    scopeGoal: "neet",
+    sessionGrammar: false,
+    meta: Object.freeze({
+      title: "NEET question papers: 2024 and the 2026 re-exam | JEENEETARD",
+      description:
+        "Official NEET UG question papers: 2024 and the 2026 re-examination, question papers only. Coverage is partial — other years and official answer keys are not listed yet.",
+      heading: "NEET question papers: 2024 and the 2026 re-exam",
+    }),
+    heroIntro:
+      "Official NEET UG question papers, each opening the recorded source PDF.",
+    coverageNote:
+      "This collection is partial: only the NEET UG 2024 papers and the 2026 re-examination papers have been reviewed, and they are question papers only — no official answer keys yet. Other years are not listed rather than linked unchecked.",
+    emptyAnswerKeysCopy:
+      "No official NEET answer key is listed — this collection is question papers only so far. This section stays empty rather than linking unchecked files.",
   }),
 ]);
 
+/**
+ * The landing that lists a paper, from its TITLE — the same prefix test the
+ * landing pages query with, so a match is never a dead end. Search results
+ * use this to send a NEET or JEE Advanced paper to its curated landing the
+ * way JEE Main results always were; null falls back to the flat directory.
+ */
+export const landingForPaperTitle = (title) =>
+  typeof title === "string"
+    ? PAPER_LANDINGS.find((l) => title.startsWith(l.titlePattern.replace("%", ""))) ?? null
+    : null;
 export const findPaperLanding = (pathname) =>
   PAPER_LANDINGS.find((landing) => landing.path === pathname) ?? null;
 
@@ -63,9 +144,19 @@ export function parsePaperYearPath(pathname) {
  *
  * The promise is the LABELLING, not the contents: a year that has no official
  * answer key must not be described as having one, so the wording says every
- * paper is labelled with what it contains.
+ * paper is labelled with what it contains. "Session by session" is claimed
+ * only for exams whose titles actually carry sessions (sessionGrammar).
  */
 export function paperYearMeta(landing, year) {
+  if (!landing.sessionGrammar) {
+    return {
+      title: `${landing.examLabel} ${year} question papers | JEENEETARD`,
+      description:
+        `Every reviewed ${landing.examLabel} ${year} paper on JEENEETARD, each labelled ` +
+        "with whether it includes the official answer key or worked solutions.",
+      heading: `${landing.examLabel} ${year} question papers`,
+    };
+  }
   return {
     title: `${landing.examLabel} ${year} question papers, session by session | JEENEETARD`,
     description:
@@ -121,4 +212,82 @@ export function splitJeeMainPapers(materials = []) {
     else groups.questionOnly.push(material);
     return groups;
   }, { questionOnly: [], answerKeys: [], withSolutions: [] });
+}
+
+// ---------------------------------------------------------------------------
+// The ONE title grammar, shared with the database.
+//
+// The staged migration supabase/migrations/
+// 20260902093000_study_material_paper_metadata.sql backfills paper_kind,
+// paper_year, exam_session and exam_shift from titles using EXACTLY these
+// rules, and src/paperMetadataSqlRehearsal.test.js executes that SQL and
+// asserts it agrees with this function title by title. Change one, change
+// both, or that test fails.
+//
+// FOLLOW-UP — where the flip happens: once the owner has applied that
+// migration with `npx supabase db push`, the client should read the four real
+// columns (add them to the SELECT in src/useJeeMainPapers.js) and this parser
+// becomes the fallback for rows predating the backfill, not the authority.
+// Until then the columns DO NOT EXIST in production and selecting them would
+// make PostgREST error every papers page.
+// ---------------------------------------------------------------------------
+
+/**
+ * Deterministic title → { year, session, shift, kind }.
+ *
+ * kind: 'with Solutions' wins over 'Answer Key' wins over the question-paper
+ * default — the same precedence splitJeeMainPapers has always applied.
+ * year: the first four-digit 20xx ('NSEP 2017-18…' → 2017), or null.
+ * session/shift: 'Session N' / 'Shift N' when the title names one, else null.
+ */
+export function parsePaperTitle(title) {
+  const text = String(title ?? "");
+  const kind = /with\s+solutions?/i.test(text)
+    ? "paper_with_solutions"
+    : /answer\s+keys?/i.test(text)
+      ? "answer_key"
+      : "question_paper";
+  const year = /\b(20\d{2})\b/.exec(text);
+  const session = /session\s*(\d+)/i.exec(text);
+  const shift = /shift\s*(\d+)/i.exec(text);
+  return {
+    year: year ? Number(year[1]) : null,
+    session: session ? `Session ${session[1]}` : null,
+    shift: shift ? `Shift ${shift[1]}` : null,
+    kind,
+  };
+}
+
+/**
+ * Pair one year's question papers with that year's official answer keys,
+ * grouped the way the exam actually publishes them: papers are per-shift,
+ * keys are per-session, so the SESSION is the join.
+ *
+ * Returns [{ session, papers, answerKeys }] with numbered sessions first in
+ * order, then the session-less group (older exams name no session; its keys
+ * are the year's session-less keys, so an exam without session grammar still
+ * pairs at the year level). A session with no key gets an empty answerKeys
+ * array — the caller shows NOTHING for it, never a dead link.
+ */
+export function groupPapersBySession(papers = [], answerKeys = []) {
+  const sessionOf = (material) => parsePaperTitle(material?.title).session;
+  const groups = new Map();
+  for (const paper of papers) {
+    const session = sessionOf(paper);
+    const key = session ?? "";
+    if (!groups.has(key)) groups.set(key, { session, papers: [], answerKeys: [] });
+    groups.get(key).papers.push(paper);
+  }
+  for (const answerKey of answerKeys) {
+    const session = sessionOf(answerKey);
+    const group = groups.get(session ?? "");
+    // A key whose session has no question paper in the loaded data attaches
+    // nowhere here; it still renders in the page's own answer-key section.
+    if (group) group.answerKeys.push(answerKey);
+  }
+  return [...groups.values()].sort((a, b) => {
+    if (a.session === null) return 1;
+    if (b.session === null) return -1;
+    return Number(a.session.slice("Session ".length)) - Number(b.session.slice("Session ".length));
+  });
 }

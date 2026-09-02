@@ -201,6 +201,8 @@ describe("edge-rendered discovery landings", () => {
     ["/faculty", "Find courses by faculty"],
     ["/materials", "Find study material by your syllabus."],
     ["/materials/jee-main/previous-year-papers", "JEE Main papers, answer keys and solutions"],
+    ["/materials/jee-advanced/previous-year-papers", "JEE Advanced question papers, 2007 to 2026"],
+    ["/materials/neet/previous-year-papers", "NEET question papers: 2024 and the 2026 re-exam"],
     ["/tests", "Mock tests"],
     ["/methodology", "How JEENEETARD curates courses"],
     ["/terms", "Terms of Service &amp; Disclaimer"],
@@ -230,7 +232,12 @@ describe("edge-rendered discovery landings", () => {
       expect(html).toContain('href="mailto:jeeneetardshelp@gmail.com"');
     }
     if (pathname === "/materials") {
-      expect(html).toContain("Short notes, formula sheets, full lecture notes");
+      expect(html).toContain("Formula sheets, full lecture notes");
+      // Zero short-notes rows exist (0 of 408 on 2026-09-01). The page must
+      // not promise them anywhere a crawler reads — this covers the edge body
+      // AND the <meta name="description"> in one assertion, so the two copy
+      // sites cannot drift back independently.
+      expect(html.toLowerCase()).not.toContain("short notes");
       expect(html).toContain('href="/explore"');
       expect(html).toContain('href="/tests"');
       expect(html).toContain('href="/methodology"');
@@ -430,6 +437,41 @@ describe("edge-rendered discovery landings", () => {
     expect(dataUrl.searchParams.get("title")).toBe("ilike.JEE Main%");
   });
 
+  // The new registry entries ride the same edge path: the NEET year page
+  // queries with the NEET pattern and renders without any exam-specific code.
+  it("serves a NEET exam year through the same registry-driven edge path", async () => {
+    vi.stubEnv("VITE_SUPABASE_URL", "https://catalog.example");
+    vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
+    const fetchSpy = paperCatalogue([
+      {
+        id: 91,
+        title: "NEET UG 2024 - Set T1 (English)",
+        description: "Official NTA question paper.",
+        source_name: "National Testing Agency (NEET)",
+        source_url: "https://nta.example/neet-2024-t1.pdf",
+        exam_year: 2024,
+      },
+    ]);
+    vi.stubGlobal("fetch", fetchSpy);
+
+    const pathname = "/materials/neet/previous-year-papers/2024";
+    const response = await middleware(new Request(`https://www.jeeneetard.com${pathname}`));
+    const html = await response.text();
+
+    expect(response.status).toBe(200);
+    expect(html).toContain("<title>NEET 2024 question papers | JEENEETARD</title>");
+    expect(html).toContain("<h1>NEET 2024 question papers</h1>");
+    expect(html).toContain('<a href="https://nta.example/neet-2024-t1.pdf" rel="noopener">');
+    expect(html).toContain(
+      '<a href="/materials/neet/previous-year-papers">All NEET papers by year</a>',
+    );
+
+    const dataUrl = new URL(String(fetchSpy.mock.calls.find(([input]) =>
+      String(input).includes("/rest/v1/study_materials?"))[0]));
+    expect(dataUrl.searchParams.get("exam_year")).toBe("eq.2024");
+    expect(dataUrl.searchParams.get("title")).toBe("ilike.NEET%");
+  });
+
   it("returns a real 404 for an exam year with no reviewed paper", async () => {
     vi.stubEnv("VITE_SUPABASE_URL", "https://catalog.example");
     vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
@@ -461,7 +503,10 @@ describe("edge-rendered discovery landings", () => {
   it.each([
     "/materials/jee-main/previous-year-papers/20244",
     "/materials/jee-main/previous-year-papers/latest",
-    "/materials/neet/previous-year-papers/2024",
+    // Unregistered exams: NSEP is deliberately absent (season titles), and
+    // NEET PG was never reviewed at all.
+    "/materials/nsep/previous-year-papers/2024",
+    "/materials/neet-pg/previous-year-papers/2024",
   ])("404s the invented paper URL %s without a lookup", async (pathname) => {
     const fetchSpy = vi.fn(async () => new Response(shell, { status: 200 }));
     vi.stubGlobal("fetch", fetchSpy);
@@ -631,6 +676,145 @@ describe("edge-rendered discovery landings", () => {
       '<link rel="canonical" href="https://www.jeeneetard.com/browse'
       + "?goal=jee&amp;class=11&amp;subject=physics&amp;chapter=kinematics\" />",
     );
+  });
+
+  // A chapter URL used to fall through to the generic landing body: an <h1> of
+  // "All courses" and one templated sentence. 380 of these are in the sitemap,
+  // so a crawler saw 380 near-identical pages under a heading that contradicted
+  // their own <title>. These pin the real heading, the real count, and the
+  // sibling links that connect them — and, just as importantly, pin that a
+  // lookup which did not confirm renders NO count rather than a zero.
+  const CURRICULUM = [
+    { level: "chapter", entity_id: 37, slug: "kinematics", name: "Kinematics", course_count: 6 },
+    { level: "chapter", entity_id: 38, slug: "laws-of-motion", name: "Laws of Motion", course_count: 4 },
+    { level: "chapter", entity_id: 39, slug: "work-energy-power", name: "Work, Energy and Power", course_count: 1 },
+  ];
+
+  const stubCurriculum = (rows, capture) => {
+    vi.stubEnv("VITE_SUPABASE_URL", "https://catalog.example");
+    vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
+    vi.stubGlobal("fetch", vi.fn(async (input, init) => {
+      if (String(input).includes("/rest/v1/rpc/get_browse_curriculum")) {
+        if (capture) capture.args = JSON.parse(init.body);
+        return rows === null
+          ? new Response("nope", { status: 500 })
+          : Response.json(rows);
+      }
+      return new Response(shell, { status: 200 });
+    }));
+  };
+
+  const chapterUrl =
+    "https://www.jeeneetard.com/browse?goal=jee&class=11&subject=physics&chapter=kinematics";
+
+  it("gives a chapter landing its own heading instead of the generic one", async () => {
+    stubCurriculum(CURRICULUM);
+    const html = await (await middleware(new Request(chapterUrl))).text();
+
+    expect(html).toContain("<h1>Kinematics</h1>");
+    expect(html).not.toContain("<h1>All courses</h1>");
+  });
+
+  it("states the real course count, goal-scoped, from the curriculum", async () => {
+    stubCurriculum(CURRICULUM);
+    const html = await (await middleware(new Request(chapterUrl))).text();
+
+    expect(html).toContain("6 courses on this site cover this chapter.");
+  });
+
+  it("agrees in number when a chapter has exactly one course", async () => {
+    stubCurriculum(CURRICULUM);
+    const html = await (await middleware(new Request(
+      "https://www.jeeneetard.com/browse?goal=jee&class=11&subject=physics&chapter=work-energy-power",
+    ))).text();
+
+    expect(html).toContain("1 course on this site covers this chapter.");
+  });
+
+  // The house rule this whole change has to obey: never render a plausible-
+  // looking zero. A chapter the curriculum knows but that carries no courses
+  // gets its honest heading and no count sentence at all.
+  it("renders no count line at all when the chapter has no courses", async () => {
+    stubCurriculum([
+      ...CURRICULUM,
+      { level: "chapter", entity_id: 40, slug: "empty-chapter", name: "Empty Chapter", course_count: 0 },
+    ]);
+    const html = await (await middleware(new Request(
+      "https://www.jeeneetard.com/browse?goal=jee&class=11&subject=physics&chapter=empty-chapter",
+    ))).text();
+
+    expect(html).toContain("<h1>Empty Chapter</h1>");
+    expect(html).not.toContain("0 course");
+    expect(html).not.toContain("cover this chapter");
+    expect(html).not.toContain("covers this chapter");
+  });
+  it("links the sibling chapters with their counts, and never to itself", async () => {
+    stubCurriculum(CURRICULUM);
+    const html = await (await middleware(new Request(chapterUrl))).text();
+
+    expect(html).toContain(
+      'href="/browse?goal=jee&amp;class=11&amp;subject=physics&amp;chapter=laws-of-motion"',
+    );
+    expect(html).toContain("(4 courses)");
+    // The page must not list itself as somewhere else to go.
+    expect(html).not.toContain(
+      '<a href="/browse?goal=jee&amp;class=11&amp;subject=physics&amp;chapter=kinematics">',
+    );
+  });
+
+  it("asks the curriculum for the stage id the RPC speaks, not the URL's short form", async () => {
+    const capture = {};
+    stubCurriculum(CURRICULUM, capture);
+    await middleware(new Request(chapterUrl));
+
+    expect(capture.args).toMatchObject({
+      p_goal: "jee", p_class: "class-11", p_subject: "physics",
+    });
+  });
+
+  it("passes dropper through unchanged, which is what the RPC expects", async () => {
+    const capture = {};
+    stubCurriculum(CURRICULUM, capture);
+    await middleware(new Request(
+      "https://www.jeeneetard.com/browse?goal=jee&class=dropper&subject=physics&chapter=kinematics",
+    ));
+
+    expect(capture.args.p_class).toBe("dropper");
+  });
+
+  // The fail-safe half. An unconfirmed lookup must never become a confident
+  // page: no heading it cannot support, and above all no invented count.
+  it("falls back to the generic body when the curriculum lookup fails", async () => {
+    stubCurriculum(null);
+    const html = await (await middleware(new Request(chapterUrl))).text();
+
+    expect(html).toContain("<h1>All courses</h1>");
+    expect(html).not.toContain("cover this chapter");
+    expect(html).not.toContain("0 courses");
+    // The head is unaffected — the title and canonical never depended on it.
+    expect(html).toContain("<title>Kinematics — JEE Class 11 Physics | JEENEETARD</title>");
+  });
+
+  it("falls back when the curriculum does not know this chapter slug", async () => {
+    stubCurriculum(CURRICULUM);
+    const html = await (await middleware(new Request(
+      "https://www.jeeneetard.com/browse?goal=jee&class=11&subject=physics&chapter=not-a-chapter",
+    ))).text();
+
+    expect(html).toContain("<h1>All courses</h1>");
+    expect(html).not.toContain("cover this chapter");
+  });
+
+  it("does not give an unbounded facet a chapter body", async () => {
+    // ?page=2 alongside a chapter is a facet, not the canonical shape. It stays
+    // noindex, and must not gain content that would make it worth indexing.
+    stubCurriculum(CURRICULUM);
+    const html = await (await middleware(new Request(
+      `${chapterUrl}&page=2`,
+    ))).text();
+
+    expect(html).toContain('name="robots" content="noindex, follow"');
+    expect(html).not.toContain("<h1>Kinematics</h1>");
   });
 
   it.each([

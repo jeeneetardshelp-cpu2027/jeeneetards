@@ -11,7 +11,7 @@
 // navigates to a bare /browse throws away the very thing the student searched
 // for, which was the original complaint.
 
-import { JEE_MAIN_PAPERS_PATH } from "./studyMaterialLandings.js";
+import { JEE_MAIN_PAPERS_PATH, landingForPaperTitle } from "./studyMaterialLandings.js";
 
 /**
  * Where a study-material result goes on THIS site. /materials reads exactly
@@ -72,14 +72,18 @@ export function resultHref(groupKey, row) {
       // is the only page that lists them, narrowed to this material's own
       // syllabus scope.
       return materialsHref(extra);
-    case "paper":
-      // A JEE Main previous-year paper belongs on the curated papers landing —
-      // organised by year, session and shift, which the flat directory is not.
-      // jee_main_landing is set by the RPC using the same title test the
-      // landing page itself queries with (JEE_MAIN_PAPERS_TITLE_PATTERN), so
-      // the paper is definitely on the page we send them to. Every other paper
-      // falls back to the directory.
+    case "paper": {
+      // A previous-year paper belongs on its curated landing — organised by
+      // year (and session/shift where the exam has them) — not the flat
+      // directory. The RPC's jee_main_landing flag predates the NEET and
+      // JEE Advanced landings, so the registry's own title-prefix test
+      // decides (it is the same test the landing pages query with, so a
+      // match is never a dead end). Unrecognised papers fall back to the
+      // directory.
+      const landing = landingForPaperTitle(row?.title);
+      if (landing) return landing.path;
       return extra.jee_main_landing ? JEE_MAIN_PAPERS_PATH : materialsHref(extra);
+    }
     case "institute":
       return `/browse?channel=${extra.institute_id ?? row.id}`;
     case "faculty":

@@ -37,6 +37,9 @@ import NotFound from "./NotFound.jsx";
 import AppErrorBoundary from "./AppErrorBoundary.jsx";
 import RouteMetadata from "./PageMetadata.jsx";
 import { RELEASE_CAPABILITIES, RELEASE_FEATURES } from "./releaseCapabilities.js";
+// The paper-landing registry: one route pair (landing + :year child) per
+// registered exam, so a sibling exam is a registry entry, not new routes.
+import { PAPER_LANDINGS } from "./studyMaterialLandings.js";
 
 // Rarely-visited static pages load on demand too — every student paid to
 // parse the terms, privacy, methodology and auth screens on first load.
@@ -303,16 +306,18 @@ function StudyMaterialsRoute() {
   return (
     <FeatureUnavailable
       title="Study material is coming soon"
-      detail="Short notes, formula sheets, lecture notes and previous-year papers are being checked before they are published."
+      detail="Formula sheets, lecture notes and previous-year papers are being checked before they are published."
     />
   );
 }
 
-function JeeMainPapersRoute() {
+function PaperLandingRoute() {
+  // JeeMainPapersPage reads the landing registry entry for the current path,
+  // so this one route component serves every registered exam's landing.
   if (RELEASE_CAPABILITIES.studyMaterials) return <JeeMainPapersPage />;
   return (
     <FeatureUnavailable
-      title="JEE Main papers are coming soon"
+      title="Previous-year papers are coming soon"
       detail="Official previous-year papers are being checked before they are published."
     />
   );
@@ -414,17 +419,25 @@ export default function App() {
           <Route path="/compare" element={<ComparisonRoute />} />
           <Route path="/search" element={<UniversalSearchRoute />} />
           <Route path="/materials" element={<StudyMaterialsRoute />} />
-          <Route
-            path="/materials/jee-main/previous-year-papers"
-            element={<JeeMainPapersRoute />}
-          />
-          {/* One page per exam year. The year is validated against the paper
-              landing registry, and the page renders NotFound for a year the
-              catalogue has nothing in — the edge gives that URL a real 404. */}
-          <Route
-            path="/materials/jee-main/previous-year-papers/:year"
-            element={<PaperYearRoute />}
-          />
+          {/* One landing per registered exam (JEE Main, JEE Advanced, NEET),
+              plus one page per exam year under each. The year is validated
+              against the paper landing registry, and the page renders
+              NotFound for a year the catalogue has nothing in — the edge
+              gives that URL a real 404. */}
+          {PAPER_LANDINGS.map((landing) => (
+            <Route
+              key={landing.id}
+              path={landing.path}
+              element={<PaperLandingRoute />}
+            />
+          ))}
+          {PAPER_LANDINGS.map((landing) => (
+            <Route
+              key={`${landing.id}-year`}
+              path={`${landing.path}/:year`}
+              element={<PaperYearRoute />}
+            />
+          ))}
           {/* The forum is deliberately routeable before release so its edge
               contract and review builds cannot silently 404. The feature flag
               keeps it out of public navigation until the complete UI ships. */}
