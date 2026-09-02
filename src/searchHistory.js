@@ -41,8 +41,18 @@ export const SEARCH_HISTORY_KEY = KEY;
 // log, which is not what this is for.
 export const MAX_RECENT_SEARCHES = 8;
 
-// Matches MIN_QUERY in useUniversalSearch.js and the floor inside the RPC: a
-// query too short to have been run is too short to remember.
+// A floor of this file's own, deliberately NOT imported from
+// useUniversalSearch.js — that module imports this one, and two test suites
+// mock it wholesale, so reaching back into it would be a cycle and a
+// mock-shaped trap. It only has to be no LONGER than the shortest query the
+// box will actually run: anything shorter than MIN_QUERY never reaches
+// rememberSearch in the first place, because a search that was never run
+// cannot have settled with results.
+//
+// MIN_QUERY has already moved once (2 -> 3, when two-character searches were
+// found to be unservable), which is why searchHistory.test.js asserts the
+// relationship rather than the number, and asserts every starter is long
+// enough for the box to run it.
 export const RECENT_SEARCH_MIN_LENGTH = 2;
 
 // The same ceiling searchGapLog.js uses. A pasted essay is not a search.

@@ -19,6 +19,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
   MAX_RECENT_SEARCHES,
+  RECENT_SEARCH_MIN_LENGTH,
   SEARCH_HISTORY_KEY,
   STARTER_QUERIES,
   clearRecentSearches,
@@ -224,7 +225,28 @@ describe("every starter prompt is backed by evidence in this repository", () => 
     ).toBe(true);
   });
 
-  it("every starter is long enough for the search box to run it", () => {
-    for (const query of STARTER_QUERIES) expect(query.trim().length).toBeGreaterThanOrEqual(2);
+  // Derived from MIN_QUERY, not from the number MIN_QUERY happened to be.
+  // It moved from 2 to 3 once already (two-character searches turned out to be
+  // unservable), and the three-letter shorthands here — shm, goc, pnc — sit
+  // exactly on the current floor. If it moves again, a starter chip would
+  // render a query the box then refuses to run: the student taps a suggestion
+  // and is told to type more. That must fail here, not in front of them.
+  it("every starter is long enough for the search box to run it", async () => {
+    const { MIN_QUERY } = await import("./useUniversalSearch.js");
+    for (const query of STARTER_QUERIES) {
+      expect(
+        query.trim().length,
+        `starter "${query}" is shorter than MIN_QUERY (${MIN_QUERY}), so tapping ` +
+          "it would show \"Type at least N characters\" instead of results",
+      ).toBeGreaterThanOrEqual(MIN_QUERY);
+    }
+  });
+
+  // The remember floor is this file's own constant rather than an import (see
+  // the note beside it), so the relationship it has to keep is asserted here.
+  // Too high and a query the box ran happily would be silently forgotten.
+  it("never refuses to remember a query the search box was willing to run", async () => {
+    const { MIN_QUERY } = await import("./useUniversalSearch.js");
+    expect(RECENT_SEARCH_MIN_LENGTH).toBeLessThanOrEqual(MIN_QUERY);
   });
 });

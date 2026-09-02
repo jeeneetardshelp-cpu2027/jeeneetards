@@ -164,6 +164,19 @@ export default function PrivacyPolicy() {
               site data.
             </p>
             <p>
+              {/* Sections 4 and 6 cover the two halves of the same moment, and
+                  read together they must not leave a student thinking either
+                  claim covers both. Without this line, "never sent to a
+                  server" here is easily read as a statement about searching in
+                  general — which section 6 then contradicts. */}
+              This is the opposite half of section 6 below, and the two do not
+              overlap. A search that <strong>found something</strong> is
+              remembered here, on this device, and is never sent anywhere. A
+              search that <strong>found nothing</strong> is not remembered here
+              at all — those words are sent to the server instead, without any
+              identity attached, and section 6 describes exactly what is kept.
+            </p>
+            <p>
               While signed out, this browser data stays on the device and is
               not attached to any account. It can be removed by clearing site
               data for this site.
