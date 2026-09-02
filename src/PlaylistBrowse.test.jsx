@@ -734,7 +734,7 @@ describe("chapter cards count the chapter, not the whole course", () => {
 // honest subset the videos table can answer — duration and recency — so no
 // option here can ever be decorative.
 describe("lectures-tab sort control", () => {
-  const renderLectures = (url = "/browse?tab=lectures") =>
+  const renderLectures = (url = "/browse?tab=lectures", search = "") =>
     render(
       <MemoryRouter initialEntries={[url]}>
         <Routes>
@@ -742,7 +742,7 @@ describe("lectures-tab sort control", () => {
             <>
               <LocationProbe />
               <PlaylistBrowse tab="lectures" onTabChange={() => {}}
-                filters={{ search: "" }} lectureView={<div />} />
+                filters={{ search }} lectureView={<div />} />
             </>
           } />
         </Routes>
@@ -783,5 +783,27 @@ describe("lectures-tab sort control", () => {
     renderLectures("/browse?tab=lectures&lsort=wizards");
     const sort = await screen.findByRole("combobox", { name: "Sort lessons" });
     expect(sort.value).toBe("recommended");
+  });
+
+  // While a term is active the default sort IS the server's relevance ranking,
+  // so the word has to say so. No new option appears and no new ?lsort= value
+  // exists — a sort id that only means something while you are typing would go
+  // stale in every shared URL.
+  it("names the default sort for what it does during a search", async () => {
+    renderLectures("/browse?tab=lectures&q=friction", "friction problems");
+    const sort = await screen.findByRole("combobox", { name: "Sort lessons" });
+    expect([...sort.options].map((o) => o.text)).toEqual([
+      "Best match", "Shortest first", "Longest first", "Recently added",
+    ]);
+    expect([...sort.options].map((o) => o.value)).toEqual([
+      "recommended", "shortest", "longest", "recent",
+    ]);
+    expect(sort.value).toBe("recommended");
+  });
+
+  it("goes back to Recommended when the search box is empty", async () => {
+    renderLectures("/browse?tab=lectures", "   ");
+    const sort = await screen.findByRole("combobox", { name: "Sort lessons" });
+    expect([...sort.options].map((o) => o.text)[0]).toBe("Recommended");
   });
 });

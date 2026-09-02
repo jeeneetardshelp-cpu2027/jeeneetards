@@ -44,6 +44,7 @@ vi.mock("./supabaseClient.js", () => ({
 
 import {
   LECTURE_PAGE_SIZE, useVideos, LECTURE_SORTS, DEFAULT_LECTURE_SORT, parseLectureSort,
+  lectureSortOptions,
 } from "./useBrowse.js";
 
 let seen;
@@ -255,6 +256,111 @@ describe("paged lecture discovery", () => {
   });
 });
 
+// search_video_ids answers with the most relevant 500 lecture ids IN RELEVANCE
+// ORDER and NO rank column — the ranking exists only as the position of each id
+// in that array. Feeding it to .in("id", …) and then .order("id") threw it away
+// (SQL IN does not preserve argument order), so the best match for a query
+// could land on page 3. These assert the ranking survives, across pages.
+describe("search relevance order", () => {
+  // Deliberately NOT ascending: if the hook fell back to database-id order the
+  // difference is visible in the very first row.
+  const RANKED = Array.from({ length: 30 }, (_, i) => 1000 - i * 7);
+  const BY_ID = [...RANKED].sort((a, b) => a - b);   // what PostgREST returns
+  const row = (id) => ({
+    id, youtube_video_id: `y${id}`, title: `Lecture ${id}`,
+    institutes_channels: null, subjects: null, chapters: null, membership: [],
+  });
+  const ids = () => seen.videos.map((v) => v.id);
+
+  beforeEach(() => {
+    rpcResponse = { data: RANKED.map((id) => ({ id })), error: null };
+    response = { data: BY_ID.map(row), error: null, count: RANKED.length };
+  });
+
+  it("fetches the whole bounded match set instead of an id-ordered page", async () => {
+    // The filters run in the DATABASE, so the page can only be cut AFTER they
+    // have been applied. The RPC's own 500-id cap is what makes that one
+    // bounded request rather than an unbounded fetch.
+    render(<Probe search="friction problems" page={0} />);
+    await waitFor(() => expect(calls).toHaveLength(1));
+    expect(calls[0].range).toEqual([0, RANKED.length - 1]);
+    expect(calls[0].in.id).toEqual(RANKED);
+    // The database ordering is untouched; the ranking is applied to the rows.
+    expect(calls[0].orders).toEqual(["id"]);
+  });
+
+  it("returns the page in the server's order, not database-id order", async () => {
+    render(<Probe search="friction problems" page={0} />);
+    await waitFor(() => expect(seen.loading).toBe(false));
+    expect(ids()).toEqual(RANKED.slice(0, LECTURE_PAGE_SIZE));
+    expect(ids()).not.toEqual(BY_ID.slice(0, LECTURE_PAGE_SIZE));
+    expect(seen.total).toBe(RANKED.length);
+    expect(seen.hasMore).toBe(true);
+  });
+
+  it("continues the ranking on page 2 rather than restarting it", async () => {
+    render(<Probe search="friction problems" page={1} />);
+    await waitFor(() => expect(seen.loading).toBe(false));
+    expect(ids()).toEqual(RANKED.slice(LECTURE_PAGE_SIZE));
+    // No id from page 1 reappears, and none is skipped.
+    expect([...RANKED.slice(0, LECTURE_PAGE_SIZE), ...ids()]).toEqual(RANKED);
+    expect(seen.hasMore).toBe(false);
+  });
+
+  it("keeps the count the database computed, not the size of the page", async () => {
+    render(<Probe search="friction problems" page={0} />);
+    await waitFor(() => expect(seen.loading).toBe(false));
+    expect(seen.videos).toHaveLength(LECTURE_PAGE_SIZE);
+    expect(seen.total).toBe(30);
+  });
+
+  // Filters run in the database, so the fetched set is what SURVIVED them.
+  // Ranking that set (rather than the raw id list) is what keeps page sizes and
+  // totals honest when a filter removes highly ranked matches.
+  it("ranks what the filters left, so a filtered page is still full", async () => {
+    const survivors = BY_ID.filter((id) => id % 2 === 0);
+    response = { data: survivors.map(row), error: null, count: survivors.length };
+    render(<Probe search="friction problems" subjectId={2} page={0} />);
+    await waitFor(() => expect(seen.loading).toBe(false));
+    expect(ids()).toEqual(RANKED.filter((id) => id % 2 === 0).slice(0, LECTURE_PAGE_SIZE));
+    expect(seen.total).toBe(survivors.length);
+  });
+
+  it("lets an explicitly chosen sort win over relevance", async () => {
+    // "Shortest first" is a request for shortest. It keeps normal paging and
+    // the database's ordering, exactly as before.
+    render(<Probe search="friction problems" sort="shortest" page={1} />);
+    await waitFor(() => expect(seen.loading).toBe(false));
+    expect(calls[0].orders).toEqual(["duration_seconds nullslast", "id"]);
+    expect(calls[0].range).toEqual([LECTURE_PAGE_SIZE, 2 * LECTURE_PAGE_SIZE - 1]);
+    expect(ids()).toEqual(BY_ID);          // the server's rows, unreordered
+  });
+
+  it("pages normally with no term, exactly as it did before", async () => {
+    render(<Probe page={1} />);
+    await waitFor(() => expect(seen.loading).toBe(false));
+    expect(rpcCalls).toHaveLength(0);
+    expect(calls[0].orders).toEqual(["id"]);
+    expect(calls[0].range).toEqual([LECTURE_PAGE_SIZE, 2 * LECTURE_PAGE_SIZE - 1]);
+    expect(ids()).toEqual(BY_ID);
+  });
+
+  it("pages normally on the ILIKE fallback, which has no ranking to keep", async () => {
+    // No search_video_ids means no relevance order exists. Inventing one from
+    // an ILIKE would be a fake ranking, so this path stays a database page.
+    rpcResponse = {
+      data: null,
+      error: { code: "PGRST202", message: "Could not find the function public.search_video_ids" },
+    };
+    render(<Probe search="friction problems" page={1} />);
+    await waitFor(() => expect(seen.loading).toBe(false));
+    expect(calls[0].ilike).toEqual(["title", "%friction problems%"]);
+    expect(calls[0].range).toEqual([LECTURE_PAGE_SIZE, 2 * LECTURE_PAGE_SIZE - 1]);
+    expect(ids()).toEqual(BY_ID);
+    expect(seen.error).toBeNull();
+  });
+});
+
 // The Individual Lectures tab's sort. Only orderings videos columns can back
 // are offered (honest-sorts rule), and every chain keeps .order("id") as the
 // unique tie-break so paging stays deterministic.
@@ -283,6 +389,10 @@ describe("lectures-tab sort", () => {
 
   it("an unknown sort falls back to the default rather than no order", async () => {
     expect(await orders({ sort: "wizards" })).toEqual(["id"]);
+    // An inherited property name is not a sort. A plain lookup finds
+    // Object.prototype.constructor here and treats it as one.
+    expect(await orders({ sort: "constructor" })).toEqual(["id"]);
+    expect(await orders({ sort: "toString" })).toEqual(["id"]);
   });
 
   it("parseLectureSort validates ?lsort= against the honest vocabulary", () => {
@@ -295,5 +405,25 @@ describe("lectures-tab sort", () => {
     for (const s of LECTURE_SORTS) {
       expect(parseLectureSort(new URLSearchParams(`lsort=${s.id}`))).toBe(s.id);
     }
+  });
+
+  // Relevance is what the DEFAULT sort does while searching — not a fifth id.
+  // A ?lsort=relevance would be a preference that means nothing the moment the
+  // term is cleared, and an option that appears as you type is a control moving
+  // under the student's hand.
+  it("renames the default sort during a search without adding one", () => {
+    expect(lectureSortOptions("").map((s) => s.label)).toEqual(
+      LECTURE_SORTS.map((s) => s.label));
+    expect(lectureSortOptions("   ")).toBe(LECTURE_SORTS);
+    expect(lectureSortOptions(undefined)).toBe(LECTURE_SORTS);
+
+    const searching = lectureSortOptions("friction problems");
+    expect(searching.map((s) => s.id)).toEqual(LECTURE_SORTS.map((s) => s.id));
+    expect(searching[0]).toEqual({ id: DEFAULT_LECTURE_SORT, label: "Best match" });
+    // No new sort id exists, so no URL can carry one.
+    expect(parseLectureSort(new URLSearchParams("lsort=relevance")))
+      .toBe(DEFAULT_LECTURE_SORT);
+    // The shared list is never mutated.
+    expect(LECTURE_SORTS[0].label).toBe("Recommended");
   });
 });

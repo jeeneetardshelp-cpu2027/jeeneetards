@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 import { usePlaylistBrowse, PAGE_SIZE } from "./usePlaylistBrowse.js";
 import {
-  LECTURE_SORTS, DEFAULT_LECTURE_SORT, LECTURE_SORT_PARAM, parseLectureSort,
+  lectureSortOptions, DEFAULT_LECTURE_SORT, LECTURE_SORT_PARAM, parseLectureSort,
 } from "./useBrowse.js";
 import { MIN_COMPARE, MAX_COMPARE, SORTS, DEFAULT_SORT } from "./filterModel.js";
 import { clearAllChips, dropParam, emptyStateMessage } from "./filterChips.js";
@@ -330,7 +330,10 @@ export default function PlaylistBrowse({
                 aria-label="Sort lessons"
                 className={`min-h-11 rounded-xl border ${t.border} ${t.card} ${t.text} px-3 text-sm`}
               >
-                {LECTURE_SORTS.map((s) => (
+                {/* While a search is active the default option is relevance,
+                    so it says "Best match" instead of "Recommended". Same id,
+                    same ?lsort= — the word is the only thing that moves. */}
+                {lectureSortOptions(filters.search).map((s) => (
                   <option key={s.id} value={s.id}>{s.label}</option>
                 ))}
               </select>
