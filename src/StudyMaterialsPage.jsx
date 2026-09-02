@@ -3,6 +3,9 @@ import { ArrowRight, BookOpen, FileCheck2, FileText, RefreshCw, SearchX } from "
 import { Link, useSearchParams } from "react-router";
 import { Page } from "./AppShell.jsx";
 import { useStructuredData } from "./PageMetadata.jsx";
+// Chapter names are catalogue text, sometimes Devanagari, under a document
+// that declares lang="en". See lang.js.
+import { langAttrs } from "./lang.js";
 import StudyMaterialCard from "./StudyMaterialCard.jsx";
 import { JEE_MAIN_PAPERS_PATH } from "./studyMaterialLandings.js";
 import {
@@ -299,7 +302,12 @@ export default function StudyMaterialsPage() {
             onChange={(event) => update("chapter", event.target.value)}
           >
             <option value="">All chapters</option>
-            {optionsFor(catalog.chapters, chapter).map((item) => <option key={item.id} value={item.slug}>{item.name}</option>)}
+            {/* Chapter names are the one option list here that carries real
+                Devanagari (lang.js) — the tag rides on each <option>, which is
+                the element a screen reader announces from the picker. */}
+            {optionsFor(catalog.chapters, chapter).map((item) => (
+              <option key={item.id} value={item.slug} {...langAttrs(item.name)}>{item.name}</option>
+            ))}
           </Filter>
         </div>
 

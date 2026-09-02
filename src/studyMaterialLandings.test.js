@@ -6,6 +6,7 @@ import {
   groupPapersBySession,
   paperIncludesAnswerKey,
   paperIncludesSolutions,
+  paperMetadata,
   paperYearMeta,
   paperYearPath,
   paperYears,
@@ -14,7 +15,24 @@ import {
   splitJeeMainPapers,
 } from "./studyMaterialLandings.js";
 
-describe("JEE Main paper grouping", () => {
+// Since the 2026-09-02 metadata flip the rows below — no paper_kind column —
+// are the FALLBACK path: an old cached edge response, or a fixture predating
+// the flip, still classifies through the title grammar exactly as before.
+describe("JEE Main paper grouping (title-grammar fallback)", () => {
+  it("still classifies a column-less row via its title and description", () => {
+    // The explicit fallback proof: nothing but title text to go on.
+    expect(paperIncludesAnswerKey({
+      title: "JEE Main 2025 Session 1 Final Answer Key",
+    })).toBe(true);
+    expect(paperIncludesSolutions({
+      title: "NSEP 2024-25 Physics Paper with Solutions",
+    })).toBe(true);
+    const groups = splitJeeMainPapers([
+      { id: 1, title: "JEE Main 2024 Session 1 - 27 January Shift 1" },
+    ]);
+    expect(groups.questionOnly.map(({ id }) => id)).toEqual([1]);
+  });
+
   it("does not mistake an explicit no-solutions statement for a solved paper", () => {
     expect(paperIncludesSolutions({
       title: "JEE Main 2026 paper",
@@ -45,6 +63,79 @@ describe("JEE Main paper grouping", () => {
     expect(paperIncludesAnswerKey({
       title: "JEE Main 2026 Session 2 final answer key",
     })).toBe(true);
+  });
+});
+
+// FLIPPED 2026-09-02: a row carrying paper_kind (every production paper row
+// since the metadata migration was applied) is classified by the database
+// columns, and the columns WIN over whatever the title says — that is the
+// whole point of the flip. Both row shapes reach these helpers: the client's
+// camelCase mapped rows and the edge middleware's raw snake_case rows.
+describe("database-first paper classification", () => {
+  it("reads paperMetadata from the columns and falls back to the title without them", () => {
+    expect(paperMetadata({
+      title: "JEE Main 2024 Session 1 - 27 January Shift 1",
+      paperKind: "question_paper",
+      paperYear: 2024,
+      examSession: "Session 1",
+      examShift: "Shift 1",
+    })).toEqual({ year: 2024, session: "Session 1", shift: "Shift 1", kind: "question_paper" });
+    // The edge's raw snake_case shape classifies identically.
+    expect(paperMetadata({
+      title: "JEE Main 2021 Session 4 Final Answer Key (Paper 1 B.E./B.Tech)",
+      paper_kind: "answer_key",
+      paper_year: 2021,
+      exam_session: "Session 4",
+      exam_shift: null,
+    })).toEqual({ year: 2021, session: "Session 4", shift: null, kind: "answer_key" });
+    // No columns: the shared title grammar answers, exactly as before.
+    expect(paperMetadata({ title: "JEE Main 2021 Session 4 Final Answer Key" }))
+      .toEqual({ year: 2021, session: "Session 4", shift: null, kind: "answer_key" });
+  });
+
+  it("trusts paper_kind over a conflicting title when splitting the landing", () => {
+    const groups = splitJeeMainPapers([
+      // Title says "with solutions", database says answer key: database wins.
+      { id: 1, title: "JEE Main 2024 paper with solutions", paperKind: "answer_key" },
+      // Snake_case edge row: kind question_paper despite key-ish wording.
+      { id: 2, title: "JEE Main 2024 answer key discussion", paper_kind: "question_paper" },
+      { id: 3, title: "NSEP 2024-25 Physics Paper with Solutions", paperKind: "paper_with_solutions" },
+    ]);
+    expect(groups.answerKeys.map(({ id }) => id)).toEqual([1]);
+    expect(groups.questionOnly.map(({ id }) => id)).toEqual([2]);
+    expect(groups.withSolutions.map(({ id }) => id)).toEqual([3]);
+  });
+
+  it("trusts a backfilled row's NULL exam_session as genuinely session-less", () => {
+    const groups = groupPapersBySession([
+      // The title names a session but the backfilled column says none:
+      // the column is the authority for a row that carries paper_kind.
+      {
+        id: 1,
+        title: "JEE Main 2015 Session 1 - Offline Set A",
+        paperKind: "question_paper",
+        examSession: null,
+      },
+      {
+        id: 2,
+        title: "JEE Main 2024 Session 2 - 4 April Shift 1",
+        paperKind: "question_paper",
+        examSession: "Session 2",
+      },
+    ], []);
+    expect(groups.map((group) => group.session)).toEqual(["Session 2", null]);
+    expect(groups[1].papers.map(({ id }) => id)).toEqual([1]);
+  });
+
+  it("prefers the paper_year column for year lists, keeping the old fallbacks", () => {
+    expect(paperYears([
+      { paperYear: 2026, examYear: 2025 },   // column wins over examYear
+      { paper_year: 2024 },                   // edge snake_case shape
+      { examYear: 2022 },                     // pre-flip row: examYear fallback
+      { exam_year: 2021 },                    // pre-flip edge row
+      { paperYear: null, exam_year: 2020 },  // null column falls through
+      { exam_year: null },
+    ])).toEqual([2026, 2024, 2022, 2021, 2020]);
   });
 });
 

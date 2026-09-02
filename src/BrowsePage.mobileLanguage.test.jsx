@@ -10,7 +10,7 @@
 // filter: same URL parameter, same active-filter chip, same honesty rule about
 // which languages are offered.
 //
-// Run: npx vitest run --project app src/Dashboard.mobileLanguage.test.jsx
+// Run: npx vitest run --project app src/BrowsePage.mobileLanguage.test.jsx
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter, Routes, Route, useLocation } from "react-router";
@@ -45,7 +45,7 @@ vi.mock("./supabaseClient", () => ({
   },
 }));
 
-import Dashboard from "./Dashboard.jsx";
+import BrowsePage from "./BrowsePage.jsx";
 
 function LocationProbe() {
   const l = useLocation();
@@ -56,7 +56,7 @@ const renderAt = (url) =>
   render(
     <MemoryRouter initialEntries={[url]}>
       <Routes>
-        <Route path="/browse" element={<><LocationProbe /><Dashboard /></>} />
+        <Route path="/browse" element={<><LocationProbe /><BrowsePage /></>} />
       </Routes>
     </MemoryRouter>,
   );

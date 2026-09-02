@@ -5,7 +5,7 @@
 // them passed goalId in by hand. Testing the hook in isolation could only ever
 // prove the hook works when wired; it could not prove anything was wiring it.
 //
-// This starts where a student starts: a URL. It renders the real Dashboard at
+// This starts where a student starts: a URL. It renders the real BrowsePage at
 // /browse?goal=1 and asserts the goal reaches the database query.
 //
 // Run: npm test
@@ -39,7 +39,7 @@ function builder(table) {
     ilike() { return b; },
     in() { return b; },
     // The legacy-chapter label lookup (useChapterName) resolves nothing here;
-    // Dashboard.legacyChapterChip.test.jsx covers the labelled path.
+    // BrowsePage.legacyChapterChip.test.jsx covers the labelled path.
     // A board slug DOES resolve here: useCanonicalFilters stays un-ready until
     // every slug in the URL becomes an id, so without this row a board view
     // could never reach the facet-count request the test below asserts.
@@ -64,12 +64,12 @@ vi.mock("./supabaseClient", () => ({
   },
 }));
 
-import Dashboard from "./Dashboard.jsx";
+import BrowsePage from "./BrowsePage.jsx";
 
 const renderAt = (url) =>
   render(
     <MemoryRouter initialEntries={[url]}>
-      <Routes><Route path="/browse" element={<Dashboard />} /></Routes>
+      <Routes><Route path="/browse" element={<BrowsePage />} /></Routes>
     </MemoryRouter>
   );
 
@@ -81,7 +81,7 @@ beforeEach(() => {
   rpcCalls.length = 0;
 });
 
-describe("Dashboard route → playlist query", () => {
+describe("BrowsePage route → playlist query", () => {
   it("carries ?goal=1 from the URL into the playlist query", async () => {
     renderAt("/browse?goal=1");
     await screen.findByText("Playlists");

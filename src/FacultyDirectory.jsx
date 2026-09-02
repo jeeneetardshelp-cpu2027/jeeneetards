@@ -18,6 +18,9 @@ import {
 import { useDebouncedValue } from "./useBrowse.js";
 import { useStructuredData } from "./PageMetadata.jsx";
 import { breadcrumbListSchema, itemListSchema } from "./structuredData.js";
+// Faculty and institute names are catalogue text, sometimes Devanagari, under
+// a document that declares lang="en". See lang.js.
+import { langAttrs } from "./lang.js";
 import { Button, EmptyState, ErrorState, Pill, Skeleton, Surface } from "./ui.jsx";
 
 function updateQuery(setParams, key, value) {
@@ -50,7 +53,10 @@ function FacultyCard({ faculty }) {
           </span>
           <div className="min-w-0 flex-1">
             <div className="flex items-start gap-2">
-              <h2 className="text-base font-semibold leading-snug text-ink">
+              <h2
+                {...langAttrs(faculty.display_name)}
+                className="text-base font-semibold leading-snug text-ink"
+              >
                 {faculty.display_name}
               </h2>
               {faculty.verified && (
@@ -61,7 +67,10 @@ function FacultyCard({ faculty }) {
               )}
             </div>
             {faculty.institutes && (
-              <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-ink-3">
+              <p
+                {...langAttrs(faculty.institutes)}
+                className="mt-1 line-clamp-2 text-xs leading-relaxed text-ink-3"
+              >
                 {faculty.institutes}
               </p>
             )}

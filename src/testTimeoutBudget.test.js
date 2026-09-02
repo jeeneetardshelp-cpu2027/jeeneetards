@@ -3,7 +3,7 @@
 // Vitest's default is 5s. The heaviest component tests here normally take
 // 2.1-2.4s, so only a ~2x slowdown blows that budget -- and with 130+ files
 // sharing 12 cores, that happened: one full run failed CourseSequence,
-// Dashboard.goal, ManageCatalogPanel and shellSafety; the very next run failed
+// BrowsePage.goal, ManageCatalogPanel and shellSafety; the very next run failed
 // a different single test; every one of them passed in isolation.
 //
 // A suite that fails somewhere different on each run teaches people to re-run

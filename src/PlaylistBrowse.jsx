@@ -29,6 +29,10 @@ import { useStructuredData } from "./PageMetadata.jsx";
 import { itemListSchema } from "./structuredData.js";
 import { useRatingsAvailability } from "./useRatingsAvailability.js";
 import { usePopularityAvailability } from "./usePopularityAvailability.js";
+// The empty-state title names the chapter or subject that emptied the list —
+// catalogue text, sometimes Devanagari, under a document that declares
+// lang="en". See lang.js.
+import { langAttrs } from "./lang.js";
 // The ONE course card lives in its own module now (PlaylistCard.jsx), so the
 // homepage can share it without pulling this whole page into its bundle.
 // ratingDisplay's home is ratingConfidence.js — import it from there.
@@ -166,7 +170,7 @@ export default function PlaylistBrowse({
 
   // The lectures tab has its own sort key (?lsort=) and its own, smaller
   // vocabulary — only orderings videos columns can back (see LECTURE_SORTS in
-  // useBrowse.js). Validation is shared with Dashboard's useVideos call via
+  // useBrowse.js). Validation is shared with BrowsePage's useVideos call via
   // parseLectureSort, so the control and the query cannot disagree.
   const lectureSort = parseLectureSort(params);
   const setLectureSort = (value) =>
@@ -360,7 +364,9 @@ export default function PlaylistBrowse({
             // widening the query: unclassified courses stay excluded, because
             // the student asked for a class and we do not know these match it.
             <div className={`mt-8 rounded-2xl border border-dashed ${t.border} ${t.card} p-8 text-center`}>
-              <p className={`text-sm font-semibold ${t.text}`}>{emptyTitle}</p>
+              {/* A mixed string is tagged as a whole (lang.js); the detail line
+                  is fixed English and stays under the document's own lang. */}
+              <p {...langAttrs(emptyTitle)} className={`text-sm font-semibold ${t.text}`}>{emptyTitle}</p>
               <p className={`mt-1 text-sm ${t.muted}`}>{emptyDetail}</p>
               <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
                 {filters.stage && (

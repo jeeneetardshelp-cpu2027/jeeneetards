@@ -14,7 +14,7 @@ import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
 import { TEST_SECTIONS } from "../testPlatforms.js";
 import { CLASS_LEVELS_BY_GOAL } from "../classLevels.js";
-import { isIndexableChapter } from "../chapterLanding.js";
+import { isIndexableChapter, isIndexableChapterScope } from "../chapterLanding.js";
 import { canonicalBrowseUrl } from "../canonicalUrl.js";
 import { RELEASE_CAPABILITIES, RELEASE_FEATURES } from "../releaseCapabilities.js";
 import {
@@ -248,9 +248,17 @@ export async function buildSitemap({
     // two-course chapter page still WORKS for anyone following a link; it is
     // simply not offered to search engines, because a thin page competing with
     // its own subject page is worse than no page.
+    // Two rules, both from chapterLanding.js so the edge and the sitemap
+    // cannot disagree: the chapter needs a real comparison on it, and the
+    // scope must be the canonical one — a Dropper chapter URL is a twin of
+    // its class page (171 of 177 were identical in production) and is never
+    // offered. Explore's own Dropper step pages are unaffected; only the
+    // chapter results URL is withheld.
     const indexableChapters = (scope) =>
-      (scope.chapters ?? []).filter((chapter) =>
-        chapter?.slug && isIndexableChapter(chapter.course_count));
+      isIndexableChapterScope(scope.classSlug)
+        ? (scope.chapters ?? []).filter((chapter) =>
+            chapter?.slug && isIndexableChapter(chapter.course_count))
+        : [];
 
     const explorePaths = new Set();
     for (const goal of activeGoals) {

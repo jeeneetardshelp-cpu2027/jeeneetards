@@ -277,7 +277,7 @@ describe("one contextual facet call", () => {
   });
 
   // On a board or teacher view the count RPC cannot apply that predicate, so
-  // its numbers are an UPPER BOUND. Dashboard now fetches them anyway and
+  // its numbers are an UPPER BOUND. BrowsePage now fetches them anyway and
   // passes countsExact={false}. A zero bound is a real zero - adding the
   // missing predicate can only shrink a count - so it prunes; a positive bound
   // might be too high, so it is never printed. Before this the counts were

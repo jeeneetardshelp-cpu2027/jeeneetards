@@ -44,6 +44,10 @@ import { canonicalBrowseUrl } from "./canonicalUrl.js";
 import { exploreStepHeading } from "./exploreHeading.js";
 import { GlobalHeader, HeaderSearch, Container, MAIN_CONTENT_ID } from "./AppShell.jsx";
 import { useTheme } from "./theme.jsx";
+// Step cards are labelled with catalogue names (goals, boards, classes,
+// subjects, chapters), and chapter names in particular are sometimes
+// Devanagari under a document that declares lang="en". See lang.js.
+import { langAttrs } from "./lang.js";
 import { useStructuredData } from "./PageMetadata.jsx";
 import {
   breadcrumbListSchema,
@@ -538,13 +542,15 @@ function Step({
           {options.map((o) =>
             // Anchors cannot be disabled, so a "Coming soon" option stays a
             // real disabled <button>; only live options become crawlable links.
+            // The label span already exists in both branches, so the language
+            // tag rides on it (lang.js); the Latin count hint stays outside.
             o.disabled ? (
               <button
                 key={o.key}
                 disabled
                 className={`min-h-11 rounded-xl border ${t.border} ${t.card} ${t.cardHover} p-4 text-left transition disabled:cursor-not-allowed disabled:opacity-50`}
               >
-                <span className={`block font-semibold ${t.text}`}>{o.label}</span>
+                <span {...langAttrs(o.label)} className={`block font-semibold ${t.text}`}>{o.label}</span>
                 {o.hint && <span className={`mt-0.5 block text-xs ${t.muted}`}>{o.hint}</span>}
               </button>
             ) : (
@@ -553,7 +559,7 @@ function Step({
                 to={o.to}
                 className={`block min-h-11 rounded-xl border ${t.border} ${t.card} ${t.cardHover} p-4 text-left transition disabled:cursor-not-allowed disabled:opacity-50`}
               >
-                <span className={`block font-semibold ${t.text}`}>{o.label}</span>
+                <span {...langAttrs(o.label)} className={`block font-semibold ${t.text}`}>{o.label}</span>
                 {o.hint && <span className={`mt-0.5 block text-xs ${t.muted}`}>{o.hint}</span>}
               </Link>
             )

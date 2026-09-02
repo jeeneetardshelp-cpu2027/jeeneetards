@@ -2,7 +2,7 @@
 // Looks up the REAL chapter ids from Supabase and returns them keyed by
 // chapter name, e.g. { Kinematics: 1 }.
 //
-// The sidebar in Dashboard.jsx is built from names, not ids. This map is
+// The sidebar in BrowsePage.jsx is built from names, not ids. This map is
 // what lets a click on "Kinematics" navigate to /chapter/1 without
 // hardcoding the number — add a chapter in Supabase and it just works.
 

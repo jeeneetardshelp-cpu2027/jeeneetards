@@ -157,7 +157,7 @@ duplicate course can be reviewed before removal. Its sanitized JSON report is wr
 | `src/App.jsx` | Routing, shared layout and capability-gated routes |
 | `src/Home.jsx` | Student landing page and guided entry points |
 | `src/Explore.jsx` | Curriculum exploration flow |
-| `src/Dashboard.jsx` | The `/browse` catalogue and filter page, routed as `BrowsePage`; the filename is a leftover |
+| `src/BrowsePage.jsx` | The `/browse` catalogue and filter page |
 | `src/PlaylistBrowse.jsx` | Course and lecture results |
 | `src/CourseVideoPage.jsx` | Course detail and lesson playback |
 | `src/searchDestinations.js` | Where a search result lands; one definition for every search surface |

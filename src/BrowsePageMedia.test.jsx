@@ -2,7 +2,7 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
 import { describe, expect, it } from "vitest";
 import { ThemeProvider } from "./theme.jsx";
-import { VideoCard } from "./Dashboard.jsx";
+import { VideoCard } from "./BrowsePage.jsx";
 
 const video = {
   id: 9,

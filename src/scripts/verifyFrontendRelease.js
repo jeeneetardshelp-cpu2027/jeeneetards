@@ -149,7 +149,7 @@ for (const asset of [
   else pass(`production build includes ${asset}`);
 }
 
-// One player, and it must be the privacy-enhanced host. src/Dashboard.jsx was
+// One player, and it must be the privacy-enhanced host. src/BrowsePage.jsx was
 // checked here too, because the browse "Individual lectures" tab used to play
 // in a bare iframe of its own — a second player that recorded no progress and
 // fed no streak. That player was deleted (the cards are links to the real
@@ -162,7 +162,7 @@ for (const file of ["src/YouTubePlayer.jsx"]) {
   else pass(`${file} uses YouTube privacy-enhanced embeds`);
 }
 
-for (const file of ["src/Dashboard.jsx"]) {
+for (const file of ["src/BrowsePage.jsx"]) {
   const source = exists(file) ? read(file) : "";
   if (source.includes("youtube.com/embed/") || source.includes("youtube-nocookie.com/embed/"))
     fail(`${file} embeds YouTube again — browse lectures must link to the watch page, not play in place`);

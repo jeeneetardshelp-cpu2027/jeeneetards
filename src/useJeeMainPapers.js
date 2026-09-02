@@ -7,18 +7,19 @@ import {
   findPaperLanding,
 } from "./studyMaterialLandings.js";
 
-// FOLLOW-UP — the paper-metadata flip happens HERE. The staged migration
-// supabase/migrations/20260902093000_study_material_paper_metadata.sql adds
-// paper_kind, paper_year, exam_session and exam_shift to study_materials.
-// Once the owner has applied it with `npx supabase db push`, add those four
-// columns to this SELECT and let the pages read them instead of re-parsing
-// titles (parsePaperTitle / splitJeeMainPapers in studyMaterialLandings.js).
-// DO NOT add them before it is applied: PostgREST errors the whole query on
-// an unknown column, which would blank every papers page in production.
+// FLIPPED 2026-09-02 — the paper-metadata migration
+// supabase/migrations/20260902093000_study_material_paper_metadata.sql was
+// verified APPLIED to production the same day, so this SELECT reads the four
+// real columns (paper_kind, paper_year, exam_session, exam_shift — populated
+// for every previous_year_paper row) and the pages classify from them through
+// paperMetadata() in studyMaterialLandings.js. The title grammar
+// (parsePaperTitle) is now the FALLBACK for rows that lack the columns — an
+// old cached edge response — not the authority.
 const SELECT = [
   "id", "title", "description", "material_type", "source_name", "source_url",
   "preview_image_url", "file_format", "language", "exam_year", "page_count",
   "is_downloadable", "rights_status",
+  "paper_kind", "paper_year", "exam_session", "exam_shift",
 ].join(",");
 
 const EMPTY = {
@@ -67,7 +68,20 @@ export async function fetchJeeMainPapers(
   const result = await query;
   if (result.error) return { data: null, error: result.error };
   const items = (result.data ?? [])
-    .map((row) => mapStudyMaterial({ ...row, scopes: [{ goal: scopeGoal }] }))
+    .map((row) => {
+      const mapped = mapStudyMaterial({ ...row, scopes: [{ goal: scopeGoal }] });
+      // The paper-metadata columns ride alongside the shared RPC shape so the
+      // classifiers in studyMaterialLandings.js can trust the database: a
+      // non-null paperKind marks a backfilled row, and its null examSession
+      // genuinely means "no session".
+      return mapped && {
+        ...mapped,
+        paperKind: row.paper_kind ?? null,
+        paperYear: row.paper_year == null ? null : Number(row.paper_year),
+        examSession: row.exam_session ?? null,
+        examShift: row.exam_shift ?? null,
+      };
+    })
     .filter(Boolean);
   return {
     data: { items, total: Number(result.count ?? items.length) },

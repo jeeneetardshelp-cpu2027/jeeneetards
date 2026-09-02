@@ -178,6 +178,50 @@ describe("edge-rendered discovery landings", () => {
     expect(response.status).toBe(200);
   });
 
+  // The slug is a lossy encoding of the question: lowercased, punctuation
+  // stripped, and cut to a 60-character stem. Building the share card from it
+  // shipped "…how JEE or NEET is run w" to WhatsApp. The edge already holds the
+  // real row, so these pin the card to the question, not the URL.
+  it("builds a poll's share card from the question, not the slug", async () => {
+    const question = "If you could change one thing about how JEE or NEET is run, what would it be?";
+    vi.stubEnv("VITE_SUPABASE_URL", "https://polls.example");
+    vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
+    vi.stubGlobal("fetch", vi.fn(async (input) => {
+      const url = String(input);
+      if (url.endsWith("/rpc/poll_mode")) return Response.json("open");
+      if (url.endsWith("/rpc/get_poll")) return Response.json([{ id: 5, question }]);
+      return new Response(shell, { status: 200 });
+    }));
+
+    const response = await middleware(new Request(
+      "https://www.jeeneetard.com/polls/if-you-could-change-one-thing-about-how-jee-or-neet-is-run-w-5",
+    ));
+    const html = await response.text();
+    expect(response.status).toBe(200);
+    // The whole question, punctuation intact — and no truncated slug tail.
+    expect(html).toContain(`<meta property="og:title" content="${question} | JEENEETARD polls"`);
+    expect(html).not.toContain("is run w |");
+    expect(html).toContain(`content="Vote and see how other JEE and NEET students answered: ${question}"`);
+    expect(html).toContain('<meta property="og:type" content="article"');
+  });
+
+  it("falls back to the slug-derived card when the poll row has no question", async () => {
+    vi.stubEnv("VITE_SUPABASE_URL", "https://polls.example");
+    vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
+    vi.stubGlobal("fetch", vi.fn(async (input) => {
+      const url = String(input);
+      if (url.endsWith("/rpc/poll_mode")) return Response.json("open");
+      if (url.endsWith("/rpc/get_poll")) return Response.json([{ id: 3 }]);
+      return new Response(shell, { status: 200 });
+    }));
+
+    const response = await middleware(new Request(
+      "https://www.jeeneetard.com/polls/how-many-hours-do-you-study-3",
+    ));
+    expect(response.status).toBe(200);
+    expect(await response.text()).toContain('<meta property="og:type" content="article"');
+  });
+
   it("does not hard-404 forum posts while the forum is off", async () => {
     vi.stubEnv("VITE_SUPABASE_URL", "https://forum.example");
     vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
@@ -371,6 +415,12 @@ describe("edge-rendered discovery landings", () => {
     expect(dataUrl.searchParams.get("material_type")).toBe("eq.previous_year_paper");
     expect(dataUrl.searchParams.get("title")).toBe("ilike.JEE Main%");
     expect(dataUrl.searchParams.get("limit")).toBe("100");
+    // The 2026-09-02 flip: the edge selects the paper-metadata columns so it
+    // classifies papers the same database-first way the hydrated page does.
+    const edgeSelect = dataUrl.searchParams.get("select").split(",");
+    for (const column of ["paper_kind", "paper_year", "exam_session", "exam_shift"]) {
+      expect(edgeSelect).toContain(column);
+    }
   });
 
   // ------------------------------------------------------------------
@@ -675,6 +725,26 @@ describe("edge-rendered discovery landings", () => {
     expect(html).toContain(
       '<link rel="canonical" href="https://www.jeeneetard.com/browse'
       + "?goal=jee&amp;class=11&amp;subject=physics&amp;chapter=kinematics\" />",
+    );
+  });
+
+  // Dropper is the union of Class 11 and Class 12, so its chapter page is a
+  // twin of a class page — 171 of 177 were identical in production. The page
+  // keeps its title, its canonical and (below) its body; it only asks not to
+  // be indexed, so the class page is the one address per chapter.
+  it("keeps a Dropper chapter view out of the index but otherwise intact", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => new Response(shell, { status: 200 })));
+
+    const response = await middleware(new Request(
+      "https://www.jeeneetard.com/browse?goal=jee&class=dropper&subject=physics&chapter=kinematics",
+    ));
+    const html = await response.text();
+
+    expect(html).toContain("<title>Kinematics — JEE Dropper Physics | JEENEETARD</title>");
+    expect(html).toContain('name="robots" content="noindex, follow"');
+    expect(html).toContain(
+      '<link rel="canonical" href="https://www.jeeneetard.com/browse'
+      + "?goal=jee&amp;class=dropper&amp;subject=physics&amp;chapter=kinematics\" />",
     );
   });
 

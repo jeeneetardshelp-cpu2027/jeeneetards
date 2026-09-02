@@ -9,10 +9,10 @@ function relativeSourceFiles() {
   return [
     "adminUI.jsx",
     "AppShell.jsx",
+    "BrowsePage.jsx",
     "CourseOverview.jsx",
     "CourseRating.jsx",
     "CourseVideoPage.jsx",
-    "Dashboard.jsx",
     "Explore.jsx",
     "FilterPanel.jsx",
     "Home.jsx",
@@ -86,22 +86,21 @@ describe("frontend release-file integrity", () => {
 //  wrong in the other — and jsdom applies no CSS, so no rendering test can
 //  catch it. This scan is the guard instead: it reads source text.
 //
-//  Scope: files that render inside <Layout data-student-surface> in
-//  App.jsx. /admin is routed OUTSIDE that layout, so the admin components
-//  below were never covered by the bridge and are not covered here; they
-//  are still full of literal slate, which is a separate, known job.
+//  Scope: originally only files that render inside
+//  <Layout data-student-surface> in App.jsx. /admin is routed OUTSIDE that
+//  layout, so the admin components were never covered by the bridge — and,
+//  having no bridge, they were never dark-correct at all. The core admin
+//  cluster (AdminPanel, adminUI, TeacherPicker, FacultyReviewPanel,
+//  ContentQualityPanel, ManageCatalogPanel, ImportPlaylistForm,
+//  EditorialTitleField) was moved to palette tokens on 2026-09-02 and is
+//  scanned here now, so it cannot regress. Only the forum/polls admin
+//  panels below remain excluded — still full of literal slate, still a
+//  separate, known job.
 // =====================================================================
 
-// Rendered under /admin only — outside [data-student-surface].
+// Rendered under /admin only — outside [data-student-surface] — and NOT yet
+// migrated to tokens. Do not add a migrated file back here; fix the file.
 const ADMIN_ONLY = new Set([
-  "AdminPanel.jsx",
-  "adminUI.jsx",
-  "ContentQualityPanel.jsx",
-  "EditorialTitleField.jsx",
-  "FacultyReviewPanel.jsx",
-  "ImportPlaylistForm.jsx",
-  "ManageCatalogPanel.jsx",
-  "TeacherPicker.jsx",
   "forum/ForumBetaAdminPanel.jsx",
   "forum/ForumReportsPanel.jsx",
   "polls/PollReviewPanel.jsx",
@@ -174,7 +173,9 @@ describe("student-surface colour tokens", () => {
     // A typo in a path would make this suite pass by reading nothing.
     const files = studentSurfaceFiles();
     expect(files.length).toBeGreaterThan(40);
-    for (const expected of ["Dashboard.jsx", "FilterPanel.jsx", "YouTubePlayer.jsx", "forum/ForumFeedPage.jsx"]) {
+    // AdminPanel and TeacherPicker are the canary that the migrated admin
+    // cluster stays scanned — re-adding them to ADMIN_ONLY fails here.
+    for (const expected of ["AdminPanel.jsx", "BrowsePage.jsx", "FilterPanel.jsx", "TeacherPicker.jsx", "YouTubePlayer.jsx", "forum/ForumFeedPage.jsx"]) {
       expect(files, `${expected} is not being scanned`).toContain(expected);
     }
   });
