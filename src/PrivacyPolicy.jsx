@@ -160,8 +160,8 @@ export default function PrivacyPolicy() {
               nothing is never stored. This list is never sent to a server. It
               is kept only in this browser, no account or device identifier is
               stored beside it, and it can be emptied at any time with the
-              Clear button shown beside the recent searches, or by clearing
-              site data.
+              Clear button shown beside the recent searches, by signing out,
+              or by clearing site data.
             </p>
             <p>
               {/* Sections 4 and 6 cover the two halves of the same moment, and
