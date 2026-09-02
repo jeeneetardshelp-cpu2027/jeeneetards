@@ -170,20 +170,20 @@ export default function PrivacyPolicy() {
                   server" here is easily read as a statement about searching in
                   general, which section 6 then appears to contradict.
 
-                  TENSE IS LOAD-BEARING HERE. Section 6 is written in the
-                  future because the gap log is NOT switched on: its migration
-                  is not in supabase/migrations/ yet. So this paragraph must
-                  not say those words "are sent" — today nothing at all leaves
-                  the browser when a search finds nothing. If section 6 ever
-                  moves to the present tense, this must move with it. */}
+                  TENSE IS LOAD-BEARING HERE, and it has already moved once.
+                  This paragraph was written in the future tense while the gap
+                  log was parked, then the migration was applied on the evening
+                  of 2 September 2026 and the log went live. Both sections were
+                  moved to the present in the same change. They must keep
+                  agreeing: searchGapPrivacyContract.test.js fails if one says
+                  the log is off while the other says words are sent, and fails
+                  if either contradicts supabase/README.md's applied marker. */}
               This is the opposite half of section 6 below, and the two do not
               overlap. A search that <strong>found something</strong> is
               remembered here, on this device, and is never sent anywhere. A
               search that <strong>found nothing</strong> is not remembered here
-              at all. Today nothing is kept about it either — the record
-              described in section 6 is not switched on — and if it ever is,
-              section 6 says exactly what would be stored and states plainly
-              that it carries no identity.
+              at all — instead those words are sent to the server, with no
+              identity attached, and section 6 says exactly what is stored.
             </p>
             <p>
               While signed out, this browser data stays on the device and is
@@ -235,46 +235,50 @@ export default function PrivacyPolicy() {
 
           <Section title="6. Searches that find nothing">
             <p>
-              <strong>This is not switched on yet.</strong> Nothing described in
-              this section is being recorded today, and this page will say so
-              plainly when that changes. It is written down in advance because
-              a record of what students type should be described before it is
-              kept, never after.
+              {/* PRESENT TENSE, as of 2 September 2026. This section was
+                  written in the future tense while the migration was parked.
+                  It was applied to production that evening, which switched the
+                  feature on — there is no flag in searchGapLog.js, so the RPC
+                  existing IS the feature being live. Verified directly, not
+                  inferred: log_search_gap returned 204 where it had returned
+                  PGRST202, and search_gap_log answers 401 permission-denied
+                  rather than 404. Leaving the old wording would have told
+                  students, in bold, that nothing was being recorded while it
+                  was. See searchGapPrivacyContract.test.js, which now derives
+                  this tense from supabase/README.md's applied marker. */}
+              If a search returns no results at all, the words searched for are
+              sent to the server and kept. Nothing is sent when a search finds
+              something. The purpose is to learn what students look for and do
+              not find, so that missing courses, missing notes, and missing
+              shorthand can be added.
             </p>
             <p>
-              When it is switched on: if a search returns no results at all, the
-              words searched for will be sent to the server and kept. Nothing
-              will be sent when a search finds something. The purpose is to
-              learn what students look for and do not find, so that missing
-              courses, missing notes, and missing shorthand can be added.
-            </p>
-            <p>
-              The database table <code>search_gap_log</code> will store the words
+              The database table <code>search_gap_log</code> stores the words
               searched for (trimmed, and cut off after 120 characters), a
               simplified form of those words used to group the same search
               written different ways, the number of results found, and the time
-              it happened. It will store nothing else. There will be no account
+              it happened. It stores nothing else. There is no account
               identifier, no session identifier, no IP address, no device or
               browser fingerprint, and no record of the page or filters in use.
               The database function that writes these rows accepts no identity
-              of any kind, so there will be nothing to link one row to another
-              or to a person.
+              of any kind, so there is nothing to link one row to another or to
+              a person.
             </p>
             <p>
-              It will be the only server-side record on this site kept for
+              It is the only server-side record on this site kept for
               signed-out visitors as well as signed-in students. Only site
-              administrators will be able to read it; other students and
-              signed-out visitors will not.
+              administrators can read it; other students and signed-out
+              visitors cannot.
             </p>
             <p>
               <strong>
-                Because these rows would carry nothing that identifies who
-                typed them, they could not be found and deleted on request
+                Because these rows carry nothing that identifies who typed
+                them, they cannot be found and deleted on request
               </strong>{" "}
               the way an account&apos;s watch progress can. That is a
               consequence of collecting no identity rather than an oversight.
-              If this is switched on, do not type anything into the search box
-              that you would not want recorded without a name attached.
+              Please do not type anything into the search box that you would
+              not want recorded without a name attached.
             </p>
           </Section>
 

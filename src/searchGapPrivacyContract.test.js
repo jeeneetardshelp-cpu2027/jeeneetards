@@ -72,13 +72,54 @@ describe("search gap log privacy contract", () => {
     ).toContain(TABLE);
   });
 
-  // WHAT NO TEST HERE CAN CHECK. Whether the table actually exists in
-  // production. The file being in the chain means a push WOULD create it, not
-  // that anyone has pushed. So the policy's "not switched on yet" wording stays
-  // correct until someone pushes, and the change that pushes is the change that
-  // must reword it. That pairing is a human step, recorded in this file's
-  // migration header and in supabase/README.md, because the fact lives in the
-  // database rather than in the repository.
+  // THE PAIRING THAT WAS A HUMAN STEP, AND THEN WAS MISSED.
+  //
+  // The note that stood here said no test could know whether the table exists
+  // in production, so rewording the policy at push time had to be a human
+  // step. Both halves were right, and the human step was missed the same
+  // evening: the migration was applied, which switched the feature on — there
+  // is no flag in searchGapLog.js, so the RPC existing IS the feature being
+  // live — and section 6 went on saying, in bold, "This is not switched on
+  // yet. Nothing described in this section is being recorded today."
+  //
+  // Under-claiming is the dangerous direction. Over-claiming tells students to
+  // self-censor a box that records nothing; under-claiming tells an audience
+  // largely under 18 that their words are not kept while they are.
+  //
+  // Production is still unreachable from a test. But the repository DOES
+  // record the answer: supabase/README.md is this chain's authority on what
+  // has been applied, and it is updated in the same change that pushes. That
+  // makes the pairing checkable after all — not against the database, but
+  // against the one file that is supposed to mirror it. If someone pushes and
+  // updates neither, the older tests still catch nothing; if they push and
+  // update the README, this fails until the policy follows.
+  it("matches the policy's tense to what the README says was applied", () => {
+    const readme = read("supabase/README.md");
+    const row = readme.split("\n").find((line) => line.includes(MIGRATION.split("/").pop()));
+    if (!row) return;                         // not recorded yet; nothing to mirror
+
+    const applied = /\*\*Applied\*\*/.test(row);
+    const policy = read("src/PrivacyPolicy.jsx").replace(/\{\/\*[\s\S]*?\*\/\}/g, " ");
+    const section = policy.slice(policy.indexOf("Searches that find nothing"));
+    const saysOff = /not switched on|not being recorded/i.test(section);
+
+    if (applied) {
+      expect(
+        saysOff,
+        "supabase/README.md records the search-gap-log migration as APPLIED, so the log " +
+          "is collecting search text — but PrivacyPolicy.jsx still tells students it is " +
+          "not switched on. Move section 6 (and the section 4 cross-reference) to the " +
+          "present tense in the same change that records the push.",
+      ).toBe(false);
+    } else {
+      expect(
+        saysOff,
+        "the migration is not recorded as applied, so the policy must keep saying the " +
+          "log is not switched on yet",
+      ).toBe(true);
+    }
+  });
+
   //
   // WHAT THE TEST BELOW CAN CHECK, and why it is worth having anyway. Both
   // checks above are gated on a fact about the migration — one on the hold
