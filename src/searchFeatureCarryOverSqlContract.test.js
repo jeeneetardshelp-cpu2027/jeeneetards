@@ -132,7 +132,7 @@ const GUARDED = [
         // that keeps the helper in its WHERE and loses the ordering fails here
         // instead of silently un-ranking the default tab.
         name: "relevance ordering (src/usePlaylistBrowse.js reads it as array position)",
-        since: "20260902220000_browse_course_relevance.sql",
+        since: "20260902240000_browse_course_relevance.sql",
         marker: /order\s+by\s+public\.search_rank_aliased/i,
       },
       {
@@ -141,7 +141,7 @@ const GUARDED = [
         // across pages; without a cap that request is unbounded, and the
         // failure mode is a slow page rather than an error.
         name: "500-id cap the whole-set fetch depends on",
-        since: "20260902220000_browse_course_relevance.sql",
+        since: "20260902240000_browse_course_relevance.sql",
         marker: /limit\s+500/i,
       },
     ],

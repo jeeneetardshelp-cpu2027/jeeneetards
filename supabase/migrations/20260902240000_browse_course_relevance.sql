@@ -69,7 +69,7 @@
 -- authored, the parked search-gap-log migration was unparked into the chain
 -- and took that exact slot. A version string identifies a migration, so two
 -- files sharing one is not a style problem -- it is an ambiguous chain and a
--- `db push` that cannot say which ran. Renamed to 20260902220000, after both.
+-- `db push` that cannot say which ran. Renamed twice: 20260902220000 collided again, with an APPLIED migration.
 -- Check `ls supabase/migrations/` before choosing a number: this chain gains
 -- files from several sessions on the same day.
 --
