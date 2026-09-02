@@ -13,8 +13,13 @@ live schema on 31 Aug 2026 and recorded in the remote migration history, so
 | `20260901120000_study_days.sql` | **Applied** 31 Aug 2026. Server copy of prep-streak study days (owner-only RLS, mirrors `video_progress`); the frontend sync woke up on its own when this landed. |
 | `20260901160000_universal_search_materials.sql` | **Applied** 1 Sep 2026. `material` and `paper` groups in `universal_search`; notes, formula sheets and previous-year papers are findable from the main search box (verified live). |
 | `20260902093000_study_material_paper_metadata.sql` | **Applied** 2 Sep 2026, verified live: all 183 paper rows classified (160 question papers / 14 answer keys / 9 with solutions), zero unclassified. The client column flip is the marked FOLLOW-UP in `src/useJeeMainPapers.js` / `src/studyMaterialLandings.js`. |
+| `20260902122500_neet_ug_2025_papers.sql` | **PENDING** — the only unapplied file. Data seed, no schema: the four official NTA NEET UG 2025 English booklets. Verified live 2 Sep 2026 that production has 2 papers for 2024 and 4 for 2026 but **zero for 2025**. Body is the reviewed `docs/sql` package verbatim; `src/neetUg2025PapersSeed.test.js` fails if the copies drift. Safe to rerun. |
 
 `npx supabase migration list` shows this local-vs-remote state at any time.
+
+Earlier paper seeds (NEET UG 2024/2026, the JEE sets) were applied by hand
+straight from `docs/sql`, so nothing records whether they ran. The 2025 seed is
+staged in the chain instead, which is what makes that question answerable.
 
 ## How to apply what is pending
 
