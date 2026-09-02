@@ -44,15 +44,50 @@ describe("which chapters are worth offering to a search engine", () => {
     expect(isIndexableChapterScope("dropper")).toBe(false);
   });
 
+  // `verified` is what a caller passes once it has CONFIRMED the chapter
+  // against the catalogue. Without it a chapter view is never indexable, so
+  // every case below that expects "index, follow" must supply one.
+  const VERIFIED = { chapterName: "Kinematics", courseCount: 13 };
+
   it("marks the Dropper chapter view noindex while the class view stays indexable", () => {
     const view = (cls) => canonicalChapterView(
       new URLSearchParams(`goal=jee&class=${cls}&subject=physics&chapter=kinematics`),
+      (v) => v,
+      VERIFIED,
     );
     expect(view("11").robots).toBe("index, follow");
     // Crawlable, not indexed: the page works for anyone who follows a link.
     expect(view("dropper").robots).toBe("noindex, follow");
     // Still a canonical chapter shape — the title and query are unchanged.
     expect(view("dropper").query).toBe("goal=jee&class=dropper&subject=physics&chapter=kinematics");
+  });
+
+  it("never indexes a chapter no caller has confirmed exists", () => {
+    // The regression this guards: the shape check bounds the query KEYS, and
+    // that was mistaken for bounding the space. A fabricated slug came back
+    // "index, follow" under an invented title, so anyone could mint unlimited
+    // indexable soft-404s — measured live on production before this fix.
+    const fabricated = canonicalChapterView(
+      new URLSearchParams("goal=banana&class=11&subject=physics&chapter=not-a-real-chapter-xyz"),
+    );
+    expect(fabricated.robots).toBe("noindex, follow");
+
+    // And a REAL chapter is equally unindexable until someone confirms it —
+    // the URL is identical either way, which is the whole point.
+    const unconfirmed = canonicalChapterView(
+      new URLSearchParams("goal=jee&class=11&subject=physics&chapter=kinematics"),
+    );
+    expect(unconfirmed.robots).toBe("noindex, follow");
+  });
+
+  it("uses the catalogue's own chapter name, not the URL's prettified slug", () => {
+    const view = canonicalChapterView(
+      new URLSearchParams("goal=jee&class=11&subject=physics&chapter=rotational-motion"),
+      (v) => v,
+      { chapterName: "Rotational Motion", courseCount: 8 },
+    );
+    expect(view.title).toContain("Rotational Motion");
+    expect(view.title).toContain("8 free courses");
   });
 
   it("keeps a thin chapter crawlable so its links still count", () => {

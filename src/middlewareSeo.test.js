@@ -712,20 +712,78 @@ describe("edge-rendered discovery landings", () => {
   // only screen this site has that YouTube does not could not be found in
   // search. The exception is exact, so the faceted space stays finite — which
   // is what the rule below still guards.
+  // The curriculum row is the ONLY thing that makes a chapter indexable, and it
+  // carries the count that makes the title worth clicking. Stub it here rather
+  // than letting every fetch return the shell, which is what an unconfirmed
+  // lookup looks like.
+  const curriculumFetch = (rows) => vi.fn(async (input) => {
+    if (String(input).includes("/rest/v1/rpc/get_browse_curriculum")) {
+      return Response.json(rows);
+    }
+    return new Response(shell, { status: 200 });
+  });
+
   it("gives the canonical chapter view its own identity before JavaScript runs", async () => {
-    vi.stubGlobal("fetch", vi.fn(async () => new Response(shell, { status: 200 })));
+    vi.stubEnv("VITE_SUPABASE_URL", "https://catalog.example");
+    vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
+    vi.stubGlobal("fetch", curriculumFetch([
+      { level: "chapter", slug: "kinematics", name: "Kinematics", course_count: 13 },
+      { level: "chapter", slug: "friction", name: "Friction", course_count: 3 },
+    ]));
 
     const response = await middleware(new Request(
       "https://www.jeeneetard.com/browse?goal=jee&class=11&subject=physics&chapter=kinematics",
     ));
     const html = await response.text();
 
-    expect(html).toContain("<title>Kinematics — JEE Class 11 Physics | JEENEETARD</title>");
+    // The count comes from the row, not the URL. Before the edge passed it, the
+    // best sentence this codebase can write was computed and thrown away on
+    // every chapter page Google reads.
+    expect(html).toContain(
+      "<title>Kinematics — 13 free courses for JEE Class 11 Physics | JEENEETARD</title>",
+    );
     expect(html).toContain('name="robots" content="index, follow"');
     expect(html).toContain(
       '<link rel="canonical" href="https://www.jeeneetard.com/browse'
       + "?goal=jee&amp;class=11&amp;subject=physics&amp;chapter=kinematics\" />",
     );
+  });
+
+  it("refuses to index a chapter slug the catalogue does not know", async () => {
+    // The regression: the shape check bounds the query KEYS and was mistaken
+    // for bounding the space, so a fabricated slug came back "index, follow"
+    // under an invented title — unlimited indexable soft-404s, measured live.
+    vi.stubEnv("VITE_SUPABASE_URL", "https://catalog.example");
+    vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
+    vi.stubGlobal("fetch", curriculumFetch([
+      { level: "chapter", slug: "kinematics", name: "Kinematics", course_count: 13 },
+    ]));
+
+    const response = await middleware(new Request(
+      "https://www.jeeneetard.com/browse"
+      + "?goal=banana&class=11&subject=physics&chapter=not-a-real-chapter-xyz",
+    ));
+    const html = await response.text();
+    expect(html).toContain('name="robots" content="noindex, follow"');
+  });
+
+  it("refuses to index a real chapter when the lookup could not be confirmed", async () => {
+    // An unconfirmed fetch is not evidence. Serving index on a timeout would
+    // make the guard depend on the network being up.
+    vi.stubEnv("VITE_SUPABASE_URL", "https://catalog.example");
+    vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
+    vi.stubGlobal("fetch", vi.fn(async (input) => {
+      if (String(input).includes("/rest/v1/rpc/get_browse_curriculum")) {
+        return new Response("upstream down", { status: 500 });
+      }
+      return new Response(shell, { status: 200 });
+    }));
+
+    const response = await middleware(new Request(
+      "https://www.jeeneetard.com/browse?goal=jee&class=11&subject=physics&chapter=kinematics",
+    ));
+    const html = await response.text();
+    expect(html).toContain('name="robots" content="noindex, follow"');
   });
 
   // Dropper is the union of Class 11 and Class 12, so its chapter page is a

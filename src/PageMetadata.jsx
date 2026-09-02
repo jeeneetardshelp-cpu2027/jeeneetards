@@ -79,6 +79,31 @@ export default function RouteMetadata() {
   return null;
 }
 
+/**
+ * Upgrade a chapter view once the catalogue has CONFIRMED it exists.
+ *
+ * RouteMetadata re-applies metadataForLocation on every navigation, and a URL
+ * alone cannot prove a chapter is real — so the shared rule defaults a chapter
+ * view to noindex. Without this hook the client would then overwrite the edge
+ * good head and every real chapter page would ask not to be indexed on
+ * Google rendered pass, which is the pass that decides.
+ *
+ * Mirrors useCourseMetadata: the page that has the real data re-states the
+ * head from it. Waits for a settled, non-null count — mid-load this is null,
+ * and re-stating the head from an unsettled number would flicker the page
+ * between indexable and not.
+ */
+export function useChapterMetadata({ chapterName, courseCount, ready }) {
+  const { pathname, search } = useLocation();
+  useEffect(() => {
+    if (!ready || courseCount == null) return;
+    const metadata = metadataForLocation(pathname, search, {
+      chapterName, courseCount,
+    });
+    if (metadata) applyPageMetadata(metadata);
+  }, [pathname, search, chapterName, courseCount, ready]);
+}
+
 export function useCourseMetadata(course) {
   const { pathname, search } = useLocation();
 

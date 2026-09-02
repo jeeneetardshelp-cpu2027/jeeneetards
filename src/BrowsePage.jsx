@@ -670,6 +670,7 @@ export default function BrowsePage() {
 
           <PlaylistBrowse
             tab={tab}
+            chapterName={chapterName}
             onTabChange={setTab}
             comparisonEnabled={RELEASE_CAPABILITIES.comparison}
             mobileSearch={
