@@ -1,7 +1,7 @@
 // searchGapLogSqlContract.test.js
 //
 // WHAT IS REAL HERE. These tests EXECUTE the staged migration
-// supabase/migrations/20260902164500_search_gap_log.sql on a real PostgreSQL
+// docs/sql/search_gap_log_2026-09-02.sql on a real PostgreSQL
 // engine (PGlite, Postgres compiled to WASM), including its own
 // self-verification DO block. The privacy claims this table makes are claims
 // about RLS, grants and function privileges, and the only honest way to check
@@ -21,7 +21,7 @@ import { PGlite } from "@electric-sql/pglite";
 import { beforeAll, describe, expect, it } from "vitest";
 
 const BASELINE = "supabase/migrations/20260831140005_production_baseline.sql";
-const MIGRATION = "supabase/migrations/20260902164500_search_gap_log.sql";
+const MIGRATION = "docs/sql/search_gap_log_2026-09-02.sql";
 
 const baseline = readFileSync(BASELINE, "utf8");
 const migration = readFileSync(MIGRATION, "utf8");
