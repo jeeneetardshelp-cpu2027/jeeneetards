@@ -308,7 +308,7 @@ describe("sibling paper landings through the registry", () => {
 
     expect(screen.getByRole("heading", {
       level: 1,
-      name: "NEET question papers: 2024 and the 2026 re-exam",
+      name: "NEET question papers: 2024, 2025 and the 2026 re-exam",
     })).toBeTruthy();
     expect(screen.getByText(/this collection is partial/i)).toBeTruthy();
     expect(screen.getByText(/no official answer keys yet/i)).toBeTruthy();

@@ -18,3 +18,37 @@ export const SUBJECT_COLORS = {
 };
 export const subjectColor = (name) =>
   SUBJECT_COLORS[String(name || "").toLowerCase()] ?? BRAND_TEAL;
+
+// Which theme token a subject reads from. Aliases collapse here, so "maths"
+// and "zoology" cannot drift from the colours they share.
+const SUBJECT_TOKENS = {
+  physics: "physics", chemistry: "chemistry", mathematics: "mathematics",
+  maths: "mathematics", biology: "biology", botany: "botany", zoology: "botany",
+};
+
+/**
+ * The subject's colour as TEXT — a CSS variable, so it swaps with the theme.
+ *
+ * SUBJECT_COLORS are fixed hexes chosen as BACKGROUNDS (the card spine, the
+ * avatar). Used as small text they failed WCAG AA in one theme or the other,
+ * every one of the six: physics 4.01:1 and mathematics 4.02:1 on the dark
+ * surface, chemistry 2.98:1, botany 3.38:1 and biology 3.65:1 on the light
+ * one, against the 4.5:1 needed. A fixed hex cannot swap, so the fix is a
+ * token per theme (see index.css); these clear 4.6:1 on their own surface.
+ */
+export const subjectTextColor = (name) => {
+  const token = SUBJECT_TOKENS[String(name || "").toLowerCase()];
+  return `var(--subject-${token ?? "accent"})`;
+};
+
+// Black or white on the subject colour, whichever is legible. White initials
+// were 2.98:1 on chemistry and 3.38:1 on botany; picking the ink by measured
+// contrast puts every subject at 4.62:1 or better without changing the circle.
+const SUBJECT_INK = {
+  physics: "#ffffff", chemistry: "#0b0b0c", mathematics: "#ffffff",
+  biology: "#0b0b0c", botany: "#0b0b0c", accent: "#ffffff",
+};
+
+/** The readable ink for text placed ON subjectColor(name). */
+export const subjectInk = (name) =>
+  SUBJECT_INK[SUBJECT_TOKENS[String(name || "").toLowerCase()] ?? "accent"];
