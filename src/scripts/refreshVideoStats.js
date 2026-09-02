@@ -7,6 +7,11 @@
 //      node src/scripts/refreshVideoStats.js            # apply
 //      node src/scripts/refreshVideoStats.js --dry-run  # show, write nothing
 //
+//  SCHEDULED weekly by .github/workflows/popularity-refresh.yml, matching
+//  REFRESH_INTERVAL_DAYS. It has to be: stats older than PURGE_AFTER_DAYS are
+//  deleted, so a job run once and forgotten empties video_stats within a month
+//  and "Recommended" falls back to alphabetical.
+//
 //  ToS: refreshes stats older than REFRESH_INTERVAL_DAYS and purges any
 //  that could not be refreshed for PURGE_AFTER_DAYS (deleted/private
 //  videos), keeping every stored statistic well inside YouTube's cadence.

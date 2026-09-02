@@ -33,6 +33,7 @@ import ManageCatalogPanel from "./ManageCatalogPanel.jsx";
 import ForumReportsPanel from "./forum/ForumReportsPanel.jsx";
 import ForumBetaAdminPanel from "./forum/ForumBetaAdminPanel.jsx";
 import PollReviewPanel from "./polls/PollReviewPanel.jsx";
+import ModerationDigest from "./ModerationDigest.jsx";
 
 export { slugify } from "./adminUI.jsx";
 
@@ -979,6 +980,9 @@ export default function AdminPanel() {
       <main id={MAIN_CONTENT_ID} className={`mx-auto px-6 py-8 ${
         tab === "manage" ? "max-w-6xl" : "max-w-3xl"
       }`}>
+        {/* One-glance digest: what is waiting for moderation, and where. */}
+        <ModerationDigest onOpenTab={setTab} />
+
         {/* Tabs */}
         <div className={`scrollbar-none mb-6 flex gap-5 overflow-x-auto border-b ${t.divider}`}>
           {TABS.map((tb) => {

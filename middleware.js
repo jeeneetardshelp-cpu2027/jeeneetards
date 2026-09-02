@@ -17,7 +17,8 @@ import { next } from "@vercel/edge";
 import { metadataForLocation, SITE_NAME } from "./src/pageMetadata.js";
 import { findTestSection } from "./src/testPlatforms.js";
 import { CLASS_LEVELS_BY_GOAL } from "./src/classLevels.js";
-import { canonicalBrowseUrl } from "./src/canonicalUrl.js";
+import { canonicalBrowseUrl, classSlugToStage } from "./src/canonicalUrl.js";
+import { canonicalChapterView } from "./src/chapterLanding.js";
 import { exploreStepHeading } from "./src/exploreHeading.js";
 import { getSubjectGuide } from "./src/subjectGuides.js";
 import {
@@ -41,11 +42,12 @@ import {
   renderStudyMaterialsBody,
   renderNotFoundBody,
   renderPaperYearBody,
+  renderChapterLandingBody,
 } from "./ogInject.js";
 import { getFacultyGuide } from "./src/facultyGuides.js";
 import { RELEASE_CAPABILITIES } from "./src/releaseCapabilities.js";
 import {
-  JEE_MAIN_PAPERS_PATH,
+  PAPER_LANDINGS,
   findPaperLanding,
   parsePaperYearPath,
 } from "./src/studyMaterialLandings.js";
@@ -55,7 +57,7 @@ import {
 // negative lookaheads; keep this list aligned with public/ and Vite's assets/.
 export const config = {
   matcher: [
-    "/((?!api/|assets/|fonts/|study-materials/|favicon\\.svg|robots\\.txt|sitemap\\.xml|llms\\.txt|social-preview\\.(?:png|svg)|theme-init\\.js|index\\.html).*)",
+    "/((?!api/|assets/|fonts/|study-materials/|icons/|favicon\\.svg|robots\\.txt|sitemap\\.xml|llms\\.txt|social-preview\\.(?:png|svg)|theme-init\\.js|sw\\.js|manifest\\.webmanifest|index\\.html).*)",
   ],
 };
 
@@ -99,7 +101,10 @@ const LOOKUP_TIMEOUT_MS = 1500;
 
 const STATIC_APP_ROUTES = new Set([
   "/", "/admin", "/browse", "/compare", "/explore", "/privacy",
-  "/faculty", "/forum", "/forum/submit", "/forum/username", "/materials", JEE_MAIN_PAPERS_PATH, "/methodology", "/polls", "/polls/new", "/reset", "/search", "/signin", "/terms", "/tests",
+  "/faculty", "/forum", "/forum/submit", "/forum/username", "/materials", "/methodology", "/polls", "/polls/new", "/reset", "/search", "/signin", "/terms", "/tests",
+  // Every registered paper landing (JEE Main, JEE Advanced, NEET) — the same
+  // registry the router, sitemap and metadata read, so they cannot disagree.
+  ...PAPER_LANDINGS.map((landing) => landing.path),
 ]);
 
 /** Mirrors the route shapes in App.jsx. Resource existence is checked later. */
@@ -162,6 +167,29 @@ function redirectResponse(url, path) {
       "cache-control": "public, max-age=0, s-maxage=3600",
     },
   });
+}
+
+// The exact canonical chapter shape, or null. canonicalChapterView is the one
+// place that decides what counts — the same function the metadata, the React
+// view and the sitemap builder agree on — so this cannot drift into indexing a
+// facet the rest of the system considers unbounded.
+//
+// classSlugToStage maps the URL's short form to what the RPC speaks: "11" ->
+// "class-11", and "dropper" -> "dropper" unchanged.
+export function chapterLandingScope(url) {
+  if (url.pathname !== "/browse") return null;
+  const params = url.searchParams;
+  if (!canonicalChapterView(params, (value) => value)) return null;
+  const stage = classSlugToStage(params.get("class"));
+  if (!stage) return null;
+  return {
+    goal: params.get("goal"),
+    board: params.get("board"),
+    cls: params.get("class"),
+    stage,
+    subject: params.get("subject"),
+    chapter: params.get("chapter"),
+  };
 }
 
 async function edgeJson(url, options = {}) {
@@ -638,6 +666,26 @@ export default async function middleware(request) {
           headers: { apikey: supaKey, Authorization: `Bearer ${supaKey}` },
         });
       }
+      // One call. get_browse_curriculum returns every chapter in this
+      // goal/class/subject with its real course_count, which is both the count
+      // for THIS chapter and the sibling list — so the page costs a single
+      // round trip rather than one lookup per section.
+      const chapterScope = chapterLandingScope(url);
+      const chapterPromise = chapterScope && supaUrl && supaKey
+        ? edgeJson(`${supaUrl}/rest/v1/rpc/get_browse_curriculum`, {
+            method: "POST",
+            headers: {
+              apikey: supaKey,
+              Authorization: `Bearer ${supaKey}`,
+              "content-type": "application/json",
+            },
+            body: JSON.stringify({
+              p_goal: chapterScope.goal,
+              p_class: chapterScope.stage,
+              p_subject: chapterScope.subject,
+            }),
+          })
+        : Promise.resolve(null);
       const isFacultyDirectory = url.pathname === "/faculty" && !url.search;
       const facultyDirectoryPromise = isFacultyDirectory && supaUrl && supaKey
         ? edgeJson(`${supaUrl}/rest/v1/rpc/get_faculty_facets`, {
@@ -654,13 +702,15 @@ export default async function middleware(request) {
             }),
           })
         : Promise.resolve(null);
-      const [shell, directory, exploreRoot, materials, facultyDirectory] = await Promise.all([
-        fetchAppShell(request),
-        directoryPromise,
-        exploreRootPromise,
-        materialsPromise,
-        facultyDirectoryPromise,
-      ]);
+      const [shell, directory, exploreRoot, materials, facultyDirectory, chapterCurriculum] =
+        await Promise.all([
+          fetchAppShell(request),
+          directoryPromise,
+          exploreRootPromise,
+          materialsPromise,
+          facultyDirectoryPromise,
+          chapterPromise,
+        ]);
       if (!shell) return next();
       let html = injectRouteMeta(shell, routeMeta);
       const [courseResult, facultyResult] = directory ?? [];
@@ -680,6 +730,32 @@ export default async function middleware(request) {
         : [];
       const facultyDirectoryItems = facultyDirectory?.confirmed && Array.isArray(facultyDirectory.data)
         ? facultyDirectory.data
+        : [];
+      // Only a CONFIRMED lookup that actually contains this chapter produces a
+      // chapter body. An unconfirmed fetch, or a slug the curriculum does not
+      // know, falls through to the generic landing below — never to a page
+      // asserting a count or a sibling list it could not verify.
+      const chapterRows = chapterScope && chapterCurriculum?.confirmed &&
+        Array.isArray(chapterCurriculum.data)
+        ? chapterCurriculum.data.filter((row) => row?.level === "chapter" || row?.level == null)
+        : [];
+      const chapterRow = chapterScope
+        ? chapterRows.find((row) => row?.slug === chapterScope.chapter)
+        : null;
+      const chapterSiblings = chapterRow
+        ? chapterRows
+            .filter((row) => row.slug && row.slug !== chapterScope.chapter)
+            .map((row) => ({
+              name: row.name,
+              url: canonicalBrowseUrl({
+                goal: chapterScope.goal,
+                cls: chapterScope.cls,
+                board: chapterScope.board,
+                subject: chapterScope.subject,
+                chapter: row.slug,
+              }),
+              count: Number(row.course_count ?? 0),
+            }))
         : [];
       html = injectStructuredData(html, [
         ...landingSchemas(url.pathname, materialItems),
@@ -703,6 +779,13 @@ export default async function middleware(request) {
             ? renderStudyMaterialsBody(routeMeta, materialItems)
           : isFacultyDirectory
             ? renderFacultyDirectoryBody(routeMeta, facultyDirectoryItems)
+          : chapterRow
+            ? renderChapterLandingBody({
+                meta: routeMeta,
+                chapterName: chapterRow.name,
+                courseCount: Number(chapterRow.course_count ?? 0),
+                siblings: chapterSiblings,
+              })
           : renderLandingBody(url.pathname, routeMeta);
       html = injectRootContent(html, body);
       return htmlResponse(html);

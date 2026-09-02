@@ -167,6 +167,24 @@ describe("StudyMaterialsDirectoryView", () => {
     expect(screen.queryByRole("button", { name: "Load 60 more resources" })).toBeNull();
   });
 
+  // Zero short-notes rows exist (0 of 408 on 2026-09-01). A filter that can
+  // only ever return nothing is a dead end, so the page does not offer it —
+  // while still offering every type a student can actually find something
+  // under. The hero copy must not promise it either.
+  it("does not offer a material type the library holds none of", () => {
+    render(
+      <MemoryRouter initialEntries={["/materials"]}>
+        <StudyMaterialsPage />
+      </MemoryRouter>,
+    );
+
+    expect(screen.queryByRole("button", { name: "Short notes" })).toBeNull();
+    for (const name of ["Formula sheets", "Full lecture notes", "Previous-year papers"]) {
+      expect(screen.getByRole("button", { name })).toBeTruthy();
+    }
+    expect(document.body.textContent.toLowerCase()).not.toContain("short notes");
+  });
+
   it("offers material-backed CBSE filters even without a lecture catalogue branch", () => {
     render(
       <MemoryRouter initialEntries={["/materials?goal=school&board=cbse&class=class-11&subject=physics"]}>
