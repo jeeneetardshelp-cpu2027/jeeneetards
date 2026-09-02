@@ -181,6 +181,30 @@ describe("paper landings and their year pages", () => {
     expect(neet.coverageNote).toMatch(/no official answer keys/i);
   });
 
+  // A landing states its coverage in FOUR places: meta.title, meta.heading,
+  // meta.description and coverageNote. Seeding the NEET UG 2025 papers made
+  // all four stale at once — the page listed 2025 while every line of copy
+  // still said "2024 and the 2026 re-exam" — and fixing it meant editing four
+  // strings by hand. Updating three of four is the obvious next mistake, and
+  // it would leave the page contradicting itself rather than the database.
+  it.each(PAPER_LANDINGS.map((l) => [l.id, l]))(
+    "%s states the same years in its title, heading, description and coverage note",
+    (_id, landing) => {
+      const years = (text) => [...new Set(String(text ?? "").match(/\b20\d{2}\b/g) ?? [])].sort();
+      const fromTitle = years(landing.meta.title);
+      // Only landings that actually name years are constrained; one that
+      // describes its coverage without listing them is free to do so.
+      if (!fromTitle.length) return;
+      expect(years(landing.meta.heading)).toEqual(fromTitle);
+      expect(years(landing.meta.description)).toEqual(fromTitle);
+      // The note may name MORE detail (a range's endpoints, a session), but it
+      // must not omit a year the title advertises.
+      for (const year of fromTitle) {
+        expect(landing.coverageNote, `${_id} coverage note omits ${year}`).toContain(year);
+      }
+    },
+  );
+
   it("keeps the honest JEE Advanced coverage claim to 2007-2026", () => {
     const advanced = findPaperLanding("/materials/jee-advanced/previous-year-papers");
     expect(advanced.meta.title).toContain("2007 to 2026");
