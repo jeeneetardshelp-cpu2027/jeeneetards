@@ -44,6 +44,18 @@ live schema on 31 Aug 2026 and recorded in the remote migration history, so
 > carry a preflight that refuses without its predecessor, and extend the chain
 > rehearsal.
 >
+> `src/searchFeatureCarryOverSqlContract.test.js` is the standing guard for
+> exactly this, and it covers **three** replaceable functions, not one:
+> `universal_search` (the search box) plus `search_video_ids` and
+> `search_playlist_ids` (the two /browse tabs), all of which the alias
+> migration re-emits. Re-emit any of them and you must add your feature's
+> marker to its `features` list, or the next author silently deletes your work.
+> Note the second `search_video_ids` entry: its `order by
+> search_rank_aliased(...)` is guarded on its own, because `src/useBrowse.js`
+> reconstructs lecture relevance purely from the POSITION of each id in the
+> returned array. Drop that ORDER BY and nothing errors — /browse just quietly
+> serves database-id order under a control that says "Best match".
+>
 > This is now history rather than a plan: both were applied in one `db push` on
 > 2 Sep 2026, in this order, and the safeguards were never tested in anger —
 > nothing refused, nothing aborted, because the order was right. What was checked
