@@ -72,6 +72,29 @@ export function chapterLandingMeta(scope) {
   };
 }
 
+/**
+ * Which class scope of a chapter is offered to a search engine.
+ *
+ * "dropper" is, by construction, the union of class-11 and class-12
+ * (classSlugsForStage). Measured against production on 2026-09-02: of the 177
+ * Dropper chapter URLs in the sitemap, 171 rendered exactly the same courses
+ * as a Class 11 or Class 12 page of the same chapter, and none held a course
+ * that no class page held. So a Dropper chapter page is almost always a
+ * second address for a class page, and 380 chapter URLs stood for 143
+ * chapters — twins competing with each other for the same search.
+ *
+ * The class page is the canonical one: its title is what students search
+ * ("class 11 physics kinematics"), and it carries the same courses. A Dropper
+ * chapter page still WORKS for anyone who reaches it from Explore or a link;
+ * it is simply not offered to search engines and asks not to be indexed. This
+ * is a scope rule, separate from the count rule (isIndexableChapter), and it
+ * accepts either spelling of the class — the URL's "dropper" and the stage
+ * id "dropper" are the same string.
+ */
+export function isIndexableChapterScope(classSlug) {
+  return String(classSlug ?? "") !== "dropper";
+}
+
 /** The canonical browse query for a chapter view, in a fixed key order. */
 export const CHAPTER_QUERY_KEYS = ["goal", "board", "class", "subject", "chapter"];
 
@@ -106,6 +129,11 @@ export function canonicalChapterView(params, readable = (v) => v) {
     .filter((key) => params.get(key))
     .map((key) => `${key}=${encodeURIComponent(params.get(key))}`)
     .join("&");
-  return { ...meta, robots: "index, follow", query };
+  // The count is unknowable here, so this cannot apply the count rule — the
+  // sitemap does that. The SCOPE rule it can apply: a Dropper chapter view is
+  // a twin of its class page and stays out of the index. noindex, not
+  // nofollow: the page works and its links still count.
+  const robots = isIndexableChapterScope(params.get("class")) ? "index, follow" : "noindex, follow";
+  return { ...meta, robots, query };
 }
 
