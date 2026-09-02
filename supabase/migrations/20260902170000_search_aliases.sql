@@ -1299,7 +1299,7 @@ begin
   loop
     -- The expander agrees with the table.
     if public.search_expand_aliases(v_row.alias_key) is distinct from v_row.expansion_key then
-      raise exception 'alias %L does not expand to its own expansion (got %L)',
+      raise exception 'alias % does not expand to its own expansion (got %)',
         v_row.alias, public.search_expand_aliases(v_row.alias_key);
     end if;
 
@@ -1309,7 +1309,7 @@ begin
     select array_agg(r.group_key || ':' || r.entity_id) into v_target
       from public.universal_search(v_row.expansion_key, null, 25, 0) r;
     if v_target is null then
-      raise exception 'alias %L expands to %L, which matches NOTHING in this catalogue -- fix or remove that seed row',
+      raise exception 'alias % expands to %, which matches NOTHING in this catalogue -- fix or remove that seed row',
         v_row.alias, v_row.expansion;
     end if;
 
@@ -1317,7 +1317,7 @@ begin
     select array_agg(r.group_key || ':' || r.entity_id) into v_alias
       from public.universal_search(v_row.alias_key, null, 25, 0) r;
     if v_alias is null or not (v_alias && v_target) then
-      raise exception 'alias %L still does not reach %L', v_row.alias, v_row.expansion;
+      raise exception 'alias % still does not reach %', v_row.alias, v_row.expansion;
     end if;
   end loop;
 
@@ -1351,11 +1351,11 @@ begin
   loop
     select count(*) into v_n from public.universal_search(v_row.q, null, 10, 0);
     if v_n = 0 then
-      raise exception 'REGRESSION - %L returned nothing', v_row.q;
+      raise exception 'REGRESSION - % returned nothing', v_row.q;
     end if;
     if not exists (select 1 from public.universal_search(v_row.q, null, 10, 0) r
                     where r.match_type = 'exact') then
-      raise exception 'exact match lost for %L', v_row.q;
+      raise exception 'exact match lost for %', v_row.q;
     end if;
   end loop;
 

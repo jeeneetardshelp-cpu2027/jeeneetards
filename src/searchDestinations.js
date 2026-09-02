@@ -12,6 +12,7 @@
 // for, which was the original complaint.
 
 import { JEE_MAIN_PAPERS_PATH, landingForPaperTitle } from "./studyMaterialLandings.js";
+import { canonicalCoursePath } from "./canonicalUrl.js";
 
 /**
  * Where a study-material result goes on THIS site. /materials reads exactly
@@ -46,9 +47,14 @@ export function resultHref(groupKey, row) {
     case "playlist":
       // A course with no chapter context is still a real destination, so this
       // never has to disable the row.
+      //
+      // A playlist row IS the course, so `row.title` is the course title and
+      // the link can carry it as keywords. Chapter sub-URLs stay id-only:
+      // middleware.js canonicalises /course/:id/chapter/:id without a slug, so
+      // adding one here would only buy a 308 on every click.
       return extra.chapter_id
         ? `/course/${row.id}/chapter/${extra.chapter_id}`
-        : `/course/${row.id}`;
+        : canonicalCoursePath(row.id, row?.title);
     case "lecture": {
       // Prefer the lesson itself — a lecture result that lands on a filtered
       // catalogue makes the student hunt for what they already found. Falls
@@ -59,6 +65,12 @@ export function resultHref(groupKey, row) {
           ? `/browse?ch=${extra.chapter_id}`
           : `/browse${extra.subject_id ? `?sub=${extra.subject_id}` : ""}`;
       }
+      // No slug on either shape. `row.title` here is the LESSON's title, and
+      // universal_search's lecture branch returns playlist_id without the
+      // course's title (see src/migrations/universal_search_v11.sql), so the
+      // only slug this could emit would be minted from the wrong string. The
+      // bare id is canonical-adjacent and 308s correctly; a wrong slug would
+      // be a second address for the page.
       const base = extra.chapter_id
         ? `/course/${extra.playlist_id}/chapter/${extra.chapter_id}`
         : `/course/${extra.playlist_id}`;

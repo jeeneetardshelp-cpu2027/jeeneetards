@@ -32,6 +32,7 @@ import NotesPanel from "./NotesPanel.jsx";
 import { applyPageMetadata, useCourseMetadata, useStructuredData } from "./PageMetadata.jsx";
 import { breadcrumbListSchema, courseSchema, videoObjectSchema } from "./structuredData.js";
 import { metadataForCourse } from "./pageMetadata.js";
+import { canonicalCoursePath } from "./canonicalUrl.js";
 import { BRAND_TEAL } from "./brandColors.js";
 
 const TEAL = BRAND_TEAL;
@@ -85,15 +86,27 @@ export function scopeCourseMetadata(course, lessons, chapter) {
 }
 
 // The link a student sends when they want a friend on this course: always the
-// course's CANONICAL address — the bare /course/:id that the sitemap, the
-// <link rel="canonical"> and the /api/og preview all use — never the chapter
+// course's CANONICAL address — /course/:id/:slug, the same string the sitemap,
+// the <link rel="canonical"> and the /api/og preview use — never the chapter
 // sub-URL or the active lesson's ?v=, so every share lands on one indexable
 // page. ?ref=share is attribution only and cannot fork that canonical: the
 // client computes canonicalPath from the pathname alone (pageMetadata.js) and
 // middleware.js matches courses on url.pathname, so the query never reaches
 // either.
-export function courseShareUrl(playlistId, origin = typeof window === "undefined" ? "" : window.location.origin) {
-  return `${origin}/course/${playlistId}?ref=share`;
+//
+// THE TITLE IS WHY THE SLUG EXISTS. This is the message a student pastes into
+// a batch group, and for the seconds before WhatsApp finishes fetching the
+// preview card the URL is all their friend can read. Sending /course/374 and
+// letting the edge 308 it to the readable form fixes the address for the
+// crawler but never for the human, who has already seen the opaque one. So the
+// slug is computed here, from the title this page has loaded, and the link is
+// readable the moment it is sent.
+//
+// A title with no ASCII (the catalogue's Devanagari courses) yields no slug and
+// canonicalCoursePath returns the bare id — that IS their canonical address,
+// so this stays exactly as correct as before for them.
+export function courseShareUrl(playlistId, title, origin = typeof window === "undefined" ? "" : window.location.origin) {
+  return `${origin}${canonicalCoursePath(playlistId, title)}?ref=share`;
 }
 
 // Honest and specific: states only what the page has actually loaded, and
@@ -686,7 +699,7 @@ export default function CourseVideoPage() {
             <ShareControl
               className="mt-4"
               subject="this course"
-              url={courseShareUrl(playlistId)}
+              url={courseShareUrl(playlistId, course.title)}
               title={course.title}
               text={courseShareText({
                 title: course.title,

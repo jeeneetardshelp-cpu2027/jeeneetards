@@ -498,10 +498,14 @@ export function renderMethodologyBody() {
  * faculty profile instead of a generic two-link shell.
  */
 export function renderBrowseDirectoryBody(meta, { courses = [], faculty = [] } = {}) {
+  // The title is right here, so the link is the course's canonical slugged
+  // address rather than the bare id a crawler would have to follow a 308 from.
+  // canonicalCoursePath escapes the id and returns the id-only path for a title
+  // with no ASCII, so this is exactly what the sitemap lists for the same row.
   const courseItems = courses
     .filter((course) => course?.id && course?.title)
     .map((course) =>
-      `<li><a href="/course/${encodeURIComponent(course.id)}">` +
+      `<li><a href="${escapeHtml(canonicalCoursePath(course.id, course.title))}">` +
       `${escapeHtml(course.title)}</a></li>`,
     )
     .join("");
