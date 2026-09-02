@@ -235,46 +235,39 @@ export default function PrivacyPolicy() {
 
           <Section title="6. Searches that find nothing">
             <p>
-              <strong>This is not switched on yet.</strong> Nothing described in
-              this section is being recorded today, and this page will say so
-              plainly when that changes. It is written down in advance because
-              a record of what students type should be described before it is
-              kept, never after.
+              If a search returns no results at all, the words searched for are
+              sent to the server and kept. Nothing is sent when a search finds
+              something. The purpose is to learn what students look for and do
+              not find, so that missing courses, missing notes, and missing
+              shorthand can be added.
             </p>
             <p>
-              When it is switched on: if a search returns no results at all, the
-              words searched for will be sent to the server and kept. Nothing
-              will be sent when a search finds something. The purpose is to
-              learn what students look for and do not find, so that missing
-              courses, missing notes, and missing shorthand can be added.
-            </p>
-            <p>
-              The database table <code>search_gap_log</code> will store the words
+              The database table <code>search_gap_log</code> stores the words
               searched for (trimmed, and cut off after 120 characters), a
               simplified form of those words used to group the same search
               written different ways, the number of results found, and the time
-              it happened. It will store nothing else. There will be no account
+              it happened. It stores nothing else. There is no account
               identifier, no session identifier, no IP address, no device or
               browser fingerprint, and no record of the page or filters in use.
               The database function that writes these rows accepts no identity
-              of any kind, so there will be nothing to link one row to another
-              or to a person.
+              of any kind, so there is nothing to link one row to another or to
+              a person.
             </p>
             <p>
-              It will be the only server-side record on this site kept for
+              This is the only server-side record on this site kept for
               signed-out visitors as well as signed-in students. Only site
-              administrators will be able to read it; other students and
-              signed-out visitors will not.
+              administrators can read it; other students and signed-out
+              visitors cannot.
             </p>
             <p>
               <strong>
-                Because these rows would carry nothing that identifies who
-                typed them, they could not be found and deleted on request
+                Because these rows carry nothing that identifies who typed
+                them, they cannot be found and deleted on request
               </strong>{" "}
               the way an account&apos;s watch progress can. That is a
               consequence of collecting no identity rather than an oversight.
-              If this is switched on, do not type anything into the search box
-              that you would not want recorded without a name attached.
+              Please do not type anything into the search box that you would
+              not want recorded without a name attached.
             </p>
           </Section>
 
