@@ -16,6 +16,7 @@ import ShareControl, { pollShareUrl } from "./ShareControl.jsx";
 import { pollApi } from "./pollApi.js";
 import { closesIn, timeAgo, voteLabel } from "./pollFormatting.js";
 import { PollsLoadError, PollsLoading, PollsUnavailable } from "./PollStates.jsx";
+import { usePollMetadata } from "../PageMetadata.jsx";
 import { usePoll } from "./usePolls.js";
 import { usePollVote } from "./usePollVote.js";
 
@@ -135,6 +136,9 @@ export default function PollPage({ api = pollApi, authState = null }) {
   const liveAuth = useSession();
   const { session } = authState ?? liveAuth;
   const thread = usePoll(slug, api);
+  // The tab title and share card follow the question too, not the slug, once
+  // the row arrives. No-op until then, and on any non-ready state.
+  usePollMetadata(thread.status === "ready" ? thread.poll : null);
   // The last crumb names the poll once it has loaded, the way the mock-test
   // page names its exam — not a generic "Poll" beside an h1 that already says
   // the question. Until then it says what the page is doing.

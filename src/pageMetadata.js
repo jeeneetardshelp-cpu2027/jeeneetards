@@ -66,6 +66,30 @@ function readableFacultySlug(value) {
     .join(" ");
 }
 
+/**
+ * The title and description for a single poll, built from the ROW rather than
+ * the URL. A slug is a lossy encoding of the question — lowercased,
+ * punctuation stripped, cut to a 60-character stem — so a URL-derived title
+ * loses every question mark and cuts a long question mid-word.
+ *
+ * Both callers that have the real question use this: the edge
+ * (middleware.js, which already fetched the row to decide the 404) and the
+ * client (PageMetadata.jsx, once usePoll resolves). One builder, so the tab
+ * title and the share card can never disagree about the same poll — they did,
+ * and the tab silently reverted to the slug-derived text after React booted.
+ *
+ * Returns null when there is no usable question, so callers keep the
+ * slug-derived fallback rather than rendering an empty title.
+ */
+export function pollMetadataForQuestion(question) {
+  const text = typeof question === "string" ? question.trim() : "";
+  if (!text) return null;
+  return {
+    title: `${text} | ${SITE_NAME} polls`,
+    description: `Vote and see how other JEE and NEET students answered: ${text}`,
+  };
+}
+
 export function metadataForLocation(pathname = "/", search = "") {
   const rawPath = pathname || "/";
   const path = rawPath.length > 1 ? rawPath.replace(/\/+$/, "") : rawPath;
