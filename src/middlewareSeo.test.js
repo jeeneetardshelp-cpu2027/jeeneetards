@@ -678,6 +678,26 @@ describe("edge-rendered discovery landings", () => {
     );
   });
 
+  // Dropper is the union of Class 11 and Class 12, so its chapter page is a
+  // twin of a class page — 171 of 177 were identical in production. The page
+  // keeps its title, its canonical and (below) its body; it only asks not to
+  // be indexed, so the class page is the one address per chapter.
+  it("keeps a Dropper chapter view out of the index but otherwise intact", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => new Response(shell, { status: 200 })));
+
+    const response = await middleware(new Request(
+      "https://www.jeeneetard.com/browse?goal=jee&class=dropper&subject=physics&chapter=kinematics",
+    ));
+    const html = await response.text();
+
+    expect(html).toContain("<title>Kinematics — JEE Dropper Physics | JEENEETARD</title>");
+    expect(html).toContain('name="robots" content="noindex, follow"');
+    expect(html).toContain(
+      '<link rel="canonical" href="https://www.jeeneetard.com/browse'
+      + "?goal=jee&amp;class=dropper&amp;subject=physics&amp;chapter=kinematics\" />",
+    );
+  });
+
   // A chapter URL used to fall through to the generic landing body: an <h1> of
   // "All courses" and one templated sentence. 380 of these are in the sitemap,
   // so a crawler saw 380 near-identical pages under a heading that contradicted
