@@ -56,14 +56,34 @@ describe("vitest project split", () => {
     // This is the whole safety property: the sql project INCLUDES exactly what
     // the app project EXCLUDES. Written as two separate literal lists, the two
     // would eventually disagree and files would fall through the gap.
-    expect(config).toContain(
-      "exclude: [...defaultExclude, ...SQL_VERIFICATION_TESTS]",
+    expect(config).toMatch(
+      /exclude: \[\s*\.\.\.defaultExclude,\s*\.\.\.WORKTREE_COPIES,\s*\.\.\.SQL_VERIFICATION_TESTS,?\s*\]/,
     );
     expect(config).toContain("include: SQL_VERIFICATION_TESTS");
     expect(sqlGlobs.length).toBeGreaterThan(0);
     for (const glob of sqlGlobs) {
       expect(glob, glob).toMatch(/^src\/[^/]*\.test\.js$/);
     }
+  });
+
+  it("never collects a worktree copy parked inside the checkout", () => {
+    // Codex (`.codex-worktrees/`) and Claude Code (`.claude/worktrees/`) both
+    // park whole, untracked copies of the project inside the checkout. Vitest
+    // only excludes node_modules and .git by default, so without this it
+    // collected every copy's tests as if they were ours — 3,368 files where
+    // the real tree has 400 — and path arguments did not scope it out, because
+    // vitest treats them as substring filters.
+    expect(config).toContain('"**/.codex-worktrees/**"');
+    expect(config).toContain('"**/.claude/worktrees/**"');
+    // Both projects. The sql includes are root-anchored, so they never reached
+    // a copy; the explicit exclude is what keeps that true if one ever grows
+    // a `**`.
+    expect(config.match(/\.\.\.WORKTREE_COPIES/g)).toHaveLength(2);
+    // And the Codex directory is ignored, so it never shows up as untracked
+    // work either.
+    const gitignore = readFileSync(resolve(root, ".gitignore"), "utf8");
+    expect(gitignore).toMatch(/^\.codex-worktrees\/\r?$/m);
+    expect(gitignore).toMatch(/^\.claude\/\r?$/m);
   });
 
   it("keeps the sql project free of anything that needs a DOM", () => {
