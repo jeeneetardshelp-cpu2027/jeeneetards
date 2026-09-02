@@ -37,6 +37,14 @@
 --
 -- ---------------------------------------------------------------------------
 -- !! DO NOT APPLY YET -- PRIVACY DISCLOSURE OUTSTANDING !!
+-- WHY THIS FILE IS NOT IN supabase/migrations/:
+-- `supabase db push` applies every pending migration in one go. While this
+-- sat in that directory, no other migration could be applied without also
+-- creating this table and starting collection. It waits here so the two
+-- decisions are independent. To ship it: get the owner's yes, add the
+-- Privacy Policy paragraph and the legalTruth check, move this file back
+-- into supabase/migrations/ keeping its timestamp, delete the banner, then
+-- push. src/searchGapPrivacyContract.test.js enforces the order.
 --
 -- src/PrivacyPolicy.jsx enumerates every path by which information reaches the
 -- server, by table name, and src/legalTruth.test.js exists because that policy

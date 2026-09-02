@@ -1,8 +1,10 @@
 // The course watch page's one-tap share. What is guarded here:
 //
 //   1. The shared URL is the course's CANONICAL address plus ?ref=share —
-//      never the chapter sub-URL, never the active lesson's ?v= — so every
-//      share lands on the one indexable page the /api/og preview renders for.
+//      /course/:id/:slug, never the chapter sub-URL, never the active lesson's
+//      ?v= — so every share lands on the one indexable page the /api/og preview
+//      renders for, AND reads as the course's title in the message itself
+//      rather than only after the recipient's browser follows a 308.
 //   2. The message is honest and specific, and drops whichever part (lecture
 //      count, teacher) the page has not actually loaded.
 //   3. The always-available share row and the ChapterCleared finish card never
@@ -118,8 +120,28 @@ afterEach(() => {
 });
 
 describe("courseShareUrl", () => {
-  it("is the canonical course address plus ?ref=share", () => {
-    expect(courseShareUrl(374, "https://www.jeeneetard.com"))
+  it("is the canonical SLUGGED course address plus ?ref=share", () => {
+    expect(courseShareUrl(374, "Complete Kinematics", "https://www.jeeneetard.com"))
+      .toBe("https://www.jeeneetard.com/course/374/complete-kinematics?ref=share");
+  });
+
+  // The whole point of putting the slug in the shared link: the friend reading
+  // it in WhatsApp reads the title, not an id, before any redirect runs.
+  it("carries the keywords in the link itself, not only after a redirect", () => {
+    expect(courseShareUrl(374, "Complete Kinematics", "https://www.jeeneetard.com"))
+      .toContain("complete-kinematics");
+  });
+
+  // A Devanagari title yields no ASCII slug, and canonicalUrl.js refuses to
+  // guess a transliteration — the bare id IS that course's canonical address.
+  it("stays the bare id for a title with no ASCII, never a percent-encoded one", () => {
+    const url = courseShareUrl(212, "कबीर की साखी", "https://www.jeeneetard.com");
+    expect(url).toBe("https://www.jeeneetard.com/course/212?ref=share");
+    expect(url).not.toContain("%");
+  });
+
+  it("still returns a working address when the title has not loaded", () => {
+    expect(courseShareUrl(374, null, "https://www.jeeneetard.com"))
       .toBe("https://www.jeeneetard.com/course/374?ref=share");
   });
 });
@@ -157,7 +179,7 @@ describe("the watch page share row", () => {
     const message = decodeURIComponent(href.replace("https://wa.me/?text=", ""));
     expect(message).toBe(
       "Watch Complete Kinematics free — 2 lectures by ABJ Sir — Mohit Tyagi on JEENEETARD "
-      + `${window.location.origin}/course/1?ref=share`,
+      + `${window.location.origin}/course/1/complete-kinematics?ref=share`,
     );
     // Never the active lesson: a shared link must land on the course page.
     expect(message).not.toContain("v=");
@@ -171,9 +193,12 @@ describe("the watch page share row", () => {
     await screen.findByRole("heading", { name: "Lesson one" });
     fireEvent.click(screen.getByRole("button", { name: "Copy a link to this course" }));
 
-    // The chapter sub-URL canonicalizes to the bare course URL (pageMetadata.js),
-    // so that is what travels.
-    expect(writeText).toHaveBeenCalledWith(`${window.location.origin}/course/1?ref=share`);
+    // The chapter sub-URL canonicalizes to the course root, and the course root
+    // is the SLUGGED address — so that is what travels, not /course/1/chapter/1
+    // and not the bare id the student's own URL bar happens to show.
+    expect(writeText).toHaveBeenCalledWith(
+      `${window.location.origin}/course/1/complete-kinematics?ref=share`,
+    );
   });
 
   it("steps aside while the ChapterCleared card is showing its own share button", async () => {

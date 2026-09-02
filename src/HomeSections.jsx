@@ -21,6 +21,11 @@ import { ratingDisplay } from "./ratingConfidence.js";
 // under a document that declares lang="en". See lang.js. (Course titles on this
 // page are tagged inside PlaylistCard, which renders them.)
 import { langAttrs } from "./lang.js";
+// A course link carries the title as keywords: /course/398/rectilinear-motion.
+// canonicalUrl.js owns that shape, so the homepage, the sitemap and the edge's
+// 308 target are the same string by construction. A Devanagari title yields no
+// ASCII slug and falls back to the bare id, which is still canonical for it.
+import { canonicalCoursePath } from "./canonicalUrl.js";
 import { orderExamsByLane } from "./examLane.js";
 import { Container } from "./AppShell.jsx";
 import {
@@ -433,7 +438,11 @@ export function TopRated({ courses, loading }) {
             ))
           : courses.map((c, i) => (
               <Reveal key={c.id} delay={i}>
-                <PlaylistCard course={c} comparisonEnabled={false} to={`/course/${c.id}`} />
+                <PlaylistCard
+                  course={c}
+                  comparisonEnabled={false}
+                  to={canonicalCoursePath(c.id, c.title)}
+                />
               </Reveal>
             ))}
       </div>

@@ -25,6 +25,12 @@ const read = (path) => readFileSync(path, "utf8");
 const stripComments = (src) =>
   src.replace(/\/\*[\s\S]*?\*\//g, " ").replace(/(^|\s)\/\/[^\n]*/g, "$1");
 
+// The file deliberately does NOT live in supabase/migrations/. `db push`
+// applies every pending migration at once, so leaving it there meant an
+// unrelated migration could not ship without also switching on a data
+// collection the owner has not agreed to. It waits outside the chain
+// instead, and the guard below still holds: the hold marker must stay
+// while the policy is silent. Moving it back is step one of shipping it.
 const MIGRATION = "docs/sql/search_gap_log_2026-09-02.sql";
 const HOLD_MARKER = "DO NOT APPLY YET";
 const TABLE = "search_gap_log";

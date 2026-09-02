@@ -110,10 +110,29 @@ export function useCourseMetadata(course) {
   useEffect(() => {
     const metadata = metadataForCourse(course);
     if (!metadata) return;
-    // Chapter sub-URLs (/course/5/chapter/2) canonicalize to the course root:
-    // the sitemap and the edge middleware both emit /course/5, and all three
-    // signals must agree or crawlers pick one arbitrarily.
-    const courseRoot = pathname.match(/^\/course\/\d+/)?.[0] ?? pathname;
+    // The course ROOT of this path — id plus the keyword slug when the URL
+    // carries one — because that is the address the edge declares canonical.
+    //
+    // This used to stop at /^\/course\/\d+/, which was right when the bare id
+    // was the canonical shape and is wrong now that /course/398/kinematics is.
+    // On a slugged URL the edge-served HTML said /course/398/kinematics and
+    // hydration replaced it with /course/398: self-healing, because the id form
+    // 308s to the slug form, but two layers stating different canonicals for
+    // the same page is exactly the drift the one-address rule exists to stop.
+    // Keeping the slug segment makes the client agree with the edge.
+    //
+    // The slug is kept, never invented: this reads what is already in the URL
+    // the edge sent the student to. Nothing here mints a slug from a title, so
+    // a stale slug still declares itself — and still resolves, since the id
+    // decides the course (canonicalUrl.js).
+    //
+    // "chapter" is excluded, so a chapter sub-URL (/course/5/chapter/2) still
+    // collapses to /course/5 exactly as it always has — courseSlug() refuses
+    // "chapter" as a slug for this reason, so no real course can be shadowed by
+    // the exclusion. A combined /course/5/kinematics/chapter/2 keeps
+    // /course/5/kinematics, which is the same course root by another spelling.
+    const courseRoot =
+      pathname.match(/^\/course\/\d+(?:\/(?!chapter(?:\/|$))[^/]+)?/)?.[0] ?? pathname;
     applyPageMetadata({
       ...metadata,
       canonicalPath: courseRoot,
