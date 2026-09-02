@@ -63,6 +63,16 @@ it composes instead of colliding. The privacy one below stays parked.
 | `docs/sql/search_gap_log_2026-09-02.sql` | **Its own header says `DO NOT APPLY YET — PRIVACY DISCLOSURE OUTSTANDING`.** It logs student-typed search text server-side; `src/PrivacyPolicy.jsx` enumerates every such path by table name and does not mention `search_gap_log`. Applying it would collect data the policy says is not collected, for an audience largely under 18. Needs the owner to decide the log should exist at all, then the disclosure paragraph, then a fresh timestamp back into the chain. `src/searchGapPrivacyContract.test.js` enforces the pairing; the frontend already goes quiet without it. |
 
 
+**Held deliberately OUTSIDE this directory:**
+`docs/sql/awaiting-owner-decision/20260902164500_search_gap_log.sql` logs the
+text of searches that return nothing. It is complete and tested, but it stores
+free text typed by an audience that is largely under 18 and the Privacy Policy
+does not mention it, so it needs the owner’s yes first. Because `db push`
+applies everything pending at once, leaving it in `supabase/migrations/` would
+have blocked every unrelated migration on that one decision. The banner inside
+the file says how to ship it; `src/searchGapPrivacyContract.test.js` enforces
+the order.
+
 `npx supabase migration list` shows this local-vs-remote state at any time, and
 it — not this table — is the authority. Several sessions add migrations on the
 same day, so a file can land in `supabase/migrations/` before it has a row
