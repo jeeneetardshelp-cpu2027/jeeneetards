@@ -10,6 +10,12 @@
     <meta name="application-name" content="JEENEETARD" />
     <meta name="google-site-verification" content="7yEuDEQPeBynhlyy9_xJWkGH7fe-8Zq2qJqLSSFFkw8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!-- PWA: the manifest makes the site installable (home-screen icon,
+         standalone launch). iOS ignores manifest icons and paints black
+         behind transparency, so it gets its own full-bleed PNG. Icons are
+         generated from favicon.svg by src/scripts/buildPwaIcons.js. -->
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
     <!-- Self-hosted Inter variable (CSP font-src 'self'). Preloaded because it
          renders the hero headline: without this the first paint uses the
          fallback stack and the h1 visibly reflows. crossorigin is required on
