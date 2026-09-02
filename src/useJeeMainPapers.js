@@ -22,6 +22,18 @@ const SELECT = [
   "paper_kind", "paper_year", "exam_session", "exam_shift",
 ].join(",");
 
+// fetchJeeMainPapers caps a single request at 100 rows on purpose. The
+// LANDING, though, states section counts — "98 reviewed papers", "14 official
+// answer keys" — and a count taken over the first page is not a count, it is a
+// lower bound presented as a fact. On 2026-09-02 the live page said 86
+// question papers and 14 answer keys out of a real 98 and 14, and the 12 rows
+// it never fetched were the OLDEST years (the order is exam_year desc), so the
+// 2014-2015 papers were absent from the page until someone pressed a button.
+//
+// The first load therefore keeps paging until it holds everything, and reports
+// once. Two requests for the 112 papers that exist today.
+const MAX_PAGES = 10;
+
 const EMPTY = {
   items: [], total: 0, loading: false, loadingMore: false,
   error: null, loadMoreError: null, unavailable: false,
@@ -120,19 +132,37 @@ export function useJeeMainPapers({ year = null, landing = null } = {}) {
       ? { ...previous, loadingMore: true, loadMoreError: null }
       : { ...previous, loading: true, error: null });
     try {
-      const result = await fetchJeeMainPapers(
-        supabase,
-        { limit: 100, offset, year, titlePattern, scopeGoal },
-        { signal: controller.signal },
-      );
-      if (!current()) return;
-      if (result.error) {
-        console.error(`${examLabel} papers:`, result.error);
-        setState((previous) => append
-          ? { ...previous, loadingMore: false, loadMoreError: `Couldn't load more ${examLabel} papers.` }
-          : { ...EMPTY, error: `Couldn't load the ${examLabel} paper library.` });
-        return;
+      // `append` is the explicit "load more" path and stays one request.
+      // A fresh load pages until it has the whole collection, because the
+      // section counts on the landing are computed from what it holds.
+      let collected = [];
+      let total = 0;
+      let cursor = offset;
+      for (let page = 0; page < MAX_PAGES; page += 1) {
+        const result = await fetchJeeMainPapers(
+          supabase,
+          { limit: 100, offset: cursor, year, titlePattern, scopeGoal },
+          { signal: controller.signal },
+        );
+        if (!current()) return;
+        if (result.error) {
+          console.error(`${examLabel} papers:`, result.error);
+          setState((previous) => append
+            ? { ...previous, loadingMore: false, loadMoreError: `Couldn't load more ${examLabel} papers.` }
+            : { ...EMPTY, error: `Couldn't load the ${examLabel} paper library.` });
+          return;
+        }
+        collected = [
+          ...new Map([...collected, ...result.data.items].map((item) => [item.id, item])).values(),
+        ];
+        total = result.data.total;
+        // One page is all the explicit load-more button ever asks for; a
+        // fresh load stops once it has everything, or when a page comes back
+        // empty so a wrong total cannot spin this.
+        if (append || collected.length >= total || result.data.items.length === 0) break;
+        cursor = offset + collected.length;
       }
+      const result = { data: { items: collected, total } };
       setState((previous) => ({
         ...result.data,
         items: append

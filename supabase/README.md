@@ -13,17 +13,65 @@ live schema on 31 Aug 2026 and recorded in the remote migration history, so
 | `20260901120000_study_days.sql` | **Applied** 31 Aug 2026. Server copy of prep-streak study days (owner-only RLS, mirrors `video_progress`); the frontend sync woke up on its own when this landed. |
 | `20260901160000_universal_search_materials.sql` | **Applied** 1 Sep 2026. `material` and `paper` groups in `universal_search`; notes, formula sheets and previous-year papers are findable from the main search box (verified live). |
 | `20260902093000_study_material_paper_metadata.sql` | **Applied** 2 Sep 2026, verified live: all 183 paper rows classified (160 question papers / 14 answer keys / 9 with solutions), zero unclassified. The client column flip is the marked FOLLOW-UP in `src/useJeeMainPapers.js` / `src/studyMaterialLandings.js`. |
-| `20260902122500_neet_ug_2025_papers.sql` | **Data applied** 2 Sep 2026, verified live: NEET UG 2025 went 0 → 4 papers (2024 stayed 2, 2026 stayed 4) and all four official NTA URLs are present. Data seed, no schema. **But `db push` has not run it.** The rows were applied by hand from the `docs/sql` copy at 12:20 UTC, before this file existed, so the remote migration history does not record it and `migration list` still shows it pending. Pushing it is a safe no-op (`on conflict … do update`, and its postflight aborts on any mismatch) and is what actually closes the record. Body is the reviewed `docs/sql` package verbatim; `src/neetUg2025PapersSeed.test.js` fails if the copies drift. |
+| `20260902122500_neet_ug_2025_papers.sql` | **Applied and recorded** 2 Sep 2026. Verified live: NEET UG 2025 went 0 → 4 papers (2024 stayed 2, 2026 stayed 4) and all four official NTA URLs are present. Data seed, no schema. The rows went in by hand from the `docs/sql` copy at 12:20 UTC, before this file existed, so for a while the data was live while the remote history did not record it. That gap is closed: `migration list` now shows local and remote both at `20260902122500`, and a `db push` at 13:11 UTC reported `Remote database is up to date` with nothing to apply. Body is the reviewed `docs/sql` package verbatim; `src/neetUg2025PapersSeed.test.js` fails if the copies drift. |
+| `20260902170000_search_aliases.sql` | **Staged, not applied.** Applied FIRST of the two pending files. Teaches search the shorthand students say out loud (`shm`, `nlm`, `emi`, `ktg`, `moi`, `rot mech`, `pnc`, `aod`): ~39 seeded aliases in an admin-extendable table, plus `search_expand_aliases` / `search_rank_aliased`, and it re-emits `universal_search` to use them. Rehearsed on a real engine in `src/searchAliasesSqlRehearsal.test.js` (66 tests). Complementary to the client layer in `src/searchAliases.js`, whose 8 keys do not intersect these 32. |
+| `20260902180000_universal_search_material_words.sql` | **Staged, not applied.** Applied SECOND, and it refuses to run before the alias file — see the note below. Lets a student find a material by the word they call it: `pyq`, `notes`, `previous year paper` and `ncert notes` all returned nothing against 412 approved materials, because the pillars match on the title and the titles never say the kind. Adds two `IMMUTABLE` helpers, re-emits `universal_search` with the widened haystack in both pillars (rank **and** prefilter), and moves the two expression indexes onto the expression the prefilter now uses. Deliberate behaviour change: a bare `notes` now returns all 225 notes and sheets. |
 
-`npx supabase migration list` shows this local-vs-remote state at any time.
+> **Why these two are one push, and in this order.** Both re-emit
+> `universal_search` whole — Postgres cannot patch one expression inside a
+> function body — so each is last-writer-wins, and `db push` orders them by
+> timestamp. `180000` was parked because it had been re-emitted from the
+> pre-alias `20260901160000` ancestor and would have silently reverted every
+> curated shorthand on the next push, with no error anywhere.
+>
+> It is back because it has been rebuilt the way the parking note prescribed:
+> **on top of** the alias body, widening that body's 12 title sites rather than
+> the ancestor's 8. Three things now hold it there. Its preflight refuses to run
+> unless `search_expand_aliases` and `search_rank_aliased` exist, so the pair
+> cannot be applied out of order. Its self-verification aborts if the function it
+> just wrote no longer calls `search_rank_aliased`. And
+> `src/universalSearchMaterialWordsSqlRehearsal.test.js` now executes the real
+> chain — baseline, `0901`, `170000`, then this — asserting all 31 seeded
+> shorthands still resolve; putting the old body back fails 24 of its 49 tests.
+>
+> The lesson generalises: a per-file rehearsal cannot see this class of bug,
+> because each file's own ancestor is not the chain production gets. A THIRD
+> migration replacing this function must be re-emitted from the newest body,
+> carry a preflight that refuses without its predecessor, and extend the chain
+> rehearsal.
 
-Every paper seed so far — NEET UG 2024/2026, the JEE sets, and 2025 — was applied
-by hand straight from `docs/sql`, so nothing in the repository records whether
-they ran; the answer has to be fetched from production each time. Staging 2025 in
-the chain does not by itself change that, because the rows were already in by the
-time the file existed. It changes it from the next push onward: once `db push`
-records this one, `migration list` can answer for it, and later seeds staged the
-same way start out answerable.
+### Parked in `docs/sql/`, deliberately out of the chain (2 Sep 2026)
+
+Two files were moved OUT of `supabase/migrations/` so that `search_aliases`
+could be pushed on its own. `db push` has no per-file selection, so a file that
+must not run yet blocks every file behind it.
+
+One of the two is back in the chain: `universal_search_material_words` was
+rebuilt on top of the alias body, which is what its parking note asked for, so
+it composes instead of colliding. The privacy one below stays parked.
+
+| Parked file | Why it is out |
+| --- | --- |
+| `docs/sql/search_gap_log_2026-09-02.sql` | **Its own header says `DO NOT APPLY YET — PRIVACY DISCLOSURE OUTSTANDING`.** It logs student-typed search text server-side; `src/PrivacyPolicy.jsx` enumerates every such path by table name and does not mention `search_gap_log`. Applying it would collect data the policy says is not collected, for an audience largely under 18. Needs the owner to decide the log should exist at all, then the disclosure paragraph, then a fresh timestamp back into the chain. `src/searchGapPrivacyContract.test.js` enforces the pairing; the frontend already goes quiet without it. |
+
+
+`npx supabase migration list` shows this local-vs-remote state at any time, and
+it — not this table — is the authority. Several sessions add migrations on the
+same day, so a file can land in `supabase/migrations/` before it has a row
+here: on 2 Sep the table described one pending file while `migration list`
+reported three. **Run `migration list` immediately before any push and read
+what it returns**, rather than trusting a status written earlier — this table
+told a reader that the NEET 2025 seed was still unpushed for some hours after
+it had been recorded.
+
+Every paper seed before this one — NEET UG 2024/2026 and the JEE sets — was
+applied by hand straight from `docs/sql`, so nothing in the repository records
+whether they ran; the answer still has to be fetched from production each time.
+NEET UG 2025 is the first one staged in the chain, and it is now recorded, so
+`migration list` can answer for it. Seeds staged the same way from here start
+out answerable. Note what staging alone did **not** do: the 2025 rows were
+already live by the time the file existed, so the file did not put them there —
+it made their status checkable.
 
 ## How to apply what is pending
 

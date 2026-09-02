@@ -16,6 +16,7 @@ import {
   safeStructuredDataJson,
 } from "./src/structuredData.js";
 import { getFacultyGuide } from "./src/facultyGuides.js";
+import { courseCredit } from "./src/courseCredit.js";
 // Pure data, no React — safe to pull into the edge runtime.
 import { TEST_SECTIONS, ACCESS, findTestSection } from "./src/testPlatforms.js";
 import { buildCourseMetadata } from "./src/courseMetadata.js";
@@ -770,7 +771,11 @@ export function renderCourseBody(course, meta, lessons = []) {
   const totalLessons = Number(course.playlist_videos?.[0]?.count ?? lessons.length);
   const rows = [
     course.subjects?.name ? ["Subject", course.subjects.name] : null,
-    course.teacher ? ["Teacher", course.teacher] : null,
+    // A "teacher" that is only the channel's own name would print the same
+    // string on both rows of the crawler-readable table.
+    courseCredit({
+      teacher: course.teacher, institute: course.institutes_channels?.name,
+    }).teacher ? ["Teacher", course.teacher] : null,
     course.institutes_channels?.name ? ["Channel", course.institutes_channels.name] : null,
     totalLessons > 0 ? ["Lessons", String(totalLessons)] : null,
   ].filter(Boolean);
