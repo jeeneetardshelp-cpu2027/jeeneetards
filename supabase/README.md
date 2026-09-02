@@ -17,7 +17,8 @@ live schema on 31 Aug 2026 and recorded in the remote migration history, so
 | `20260902170000_search_aliases.sql` | **Applied** 2 Sep 2026 via `db push`, first of the two. Verified live against the RPC, same query and limit before and after: `pnc` 0 → 25 (it returned nothing at all before, which is the failure this file was written for), `aod` 3 → 54, `rot mech` 13 → 50, `salt analysis` 42 → 59, `shm` 16 → 21. Teaches search the shorthand students say out loud (`shm`, `nlm`, `emi`, `ktg`, `moi`, `rot mech`, `pnc`, `aod`): ~39 seeded aliases in an admin-extendable table, plus `search_expand_aliases` / `search_rank_aliased`, and it re-emits `universal_search` to use them. Rehearsed on a real engine in `src/searchAliasesSqlRehearsal.test.js` (66 tests). Complementary to the client layer in `src/searchAliases.js`, whose 8 keys do not intersect these 32. |
 | `20260902180000_universal_search_material_words.sql` | **Applied** 2 Sep 2026 via `db push`, second, in the same push as the alias file. Verified live: `notes` 24 → 74 and `pyq` 55 → 105, which is the deliberate behaviour change below landing as designed. Ordinary queries were re-checked in the same pass because both files re-emit `universal_search` itself — `physics` 83, `kinematics` 67, `class 12` 41, and the site answering 200. Refuses to run before the alias file — see the note below. Lets a student find a material by the word they call it: `pyq`, `notes`, `previous year paper` and `ncert notes` all returned nothing against 412 approved materials, because the pillars match on the title and the titles never say the kind. Adds two `IMMUTABLE` helpers, re-emits `universal_search` with the widened haystack in both pillars (rank **and** prefilter), and moves the two expression indexes onto the expression the prefilter now uses. Deliberate behaviour change: a bare `notes` now returns all 225 notes and sheets. |
 | `20260902200000_link_verified_faculty_credits.sql` | **Applied** 2 Sep 2026 — confirmed by `migration list`, local and remote both at `20260902200000`. (This row said "staged, not applied, the ONLY pending file" for a while after it had in fact been pushed; that is the hazard the note under this table describes.) It touches no function the search migrations touch. Links 10 courses to faculty ALREADY in the registry, via `set_playlist_teachers`. It creates no teacher, alias or proposal, and leaves `faculty_credit_status` alone, because on production `identified` is a strict subset of linked (64 of 238) and so means a person confirmed the credit — which a name match has not. Deliberately NOT the other 158 unlinked courses: 132 of those have the CHANNEL name in `teacher` (linking them would file institutes as faculty) and 26 need an identity decision, several being more than one person. Rehearsed on a real engine in `src/facultySafeLinksSqlRehearsal.test.js` (11 tests, including a re-credited course, a de-verified teacher, a moved registry id, and a hand-curated link it must not overwrite). |
-| `20260902210000_search_gap_log.sql` | **Staged, not applied — the only pending file.** Unparked 2 Sep 2026 once the disclosure landed: `src/PrivacyPolicy.jsx` section 6 now names `search_gap_log`, and `src/legalTruth.test.js` fails if that is removed. Creates the table, two indexes, RLS with an admin-only read policy, and the anonymous `log_search_gap` RPC, so a search that finds nothing is remembered. No identity is stored and the RPC accepts none. **Before pushing, confirm the live /privacy page names the table.** The policy reaching students is a deploy, not a merge — this site serves from `release` — and applying this while the disclosure sits in `main` only would start collection before the page students can read mentions it. |
+| `20260902210000_search_gap_log.sql` | **Staged, not applied.** First of the two pending files. Unparked 2 Sep 2026 once the disclosure landed: `src/PrivacyPolicy.jsx` section 6 now names `search_gap_log`, and `src/legalTruth.test.js` fails if that is removed. Creates the table, two indexes, RLS with an admin-only read policy, and the anonymous `log_search_gap` RPC, so a search that finds nothing is remembered. No identity is stored and the RPC accepts none. **Before pushing, confirm the live /privacy page names the table.** The policy reaching students is a deploy, not a merge — this site serves from `release` — and applying this while the disclosure sits in `main` only would start collection before the page students can read mentions it. |
+| `20260902220000_repair_hindi_note_titles.sql` | **Staged, not applied.** Runs last of the pending files. Repairs 32 Hindi note titles and descriptions that lost their Devanagari at ingest: every non-ASCII character is a literal `?`, so `तोप - NCERT स्पर्श` is stored as `??? - NCERT ??????`. The seed files in `docs/sql/` are fine — only the copy in the database is damaged — so this is exact recovery, not reconstruction. Rows are named by id and each UPDATE fires only while its row still shows the damage, so re-runs are no-ops and hand-fixed rows are left alone. Rehearsed in `src/repairHindiNoteTitlesSqlRehearsal.test.js`, 12 tests on a real engine. |
 
 > **Why these two are one push, and in this order.** Both re-emit
 > `universal_search` whole — Postgres cannot patch one expression inside a
@@ -55,6 +56,38 @@ live schema on 31 Aug 2026 and recorded in the remote migration history, so
 Nothing sits in `docs/sql/` waiting any more. Both files that were pulled out of
 the chain are back in it, so this section is history — kept because the move is
 worth reaching for again.
+
+### Apply seeds through the chain, not by hand (2 Sep 2026)
+
+Every paper and note seed before 2 Sep 2026 was applied by hand from
+`docs/sql/`. For ASCII content that only cost the migration history its record
+of what ran. For the two Hindi packages it cost the data: whatever client ran
+them was not talking UTF-8, so all 32 titles and descriptions arrived with each
+Devanagari character replaced by one `?`. The files were never wrong; the copy
+in the database is.
+
+Nobody noticed for four weeks, because those notes were unreachable from search
+until `20260902180000` made them findable by the word "notes". Then they became
+some of the first rows a Hindi-medium student sees.
+
+**So: anything carrying non-ASCII text goes through `npx supabase db push`,**
+which is UTF-8 end to end. The SQL Editor and ad-hoc clients are how this
+happened.
+
+A migration that carries non-ASCII text should also prove the encoding survived
+the trip, the way `20260902210000` does — the check is one line, because a
+Devanagari string takes more **bytes** than it has **characters**:
+
+```sql
+if length('तोप') = octet_length('तोप') then
+  raise exception 'REFUSING: this connection is not UTF-8';
+end if;
+```
+
+Without it, a repair run over a bad connection writes question marks over
+question marks and reports success.
+
+### Parked in `docs/sql/`, deliberately out of the chain (2 Sep 2026)
 
 Two files were moved OUT of `supabase/migrations/` so that `search_aliases`
 could be pushed on its own. `db push` has no per-file selection, so **a file
