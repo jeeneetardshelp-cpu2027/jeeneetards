@@ -83,6 +83,27 @@ Push applies **every** pending migration in timestamp order — there is no
 per-file selection. Review `migration list` first so you know exactly what
 will run.
 
+### When a held file is in the way
+
+Sooner or later a file that must not run yet will sit in front of one you want.
+**Do not reach for `--include-all`, and do not renumber a file to jump the
+queue.** The ordering is not what is stopping you — whatever made that file
+unsafe is, and it is just as unsafe applied out of order. Renumbering only
+hides the hold from the next person to read `migration list`.
+
+The supported move is to take the held file **out of the chain**: park it in
+`docs/sql/` with a note saying what it is waiting on, and rename it back with a
+fresh timestamp once that condition is met. That is the opposite of jumping the
+queue — it makes the held file harder to apply, not easier — and it is what was
+done on 2 Sep with `search_gap_log`.
+
+Before parking anything, check what else re-emits the same objects. On 2 Sep
+two pending files both re-emitted `public.universal_search`, and the later one
+knew nothing of the earlier one's helpers: pushing the pair would have created
+the alias table and then silently stopped calling it. Parking the first blocker
+alone would have left exactly that pair pending and made a push *look* fine
+while undoing the feature it was run for.
+
 ## How new schema changes work from now on
 
 1. Write the change as `supabase/migrations/<UTC timestamp>_<name>.sql`
