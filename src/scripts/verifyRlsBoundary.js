@@ -63,11 +63,26 @@ const PRIVATE = [
 ];
 
 // Reachable only through SECURITY DEFINER functions, never as tables.
+//
+// The third slot names columns to ask for BY NAME as well. A denied `select=*`
+// does not prove a named column is denied: playlist_ratings below refuses `*`
+// outright and serves "id,rating,review" happily, because the grant is
+// column-level. So a table checked only through `*` can be leaking a column.
 const RPC_ONLY = [
   ["polls", "poll rows are served by get_polls_feed"],
   ["poll_options", "options ride with the feed"],
   ["forum_topics", "forum reads go through their own functions"],
   ["forum_posts", "forum reads go through their own functions"],
+  // Deliberately HERE and not in PRIVATE, which is the point of this entry.
+  // PRIVATE accepts "readable but 0 rows" as safe, and search_gap_log is empty
+  // on production today — so a PRIVATE check would pass exactly as happily if
+  // anon held full SELECT on it, and would keep passing until the first row
+  // arrived. What it stores is free text a student typed into the search box,
+  // which makes it the last table that should be graded on a technicality.
+  // anon writes through log_search_gap (SECURITY DEFINER) and holds no table
+  // privilege at all; only admins read it.
+  ["search_gap_log", "the words a student typed when a search found nothing",
+    ["query_text", "query_key"]],
 ];
 
 // Readable, but only the columns the product actually shows.
@@ -91,10 +106,15 @@ for (const [table, why] of PRIVATE) {
   else bad(`${table}: ANON CAN READ ${r.count} row(s) — ${why}`);
 }
 
-for (const [table, why] of RPC_ONLY) {
+for (const [table, why, columns = []] of RPC_ONLY) {
   const r = await anonCount(table);
   if (r.denied) ok(`${table}: anon refused (${r.code}) — ${why}`);
   else bad(`${table}: anon can select the table directly (${r.count} row(s)) — ${why}`);
+  for (const column of columns) {
+    const c = await anonCount(table, column);
+    if (c.denied) ok(`${table}.${column}: anon refused (${c.code}) even when named`);
+    else bad(`${table}.${column}: ANON CAN READ IT (${c.count} row(s)) — ${why}`);
+  }
 }
 
 for (const [table, allowed, forbidden, why] of COLUMN_SCOPED) {
