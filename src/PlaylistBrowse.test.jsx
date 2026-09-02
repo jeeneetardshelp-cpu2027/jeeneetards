@@ -480,6 +480,46 @@ describe("popularity sort truthfulness", () => {
   });
 });
 
+// While a term is active the default sort IS the server's relevance ranking
+// (search_playlist_ids returns its ids ranked), so the word has to say so. No
+// new option appears and no new ?sort= value exists — a sort id that only means
+// something while you are typing would go stale in every shared URL, which is
+// the exact problem the replace-effect above already has to clean up.
+describe("the courses sort control during a search", () => {
+  const optionTexts = async () => {
+    const sort = await screen.findByRole("combobox", { name: "Sort courses" });
+    return [...sort.options].map((option) => option.text);
+  };
+
+  it("names the default sort for what it does during a search", async () => {
+    renderBrowse({ subject: null, chapter: null, search: "kinematics" }, "/browse?q=kinematics");
+
+    const sort = await screen.findByRole("combobox", { name: "Sort courses" });
+    expect([...sort.options].map((o) => o.text)[0]).toBe("Best match");
+    expect([...sort.options].map((o) => o.value)).toEqual(
+      ["recommended", "popular", "most_viewed", "rating", "recent"],
+    );
+    expect(sort.value).toBe("recommended");
+    // The URL is untouched: "Best match" is a word, not a preference.
+    expect(screen.getByTestId("loc").textContent).not.toContain("sort=");
+  });
+
+  it("goes back to Recommended when the search box is empty", async () => {
+    renderBrowse({ subject: null, chapter: null, search: "   " });
+    expect((await optionTexts())[0]).toBe("Recommended");
+  });
+
+  it("does not resurrect a sort the catalogue cannot honour", async () => {
+    popularityMock.available = { popular: false, views: false };
+    renderBrowse({ subject: null, chapter: null, search: "kinematics" });
+
+    const texts = await optionTexts();
+    expect(texts[0]).toBe("Best match");
+    expect(texts).not.toContain("Most popular");
+    expect(texts).not.toContain("Most viewed");
+  });
+});
+
 describe("opening a course", () => {
   beforeEach(() => {
     COUNT = 1;

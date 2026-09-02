@@ -37,6 +37,15 @@
 // position, and /browse silently goes back to serving database-id order under
 // a control that says "Best match".
 //
+// `search_playlist_ids` earned the same pair later the same day, and they
+// matter MORE there: Courses is the DEFAULT tab, so a lost ordering is the
+// first thing a searching student meets. Its two markers are guarded
+// separately on purpose — a body can keep `search_rank_aliased` in its WHERE
+// (marker 1 satisfied, matching unchanged) while dropping it from the ORDER BY
+// (marker 2 gone, ranking silently back to whatever ?sort= says), and the LIMIT
+// is what lets src/usePlaylistBrowse.js fetch the whole match set in one
+// bounded request instead of an unbounded one.
+//
 // ADDING A FEATURE. If you re-emit one of these functions, add a row to its
 // `features` with a marker that appears in YOUR body and the file that
 // introduced it. From then on, anyone who re-emits it without carrying your
@@ -109,13 +118,31 @@ const GUARDED = [
   },
   {
     fn: "search_playlist_ids",
-    // /browse's Courses tab.
-    minReemissions: 1,
+    // /browse's Courses tab — the DEFAULT tab.
+    minReemissions: 2,
     features: [
       {
         name: "curated shorthand alias pass",
         since: "20260902170000_search_aliases.sql",
         marker: /search_rank_aliased/,
+      },
+      {
+        // Same shape as search_video_ids' second feature, and for the same
+        // reason: this marker matches only an ORDER BY that ranks, so a body
+        // that keeps the helper in its WHERE and loses the ordering fails here
+        // instead of silently un-ranking the default tab.
+        name: "relevance ordering (src/usePlaylistBrowse.js reads it as array position)",
+        since: "20260902220000_browse_course_relevance.sql",
+        marker: /order\s+by\s+public\.search_rank_aliased/i,
+      },
+      {
+        // The bound the client relies on. usePlaylistBrowse fetches the WHOLE
+        // filtered match set in one request so it can re-apply the ranking
+        // across pages; without a cap that request is unbounded, and the
+        // failure mode is a slow page rather than an error.
+        name: "500-id cap the whole-set fetch depends on",
+        since: "20260902220000_browse_course_relevance.sql",
+        marker: /limit\s+500/i,
       },
     ],
   },
