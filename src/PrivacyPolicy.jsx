@@ -168,13 +168,22 @@ export default function PrivacyPolicy() {
                   read together they must not leave a student thinking either
                   claim covers both. Without this line, "never sent to a
                   server" here is easily read as a statement about searching in
-                  general — which section 6 then contradicts. */}
+                  general, which section 6 then appears to contradict.
+
+                  TENSE IS LOAD-BEARING HERE. Section 6 is written in the
+                  future because the gap log is NOT switched on: its migration
+                  is not in supabase/migrations/ yet. So this paragraph must
+                  not say those words "are sent" — today nothing at all leaves
+                  the browser when a search finds nothing. If section 6 ever
+                  moves to the present tense, this must move with it. */}
               This is the opposite half of section 6 below, and the two do not
               overlap. A search that <strong>found something</strong> is
               remembered here, on this device, and is never sent anywhere. A
               search that <strong>found nothing</strong> is not remembered here
-              at all — those words are sent to the server instead, without any
-              identity attached, and section 6 describes exactly what is kept.
+              at all. Today nothing is kept about it either — the record
+              described in section 6 is not switched on — and if it ever is,
+              section 6 says exactly what would be stored and states plainly
+              that it carries no identity.
             </p>
             <p>
               While signed out, this browser data stays on the device and is

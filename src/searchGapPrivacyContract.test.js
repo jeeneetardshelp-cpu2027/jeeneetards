@@ -79,6 +79,61 @@ describe("search gap log privacy contract", () => {
   // must reword it. That pairing is a human step, recorded in this file's
   // migration header and in supabase/README.md, because the fact lives in the
   // database rather than in the repository.
+  //
+  // WHAT THE TEST BELOW CAN CHECK, and why it is worth having anyway. Both
+  // checks above are gated on a fact about the migration — one on the hold
+  // marker, one on the directory — and the hold marker is now gone, so the
+  // tense of the disclosure is currently enforced by nothing at all. That is
+  // precisely when it broke.
+  //
+  // On 2026-09-02, within an hour, two sessions wrote about the same moment.
+  // Section 6 was corrected to the future tense after production was checked.
+  // Section 4 gained a cross-reference — so "this list is never sent to a
+  // server", about the device-local remembered searches, would not read as a
+  // claim about searching in general — and that cross-reference said a failed
+  // search's words "are sent to the server instead". Present tense, four
+  // sections earlier. Each paragraph was right about itself. The rebase was
+  // clean, every test passed, and the document was false.
+  //
+  // So the invariant here is not about the migration at all. It is INTERNAL
+  // CONSISTENCY: whatever tense section 6 chooses, the rest of the policy must
+  // agree with it. That holds before the push and after it, needs to know
+  // nothing about production, and is the failure that actually happened.
+  it("says the same thing about failed searches in every section", () => {
+    const prose = read("src/PrivacyPolicy.jsx")
+      // A JSX comment is never shown to a student, and the ones around that
+      // very paragraph quote the banned wording in order to explain it.
+      .replace(/\{\/\*[\s\S]*?\*\/\}/g, " ")
+      .replace(/\s+/g, " ");
+
+    const at = prose.indexOf("Searches that find nothing");
+    if (at < 0) return;                       // no such section; nothing to agree with
+
+    // Section 6's own framing decides what the rest of the document may say.
+    const notYet = /not switched on|will be sent|not being recorded/i.test(prose.slice(at));
+    if (!notYet) return;                      // section 6 is present tense; so may the rest be
+
+    // Section 6 says it is not on yet, so nothing anywhere may assert that a
+    // search's words leave the browser today. "will be sent" is the honest
+    // future and does not match. "is never sent" does not match either — the
+    // negation sits between the verb and the word. Only a bare "is/are sent to
+    // the server" does, and the captured preceding word lets section 5's
+    // legitimate "nothing is sent to the server" through.
+    const offenders = prose
+      .split(/(?<=\.)\s+/)
+      .filter((sentence) => /search/i.test(sentence))
+      .filter((sentence) =>
+        [...sentence.matchAll(/(\w+)\s+(?:are|is)\s+sent to (?:the|a) server/gi)]
+          .some(([, before]) => !/^(nothing|never|not)$/i.test(before)));
+
+    expect(
+      offenders,
+      "PrivacyPolicy.jsx says in the present tense that searches are sent to the server, " +
+        "while its own \"Searches that find nothing\" section says that is not switched on " +
+        "yet. Both cannot be true. If the log has been pushed, reword section 6 to the " +
+        "present tense in the same change; if it has not, use the future tense here too.",
+    ).toEqual([]);
+  });
 
   it("does not collect student search text before the policy says so", () => {
     const wired = read("src/useUniversalSearch.js").includes("scheduleSearchGapLog");
