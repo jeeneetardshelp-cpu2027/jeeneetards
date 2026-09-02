@@ -14,9 +14,9 @@ live schema on 31 Aug 2026 and recorded in the remote migration history, so
 | `20260901160000_universal_search_materials.sql` | **Applied** 1 Sep 2026. `material` and `paper` groups in `universal_search`; notes, formula sheets and previous-year papers are findable from the main search box (verified live). |
 | `20260902093000_study_material_paper_metadata.sql` | **Applied** 2 Sep 2026, verified live: all 183 paper rows classified (160 question papers / 14 answer keys / 9 with solutions), zero unclassified. The client column flip is the marked FOLLOW-UP in `src/useJeeMainPapers.js` / `src/studyMaterialLandings.js`. |
 | `20260902122500_neet_ug_2025_papers.sql` | **Applied and recorded** 2 Sep 2026. Verified live: NEET UG 2025 went 0 → 4 papers (2024 stayed 2, 2026 stayed 4) and all four official NTA URLs are present. Data seed, no schema. The rows went in by hand from the `docs/sql` copy at 12:20 UTC, before this file existed, so for a while the data was live while the remote history did not record it. That gap is closed: `migration list` now shows local and remote both at `20260902122500`, and a `db push` at 13:11 UTC reported `Remote database is up to date` with nothing to apply. Body is the reviewed `docs/sql` package verbatim; `src/neetUg2025PapersSeed.test.js` fails if the copies drift. |
-| `20260902170000_search_aliases.sql` | **Staged, not applied.** Applied FIRST of the two pending files. Teaches search the shorthand students say out loud (`shm`, `nlm`, `emi`, `ktg`, `moi`, `rot mech`, `pnc`, `aod`): ~39 seeded aliases in an admin-extendable table, plus `search_expand_aliases` / `search_rank_aliased`, and it re-emits `universal_search` to use them. Rehearsed on a real engine in `src/searchAliasesSqlRehearsal.test.js` (66 tests). Complementary to the client layer in `src/searchAliases.js`, whose 8 keys do not intersect these 32. |
-| `20260902180000_universal_search_material_words.sql` | **Staged, not applied.** Applied SECOND, and it refuses to run before the alias file — see the note below. Lets a student find a material by the word they call it: `pyq`, `notes`, `previous year paper` and `ncert notes` all returned nothing against 412 approved materials, because the pillars match on the title and the titles never say the kind. Adds two `IMMUTABLE` helpers, re-emits `universal_search` with the widened haystack in both pillars (rank **and** prefilter), and moves the two expression indexes onto the expression the prefilter now uses. Deliberate behaviour change: a bare `notes` now returns all 225 notes and sheets. |
-| `20260902200000_link_verified_faculty_credits.sql` | **Staged, not applied.** Independent of the two search files above — it touches no function they touch and can be applied in any order relative to them, but note that `db push` will carry all three. Links 10 courses to faculty ALREADY in the registry, via `set_playlist_teachers`. It creates no teacher, alias or proposal, and leaves `faculty_credit_status` alone, because on production `identified` is a strict subset of linked (64 of 238) and so means a person confirmed the credit — which a name match has not. Deliberately NOT the other 158 unlinked courses: 132 of those have the CHANNEL name in `teacher` (linking them would file institutes as faculty) and 26 need an identity decision, several being more than one person. Rehearsed on a real engine in `src/facultySafeLinksSqlRehearsal.test.js` (11 tests, including a re-credited course, a de-verified teacher, a moved registry id, and a hand-curated link it must not overwrite). |
+| `20260902170000_search_aliases.sql` | **Applied** 2 Sep 2026 via `db push`, first of the two. Verified live against the RPC, same query and limit before and after: `pnc` 0 → 25 (it returned nothing at all before, which is the failure this file was written for), `aod` 3 → 54, `rot mech` 13 → 50, `salt analysis` 42 → 59, `shm` 16 → 21. Teaches search the shorthand students say out loud (`shm`, `nlm`, `emi`, `ktg`, `moi`, `rot mech`, `pnc`, `aod`): ~39 seeded aliases in an admin-extendable table, plus `search_expand_aliases` / `search_rank_aliased`, and it re-emits `universal_search` to use them. Rehearsed on a real engine in `src/searchAliasesSqlRehearsal.test.js` (66 tests). Complementary to the client layer in `src/searchAliases.js`, whose 8 keys do not intersect these 32. |
+| `20260902180000_universal_search_material_words.sql` | **Applied** 2 Sep 2026 via `db push`, second, in the same push as the alias file. Verified live: `notes` 24 → 74 and `pyq` 55 → 105, which is the deliberate behaviour change below landing as designed. Ordinary queries were re-checked in the same pass because both files re-emit `universal_search` itself — `physics` 83, `kinematics` 67, `class 12` 41, and the site answering 200. Refuses to run before the alias file — see the note below. Lets a student find a material by the word they call it: `pyq`, `notes`, `previous year paper` and `ncert notes` all returned nothing against 412 approved materials, because the pillars match on the title and the titles never say the kind. Adds two `IMMUTABLE` helpers, re-emits `universal_search` with the widened haystack in both pillars (rank **and** prefilter), and moves the two expression indexes onto the expression the prefilter now uses. Deliberate behaviour change: a bare `notes` now returns all 225 notes and sheets. |
+| `20260902200000_link_verified_faculty_credits.sql` | **Staged, not applied.** The ONLY pending file, now that the two search migrations above are applied, so `db push` carries this alone. It touches no function they touch. Links 10 courses to faculty ALREADY in the registry, via `set_playlist_teachers`. It creates no teacher, alias or proposal, and leaves `faculty_credit_status` alone, because on production `identified` is a strict subset of linked (64 of 238) and so means a person confirmed the credit — which a name match has not. Deliberately NOT the other 158 unlinked courses: 132 of those have the CHANNEL name in `teacher` (linking them would file institutes as faculty) and 26 need an identity decision, several being more than one person. Rehearsed on a real engine in `src/facultySafeLinksSqlRehearsal.test.js` (11 tests, including a re-credited course, a de-verified teacher, a moved registry id, and a hand-curated link it must not overwrite). |
 
 > **Why these two are one push, and in this order.** Both re-emit
 > `universal_search` whole — Postgres cannot patch one expression inside a
@@ -40,6 +40,14 @@ live schema on 31 Aug 2026 and recorded in the remote migration history, so
 > migration replacing this function must be re-emitted from the newest body,
 > carry a preflight that refuses without its predecessor, and extend the chain
 > rehearsal.
+>
+> This is now history rather than a plan: both were applied in one `db push` on
+> 2 Sep 2026, in this order, and the safeguards were never tested in anger —
+> nothing refused, nothing aborted, because the order was right. What was checked
+> afterwards is the thing those safeguards exist to protect: the curated
+> shorthands still resolve in production (`pnc` 0 → 25, `aod` 3 → 54) *and* the
+> widened material words work (`notes` 24 → 74), so the second file composed with
+> the first instead of reverting it.
 
 ### Parked in `docs/sql/`, deliberately out of the chain (2 Sep 2026)
 
@@ -83,6 +91,27 @@ npx supabase db push
 Push applies **every** pending migration in timestamp order — there is no
 per-file selection. Review `migration list` first so you know exactly what
 will run.
+
+### When a held file is in the way
+
+Sooner or later a file that must not run yet will sit in front of one you want.
+**Do not reach for `--include-all`, and do not renumber a file to jump the
+queue.** The ordering is not what is stopping you — whatever made that file
+unsafe is, and it is just as unsafe applied out of order. Renumbering only
+hides the hold from the next person to read `migration list`.
+
+The supported move is to take the held file **out of the chain**: park it in
+`docs/sql/` with a note saying what it is waiting on, and rename it back with a
+fresh timestamp once that condition is met. That is the opposite of jumping the
+queue — it makes the held file harder to apply, not easier — and it is what was
+done on 2 Sep with `search_gap_log`.
+
+Before parking anything, check what else re-emits the same objects. On 2 Sep
+two pending files both re-emitted `public.universal_search`, and the later one
+knew nothing of the earlier one's helpers: pushing the pair would have created
+the alias table and then silently stopped calling it. Parking the first blocker
+alone would have left exactly that pair pending and made a push *look* fine
+while undoing the feature it was run for.
 
 ## How new schema changes work from now on
 
