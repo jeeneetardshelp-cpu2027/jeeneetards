@@ -44,7 +44,7 @@ export default function PollsFeedPage({ api = pollApi, authState = null }) {
         as="h1"
         eyebrow="Student polls"
         title="What does everyone else think?"
-        lead="Vote, see how the rest of the country answered, and argue about it in the comments. Reading and voting results never need an account to browse — only voting and commenting do."
+        lead="Vote, see how the rest of the country answered, and argue about it in the comments. Reading polls and results never needs an account — only voting and commenting do."
         action={
           <Button to="/polls/new" size="sm">
             <Plus aria-hidden="true" className="h-4 w-4" />
