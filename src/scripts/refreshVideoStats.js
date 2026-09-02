@@ -127,15 +127,31 @@ async function main() {
       if (dryRun) {
         console.log(`Would backfill published_at on ${backfill.length} video(s).`);
       } else {
-        // Chunked: one upsert of several thousand rows is a request large
-        // enough to be refused, and a half-written backfill is worse than none.
-        for (let i = 0; i < backfill.length; i += 500) {
-          const { error } = await db
-            .from("videos")
-            .upsert(backfill.slice(i, i + 500), { onConflict: "id" });
-          if (error) fail(`backfilling published_at: ${error.message}`);
+        // UPDATE per row, not upsert. videos.id is GENERATED ALWAYS, so any
+        // statement naming it is refused outright ("cannot insert a
+        // non-DEFAULT value into column id") — and an upsert always names the
+        // conflict target. Each row carries a different date, so there is no
+        // single-statement form; batched concurrently to keep it to seconds.
+        //
+        // Non-fatal on purpose. This is an optimisation — the stats written
+        // below already use the date fetched from YouTube — so a failure here
+        // must not cost the run its actual work.
+        let backfilled = 0;
+        let failedBackfills = 0;
+        for (let i = 0; i < backfill.length; i += 50) {
+          const results = await Promise.all(
+            backfill.slice(i, i + 50).map(({ id, published_at }) =>
+              db.from("videos").update({ published_at }).eq("id", id)),
+          );
+          for (const { error } of results) {
+            if (error) failedBackfills += 1;
+            else backfilled += 1;
+          }
         }
-        console.log(`Backfilled published_at on ${backfill.length} video(s).`);
+        console.log(
+          `Backfilled published_at on ${backfilled} video(s)`
+          + `${failedBackfills ? `, ${failedBackfills} failed` : ""}.`,
+        );
       }
     }
 

@@ -77,7 +77,23 @@ describe("the job reads whole tables and asks for the date", () => {
 
   it("backfills the date it learned, so the next run need not ask again", () => {
     expect(refresh).toContain("published_at: s.publishedAt");
-    expect(refresh).toMatch(/from\("videos"\)\s*\n?\s*\.upsert\(backfill/);
+    // UPDATE, never upsert. videos.id is GENERATED ALWAYS, so any statement
+    // naming it is refused — "cannot insert a non-DEFAULT value into column
+    // id" — and an upsert always names its conflict target. That killed the
+    // whole run before a single stat row was written.
+    expect(refresh).toContain('db.from("videos").update({ published_at }).eq("id", id)');
+    expect(refresh).not.toMatch(/from\("videos"\)[\s\S]{0,40}\.upsert\(/);
+  });
+
+  it("does not let a failed backfill cost the run its stats", () => {
+    // The backfill is an optimisation — the stats written below already use
+    // the date fetched from YouTube — so failing hard here would throw away
+    // the run's actual work for a nicety.
+    const block = refresh.slice(
+      refresh.indexOf("const backfill = []"),
+      refresh.indexOf("Would upsert"),
+    );
+    expect(block).not.toContain("fail(`backfilling");
   });
 
   it("pages every table read, so none is silently capped at 1000", () => {
