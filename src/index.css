@@ -41,24 +41,27 @@
 
 /* ------------------------------------------------------------- palettes
 
-   CONTRAST AUDIT (2026-09-01, WCAG 2.1 relative-luminance formula). Dark is
-   the forced default for anyone who has never chosen, so it was measured
-   first. Ink tokens against each background, worst case shown:
+   CONTRAST AUDIT (2026-09-01, extended 2026-09-02; WCAG 2.1
+   relative-luminance formula). Every ink token measured against every
+   surface it can sit on, in both themes. Worst case per token:
 
-     dark   --ink   on --surface-2   17.35:1   pass AA and AAA
-            --ink-2 on --surface-2    8.27:1   pass AA and AAA
-            --ink-3 on --surface-2    4.61:1   pass AA (normal text)
+     dark   --ink    17.35:1     --ink-2  8.27:1     --ink-3  4.61:1
+     light  --ink    17.71:1     --ink-2  6.42:1     --ink-3  4.53:1
 
-   No dark-theme failure, so nothing here was changed.
+   All pass AA for normal text (4.5:1). Dark needed no change.
 
-   The light palette is NOT clean: --ink-3 (#75757c) is below AA on the
-   tinted backgrounds — 4.38:1 on --canvas-2, 4.23:1 on --surface-2, 4.09:1
-   on --surface-inset (AA needs 4.5:1). It passes only on plain white
-   (4.57:1). --ink-3 carries card metadata, which is small text, so this is a
-   real failure, not a rounding argument. Darkening it to #6e6e75 clears every
-   surface (4.53–5.06:1) and is a one-value change. Left for the owner to
-   decide because it moves the look of every card in light mode, and this
-   pass was scoped to the dark default. */
+   --ink-3 in LIGHT did. At #75757c it was below AA on every tinted
+   background — 4.38:1 on --canvas-2, 4.23:1 on --surface-2, 4.09:1 on
+   --surface-inset — and passed only on plain white (4.57:1). --ink-3 carries
+   card metadata, which is small text, so that was a real failure rather than
+   a rounding argument. It is #6e6e75 now, which clears every surface
+   (4.53–5.06:1). The 2026-09-01 pass left this for the owner because it
+   moves the look of every card in light mode; the owner decided on
+   2026-09-02.
+
+   These ratios are not maintained by hand: src/inkContrast.test.js parses
+   this file, pairs every ink token with every surface in its own theme, and
+   computes each one. A value edited below AA fails the suite. */
 :root,
 html[data-theme="dark"] {
   color-scheme: dark;
@@ -133,7 +136,7 @@ html[data-theme="light"] {
 
   --ink: #0a0a0a;
   --ink-2: #57575d;
-  --ink-3: #75757c;
+  --ink-3: #6e6e75;
 
   /* Subject colours as TEXT on --surface (#ffffff). Chemistry was the worst
      failure anywhere at 2.98:1 and moves -11 lightness; biology -8, botany -7.

@@ -305,6 +305,24 @@ describe("server-ranked, paginated, debounced (requirements 4, 5, 7)", () => {
     expect(rpcCalls[0].args.p_query).toBe("kinem");
   });
 
+  // The catalogue is written in English but the audience is not. Measured on
+  // production 2026-09-02: rasayan, bhautiki, jeev vigyan and pw all returned
+  // ZERO rows, while their English equivalents returned 27, 27, 21 and 2.
+  it("sends the English equivalent when a student types the Hindi word", async () => {
+    renderSearch();
+    type("rasayan");
+    await settle();
+    expect(rpcCalls[0].args.p_query).toBe("chemistry");
+  });
+
+  it("sends anything that is not an alias exactly as typed", async () => {
+    // The risk in a rewrite is not failing to help, it is changing a query
+    // that already worked.
+    renderSearch();
+    type("organic chemistry one shot");
+    await settle();
+    expect(rpcCalls[0].args.p_query).toBe("organic chemistry one shot");
+  });
   it("asks the database for a page, not the catalogue", async () => {
     renderSearch();
     type("kinematics");
