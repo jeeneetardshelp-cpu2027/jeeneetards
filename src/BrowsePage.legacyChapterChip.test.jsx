@@ -51,7 +51,7 @@ vi.mock("./supabaseClient", () => ({
   },
 }));
 
-import Dashboard from "./Dashboard.jsx";
+import BrowsePage from "./BrowsePage.jsx";
 
 function LocationProbe() {
   const l = useLocation();
@@ -62,7 +62,7 @@ const renderAt = (url) =>
   render(
     <MemoryRouter initialEntries={[url]}>
       <Routes>
-        <Route path="/browse" element={<><LocationProbe /><Dashboard /></>} />
+        <Route path="/browse" element={<><LocationProbe /><BrowsePage /></>} />
       </Routes>
     </MemoryRouter>
   );

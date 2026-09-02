@@ -18,7 +18,7 @@ import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
 import { ThemeProvider } from "./theme.jsx";
-import { VideoCard } from "./Dashboard.jsx";
+import { VideoCard } from "./BrowsePage.jsx";
 import ChapterRevision from "./ChapterRevision.jsx";
 import StudyMaterialCard from "./StudyMaterialCard.jsx";
 import { SocialProof } from "./HomeSections.jsx";

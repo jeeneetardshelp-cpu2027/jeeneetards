@@ -64,7 +64,7 @@ export function useFilterOptions({ subjectId } = {}) {
         loading: false, error: null,
         options: {
           // Keep ids as metadata while slugs remain the emitted URL values.
-          // Dashboard can label an old ?sub=3 bookmark from these bounded
+          // BrowsePage can label an old ?sub=3 bookmark from these bounded
           // dimension rows without rebuilding a tree from every video.
           goal: goals.data.map((r) => ({ id: r.id, value: r.slug, label: r.name })),
           class: classes.data.map((r) => ({ id: r.id, value: shortClass(r.slug), label: r.name })),

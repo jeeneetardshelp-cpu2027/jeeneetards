@@ -206,7 +206,7 @@ const { usePlaylistBrowse } = await import("./usePlaylistBrowse.js");
 
 const catalogueCalls = () => calls.filter((c) => c.table === "playlists");
 
-// Drives the real pair: resolver gates the catalogue hook, exactly as Dashboard does.
+// Drives the real pair: resolver gates the catalogue hook, exactly as BrowsePage does.
 let seen;
 function Wired({ qs }) {
   const params = new URLSearchParams(qs);

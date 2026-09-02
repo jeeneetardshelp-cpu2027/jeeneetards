@@ -55,7 +55,7 @@ const FacultyDirectory = lazy(() => import("./FacultyDirectory.jsx"));
 const FacultyProfile = lazy(() => import("./FacultyProfile.jsx"));
 const Compare = lazy(() => import("./Compare.jsx"));
 const SearchPage = lazy(() => import("./SearchPage.jsx"));
-const Dashboard = lazy(() => import("./Dashboard.jsx"));
+const BrowsePage = lazy(() => import("./BrowsePage.jsx"));
 const AdminPanel = lazy(() => import("./AdminPanel.jsx"));
 const CourseVideoPage = lazy(() => import("./CourseVideoPage.jsx"));
 const TestsPage = lazy(() => import("./TestsPage.jsx"));
@@ -220,12 +220,10 @@ function Layout() {
 }
 
 // ---------------------------------------------------------------------
-//  1. EXPLORE  — the full browse feed (sidebar + grid). Dashboard is
-//     self-contained: it reads its filters from the URL and fetches itself.
+//  1. EXPLORE  — the full browse feed (sidebar + grid). BrowsePage
+//     (lazy-imported above) is self-contained: it reads its filters from
+//     the URL and fetches itself, so /browse routes it directly.
 // ---------------------------------------------------------------------
-function BrowsePage() {
-  return <Dashboard />;
-}
 
 // ---------------------------------------------------------------------
 //  2. LEGACY CHAPTER ROUTE  —  /chapter/:chapterId

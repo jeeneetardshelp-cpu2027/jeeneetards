@@ -1,11 +1,11 @@
 // =====================================================================
-//  Dashboard.jsx  —  Systematic Educational Video Directory
+//  BrowsePage.jsx  —  the /browse catalogue and filter page.
 //  React + Tailwind CSS.  Beginner-friendly, split into small pieces.
 //
 //  HOW IT'S ORGANISED (read top to bottom):
 //    1. VideoCard      -> one card in the grid; a link to the watch page.
 //    2. SearchBar      -> the top search box.
-//    3. Dashboard      -> puts everything together (this is exported).
+//    3. BrowsePage     -> puts everything together (this is exported).
 //
 //  REMOVED: VideoModal, a second bare-iframe player that opened here. It
 //  recorded no progress, so a lesson watched in it earned no Continue
@@ -20,7 +20,7 @@ import { Link, useSearchParams } from "react-router";
 import { useCanonicalFilters } from "./useCanonicalFilters.js";
 import { applyFilterChange, buildChips, removeChip, clearAllChips } from "./filterChips.js";
 import { filterByKey } from "./filterSchema.js";
-import FilterPanel from "./FilterPanel.jsx";
+import FilterPanel, { LanguageChips, honestLanguageOptions } from "./FilterPanel.jsx";
 import { useFilterOptions } from "./useFilterOptions.js";
 import { useBrowseFacets } from "./useBrowseFacets.js";
 import { useGoalCatalog } from "./useExplore.js";
@@ -39,7 +39,6 @@ import { RELEASE_CAPABILITIES } from "./releaseCapabilities.js";
 // this catalogue writes plenty of it in Devanagari under a document that
 // declares lang="en". See lang.js.
 import { langAttrs } from "./lang.js";
-import { BRAND_TEAL } from "./brandColors.js";
 import YouTubeThumbnail from "./YouTubeThumbnail.jsx";
 import ChannelAvatar from "./ChannelAvatar.jsx";
 
@@ -234,77 +233,34 @@ function SkeletonCard() {
 // So the row is surfaced here too, beside the active-filter chips, and hidden
 // from lg up where the sidebar's copy is already showing.
 //
-// THIS IS NOT A SECOND FILTER MODEL. The values come from filterSchema (remove
-// language from AVAILABLE and this row disappears with it), the click writes
-// through the SAME applyFilterChange as the panel, and the URL parameter is
-// unchanged — so this row, the sheet's row, the removable chips below and the
-// catalogue query cannot disagree about what is selected.
+// THIS IS NOT A SECOND FILTER MODEL — and not a second copy of the row either.
+// The values come from filterSchema (remove language from AVAILABLE and this
+// row disappears with it), the markup and the honest-filters predicate are
+// FilterPanel's own exports (LanguageChips / honestLanguageOptions), and the
+// click writes through the SAME applyFilterChange as the panel — so this row,
+// the sheet's row, the removable chips below and the catalogue query cannot
+// disagree about what is offered or selected.
 function BrowseLanguageChips({ params, counts, countsLoading, countsExact = true, onChange }) {
-  const { t } = useTheme();
   const filter = filterByKey("language");
   if (!filter) return null;
 
   const selected = (params.get(filter.param) ?? "").split(",").filter(Boolean);
-  // The honest-filters rule, applied exactly as FilterPanel applies it: once
-  // the contextual counts have settled, a language this view has no courses in
-  // is not offered at all. A chip at the top of the results reads as "what this
-  // catalogue has", so a dead end here is a worse lie than one buried in a
-  // panel. An already-selected value survives so a shared or stale URL can
-  // still be cleared.
+  // null until the contextual counts have settled — honestLanguageOptions then
+  // offers every language rather than guessing.
   const known = !countsLoading && counts?.language ? counts.language : null;
-  const options = filter.options
-    .map((option) => ({ value: option.id, label: option.label }))
-    .filter((option) => (
-      known == null
-      || selected.includes(String(option.value))
-      || Number(known[String(option.value)] ?? 0) > 0
-    ));
-  if (options.length === 0) return null;
-
   return (
-    <section aria-labelledby="browse-language-heading" className="mb-4 lg:hidden">
-      <h2 id="browse-language-heading" className={`text-xs font-medium ${t.muted}`}>
-        {filter.label}
-      </h2>
-      <div className="mt-2 flex flex-wrap gap-2">
-        {options.map((option) => {
-          const active = selected.includes(String(option.value));
-          // On a board or teacher view the counts are an upper bound (see the
-          // useBrowseFacets call below): fine for dropping a zero, wrong to
-          // print as a figure. No number, rather than a number that may be high.
-          const count = known == null || !countsExact
-            ? null
-            : Number(known[String(option.value)] ?? 0);
-          return (
-            <button
-              key={option.value}
-              type="button"
-              onClick={() => onChange(applyFilterChange(params, filter, option.value))}
-              aria-pressed={active}
-              aria-label={count == null
-                ? undefined
-                : `${option.label}, ${count} course${count === 1 ? "" : "s"}`}
-              className={`inline-flex min-h-11 items-center gap-1.5 rounded-full border px-3 text-sm transition ${
-                active
-                  ? "border-transparent font-medium text-white"
-                  : `${t.border} ${t.card} ${t.faint} ${t.hover}`
-              }`}
-              style={active ? { backgroundColor: BRAND_TEAL } : undefined}
-            >
-              {option.label}
-              {count != null && (
-                <span
-                  className={`tabular-nums ${active ? "text-white/80" : t.muted}`}
-                  aria-hidden="true"
-                >
-                  {count}
-                </span>
-              )}
-            </button>
-          );
-        })}
-      </div>
-    </section>
+    <LanguageChips
+      filter={filter}
+      headingId="browse-language-heading"
+      appearance="page"
+      options={honestLanguageOptions(filter, selected, known)}
+      selected={selected}
+      onToggle={(value) => onChange(applyFilterChange(params, filter, value))}
+      // On a board or teacher view the counts are an upper bound (see the
+      // useBrowseFacets call below): fine for dropping a zero, wrong to
+      // print as a figure. No number, rather than a number that may be high.
+      counts={known == null || !countsExact ? null : known}
+    />
   );
 }
 
@@ -318,7 +274,7 @@ function BrowseLanguageChips({ params, counts, countsLoading, countsExact = true
 // results list are both built from video_learning_goals, so they cannot
 // disagree about which lessons belong where.
 // ---------------------------------------------------------------------
-export default function Dashboard() {
+export default function BrowsePage() {
   const [params, setParams] = useSearchParams();
   const { t, dark } = useTheme();
 

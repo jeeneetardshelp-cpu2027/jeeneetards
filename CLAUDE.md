@@ -50,9 +50,8 @@ catalogue data only. Live at jeeneetard.com.
 - `/explore/…` — `Explore.jsx`: the guided goal → (board) → class → subject →
   chapter cascade. The path *is* the state. **Its last step redirects into
   `/browse`; it does not render results.**
-- `/browse` — `Dashboard.jsx`, routed under the alias `BrowsePage`. The
-  catalogue: `FilterPanel.jsx` plus `PlaylistBrowse.jsx` results. The filename
-  is a leftover; this is the browse page, not a dashboard.
+- `/browse` — `BrowsePage.jsx` (renamed from `Dashboard.jsx` on 2026-09-02). The
+  catalogue: `FilterPanel.jsx` plus `PlaylistBrowse.jsx` results.
 - `/course/:playlistId[/chapter/:chapterId]` — `CourseVideoPage.jsx`: the watch
   page. The player and lesson rail come from `MinimalUI.jsx`'s `VideoView`;
   notes, study materials, rating, report, share and chapter panels sit under it.

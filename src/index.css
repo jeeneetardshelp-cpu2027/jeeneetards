@@ -720,7 +720,7 @@ html[data-theme="light"] {
       equivalent (there is no warning token in the palette) and ONE real
       unconditional consumer left on the student surface —
       src/CourseOverview.jsx, the "N lessons are marked as unavailable"
-      notice on the watch page. Every other amber notice (Dashboard,
+      notice on the watch page. Every other amber notice (BrowsePage,
       FacultyFilter, Compare, UniversalSearch) already picks its own colours
       through a `dark ? … : …` ternary, so these rules never apply to them.
       Delete these two when CourseOverview either gains a real warning token

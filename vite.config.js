@@ -74,7 +74,7 @@ export default defineConfig({
     setupFiles: ["./src/setupTests.js"],
     // Vitest defaults to a 5s per-test timeout (verified by probe, not assumed).
     // The heaviest component tests — CourseSequence's full-course paging,
-    // Dashboard.goal's mobile search, shellSafety's statistics band — normally
+    // BrowsePage.goal's mobile search, shellSafety's statistics band — normally
     // take 2.1–2.4s, so only a ~2x slowdown is enough to blow that budget. With
     // 130+ files sharing 12 cores that happens intermittently: one run failed
     // four of them, the next run failed a different one, and every one passed in
