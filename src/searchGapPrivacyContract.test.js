@@ -31,7 +31,7 @@ const stripComments = (src) =>
 // collection the owner has not agreed to. It waits outside the chain
 // instead, and the guard below still holds: the hold marker must stay
 // while the policy is silent. Moving it back is step one of shipping it.
-const MIGRATION = "docs/sql/search_gap_log_2026-09-02.sql";
+const MIGRATION = "supabase/migrations/20260902210000_search_gap_log.sql";
 const HOLD_MARKER = "DO NOT APPLY YET";
 const TABLE = "search_gap_log";
 

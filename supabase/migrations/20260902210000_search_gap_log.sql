@@ -36,34 +36,23 @@
 -- as HTML, do not interpolate it into SQL, do not put it in a URL.
 --
 -- ---------------------------------------------------------------------------
--- !! DO NOT APPLY YET -- PRIVACY DISCLOSURE OUTSTANDING !!
--- WHY THIS FILE IS NOT IN supabase/migrations/:
--- `supabase db push` applies every pending migration in one go. While this
--- sat in that directory, no other migration could be applied without also
--- creating this table and starting collection. It waits here so the two
--- decisions are independent. To ship it: get the owner's yes, add the
--- Privacy Policy paragraph and the legalTruth check, move this file back
--- into supabase/migrations/ keeping its timestamp, delete the banner, then
--- push. src/searchGapPrivacyContract.test.js enforces the order.
+-- HOLD LIFTED 2 Sep 2026. This file carried a do-not-apply banner while it
+-- waited outside supabase/migrations/, because `db push` applies every pending
+-- migration at once and leaving it in the chain meant no unrelated migration
+-- could ship without also switching on this collection.
 --
--- src/PrivacyPolicy.jsx enumerates every path by which information reaches the
--- server, by table name, and src/legalTruth.test.js exists because that policy
--- once shipped two statements that were false in production. This table is a
--- NEW server-side path carrying student-typed free text, and the policy does
--- not mention it yet. `npx supabase db push` applies EVERY pending migration at
--- once, so this file must not sit in the chain unremarked.
+-- Both conditions the banner named have now been met: the owner decided the log
+-- should exist, and src/PrivacyPolicy.jsx section 6 names `search_gap_log` and
+-- says what it stores, that it is kept for signed-out visitors too, and that
+-- its rows cannot be deleted on request because they carry no identity.
+-- src/legalTruth.test.js now fails if that disclosure is removed.
 --
--- Applying this file before the Privacy Policy names `search_gap_log` would
--- collect data the policy says is not collected. The owner must (a) decide
--- this log should exist at all -- "whether advertising or audience analytics
--- will be added" is an explicit owner decision in
--- docs/legal_release_inputs.md -- and (b) land the disclosure paragraph first.
---
--- Once the policy names this table, delete this banner and push. The frontend
--- is already safe either way: src/searchGapLog.js swallows the
--- missing-function error and goes quiet, so until this is applied the site
--- behaves exactly as it did before.
--- src/searchGapPrivacyContract.test.js enforces this pairing.
+-- ONE THING THIS FILE CANNOT CHECK. The policy reaching students is a deploy,
+-- not a merge: this site serves from the `release` branch. Applying this
+-- migration while the disclosure sits in `main` but not in `release` would
+-- start collecting search text before the page students can read mentions it —
+-- which is the harm the banner existed to prevent, arriving by a different
+-- door. Confirm the live /privacy page names the table before pushing.
 -- ---------------------------------------------------------------------------
 --
 -- ABUSE. The insert path is anonymous by construction, so it cannot be

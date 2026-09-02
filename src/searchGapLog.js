@@ -7,7 +7,7 @@
 //
 // WHAT LEAVES THE BROWSER. The query text and a result count. Nothing else.
 // No user id, no session id, no page, no filter, no timing — the RPC
-// (docs/sql/search_gap_log_2026-09-02.sql) takes no identity
+// (supabase/migrations/20260902210000_search_gap_log.sql) takes no identity
 // argument at all, so there is nothing here for a later change to start
 // attaching by accident. Signed-in and signed-out students send exactly the
 // same thing.
