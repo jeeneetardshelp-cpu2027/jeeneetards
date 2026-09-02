@@ -15,6 +15,11 @@ import { ratingDisplay } from "./ratingConfidence.js";
 // and some of it is written in Devanagari under a document that declares
 // lang="en". See lang.js.
 import { hasDevanagari, langAttrs } from "./lang.js";
+// Course links here carry the title as keywords (/course/9/complete-kinematics)
+// through the one function that decides that shape. A Devanagari course title
+// has no ASCII to slugify, so it keeps the bare id — which is its canonical
+// address, not a fallback.
+import { canonicalCoursePath } from "./canonicalUrl.js";
 import { useTheme } from "./theme.jsx";
 import { applyPageMetadata, useStructuredData } from "./PageMetadata.jsx";
 import { breadcrumbListSchema, personSchema } from "./structuredData.js";
@@ -197,7 +202,7 @@ export default function FacultyProfile() {
                   return (
                   <li key={c.playlist_id}>
                     <Link
-                      to={`/course/${c.playlist_id}`}
+                      to={canonicalCoursePath(c.playlist_id, c.title)}
                       className={`flex min-h-14 items-center justify-between gap-4 rounded-xl border ${t.border} ${t.card} ${t.cardHover} px-4 py-3 transition`}
                     >
                       <div>

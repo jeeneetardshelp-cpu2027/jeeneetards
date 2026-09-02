@@ -604,8 +604,12 @@ describe("edge-rendered discovery landings", () => {
 
     expect(response.status).toBe(200);
     expect(html).toContain("<h2>Course directory</h2>");
-    expect(html).toContain('<a href="/course/5">Kinematics</a>');
-    expect(html).toContain("<a href=\"/course/8\">Newton's Laws of Motion</a>");
+    // The directory has each row's TITLE, so it links the canonical slugged
+    // address rather than spending a 308 per course to arrive at it.
+    expect(html).toContain('<a href="/course/5/kinematics">Kinematics</a>');
+    expect(html).toContain(
+      "<a href=\"/course/8/newton-s-laws-of-motion\">Newton's Laws of Motion</a>",
+    );
     expect(html).toContain("<h2>Faculty directory</h2>");
     expect(html).toContain('<a href="/faculty/amit-bijarnia">Amit Bijarnia</a>');
     expect(html).toContain('<a href="/faculty/mohit-tyagi">Mohit Tyagi</a>');

@@ -14,7 +14,10 @@ function renderProfile() {
     <MemoryRouter initialEntries={["/faculty/amit-bijarnia"]}>
       <Routes>
         <Route path="/faculty/:slug" element={<FacultyProfile />} />
-        <Route path="/course/:id" element={<p>Course destination</p>} />
+        {/* One route with an optional slug, mirroring App.jsx: a course link
+            from here is the canonical /course/:id/:slug, and a two-route
+            stand-in would let a slugged href fall through to no match. */}
+        <Route path="/course/:id/:slug?" element={<p>Course destination</p>} />
       </Routes>
     </MemoryRouter>,
   );
@@ -42,7 +45,7 @@ describe("FacultyProfile", () => {
       .toContain('"alternateName":["ABJ Sir"]');
   });
 
-  it("links every course to its real course page", () => {
+  it("links every course to its canonical slugged course page", () => {
     profileHook.value = {
       loading: false, error: null,
       profile: {
@@ -55,7 +58,7 @@ describe("FacultyProfile", () => {
     };
     renderProfile();
     const link = screen.getByRole("link", { name: /Complete Kinematics/i });
-    expect(link.getAttribute("href")).toBe("/course/9");
+    expect(link.getAttribute("href")).toBe("/course/9/complete-kinematics");
     expect(screen.getByText("1 student rating")).toBeDefined();
   });
 
@@ -118,6 +121,10 @@ describe("Devanagari on a faculty profile", () => {
     expect(container.querySelector("h1 [lang='hi']").textContent).toBe("अमित बिजारणिया");
     expect(screen.getByText("एबीजे सर").getAttribute("lang")).toBe("hi");
     expect(screen.getByText("कबीर की साखी").getAttribute("lang")).toBe("hi");
+    // Same course, the other half of the slug rule: no ASCII to slugify means
+    // the canonical address is the bare id, not a percent-encoded guess.
+    expect(screen.getByText("कबीर की साखी").closest("a").getAttribute("href"))
+      .toBe("/course/1");
     // The Verified badge shares the h1 and must not inherit Hindi.
     expect(screen.getByText("Verified").closest("[lang]")).toBeNull();
   });

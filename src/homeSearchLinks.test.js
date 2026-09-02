@@ -15,14 +15,35 @@ describe("search result destinations", () => {
     expect(resultHref("chapter", row(7, { chapter_id: 7 }))).toBe("/browse?ch=7");
   });
 
+  // Chapter context wins, and it stays id-only: middleware.js canonicalises a
+  // chapter sub-URL without a slug, so adding one would buy a 308 per click.
   it("sends a course to its watch page, with chapter context when known", () => {
-    expect(resultHref("playlist", row(5, { chapter_id: 1 }))).toBe("/course/5/chapter/1");
+    expect(resultHref("playlist", row(5, { chapter_id: 1 }, { title: "Complete Kinematics" })))
+      .toBe("/course/5/chapter/1");
   });
 
   it("still opens a course that has no chapter context, rather than disabling it", () => {
     expect(resultHref("playlist", row(5, {}))).toBe("/course/5");
   });
 
+  // A playlist row IS the course, so its title is the course title and the
+  // destination can be the canonical slugged address rather than a redirect to
+  // it. (A lecture row's title is the LESSON's — see the fallback below.)
+  it("sends a course with no chapter context to its canonical slugged address", () => {
+    expect(resultHref("playlist", row(5, {}, { title: "Complete Kinematics" })))
+      .toBe("/course/5/complete-kinematics");
+  });
+
+  it("keeps the id-only address for a course title with no ASCII", () => {
+    const href = resultHref("playlist", row(212, {}, { title: "कबीर की साखी" }));
+    expect(href).toBe("/course/212");
+    expect(href).not.toContain("%");
+  });
+
+  // No slug on a lecture destination: universal_search's lecture branch returns
+  // playlist_id but not the COURSE's title, and row.title here is the lesson's.
+  // A slug minted from the wrong string would be a second address for the page;
+  // the bare id 308s to the right one.
   it("sends a lecture to the lesson itself when the course is known", () => {
     expect(
       resultHref("lecture", row(42, {
