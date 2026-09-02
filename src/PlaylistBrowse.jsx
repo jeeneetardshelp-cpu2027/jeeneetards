@@ -18,9 +18,11 @@ import {
 } from "lucide-react";
 import { usePlaylistBrowse, PAGE_SIZE } from "./usePlaylistBrowse.js";
 import {
-  LECTURE_SORTS, DEFAULT_LECTURE_SORT, LECTURE_SORT_PARAM, parseLectureSort,
+  lectureSortOptions, DEFAULT_LECTURE_SORT, LECTURE_SORT_PARAM, parseLectureSort,
 } from "./useBrowse.js";
-import { MIN_COMPARE, MAX_COMPARE, SORTS, DEFAULT_SORT } from "./filterModel.js";
+import {
+  MIN_COMPARE, MAX_COMPARE, SORTS, DEFAULT_SORT, courseSortOptions,
+} from "./filterModel.js";
 import { clearAllChips, dropParam, emptyStateMessage } from "./filterChips.js";
 import { FILTER_PARAMS } from "./filterSchema.js";
 import { makeReturnState } from "./returnTo.js";
@@ -144,9 +146,18 @@ export default function PlaylistBrowse({
   const sort = !sortUnavailable && SORTS.some((s) => s.id === sortRaw)
     ? sortRaw
     : DEFAULT_SORT;
+  // Availability first (which sorts this catalogue can honour), then the word
+  // (what the default one is doing right now). While a term is active the
+  // default IS relevance — search_playlist_ids ranks its ids and
+  // usePlaylistBrowse keeps that order — so the option reads "Best match".
+  // Same id, same URL: this adds no ?sort= value, so the stale-preference
+  // replace-effect below has nothing new to clean up.
   const sortOptions = useMemo(
-    () => SORTS.filter((option) => !unavailableSorts.has(option.id)),
-    [unavailableSorts],
+    () => courseSortOptions(
+      SORTS.filter((option) => !unavailableSorts.has(option.id)),
+      filters.search,
+    ),
+    [unavailableSorts, filters.search],
   );
   const setSort = useCallback((value, { replace = false } = {}) =>
     setParams((prev) => {
@@ -330,7 +341,10 @@ export default function PlaylistBrowse({
                 aria-label="Sort lessons"
                 className={`min-h-11 rounded-xl border ${t.border} ${t.card} ${t.text} px-3 text-sm`}
               >
-                {LECTURE_SORTS.map((s) => (
+                {/* While a search is active the default option is relevance,
+                    so it says "Best match" instead of "Recommended". Same id,
+                    same ?lsort= — the word is the only thing that moves. */}
+                {lectureSortOptions(filters.search).map((s) => (
                   <option key={s.id} value={s.id}>{s.label}</option>
                 ))}
               </select>

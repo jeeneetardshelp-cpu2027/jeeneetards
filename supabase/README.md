@@ -16,7 +16,11 @@ live schema on 31 Aug 2026 and recorded in the remote migration history, so
 | `20260902122500_neet_ug_2025_papers.sql` | **Applied and recorded** 2 Sep 2026. Verified live: NEET UG 2025 went 0 → 4 papers (2024 stayed 2, 2026 stayed 4) and all four official NTA URLs are present. Data seed, no schema. The rows went in by hand from the `docs/sql` copy at 12:20 UTC, before this file existed, so for a while the data was live while the remote history did not record it. That gap is closed: `migration list` now shows local and remote both at `20260902122500`, and a `db push` at 13:11 UTC reported `Remote database is up to date` with nothing to apply. Body is the reviewed `docs/sql` package verbatim; `src/neetUg2025PapersSeed.test.js` fails if the copies drift. |
 | `20260902170000_search_aliases.sql` | **Applied** 2 Sep 2026 via `db push`, first of the two. Verified live against the RPC, same query and limit before and after: `pnc` 0 → 25 (it returned nothing at all before, which is the failure this file was written for), `aod` 3 → 54, `rot mech` 13 → 50, `salt analysis` 42 → 59, `shm` 16 → 21. Teaches search the shorthand students say out loud (`shm`, `nlm`, `emi`, `ktg`, `moi`, `rot mech`, `pnc`, `aod`): ~39 seeded aliases in an admin-extendable table, plus `search_expand_aliases` / `search_rank_aliased`, and it re-emits `universal_search` to use them. Rehearsed on a real engine in `src/searchAliasesSqlRehearsal.test.js` (66 tests). Complementary to the client layer in `src/searchAliases.js`, whose 8 keys do not intersect these 32. |
 | `20260902180000_universal_search_material_words.sql` | **Applied** 2 Sep 2026 via `db push`, second, in the same push as the alias file. Verified live: `notes` 24 → 74 and `pyq` 55 → 105, which is the deliberate behaviour change below landing as designed. Ordinary queries were re-checked in the same pass because both files re-emit `universal_search` itself — `physics` 83, `kinematics` 67, `class 12` 41, and the site answering 200. Refuses to run before the alias file — see the note below. Lets a student find a material by the word they call it: `pyq`, `notes`, `previous year paper` and `ncert notes` all returned nothing against 412 approved materials, because the pillars match on the title and the titles never say the kind. Adds two `IMMUTABLE` helpers, re-emits `universal_search` with the widened haystack in both pillars (rank **and** prefilter), and moves the two expression indexes onto the expression the prefilter now uses. Deliberate behaviour change: a bare `notes` now returns all 225 notes and sheets. |
-| `20260902200000_link_verified_faculty_credits.sql` | **Staged, not applied.** The ONLY pending file, now that the two search migrations above are applied, so `db push` carries this alone. It touches no function they touch. Links 10 courses to faculty ALREADY in the registry, via `set_playlist_teachers`. It creates no teacher, alias or proposal, and leaves `faculty_credit_status` alone, because on production `identified` is a strict subset of linked (64 of 238) and so means a person confirmed the credit — which a name match has not. Deliberately NOT the other 158 unlinked courses: 132 of those have the CHANNEL name in `teacher` (linking them would file institutes as faculty) and 26 need an identity decision, several being more than one person. Rehearsed on a real engine in `src/facultySafeLinksSqlRehearsal.test.js` (11 tests, including a re-credited course, a de-verified teacher, a moved registry id, and a hand-curated link it must not overwrite). |
+| `20260902200000_link_verified_faculty_credits.sql` | **Applied** 2 Sep 2026 — confirmed by `migration list`, local and remote both at `20260902200000`. (This row said "staged, not applied, the ONLY pending file" for a while after it had in fact been pushed; that is the hazard the note under this table describes.) It touches no function the search migrations touch. Links 10 courses to faculty ALREADY in the registry, via `set_playlist_teachers`. It creates no teacher, alias or proposal, and leaves `faculty_credit_status` alone, because on production `identified` is a strict subset of linked (64 of 238) and so means a person confirmed the credit — which a name match has not. Deliberately NOT the other 158 unlinked courses: 132 of those have the CHANNEL name in `teacher` (linking them would file institutes as faculty) and 26 need an identity decision, several being more than one person. Rehearsed on a real engine in `src/facultySafeLinksSqlRehearsal.test.js` (11 tests, including a re-credited course, a de-verified teacher, a moved registry id, and a hand-curated link it must not overwrite). |
+| `20260902210000_search_gap_log.sql` | **Applied** 2 Sep 2026 via `db push`, first of the two. Creates `search_gap_log` and the `log_search_gap` RPC. This is the push that switched the feature ON: there is no flag in `src/searchGapLog.js`, the caller was already deployed, and the only thing holding it back was the missing RPC. Verified live: the RPC returned PGRST202 before the push and succeeded after. The disclosure in `src/PrivacyPolicy.jsx` was already on `release` when it landed. |
+| `20260902220000_repair_hindi_note_titles.sql` | **Applied** 2 Sep 2026 via `db push`, second. Verified live: approved rows containing a `?` went 33 → 1, and the one left is id 87, `How do Organisms Reproduce? - NCERT Science`, whose question mark is real punctuation. Spot-checked the two collision pairs, which are the rows a careless repair would have swapped — id 175 is `कबीर की साखी - NCERT स्पर्श` and id 204 is `माता का आँचल - NCERT कृतिका`, each matching its own chapter scope. Confirmed in a browser at code-point level: the search box now renders `तोप - NCERT स्पर्श` as U+0924 U+094B U+092A, not question marks. |
+| `20260902230000_remove_search_gap_probe.sql` | **Staged, not applied.** Deletes one synthetic row, `___probe___`, written into `search_gap_log` by the RPC existence check run during the push above. `anon` can write to that table but not read it, so it could not be cleaned up the way it was made. Exact-match delete with a postflight that fails if the row survives. |
+| `20260902240000_browse_course_relevance.sql` | **Staged, not applied.** Gives `search_playlist_ids` the relevance `ORDER BY` and `LIMIT 500` that `search_video_ids` already has, so /browse's Courses tab — the DEFAULT tab — finally has a best-match order. Measured against production first: `kinematics` returns 48 courses of which only 4 are literal, and page one today is one Kinematics course followed by eleven *Mathematics* ones, because `mathematics` sits within `word_similarity` 0.5 of `kinematics`; the two courses actually named Kinematics are not on page one at all, and the new ordering puts them at rows 1 and 2. Honest counter-case in the header: `organic chemistry` is all one tier, so its order is unchanged. Re-emitted from `20260902170000_search_aliases.sql`, carrying the alias pass forward, with a preflight that refuses if the helpers are missing OR if the deployed body has already lost them. Rehearsed on the composed chain in `src/browseCourseRelevanceSqlRehearsal.test.js`. **Renamed twice before landing** — `20260902210000` and `20260902220000` were both taken by files that appeared while this was being written, and the second was already applied, which would have made `db push` skip this one silently. Check `ls supabase/migrations/` immediately before choosing a number. |
 
 > **Why these two are one push, and in this order.** Both re-emit
 > `universal_search` whole — Postgres cannot patch one expression inside a
@@ -41,6 +45,18 @@ live schema on 31 Aug 2026 and recorded in the remote migration history, so
 > carry a preflight that refuses without its predecessor, and extend the chain
 > rehearsal.
 >
+> `src/searchFeatureCarryOverSqlContract.test.js` is the standing guard for
+> exactly this, and it covers **three** replaceable functions, not one:
+> `universal_search` (the search box) plus `search_video_ids` and
+> `search_playlist_ids` (the two /browse tabs), all of which the alias
+> migration re-emits. Re-emit any of them and you must add your feature's
+> marker to its `features` list, or the next author silently deletes your work.
+> Note the second `search_video_ids` entry: its `order by
+> search_rank_aliased(...)` is guarded on its own, because `src/useBrowse.js`
+> reconstructs lecture relevance purely from the POSITION of each id in the
+> returned array. Drop that ORDER BY and nothing errors — /browse just quietly
+> serves database-id order under a control that says "Best match".
+>
 > This is now history rather than a plan: both were applied in one `db push` on
 > 2 Sep 2026, in this order, and the safeguards were never tested in anger —
 > nothing refused, nothing aborted, because the order was right. What was checked
@@ -49,19 +65,56 @@ live schema on 31 Aug 2026 and recorded in the remote migration history, so
 > widened material words work (`notes` 24 → 74), so the second file composed with
 > the first instead of reverting it.
 
+### Parking, and why nothing is parked now (2 Sep 2026)
+
+Nothing sits in `docs/sql/` waiting any more. Both files that were pulled out of
+the chain are back in it, so this section is history — kept because the move is
+worth reaching for again.
+
+### Apply seeds through the chain, not by hand (2 Sep 2026)
+
+Every paper and note seed before 2 Sep 2026 was applied by hand from
+`docs/sql/`. For ASCII content that only cost the migration history its record
+of what ran. For the two Hindi packages it cost the data: whatever client ran
+them was not talking UTF-8, so all 32 titles and descriptions arrived with each
+Devanagari character replaced by one `?`. The files were never wrong; the copy
+in the database is.
+
+Nobody noticed for four weeks, because those notes were unreachable from search
+until `20260902180000` made them findable by the word "notes". Then they became
+some of the first rows a Hindi-medium student sees.
+
+**So: anything carrying non-ASCII text goes through `npx supabase db push`,**
+which is UTF-8 end to end. The SQL Editor and ad-hoc clients are how this
+happened.
+
+A migration that carries non-ASCII text should also prove the encoding survived
+the trip, the way `20260902210000` does — the check is one line, because a
+Devanagari string takes more **bytes** than it has **characters**:
+
+```sql
+if length('तोप') = octet_length('तोप') then
+  raise exception 'REFUSING: this connection is not UTF-8';
+end if;
+```
+
+Without it, a repair run over a bad connection writes question marks over
+question marks and reports success.
+
 ### Parked in `docs/sql/`, deliberately out of the chain (2 Sep 2026)
 
 Two files were moved OUT of `supabase/migrations/` so that `search_aliases`
-could be pushed on its own. `db push` has no per-file selection, so a file that
-must not run yet blocks every file behind it.
+could be pushed on its own. `db push` has no per-file selection, so **a file
+that must not run yet blocks every file behind it**. Parking the blocker, rather
+than renumbering around it or reaching for `--include-all`, is what let the
+finished work ship.
 
-One of the two is back in the chain: `universal_search_material_words` was
-rebuilt on top of the alias body, which is what its parking note asked for, so
-it composes instead of colliding. The privacy one below stays parked.
-
-| Parked file | Why it is out |
-| --- | --- |
-| `docs/sql/search_gap_log_2026-09-02.sql` | **Its own header says `DO NOT APPLY YET — PRIVACY DISCLOSURE OUTSTANDING`.** It logs student-typed search text server-side; `src/PrivacyPolicy.jsx` enumerates every such path by table name and does not mention `search_gap_log`. Applying it would collect data the policy says is not collected, for an audience largely under 18. Needs the owner to decide the log should exist at all, then the disclosure paragraph, then a fresh timestamp back into the chain. `src/searchGapPrivacyContract.test.js` enforces the pairing; the frontend already goes quiet without it. |
+Both came back for their own reasons. `universal_search_material_words` was
+rebuilt on top of the alias body, as its parking note prescribed, so it composes
+instead of colliding. `search_gap_log` returned as `20260902210000` once the
+condition its banner named was met: the owner decided the log should exist, and
+the Privacy Policy now names the table. Its remaining gate is a deploy rather
+than a merge — see its row above.
 
 
 **Held deliberately OUTSIDE this directory:**

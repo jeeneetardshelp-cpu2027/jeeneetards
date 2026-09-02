@@ -23,7 +23,7 @@
 //  HomeSections.jsx.
 // =====================================================================
 
-import { Suspense, lazy, useEffect, useMemo, useState } from "react";
+import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router";
 import { Search, X } from "lucide-react";
 import { usePlaylistBrowse } from "./usePlaylistBrowse.js";
@@ -36,6 +36,11 @@ import { Container, GlobalHeader, MAIN_CONTENT_ID } from "./AppShell.jsx";
 // its input and hands the query straight to the component /search uses, so the
 // same query behaves identically wherever a student types it.
 import UniversalSearch from "./UniversalSearch.jsx";
+// The hero's empty state. Same component /search draws under its own empty
+// field — the student's own successful searches, or a short curated list while
+// they have none yet. Nothing it shows has ever left this browser; see
+// searchHistory.js.
+import SearchStarters from "./SearchStarters.jsx";
 import { getContinueWatching, mergeRemoteEntry } from "./progress.js";
 import { pullServerProgress } from "./progressSync.js";
 import { useSession } from "./useSession.js";
@@ -106,6 +111,15 @@ export default function Home() {
   // and running the hook here as well would double every request just to draw a
   // spinner. The component says "Searching…" below the field instead.
   const searching = input.trim().length > 0;
+
+  // Tapping a recent-search or starter chip removes the chips from the page,
+  // so focus would otherwise fall to <body> and a keyboard student would lose
+  // their place. Put it back in the field they are now searching from.
+  const heroInputRef = useRef(null);
+  const runQuery = useCallback((query) => {
+    setInput(query);
+    heroInputRef.current?.focus();
+  }, []);
 
   const [continueWatching, setContinueWatching] = useState(() => getContinueWatching(3));
   const { session } = useSession();
@@ -194,11 +208,20 @@ export default function Home() {
 
       <Hero
         searchField={
-          <HeroSearch
-            value={input}
-            onChange={setInput}
-            onClear={() => setInput("")}
-          />
+          <>
+            <HeroSearch
+              value={input}
+              onChange={setInput}
+              onClear={() => setInput("")}
+              inputRef={heroInputRef}
+            />
+            {/* Outside the <form>, not inside it: HeroSearch's focus halo is
+                an absolutely positioned -inset-1 of the form, so chips added
+                within it would sit under the glow. */}
+            {!searching && (
+              <SearchStarters onPick={runQuery} className="mt-5 text-left" />
+            )}
+          </>
         }
         chips={searching ? null : <TrustChips />}
         stats={searching ? [] : heroStats}
@@ -242,7 +265,7 @@ export default function Home() {
 //  Hero search — the page's primary control, so it is the only input on
 //  the site that gets display sizing and a focus glow.
 // ---------------------------------------------------------------------
-function HeroSearch({ value, onChange, onClear }) {
+function HeroSearch({ value, onChange, onClear, inputRef }) {
   return (
     <form
       role="search"
@@ -271,6 +294,7 @@ function HeroSearch({ value, onChange, onClear }) {
           keyboard over the hero and pins the page at the top. ?q= still
           seeds the field, so a hand-off from Explore behaves as before. */}
       <input
+        ref={inputRef}
         aria-label="Search the library"
         // How AppShell's "/" and Ctrl/Cmd-K shortcut finds this field — see
         // "The global search shortcut" in AppShell.jsx. Without it the

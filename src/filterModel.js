@@ -112,6 +112,35 @@ export const SORTS = [
 ];
 export const DEFAULT_SORT = "recommended";
 
+/**
+ * The course sort options AS THE CONTROL SHOULD LABEL THEM for the current
+ * search box.
+ *
+ * There is no sixth "Relevance" sort id, deliberately — the same reasoning
+ * useBrowse.js records for the lectures tab. While a term is active the
+ * default sort IS the server's relevance ranking (search_playlist_ids now
+ * returns its ids ranked; usePlaylistBrowse.js keeps that order), so a
+ * separate id would only add a ?sort=relevance value that goes meaningless the
+ * moment the term is cleared. This tab already has to clean stale ?sort=
+ * values out of shared URLs with a replace-effect; adding a value that goes
+ * stale by design would be a second instance of that problem.
+ *
+ * What DOES change is the word. Same id, same ?sort= (still absent from the
+ * URL at the default), same option list — only the label moves, so the
+ * availability replace-effect in PlaylistBrowse.jsx has nothing new to react
+ * to.
+ *
+ * Takes the list rather than SORTS itself, because WHICH sorts exist is a data
+ * question (useRatingsAvailability / usePopularityAvailability decide it) and
+ * what the default one is CALLED is a search question. Composing them keeps
+ * one filtered list, not two.
+ */
+export function courseSortOptions(options, search) {
+  if (!(search ?? "").trim()) return options;
+  return options.map((s) =>
+    s.id === DEFAULT_SORT ? { ...s, label: "Best match" } : s);
+}
+
 // ---------------------------------------------------------------- URL schema
 // Short, stable keys. Renaming one is a breaking change to every shared link,
 // so they are defined once, here.

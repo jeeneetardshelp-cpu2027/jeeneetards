@@ -8,6 +8,16 @@ function variantsText(variants = []) {
   return variants.map((v) => `${v.raw_teacher} (${v.occurrences})`).join(" · ");
 }
 
+// "Unacademy NEET (14)" or "Allen (3), eSaral (1)". Empty when the catalogue
+// read did not land, so the line simply omits it rather than saying nothing
+// in more words.
+function channelsText(context) {
+  const channels = context?.channels ?? [];
+  if (!channels.length) return "";
+  return channels.slice(0, 3).map((c) => `${c.name} (${c.count})`).join(", ")
+    + (channels.length > 3 ? ` +${channels.length - 3} more` : "");
+}
+
 export default function FacultyReviewPanel() {
   const { t } = useTheme();
   const { groups, loading, error, unavailable, reload } = useFacultyReview();
@@ -108,6 +118,7 @@ export default function FacultyReviewPanel() {
                     <span className={`block text-sm font-medium ${t.text}`}>{variantsText(group.variants)}</span>
                     <span className={`block text-xs ${t.faint}`}>
                       {group.kind} · {group.total_occurrences} playlist occurrence{Number(group.total_occurrences) === 1 ? "" : "s"}
+                      {channelsText(group.context) && ` · on ${channelsText(group.context)}`}
                     </span>
                   </span>
                   <ChevronDown className={`h-4 w-4 shrink-0 transition ${open ? "rotate-180" : ""}`} />
@@ -115,6 +126,20 @@ export default function FacultyReviewPanel() {
 
                 {open && (
                   <div className={`border-t ${t.divider} p-4`}>
+                    {group.context?.isChannelName && (
+                      // The classifier reads spelling; this reads the
+                      // catalogue. "Magnet Brains" trips no organisation
+                      // keyword and arrives labelled `single`, so without this
+                      // the queue offers an institute as a person to approve.
+                      // Amber pair, deliberately theme-independent, as above.
+                      <p className="mb-4 rounded-lg bg-amber-50 p-3 text-xs text-amber-900">
+                        Every course with this name sits on a channel of the same name, so
+                        this is very likely the channel itself rather than a person. Approving
+                        it as faculty would list an institute in the directory. Reject it
+                        unless you know this is a real person whose channel carries their
+                        name — several are.
+                      </p>
+                    )}
                     {requiresSplit && (
                       // Amber pair — deliberately theme-independent, see above.
                       <p className="mb-4 rounded-lg bg-amber-50 p-3 text-xs text-amber-900">

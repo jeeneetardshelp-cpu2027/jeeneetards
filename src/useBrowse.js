@@ -31,6 +31,25 @@ export const LECTURE_SORTS = [
 ];
 export const DEFAULT_LECTURE_SORT = "recommended";
 
+/**
+ * The sort options AS THE CONTROL SHOULD LABEL THEM for the current search box.
+ *
+ * There is no fifth "Relevance" sort id, deliberately. While a term is active
+ * the default sort IS relevance (see useVideos below), so a separate id would
+ * only add a ?lsort=relevance value that goes meaningless the moment the term
+ * is cleared — the exact stale-preference problem the courses tab already has
+ * to clean up with a replace-effect — and an option that appears and vanishes
+ * as you type is a control moving under the student's hand.
+ *
+ * What DOES change is the word: "Recommended" is not what the list is doing
+ * during a search, "Best match" is. Same id, same URL, same default.
+ */
+export function lectureSortOptions(search) {
+  if (!(search ?? "").trim()) return LECTURE_SORTS;
+  return LECTURE_SORTS.map((s) =>
+    s.id === DEFAULT_LECTURE_SORT ? { ...s, label: "Best match" } : s);
+}
+
 // ?lsort= — its own URL key, not the playlists tab's ?sort=: the two tabs have
 // different honest vocabularies, and sharing one key would make a playlists
 // sort silently mean something else (or nothing) after a tab switch.
@@ -118,6 +137,12 @@ export function useVideos({
     // title matches (multi-token, typo-tolerant, Hinglish), capped at the most
     // relevant 500, and we intersect that with the filters below. Resolving ids
     // once here keeps the branchy column/filter builder untouched otherwise.
+    //
+    // The RPC returns ids IN RELEVANCE ORDER (its SQL is `order by rank,
+    // length(title), id limit 500`) but returns no rank column, so the order is
+    // carried entirely by the position of each id in this array. That position
+    // is the only copy of the ranking that exists on the client — the ordering
+    // below depends on it.
     const term = (search ?? "").trim();
     let searchIds = null;
     let searchIlike = null; // graceful fallback while the match RPC is undeployed
@@ -165,14 +190,57 @@ export function useVideos({
         : ", membership:playlist_videos(playlist_id)");
     // The chosen sort leads; .order("id") always follows as the unique
     // tie-break, so "recommended" is exactly the order this list always had.
-    const applyOrder = LECTURE_ORDER_BY[sort] ?? LECTURE_ORDER_BY.recommended;
+    // hasOwn, not a plain lookup: `?lsort=constructor` would otherwise resolve
+    // to an inherited property and be treated as a real sort. It now matters
+    // twice over, because the relevance branch below asks which sort this is.
+    const effectiveSort = Object.hasOwn(LECTURE_ORDER_BY, sort ?? "")
+      ? sort
+      : DEFAULT_LECTURE_SORT;
+    const applyOrder = LECTURE_ORDER_BY[effectiveSort];
+
+    // RELEVANCE. `SQL IN` does not preserve the order of its arguments, so
+    // .in("id", searchIds).order("id") threw the server's ranking away and
+    // handed back database-id order — the best match for "friction problems"
+    // could sit on page 3. Postgres knows the rank; PostgREST cannot order by
+    // a position in a client-supplied array, and the RPC exposes no rank
+    // column to order on, so the reordering has to happen here.
+    //
+    // It is only correct if it sees the WHOLE filtered result set, because the
+    // filters run in the database: taking the 24 most relevant ids first and
+    // filtering after would give short pages, a wrong total, and an empty page
+    // 1 in front of a full page 2. That is affordable precisely because the
+    // RPC caps itself at 500 ids, and .in("id", …) on a unique key bounds the
+    // result to at most that many rows — so ONE request with range(0, n-1)
+    // always covers everything, and the page is sliced from it below.
+    //
+    // THE COST, MEASURED against production on 2 Sep 2026 rather than guessed
+    // at, because /browse debounces at 300ms and so pays it per keystroke:
+    // "phy" 229 ids / 92 KB, "physics" 211 / 85 KB, "kin" 212 / 80 KB,
+    // "friction problems" 40 / 15 KB, "notes" 23 / 9 KB — against ~9 KB for a
+    // 24-row page. Nothing came near the 500 cap, so the realistic ceiling is
+    // ~90 KB of JSON (uncompressed; the wire figure is smaller and could not
+    // be read cross-origin), roughly what one or two of the page's own video
+    // thumbnails cost. The two-request alternative — ids-only, then .in() the
+    // 24 page ids — would trade that for a second round trip on every
+    // debounced keystroke plus a duplicated join builder. At this size the
+    // round trip is the thing a student on mobile data actually feels, so it
+    // is not worth it. If a future catalogue makes broad queries hit the 500
+    // cap, re-measure before assuming that still holds.
+    //
+    // Only the DEFAULT sort becomes relevance. A student who picked "Shortest
+    // first" asked for shortest, and gets shortest.
+    const byRelevance = Boolean(searchIds) && effectiveSort === DEFAULT_LECTURE_SORT;
+    const from = byRelevance ? 0 : page * LECTURE_PAGE_SIZE;
+    const to = byRelevance
+      ? Math.max(searchIds.length - 1, 0)
+      : page * LECTURE_PAGE_SIZE + LECTURE_PAGE_SIZE - 1;
     let q = applyOrder(supabase.from("videos").select(cols, { count: "exact" }))
       .order("id", { ascending: true })
       // Referenced-table order + limit: the course embed above, bounded to the
       // lowest-numbered matching course so the link is stable across reloads.
       .order("playlist_id", { referencedTable: "membership", ascending: true })
       .limit(1, { referencedTable: "membership" })
-      .range(page * LECTURE_PAGE_SIZE, page * LECTURE_PAGE_SIZE + LECTURE_PAGE_SIZE - 1);
+      .range(from, to);
 
     if (goalId) q = q.eq("video_learning_goals.learning_goal_id", goalId);
     if (classSlugs) q = q.in("membership.playlists.pcl.class_levels.slug", classSlugs);
@@ -200,7 +268,7 @@ export function useVideos({
         return;
       }
 
-      const videos = (data ?? []).map((r) => ({
+      let videos = (data ?? []).map((r) => ({
         id: r.id,
         youtubeVideoId: r.youtube_video_id,
         title: r.title,
@@ -214,10 +282,27 @@ export function useVideos({
         // and the card says so rather than promising a destination.
         playlistId: r.membership?.[0]?.playlist_id ?? null,
       }));
+      // Under relevance the request above fetched the ENTIRE filtered match
+      // set, so its size is the true total even if the count header were ever
+      // missing, and the page is cut from it AFTER reordering — which is what
+      // makes page 2 continue the ranking instead of restarting it.
+      let total = count ?? null;
+      if (byRelevance) {
+        if (total == null) total = videos.length;
+        const rankOf = new Map(searchIds.map((id, i) => [id, i]));
+        const rank = (v) => rankOf.get(v.id) ?? Number.MAX_SAFE_INTEGER;
+        videos = videos
+          .slice()
+          // Every id has a distinct rank, so this is a total order — the same
+          // rows always produce the same page. The id tie-break only ever runs
+          // for a row the id list somehow did not name.
+          .sort((a, b) => rank(a) - rank(b) || a.id - b.id)
+          .slice(page * LECTURE_PAGE_SIZE, (page + 1) * LECTURE_PAGE_SIZE);
+      }
       setState({
-        videos, total: count ?? null, loading: false, error: null,
-        hasMore: count != null
-          ? (page + 1) * LECTURE_PAGE_SIZE < count
+        videos, total, loading: false, error: null,
+        hasMore: total != null
+          ? (page + 1) * LECTURE_PAGE_SIZE < total
           : videos.length === LECTURE_PAGE_SIZE,
       });
     } catch (err) {

@@ -176,6 +176,12 @@ export function usePlaylistBrowse({
     // only on the term, not on the stats-column retry) keeps buildQuery a pure
     // filter composition. Before this, "friction problems" returned 0 courses
     // on /browse while the homepage found 3.
+    //
+    // The RPC returns ids IN RELEVANCE ORDER (its SQL ends `order by
+    // search_rank_aliased(...), length(pl.title), pl.id limit 500`) but exposes
+    // NO rank column, so the ranking is carried entirely by the position of
+    // each id in this array. That position is the only copy of the ranking that
+    // exists on the client — the ordering further down depends on it.
     const term = (search ?? "").trim();
     let searchIds = null;
     let searchIlike = null; // graceful fallback while the match RPC is undeployed
@@ -240,6 +246,44 @@ export function usePlaylistBrowse({
       // embed yields both the chapter-scoped lecture count and its runtime.
       (chapterId ? ", pv:playlist_videos!inner(videos!inner(chapter_id, duration_seconds))" : "");
 
+    // hasOwn, not a plain lookup: `?sort=constructor` would otherwise resolve
+    // to an inherited property and be treated as a real ordering. It matters
+    // twice over now, because the relevance branch below asks which sort this
+    // is, not merely which chain to run.
+    const effectiveSort = Object.hasOwn(ORDER_BY, sort ?? "") ? sort : "recommended";
+
+    // RELEVANCE. `SQL IN` does not preserve the order of its arguments, so
+    // .in("id", searchIds).order(...) throws the server's ranking away and
+    // hands back whatever ?sort= says — which, measured against production on
+    // 2 Sep 2026, means a student typing "kinematics" gets a page of
+    // *Mathematics* courses (44 of the 48 matches are trigram-fuzzy) while the
+    // two courses actually called Kinematics sit below the fold. Postgres knows
+    // the rank; PostgREST cannot order by a position in a client-supplied
+    // array, and the RPC exposes no rank column, so the reordering happens here.
+    //
+    // It is only correct if it sees the WHOLE filtered result set, because the
+    // filters run in the database: taking the 12 most relevant ids first and
+    // filtering after would give short pages, a wrong total, and an empty page
+    // 1 in front of a full page 2. That is affordable precisely because the RPC
+    // caps itself at 500 ids, and .in("id", …) on a unique key bounds the
+    // result to at most that many rows — so ONE request with range(0, n-1)
+    // always covers everything, and the page is sliced from it below.
+    //
+    // THE COST, MEASURED against production rather than guessed at, because
+    // /browse debounces at 300ms and so pays it per keystroke. Course rows are
+    // fatter than lecture rows (cover embed, counts, stats), so this was
+    // measured with the exact `cols` above: "che"/"chemistry" 96 ids / 64 KB,
+    // "maths" 58 / 38 KB, "jee" 54 / 35 KB, "phy" 49 / 33 KB, "physics" 47 /
+    // 32 KB, "organic chemistry" 18 / 12 KB — against ~8 KB for a 12-row page,
+    // at the same one round trip and the same ~230-300ms. The absolute ceiling
+    // is the whole table: 484 playlists / 322 KB, and no real query came within
+    // a factor of five of it. If the catalogue ever makes broad queries hit the
+    // RPC's 500 cap, re-measure before assuming that still holds.
+    //
+    // Only the DEFAULT sort becomes relevance. A student who picked "Most
+    // viewed" asked for most viewed, and gets most viewed.
+    const byRelevance = Boolean(searchIds) && effectiveSort === "recommended";
+
     // The sort the student chose (?sort=) selects the ordering. "recommended"
     // still leads with curated display_order (new courses default to 1,000,000,
     // so they stay after deliberately placed rows). Every chain ends with a
@@ -249,7 +293,7 @@ export function usePlaylistBrowse({
         ? cols
         : cols.replace(" view_count_total, stats_fetched_at,", "");
       const orderMap = includeStats ? ORDER_BY : ORDER_WITHOUT_STATS;
-      const applyOrder = orderMap[sort] ?? orderMap.recommended;
+      const applyOrder = orderMap[effectiveSort];
       let q = applyOrder(supabase.from("playlists").select(selectedColumns, { count: "exact" }))
         .order("id")
         // One representative image per course, chosen deterministically from
@@ -258,7 +302,14 @@ export function usePlaylistBrowse({
         .order("position", { ascending: true, referencedTable: "cover" })
         .order("id", { ascending: true, referencedTable: "cover" })
         .range(0, 0, { referencedTable: "cover" })
-        .range(page * pageSize, page * pageSize + pageSize - 1);
+        // Under relevance this is the WHOLE bounded match set, not a page: the
+        // page is cut from it after the ranking is re-applied below.
+        .range(
+          byRelevance ? 0 : page * pageSize,
+          byRelevance
+            ? Math.max(searchIds.length - 1, 0)
+            : page * pageSize + pageSize - 1,
+        );
 
       // Learning goal was accepted as a prop and never applied, so a JEE view
       // also listed NEET courses. Goal isolation is the point of the journey.
@@ -305,6 +356,22 @@ export function usePlaylistBrowse({
       return;
     }
     let items = (data ?? []).map(toCard);
+    // Under relevance the request above fetched the ENTIRE filtered match set,
+    // so its size is the true total even if the count header were ever missing,
+    // and the page is cut from it AFTER reordering — which is what makes page 2
+    // continue the ranking instead of restarting it.
+    let total = count ?? null;
+    if (byRelevance) {
+      if (total == null) total = items.length;
+      const rankOf = new Map(searchIds.map((id, i) => [id, i]));
+      const rank = (c) => rankOf.get(c.id) ?? Number.MAX_SAFE_INTEGER;
+      items = [...items]
+        // Every id has a distinct rank, so this is a total order — the same
+        // rows always produce the same page. The id tie-break only ever runs
+        // for a row the id list somehow did not name.
+        .sort((a, b) => rank(a) - rank(b) || a.id - b.id)
+        .slice(page * pageSize, (page + 1) * pageSize);
+    }
     // "recommended" is display_order -> popularity_score -> title, but 472/477
     // production rows share display_order=1000000 and popularity_score is 0 on
     // ALL of them, so a chapter page fell through to ALPHABETICAL. That floated
@@ -317,12 +384,17 @@ export function usePlaylistBrowse({
     // PostgREST cannot order by an embedded aggregate without a database-side
     // rollup. That is enough in practice -- chapter result sets are tiny (median
     // 3 courses, max 22) and only 18 of 249 populated chapters exceed one page.
-    if (chapterId && (sort ?? "recommended") === "recommended") {
+    //
+    // NOT under relevance. A student who typed a query asked "which of these
+    // is the best match", and chapter depth is a different question with a
+    // different answer; running both would leave neither control honest. When
+    // a term is active the ranking wins and this heuristic stands down.
+    if (!byRelevance && chapterId && effectiveSort === "recommended") {
       items = [...items].sort((a, b) => (b.lectures ?? 0) - (a.lectures ?? 0));
     }
     setState({
-      items, total: count ?? null, loading: false, error: null,
-      hasMore: count != null ? (page + 1) * pageSize < count : items.length === pageSize,
+      items, total, loading: false, error: null,
+      hasMore: total != null ? (page + 1) * pageSize < total : items.length === pageSize,
     });
   }, [enabled, goalId, boardId, subjectId, chapterId, stage, channelId, teacherId,
       chapterClassKey,
