@@ -5,6 +5,30 @@ This directory is the **ordered migration chain** for the production database
 live schema on 31 Aug 2026 and recorded in the remote migration history, so
 `supabase db push` applies only what production does not already have.
 
+## SEARCH_GAP_COLLECTION: live
+
+**This line is a switch, not a note.** `src/searchGapPrivacyContract.test.js`
+reads it and fails the build if `src/PrivacyPolicy.jsx` disagrees with it, so
+the deployed privacy wording and the database can no longer drift apart.
+
+`paused` means `anon` and `authenticated` cannot execute `log_search_gap`, so
+no zero-result search is recorded, and the policy must keep saying the log is
+not switched on yet. `live` means the reverse and the policy must be in the
+present tense.
+
+It says `live`, and it briefly said `paused` on 2 Sep 2026 for about twenty
+minutes. That episode is the reason this marker exists, so it is worth keeping:
+the migration that created the log switched collection on while the disclosure
+was still undeployed. A merged PR is not a deployed page — production was
+serving the 31 August policy, which had no search section in it at all. So
+collection was revoked at the database until the page caught up, and restored
+once it had.
+
+**Never flip this to `live` on the strength of a merge.** Load
+<https://jeeneetard.com/privacy> in a browser and read section 6 with your own
+eyes first. Then, in one change: the migration granting `EXECUTE`, this marker,
+and the policy's tense.
+
 ## Current state (2 Sep 2026)
 
 | File | Status |
@@ -21,6 +45,8 @@ live schema on 31 Aug 2026 and recorded in the remote migration history, so
 | `20260902220000_repair_hindi_note_titles.sql` | **Applied** 2 Sep 2026 via `db push`, second. Verified live: approved rows containing a `?` went 33 → 1, and the one left is id 87, `How do Organisms Reproduce? - NCERT Science`, whose question mark is real punctuation. Spot-checked the two collision pairs, which are the rows a careless repair would have swapped — id 175 is `कबीर की साखी - NCERT स्पर्श` and id 204 is `माता का आँचल - NCERT कृतिका`, each matching its own chapter scope. Confirmed in a browser at code-point level: the search box now renders `तोप - NCERT स्पर्श` as U+0924 U+094B U+092A, not question marks. |
 | `20260902230000_remove_search_gap_probe.sql` | **Applied** 2 Sep 2026 via `db push`. Deleted the one synthetic `___probe___` row left in `search_gap_log` by the RPC existence check run during the previous push. The row this file was written to remove is gone; `anon` cannot read that table, so the postflight inside the migration is the proof, not a query. |
 | `20260902240000_browse_course_relevance.sql` | **Applied** 2 Sep 2026 via `db push`, ahead of the release that needs it. Measured immediately before and after against production, same query both times: `search_playlist_ids('kinematics')` returned 48 ids led by *Chemical Kinetics* with only 1 of the top 10 actually Kinematics, and afterwards returned the same 48 led by `Kinematics 1D`, `Kinematics| Irodov solutions`, `Rectilinear Motion (Kinematics)` and `Rohit Mishra JEE Advanced Kinematics`, with Chemical Kinetics demoted to 5th. Applied BEFORE the frontend that depends on it: the client stops re-sorting and carries the ranking in the array position alone, so shipping the code first would have replaced a defined `?sort=` order with an arbitrary one. Alias parity re-checked after: `/browse` and the search box agree on `pnc` (2 and 2), `aod` (2 and 2) and `shm` (0 and 0 — the catalogue has no course with "harmonic" in its title). |
+| `20260902250000_pause_search_gap_collection.sql` | **Applied** 2 Sep 2026, then lifted by the file above about twenty minutes later. Revokes `EXECUTE` on `log_search_gap` from `anon` and `authenticated`, so nothing is recorded. Verified live: the RPC answers `401 permission denied` where it answered `204`, `search_video_ids` still returns 172 rows for `kinematics`, and `/search` renders its ordinary "Nothing matches" empty state with no error text — `src/searchGapLog.js:86-87` swallows the refusal exactly as it swallowed the missing function before the push. **Why:** applying `20260902210000` switched collection ON, but the disclosure never reached students — the Vercel build of `release` was rate limited ("retry in 24 hours"), so `https://jeeneetard.com/privacy` was still the 31 August version with no search section at all. Merged is not deployed. Rows already written were deliberately left in place; whether to keep or discard them is an owner decision, and `anon` cannot read them meanwhile. |
+| `20260902260000_resume_search_gap_collection.sql` | **Applied** 2 Sep 2026, lifting the pause below once the disclosure was confirmed on the live page — `https://jeeneetard.com/privacy` loaded in a browser showing "Effective date: 2 September 2026" and section 6, "Searches that find nothing", naming `search_gap_log` in the present tense. Verified after: the RPC answers `204` again, `search_video_ids` still returns 172 rows for `kinematics`, and `anon` still gets `401` reading the table, so RLS is untouched. Restores exactly the two grants the pause revoked; nothing else changes. **Note for the next reader:** its first push ABORTED and rolled back — the self-verification compared `pg_get_function_identity_arguments` against `'text, integer'`, but that function includes parameter names, so the real value is `p_query text, p_result_count integer`. The assertion was wrong, not the database, and it was redundant with the `to_regprocedure` lookup that already pins the types. Recorded rather than quietly deleted. |
 
 > **Why these two are one push, and in this order.** Both re-emit
 > `universal_search` whole — Postgres cannot patch one expression inside a

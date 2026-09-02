@@ -93,29 +93,47 @@ describe("search gap log privacy contract", () => {
   // against the one file that is supposed to mirror it. If someone pushes and
   // updates neither, the older tests still catch nothing; if they push and
   // update the README, this fails until the policy follows.
-  it("matches the policy's tense to what the README says was applied", () => {
-    const readme = read("supabase/README.md");
-    const row = readme.split("\n").find((line) => line.includes(MIGRATION.split("/").pop()));
-    if (!row) return;                         // not recorded yet; nothing to mirror
+  // KEYED ON COLLECTION, NOT ON THE MIGRATION. The first version of this test
+  // read the migration's row and asked whether it said "Applied". That was
+  // wrong within the hour, because applied and collecting stopped being the
+  // same fact: the log migration IS applied, and collection is nonetheless off,
+  // because a later migration revoked EXECUTE from anon and authenticated
+  // while the disclosure waits for a deploy that Vercel rate limited.
+  //
+  // "Has a file been applied" is a question about the chain. "Is anything being
+  // recorded" is the question a privacy policy answers, and it is the one that
+  // has to drive the tense. So there is now exactly ONE switch —
+  // SEARCH_GAP_COLLECTION in supabase/README.md — and this asserts the policy
+  // agrees with it. Flipping the switch without touching the policy fails here,
+  // and so does the reverse.
+  it("matches the policy's tense to the recorded collection state", () => {
+    const marker = read("supabase/README.md").match(/SEARCH_GAP_COLLECTION:\s*(\w+)/i);
+    expect(
+      marker,
+      "supabase/README.md must carry a SEARCH_GAP_COLLECTION marker — it is the single " +
+        "switch this test and the Privacy Policy both key on",
+    ).not.toBe(null);
 
-    const applied = /\*\*Applied\*\*/.test(row);
+    const state = marker[1].toLowerCase();
+    expect(["live", "paused"], `unknown SEARCH_GAP_COLLECTION state "${state}"`).toContain(state);
+
     const policy = read("src/PrivacyPolicy.jsx").replace(/\{\/\*[\s\S]*?\*\/\}/g, " ");
     const section = policy.slice(policy.indexOf("Searches that find nothing"));
     const saysOff = /not switched on|not being recorded/i.test(section);
 
-    if (applied) {
+    if (state === "live") {
       expect(
         saysOff,
-        "supabase/README.md records the search-gap-log migration as APPLIED, so the log " +
-          "is collecting search text — but PrivacyPolicy.jsx still tells students it is " +
-          "not switched on. Move section 6 (and the section 4 cross-reference) to the " +
-          "present tense in the same change that records the push.",
+        "SEARCH_GAP_COLLECTION says live, so zero-result searches are being recorded — " +
+          "but PrivacyPolicy.jsx still tells students the log is not switched on. Move " +
+          "section 6 and the section 4 cross-reference to the present tense in the same " +
+          "change that flips the marker.",
       ).toBe(false);
     } else {
       expect(
         saysOff,
-        "the migration is not recorded as applied, so the policy must keep saying the " +
-          "log is not switched on yet",
+        "SEARCH_GAP_COLLECTION says paused, so nothing is recorded — the policy must say " +
+          "so plainly rather than describing the log in the present tense.",
       ).toBe(true);
     }
   });
