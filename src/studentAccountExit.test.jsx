@@ -133,6 +133,52 @@ describe("student account safety", () => {
     expect(localStorage.getItem("ll_revision_v1")).not.toBeNull();
   });
 
+  // The same shared-device reasoning a third time, and the most literal case
+  // of it: this key holds up to eight things the student TYPED. Deleting
+  // clearRecentSearches() from AppShell must not leave the suite green, which
+  // is exactly what happened to clearProgress() before the test above existed.
+  it("clears this device's recent searches after a successful sign-out", async () => {
+    localStorage.setItem(
+      "ll_search_history_v1",
+      JSON.stringify([{ q: "hindi class 10 notes", at: 1700000000000 }]),
+    );
+
+    render(
+      <ThemeProvider>
+        <MemoryRouter>
+          <GlobalHeader />
+        </MemoryRouter>
+      </ThemeProvider>,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Sign out" }));
+
+    await waitFor(() => expect(localStorage.getItem("ll_search_history_v1")).toBeNull());
+  });
+
+  it("keeps this device's recent searches when sign-out FAILS", async () => {
+    auth.signOut.mockResolvedValue({ error: { message: "network" } });
+    localStorage.setItem(
+      "ll_search_history_v1",
+      JSON.stringify([{ q: "hindi class 10 notes", at: 1700000000000 }]),
+    );
+
+    render(
+      <ThemeProvider>
+        <MemoryRouter>
+          <GlobalHeader />
+        </MemoryRouter>
+      </ThemeProvider>,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Sign out" }));
+
+    await waitFor(() => expect(auth.signOut).toHaveBeenCalled());
+    // Still signed in. Wiping a student's own searches out from under a failed
+    // sign-out would be the same bug pointed the other way.
+    expect(localStorage.getItem("ll_search_history_v1")).not.toBeNull();
+  });
+
   it("links the sign-in form to the password-reset route", () => {
     render(
       <ThemeProvider>

@@ -140,8 +140,19 @@ export function rememberSearch(query, { resultCount = 0 } = {}) {
   return next;
 }
 
-/** Forget every remembered search on this device. The Clear button. */
+/**
+ * Forget every remembered search on this device. The Clear button, and sign-out.
+ *
+ * Cancels the scheduled write below as well as removing the stored list. A
+ * search that settled moments ago still holds that timer, and it calls
+ * rememberSearch() on a delay — so without this, clearing lasts only until the
+ * timer fires and the term the student just cleared writes itself straight
+ * back. It is the same 1200ms window for the Clear button and for sign-out,
+ * and on a shared machine the sign-out case is the one that matters.
+ */
 export function clearRecentSearches() {
+  clearTimeout(pending);
+  pending = null;
   try {
     localStorage.removeItem(KEY);
   } catch {
