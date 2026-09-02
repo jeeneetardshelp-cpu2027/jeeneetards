@@ -11,6 +11,7 @@ import { ratingDisplay } from "./ratingConfidence.js";
 // document declares lang="en". See lang.js.
 import { hasDevanagari, langAttrs } from "./lang.js";
 import { BRAND_SERIF, BRAND_TEAL, subjectColor, subjectInk } from "./brandColors.js";
+import { courseCredit } from "./courseCredit.js";
 import ChannelAvatar from "./ChannelAvatar.jsx";
 
 const TEAL = BRAND_TEAL;
@@ -31,7 +32,8 @@ export default function CourseOverview({
   const color = subjectColor(course.subject);
   // White initials were 2.98:1 on chemistry; the ink is chosen by contrast.
   const ink = subjectInk(course.subject);
-  const initials = (course.teacher || "")
+  const credit = courseCredit({ teacher: course.teacher, institute: course.institute });
+  const initials = (credit.teacher || "")
     .split(/\s+/).map((w) => w[0]).filter(Boolean).slice(0, 2).join("").toUpperCase();
   const watchedCount = lessons.filter((lesson) => watchedIds.includes(lesson.videoId)).length;
   const lectureCount = Number.isFinite(course.lectures) ? course.lectures : lessons.length;
@@ -77,13 +79,13 @@ export default function CourseOverview({
             style={{ fontFamily: BRAND_SERIF }}>
             {course.title}
           </h2>
-          {(course.teacher || course.institute) && (
+          {(credit.teacher || credit.institute) && (
             <div className={`mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm ${t.muted}`}>
-              {course.teacher && (
+              {credit.teacher && (
                 <span className="inline-flex items-center gap-2">
                   <span className="grid h-6 w-6 place-items-center rounded-full text-[0.6rem] font-bold"
                     style={{ background: color, color: ink }} aria-hidden="true">{initials || "?"}</span>
-                  {course.teacher}
+                  {credit.teacher}
                 </span>
               )}
               {course.institute && (

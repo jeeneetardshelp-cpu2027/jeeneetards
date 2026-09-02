@@ -1,3 +1,5 @@
+import { courseCredit } from "./courseCredit.js";
+
 const SITE_NAME = "JEENEETARD";
 
 const shorten = (value, limit) => {
@@ -12,10 +14,15 @@ export function buildCourseMetadata(course) {
   if (!courseTitle) return null;
 
   const subject = String(course?.subject ?? course?.subjects?.name ?? "").trim();
-  const teacher = String(course?.teacher ?? "").trim();
-  const institute = String(
-    course?.institute ?? course?.institutes_channels?.name ?? "",
-  ).trim();
+  // 132 courses store the channel's own name in `teacher`, so the raw pair
+  // renders "by Competishun+ from Competishun+". courseCredit drops the
+  // duplicate and keeps the linked institute.
+  const credit = courseCredit({
+    teacher: course?.teacher,
+    institute: course?.institute ?? course?.institutes_channels?.name,
+  });
+  const teacher = String(credit.teacher ?? "").trim();
+  const institute = String(credit.institute ?? "").trim();
   // Topic-only titles collide whenever different teachers cover the same
   // chapter (for example, two distinct "Friction" courses). Keep the topic
   // first for search intent, but reserve enough title space for the teacher
