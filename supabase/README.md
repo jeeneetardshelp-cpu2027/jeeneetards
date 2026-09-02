@@ -14,8 +14,21 @@ live schema on 31 Aug 2026 and recorded in the remote migration history, so
 | `20260901160000_universal_search_materials.sql` | **Applied** 1 Sep 2026. `material` and `paper` groups in `universal_search`; notes, formula sheets and previous-year papers are findable from the main search box (verified live). |
 | `20260902093000_study_material_paper_metadata.sql` | **Applied** 2 Sep 2026, verified live: all 183 paper rows classified (160 question papers / 14 answer keys / 9 with solutions), zero unclassified. The client column flip is the marked FOLLOW-UP in `src/useJeeMainPapers.js` / `src/studyMaterialLandings.js`. |
 | `20260902122500_neet_ug_2025_papers.sql` | **Applied** 2 Sep 2026 via `db push`, verified live: NEET UG 2025 carries 4 papers (2024 2, 2026 4) and all four official NTA URLs resolve to exactly one row each. Data seed, no schema. Its idempotency is not theoretical: the rows had already been applied by hand from the `docs/sql` copy at 12:20 UTC, before this file existed, so the push re-ran the seed against a database that already held every row — counts did not move and no duplicate appeared, which is the `on conflict … do update` and the seed's own postflight doing their job in production. Body is the reviewed `docs/sql` package verbatim; `src/neetUg2025PapersSeed.test.js` fails if the copies drift. |
+| `20260902180000_universal_search_material_words.sql` | **Staged, not applied.** Lets a student find a material by the word they call it: `pyq`, `notes`, `previous year paper`, `ncert notes` all returned nothing against 412 approved materials, because the pillars match on the title and the titles never say the kind. Adds two `IMMUTABLE` helpers, re-emits `universal_search` with the widened haystack in both pillars (rank **and** prefilter), and moves the two expression indexes onto the expression the prefilter now uses. Deliberate behaviour change: a bare `notes` now returns all 225 notes and sheets. Rehearsed on a real engine in `src/universalSearchMaterialWordsSqlRehearsal.test.js` (17 tests); the file's own `DO` block aborts the push if the wiring or either index is missing. |
 
-`npx supabase migration list` shows this local-vs-remote state at any time.
+`npx supabase migration list` shows this local-vs-remote state at any time — and
+it, not this table, is the authority. As of 2 Sep 2026 it reports **three pending
+migrations**, but only one of them has a row above:
+
+```
+20260902164500_search_gap_log.sql              PENDING, no row yet
+20260902170000_search_aliases.sql              PENDING, no row yet
+20260902180000_universal_search_material_words.sql   PENDING (row above)
+```
+
+That gap matters because `db push` takes all three, not the one you came for.
+Whoever staged the first two should describe them here; they are left undescribed
+rather than guessed at.
 
 The older paper seeds — NEET UG 2024/2026 and the JEE sets — were applied by hand
 straight from `docs/sql`, so nothing records whether they ran and the answer still
