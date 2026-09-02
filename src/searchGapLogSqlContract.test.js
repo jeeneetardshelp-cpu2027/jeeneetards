@@ -1,7 +1,7 @@
 // searchGapLogSqlContract.test.js
 //
 // WHAT IS REAL HERE. These tests EXECUTE the staged migration
-// docs/sql/search_gap_log_2026-09-02.sql on a real PostgreSQL
+// supabase/migrations/20260902210000_search_gap_log.sql on a real PostgreSQL
 // engine (PGlite, Postgres compiled to WASM), including its own
 // self-verification DO block. The privacy claims this table makes are claims
 // about RLS, grants and function privileges, and the only honest way to check
@@ -21,7 +21,7 @@ import { PGlite } from "@electric-sql/pglite";
 import { beforeAll, describe, expect, it } from "vitest";
 
 const BASELINE = "supabase/migrations/20260831140005_production_baseline.sql";
-const MIGRATION = "docs/sql/search_gap_log_2026-09-02.sql";
+const MIGRATION = "supabase/migrations/20260902210000_search_gap_log.sql";
 
 const baseline = readFileSync(BASELINE, "utf8");
 const migration = readFileSync(MIGRATION, "utf8");
@@ -116,12 +116,20 @@ beforeAll(async () => {
 });
 
 describe("search gap log migration", () => {
-  it("stays staged until the Privacy Policy names it", () => {
-    // The banner is the only thing standing between `supabase db push` and
-    // collecting student-typed text the policy does not mention. It is
-    // removed by the change that lands the disclosure, not before.
-    expect(migration).toContain("DO NOT APPLY YET");
+  it("is in the chain, with the hold banner gone", () => {
+    // This file used to assert a DO NOT APPLY banner, which was the only thing
+    // standing between `supabase db push` and collecting student-typed text the
+    // policy did not mention. The banner came off on 2 Sep 2026 when the
+    // disclosure landed, so the assertion inverts: the file now sits in
+    // supabase/migrations/, and a push WILL create the table.
+    //
+    // The other half of that pairing — the policy must keep naming the table —
+    // is asserted in searchGapPrivacyContract.test.js and legalTruth.test.js,
+    // not here. This project runs without a DOM, and testProjects.test.js
+    // rightly refuses a `.jsx` reference in it.
+    expect(MIGRATION).toMatch(/^supabase\/migrations\//);
     expect(migration).toContain("search_gap_log");
+    expect(migration).not.toContain("DO NOT APPLY YET");
     expect(migration.trimEnd()).toMatch(/commit;$/i);
   });
 

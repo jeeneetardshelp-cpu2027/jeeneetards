@@ -31,7 +31,7 @@ const stripComments = (src) =>
 // collection the owner has not agreed to. It waits outside the chain
 // instead, and the guard below still holds: the hold marker must stay
 // while the policy is silent. Moving it back is step one of shipping it.
-const MIGRATION = "docs/sql/search_gap_log_2026-09-02.sql";
+const MIGRATION = "supabase/migrations/20260902210000_search_gap_log.sql";
 const HOLD_MARKER = "DO NOT APPLY YET";
 const TABLE = "search_gap_log";
 
@@ -58,6 +58,27 @@ describe("search gap log privacy contract", () => {
       "PrivacyPolicy.jsx describes search_gap_log in the present tense while the migration is parked",
     ).toBe(true);
   });
+
+  // The inverse of the test above, needed because unparking made that one
+  // inert: it returns early once the banner is gone, and the banner came off
+  // on 2026-09-02 when the file moved into supabase/migrations/. From here on,
+  // a push creates the table, so the policy must keep naming it.
+  it("keeps naming the table once the migration is in the chain", () => {
+    if (!MIGRATION.startsWith("supabase/migrations/")) return;  // still parked
+    expect(existsSync(MIGRATION), `${MIGRATION} is missing`).toBe(true);
+    expect(
+      read("src/PrivacyPolicy.jsx"),
+      "the migration is in the chain, so the policy must name search_gap_log",
+    ).toContain(TABLE);
+  });
+
+  // WHAT NO TEST HERE CAN CHECK. Whether the table actually exists in
+  // production. The file being in the chain means a push WOULD create it, not
+  // that anyone has pushed. So the policy's "not switched on yet" wording stays
+  // correct until someone pushes, and the change that pushes is the change that
+  // must reword it. That pairing is a human step, recorded in this file's
+  // migration header and in supabase/README.md, because the fact lives in the
+  // database rather than in the repository.
 
   it("does not collect student search text before the policy says so", () => {
     const wired = read("src/useUniversalSearch.js").includes("scheduleSearchGapLog");
