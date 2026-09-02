@@ -136,7 +136,7 @@ export default function NotesPanel({
           <button
             type="submit"
             disabled={!canSave}
-            className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-accent px-3 text-sm font-semibold text-white transition disabled:cursor-not-allowed disabled:opacity-40"
+            className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-accent px-3 text-sm font-semibold text-accent-ink transition disabled:cursor-not-allowed disabled:opacity-40"
           >
             <Plus aria-hidden="true" className="h-4 w-4" /> Add note
           </button>
