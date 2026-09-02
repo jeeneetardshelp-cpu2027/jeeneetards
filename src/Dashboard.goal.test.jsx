@@ -40,7 +40,15 @@ function builder(table) {
     in() { return b; },
     // The legacy-chapter label lookup (useChapterName) resolves nothing here;
     // Dashboard.legacyChapterChip.test.jsx covers the labelled path.
-    maybeSingle() { return Promise.resolve({ data: null, error: null }); },
+    // A board slug DOES resolve here: useCanonicalFilters stays un-ready until
+    // every slug in the URL becomes an id, so without this row a board view
+    // could never reach the facet-count request the test below asserts.
+    maybeSingle() {
+      if (rec.table === "boards" && rec.eq.slug === "cbse") {
+        return Promise.resolve({ data: { id: 1, slug: "cbse", name: "CBSE" }, error: null });
+      }
+      return Promise.resolve({ data: null, error: null });
+    },
     then(resolve) { return Promise.resolve({ data: [], error: null, count: 0 }).then(resolve); },
   };
   return b;
@@ -102,6 +110,20 @@ describe("Dashboard route → playlist query", () => {
     renderAt("/browse");
     await screen.findByText("Playlists");
     await waitFor(() => expect(rpcCalls).toContain("get_faculty_facets"));
+  });
+
+  // The count RPC has no board argument, so the old gate switched counts off
+  // on any board view - and with them the only signal that school Class 11 and
+  // Class 12 hold nothing. Counts are now fetched there too, as an upper bound
+  // that prunes dead ends but is never displayed.
+  it("still asks for facet counts on a board view", async () => {
+    renderAt("/browse?goal=4&board=cbse&class=10");
+    await waitFor(() => expect(rpcCalls).toContain("browse_facet_counts"));
+  });
+
+  it("still asks for facet counts on a faculty view", async () => {
+    renderAt("/browse?goal=1&teacher=7");
+    await waitFor(() => expect(rpcCalls).toContain("browse_facet_counts"));
   });
 
   it("carries subject and chapter from the URL too", async () => {

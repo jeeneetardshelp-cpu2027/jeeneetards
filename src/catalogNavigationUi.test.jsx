@@ -276,6 +276,68 @@ describe("one contextual facet call", () => {
     }).getAttribute("aria-pressed")).toBe("true");
   });
 
+  // On a board or teacher view the count RPC cannot apply that predicate, so
+  // its numbers are an UPPER BOUND. Dashboard now fetches them anyway and
+  // passes countsExact={false}. A zero bound is a real zero - adding the
+  // missing predicate can only shrink a count - so it prunes; a positive bound
+  // might be too high, so it is never printed. Before this the counts were
+  // switched off entirely on those views, and school offered Class 11 and
+  // Class 12 with no courses behind either and no zero to warn anyone.
+  const schoolOptions = {
+    goal: [{ id: 3, value: "school", label: "School Boards" }],
+    class: [
+      { id: 1, value: "10", label: "Class 10" },
+      { id: 2, value: "11", label: "Class 11" },
+      { id: 3, value: "12", label: "Class 12" },
+    ],
+  };
+  const boardView = (extra = {}) => render(
+    <MemoryRouter>
+      <FilterPanel
+        options={schoolOptions}
+        params={new URLSearchParams("goal=school&board=cbse")}
+        onChange={vi.fn()}
+        counts={{ class: { "class-10": 27 } }}
+        countsLoading={false}
+        countsExact={false}
+        {...extra}
+      />
+    </MemoryRouter>,
+  );
+
+  it("drops a class whose upper-bound count is zero on a board view", () => {
+    boardView();
+
+    expect(screen.getByRole("button", { name: "Class 10" })).toBeTruthy();
+    expect(screen.queryByText("Class 11")).toBeNull();
+    expect(screen.queryByText("Class 12")).toBeNull();
+  });
+
+  it("never prints an upper-bound count as a figure", () => {
+    boardView();
+
+    // With exact counts this button would be named "Class 10, 27 courses".
+    expect(screen.queryByRole("button", { name: /27 courses/ })).toBeNull();
+    expect(screen.queryByText("27")).toBeNull();
+  });
+
+  it("keeps a selected zero-bound class removable from a shared URL", () => {
+    boardView({ params: new URLSearchParams("goal=school&board=cbse&class=11") });
+
+    expect(screen.getByRole("button", { name: "Class 11" }).getAttribute("aria-pressed"))
+      .toBe("true");
+  });
+
+  it("hides an enum group whose every option has a zero bound, but keeps it with exact counts", () => {
+    const { unmount } = boardView({ counts: { type: {} } });
+    expect(screen.queryByRole("button", { name: "Course type" })).toBeNull();
+    unmount();
+
+    // The tested convention on an exact view: the group stays, zeros and all.
+    boardView({ counts: { type: {} }, countsExact: true });
+    expect(screen.getByRole("button", { name: "Course type" })).toBeTruthy();
+  });
+
   it("keeps the School chapter picker inside its exam and class curriculum", () => {
     render(
       <MemoryRouter>
