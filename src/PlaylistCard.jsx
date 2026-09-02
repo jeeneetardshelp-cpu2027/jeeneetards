@@ -21,6 +21,7 @@ import { ratingDisplay } from "./ratingConfidence.js";
 import { langAttrs } from "./lang.js";
 import { useTheme } from "./theme.jsx";
 import { subjectColor, subjectInk, subjectTextColor } from "./brandColors.js";
+import { courseCredit } from "./courseCredit.js";
 import YouTubeThumbnail from "./YouTubeThumbnail.jsx";
 import ChannelAvatar from "./ChannelAvatar.jsx";
 
@@ -41,7 +42,10 @@ export function PlaylistCard({ course, onOpen, to, state, selected, onToggle, di
   const color = subjectColor(course.subject);
   const textColor = subjectTextColor(course.subject);
   const ink = subjectInk(course.subject);
-  const initials = (course.teacher || "")
+  // When `teacher` is only the channel's own name, the card showed an
+  // initials circle AND the channel logo AND the name twice. One credit.
+  const credit = courseCredit({ teacher: course.teacher, institute: course.institute });
+  const initials = (credit.teacher || "")
     .split(/\s+/).map((w) => w[0]).filter(Boolean).slice(0, 2).join("").toUpperCase();
   // Subject leads the kicker; class levels ride alongside it instead of as a
   // separate chip row, so the card has one clear identity line.
@@ -118,17 +122,17 @@ export function PlaylistCard({ course, onOpen, to, state, selected, onToggle, di
 
         {/* Faculty and institute. Omitted when unknown — an absent line reads
             as "no data", a placeholder reads as "broken product". */}
-        {(course.teacher || course.institute) && (
+        {(credit.teacher || credit.institute) && (
           <div className={`mt-2.5 flex min-w-0 items-center gap-2 text-sm ${t.faint}`}>
-            {course.teacher && (
+            {credit.teacher && (
               <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full text-[0.6rem] font-bold"
                 style={{ background: color, color: ink }} aria-hidden="true">
                 {initials || "?"}
               </span>
             )}
             <span className="line-clamp-1 flex min-w-0 items-center gap-1">
-              {course.teacher}
-              {course.teacher && course.institute && <span className={t.muted}>·</span>}
+              {credit.teacher}
+              {credit.teacher && credit.institute && <span className={t.muted}>·</span>}
               {course.institute && (
                 course.instituteId ? (
                 <Link

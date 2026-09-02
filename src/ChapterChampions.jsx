@@ -12,6 +12,7 @@
 // confident dimension yet (true for most chapters while the rating prompt is
 // young), render NOTHING. No empty panel, no "not enough data" filler.
 import { Link } from "react-router";
+import { courseCredit } from "./courseCredit.js";
 import { Award, ArrowRight } from "lucide-react";
 import { useTheme } from "./theme.jsx";
 import { useChapterChampions } from "./useChapterChampions.js";
@@ -62,7 +63,10 @@ export default function ChapterChampions({ chapterId, chapterName }) {
           // ratings)". Only the first half is catalogue text; tagging the whole
           // line would read the score in Hindi phonetics too, so the names get
           // their own element — and only when they need one.
-          const credit = [champion.teacher, champion.institute].filter(Boolean).join(" — ");
+          // Same rule as the cards: a teacher that is only the channel's own
+          // name would render "Competishun+ — Competishun+".
+          const named = courseCredit({ teacher: champion.teacher, institute: champion.institute });
+          const credit = [named.teacher, named.institute].filter(Boolean).join(" — ");
           return (
             <li key={key}>
               <Link

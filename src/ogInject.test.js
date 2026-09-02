@@ -367,6 +367,29 @@ describe("renderCourseBody + injectRootContent", () => {
   const meta = courseMeta(course, 5);
   const body = renderCourseBody(course, meta, ["Lesson one", "Lesson two"]);
 
+  // 132 courses store the channel name in `teacher`, which printed the same
+  // string on both rows of the crawler-readable table.
+  it("omits the Teacher row when it only repeats the Channel", () => {
+    const dup = renderCourseBody(
+      { ...course, teacher: "Competishun+", institutes_channels: { name: "Competishun+" } },
+      meta,
+      [],
+    );
+    expect(dup).toContain("Competishun+");
+    expect(dup).not.toContain("Teacher");
+    expect(dup).toContain("Channel");
+  });
+
+  it("keeps the Teacher row when it names a different person", () => {
+    const real = renderCourseBody(
+      { ...course, teacher: "Mohit Tyagi", institutes_channels: { name: "Competishun+" } },
+      meta,
+      [],
+    );
+    expect(real).toContain("Teacher");
+    expect(real).toContain("Mohit Tyagi");
+    expect(real).toContain("Competishun+");
+  });
   it("renders the course as real, readable HTML", () => {
     expect(body).toContain("<h1>Rectilinear Motion (Kinematics)</h1>");
     expect(body).toContain("<li>Lesson one</li>");

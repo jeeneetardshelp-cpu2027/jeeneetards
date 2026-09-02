@@ -112,6 +112,34 @@ beforeEach(() => {
 });
 
 describe("playlist card channel navigation", () => {
+  // 132 courses store the channel name in `teacher`, so the card rendered an
+  // initials circle, the channel logo, and the name twice: "C Competishun+ ·
+  // Competishun+". One credit, one avatar.
+  it("does not print the channel name twice when teacher repeats it", () => {
+    render(
+      <MemoryRouter>
+        <ThemeProvider>
+          <PlaylistCard
+            course={{
+              id: 167,
+              title: "Hydrogen I Class - XI Chemistry",
+              subject: "Chemistry",
+              teacher: "Competishun+",
+              instituteId: 9,
+              institute: "Competishun+",
+              classLevels: [],
+            }}
+            to="/course/167"
+            comparisonEnabled={false}
+          />
+        </ThemeProvider>
+      </MemoryRouter>,
+    );
+
+    expect(screen.getAllByText("Competishun+")).toHaveLength(1);
+    // The initials circle belongs to the teacher credit that is no longer shown.
+    expect(screen.queryByText("C")).toBeNull();
+  });
   it("links the channel credit to all courses from that channel", () => {
     render(
       <MemoryRouter>
