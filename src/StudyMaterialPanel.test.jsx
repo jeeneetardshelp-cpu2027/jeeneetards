@@ -122,7 +122,8 @@ describe("the watch page's exam-level papers link", () => {
     // thing (the honest chapter-scoped unit is a question, not a paper).
     expect(screen.getByText(/whole exam/i).textContent)
       .toMatch(/covering every subject/i);
-    expect(screen.getByText(/whole exam/i).textContent).not.toMatch(/yet/i);
+    expect(screen.getByText(/whole exam/i).textContent.toLowerCase())
+      .not.toContain(" yet");
     expect(screen.queryByText(/from this chapter/i)).toBeNull();
     expect(screen.queryByText(/for this chapter/i)).toBeNull();
   });
