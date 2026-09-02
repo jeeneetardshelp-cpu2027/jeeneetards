@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
@@ -72,5 +72,156 @@ describe("frontend release-file integrity", () => {
       "This project copy is not currently a Git repository",
     );
     expect(deploymentGuide).not.toContain("Verified on 23 July 2026");
+  });
+});
+
+// =====================================================================
+//  THE BRIDGE GUARD
+//
+//  src/index.css used to carry a "LEGACY BRIDGE": rules scoped to
+//  [data-student-surface] that re-coloured literal Tailwind slate/white
+//  utilities so the dark default did not look broken. It was retired on
+//  2026-09-02. The failure mode it existed for is silent — a literal
+//  colour class looks fine in whichever theme the author had open and
+//  wrong in the other — and jsdom applies no CSS, so no rendering test can
+//  catch it. This scan is the guard instead: it reads source text.
+//
+//  Scope: files that render inside <Layout data-student-surface> in
+//  App.jsx. /admin is routed OUTSIDE that layout, so the admin components
+//  below were never covered by the bridge and are not covered here; they
+//  are still full of literal slate, which is a separate, known job.
+// =====================================================================
+
+// Rendered under /admin only — outside [data-student-surface].
+const ADMIN_ONLY = new Set([
+  "AdminPanel.jsx",
+  "adminUI.jsx",
+  "ContentQualityPanel.jsx",
+  "EditorialTitleField.jsx",
+  "FacultyReviewPanel.jsx",
+  "ImportPlaylistForm.jsx",
+  "ManageCatalogPanel.jsx",
+  "TeacherPicker.jsx",
+  "forum/ForumBetaAdminPanel.jsx",
+  "forum/ForumReportsPanel.jsx",
+  "polls/PollReviewPanel.jsx",
+]);
+
+// A literal that must NOT follow the theme, with the reason it must not.
+// Every entry is painted on something whose colour is fixed in both themes,
+// so a token here would be the bug. Each one is also explained at the point
+// it is written. Entries may be removed freely; an entry for a class that no
+// longer exists is harmless.
+const THEME_FIXED = {
+  "YouTubePlayer.jsx": {
+    classes: ["bg-slate-900", "bg-slate-950", "text-slate-200", "text-slate-300"],
+    reason:
+      "the video stage is a black rectangle in both themes, so its overlays are fixed light-on-dark",
+  },
+  "FilterPanel.jsx": {
+    classes: ["bg-white"],
+    reason:
+      "the checkbox tick sits on BRAND.teal, which is the same colour in both themes",
+  },
+  "Compare.jsx": {
+    classes: ["text-slate-800"],
+    reason:
+      "light-only branch of an explicit `dark ? … : …`; Compare picks both colours itself and has not been moved to tokens yet",
+  },
+};
+
+// The vocabulary the bridge actually rewrote: surface whites and the whole
+// slate scale (plus its gray twin), in any utility position and under any
+// variant. Deliberately NOT included: text-white / border-white /
+// outline-white / fill-white and bg-black. Those are the product's standing
+// "fixed ink on a coloured fill" idiom — a teal button, a play glyph over a
+// thumbnail — they were never bridged, and flagging them would bury this
+// check under twenty exceptions that all say the same thing.
+const BRIDGED_LITERAL =
+  /(?<![\w-])(?:[a-z-]+:)*(bg-white(?:\/\d{1,3})?|(?:bg|text|border|ring|divide|outline|from|via|to|placeholder|decoration|caret|accent|fill|stroke)-(?:slate|gray)-\d{2,3}(?:\/\d{1,3})?)(?![\w-])/g;
+
+// Prose is not code. Block comments go entirely; line comments go only when
+// the line STARTS with them, so a URL containing "//" inside a className can
+// never swallow the rest of its own line. Both blank the text and keep the
+// newlines, so the line numbers this suite reports are the real ones.
+function stripComments(source) {
+  return source
+    .replace(/\/\*[\s\S]*?\*\//g, (comment) => comment.replace(/[^\n]/g, " "))
+    .split("\n")
+    .map((line) => (/^\s*(\/\/|\*)/.test(line) ? "" : line))
+    .join("\n");
+}
+
+function studentSurfaceFiles() {
+  const found = [];
+  for (const dir of ["", "forum", "polls"]) {
+    const absolute = dir ? resolve(sourceRoot, dir) : sourceRoot;
+    for (const entry of readdirSync(absolute, { withFileTypes: true })) {
+      if (!entry.isFile() || !entry.name.endsWith(".jsx")) continue;
+      if (entry.name.endsWith(".test.jsx")) continue;
+      // Standalone browser fixtures are demo pages, not shipped routes.
+      if (entry.name.endsWith("BrowserFixture.jsx")) continue;
+      const relativePath = dir ? `${dir}/${entry.name}` : entry.name;
+      if (ADMIN_ONLY.has(relativePath)) continue;
+      found.push(relativePath);
+    }
+  }
+  return found.sort();
+}
+
+describe("student-surface colour tokens", () => {
+  it("finds the student components it is meant to be scanning", () => {
+    // A typo in a path would make this suite pass by reading nothing.
+    const files = studentSurfaceFiles();
+    expect(files.length).toBeGreaterThan(40);
+    for (const expected of ["Dashboard.jsx", "FilterPanel.jsx", "YouTubePlayer.jsx", "forum/ForumFeedPage.jsx"]) {
+      expect(files, `${expected} is not being scanned`).toContain(expected);
+    }
+  });
+
+  it("uses palette tokens, not literal slate/white utilities", () => {
+    const offences = [];
+
+    for (const file of studentSurfaceFiles()) {
+      const source = stripComments(readFileSync(resolve(sourceRoot, file), "utf8"));
+      const allowed = new Set(THEME_FIXED[file]?.classes ?? []);
+      const lines = source.split("\n");
+
+      lines.forEach((line, index) => {
+        for (const match of line.matchAll(BRIDGED_LITERAL)) {
+          if (allowed.has(match[1])) continue;
+          offences.push(`${file}:${index + 1}  ${match[1]}`);
+        }
+      });
+    }
+
+    expect(
+      offences,
+      [
+        "Literal slate/white utilities found on the student surface.",
+        "These do not follow html[data-theme], and the index.css bridge that used to",
+        "cover for them is gone. Use a palette token instead — bg-surface, bg-canvas,",
+        "bg-surface-2, text-ink, text-ink-2, text-ink-3, border-hairline,",
+        "border-hairline-strong, bg-accent-soft/text-accent — or the matching",
+        "useTheme().t entry in a file that still uses those.",
+        "If the colour genuinely must NOT follow the theme (it sits on a video frame,",
+        "a brand fill or a coloured badge), say so in a comment where it is written",
+        "and add it to THEME_FIXED above with that reason.",
+        "",
+        ...offences,
+      ].join("\n"),
+    ).toEqual([]);
+  });
+
+  it("keeps the retired slate/white bridge out of index.css", () => {
+    const css = readFileSync(resolve(sourceRoot, "index.css"), "utf8");
+    const revived = [...css.matchAll(/\[data-student-surface\][^{]*/g)]
+      .map((match) => match[0])
+      .filter((selector) => /\.(?:bg-white|(?:bg|text|border|ring|divide|hover\\?:[a-z-]*)-slate-)/.test(selector));
+
+    expect(
+      revived,
+      "index.css re-colours literal slate/white utilities again. Fix the component instead.",
+    ).toEqual([]);
   });
 });

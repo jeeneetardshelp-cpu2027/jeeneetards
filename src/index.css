@@ -693,81 +693,47 @@ html[data-theme="light"] {
 }
 
 /* =====================================================================
-   LEGACY BRIDGE — retained deliberately.
-   Twelve literal slate/white utilities still exist in student components
-   that have not been migrated to the token palette yet (FacultyFilter,
-   YouTubePlayer, PlaylistBrowse, Compare). Until those pages are done in
-   the rollout, these keep their dark appearance correct. Delete each rule
-   as its last consumer is migrated — do not add new ones.
+   THE SLATE/WHITE BRIDGE IS GONE (retired 2026-09-02).
+
+   It used to hold ~20 rules that re-coloured literal Tailwind slate and
+   white utilities inside [data-student-surface] so the dark default looked
+   right. Its comment named FacultyFilter, YouTubePlayer, PlaylistBrowse and
+   Compare as the unmigrated consumers; by the time it was retired that was
+   wrong twice over. PlaylistBrowse and Compare no longer had a single
+   bridged literal, and the real consumers were FacultyFilter (a selected
+   chip), YouTubePlayer (video-stage text) and FilterPanel (a checkbox tick)
+   — the last two of which were being made WORSE by the bridge, not better:
+   both are painted on a surface that is fixed dark or fixed teal in both
+   themes, so rewriting them to a theme token dimmed or erased them.
+
+   Those three are now either on tokens or documented in place as
+   deliberately theme-independent, so every slate/white rule was deleted
+   rather than kept. Do not add a rule like that back. If a student
+   component needs a colour that follows the theme, it uses a token
+   (bg-surface, text-ink-2, border-hairline …); if it needs a colour that
+   must NOT follow the theme, it says so in a comment where it is written.
+   src/releaseIntegrity.test.js fails if a bridged literal reappears.
+
+   What is left below is not that bridge:
+
+   1. The amber notice pair. `bg-amber-50` / `text-amber-900` have no token
+      equivalent (there is no warning token in the palette) and ONE real
+      unconditional consumer left on the student surface —
+      src/CourseOverview.jsx, the "N lessons are marked as unavailable"
+      notice on the watch page. Every other amber notice (Dashboard,
+      FacultyFilter, Compare, UniversalSearch) already picks its own colours
+      through a `dark ? … : …` ternary, so these rules never apply to them.
+      Delete these two when CourseOverview either gains a real warning token
+      or switches to a ternary like its neighbours.
+      NOTE: `border-amber-200` is deliberately NOT bridged, so that notice
+      keeps a pale border on a dark fill in the dark theme. Fixing that is a
+      CourseOverview change, not a change here.
+
+   2. `color-scheme: dark` on native controls. Not a colour override at all
+      — it is what makes a real <select>/<input>/<textarea> dropdown,
+      caret and scrollbar render dark. It stays for good.
    ===================================================================== */
-[data-student-surface] .text-slate-400 {
-  color: var(--ink-3);
-}
-
-html[data-theme="dark"] [data-student-surface] .bg-white,
-html[data-theme="dark"] [data-student-surface] .bg-white\/95 {
-  background-color: var(--surface);
-}
-
-html[data-theme="dark"] [data-student-surface] .bg-slate-50,
-html[data-theme="dark"] [data-student-surface] .bg-slate-50\/60 {
-  background-color: var(--canvas);
-}
-
-html[data-theme="dark"] [data-student-surface] .bg-slate-100 {
-  background-color: var(--surface-2);
-}
-
-html[data-theme="dark"] [data-student-surface] .bg-slate-200 {
-  background-color: var(--surface-inset);
-}
-
-html[data-theme="dark"] [data-student-surface] .text-slate-900,
-html[data-theme="dark"] [data-student-surface] .text-slate-800 {
-  color: var(--ink);
-}
-
-html[data-theme="dark"] [data-student-surface] .text-slate-700,
-html[data-theme="dark"] [data-student-surface] .text-slate-600 {
-  color: var(--ink-2);
-}
-
-html[data-theme="dark"] [data-student-surface] .text-slate-500,
-html[data-theme="dark"] [data-student-surface] .text-slate-400 {
-  color: var(--ink-3);
-}
-
-html[data-theme="dark"] [data-student-surface] .text-slate-300 {
-  color: var(--ink-3);
-}
-
-html[data-theme="dark"] [data-student-surface] .border-slate-100,
-html[data-theme="dark"] [data-student-surface] .border-slate-200 {
-  border-color: var(--hairline);
-}
-
-html[data-theme="dark"] [data-student-surface] .border-slate-300,
-html[data-theme="dark"] [data-student-surface] .border-slate-400 {
-  border-color: var(--hairline-strong);
-}
-
-html[data-theme="dark"] [data-student-surface] .hover\:bg-slate-50:hover,
-html[data-theme="dark"] [data-student-surface] .hover\:bg-slate-100:hover {
-  background-color: var(--surface-2);
-}
-
-html[data-theme="dark"] [data-student-surface] .hover\:text-slate-900:hover,
-html[data-theme="dark"] [data-student-surface] .hover\:text-slate-800:hover,
-html[data-theme="dark"] [data-student-surface] .hover\:text-slate-700:hover {
-  color: var(--ink);
-}
-
-html[data-theme="dark"] [data-student-surface] .hover\:border-slate-300:hover {
-  border-color: var(--hairline-strong);
-}
-
-html[data-theme="dark"] [data-student-surface] .bg-amber-50,
-html[data-theme="dark"] [data-student-surface] .bg-amber-50\/40 {
+html[data-theme="dark"] [data-student-surface] .bg-amber-50 {
   background-color: rgb(69 26 3 / 0.55);
 }
 

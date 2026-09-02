@@ -556,3 +556,38 @@ describe("query and type persist in the URL (requirement 9)", () => {
     expect(rpcCalls[0].args.p_types).toBeNull();
   });
 });
+
+// ------------------------------------------------------- Devanagari (lang.js)
+// Every row here is catalogue text — a teacher, a chapter, a course, a lesson —
+// rendered under a document that declares lang="en". See lang.js.
+describe("Devanagari result rows are tagged for a screen reader", () => {
+  it("tags the title, the alias and the context line, and only those", async () => {
+    RPC_ROWS = [row({
+      title: "अमित बिजारणिया",
+      aka: "एबीजे सर",
+      subtitle: "Competishun · भौतिकी · JEE",
+    })];
+    renderSearch();
+    type("amit");
+    await settle();
+
+    const option = (await screen.findAllByRole("option"))[0];
+    const tagged = [...option.querySelectorAll("[lang='hi']")].map((el) => el.textContent);
+    expect(tagged).toContain("अमित बिजारणिया");
+    expect(tagged).toContain("एबीजे सर");
+    expect(tagged).toContain("Competishun · भौतिकी · JEE");
+    // "Also known as:" is interface English and stays outside the Hindi element.
+    expect(option.textContent).toContain("Also known as:");
+    expect(screen.getByText(/Also known as:/).getAttribute("lang")).toBeNull();
+  });
+
+  it("adds no lang and no wrapper to a Latin row", async () => {
+    RPC_ROWS = [row()];
+    renderSearch();
+    type("amit");
+    await settle();
+    const option = (await screen.findAllByRole("option"))[0];
+    expect(option.querySelector("[lang]")).toBeNull();
+    expect(screen.getByText("Competishun · Physics · JEE").getAttribute("lang")).toBeNull();
+  });
+});

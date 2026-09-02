@@ -15,6 +15,10 @@ import { Link } from "react-router";
 import { Award, ArrowRight } from "lucide-react";
 import { useTheme } from "./theme.jsx";
 import { useChapterChampions } from "./useChapterChampions.js";
+// Chapter names, course titles and faculty names are catalogue text, and this
+// catalogue writes plenty of it in Devanagari under a document that declares
+// lang="en". See lang.js.
+import { hasDevanagari, langAttrs } from "./lang.js";
 import { BRAND_TEAL } from "./brandColors.js";
 
 const DIMENSIONS = [
@@ -42,7 +46,9 @@ export default function ChapterChampions({ chapterId, chapterName }) {
         <Award className="h-4 w-4" style={{ color: BRAND_TEAL }} aria-hidden="true" />
         <h2 className={`text-sm font-semibold ${t.text}`}>
           Chapter champions{" "}
-          {chapterName ? <span className={t.muted}>{chapterName}</span> : null}
+          {chapterName
+            ? <span {...langAttrs(chapterName)} className={t.muted}>{chapterName}</span>
+            : null}
         </h2>
       </div>
       <p className={`mt-1 text-xs ${t.muted}`}>
@@ -52,6 +58,11 @@ export default function ChapterChampions({ chapterId, chapterName }) {
       <ul className="mt-3 grid gap-2 sm:grid-cols-2">
         {rows.map(({ key, label, unit }) => {
           const champion = champions[key];
+          // The credit line runs "<teacher — institute> · 4.5/5 clarity (6
+          // ratings)". Only the first half is catalogue text; tagging the whole
+          // line would read the score in Hindi phonetics too, so the names get
+          // their own element — and only when they need one.
+          const credit = [champion.teacher, champion.institute].filter(Boolean).join(" — ");
           return (
             <li key={key}>
               <Link
@@ -62,11 +73,14 @@ export default function ChapterChampions({ chapterId, chapterName }) {
                   <span className={`block text-xs font-semibold uppercase tracking-wide ${t.muted}`}>
                     {label}
                   </span>
-                  <span className={`mt-0.5 block truncate text-sm font-medium ${t.text}`}>
+                  <span
+                    {...langAttrs(champion.title)}
+                    className={`mt-0.5 block truncate text-sm font-medium ${t.text}`}
+                  >
                     {champion.title}
                   </span>
                   <span className={`block truncate text-xs ${t.muted}`}>
-                    {[champion.teacher, champion.institute].filter(Boolean).join(" — ")}
+                    {hasDevanagari(credit) ? <span lang="hi">{credit}</span> : credit}
                     {" · "}
                     {champion.score.toFixed(1)}/5 {unit} ({champion.count} ratings)
                   </span>
