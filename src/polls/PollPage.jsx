@@ -135,9 +135,15 @@ export default function PollPage({ api = pollApi, authState = null }) {
   const liveAuth = useSession();
   const { session } = authState ?? liveAuth;
   const thread = usePoll(slug, api);
+  // The last crumb names the poll once it has loaded, the way the mock-test
+  // page names its exam — not a generic "Poll" beside an h1 that already says
+  // the question. Until then it says what the page is doing.
+  const crumb = thread.status === "ready"
+    ? thread.poll.question
+    : thread.status === "not_found" ? "Not found" : "Poll";
 
   return (
-    <Page crumbs={[{ label: "Polls", to: "/polls" }, { label: "Poll" }]} width="reading">
+    <Page crumbs={[{ label: "Polls", to: "/polls" }, { label: crumb }]} width="reading">
       {thread.status === "loading" && <PollsLoading rows={1} />}
       {thread.status === "unavailable" && <PollsUnavailable />}
       {thread.status === "error" && <PollsLoadError detail={thread.error} onRetry={thread.retry} />}
