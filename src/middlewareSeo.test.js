@@ -633,6 +633,145 @@ describe("edge-rendered discovery landings", () => {
     );
   });
 
+  // A chapter URL used to fall through to the generic landing body: an <h1> of
+  // "All courses" and one templated sentence. 380 of these are in the sitemap,
+  // so a crawler saw 380 near-identical pages under a heading that contradicted
+  // their own <title>. These pin the real heading, the real count, and the
+  // sibling links that connect them — and, just as importantly, pin that a
+  // lookup which did not confirm renders NO count rather than a zero.
+  const CURRICULUM = [
+    { level: "chapter", entity_id: 37, slug: "kinematics", name: "Kinematics", course_count: 6 },
+    { level: "chapter", entity_id: 38, slug: "laws-of-motion", name: "Laws of Motion", course_count: 4 },
+    { level: "chapter", entity_id: 39, slug: "work-energy-power", name: "Work, Energy and Power", course_count: 1 },
+  ];
+
+  const stubCurriculum = (rows, capture) => {
+    vi.stubEnv("VITE_SUPABASE_URL", "https://catalog.example");
+    vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
+    vi.stubGlobal("fetch", vi.fn(async (input, init) => {
+      if (String(input).includes("/rest/v1/rpc/get_browse_curriculum")) {
+        if (capture) capture.args = JSON.parse(init.body);
+        return rows === null
+          ? new Response("nope", { status: 500 })
+          : Response.json(rows);
+      }
+      return new Response(shell, { status: 200 });
+    }));
+  };
+
+  const chapterUrl =
+    "https://www.jeeneetard.com/browse?goal=jee&class=11&subject=physics&chapter=kinematics";
+
+  it("gives a chapter landing its own heading instead of the generic one", async () => {
+    stubCurriculum(CURRICULUM);
+    const html = await (await middleware(new Request(chapterUrl))).text();
+
+    expect(html).toContain("<h1>Kinematics</h1>");
+    expect(html).not.toContain("<h1>All courses</h1>");
+  });
+
+  it("states the real course count, goal-scoped, from the curriculum", async () => {
+    stubCurriculum(CURRICULUM);
+    const html = await (await middleware(new Request(chapterUrl))).text();
+
+    expect(html).toContain("6 courses on this site cover this chapter.");
+  });
+
+  it("agrees in number when a chapter has exactly one course", async () => {
+    stubCurriculum(CURRICULUM);
+    const html = await (await middleware(new Request(
+      "https://www.jeeneetard.com/browse?goal=jee&class=11&subject=physics&chapter=work-energy-power",
+    ))).text();
+
+    expect(html).toContain("1 course on this site covers this chapter.");
+  });
+
+  // The house rule this whole change has to obey: never render a plausible-
+  // looking zero. A chapter the curriculum knows but that carries no courses
+  // gets its honest heading and no count sentence at all.
+  it("renders no count line at all when the chapter has no courses", async () => {
+    stubCurriculum([
+      ...CURRICULUM,
+      { level: "chapter", entity_id: 40, slug: "empty-chapter", name: "Empty Chapter", course_count: 0 },
+    ]);
+    const html = await (await middleware(new Request(
+      "https://www.jeeneetard.com/browse?goal=jee&class=11&subject=physics&chapter=empty-chapter",
+    ))).text();
+
+    expect(html).toContain("<h1>Empty Chapter</h1>");
+    expect(html).not.toContain("0 course");
+    expect(html).not.toContain("cover this chapter");
+    expect(html).not.toContain("covers this chapter");
+  });
+  it("links the sibling chapters with their counts, and never to itself", async () => {
+    stubCurriculum(CURRICULUM);
+    const html = await (await middleware(new Request(chapterUrl))).text();
+
+    expect(html).toContain(
+      'href="/browse?goal=jee&amp;class=11&amp;subject=physics&amp;chapter=laws-of-motion"',
+    );
+    expect(html).toContain("(4 courses)");
+    // The page must not list itself as somewhere else to go.
+    expect(html).not.toContain(
+      '<a href="/browse?goal=jee&amp;class=11&amp;subject=physics&amp;chapter=kinematics">',
+    );
+  });
+
+  it("asks the curriculum for the stage id the RPC speaks, not the URL's short form", async () => {
+    const capture = {};
+    stubCurriculum(CURRICULUM, capture);
+    await middleware(new Request(chapterUrl));
+
+    expect(capture.args).toMatchObject({
+      p_goal: "jee", p_class: "class-11", p_subject: "physics",
+    });
+  });
+
+  it("passes dropper through unchanged, which is what the RPC expects", async () => {
+    const capture = {};
+    stubCurriculum(CURRICULUM, capture);
+    await middleware(new Request(
+      "https://www.jeeneetard.com/browse?goal=jee&class=dropper&subject=physics&chapter=kinematics",
+    ));
+
+    expect(capture.args.p_class).toBe("dropper");
+  });
+
+  // The fail-safe half. An unconfirmed lookup must never become a confident
+  // page: no heading it cannot support, and above all no invented count.
+  it("falls back to the generic body when the curriculum lookup fails", async () => {
+    stubCurriculum(null);
+    const html = await (await middleware(new Request(chapterUrl))).text();
+
+    expect(html).toContain("<h1>All courses</h1>");
+    expect(html).not.toContain("cover this chapter");
+    expect(html).not.toContain("0 courses");
+    // The head is unaffected — the title and canonical never depended on it.
+    expect(html).toContain("<title>Kinematics — JEE Class 11 Physics | JEENEETARD</title>");
+  });
+
+  it("falls back when the curriculum does not know this chapter slug", async () => {
+    stubCurriculum(CURRICULUM);
+    const html = await (await middleware(new Request(
+      "https://www.jeeneetard.com/browse?goal=jee&class=11&subject=physics&chapter=not-a-chapter",
+    ))).text();
+
+    expect(html).toContain("<h1>All courses</h1>");
+    expect(html).not.toContain("cover this chapter");
+  });
+
+  it("does not give an unbounded facet a chapter body", async () => {
+    // ?page=2 alongside a chapter is a facet, not the canonical shape. It stays
+    // noindex, and must not gain content that would make it worth indexing.
+    stubCurriculum(CURRICULUM);
+    const html = await (await middleware(new Request(
+      `${chapterUrl}&page=2`,
+    ))).text();
+
+    expect(html).toContain('name="robots" content="noindex, follow"');
+    expect(html).not.toContain("<h1>Kinematics</h1>");
+  });
+
   it.each([
     // One filter short of a chapter — nothing distinctive to index.
     "?goal=jee&class=11&subject=physics",

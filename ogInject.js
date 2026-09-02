@@ -827,6 +827,46 @@ export function renderFacultyBody(profile, meta, guide = getFacultyGuide(profile
   ].join("");
 }
 
+/**
+ * The crawler-readable body for one chapter landing:
+ * /browse?goal=…&class=…&subject=…&chapter=…
+ *
+ * Before this, a chapter URL fell through to renderLandingBody and got the
+ * generic shell: an <h1> of "All courses" and one templated sentence. 380 of
+ * these URLs are in the sitemap, so a crawler saw 380 near-identical pages
+ * whose only difference was a substituted chapter name — under a heading that
+ * contradicted their own <title>.
+ *
+ * The count comes from get_browse_curriculum, which is already goal-scoped, so
+ * the number here is the number the student sees on the same URL. It is
+ * rendered only when it is greater than zero, and the caller falls back to the
+ * old body when the lookup does not confirm: a generic heading is honest, an
+ * invented count is not.
+ *
+ * Siblings are the other chapters in the same subject, linked to the same
+ * canonical shape. They are what turns 380 orphans into a connected set.
+ */
+export function renderChapterLandingBody({ meta, chapterName, courseCount, siblings = [] }) {
+  const count = Number(courseCount ?? 0);
+  const items = siblings.map((option) => {
+    const n = Number(option.count ?? 0);
+    return `<li><a href="${escapeHtml(option.url)}">${escapeHtml(option.name)}</a>` +
+      `${n > 0 ? ` (${n} course${n === 1 ? "" : "s"})` : ""}</li>`;
+  }).join("");
+
+  return [
+    "<main>",
+    `<h1>${escapeHtml(chapterName)}</h1>`,
+    `<p>${escapeHtml(meta.description)}</p>`,
+    count > 0
+      ? `<p>${count} course${count === 1 ? "" : "s"} on this site cover${count === 1 ? "s" : ""} this chapter.</p>`
+      : "",
+    items ? `<h2>Other chapters in this subject</h2><ul>${items}</ul>` : "",
+    '<p><a href="/browse">Browse all courses</a></p>',
+    "</main>",
+  ].join("");
+}
+
 export function renderExploreBody({ heading, meta, crumbs, options, emptyMessage, guide }) {
   const breadcrumb = crumbs.map((crumb, index) => {
     const label = escapeHtml(crumb.label);
