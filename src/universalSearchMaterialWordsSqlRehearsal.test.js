@@ -1,7 +1,7 @@
 // universalSearchMaterialWordsSqlRehearsal.test.js
 //
 // WHAT IS REAL HERE. These tests EXECUTE the staged migration
-// supabase/migrations/20260902180000_universal_search_material_words.sql, on top
+// docs/sql/universal_search_material_words_2026-09-02.sql, on top
 // of the 0901 migration it amends, on a real
 // PostgreSQL engine (PGlite, Postgres compiled to WASM) with the real pg_trgm
 // extension, so `%>`, word_similarity, gin_trgm_ops indexes and the migration's
@@ -27,7 +27,7 @@ import { beforeAll, describe, expect, it } from "vitest";
 
 const BASELINE = "supabase/migrations/20260831140005_production_baseline.sql";
 const MIGRATION = "supabase/migrations/20260901160000_universal_search_materials.sql";
-const WORDS = "supabase/migrations/20260902180000_universal_search_material_words.sql";
+const WORDS = "docs/sql/universal_search_material_words_2026-09-02.sql";
 
 const baseline = readFileSync(BASELINE, "utf8");
 const migration = readFileSync(MIGRATION, "utf8");

@@ -25,7 +25,7 @@ const read = (path) => readFileSync(path, "utf8");
 const stripComments = (src) =>
   src.replace(/\/\*[\s\S]*?\*\//g, " ").replace(/(^|\s)\/\/[^\n]*/g, "$1");
 
-const MIGRATION = "supabase/migrations/20260902164500_search_gap_log.sql";
+const MIGRATION = "docs/sql/search_gap_log_2026-09-02.sql";
 const HOLD_MARKER = "DO NOT APPLY YET";
 const TABLE = "search_gap_log";
 
