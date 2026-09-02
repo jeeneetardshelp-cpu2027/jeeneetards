@@ -20,7 +20,7 @@ import { COURSE_TYPES, DIFFICULTIES, LANGUAGES } from "./filterModel.js";
 import { ratingDisplay } from "./ratingConfidence.js";
 import { langAttrs } from "./lang.js";
 import { useTheme } from "./theme.jsx";
-import { subjectColor } from "./brandColors.js";
+import { subjectColor, subjectInk, subjectTextColor } from "./brandColors.js";
 import YouTubeThumbnail from "./YouTubeThumbnail.jsx";
 import ChannelAvatar from "./ChannelAvatar.jsx";
 
@@ -34,7 +34,13 @@ export function PlaylistCard({ course, onOpen, to, state, selected, onToggle, di
   const { t } = useTheme();
   const duration = formatDuration(course.durationSeconds);
   const rating = ratingDisplay(course.rating, course.ratingCount);
+  // Three different jobs, three different values. `color` paints the spine and
+  // the avatar (backgrounds, no contrast requirement against the page);
+  // `textColor` is the theme token that is legible as small text; `ink` is what
+  // is legible ON the avatar.
   const color = subjectColor(course.subject);
+  const textColor = subjectTextColor(course.subject);
+  const ink = subjectInk(course.subject);
   const initials = (course.teacher || "")
     .split(/\s+/).map((w) => w[0]).filter(Boolean).slice(0, 2).join("").toUpperCase();
   // Subject leads the kicker; class levels ride alongside it instead of as a
@@ -86,7 +92,7 @@ export function PlaylistCard({ course, onOpen, to, state, selected, onToggle, di
         {(kicker || language) && (
           <div className="flex min-w-0 items-start justify-between gap-2">
             {kicker && (
-              <span className="min-w-0 text-[0.68rem] font-semibold uppercase tracking-[0.08em]" style={{ color }}>
+              <span className="min-w-0 text-[0.68rem] font-semibold uppercase tracking-[0.08em]" style={{ color: textColor }}>
                 {kicker}
               </span>
             )}
@@ -115,8 +121,8 @@ export function PlaylistCard({ course, onOpen, to, state, selected, onToggle, di
         {(course.teacher || course.institute) && (
           <div className={`mt-2.5 flex min-w-0 items-center gap-2 text-sm ${t.faint}`}>
             {course.teacher && (
-              <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full text-[0.6rem] font-bold text-white"
-                style={{ background: color }} aria-hidden="true">
+              <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full text-[0.6rem] font-bold"
+                style={{ background: color, color: ink }} aria-hidden="true">
                 {initials || "?"}
               </span>
             )}
