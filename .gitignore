@@ -37,6 +37,7 @@ archive/
 # Local assistant/tool state
 .claude/
 .codex/
+.codex-worktrees/
 
 # Logs
 *.log
