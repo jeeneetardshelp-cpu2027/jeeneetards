@@ -259,17 +259,23 @@ export function useGoalCatalog({ goal, stage, subject } = {}) {
 
     const load = async () => {
       const args = { p_goal: goal, p_class: stage ?? null, p_subject: null };
-      const subjectResult = await supabase.rpc("get_browse_curriculum", args);
+      // Both calls together, not one after the other. The chapter call's
+      // arguments come from `subject` — a prop — so it never depended on the
+      // subject response; that response is only needed afterwards, to map the
+      // chosen subject to its id.
+      const [subjectResult, chapterResult] = await Promise.all([
+        supabase.rpc("get_browse_curriculum", args),
+        subject
+          ? supabase.rpc("get_browse_curriculum", { ...args, p_subject: subject })
+          : Promise.resolve(null),
+      ]);
       if (!active) return;
       if (subjectResult.error) throw subjectResult.error;
+      if (chapterResult?.error) throw chapterResult.error;
 
       const nextSubjects = (subjectResult.data ?? []).map(curriculumRow);
       let nextChapters = {};
-      if (subject) {
-        const chapterResult = await supabase.rpc("get_browse_curriculum", {
-          ...args, p_subject: subject,
-        });
-        if (chapterResult.error) throw chapterResult.error;
+      if (subject && chapterResult) {
         const selected = nextSubjects.find((row) => row.slug === subject);
         if (selected)
           nextChapters = { [selected.id]: (chapterResult.data ?? []).map(curriculumRow) };

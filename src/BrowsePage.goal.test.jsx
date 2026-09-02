@@ -116,6 +116,17 @@ describe("BrowsePage route → playlist query", () => {
   // on any board view - and with them the only signal that school Class 11 and
   // Class 12 hold nothing. Counts are now fetched there too, as an upper bound
   // that prunes dead ends but is never displayed.
+  // get_faculty_facets used to fire twice per load: once with every id null,
+  // while useCanonicalFilters was still turning the URL slugs into ids, and
+  // again when they arrived. The hook has always taken an `enabled` flag; the
+  // call site passed none. Slugs never resolve in this harness, so a page that
+  // waits correctly asks nothing at all here — and one that does not, asks.
+  it("does not ask for faculty facets before the URL slugs have resolved", async () => {
+    renderAt("/browse?goal=jee&subject=physics");
+    await waitFor(() => expect(calls.length).toBeGreaterThan(0));
+    await new Promise((r) => setTimeout(r, 120));
+    expect(rpcCalls.filter((n) => n === "get_faculty_facets")).toHaveLength(0);
+  });
   it("still asks for facet counts on a board view", async () => {
     renderAt("/browse?goal=4&board=cbse&class=10");
     await waitFor(() => expect(rpcCalls).toContain("browse_facet_counts"));
