@@ -58,14 +58,30 @@ describe("public page metadata", () => {
   // does not — every course on a chapter, side by side — could not be found in
   // a search engine.
   it("gives the canonical chapter view its own title and canonical", () => {
+    // The third argument is the catalogue confirming this chapter exists. A
+    // URL cannot prove that, so without it the page is never indexable — see
+    // the fabricated-slug case below.
     const chapter = metadataForLocation(
       "/browse",
       "?goal=jee&class=11&subject=physics&chapter=kinematics",
+      { chapterName: "Kinematics", courseCount: 13 },
     );
     expect(chapter.robots).toBe("index, follow");
     expect(chapter.canonicalPath)
       .toBe("/browse?goal=jee&class=11&subject=physics&chapter=kinematics");
-    expect(chapter.title).toBe("Kinematics — JEE Class 11 Physics | JEENEETARD");
+    // The count is the differentiator, and it is only sayable because the
+    // caller confirmed it. Every indexed chapter URL shipped the count-less
+    // form until the edge started passing the row it had already fetched.
+    expect(chapter.title)
+      .toBe("Kinematics — 13 free courses for JEE Class 11 Physics | JEENEETARD");
+  });
+
+  it("refuses to index a chapter nobody has confirmed exists", () => {
+    // Anyone could otherwise mint unlimited indexable soft-404s by inventing a
+    // slug — measured live on production before this fix.
+    const fabricated = metadataForLocation(
+      "/browse", "?goal=banana&class=11&subject=physics&chapter=not-a-real-chapter-xyz");
+    expect(fabricated.robots).toBe("noindex, follow");
   });
 
   it("keeps every OTHER filtered catalogue variant out of the index", () => {
