@@ -7,7 +7,7 @@ import { useStructuredData } from "./PageMetadata.jsx";
 // that declares lang="en". See lang.js.
 import { langAttrs } from "./lang.js";
 import StudyMaterialCard from "./StudyMaterialCard.jsx";
-import { JEE_MAIN_PAPERS_PATH } from "./studyMaterialLandings.js";
+import { PAPER_LANDINGS } from "./studyMaterialLandings.js";
 import {
   applyMaterialScopeChange,
   normalizeMaterialScopeParams,
@@ -233,25 +233,45 @@ export default function StudyMaterialsPage() {
         </div>
       </section>
 
-      {/* The curated JEE Main paper landing, surfaced from the directory it
-          belongs to instead of being orphaned. A slim banner on purpose: on a
-          phone the filters below must stay within reach, not below the fold. */}
-      <Link
-        to={JEE_MAIN_PAPERS_PATH}
-        className="mt-6 flex min-h-11 flex-wrap items-center gap-3 rounded-xl border border-accent-line bg-accent-soft px-4 py-3 transition-colors hover:bg-surface-2 sm:px-5"
-      >
-        <FileCheck2 aria-hidden="true" className="h-5 w-5 shrink-0 text-accent" />
-        <span className="min-w-0 flex-1 basis-52">
-          <span className="block text-sm font-semibold text-ink">JEE Main previous-year papers, by year</span>
-          <span className="mt-0.5 block text-xs leading-relaxed text-ink-2">
-            Official question papers and final answer keys, organised by year, session and shift.
-          </span>
-        </span>
-        <span className="inline-flex items-center gap-1 text-sm font-semibold text-accent">
-          Browse papers
-          <ArrowRight aria-hidden="true" className="h-4 w-4" />
-        </span>
-      </Link>
+      {/* Every curated paper landing, surfaced from the directory it belongs
+          to instead of being orphaned. This used to be one hardcoded JEE Main
+          banner, so the NEET and JEE Advanced landings — registered later —
+          had no link from the page above them: the sitemap offered them to
+          Google while a student browsing /materials could not reach them.
+          Reading PAPER_LANDINGS, as the sitemap already does, keeps a fourth
+          exam a data change. Slim banners on purpose: on a phone the filters
+          below must stay within reach, not below the fold. */}
+      <ul className="mt-6 grid gap-2">
+        {PAPER_LANDINGS.map((landing) => (
+          <li key={landing.path}>
+            <Link
+              to={landing.path}
+              className="flex min-h-11 flex-wrap items-center gap-3 rounded-xl border border-accent-line bg-accent-soft px-4 py-3 transition-colors hover:bg-surface-2 sm:px-5"
+            >
+              <FileCheck2 aria-hidden="true" className="h-5 w-5 shrink-0 text-accent" />
+              <span className="min-w-0 flex-1 basis-52">
+                <span className="block text-sm font-semibold text-ink">
+                  {landing.examLabel} previous-year papers, by year
+                </span>
+                {/* Three banners where there was one, so the description is
+                    desktop-only: at 375px it cost 396px of banner and pushed
+                    the Exam filter to 1041px, below an 812px fold. The label
+                    above already says which exam and that it is by year. */}
+                <span className="mt-0.5 hidden text-xs leading-relaxed text-ink-2 sm:block">
+                  {landing.heroIntro}
+                </span>
+              </span>
+              {/* Desktop-only for the same reason as the description: on a
+                  phone this wraps onto its own line inside every banner, and
+                  the whole row is already the link. */}
+              <span className="hidden items-center gap-1 text-sm font-semibold text-accent sm:inline-flex">
+                Browse papers
+                <ArrowRight aria-hidden="true" className="h-4 w-4" />
+              </span>
+            </Link>
+          </li>
+        ))}
+      </ul>
 
       <section aria-label="Filter study material" className="my-8 rounded-xl border border-hairline bg-surface-2 p-4 sm:p-5">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">

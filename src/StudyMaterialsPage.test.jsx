@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter, useLocation, useNavigate } from "react-router";
 import { describe, expect, it, vi } from "vitest";
+import { PAPER_LANDINGS } from "./studyMaterialLandings.js";
 
 // The whole library, as the RPC answers when a level is unfiltered. The mock
 // below runs it through the REAL scoping rule, so these tests exercise the
@@ -198,24 +199,35 @@ describe("StudyMaterialsDirectoryView", () => {
     expect(screen.getByRole("option", { name: "Kinematics" })).toBeTruthy();
   });
 
-  it("links the curated JEE Main paper landing from the top of the directory", () => {
-    render(
-      <MemoryRouter initialEntries={["/materials"]}>
-        <StudyMaterialsPage />
-      </MemoryRouter>,
-    );
+  // EVERY registered landing, not just JEE Main. This page used to hardcode a
+  // single JEE Main banner, so the NEET and JEE Advanced landings — added to
+  // the registry later — had no link from the directory above them: the
+  // sitemap offered them to Google while a student browsing /materials could
+  // not reach them. Driving the list from PAPER_LANDINGS means the next exam
+  // registered cannot be orphaned the same way, and this test fails if the
+  // page ever goes back to naming one exam.
+  it.each(PAPER_LANDINGS.map((l) => [l.examLabel, l]))(
+    "links the curated %s paper landing from the top of the directory",
+    (examLabel, landing) => {
+      render(
+        <MemoryRouter initialEntries={["/materials"]}>
+          <StudyMaterialsPage />
+        </MemoryRouter>,
+      );
 
-    const banner = screen.getByRole("link", {
-      name: /JEE Main previous-year papers, by year/i,
-    });
-    expect(banner.getAttribute("href")).toBe("/materials/jee-main/previous-year-papers");
-    expect(banner.textContent).toContain("Official question papers and final answer keys");
-    // The banner sits ABOVE the filters — a link into the deepest paper
-    // shelf, not a card lost below the fold.
-    const filters = screen.getByRole("combobox", { name: "Exam" });
-    expect(banner.compareDocumentPosition(filters) & Node.DOCUMENT_POSITION_FOLLOWING)
-      .toBeTruthy();
-  });
+      const banner = screen.getByRole("link", {
+        name: new RegExp(`${examLabel} previous-year papers, by year`, "i"),
+      });
+      expect(banner.getAttribute("href")).toBe(landing.path);
+      // Each banner describes its own collection, not a neighbour's.
+      expect(banner.textContent).toContain(landing.heroIntro);
+      // The banners sit ABOVE the filters — links into the deepest paper
+      // shelf, not cards lost below the fold.
+      const filters = screen.getByRole("combobox", { name: "Exam" });
+      expect(banner.compareDocumentPosition(filters) & Node.DOCUMENT_POSITION_FOLLOWING)
+        .toBeTruthy();
+    },
+  );
 
   // ---- the curriculum controls cascade ----
   //

@@ -9,8 +9,21 @@ const manifest = JSON.parse(readFileSync(
   "docs/study-materials/neet-ug-2025-official-papers-manifest.json",
   "utf8",
 ));
+// The same SQL now lives twice: the reviewed package here, and the migration
+// that actually applies it. Two copies drift, and a drifted copy would mean the
+// text everyone reviews is not the text production runs.
+const migration = readFileSync(
+  "supabase/migrations/20260902122500_neet_ug_2025_papers.sql",
+  "utf8",
+);
 
 describe("NEET UG 2025 official question-paper package", () => {
+  it("is carried into the migration chain verbatim, so the two cannot drift", () => {
+    // Only the migration's own header may differ; every statement must match.
+    expect(migration).toContain(seed);
+    expect(migration.indexOf(seed)).toBeGreaterThan(0);
+  });
+
   it("records the four visually verified official NTA English PDFs", () => {
     expect(manifest.officialApiUrl).toBe("https://www.nta.ac.in/downloads/getlist");
     expect(manifest.officialNoticeUrl).toBe(
