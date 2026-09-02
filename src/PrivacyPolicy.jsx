@@ -154,6 +154,16 @@ export default function PrivacyPolicy() {
               remember a page&apos;s scroll position.
             </p>
             <p>
+              Local storage key <code>ll_search_history_v1</code> remembers up
+              to eight recent searches that returned at least one result, so
+              the search box can offer them again; a search that returned
+              nothing is never stored. This list is never sent to a server. It
+              is kept only in this browser, no account or device identifier is
+              stored beside it, and it can be emptied at any time with the
+              Clear button shown beside the recent searches, or by clearing
+              site data.
+            </p>
+            <p>
               While signed out, this browser data stays on the device and is
               not attached to any account. It can be removed by clearing site
               data for this site.

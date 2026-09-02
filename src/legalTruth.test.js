@@ -52,6 +52,12 @@ describe("legal release truth", () => {
       "ll_revision_v1",
       "ll_exam_lane_v1",
       "ll_goal_met_v1",
+      // Device-local recent searches (searchHistory.js). Added 2 September
+      // 2026. Materially different from the search-gap log staged in
+      // docs/sql/, which sends ZERO-result queries to the server: this key
+      // holds only searches that WORKED and no part of it ever leaves the
+      // browser, which is why the policy line says so outright.
+      "ll_search_history_v1",
     ]) {
       expect(privacy).toContain(fact);
     }
@@ -92,6 +98,55 @@ describe("legal release truth", () => {
       const writesMoment = read("src/CourseVideoPage.jsx").includes("markGoalMetShown");
       if (!writesMoment) return;
       expect(privacy()).toContain("ll_goal_met_v1");
+    });
+
+    it("states the size of the remembered-search list the code actually keeps", async () => {
+      // "up to eight" is a number in a legal document; it must come from the
+      // constant, not from someone's memory of it. Raising the cap without
+      // touching the policy fails here.
+      const { MAX_RECENT_SEARCHES } = await import("./searchHistory.js");
+      const words = [
+        "zero", "one", "two", "three", "four", "five", "six",
+        "seven", "eight", "nine", "ten", "eleven", "twelve",
+      ];
+      const spelled = words[MAX_RECENT_SEARCHES] ?? String(MAX_RECENT_SEARCHES);
+      // JSX wraps prose across source lines, so the sentence is only a
+      // sentence once the indentation is collapsed.
+      expect(privacy().replace(/\s+/g, " ")).toMatch(
+        new RegExp(`up to (?:${spelled}|${MAX_RECENT_SEARCHES}) recent searches`, "i"),
+      );
+    });
+
+    it("discloses remembered searches whenever the search box stores them", () => {
+      // ll_search_history_v1 holds the student's own successful queries.
+      // Derived from the code that writes the key, like the checks around it.
+      const writesHistory = read("src/searchHistory.js").includes("ll_search_history_v1");
+      if (!writesHistory) return;
+      expect(privacy()).toContain("ll_search_history_v1");
+
+      // The claim that makes this key different from every server-side path
+      // in sections 5 and 6, and different from the search-gap log staged in
+      // docs/sql/ — which exists precisely to send zero-result queries to the
+      // server. It has to be stated NEXT TO the key, not somewhere else in a
+      // long document, or a student cannot tell which store it is about.
+      expect(privacy()).toMatch(
+        /ll_search_history_v1[\s\S]{0,600}never sent to a server/i,
+      );
+
+      // And the file must keep earning that sentence. Anything that turns this
+      // store into a network call — a supabase client, an rpc, a fetch —
+      // makes the policy line false the day it lands. Matched against CODE
+      // only: the file's own comments name searchGapLog.js and the alias
+      // migration path to explain the difference, and prose must stay free.
+      const store = read("src/searchHistory.js")
+        .replace(/\/\*[\s\S]*?\*\//g, " ")
+        .split("\n")
+        .map((line) => (/^\s*(\/\/|\*)/.test(line) ? "" : line))
+        .join("\n");
+      for (const networked of ["supabase", "fetch(", "sendBeacon", "XMLHttpRequest", "import("]) {
+        expect(store, `searchHistory.js must not reach the network (${networked})`)
+          .not.toContain(networked);
+      }
     });
 
     it("discloses the remembered exam lane whenever the homepage persists it", () => {

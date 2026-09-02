@@ -47,6 +47,11 @@ import { normalizeForHighlight } from "./searchHighlight.js";
 // and plenty of it is Devanagari under a document that declares lang="en".
 // See lang.js.
 import { hasDevanagari, langAttrs } from "./lang.js";
+// Before a single character is typed this box used to render nothing at all.
+// SearchStarters fills that with the student's own successful searches, or —
+// only if they have none yet — a short curated list. Device-local; see
+// searchHistory.js.
+import SearchStarters from "./SearchStarters.jsx";
 import { useTheme } from "./theme.jsx";
 import { BRAND_NAVY, BRAND_TEAL } from "./brandColors.js";
 import YouTubeThumbnail from "./YouTubeThumbnail.jsx";
@@ -255,6 +260,14 @@ export default function UniversalSearch({ query: controlledQuery, footer = null 
   useEffect(() => { setCursor(-1); }, [term, type]);
 
   const listRef = useRef(null);
+  // Clicking a starter chip removes the chip from the page, so focus would
+  // otherwise fall to <body> and a keyboard student would lose their place.
+  // Put it back in the field they are now searching from.
+  const inputRef = useRef(null);
+  const runQuery = useCallback((query) => {
+    setText(query);
+    inputRef.current?.focus();
+  }, []);
 
   // Destinations are shared with every other search box (searchDestinations.js).
   // This used to be a second copy that had drifted: lecture rows here went to
@@ -308,6 +321,7 @@ export default function UniversalSearch({ query: controlledQuery, footer = null 
         <div className="relative">
           <Search className={`pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 ${t.muted}`} />
           <input
+            ref={inputRef}
             autoFocus
             // The shell's "/" and Ctrl/Cmd-K shortcut finds a page's search box
             // by this attribute rather than by guessing at selectors. See
@@ -375,7 +389,13 @@ export default function UniversalSearch({ query: controlledQuery, footer = null 
 
       {/* ---- states: loading / error / too short / empty / results ---- */}
       <div className="mt-3">
-        {tooShort ? (
+        {/* Nothing typed yet. Standalone only: in EMBEDDED mode the caller
+            owns the field, so it also owns what sits under an empty one —
+            Home draws the same component in its hero, and Explore does not
+            render this component at all until something is typed. */}
+        {!embedded && !(term ?? "").trim() ? (
+          <SearchStarters onPick={runQuery} className="px-1 py-4" />
+        ) : tooShort ? (
           <p className={`px-1 py-6 text-center text-sm ${t.muted}`}>
             Type at least {MIN_QUERY} characters.
           </p>

@@ -5,17 +5,26 @@
 // renders. If you ever find yourself sorting or filtering results here, the
 // query is wrong — the browser must never hold the catalogue (requirement 4).
 //
-// The one thing it does beyond fetching: when a search SETTLES with nothing,
-// it hands the query to searchGapLog.js, because "students looked for this and
-// we do not have it" is the most useful thing this hook ever learns and it
-// currently evaporates. That path is fire-and-forget, cancellable and silent —
-// see the conditions guarding it below, and the file itself for what does and
-// does not leave the browser.
+// The two things it does beyond fetching, and they are mirror images:
+//
+//   * when a search SETTLES with nothing, it hands the query to
+//     searchGapLog.js, because "students looked for this and we do not have
+//     it" is the most useful thing this hook ever learns and it currently
+//     evaporates. That path goes TO THE SERVER; it is fire-and-forget,
+//     cancellable and silent — see the conditions guarding it below, and the
+//     file itself for what does and does not leave the browser.
+//   * when a search SETTLES WITH RESULTS, it hands the query to
+//     searchHistory.js so the box can offer it again tomorrow. That path never
+//     leaves the device: it is a localStorage write and nothing else.
+//
+// Neither one can delay, block or break the render, and neither one changes
+// what is on screen for this search.
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { supabase, isSupabaseConfigured } from "./supabaseClient";
 import { expandSearchQuery } from "./searchAliases.js";
 import { scheduleSearchGapLog } from "./searchGapLog";
+import { scheduleSearchMemory } from "./searchHistory.js";
 
 // Requirement 6. The client checks so we don't spend a round trip learning it.
 //
@@ -230,6 +239,24 @@ export function useUniversalSearch(query, { type = null, limit = 5 } = {}) {
           if (page === 0 && !type && (enriched ?? []).length === 0) {
             cancelGapLog.current?.();
             cancelGapLog.current = scheduleSearchGapLog(term, { resultCount: 0 });
+          }
+
+          // The other half of the same moment: a SETTLED first page that came
+          // back with rows is a query worth offering the student again. Same
+          // gen/error/page-0 guards as the gap log above — a stale response
+          // for a prefix must not be remembered either — but deliberately NOT
+          // restricted to the unfiltered view: a type-filtered search that
+          // found rows is a subset of the unfiltered one, so re-running the
+          // remembered query from a chip cannot come back empty.
+          //
+          // Not cancelled by the cleanup below, unlike the gap log. See the
+          // note on scheduleSearchMemory: a gap log is a permanent shared row
+          // and a superseded one must never be sent, while this is a
+          // device-local note about a search that worked — and cancelling on
+          // unmount would drop exactly the searches a student clicked straight
+          // through. A later query supersedes it inside searchHistory.js.
+          if (page === 0 && (enriched ?? []).length > 0) {
+            scheduleSearchMemory(term, { resultCount: enriched.length });
           }
         });
     }, DEBOUNCE_MS);
