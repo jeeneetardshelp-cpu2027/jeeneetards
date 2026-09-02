@@ -36,11 +36,19 @@
 -- (the pure-filler guard), so a query of only kind words still arrives with its
 -- tokens intact -- it simply had no haystack to match. Now it has one.
 --
--- WHAT THIS DELIBERATELY CHANGES. A bare "notes" now returns all 225 notes and
--- sheets, and a bare "pyq" all 187 papers, where both returned nothing. That is
--- a real change to group_total on high-frequency queries, and it is the
--- intended reading: a student typing "notes" wants the notes. The group heading
+-- WHAT THIS DELIBERATELY CHANGES. A bare "notes" now returns all 205 notes,
+-- and a bare "pyq" all 187 papers, where both returned nothing. That is a real
+-- change to group_total on high-frequency queries, and it is the intended
+-- reading: a student typing "notes" wants the notes. The group heading
 -- ("Notes & sheets", "Previous-year papers") is what tells them what they got.
+--
+-- Measured live after this was applied on 2026-09-02: 205, not the 225 an
+-- earlier draft of this header predicted. The 20 formula sheets are NOT in it,
+-- because their kind words are "formula sheet formulas" and none of those is
+-- "notes" -- so a bare "notes" reaches notes, and "formula sheet" reaches the
+-- sheets. That is the better behaviour of the two; the header was simply wrong
+-- about what the code it describes does, which is worth correcting in place
+-- rather than leaving a number nobody can reproduce.
 --
 -- NOT ADDED, on purpose: the kind words do NOT include the exam or the subject.
 -- Adding "ncert" to every full_notes row would make "ncert" match notes that
