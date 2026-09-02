@@ -1,4 +1,22 @@
 -- ============================================================================
+-- LAYERING NOTE (added 2026-09-02, after src/searchAliases.js landed upstream).
+-- There are now TWO alias layers, and they are complementary, not rivals:
+--
+--   * src/searchAliases.js (client, already live) rewrites a WHOLE query that
+--     exactly matches a Hindi SUBJECT or institute word before the RPC is
+--     called: rasayan -> chemistry, bhautiki -> physics, pw -> physics wallah.
+--   * this table (database) expands English CHAPTER abbreviations inside the
+--     query as a second ranking pass: shm, nlm, pnc, aod, moi, rot mech.
+--
+-- Verified on 2026-09-02: the two key sets do not intersect at all (8 client
+-- keys, 32 here, zero overlap), so neither can shadow the other. The client
+-- runs first, so this table sees the rewritten query - which is harmless
+-- precisely because the vocabularies are disjoint.
+--
+-- If you are tempted to merge them, know what you would lose: the client layer
+-- must rewrite the WHOLE query (a partial rewrite would be guessing at the
+-- rest of the sentence), while this layer must NOT, because an abbreviation is
+-- one token inside a longer query. They are different rules, not duplication.
 -- SEARCH ALIASES -- teach search the shorthand students actually type.
 --
 -- THE GAP. universal_search matches over titles only. A student who types
