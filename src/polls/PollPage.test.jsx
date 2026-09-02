@@ -197,3 +197,22 @@ describe("poll page states", () => {
     expect(await screen.findByRole("heading", { name: "Poll not found" })).toBeTruthy();
   });
 });
+
+describe("poll page breadcrumb", () => {
+  // The current-page crumb, not the h1: both hold the question once the poll
+  // loads, so a plain text query would pass against the old generic "Poll".
+  const currentCrumb = () =>
+    document.querySelector('[aria-label="Breadcrumb"] [aria-current="page"]');
+
+  it("names the poll once it loads instead of a generic Poll", async () => {
+    renderPoll(apiWith());
+    await screen.findByRole("heading", { name: unvoted.question });
+    expect(currentCrumb().textContent).toBe(unvoted.question);
+  });
+
+  it("says Not found for a missing poll", async () => {
+    renderPoll(apiWith({ getPoll: vi.fn().mockResolvedValue(null) }));
+    await screen.findByRole("heading", { name: "Poll not found" });
+    expect(currentCrumb().textContent).toBe("Not found");
+  });
+});
