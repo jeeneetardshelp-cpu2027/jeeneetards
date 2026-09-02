@@ -39,6 +39,14 @@ const SQL_VERIFICATION_TESTS = [
   "src/nsep*.test.js",
 ];
 
+// Untracked worktree copies parked inside the checkout (Codex under
+// `.codex-worktrees/`, Claude Code under `.claude/worktrees/`). Vitest only
+// excludes node_modules and .git by default, so it collected every copy's
+// tests as if they were the project's own — 3,368 files where the real tree
+// has 400 — and path arguments don't scope it out, because vitest treats them
+// as substring filters. Excluded from both projects so no copy is collected.
+const WORKTREE_COPIES = ["**/.codex-worktrees/**", "**/.claude/worktrees/**"];
+
 // Tailwind v4 is wired in as a Vite plugin — no PostCSS config, no
 // tailwind.config.js. The only other half of the setup is the single
 // `@import "tailwindcss";` line at the top of src/index.css.
@@ -92,7 +100,11 @@ export default defineConfig({
           // `npm test` runs this.
           name: "app",
           environment: "jsdom",
-          exclude: [...defaultExclude, ...SQL_VERIFICATION_TESTS],
+          exclude: [
+            ...defaultExclude,
+            ...WORKTREE_COPIES,
+            ...SQL_VERIFICATION_TESTS,
+          ],
         },
       },
       {
@@ -104,6 +116,7 @@ export default defineConfig({
           name: "sql",
           environment: "node",
           include: SQL_VERIFICATION_TESTS,
+          exclude: [...defaultExclude, ...WORKTREE_COPIES],
           // src/setupTests.js only configures Testing Library, which these
           // tests never use and which expects a DOM.
           setupFiles: [],

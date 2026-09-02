@@ -219,6 +219,10 @@ export default function FilterPanel({
   variant = "sidebar", options = {}, params, onChange,
   loading = false, error = null, onRetry = null,
   counts = null, countsLoading = false,
+  // False on a board or teacher view: the count RPC has no such argument, so
+  // its numbers ignore that predicate and can only be too HIGH. Such counts
+  // still prune (a zero is a real zero) but are never rendered as figures.
+  countsExact = true,
   chapterScopeValues = null,
 }) {
   const { t } = useTheme();
@@ -238,7 +242,7 @@ export default function FilterPanel({
     ? options.goal?.find((o) => String(o.value) === goalRaw || String(o.id) === goalRaw)?.value ?? goalRaw
     : null;
 
-  const optionsFor = (filter) => {
+  const baseOptionsFor = (filter) => {
     let raw = filter.kind === "enum"
       ? filter.options.map((o) => ({ value: o.id, label: o.label }))
       : options[filter.key] ?? [];
@@ -290,6 +294,25 @@ export default function FilterPanel({
     return raw;
   };
 
+  // With EXACT counts every rule above stands, including showing a class or a
+  // course type with its honest zero. With UPPER-BOUND counts there is no
+  // honest zero to show - the figure is withheld - so an option whose bound is
+  // already zero would sit there as a silent dead end. School offered Class 11
+  // and Class 12 that way with no courses behind either. A certain dead end
+  // that cannot be labelled is dropped; a selected value is always kept so a
+  // shared or stale URL can still be cleared.
+  const optionsFor = (filter) => {
+    const base = baseOptionsFor(filter);
+    if (countsExact || counts == null || countsLoading) return base;
+    const chosen = selectedFor(filter).map(String);
+    return base.filter((option) =>
+      chosen.includes(String(option.value)) || optionCount(counts, filter.key, option.value) > 0
+    );
+  };
+  // What the figures are drawn from. null withholds them without touching the
+  // pruning above, which reads `counts` directly.
+  const displayCounts = countsExact ? counts : null;
+
   // Which filters can be shown right now. A dimension whose parent is not
   // chosen yet (chapter without a subject) is HIDDEN rather than shown empty:
   // an empty list invites the student to conclude there are no chapters.
@@ -300,6 +323,9 @@ export default function FilterPanel({
     if (f.dependsOn && !params.get(f.dependsOn)) return false;
     if (f.scopedBy && !params.get(f.scopedBy)) return false;
     if (f.kind === "dimension" && optionsFor(f).length === 0) return false;
+    // An enum group can only empty out on an upper-bound view (its vocabulary
+    // is fixed, and exact views keep zeros). Then it is hidden, not shown bare.
+    if (f.kind === "enum" && !countsExact && optionsFor(f).length === 0) return false;
     // A single-option dimension is not a filter — picking the only value
     // changes nothing, and offering it implies a choice that does not exist.
     // Production currently has exactly one (placeholder-backed) channel.
@@ -357,7 +383,7 @@ export default function FilterPanel({
           options={languageOptions}
           selected={selectedFor(languageFilter)}
           onToggle={toggle}
-          counts={counts}
+          counts={displayCounts}
         />
       )}
       {visible.map((f) => {
@@ -373,7 +399,7 @@ export default function FilterPanel({
               options={opts}
               selected={selectedFor(f)}
               onToggle={toggle}
-              counts={counts}
+              counts={displayCounts}
             />
           </Group>
         );

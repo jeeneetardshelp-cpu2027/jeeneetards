@@ -239,7 +239,7 @@ function SkeletonCard() {
 // through the SAME applyFilterChange as the panel, and the URL parameter is
 // unchanged — so this row, the sheet's row, the removable chips below and the
 // catalogue query cannot disagree about what is selected.
-function BrowseLanguageChips({ params, counts, countsLoading, onChange }) {
+function BrowseLanguageChips({ params, counts, countsLoading, countsExact = true, onChange }) {
   const { t } = useTheme();
   const filter = filterByKey("language");
   if (!filter) return null;
@@ -269,7 +269,12 @@ function BrowseLanguageChips({ params, counts, countsLoading, onChange }) {
       <div className="mt-2 flex flex-wrap gap-2">
         {options.map((option) => {
           const active = selected.includes(String(option.value));
-          const count = known == null ? null : Number(known[String(option.value)] ?? 0);
+          // On a board or teacher view the counts are an upper bound (see the
+          // useBrowseFacets call below): fine for dropping a zero, wrong to
+          // print as a figure. No number, rather than a number that may be high.
+          const count = known == null || !countsExact
+            ? null
+            : Number(known[String(option.value)] ?? 0);
           return (
             <button
               key={option.value}
@@ -439,8 +444,8 @@ export default function Dashboard() {
   const chapterRaw = params.get("chapter") ?? params.get("ch");
   const goalValue = optionValue("goal", goalRaw);
   const subjectValue = optionValue("subject", subjectRaw);
-  // Facet counts intentionally stop when a board or teacher is active because
-  // the v9 count RPC has no such argument. Keep the chapter picker honest in
+  // On a board or teacher view the facet counts are only an upper bound (the
+  // v9 count RPC has no such argument), so they prune but are never shown. Keep the chapter picker honest in
   // that state by reusing the bounded curriculum RPC that powers Explore. It
   // applies the selected exam/class scope and never downloads the catalogue.
   const chapterCatalog = useGoalCatalog({
@@ -482,18 +487,25 @@ export default function Dashboard() {
     contentType: validated.contentType,
     difficulty: validated.difficulty,
     search: urlQuery,
-    // v9 has no teacher/board argument. Showing counts while either is active
-    // would silently ignore part of the student's question, so omit counts
-    // until those dimensions are added to the RPC contract.
+    // v9 has no teacher/board argument, so on those views its numbers ignore
+    // part of the student's question. That makes them an UPPER BOUND: adding
+    // the missing predicate can only shrink a count, never grow it, so a zero
+    // here is a zero for the student too. The counts are therefore still
+    // fetched on board and teacher views and used to drop certain dead ends -
+    // but never DISPLAYED there (countsExact below), because a positive number
+    // might be too high. Before this the counts were simply switched off, which
+    // is how school offered Class 11 and Class 12 with no courses and no zero
+    // to warn anyone.
     //
     // Search counts ARE shown: browse_facet_search_2026-08-25.sql upgraded the
     // facet RPC's p_search to match with the same engine as the result list
     // (search_playlist_ids), so the sidebar counts now agree with the results.
     // If that migration is not yet deployed the RPC still answers (its own
     // matcher), so counts never error here.
-    enabled: canonical.ready && !filterOptions.loading && !filterOptions.error
-      && !teacherRequested && !canonical.board,
+    enabled: canonical.ready && !filterOptions.loading && !filterOptions.error,
   });
+  // Exact when every active filter reached the RPC; an upper bound otherwise.
+  const countsExact = !teacherRequested && !canonical.board;
   const searchTerm = urlQuery.trim();
   const scopeHeading = chapterName ?? subjectName ?? goalName ?? null;
   const heading = searchTerm
@@ -538,6 +550,7 @@ export default function Dashboard() {
       onRetry={filterOptions.retry}
       counts={facetCounts.counts}
       countsLoading={countsLoading}
+      countsExact={countsExact}
       chapterScopeValues={chapterScopeValues}
       params={params}
       onChange={(next) => setParams(next)}
@@ -634,6 +647,7 @@ export default function Dashboard() {
             params={params}
             counts={facetCounts.counts}
             countsLoading={countsLoading}
+            countsExact={countsExact}
             onChange={(next) => setParams(next)}
           />
 
