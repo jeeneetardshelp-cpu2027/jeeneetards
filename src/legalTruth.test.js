@@ -41,6 +41,11 @@ describe("legal release truth", () => {
       // the streak sync — the dates behind the streak now reach the server
       // for signed-in students, and the policy must say so by name.
       "study_days",
+      // Zero-result search text (search_gap_log). Added 2 September 2026.
+      // Unlike every other server-side path here it carries no identity and is
+      // kept for signed-out visitors too, which makes it the one record a
+      // student cannot ask us to delete. The policy has to say both parts.
+      "search_gap_log",
       "ll_player_prefs_v1",
       "ll_notes_v1",
       "ll_streak_v1",
