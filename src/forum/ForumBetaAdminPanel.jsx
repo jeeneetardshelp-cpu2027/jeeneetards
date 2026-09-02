@@ -138,6 +138,10 @@ export default function ForumBetaAdminPanel({ api = forumApi }) {
                 className={`mt-1 min-h-11 w-full max-w-xs rounded-lg border px-3 text-sm ${t.border} ${t.input} ${t.text}`}
               />
             </label>
+            {/* text-white stays literal here, and on the Add tester button
+                below: it is ink on BRAND_TEAL, which is the same fill in both
+                themes. A theme token would flip this label to near-black on
+                teal in the light theme. Same idiom as adminUI.jsx. */}
             <button
               type="button"
               disabled={!canActivate}

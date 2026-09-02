@@ -128,7 +128,11 @@ function PendingPoll({ poll, api, onDone, t }) {
         </label>
       </div>
 
-      {error && <p role="alert" className={`mt-3 text-sm ${t.muted}`}>{error}</p>}
+      {/* Failures read as danger, not as ordinary muted copy. t.muted is
+          text-ink-2 — perfectly legible, but it makes "your review did not
+          save" look like a caption. text-danger is a palette token, so it
+          switches with the theme like everything else here. */}
+      {error && <p role="alert" className="mt-3 text-sm text-danger">{error}</p>}
 
       <div className="mt-4 flex flex-wrap gap-3">
         <button
@@ -295,7 +299,7 @@ export default function PollReviewPanel({ api = pollApi }) {
             {MODES.find((entry) => entry.id === mode)?.detail}
           </p>
         )}
-        {modeError && <p role="alert" className={`mt-2 text-sm ${t.muted}`}>{modeError}</p>}
+        {modeError && <p role="alert" className="mt-2 text-sm text-danger">{modeError}</p>}
       </section>
 
       <section aria-labelledby="poll-expired-heading">
@@ -327,7 +331,7 @@ export default function PollReviewPanel({ api = pollApi }) {
           Waiting for review {pending.status === "ready" ? `(${pending.data.length})` : ""}
         </h3>
         {pending.status === "loading" && <p className={`text-sm ${t.faint}`}>Loading…</p>}
-        {pending.status === "error" && <p className={`text-sm ${t.muted}`}>{pending.error}</p>}
+        {pending.status === "error" && <p className="text-sm text-danger">{pending.error}</p>}
         {pending.status === "ready" && pending.data.length === 0 && (
           <p className={`text-sm ${t.faint}`}>Nothing waiting. </p>
         )}
@@ -345,7 +349,7 @@ export default function PollReviewPanel({ api = pollApi }) {
           Reported poll content {reports.status === "ready" ? `(${reports.data.length})` : ""}
         </h3>
         {reports.status === "loading" && <p className={`text-sm ${t.faint}`}>Loading…</p>}
-        {reports.status === "error" && <p className={`text-sm ${t.muted}`}>{reports.error}</p>}
+        {reports.status === "error" && <p className="text-sm text-danger">{reports.error}</p>}
         {reports.status === "ready" && reports.data.length === 0 && (
           <p className={`text-sm ${t.faint}`}>Nothing reported.</p>
         )}
