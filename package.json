@@ -86,6 +86,7 @@
     "verify:report-browser": "node src/scripts/reportBrowserFixture.js verify",
     "cleanup:report-browser": "node src/scripts/reportBrowserFixture.js cleanup",
     "verify:production-capabilities": "node src/scripts/verifyProductionCapabilities.js",
+    "verify:rls-boundary": "node src/scripts/verifyRlsBoundary.js",
     "verify:study-materials-production": "node src/scripts/verifyStudyMaterialsProduction.js",
     "verify:frontend-release": "node src/scripts/verifyFrontendRelease.js",
     "draft:manifest": "node src/scripts/draftManifest.js",
