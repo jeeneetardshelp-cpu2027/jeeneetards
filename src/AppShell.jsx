@@ -39,6 +39,7 @@ import { clearNotes } from "./notes.js";
 import { clearStreak, mergeStudyDays, streakStats } from "./streak.js";
 import { pullServerStudyDays } from "./streakSync.js";
 import { clearRevision } from "./revision.js";
+import { clearRecentSearches } from "./searchHistory.js";
 import { prefersReducedMotion } from "./motion.jsx";
 import { langAttrs } from "./lang.js";
 
@@ -369,6 +370,12 @@ export function GlobalHeader({ crumbs = [], search = null, leading = null, width
     // finished, which is exactly the kind of thing a shared machine must not
     // hand to whoever signs in next.
     clearRevision();
+    // Same reasoning again, and the most literal case of it: ll_search_history_v1
+    // holds up to eight things the student TYPED. Leaving them behind offers the
+    // next person at a school-lab browser the last one's searches as chips under
+    // an empty search box. This also cancels a search that settled in the last
+    // second, which would otherwise write itself back after the sign-out.
+    clearRecentSearches();
     // The chip above reads the store this just wiped, and the next sign-in
     // (even in this same tab, without a reload) must be allowed to pull the
     // server copy back down.

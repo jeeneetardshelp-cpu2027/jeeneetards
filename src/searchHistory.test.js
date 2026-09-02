@@ -194,6 +194,49 @@ describe("a half-typed prefix never becomes a remembered search", () => {
   });
 });
 
+// Clearing removes the stored list, but a search that settled a moment ago is
+// still holding a timer that calls rememberSearch() on a delay. Unless clearing
+// cancels that too, "cleared" lasts until the timer fires and the term writes
+// itself straight back — with nothing on screen to say it happened.
+describe("clearing also reaches the search that has not landed yet", () => {
+  beforeEach(() => { vi.useFakeTimers(); });
+
+  it("a search still in flight does not write itself back after the Clear button", () => {
+    scheduleSearchMemory("hindi class 10 notes", { resultCount: 4, delay: 1000 });
+    // Cleared while that write is in flight — the realistic case, because a
+    // student clears the list right after seeing it fill up.
+    expect(clearRecentSearches()).toEqual([]);
+    vi.advanceTimersByTime(2000);
+
+    expect(getRecentSearches()).toEqual([]);
+    expect(localStorage.getItem(SEARCH_HISTORY_KEY)).toBeNull();
+  });
+
+  it("and not after sign-out either, which is the shared-machine case", () => {
+    // A student searches, then signs out within the settle window. On a school
+    // machine the next person must not get that query back a second later.
+    found("class 12 organic chemistry");
+    scheduleSearchMemory("neet 2025 answer key", { resultCount: 6, delay: 1000 });
+    clearRecentSearches();
+    vi.advanceTimersByTime(5000);
+
+    expect(getRecentSearches()).toEqual([]);
+  });
+
+  it("does not disturb a later search that the student starts after clearing", () => {
+    // Cancelling the pending slot must not leave it in a state that swallows
+    // the NEXT schedule — clearing is not a mute button.
+    scheduleSearchMemory("kinematics", { resultCount: 5, delay: 1000 });
+    clearRecentSearches();
+    vi.advanceTimersByTime(2000);
+    expect(getRecentSearches()).toEqual([]);
+
+    scheduleSearchMemory("thermodynamics", { resultCount: 5, delay: 1000 });
+    vi.advanceTimersByTime(2000);
+    expect(getRecentSearches()).toEqual(["thermodynamics"]);
+  });
+});
+
 describe("every starter prompt is backed by evidence in this repository", () => {
   // The two places that record what production actually answers:
   //   * the applied alias migration, whose self-test runs universal_search on
