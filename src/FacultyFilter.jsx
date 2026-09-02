@@ -4,6 +4,12 @@
 //
 // No alias logic here: options come from get_faculty_facets(), suggestions from
 // search_teachers(). See useFaculty.js.
+//
+// A selected chip uses the accent-soft token pair — the same "on" treatment as
+// AppShell's active nav item and the forum topic chips. It used to be a literal
+// slate-800 pill, which in the dark default sat almost exactly on the surface
+// colour, so "selected" was invisible; the count inside it was recoloured by
+// the index.css bridge to --ink-3 and fell to ~2.6:1 against that pill.
 
 import { useEffect, useState } from "react";
 import { Search, X, BadgeCheck } from "lucide-react";
@@ -90,22 +96,24 @@ export function FacultyFilter({ params, setParams, scope = {}, onAvailabilityCha
               aria-pressed={active}
               className={`flex min-h-11 items-center gap-1 rounded-full border px-3 text-xs transition ${
                 active
-                  ? "border-slate-800 bg-slate-800 text-white"
+                  ? "border-accent-line bg-accent-soft font-medium text-accent"
                   : `${t.border} ${t.card} ${t.faint} ${t.cardHover}`
               }`}
             >
               {f.verified && <BadgeCheck className="h-3 w-3" aria-label="Verified" />}
               {f.display_name}
-              <span className={active ? "text-slate-300" : t.muted}>({f.course_count})</span>
+              <span className={active ? "text-accent" : t.muted}>({f.course_count})</span>
             </button>
           );
         })}
 
-        {/* A teacher chosen from search may not be among the top facets. */}
+        {/* A teacher chosen from search may not be among the top facets. This
+            chip is always the selected one, so it carries the same accent
+            "on" treatment as an active facet chip above. */}
         {selected && !facets.slice(0, 6).some((f) => Number(f.teacher_id) === selected) && (
           <button
             onClick={() => choose(selected)}
-            className="flex min-h-11 items-center gap-1 rounded-full border border-slate-800 bg-slate-800 px-3 text-xs text-white"
+            className="flex min-h-11 items-center gap-1 rounded-full border border-accent-line bg-accent-soft px-3 text-xs font-medium text-accent"
           >
             {selectedFacet?.display_name ?? `Teacher #${selected}`}
             <X className="h-3 w-3" />
