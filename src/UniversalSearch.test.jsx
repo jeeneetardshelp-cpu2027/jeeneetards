@@ -36,7 +36,7 @@ vi.mock("./supabaseClient", () => ({
 }));
 
 const { default: UniversalSearch, highlightParts } = await import("./UniversalSearch.jsx");
-const { DEBOUNCE_MS, groupRows, appendGroupRows } = await import("./useUniversalSearch.js");
+const { DEBOUNCE_MS, MIN_QUERY, groupRows, appendGroupRows } = await import("./useUniversalSearch.js");
 
 const row = (over = {}) => ({
   group_key: "faculty", entity_id: 1, title: "Amit Bijarnia",
@@ -207,8 +207,8 @@ describe("keyboard navigation (requirement 8)", () => {
 
   it("arrows move through groups as one continuous list", async () => {
     renderSearch();
-    type("a");
     type("am");
+    type("ami");
     await settle();
     const input = screen.getByRole("combobox");
     await screen.findAllByRole("option");
@@ -492,11 +492,15 @@ describe("Show more paging in the single-type view", () => {
 
 // ---------------------------------------------------------------- states
 describe("short query, loading, error and empty (requirements 6, 8)", () => {
-  it("refuses a one-character query without asking the server", async () => {
+  // Asserted against MIN_QUERY, not a literal. The floor rose from 2 to 3 on
+  // 2026-09-02 because a two-character query times out in the RPC rather than
+  // returning nothing, and a test naming the old number would have had to be
+  // edited rather than simply passing.
+  it("refuses a query below the floor without asking the server", async () => {
     renderSearch();
-    type("a");
+    type("a".repeat(MIN_QUERY - 1));
     await settle();
-    expect(screen.getByText(/Type at least 2 characters/i)).toBeTruthy();
+    expect(screen.getByText(new RegExp(`Type at least ${MIN_QUERY} characters`, "i"))).toBeTruthy();
     expect(rpcCalls).toHaveLength(0);
   });
 
