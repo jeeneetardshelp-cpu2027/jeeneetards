@@ -8,6 +8,7 @@
 //  Routes (all addressed by real Supabase ids):
 //    /                                        -> Home / browse
 //    /chapter/:chapterId                      -> redirect to /browse?ch=
+//    /course/:playlistId/:slug?               -> Video View (slug is decoration)
 //    /course/:playlistId/chapter/:chapterId   -> Video View
 //    /terms                                   -> Terms & Disclaimer
 //    /privacy                                 -> Privacy Policy
@@ -37,6 +38,9 @@ import NotFound from "./NotFound.jsx";
 import AppErrorBoundary from "./AppErrorBoundary.jsx";
 import RouteMetadata from "./PageMetadata.jsx";
 import { RELEASE_CAPABILITIES, RELEASE_FEATURES } from "./releaseCapabilities.js";
+// The one place that knows what a /course URL's parts mean. Used here only to
+// tell two spellings of the same course address apart from two real pages.
+import { parseCoursePath } from "./canonicalUrl.js";
 // The paper-landing registry: one route pair (landing + :year child) per
 // registered exam, so a sibling exam is a registry entry, not new routes.
 import { PAPER_LANDINGS } from "./studyMaterialLandings.js";
@@ -196,6 +200,25 @@ function ScrollToTop() {
   return null;
 }
 
+// Which pathnames count as "the same page" for the transition below.
+//
+// A course has more than one spelling of its address — /course/398,
+// /course/398/rectilinear-motion, and any stale slug still in circulation — and
+// they are all ONE page: the keyword slug is decoration, the id resolves the
+// course. Collapsing them to the id form means arriving on the canonical URL
+// does not restart the fade-up or remount the player, the lesson list and the
+// student's position in it. Exactly the reasoning that already excludes the
+// query string, applied to the part of the path that is likewise not identity.
+//
+// The chapter sub-URL keeps its own key: that IS a different page.
+function routeTransitionKey(pathname) {
+  const course = parseCoursePath(pathname);
+  if (!course) return pathname;
+  return course.chapterId
+    ? `/course/${course.id}/chapter/${course.chapterId}`
+    : `/course/${course.id}`;
+}
+
 // The shared shell: page content, then the footer on EVERY page.
 //
 // The `key` on the content wrapper is what produces the page transition: a
@@ -209,7 +232,7 @@ function Layout() {
       data-student-surface="true"
       className="flex min-h-screen flex-col bg-canvas text-ink"
     >
-      <div key={pathname} className="route-enter flex-1">
+      <div key={routeTransitionKey(pathname)} className="route-enter flex-1">
         <Suspense fallback={<RouteFallback />}>
           <Outlet />
         </Suspense>
@@ -456,8 +479,23 @@ export default function App() {
           <Route path="/chapter/:chapterId" element={<LegacyChapterRedirect />} />
           {/* A course opened from the catalogue has no chapter context, so the
               chapterless route is a real destination — not a 404 reached via an
-              invented chapter id. */}
-          <Route path="/course/:playlistId" element={<CourseVideoPage />} />
+              invented chapter id.
+
+              ONE route, with the keyword slug as an OPTIONAL segment, rather
+              than two routes sharing an element. That is the whole reason for
+              the "?": React Router explodes an optional segment into two
+              matchable paths that resolve to the SAME route object, so
+              /course/398 and /course/398/kinematics render the same mounted
+              component. Two separate <Route> declarations would look identical
+              and remount CourseVideoPage on the edge's 308 — throwing away the
+              loaded lessons, the player and the student's position in it.
+
+              :slug is never read. useParams() takes playlistId; the slug is
+              decoration for search engines and for anyone reading a link
+              before its preview loads, so a wrong or stale one still opens the
+              right course (middleware.js then redirects it to the canonical
+              spelling on the next full load). */}
+          <Route path="/course/:playlistId/:slug?" element={<CourseVideoPage />} />
           <Route
             path="/course/:playlistId/chapter/:chapterId"
             element={<CourseVideoPage />}

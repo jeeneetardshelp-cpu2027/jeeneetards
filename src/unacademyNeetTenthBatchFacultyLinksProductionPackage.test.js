@@ -239,5 +239,5 @@ describe("Unacademy NEET tenth-batch faculty-link production package", () => {
       "select count(*)::int as count from public.playlist_teachers where playlist_id in (411,412,413)",
     )).rows[0].count).toBe(0);
     await drifted.close();
-  }, 30_000);
+  });
 });

@@ -183,8 +183,18 @@ export function metadataForLocation(pathname = "/", search = "", verifiedChapter
       description:
         "Browse the lesson sequence and watch this free course through YouTube's privacy-enhanced player.",
       type: "article",
-      // Chapter sub-URLs canonicalize to the course root — the same URL the
-      // sitemap and the edge middleware emit for this course.
+      // The id form, deliberately, even when the URL carries a keyword slug.
+      //
+      // A course's canonical address is /course/:id/:slug, and the edge emits
+      // exactly that — because the edge has fetched the row and KNOWS the
+      // current title. This function has not: it sees a path, and the slug in
+      // it may be stale, mis-cased or invented. Declaring an unverified slug
+      // canonical would be asserting something we cannot check.
+      //
+      // /course/:id is the one form that is always true, and it is never a dead
+      // end: the edge permanently redirects it to the slugged address, so this
+      // canonical resolves to the same page the edge names. Chapter sub-URLs
+      // collapse here too, as they always have.
       canonicalPath: path.match(/^\/course\/\d+/)?.[0] ?? path,
     };
   }

@@ -131,7 +131,7 @@ describe("forum moderation-context SQL delta", () => {
       await pg.exec("reset role").catch(() => {});
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("denies real non-admin and anonymous roles and represents a removed target safely", async () => {
     const pg = await database();
@@ -161,7 +161,7 @@ describe("forum moderation-context SQL delta", () => {
       await pg.exec("reset role").catch(() => {});
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("restores the reviewed forum v1 report-list contract", async () => {
     const pg = await database();
@@ -180,5 +180,5 @@ describe("forum moderation-context SQL delta", () => {
       await pg.exec("reset role").catch(() => {});
       await pg.close();
     }
-  }, 30_000);
+  });
 });

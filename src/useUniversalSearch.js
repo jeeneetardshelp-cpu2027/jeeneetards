@@ -4,10 +4,18 @@
 // paging all happen in universal_search(); this hook debounces, cancels and
 // renders. If you ever find yourself sorting or filtering results here, the
 // query is wrong — the browser must never hold the catalogue (requirement 4).
+//
+// The one thing it does beyond fetching: when a search SETTLES with nothing,
+// it hands the query to searchGapLog.js, because "students looked for this and
+// we do not have it" is the most useful thing this hook ever learns and it
+// currently evaporates. That path is fire-and-forget, cancellable and silent —
+// see the conditions guarding it below, and the file itself for what does and
+// does not leave the browser.
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { supabase, isSupabaseConfigured } from "./supabaseClient";
 import { expandSearchQuery } from "./searchAliases.js";
+import { scheduleSearchGapLog } from "./searchGapLog";
 
 // Requirement 6. Two characters is the floor the database enforces too; the
 // client checks as well so we don't spend a round trip learning it.
@@ -119,6 +127,11 @@ export function useUniversalSearch(query, { type = null, limit = 5 } = {}) {
   // is exactly the bug that makes a search box show results for a prefix of
   // what you typed. Anything but the newest generation is discarded.
   const generation = useRef(0);
+  // Cancel handle for a pending "this search found nothing" log. Held in a ref
+  // because it is created inside the RPC's .then(), long after the effect
+  // returned its cleanup — and the cleanup is the only thing that can promise
+  // a superseded search never becomes a row.
+  const cancelGapLog = useRef(null);
   const [page, setPage] = useState(0);
   // Retry needs its own state. setPage(p => p) looks like a re-run but React
   // bails out when the value is identical, so the effect never fires and the
@@ -181,12 +194,38 @@ export function useUniversalSearch(query, { type = null, limit = 5 } = {}) {
             groups: page > 0 ? appendGroupRows(s.groups, enriched) : groupRows(enriched),
             loading: false, error: null, tooShort: false, query: term,
           }));
+
+          // A SETTLED first page of an unfiltered search that came back with
+          // nothing is the one thing worth remembering about this request: it
+          // names content the library does not have. Conditions, all of them
+          // load-bearing:
+          //   * gen === generation.current (checked twice above) — a stale
+          //     response for a prefix of what the student has since typed must
+          //     never be logged;
+          //   * no error — a failed search is not an empty library;
+          //   * page 0 — an exhausted "Show more" is not a zero-result search;
+          //   * no type filter — a row saying "kinematics" is honest, a row
+          //     saying "kinematics" when the student had narrowed to Faculty
+          //     would not be, and this table stores no filter column.
+          // Fire-and-forget: scheduleSearchGapLog starts a timer, returns
+          // immediately and never touches state, so nothing here can delay,
+          // block or break the render. The cleanup below cancels it.
+          if (page === 0 && !type && (enriched ?? []).length === 0) {
+            cancelGapLog.current?.();
+            cancelGapLog.current = scheduleSearchGapLog(term, { resultCount: 0 });
+          }
         });
     }, DEBOUNCE_MS);
 
     // Clearing the timer cancels a request that has not left yet; bumping the
-    // generation discards one already in flight. Both are needed.
-    return () => clearTimeout(timer);
+    // generation discards one already in flight; cancelling the pending gap
+    // log means a query the student kept typing past is never recorded as a
+    // gap. All three are needed.
+    return () => {
+      clearTimeout(timer);
+      cancelGapLog.current?.();
+      cancelGapLog.current = null;
+    };
   }, [query, type, limit, page, nonce]);
 
   const retry = useCallback(() => setNonce((n) => n + 1), []);

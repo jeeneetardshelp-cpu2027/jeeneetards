@@ -19,6 +19,7 @@ import { getFacultyGuide } from "./src/facultyGuides.js";
 // Pure data, no React — safe to pull into the edge runtime.
 import { TEST_SECTIONS, ACCESS, findTestSection } from "./src/testPlatforms.js";
 import { buildCourseMetadata } from "./src/courseMetadata.js";
+import { canonicalCoursePath } from "./src/canonicalUrl.js";
 import {
   paperYearSchemas,
   studyMaterialLandingSchemas,
@@ -55,7 +56,12 @@ export function escapeHtml(value) {
 export function courseMeta(course, id) {
   return {
     ...buildCourseMetadata(course),
-    url: `${SITE}/course/${id}`,
+    // The canonical address carries the title as keywords: /course/398/kinematics.
+    // canonicalUrl.js is the one place that decides that shape, so the og:url,
+    // the <link rel="canonical">, the 308 the edge issues and the sitemap entry
+    // are all the same string by construction. A title with no ASCII to slugify
+    // (the catalogue's Devanagari courses) falls back to the bare /course/398.
+    url: `${SITE}${canonicalCoursePath(id, course?.title)}`,
     // Per-course WhatsApp/Telegram preview card. /api/og renders the course's
     // own title/teacher/rating as a PNG and falls back to the static
     // social-preview.png for anything it cannot render, so pointing og:image

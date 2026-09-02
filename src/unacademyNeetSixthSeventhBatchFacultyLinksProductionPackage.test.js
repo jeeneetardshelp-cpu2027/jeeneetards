@@ -232,5 +232,5 @@ describe("Unacademy NEET sixth/seventh-batch faculty-link production package", (
       memberships: 4520,
     });
     await pg.close();
-  }, 30_000);
+  });
 });

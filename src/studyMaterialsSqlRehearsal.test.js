@@ -532,7 +532,7 @@ describe("study materials v1 local SQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("loads current NCERT Class 12 Mathematics across JEE and CBSE lecture taxonomy", async () => {
     const pg = await productionShapedDatabase();
@@ -591,7 +591,7 @@ describe("study materials v1 local SQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("loads current NCERT Class 10 Mathematics beside the existing CBSE lecture taxonomy", async () => {
     const pg = await productionShapedDatabase();
@@ -647,7 +647,7 @@ describe("study materials v1 local SQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("loads both rationalised NCERT Class 10 English readers into exact CBSE chapter scopes", async () => {
     const pg = await productionShapedDatabase();
@@ -704,7 +704,7 @@ describe("study materials v1 local SQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("loads all four rationalised NCERT Class 10 Social Science books into exact CBSE chapter scopes", async () => {
     const pg = await productionShapedDatabase();
@@ -761,7 +761,7 @@ describe("study materials v1 local SQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("loads rationalised NCERT Class 10 Hindi B into exact CBSE chapter scopes", async () => {
     const pg = await productionShapedDatabase();
@@ -818,7 +818,7 @@ describe("study materials v1 local SQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("loads rationalised NCERT Class 10 Hindi A with shared poem scopes", async () => {
     const pg = await productionShapedDatabase();
@@ -878,7 +878,7 @@ describe("study materials v1 local SQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("loads current NCERT Class 10 Science into exact CBSE subject and chapter scopes", async () => {
     const pg = await productionShapedDatabase();
@@ -937,7 +937,7 @@ describe("study materials v1 local SQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("loads the rationalised NCERT Class 12 Biology set for NEET and CBSE", async () => {
     const pg = await productionShapedDatabase();
@@ -991,7 +991,7 @@ describe("study materials v1 local SQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("loads the rationalised NCERT Class 11 Biology set for NEET and CBSE", async () => {
     const pg = await productionShapedDatabase();
@@ -1045,7 +1045,7 @@ describe("study materials v1 local SQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("loads the rationalised NCERT Class 12 Chemistry set across all curricula", async () => {
     const pg = await productionShapedDatabase();
@@ -1098,7 +1098,7 @@ describe("study materials v1 local SQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("loads the rationalised NCERT Class 11 Chemistry set across all curricula", async () => {
     const pg = await productionShapedDatabase();
@@ -1147,7 +1147,7 @@ describe("study materials v1 local SQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("loads both complete NCERT Physics classes without cross-class leakage", async () => {
     const pg = await productionShapedDatabase();
@@ -1205,7 +1205,7 @@ describe("study materials v1 local SQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("loads the complete NCERT Class 11 Physics set once across all three curricula", async () => {
     const pg = await productionShapedDatabase();
@@ -1480,7 +1480,7 @@ describe("study materials v1 local SQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("loads all four JEE Advanced 2025 papers into one JEE-only exam scope each", async () => {
     const pg = await productionShapedDatabase();
@@ -1529,7 +1529,7 @@ describe("study materials v1 local SQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("loads all four JEE Advanced 2024 papers into one JEE-only exam scope each", async () => {
     const pg = await productionShapedDatabase();
@@ -1578,7 +1578,7 @@ describe("study materials v1 local SQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("loads all four JEE Advanced 2023 papers into one JEE-only exam scope each", async () => {
     const pg = await productionShapedDatabase();
@@ -1627,7 +1627,7 @@ describe("study materials v1 local SQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("loads all four JEE Advanced 2022 papers into one JEE-only exam scope each", async () => {
     const pg = await productionShapedDatabase();
@@ -1676,7 +1676,7 @@ describe("study materials v1 local SQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("loads all four JEE Advanced 2021 papers into one JEE-only exam scope each", async () => {
     const pg = await productionShapedDatabase();
@@ -1725,7 +1725,7 @@ describe("study materials v1 local SQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("loads all four JEE Advanced 2020 papers into one JEE-only exam scope each", async () => {
     const pg = await productionShapedDatabase();
@@ -1774,7 +1774,7 @@ describe("study materials v1 local SQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("loads all four JEE Advanced 2019 papers into one JEE-only exam scope each", async () => {
     const pg = await productionShapedDatabase();
@@ -1812,7 +1812,7 @@ describe("study materials v1 local SQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("loads both JEE Advanced 2018 papers into one JEE-only exam scope each", async () => {
     const pg = await productionShapedDatabase();
@@ -1850,7 +1850,7 @@ describe("study materials v1 local SQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("loads both JEE Advanced 2017 papers into one JEE-only exam scope each", async () => {
     const pg = await productionShapedDatabase();
@@ -1888,7 +1888,7 @@ describe("study materials v1 local SQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("loads both JEE Advanced 2016 papers into one JEE-only exam scope each", async () => {
     const pg = await productionShapedDatabase();
@@ -1926,7 +1926,7 @@ describe("study materials v1 local SQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("loads both JEE Advanced 2015 papers into one JEE-only exam scope each", async () => {
     const pg = await productionShapedDatabase();
@@ -1964,7 +1964,7 @@ describe("study materials v1 local SQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("loads both JEE Advanced 2014 papers into one JEE-only exam scope each", async () => {
     const pg = await productionShapedDatabase();
@@ -2002,7 +2002,7 @@ describe("study materials v1 local SQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("loads both JEE Advanced 2013 bilingual papers into one JEE-only exam scope each", async () => {
     const pg = await productionShapedDatabase();
@@ -2040,7 +2040,7 @@ describe("study materials v1 local SQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("loads both IIT-JEE 2012 papers into one JEE-only exam scope each", async () => {
     const pg = await productionShapedDatabase();
@@ -2078,7 +2078,7 @@ describe("study materials v1 local SQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("loads both IIT-JEE 2011 papers into one JEE-only exam scope each", async () => {
     const pg = await productionShapedDatabase();
@@ -2116,7 +2116,7 @@ describe("study materials v1 local SQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("loads both IIT-JEE 2010 papers into one JEE-only exam scope each", async () => {
     const pg = await productionShapedDatabase();
@@ -2154,7 +2154,7 @@ describe("study materials v1 local SQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("loads both IIT-JEE 2009 papers into one JEE-only exam scope each", async () => {
     const pg = await productionShapedDatabase();
@@ -2192,7 +2192,7 @@ describe("study materials v1 local SQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("loads both IIT-JEE 2008 papers into one JEE-only exam scope each", async () => {
     const pg = await productionShapedDatabase();
@@ -2230,7 +2230,7 @@ describe("study materials v1 local SQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("loads both IIT-JEE 2007 papers into one JEE-only exam scope each", async () => {
     const pg = await productionShapedDatabase();
@@ -2268,7 +2268,7 @@ describe("study materials v1 local SQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("loads all eight official JEE Main 2014 papers into JEE-only exam scopes", async () => {
     const pg = await productionShapedDatabase();
@@ -2307,7 +2307,7 @@ describe("study materials v1 local SQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("loads all six official JEE Main 2015 papers into JEE-only exam scopes", async () => {
     const pg = await productionShapedDatabase();
@@ -2346,7 +2346,7 @@ describe("study materials v1 local SQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("loads all six official JEE Main 2016 papers into JEE-only exam scopes", async () => {
     const pg = await productionShapedDatabase();
@@ -2385,7 +2385,7 @@ describe("study materials v1 local SQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("loads all ten official JEE Main 2017 papers into JEE-only exam scopes", async () => {
     const pg = await productionShapedDatabase();
@@ -2424,7 +2424,7 @@ describe("study materials v1 local SQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("loads all twelve official JEE Main 2022 Session 1 papers into JEE-only exam scopes", async () => {
     const pg = await productionShapedDatabase();
@@ -2463,7 +2463,7 @@ describe("study materials v1 local SQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("loads nine verified official JEE Main 2022 Session 2 papers into JEE-only exam scopes", async () => {
     const pg = await productionShapedDatabase();
@@ -2502,7 +2502,7 @@ describe("study materials v1 local SQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("loads twelve verified official JEE Main 2023 Session 2 papers into JEE-only exam scopes", async () => {
     const pg = await productionShapedDatabase();
@@ -2545,7 +2545,7 @@ describe("study materials v1 local SQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("loads eight verified official JEE Main 2025 Session 2 papers into JEE-only exam scopes", async () => {
     const pg = await productionShapedDatabase();
@@ -2585,7 +2585,7 @@ describe("study materials v1 local SQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("loads eight verified official JEE Main 2024 Session 1 papers into JEE-only exam scopes", async () => {
     const pg = await productionShapedDatabase();
@@ -2628,7 +2628,7 @@ describe("study materials v1 local SQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("loads all ten official JEE Main 2024 Session 2 papers into JEE-only exam scopes", async () => {
     const pg = await productionShapedDatabase();
@@ -2671,7 +2671,7 @@ describe("study materials v1 local SQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("loads nine official JEE Main 2026 Session 2 papers into JEE-only exam scopes", async () => {
     const pg = await productionShapedDatabase();
@@ -2710,7 +2710,7 @@ describe("study materials v1 local SQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("loads two official NEET UG 2024 papers into NEET-only exam scopes", async () => {
     const pg = await productionShapedDatabase();
@@ -2751,7 +2751,7 @@ describe("study materials v1 local SQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("loads four official NEET UG 2026 papers into NEET-only exam scopes", async () => {
     const pg = await productionShapedDatabase();
@@ -2792,7 +2792,7 @@ describe("study materials v1 local SQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 
   it("loads four official NEET UG 2025 papers into NEET-only exam scopes", async () => {
     const pg = await productionShapedDatabase();
@@ -2833,5 +2833,5 @@ describe("study materials v1 local SQL rehearsal", () => {
     } finally {
       await pg.close();
     }
-  }, 30_000);
+  });
 });

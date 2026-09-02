@@ -81,12 +81,21 @@ describe("edge-rendered discovery landings", () => {
     "/faculty", "/faculty/amit-bijarnia", "/chapter/79", "/course/13",
     "/course/13/chapter/8", "/methodology", "/terms", "/privacy", "/search", "/tests",
     "/tests/jee-main", "/tests/neet", "/tests/class-12",
+    // The keyword slug. A slug that is wrong, mis-cased or left over from an
+    // older title is NOT a 404 — the id resolves the course and the edge
+    // redirects the URL to its canonical spelling, so a mistyped share still
+    // lands on one indexable page. "/course/13/extra" used to be rejected here
+    // for exactly the reason it must now be accepted.
+    "/course/13/rectilinear-motion-kinematics", "/course/13/extra",
+    "/course/13/rectilinear-motion/chapter/8",
   ])("recognises supported application path %s", (pathname) => {
     expect(isSupportedAppPath(pathname)).toBe(true);
   });
 
   it.each([
-    "/not-real", "/course/nope", "/course/13/extra", "/faculty/a/b",
+    "/not-real", "/course/nope", "/faculty/a/b",
+    // Still bounded: one stale slug segment, not an arbitrary path.
+    "/course/13/kinematics/extra", `/course/13/${"x".repeat(121)}`,
     "/explore/a/b/c/d/e/f", "/explore/jee/class-11/physics/kinematics/extra",
     "/chapter/nope",
     // An invented exam must 404 rather than render an empty exam page —
@@ -1466,6 +1475,137 @@ describe("edge-rendered discovery landings", () => {
 
     expect(response.status).toBe(200);
     expect(chapterStartedBeforeCourseResolved).toBe(true);
+  });
+
+  // ------------------------------------------------------------------
+  // One address per course: /course/:id/:slug.
+  //
+  // /course/398 carried no keywords for a search engine, and a link pasted
+  // into a WhatsApp batch group said nothing at all until the preview
+  // finished loading. The id still decides which course this is; the slug is
+  // spelling, and the edge fixes the spelling.
+  // ------------------------------------------------------------------
+  const stubCourse = (title, lessons = []) => {
+    vi.stubEnv("VITE_SUPABASE_URL", "https://catalog.example");
+    vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
+    const fetchSpy = vi.fn(async (input) => {
+      const url = String(input);
+      if (url.includes("/rest/v1/playlists")) return Response.json([{ title, lessons }]);
+      if (url.includes("/rest/v1/playlist_videos")) {
+        return Response.json([{ playlist_id: 13, videos: { chapter_id: 8 } }]);
+      }
+      return new Response(shell, { status: 200 });
+    });
+    vi.stubGlobal("fetch", fetchSpy);
+    return fetchSpy;
+  };
+
+  it.each([
+    // The bare id every internal link and every already-shared link uses.
+    ["/course/13", "/course/13/rectilinear-motion-kinematics"],
+    // A slug left over from an older title, or typed by hand, or mis-cased.
+    ["/course/13/an-older-title", "/course/13/rectilinear-motion-kinematics"],
+    ["/course/13/Rectilinear-Motion-Kinematics", "/course/13/rectilinear-motion-kinematics"],
+    // A chapter sub-URL keeps the id-only shape: it is not the indexable
+    // address, it canonicalizes to the course root.
+    ["/course/13/rectilinear-motion-kinematics/chapter/8", "/course/13/chapter/8"],
+  ])("redirects %s to the course's canonical address", async (path, target) => {
+    stubCourse("Rectilinear Motion (Kinematics)");
+
+    const response = await middleware(new Request(`https://www.jeeneetard.com${path}`));
+
+    expect(response.status).toBe(308);
+    expect(response.headers.get("location"))
+      .toBe(`https://www.jeeneetard.com${target}`);
+  });
+
+  it("keeps the query string across the canonical redirect", async () => {
+    // ?ref=share is attribution and ?v= is the open lesson. Canonicalising the
+    // path must not throw either away.
+    stubCourse("Rectilinear Motion (Kinematics)");
+
+    const response = await middleware(new Request(
+      "https://www.jeeneetard.com/course/13?ref=share&v=abc123",
+    ));
+
+    expect(response.headers.get("location")).toBe(
+      "https://www.jeeneetard.com/course/13/rectilinear-motion-kinematics?ref=share&v=abc123",
+    );
+  });
+
+  it("serves the canonical course URL itself without redirecting", async () => {
+    stubCourse("Rectilinear Motion (Kinematics)");
+
+    const response = await middleware(new Request(
+      "https://www.jeeneetard.com/course/13/rectilinear-motion-kinematics",
+    ));
+    const html = await response.text();
+
+    expect(response.status).toBe(200);
+    expect(html).toContain(
+      '<link rel="canonical" href="https://www.jeeneetard.com/course/13/rectilinear-motion-kinematics" />',
+    );
+    expect(html).toContain(
+      'property="og:url" content="https://www.jeeneetard.com/course/13/rectilinear-motion-kinematics"',
+    );
+  });
+
+  // The deliberate Devanagari decision. The bare id IS the canonical address
+  // for these courses, so the bare URL must serve a page — not bounce forever
+  // against a slug that can never be produced.
+  it("serves a Devanagari course at its bare id, with no redirect loop", async () => {
+    stubCourse("कबीर की साखी");
+
+    const response = await middleware(new Request("https://www.jeeneetard.com/course/13"));
+    const html = await response.text();
+
+    expect(response.status).toBe(200);
+    expect(html).toContain(
+      '<link rel="canonical" href="https://www.jeeneetard.com/course/13" />',
+    );
+  });
+
+  it("sends a slugged URL for a Devanagari course back to the bare id", async () => {
+    stubCourse("कबीर की साखी");
+
+    const response = await middleware(new Request(
+      "https://www.jeeneetard.com/course/13/kabir-ki-sakhi",
+    ));
+
+    expect(response.status).toBe(308);
+    expect(response.headers.get("location")).toBe("https://www.jeeneetard.com/course/13");
+  });
+
+  it("does not redirect on an unconfirmed lookup", async () => {
+    // Fail-through is absolute: a slow or failing catalogue must serve the
+    // normal shell, never a permanent redirect built from a title we could
+    // not read.
+    vi.stubEnv("VITE_SUPABASE_URL", "https://catalog.example");
+    vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
+    vi.stubGlobal("fetch", vi.fn(async (input) =>
+      String(input).includes("/rest/v1/playlists")
+        ? new Response("temporarily unavailable", { status: 503 })
+        : new Response(shell, { status: 200 })));
+
+    const response = await middleware(new Request("https://www.jeeneetard.com/course/13"));
+
+    expect(response.headers.get("x-middleware-next")).toBe("1");
+  });
+
+  it("still 404s a slugged URL whose course does not exist", async () => {
+    vi.stubEnv("VITE_SUPABASE_URL", "https://catalog.example");
+    vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
+    vi.stubGlobal("fetch", vi.fn(async (input) =>
+      String(input).includes("/rest/v1/playlists")
+        ? Response.json([])
+        : new Response(shell, { status: 200 })));
+
+    const response = await middleware(new Request(
+      "https://www.jeeneetard.com/course/999999999/invented-course",
+    ));
+
+    expect(response.status).toBe(404);
+    expect(await response.text()).toContain("<h1>Course not found</h1>");
   });
 
   it("returns HTTP 404 only after a faculty lookup confirms it is missing", async () => {
