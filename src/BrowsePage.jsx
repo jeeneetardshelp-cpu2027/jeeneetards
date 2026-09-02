@@ -644,6 +644,9 @@ export default function BrowsePage() {
                 goalId: canonical.goalId,
                 subjectId: canonical.subjectId,
                 chapterId: canonical.chapterId,
+                // Asking before the slugs have resolved spends a round trip on
+                // a question whose answer is thrown away a moment later.
+                enabled: canonical.ready,
               }}
               onAvailabilityChange={setFacultyCapability}
             />

@@ -16,7 +16,7 @@
 // When the owner approves the feature and the policy paragraph lands, this
 // test goes quiet on its own and the banner can be deleted from the migration.
 
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 const read = (path) => readFileSync(path, "utf8");
@@ -36,6 +36,29 @@ const HOLD_MARKER = "DO NOT APPLY YET";
 const TABLE = "search_gap_log";
 
 describe("search gap log privacy contract", () => {
+  // The MIRROR of the test below, and the one that was missing. The pairing
+  // was only ever guarded in one direction: collecting without disclosing.
+  // On 2026-09-02 the policy gained a section stating in the present tense
+  // that search words "are sent to the server and kept" while the table 404'd
+  // on production, because the migration is parked. legalTruth passed
+  // throughout — it checks that a claim of absence is honest, not that a claim
+  // of collection is. Over-claiming is still a false privacy policy.
+  it("does not claim to collect search text while the migration is parked", () => {
+    const policy = read("src/PrivacyPolicy.jsx");
+    if (!policy.includes(TABLE)) return;      // says nothing; nothing to check
+
+    const parked = existsSync(MIGRATION) && read(MIGRATION).includes(HOLD_MARKER);
+    if (!parked) return;                      // shipped or approved; present tense is fine
+
+    // Parked, yet described. The section must say plainly that it is not on
+    // yet, or a reader is told their searches are being kept when they are not.
+    const section = policy.slice(policy.indexOf("Searches that find nothing"));
+    expect(
+      /not switched on|will be sent|is not being recorded|not being recorded/i.test(section),
+      "PrivacyPolicy.jsx describes search_gap_log in the present tense while the migration is parked",
+    ).toBe(true);
+  });
+
   it("does not collect student search text before the policy says so", () => {
     const wired = read("src/useUniversalSearch.js").includes("scheduleSearchGapLog");
     if (!wired) return;                       // nothing is collected; nothing to disclose

@@ -40,8 +40,15 @@ import { supabase, isSupabaseConfigured } from "./supabaseClient";
 
 const RPC = "log_search_gap";
 
-// Matches MIN_QUERY in useUniversalSearch.js and the floor inside the RPC.
-export const GAP_LOG_MIN_LENGTH = 2;
+// Matches MIN_QUERY in useUniversalSearch.js, which rose to 3 on 2026-09-02
+// because a two-character query cannot be served: it times out in the RPC
+// rather than returning nothing. Kept as a separate constant rather than an
+// import because useUniversalSearch.js imports THIS module, and the pair would
+// be circular. If one moves, move the other.
+//
+// A shorter query can no longer reach a zero-result state to be logged, so this
+// is belt-and-braces for any future caller that searches without the hook.
+export const GAP_LOG_MIN_LENGTH = 3;
 // Matches the 120-character cap the column enforces. Truncating here as well
 // keeps the request small; the database is still the one that decides.
 export const GAP_LOG_MAX_LENGTH = 120;

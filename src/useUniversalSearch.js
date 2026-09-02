@@ -17,9 +17,26 @@ import { supabase, isSupabaseConfigured } from "./supabaseClient";
 import { expandSearchQuery } from "./searchAliases.js";
 import { scheduleSearchGapLog } from "./searchGapLog";
 
-// Requirement 6. Two characters is the floor the database enforces too; the
-// client checks as well so we don't spend a round trip learning it.
-export const MIN_QUERY = 2;
+// Requirement 6. The client checks so we don't spend a round trip learning it.
+//
+// THREE, not the two the RPC still allows. Measured against production on
+// 2026-09-02: a two-character query cannot be served. It yields at most one or
+// two trigrams, so the GIN index cannot narrow candidates and the planner
+// scans — "ac" took 3887ms and "3d" 3217ms against a ~3s statement timeout,
+// and both came back as HTTP 500 `57014 canceling statement due to statement
+// timeout`. Not slow results: a failed request, where a student typing "ac"
+// for Alternating Current sees an error. A non-alias "zq" failed the same way,
+// so this is about query length, not the alias table.
+//
+// For comparison, at the same moment: "electromagnetic induction" 606ms,
+// "kinematics" 861ms, "emi" 1770ms. The cliff is specific to two characters.
+//
+// Raising the floor here turns those failures into an instant empty result.
+// The RPC's own floor is still `qlen < 2`, so a caller that bypasses this hook
+// can still reach the cliff, and a LONGER query whose tokens are all tiny
+// ("p and c") still times out — that one needs the RPC floor raised or the
+// alias row retired, which is a migration, not a client change.
+export const MIN_QUERY = 3;
 
 // Requirement 7. 275ms sits in the asked-for 250-300ms band: long enough that
 // a typed word is one request rather than six, short enough to feel live.
