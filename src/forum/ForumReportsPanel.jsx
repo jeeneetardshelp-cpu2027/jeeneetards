@@ -197,6 +197,9 @@ export default function ForumReportsPanel({ api = forumApi }) {
             <div className="mt-4 flex flex-wrap gap-2">
               {report.target_exists && (
                 <>
+                {/* text-white stays literal: ink on BRAND_TEAL, a fill that is
+                    the same colour in both themes, so a theme token would be
+                    the bug. Same idiom as adminUI.jsx. */}
                 <button
                   type="button"
                   disabled={busy}

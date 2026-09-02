@@ -1,7 +1,8 @@
 # Production schema reference
 
-**Generated 2026-09-01 from the migration baseline. GENERATED, NOT HAND-MAINTAINED —
-re-derive it rather than editing a row.**
+**Generated 2026-09-01 from the migration baseline, then hand-amended 2026-09-02 for the
+three migrations applied since. GENERATED, NOT HAND-MAINTAINED — re-derive it rather than
+editing a row; the hand-amendments are marked so a regeneration can simply drop them.**
 
 **Source:** [`supabase/migrations/20260831140005_production_baseline.sql`](../supabase/migrations/20260831140005_production_baseline.sql)
 — the Supabase CLI baseline pulled from the live production database on 31 Aug 2026 and
@@ -11,8 +12,37 @@ as accurate as the baseline and no more. It replaces the 2026-07-30 edition, whi
 generated from a PostgREST spec, predated the forum, polls and study-material clusters
 entirely, and had drifted into actively misleading.
 
+**Amended by hand on 2026-09-02, not regenerated.** Everything unmarked on this page is
+the baseline parse. Three migrations have been applied to production since that parse, and
+their shapes were read out of the migration files and typed in by hand. Each such addition
+carries a *(added by …)* marker naming the migration it came from. No database was queried
+to write them and nothing was added that its migration file does not state, so an amended
+row is exactly as accurate as the SQL it was transcribed from — and, unlike the rest of the
+page, it has not been checked against what production actually holds.
+
+- `20260901120000_study_days.sql` — the new table `public.study_days`, written up under
+  [Progress & streaks](#progress--streaks).
+- `20260901160000_universal_search_materials.sql` — `universal_search` re-emitted with two
+  extra group keys, `material` and `paper`, plus two title-search indexes on
+  `study_materials`. See [Enum-like contracts](#enum-like-contracts).
+- `20260902093000_study_material_paper_metadata.sql` — four columns and five CHECK
+  constraints on `study_materials`, written up in that table's entry.
+
+One trap in reading those files: all three still open with a "STAGED, NOT APPLIED" header
+comment, written before they were pushed and never updated.
+[`supabase/README.md`](../supabase/README.md) records all three as applied (31 Aug, 1 Sep
+and 2 Sep 2026), and `npx supabase migration list` is the authority.
+
 **Counts in the baseline: 66 tables, 181 functions, 98 RLS policies.** RLS is enabled on
 all 66 tables; 145 of the 181 functions are `SECURITY DEFINER`.
+
+**Counts after those three migrations: 67 tables, 181 functions, 100 RLS policies** — RLS
+enabled on all 67. `study_days` is the 67th table and brings the two extra policies (its
+own owner-only select and insert). The function count does not move: the search migration
+is a `CREATE OR REPLACE` of `universal_search` at its existing signature, and no applied
+migration creates or drops a function. The `SECURITY DEFINER` count does not move either —
+`universal_search` stays `SECURITY INVOKER`, which its own self-test enforces. The
+paper-metadata migration adds only columns and constraints, which no count above tracks.
 
 ## How to keep this true
 
@@ -24,19 +54,15 @@ timestamped migration applied with `npx supabase db push`, and the SQL Editor is
 
 `npx supabase migration list` — not this page — is the authority on what is deployed.
 
-**Applied after the baseline, so NOT described below:**
+**Applied after the baseline, and now described below from the migration files by hand:**
 
-- `20260901120000_study_days.sql` — `public.study_days (user_id uuid, day date)`, PK
-  `(user_id, day)`, FK to `auth.users` on delete cascade. Default-deny RLS, owner-only
-  select/insert (`auth.uid() = user_id`), no `anon` access, explicit table grants. Server
-  copy of the prep streak's study days so a streak survives sign-out. One row is one date:
-  no lesson ids, titles, durations or times of day.
+- `20260901120000_study_days.sql` → [Progress & streaks](#progress--streaks)
+- `20260901160000_universal_search_materials.sql` → [Enum-like contracts](#enum-like-contracts)
+- `20260902093000_study_material_paper_metadata.sql` → [`study_materials`](#study_materials)
 
-**Staged but not applied at generation time:**
-
-- `20260901160000_universal_search_materials.sql` — re-emits `universal_search` with two
-  extra group keys, `material` and `paper`. Until it is pushed, the live function returns
-  the five groups listed under [Enum-like contracts](#enum-like-contracts).
+Nothing is staged-but-unapplied in `supabase/migrations/` as of 2026-09-02. Two reviewed
+packages are deliberately held outside the chain in `docs/sql/`; `supabase/README.md` says
+which and why.
 
 ## Contents
 
@@ -1174,24 +1200,66 @@ RLS on, **no policy** — no `anon`/`authenticated` access at all; reachable onl
 | `published_at` | timestamp with time zone | null | — |
 | `created_at` | timestamp with time zone | not null | `now()` |
 | `updated_at` | timestamp with time zone | not null | `now()` |
+| `paper_kind` | text | null | — |
+| `paper_year` | integer | null | — |
+| `exam_session` | text | null | — |
+| `exam_shift` | text | null | — |
+
+*The last four columns were added by
+[`20260902093000_study_material_paper_metadata.sql`](../supabase/migrations/20260902093000_study_material_paper_metadata.sql)
+(applied 2 Sep 2026) and are transcribed from that file, not from a baseline dump.* They
+give previous-year papers real columns instead of the title regexes the papers pages used
+to classify by. All four are nullable on purpose and, per the scope CHECK below, are NULL
+on every row that is not a `previous_year_paper` — notes and formula sheets carry nothing
+here. The migration backfilled them from `title` alone for existing paper rows:
+`paper_kind` from the title's wording (`with Solutions` beats `Answer Key` beats the
+`question_paper` default), `paper_year` from the first `20xx` in the title, `exam_session`
+as `'Session N'` and `exam_shift` as `'Shift N'` where the title names one, else NULL.
+Its own self-test aborts the migration if any paper row comes out without a `paper_kind`
+or a `paper_year`, so on an applied database every paper row has both. The same grammar
+is implemented client-side as `parsePaperTitle` in `src/studyMaterialLandings.js`, and
+`src/paperMetadataSqlRehearsal.test.js` runs this SQL on a real Postgres and asserts the
+two agree — change one and you must change the other.
 
 **PK** `id`  
 **Unique** `title, source_url`
 
+**Indexes** *(added by `20260901160000_universal_search_materials.sql`)*:
+`idx_study_materials_title_latin_pattern` — btree on `public.search_latin_key(title)
+text_pattern_ops`; `idx_study_materials_title_latin_trgm` — gin on the same expression with
+`public.gin_trgm_ops`. They exist so `universal_search`'s new material and paper blocks
+have the sargable predicates every other search block already relies on. (Indexes are
+otherwise not catalogued on this page; these two are noted because the migration that
+created them is hand-amended in.)
+
 **Checks:**
 - `study_materials_description_length` — `(((description IS NULL) OR (char_length(description) <= 1000)))`
+- `study_materials_exam_session_check` — `((exam_session IS NULL) OR (exam_session ~ '^Session [0-9]+$'))` *(paper-metadata migration)*
+- `study_materials_exam_shift_check` — `((exam_shift IS NULL) OR (exam_shift ~ '^Shift [0-9]+$'))` *(paper-metadata migration)*
 - `study_materials_exam_year_check` — `(((exam_year IS NULL) OR ((exam_year >= 2000) AND (exam_year <= 2100))))`
 - `study_materials_file_format_check` — `((file_format = ANY (ARRAY['web', 'pdf'])))`
 - `study_materials_https_preview` — `(((preview_image_url IS NULL) OR (preview_image_url ~ '^https://[^[:space:]]+$')))`
 - `study_materials_https_source` — `((source_url ~ '^https://[^[:space:]]+$'))`
 - `study_materials_language_check` — `((language = ANY (ARRAY['English', 'Hindi', 'Hinglish'])))`
 - `study_materials_page_count_check` — `(((page_count IS NULL) OR (page_count > 0)))`
+- `study_materials_paper_kind_check` — `((paper_kind IS NULL) OR (paper_kind IN ('question_paper', 'answer_key', 'paper_with_solutions')))` *(paper-metadata migration)*
+- `study_materials_paper_metadata_scope` — `((material_type = 'previous_year_paper') OR (paper_kind IS NULL AND paper_year IS NULL AND exam_session IS NULL AND exam_shift IS NULL))` *(paper-metadata migration)*
+- `study_materials_paper_year_check` — `((paper_year IS NULL) OR ((paper_year >= 2000) AND (paper_year <= 2100)))` *(paper-metadata migration)*
 - `study_materials_publish_gate` — `((((review_status = 'approved') AND (published_at IS NOT NULL)) OR ((review_status <> 'approved') AND (published_at IS NULL))))`
 - `study_materials_review_check` — `((review_status = ANY (ARRAY['pending', 'approved', 'rejected'])))`
 - `study_materials_rights_check` — `((rights_status = ANY (ARRAY['official_source', 'open_license', 'creator_permission'])))`
 - `study_materials_source_name_length` — `(((char_length(btrim(source_name)) >= 2) AND (char_length(btrim(source_name)) <= 120)))`
 - `study_materials_title_length` — `(((char_length(btrim(title)) >= 3) AND (char_length(btrim(title)) <= 180)))`
 - `study_materials_type_check` — `((material_type = ANY (ARRAY['short_notes', 'formula_sheet', 'full_notes', 'previous_year_paper'])))`
+
+The five checks marked *(paper-metadata migration)* are quoted as the migration file writes
+them. The baseline's other checks on this page are `pg_get_constraintdef()` output, which
+normalises spacing and parentheses, so expect these five to read slightly differently if
+you dump them from the live database. The predicates are the same.
+
+`study_materials_paper_metadata_scope` is the one worth remembering: paper metadata belongs
+to papers, so a `short_notes` row that somehow acquires a `paper_kind` is rejected by the
+database rather than displayed.
 
 **Triggers:** `trg_study_material_updated_at` (before update → FOR EACH ROW EXECUTE FUNCTION touch_study_material_updated_at())
 
@@ -1200,6 +1268,9 @@ RLS on. Policies:
   - `admins insert` — INSERT to `authenticated`: `WITH CHECK public.is_admin()`
   - `admins update` — UPDATE to `authenticated`: `USING public.is_admin() / WITH CHECK public.is_admin()`
   - `public reads approved study materials` — SELECT to `public`: `USING ((review_status = 'approved') AND (published_at <= now()))`
+
+The paper-metadata migration changed no policy, grant or function: the four new columns are
+readable exactly where the row already was.
 
 #### `study_material_scopes`
 
@@ -1427,7 +1498,8 @@ RLS on. Policies:
 
 ### Progress & streaks
 
-1 table: `video_progress`.
+2 tables: `video_progress` (baseline), `study_days` (added by
+`20260901120000_study_days.sql`).
 
 #### `video_progress`
 
@@ -1456,6 +1528,46 @@ RLS on. Policies:
   - `user inserts own progress` — INSERT to `public`: `WITH CHECK (auth.uid() = user_id)`
   - `user reads own progress` — SELECT to `public`: `USING (auth.uid() = user_id)`
   - `user updates own progress` — UPDATE to `public`: `USING (auth.uid() = user_id) / WITH CHECK (auth.uid() = user_id)`
+
+#### `study_days`
+
+*Added by
+[`20260901120000_study_days.sql`](../supabase/migrations/20260901120000_study_days.sql)
+(applied 31 Aug 2026); transcribed from that file, not from a baseline dump.*
+
+| column | type | null | default |
+| --- | --- | --- | --- |
+| `user_id` | uuid | not null | — |
+| `day` | date | not null | — |
+
+**PK** `user_id, day`  
+**FK** `user_id` → `auth.users.id` on delete cascade
+
+No other constraint, no trigger, no index beyond the primary key, and no surrogate `id`:
+one row IS one student-day. Note the FK target: `auth.users`, not `profiles`.
+`video_progress` — the table this one deliberately mirrors — points its `user_id` at
+`profiles` instead, so the two do not share a foreign-key parent. Both cascade on user
+delete, so the practical difference is only which table a join has to go through.
+
+RLS on. Policies:
+  - `user reads own study days` — SELECT to `authenticated`: `USING (auth.uid() = user_id)`
+  - `user inserts own study days` — INSERT to `authenticated`: `WITH CHECK (auth.uid() = user_id)`
+
+**Grants** are explicit and narrower than usual: `revoke all … from public, anon,
+authenticated`, then `grant select, insert … to authenticated`. `anon` holds nothing at
+all, and the migration's self-test fails if it ever does. There is deliberately **no update
+policy** (a row is its own primary key — there is nothing to update) and **no delete
+policy** (deleting study history is an owner-handled account request, not a client path),
+so an UPDATE or DELETE from the browser is denied by default-deny RLS.
+
+Server copy of the prep streak's study days, so a streak survives sign-out — `streak.js`
+wipes its `localStorage` set on sign-out because that store is un-namespaced and a shared
+school machine must not hand one student another's streak. `streakSync.js` best-effort
+upserts a row per study day while signed in and unions the set back into `localStorage` on
+the next sign-in. The `day` is the student's LOCAL calendar day as the client computes it;
+this table just stores the answer. One row is one date: no lesson ids, no titles, no
+durations, no times of day. When a student studies is private, and the security shape
+mirrors `video_progress` for that reason.
 
 ---
 
@@ -1566,6 +1678,11 @@ means the function runs as its owner and bypasses RLS — the body is the access
 `invoker` means the caller's RLS applies. Every `SECURITY DEFINER` function in the
 baseline pins `search_path`.
 
+Still 181 after the three applied migrations: none of them creates or drops a function.
+One function's **body** changed — `universal_search`, re-emitted by
+`20260901160000_universal_search_materials.sql` at the same signature, same return type and
+same `SECURITY INVOKER` context. The signatures below are therefore all still current.
+
 ### Catalogue & browse — 16 functions
 
 - `assert_playlist_video_channel(p_playlist_id bigint, p_video_id bigint)` — SECURITY DEFINER  
@@ -1624,7 +1741,11 @@ baseline pins `search_path`.
 - `translit_devanagari(p_text text)` — invoker  
   → `text`
 - `universal_search(p_query text, p_types text[] DEFAULT NULL::text[], p_limit integer DEFAULT 5, p_offset integer DEFAULT 0)` — invoker  
-  → `TABLE(group_key text, entity_id bigint, title text, subtitle text, aka text, slug text, match_type text, match_rank integer, matched_on text, is_ambiguous boolean, group_total bigint, extra jsonb)`
+  → `TABLE(group_key text, entity_id bigint, title text, subtitle text, aka text, slug text, match_type text, match_rank integer, matched_on text, is_ambiguous boolean, group_total bigint, extra jsonb)`  
+  Body replaced by `20260901160000_universal_search_materials.sql`: seven groups now, not
+  five. Signature, return type and invoker context unchanged. Must stay `SECURITY INVOKER`
+  — `study_materials` RLS is what keeps unapproved material out of a student's results, and
+  the migration's self-test refuses to apply if the function is definer.
 
 ### Community: ratings, reviews, reports, accounts — 8 functions
 
@@ -1961,7 +2082,8 @@ written straight through PostgREST under owner-only RLS.
 
 Postgres `enum` types are not used anywhere. Every closed value set below is a `text`
 column with a `CHECK (... = ANY (ARRAY[...]))` constraint, listed here because application
-code has to match these strings exactly. Extracted from the baseline's CHECK constraints.
+code has to match these strings exactly. Extracted from the baseline's CHECK constraints,
+plus the one row marked as coming from a later migration.
 
 | table.column | allowed values |
 | --- | --- |
@@ -1995,6 +2117,7 @@ code has to match these strings exactly. Extracted from the baseline's CHECK con
 | `study_materials.file_format` | `web`, `pdf` |
 | `study_materials.language` | `English`, `Hindi`, `Hinglish` |
 | `study_materials.material_type` | `short_notes`, `formula_sheet`, `full_notes`, `previous_year_paper` |
+| `study_materials.paper_kind` | `question_paper`, `answer_key`, `paper_with_solutions` — or NULL *(added by `20260902093000_study_material_paper_metadata.sql`)* |
 | `study_materials.review_status` | `pending`, `approved`, `rejected` |
 | `study_materials.rights_status` | `official_source`, `open_license`, `creator_permission` |
 | `teacher_aliases.alias_type` | `full-name`, `short`, `initials`, `nickname`, `maiden`, `transliteration`, `misspelling` |
@@ -2018,9 +2141,21 @@ Documented but **not** enforced by a constraint:
   `agree | array-only | junction-only | both-empty`, but the baseline shows no CHECK. Safe
   in practice only because `migrate_class_levels()` is its sole writer.
 
+Unlike the closed sets above, `paper_kind`'s three siblings are shape constraints rather
+than value lists: `paper_year` is any integer 2000–2100 or NULL, `exam_session` must match
+`^Session [0-9]+$` or be NULL, and `exam_shift` must match `^Shift [0-9]+$` or be NULL. All
+four are NULL together on any row whose `material_type` is not `previous_year_paper`.
+
 `universal_search(p_query, p_types, p_limit, p_offset)` returns a `group_key` column whose
-live value set is `faculty`, `chapter`, `playlist`, `lecture`, `institute` (the default of
-its `p_types` argument). The staged materials migration adds `material` and `paper`.
+value set is `faculty`, `chapter`, `playlist`, `lecture`, `institute`, `material` and
+`paper` — the default of its `p_types` argument. The last two were added by
+`20260901160000_universal_search_materials.sql` (applied 1 Sep 2026): `material` covers
+`short_notes | formula_sheet | full_notes`, `paper` covers `previous_year_paper`, and they
+are two groups rather than one because the words that would tell them apart — "notes",
+"paper", "pdf" — are filler tokens stripped before matching, so only the group heading can
+disambiguate. Both new blocks return only material that is `review_status = 'approved'` and
+`published_at <= now()`, and only material some page on this site actually lists (a scope
+row, or a `JEE Main%` title that the curated papers landing reads directly).
 `src/searchDestinations.js` owns where each group key sends the student — a new group key
 needs a case there, or the result becomes a dead row.
 

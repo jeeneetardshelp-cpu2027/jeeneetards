@@ -25,6 +25,11 @@ describe("lessonNumber", () => {
     expect(lessonNumber("8 Example of evaluation of integral (Part 2)")).toBe(8);
     expect(lessonNumber("Lecture 12 | Kinematics")).toBe(12);
   });
+  it("prefers a chapter sequence before the first pipe over an internal part number", () => {
+    expect(lessonNumber(
+      "Coordination Compounds 04 | Valence Bond Theory (Part-1) | Class 12th/NEET",
+    )).toBe(4);
+  });
   it("returns null when there is no number", () => {
     expect(lessonNumber("Introduction to Solutions")).toBeNull();
   });

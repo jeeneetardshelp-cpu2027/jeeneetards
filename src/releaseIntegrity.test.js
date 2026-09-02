@@ -93,18 +93,25 @@ describe("frontend release-file integrity", () => {
 //  cluster (AdminPanel, adminUI, TeacherPicker, FacultyReviewPanel,
 //  ContentQualityPanel, ManageCatalogPanel, ImportPlaylistForm,
 //  EditorialTitleField) was moved to palette tokens on 2026-09-02 and is
-//  scanned here now, so it cannot regress. Only the forum/polls admin
-//  panels below remain excluded — still full of literal slate, still a
-//  separate, known job.
+//  scanned here now, so it cannot regress. The last three exclusions —
+//  forum/ForumBetaAdminPanel.jsx, forum/ForumReportsPanel.jsx and
+//  polls/PollReviewPanel.jsx — were removed the same day, so every .jsx in
+//  src/, src/forum/ and src/polls/ is scanned. The exclusion list is empty.
 // =====================================================================
 
-// Rendered under /admin only — outside [data-student-surface] — and NOT yet
-// migrated to tokens. Do not add a migrated file back here; fix the file.
-const ADMIN_ONLY = new Set([
-  "forum/ForumBetaAdminPanel.jsx",
-  "forum/ForumReportsPanel.jsx",
-  "polls/PollReviewPanel.jsx",
-]);
+// Deliberately empty. It used to hold the forum and polls admin panels,
+// on the belief that they were "still full of literal slate". They were
+// not: all three colour themselves through useTheme().t, and t has pointed
+// at palette tokens since theme.jsx was rewritten, so they came over with
+// it. The only literals left in them are `text-white` on a BRAND_TEAL
+// button, which this scan deliberately does not flag (see BRIDGED_LITERAL)
+// and which is commented at each call site.
+//
+// The mechanism is kept, not deleted, so a genuinely unmigrated admin file
+// has a documented place to wait. Adding a name here hides that file from
+// the colour guard, so it is a last resort with a dated reason — do not use
+// it to silence a failure in a file that should simply be fixed.
+const ADMIN_ONLY = new Set([]);
 
 // A literal that must NOT follow the theme, with the reason it must not.
 // Every entry is painted on something whose colour is fixed in both themes,
@@ -175,7 +182,15 @@ describe("student-surface colour tokens", () => {
     expect(files.length).toBeGreaterThan(40);
     // AdminPanel and TeacherPicker are the canary that the migrated admin
     // cluster stays scanned — re-adding them to ADMIN_ONLY fails here.
-    for (const expected of ["AdminPanel.jsx", "BrowsePage.jsx", "FilterPanel.jsx", "TeacherPicker.jsx", "YouTubePlayer.jsx", "forum/ForumFeedPage.jsx"]) {
+    for (const expected of [
+      "AdminPanel.jsx", "BrowsePage.jsx", "FilterPanel.jsx", "TeacherPicker.jsx",
+      "YouTubePlayer.jsx", "forum/ForumFeedPage.jsx",
+      // The last three files to leave ADMIN_ONLY (2026-09-02). Naming them here
+      // means quietly re-excluding one fails this test instead of silently
+      // dropping it from the scan.
+      "forum/ForumBetaAdminPanel.jsx", "forum/ForumReportsPanel.jsx",
+      "polls/PollReviewPanel.jsx",
+    ]) {
       expect(files, `${expected} is not being scanned`).toContain(expected);
     }
   });
