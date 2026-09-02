@@ -91,6 +91,28 @@ describe("homepage never states a measurement it does not have", () => {
     expect(await screen.findByText("Free courses")).toBeTruthy();
     expect(screen.getByText("Exam tracks")).toBeTruthy();
   });
+
+  // The caption under the figure names exactly the tracks the figure counts.
+  // It was a hardcoded "JEE, NEET, Boards" — three names under a number that
+  // read 4 once Olympiad went live. The pure helper is unit-tested elsewhere;
+  // this pins that Home actually feeds the rendered Stat from it.
+  it("names in the exam-track caption exactly the tracks it counts", async () => {
+    browseState.current = { items: [], total: 292, loading: false, error: null };
+    goalsState.current = {
+      goals: [{ slug: "jee", count: 167 }, { slug: "neet", count: 102 }],
+      loading: false,
+      error: null,
+    };
+
+    show();
+    const link = await screen.findByRole("link", { name: /Exam tracks/i });
+    // Stat folds value, label and note into one accessible name:
+    // "2 Exam tracks. JEE, NEET"
+    const [figure, caption] = link.getAttribute("aria-label").split(" Exam tracks. ");
+    expect(figure).toBe("2");
+    expect(caption).toBe("JEE, NEET");
+    expect(caption.split(", ")).toHaveLength(Number(figure));
+  });
 });
 
 describe("the trimmed landing page stays trimmed", () => {

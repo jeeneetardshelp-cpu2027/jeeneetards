@@ -12,7 +12,9 @@ import {
   isMissingStudyMaterialsRpc,
   mapStudyMaterial,
   materialTypeLabel,
+  OFFERED_MATERIAL_TYPES,
   STUDY_MATERIAL_PAGE_SIZE,
+  STUDY_MATERIAL_TYPES,
   useStudyMaterials,
 } from "./useStudyMaterials.js";
 
@@ -39,6 +41,28 @@ const row = {
   }],
   total_count: 1,
 };
+
+describe("offered material types", () => {
+  // Zero short-notes rows exist in production. The page must not offer a
+  // filter that can only return nothing — but the type must stay KNOWN, so a
+  // row of it can still be labelled and a ?type=short_notes link still parses.
+  it("does not offer short notes while the library holds none", () => {
+    expect(OFFERED_MATERIAL_TYPES.map((t) => t.value)).toEqual([
+      "formula_sheet", "full_notes", "previous_year_paper",
+    ]);
+  });
+
+  it("keeps short notes in the vocabulary so labels and URLs keep working", () => {
+    expect(STUDY_MATERIAL_TYPES.map((t) => t.value)).toContain("short_notes");
+    expect(materialTypeLabel("short_notes")).toBe("Short notes");
+  });
+
+  it("derives the offered list from the vocabulary rather than duplicating it", () => {
+    for (const item of OFFERED_MATERIAL_TYPES) {
+      expect(STUDY_MATERIAL_TYPES).toContain(item);
+    }
+  });
+});
 
 describe("study-material mapping", () => {
   it("maps the reviewed RPC row into the shared card shape", () => {
