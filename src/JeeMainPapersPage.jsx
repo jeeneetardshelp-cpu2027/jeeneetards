@@ -14,7 +14,7 @@ import { studyMaterialLandingSchemas } from "./studyMaterialsStructuredData.js";
 import {
   JEE_MAIN_PAPERS_PATH,
   findPaperLanding,
-  parsePaperTitle,
+  paperMetadata,
   paperYearPath,
   splitJeeMainPapers,
 } from "./studyMaterialLandings.js";
@@ -115,12 +115,13 @@ export default function JeeMainPapersPage() {
       .map((paper) => Number(paper.examYear))
       .filter(Number.isFinite),
   )].sort((yearA, yearB) => yearB - yearA), [papers.items]);
-  // Which years have an official answer key in the loaded data. Derived from
-  // the same title grammar the database backfill uses (parsePaperTitle), so
-  // the landing and the staged paper_kind column can never disagree.
+  // Which years have an official answer key in the loaded data. Since the
+  // 2026-09-02 metadata flip the year comes from the database's paper_year
+  // column when the row carries it (paperMetadata falls back to the shared
+  // title grammar otherwise), with examYear as the last resort.
   const answerKeyYears = useMemo(() => new Set(
     groups.answerKeys
-      .map((key) => parsePaperTitle(key.title).year ?? Number(key.examYear))
+      .map((key) => paperMetadata(key).year ?? Number(key.examYear))
       .filter(Number.isFinite),
   ), [groups.answerKeys]);
   const normalizedQuery = query.trim().toLocaleLowerCase();

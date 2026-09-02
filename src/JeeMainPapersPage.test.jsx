@@ -6,6 +6,9 @@ vi.mock("./AppShell.jsx", () => ({ Page: ({ children }) => <>{children}</> }));
 
 // One fixture per landing, keyed by title prefix exactly as the real hook
 // queries (registry titlePattern), so each landing's test sees its own exam.
+// Rows carry the paper-metadata columns the hook has mapped since the
+// 2026-09-02 flip (paperKind/paperYear/examSession/examShift), so the page
+// classifies these fixtures the database-first way it classifies production.
 // vi.hoisted, because the vi.mock factory below is hoisted above module code.
 const FIXTURES = vi.hoisted(() => ({
   "JEE Advanced%": [
@@ -19,6 +22,10 @@ const FIXTURES = vi.hoisted(() => ({
       sourceUrl: "https://jeeadv.example/2013-p1.pdf",
       fileFormat: "pdf",
       examYear: 2013,
+      paperKind: "question_paper",
+      paperYear: 2013,
+      examSession: null,
+      examShift: null,
       scopes: [{ goal: "jee" }],
     },
   ],
@@ -33,6 +40,10 @@ const FIXTURES = vi.hoisted(() => ({
       sourceUrl: "https://nta.example/neet-2024-t1.pdf",
       fileFormat: "pdf",
       examYear: 2024,
+      paperKind: "question_paper",
+      paperYear: 2024,
+      examSession: null,
+      examShift: null,
       scopes: [{ goal: "neet" }],
     },
   ],
@@ -65,6 +76,10 @@ vi.mock("./useJeeMainPapers.js", () => ({
         sourceUrl: "https://nta.example/2026-s1.pdf",
         fileFormat: "pdf",
         examYear: 2026,
+        paperKind: "question_paper",
+        paperYear: 2026,
+        examSession: "Session 1",
+        examShift: "Shift 1",
         scopes: [{ goal: "jee-main" }],
       },
       {
@@ -77,6 +92,10 @@ vi.mock("./useJeeMainPapers.js", () => ({
         sourceUrl: "https://nta.example/2026-key.pdf",
         fileFormat: "pdf",
         examYear: 2026,
+        paperKind: "answer_key",
+        paperYear: 2026,
+        examSession: "Session 1",
+        examShift: null,
         scopes: [{ goal: "jee-main" }],
       },
       {
@@ -89,6 +108,10 @@ vi.mock("./useJeeMainPapers.js", () => ({
         sourceUrl: "https://nta.example/paper.pdf",
         fileFormat: "pdf",
         examYear: 2024,
+        paperKind: "question_paper",
+        paperYear: 2024,
+        examSession: "Session 1",
+        examShift: "Shift 1",
         scopes: [{ goal: "jee-main" }],
       },
       {
@@ -101,6 +124,10 @@ vi.mock("./useJeeMainPapers.js", () => ({
         sourceUrl: "https://nta.example/final-answer-key.pdf",
         fileFormat: "pdf",
         examYear: 2025,
+        paperKind: "answer_key",
+        paperYear: 2025,
+        examSession: "Session 1",
+        examShift: null,
         scopes: [{ goal: "jee-main" }],
       },
       {
@@ -113,6 +140,10 @@ vi.mock("./useJeeMainPapers.js", () => ({
         sourceUrl: "https://example.edu/solved-paper.pdf",
         fileFormat: "pdf",
         examYear: 2023,
+        paperKind: "paper_with_solutions",
+        paperYear: 2023,
+        examSession: null,
+        examShift: null,
         scopes: [{ goal: "jee-main" }],
       },
       {
@@ -125,6 +156,10 @@ vi.mock("./useJeeMainPapers.js", () => ({
         sourceUrl: "https://nta.example/older-paper.pdf",
         fileFormat: "pdf",
         examYear: 2022,
+        paperKind: "question_paper",
+        paperYear: 2022,
+        examSession: "Session 2",
+        examShift: "Shift 2",
         scopes: [{ goal: "jee-main" }],
       },
     ],

@@ -1,6 +1,6 @@
 // paperMetadataSqlRehearsal.test.js
 //
-// WHAT IS REAL HERE. These tests EXECUTE the staged migration
+// WHAT IS REAL HERE. These tests EXECUTE the migration
 // supabase/migrations/20260902093000_study_material_paper_metadata.sql on a
 // real PostgreSQL engine (PGlite, Postgres compiled to WASM), against
 // study_materials created from the production baseline's own CREATE TABLE
@@ -10,9 +10,12 @@
 // THE CONTRACT UNDER TEST: the SQL backfill and the client's
 // parsePaperTitle (src/studyMaterialLandings.js) implement ONE title
 // grammar. Every sample title below — the live-verified production shapes —
-// must classify identically in both, so that when the owner applies the
-// migration and the client later flips from title parsing to the real
-// columns, nothing moves.
+// must classify identically in both. The migration was APPLIED to production
+// and the client flipped to the real columns on 2026-09-02
+// (src/useJeeMainPapers.js selects them; paperMetadata prefers them), so
+// this contract now keeps the grammar honest for FUTURE seeds — a new
+// title must land in the same columns the pages trust — and for the title
+// fallback that still classifies rows lacking the columns.
 //
 // WHAT IS NOT REAL. Production's 171 rows are not here; a handful of
 // representative titles are. The migration itself guards the full set: its
@@ -95,7 +98,10 @@ beforeAll(async () => {
 }, 120_000);
 
 describe("the staged paper-metadata migration", () => {
-  it("stays a staged, rollback-documented, push-applied file", () => {
+  // The migration is applied history now (2026-09-02): its file text — the
+  // staging note included — must stay byte-stable, or the local migrations
+  // directory would diff against what production already ran.
+  it("keeps its recorded staging, rollback and push documentation intact", () => {
     expect(migration).toContain("STAGED, NOT APPLIED");
     expect(migration).toContain("npx supabase db push");
     expect(migration).toContain("ROLLBACK");

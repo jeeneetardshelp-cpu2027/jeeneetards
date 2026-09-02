@@ -415,6 +415,12 @@ describe("edge-rendered discovery landings", () => {
     expect(dataUrl.searchParams.get("material_type")).toBe("eq.previous_year_paper");
     expect(dataUrl.searchParams.get("title")).toBe("ilike.JEE Main%");
     expect(dataUrl.searchParams.get("limit")).toBe("100");
+    // The 2026-09-02 flip: the edge selects the paper-metadata columns so it
+    // classifies papers the same database-first way the hydrated page does.
+    const edgeSelect = dataUrl.searchParams.get("select").split(",");
+    for (const column of ["paper_kind", "paper_year", "exam_session", "exam_shift"]) {
+      expect(edgeSelect).toContain(column);
+    }
   });
 
   // ------------------------------------------------------------------
