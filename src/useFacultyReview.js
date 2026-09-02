@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { supabase, isSupabaseConfigured } from "./supabaseClient.js";
 import { isMissingFacultyCapability } from "./useFaculty.js";
+import { withProposalContext } from "./facultyProposalContext.js";
 
 const INITIAL = { groups: [], loading: true, error: null, unavailable: false };
 
@@ -26,7 +27,34 @@ export function useFacultyReview(status = "pending") {
       setState({ groups: [], loading: false, error: "Couldn't load faculty proposals.", unavailable: false });
       return;
     }
-    setState({ groups: data ?? [], loading: false, error: null, unavailable: false });
+    // Which channel a proposed name teaches on is the one fact that separates
+    // "Magnet Brains, an organisation" from "Mohit Tyagi, a person whose
+    // channel carries their name". get_faculty_review_groups does not return
+    // it, so it is joined on here from the catalogue.
+    //
+    // Best effort on purpose: the queue is the point, the context is a help.
+    // If this read fails the groups still render, just without it — an admin
+    // screen that refuses to load because an annotation was unavailable would
+    // be a worse tool than one that shows a little less.
+    let rows = [];
+    try {
+      const catalogue = await supabase
+        .from("playlists")
+        .select("teacher, institutes_channels(name)")
+        .not("teacher", "is", null)
+        .limit(1000);
+      if (gen !== generation.current) return;
+      if (!catalogue.error) rows = catalogue.data ?? [];
+      else console.error("faculty review context:", catalogue.error);
+    } catch (reason) {
+      console.error("faculty review context:", reason);
+    }
+    setState({
+      groups: withProposalContext(data ?? [], rows),
+      loading: false,
+      error: null,
+      unavailable: false,
+    });
   }, [status]);
 
   useEffect(() => { load(); }, [load]);
