@@ -35,6 +35,8 @@ const course = {
   playlist_videos: [{ count: 10 }],
 };
 
+const COURSE_URL = "https://www.jeeneetard.com/course/5/rectilinear-motion-kinematics";
+
 describe("courseMeta", () => {
   it("builds title, description and the canonical course URL", () => {
     const meta = courseMeta(course, 5);
@@ -43,7 +45,19 @@ describe("courseMeta", () => {
     expect(meta.description).toContain("10 Physics lectures by ABJ Sir");
     expect(meta.description).toContain("ads or recommendations may appear");
     expect(meta.description).not.toContain("ad-free");
-    expect(meta.url).toBe("https://www.jeeneetard.com/course/5");
+    // The canonical URL carries the title as keywords. The id stays first and
+    // is still the only part that resolves the course.
+    expect(meta.url).toBe(COURSE_URL);
+  });
+
+  // Deliberate: a Devanagari title gets no slug rather than a transliterated
+  // guess baked into a permanent public address.
+  it("falls back to the bare id when a title has no ASCII to slugify", () => {
+    const hindi = { ...course, title: "कबीर की साखी" };
+    expect(courseMeta(hindi, 212).url).toBe("https://www.jeeneetard.com/course/212");
+    // The preview card still shows the real title — nothing regresses there.
+    expect(courseMeta(hindi, 212).image)
+      .toBe("https://www.jeeneetard.com/api/og?course=212");
   });
 });
 
@@ -53,7 +67,7 @@ describe("injectCourseMeta", () => {
   it("swaps title, description and og/twitter tags", () => {
     expect(html).toContain("<title>Rectilinear Motion (Kinematics) by ABJ Sir | JEENEETARD</title>");
     expect(html).toContain('property="og:title" content="Rectilinear Motion (Kinematics) by ABJ Sir | JEENEETARD"');
-    expect(html).toContain('property="og:url" content="https://www.jeeneetard.com/course/5"');
+    expect(html).toContain(`property="og:url" content="${COURSE_URL}"`);
     // The course page must not fall back to the homepage default title.
     expect(html).not.toContain("chapter by chapter");
     expect(html).toContain('name="robots" content="index, follow"');
@@ -77,9 +91,7 @@ describe("injectCourseMeta", () => {
 
   it("adds the course canonical exactly once", () => {
     expect(html.match(/<link rel="canonical"/g)).toHaveLength(1);
-    expect(html).toContain(
-      '<link rel="canonical" href="https://www.jeeneetard.com/course/5" />',
-    );
+    expect(html).toContain(`<link rel="canonical" href="${COURSE_URL}" />`);
   });
 
   it("replaces (not duplicates) a canonical when an older shell still ships one", () => {
@@ -89,7 +101,7 @@ describe("injectCourseMeta", () => {
     );
     const out = injectCourseMeta(oldShell, courseMeta(course, 5));
     expect(out.match(/<link rel="canonical"/g)).toHaveLength(1);
-    expect(out).toContain('href="https://www.jeeneetard.com/course/5"');
+    expect(out).toContain(`href="${COURSE_URL}"`);
     expect(out).not.toContain('href="https://www.jeeneetard.com/"');
   });
 
@@ -321,7 +333,7 @@ describe("courseSchemas", () => {
     const { schema } = courseSchemas(course, meta).find((s) => s.key === "Course");
     expect(schema["@type"]).toBe("Course");
     expect(schema.name).toBe(course.title);
-    expect(schema.url).toBe("https://www.jeeneetard.com/course/5");
+    expect(schema.url).toBe(COURSE_URL);
     expect(schema.hasCourseInstance.instructor.name).toBe("ABJ Sir");
   });
 });

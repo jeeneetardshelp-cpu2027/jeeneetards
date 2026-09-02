@@ -1,10 +1,17 @@
 // middleware.js — Vercel Edge Middleware.
 //
-// The app is a client-rendered SPA: /course/:id serves a generic HTML shell,
+// The app is a client-rendered SPA: a course URL serves a generic HTML shell,
 // so link-preview crawlers (WhatsApp, Telegram, iMessage, Facebook, ...) and
 // search engines see the homepage title/description on every course. This
-// middleware rewrites the <head> for /course/:id to that course's own title
+// middleware rewrites the <head> for a course URL to that course's own title
 // and description before the HTML leaves the edge.
+//
+// It also owns the course's ADDRESS. A course lives at /course/:id/:slug, the
+// slug being its title as keywords; the id is still the only part that resolves
+// anything. Anything else — the bare /course/:id, a slug from an older title, a
+// slug typed by hand — is permanently redirected here to that one address, so
+// there is a single indexable URL per course and a link pasted into a WhatsApp
+// group says what it is before the preview card loads.
 //
 // Injected for EVERY visitor (not only bots): serving crawlers different
 // content than users is cloaking and is penalised. The SPA simply hydrates
@@ -17,7 +24,12 @@ import { next } from "@vercel/edge";
 import { metadataForLocation, pollMetadataForQuestion, SITE_NAME } from "./src/pageMetadata.js";
 import { findTestSection } from "./src/testPlatforms.js";
 import { CLASS_LEVELS_BY_GOAL } from "./src/classLevels.js";
-import { canonicalBrowseUrl, classSlugToStage } from "./src/canonicalUrl.js";
+import {
+  canonicalBrowseUrl,
+  canonicalCoursePath,
+  classSlugToStage,
+  parseCoursePath,
+} from "./src/canonicalUrl.js";
 import { canonicalChapterView } from "./src/chapterLanding.js";
 import { exploreStepHeading } from "./src/exploreHeading.js";
 import { getSubjectGuide } from "./src/subjectGuides.js";
@@ -130,7 +142,12 @@ export function isSupportedAppPath(pathname) {
   if (/^\/polls\/[a-z0-9]+(?:-[a-z0-9]+)*-\d+$/.test(path)) return true;
   if (/^\/faculty\/[^/]+$/.test(path)) return true;
   if (/^\/chapter\/\d+$/.test(path)) return true;
-  return /^\/course\/\d+(?:\/chapter\/\d+)?$/.test(path);
+  // Every /course shape the site answers, including a slug that is wrong or
+  // stale. Those are NOT 404s: the id resolves the course and the response
+  // below is a 308 to the canonical address, so a mistyped or retitled share
+  // lands on one indexable URL instead of a dead end. parseCoursePath caps the
+  // slug's length, so the accepted space is still finite.
+  return Boolean(parseCoursePath(path));
 }
 
 export function parseExplorePath(pathname) {
@@ -485,7 +502,7 @@ export default async function middleware(request) {
       return next();
     }
 
-    const courseMatch = url.pathname.match(/^\/course\/(\d+)(?:\/chapter\/(\d+))?\/?$/);
+    const courseRoute = parseCoursePath(url.pathname);
     const facultyMatch = url.pathname.match(/^\/faculty\/([^/]+)\/?$/);
     const forumPostMatch = url.pathname.match(/^\/forum\/post\/(\d+)\/?$/);
     // Set from the row fetched for the 404 check below, when there is one.
@@ -607,7 +624,7 @@ export default async function middleware(request) {
     // Static routes share the client's metadata. Canonical Browse, Faculty,
     // root Explore, and Study material additionally fetch bounded public data
     // for crawler HTML.
-    if (!courseMatch && !facultyMatch) {
+    if (!courseRoute && !facultyMatch) {
       let routeMeta = metadataForLocation(url.pathname, url.search);
       if (!routeMeta) return next();
       // A thread describes itself. Everything else about the route's metadata —
@@ -877,8 +894,8 @@ export default async function middleware(request) {
       return htmlResponse(html);
     }
 
-    const id = courseMatch[1];
-    const chapterId = courseMatch[2] ?? null;
+    const id = courseRoute.id;
+    const chapterId = courseRoute.chapterId;
 
     // 1. Look up the course (anon key, public catalogue data) with a hard
     //    timeout so a slow DB never delays the page. Chapter membership is an
@@ -956,7 +973,32 @@ export default async function middleware(request) {
       if (!chapterLookup.confirmed) return next();
     }
 
-    // 2. Fetch the built shell (not matched by this middleware, so no loop)
+    // 2. One address per course. The bare /course/398 that every internal link
+    //    and every already-shared link uses is not the canonical form any
+    //    more — /course/398/kinematics is — so send it there permanently, and
+    //    do the same for a slug that is wrong, mis-cased or left over from an
+    //    older title. The id decided which course this is, so none of those
+    //    are errors; they are just the wrong spelling of a working address.
+    //
+    //    This runs AFTER the lookups on purpose: the canonical slug comes from
+    //    the title, and a redirect issued before the row was confirmed could
+    //    point at a course that does not exist. An unconfirmed lookup has
+    //    already fallen through to next() above, so this line is only reached
+    //    when the course is known.
+    //
+    //    Chapter sub-URLs stay id-only. They are not the indexable address —
+    //    they canonicalize to the course root — so giving them a slug would add
+    //    a second shape for no gain. The query string always survives: ?ref=
+    //    attribution, ?v= (the open lesson) and campaign parameters must not be
+    //    dropped by canonicalisation.
+    const canonicalPath = chapterId
+      ? `/course/${id}/chapter/${chapterId}`
+      : canonicalCoursePath(id, course.title);
+    if (url.pathname !== canonicalPath) {
+      return redirectResponse(url, `${canonicalPath}${url.search}`);
+    }
+
+    // 3. Fetch the built shell (not matched by this middleware, so no loop)
     //    and swap its head tags.
     const shell = await fetchAppShell(request);
     if (!shell) return next();

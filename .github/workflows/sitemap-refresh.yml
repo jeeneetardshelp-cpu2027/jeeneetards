@@ -1,0 +1,115 @@
+# Sitemap refresh: keep sitemap.xml describing the catalogue that exists today,
+# not the catalogue that existed at the last code push.
+#
+# WHY A SCHEDULE. buildSitemap.js runs as `npm prebuild`, so the only thing that
+# has ever refreshed sitemap.xml is a deploy. Courses arrive through the admin
+# ingestion flow, which touches the database and no code — so between deploys
+# the sitemap silently stops listing new courses. Measured at three and a half
+# weeks stale in the August review: every course added in that window was
+# invisible to search engines until an unrelated code change happened to ship.
+#
+# HOW IT PUBLISHES. The commit back to main is the mechanism, not the record:
+# pushing public/sitemap.xml triggers the normal production deploy, and that
+# deploy's own prebuild regenerates the file from the live catalogue. Committing
+# it also keeps the checked-in copy usable as buildSitemap's fallback (it
+# preserves the last complete sitemap rather than replacing it with a six-URL
+# stub), so the two mechanisms agree instead of fighting.
+#
+# CADENCE. Daily, and staggered off the other two scheduled jobs
+# (video-liveness on Sundays, popularity-refresh on Wednesdays, both 22:30 UTC)
+# so they never contend. A run that finds nothing new costs a handful of
+# anonymous reads and pushes nothing.
+#
+# ANON KEY, NEVER THE SERVICE KEY. The sitemap must advertise exactly what a
+# logged-out visitor can reach, and the anon key is what enforces that. Handing
+# this job the service_role key would let it list URLs the public cannot open.
+#
+# Requires two repository secrets (Settings → Secrets and variables → Actions):
+#   SITEMAP_SUPABASE_URL       — the project URL (same value as VITE_SUPABASE_URL,
+#                                and the same value as LIVENESS_SUPABASE_URL)
+#   SITEMAP_SUPABASE_ANON_KEY  — the anon key (same value as VITE_SUPABASE_ANON_KEY;
+#                                public by design, it ships to every browser)
+# The job fails fast with a clear message if either is missing.
+#
+# The build step then FAILS when the catalogue could not be read, because
+# buildSitemap.js exits 0 whether it wrote a fresh sitemap or preserved an old
+# one — see the --require-catalogue flag. Same contract as video-liveness.yml:
+#   green = the sitemap describes today's catalogue, red = go and look.
+
+name: sitemap-refresh
+
+on:
+  schedule:
+    - cron: "40 21 * * *" # Daily 21:40 UTC = 03:10 IST, before the study day starts
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Report what would change, without committing the sitemap"
+        type: boolean
+        default: true
+
+jobs:
+  refresh:
+    if: github.repository == 'jeeneetardshelp-cpu2027/jeeneetards'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    # The one job in this repository that writes to the repository. Scoped here
+    # rather than at the workflow level so it is impossible to widen by adding
+    # a second job.
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # buildSitemap.js reads ../../.env relative to itself before process.env,
+      # so materialise the two values it needs into a .env file for this run.
+      - name: Write .env from secrets
+        env:
+          SUPABASE_URL: ${{ secrets.SITEMAP_SUPABASE_URL }}
+          ANON_KEY: ${{ secrets.SITEMAP_SUPABASE_ANON_KEY }}
+        run: |
+          if [ -z "$SUPABASE_URL" ] || [ -z "$ANON_KEY" ]; then
+            echo "Missing one of SITEMAP_SUPABASE_URL / SITEMAP_SUPABASE_ANON_KEY repo secrets." >&2
+            exit 1
+          fi
+          {
+            echo "VITE_SUPABASE_URL=$SUPABASE_URL"
+            echo "VITE_SUPABASE_ANON_KEY=$ANON_KEY"
+          } > .env
+
+      # --require-catalogue exits non-zero if the catalogue could not be read,
+      # so a run that merely preserved the stale file is reported as the failure
+      # it is instead of a green tick.
+      - name: Rebuild the sitemap
+        run: node src/scripts/buildSitemap.js --require-catalogue
+
+      # Manual runs default to a dry run so the plumbing (secrets, permissions,
+      # the query) can be tested without writing to main; the daily schedule
+      # always commits for real.
+      - name: Commit the sitemap if it changed
+        env:
+          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run }}
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- public/sitemap.xml; then
+            echo "sitemap unchanged — nothing to commit."
+            exit 0
+          fi
+          echo "sitemap changed:"
+          git --no-pager diff --stat -- public/sitemap.xml
+          if [ "$DRY_RUN" = "true" ]; then
+            echo "Dry run — not committing."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/sitemap.xml
+          git commit -m "chore(sitemap): refresh from the live catalogue"
+          git push

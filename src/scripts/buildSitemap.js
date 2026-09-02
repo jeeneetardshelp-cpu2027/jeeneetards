@@ -6,6 +6,13 @@
 // preserve the last known usable sitemap instead of replacing it with a
 // six-URL fallback.
 // A sitemap failure must never break a production deploy.
+//
+// WHEN THIS RUNS. Two triggers, not one. `npm prebuild` runs it on every
+// deploy (best effort, never fatal), and .github/workflows/sitemap-refresh.yml
+// runs it daily with --require-catalogue and commits the result. The schedule
+// exists because courses arrive through the admin ingestion flow, which changes
+// the database and no code — so between deploys the sitemap silently stopped
+// listing new courses, measured at three and a half weeks stale.
 // =====================================================================
 
 import { createClient } from "@supabase/supabase-js";
@@ -15,7 +22,7 @@ import { dirname, resolve } from "node:path";
 import { TEST_SECTIONS } from "../testPlatforms.js";
 import { CLASS_LEVELS_BY_GOAL } from "../classLevels.js";
 import { isIndexableChapter, isIndexableChapterScope } from "../chapterLanding.js";
-import { canonicalBrowseUrl } from "../canonicalUrl.js";
+import { canonicalBrowseUrl, canonicalCoursePath } from "../canonicalUrl.js";
 import { RELEASE_CAPABILITIES, RELEASE_FEATURES } from "../releaseCapabilities.js";
 import {
   PAPER_LANDINGS,
@@ -132,6 +139,39 @@ export async function paperYearPaths(db) {
   return paths;
 }
 
+/**
+ * The honest <lastmod> for one course.
+ *
+ * It used to be playlists.created_at alone, which said "this page has not
+ * changed since the day it was added" about every course whose lesson list has
+ * grown since — so the one signal a crawler uses to decide whether to re-read a
+ * page was permanently wrong for exactly the pages that had changed.
+ *
+ * What the schema actually offers, and what it does not:
+ *   • playlists has NO updated_at column (checked against the applied baseline).
+ *     A pure retitle or a teacher correction therefore has no timestamp
+ *     anywhere, and this deliberately does not invent one.
+ *   • playlist_videos.created_at is when a lesson joined this course. The
+ *     lesson list IS the course page, so this is a real content change, and it
+ *     is the signal the admin ingestion flow moves.
+ *   • videos.updated_at exists and is tempting, and is NOT used: the weekly
+ *     video-liveness job stamps last_verified_at on every video row, whose
+ *     trigger bumps updated_at. Reading it would make every course claim to
+ *     have changed last month, forever — a freshness signal that is always
+ *     "now" is the same lie as one that is always "2026-03-14", and Google
+ *     discounts a sitemap that tells it that.
+ *
+ * So: the later of "the course was added" and "its newest lesson was added".
+ * Never a guess, never today's date.
+ */
+export function courseLastmod(row) {
+  const stamps = [row?.created_at, row?.lessons?.[0]?.created_at]
+    .map((value) => (value ? Date.parse(value) : Number.NaN))
+    .filter((value) => Number.isFinite(value));
+  if (!stamps.length) return null;
+  return new Date(Math.max(...stamps)).toISOString().slice(0, 10);
+}
+
 export function hasUsableSitemap(out = DEFAULT_OUT) {
   if (!existsSync(out)) return false;
   try {
@@ -173,7 +213,16 @@ export async function buildSitemap({
       auth: { persistSession: false, autoRefreshToken: false },
     });
     const [courseResult, facultyResult, goalResult, boardResult] = await Promise.all([
-      db.from("playlists").select("id, created_at").order("id"),
+      // title, because the canonical course URL now carries the title as a
+      // keyword slug; and the newest playlist_videos row per course, because
+      // that is the only truthful "this page changed" signal the schema has
+      // (see courseLastmod). The embedded order+limit means ONE row comes back
+      // per course, not the whole lesson list.
+      db.from("playlists")
+        .select("id, title, created_at, lessons:playlist_videos(created_at)")
+        .order("created_at", { referencedTable: "lessons", ascending: false })
+        .limit(1, { referencedTable: "lessons" })
+        .order("id"),
       db.rpc("get_faculty_facets", {
         p_chapter_id: null,
         p_subject_id: null,
@@ -303,10 +352,7 @@ export async function buildSitemap({
 
     const staticEntries = STATIC_ROUTES.map((path) => urlEntry(path));
     const courseEntries = (courseResult.data ?? []).map((row) =>
-      urlEntry(
-        `/course/${row.id}`,
-        row.created_at ? new Date(row.created_at).toISOString().slice(0, 10) : null,
-      ),
+      urlEntry(canonicalCoursePath(row.id, row.title), courseLastmod(row)),
     );
     const facultySlugs = [
       ...new Set((facultyResult.data ?? []).map((row) => row.slug).filter(Boolean)),
@@ -347,12 +393,33 @@ const invokedDirectly = process.argv[1]
   && resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 
 if (invokedDirectly) {
-  buildSitemap().catch((error) => {
-    console.warn(`! sitemap generation skipped: ${error.message}`);
-    try {
-      preserveOrWriteStatic();
-    } catch {
-      // The build must still succeed even if the filesystem is unavailable.
-    }
-  });
+  // --require-catalogue turns a preserved or static sitemap into a FAILURE.
+  //
+  // Off by default, because `npm prebuild` runs this and a sitemap problem must
+  // never break a production deploy. The scheduled refresh
+  // (.github/workflows/sitemap-refresh.yml) passes it, for the same reason
+  // video-liveness.yml has a separate "fail if anything needs review" step:
+  // the whole point of that job is to notice staleness, so a run that quietly
+  // preserved a three-week-old file and reported success would recreate the
+  // problem it exists to catch. A red scheduled run is the notification.
+  const requireCatalogue = process.argv.includes("--require-catalogue");
+  buildSitemap()
+    .then((result) => {
+      if (requireCatalogue && result.outcome !== "written") {
+        console.error(
+          `! sitemap: catalogue unavailable (outcome: ${result.outcome}) — ` +
+            "the sitemap was not refreshed.",
+        );
+        process.exitCode = 1;
+      }
+    })
+    .catch((error) => {
+      console.warn(`! sitemap generation skipped: ${error.message}`);
+      if (requireCatalogue) process.exitCode = 1;
+      try {
+        preserveOrWriteStatic();
+      } catch {
+        // The build must still succeed even if the filesystem is unavailable.
+      }
+    });
 }

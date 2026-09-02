@@ -31,15 +31,29 @@ function clientWith({
       return { data, error: paperError };
     },
   };
+  // playlists is now read with an embedded lesson query — .order()/.limit()
+  // scoped to the referenced table, then .order("id") — so the builder can ask
+  // for the newest playlist_videos row per course in one request. The fake
+  // records those options so a test can assert the shape, and stays awaitable
+  // at every step because .order() is both chainable and thenable in
+  // postgrest-js.
+  const playlistQuery = {
+    options: [],
+    order(column, options) { this.options.push([column, options]); return this; },
+    limit(count, options) { this.options.push(["limit", count, options]); return this; },
+    then(resolve, reject) {
+      return Promise.resolve({ data: courses, error: courseError }).then(resolve, reject);
+    },
+  };
   return () => ({
     from: (table) => ({
       select: () => table === "study_materials"
         ? paperQuery
-        : {
-            order: async () => table === "boards"
-              ? ({ data: boards, error: boardError })
-              : ({ data: courses, error: courseError }),
-          },
+        : table === "playlists"
+          ? playlistQuery
+          : {
+              order: async () => ({ data: boards, error: boardError }),
+            },
     }),
     rpc: async (name, args) => {
       if (name === "get_faculty_facets") return { data: faculty, error: facultyError };
@@ -140,7 +154,12 @@ describe("sitemap generation", () => {
       env: { VITE_SUPABASE_URL: "https://example.supabase.co", VITE_SUPABASE_ANON_KEY: "anon" },
       out,
       clientFactory: clientWith({
-        courses: [{ id: 5, created_at: "2026-07-20T10:00:00Z" }],
+        courses: [{
+          id: 5,
+          title: "Rectilinear Motion (Kinematics)",
+          created_at: "2026-07-20T10:00:00Z",
+          lessons: [{ created_at: "2026-08-14T09:00:00Z" }],
+        }],
         faculty: [{ slug: "mohit-tyagi" }, { slug: "amit-bijarnia" }, { slug: "mohit-tyagi" }],
         goals: [
           { slug: "jee", course_count: 10 },
@@ -173,8 +192,14 @@ describe("sitemap generation", () => {
     expect(result).toEqual({
       outcome: "written", courses: 1, faculty: 2, explore: 7, paperYears: 0,
     });
-    expect(xml).toContain("<loc>https://www.jeeneetard.com/course/5</loc>");
-    expect(xml).toContain("<lastmod>2026-07-20</lastmod>");
+    // The course URL carries the title as keywords, and the lastmod is the
+    // later of "added" and "newest lesson added" — not the creation date that
+    // used to claim nothing had changed since the course first appeared.
+    expect(xml).toContain(
+      "<loc>https://www.jeeneetard.com/course/5/rectilinear-motion-kinematics</loc>",
+    );
+    expect(xml).toContain("<lastmod>2026-08-14</lastmod>");
+    expect(xml).not.toContain("<lastmod>2026-07-20</lastmod>");
     expect(xml).toContain("<loc>https://www.jeeneetard.com/faculty/amit-bijarnia</loc>");
     expect(xml).toContain("<loc>https://www.jeeneetard.com/faculty</loc>");
     expect(xml.match(/faculty\/mohit-tyagi/g)).toHaveLength(1);
@@ -271,6 +296,65 @@ describe("sitemap generation", () => {
     expect(result.outcome).toBe("written");
     expect(result.paperYears).toBe(0);
     expect(readFileSync(out, "utf8")).toContain("<loc>https://www.jeeneetard.com/course/5</loc>");
+  });
+
+  // ------------------------------------------------------------------
+  // Freshness. The sitemap used to say created_at, so a course whose lesson
+  // list had grown since the day it was added told crawlers it had not
+  // changed — wrong for exactly the pages that HAD changed.
+  // ------------------------------------------------------------------
+  it("dates a course by its newest lesson, not by the day it was added", async () => {
+    const out = temporarySitemap();
+    const capture = clientWith({
+      courses: [
+        {
+          id: 5,
+          title: "Kinematics",
+          created_at: "2026-03-14T10:00:00Z",
+          lessons: [{ created_at: "2026-08-30T06:00:00Z" }],
+        },
+        // No lesson yet: the course's own date is all there is, and that is
+        // the honest answer rather than a stand-in for today.
+        { id: 6, title: "Laws of Motion", created_at: "2026-04-01T10:00:00Z", lessons: [] },
+        // No usable timestamp at all: emit the URL with no <lastmod> instead
+        // of inventing one.
+        { id: 7, title: "Work Energy Power" },
+      ],
+      goals: [],
+    });
+    await buildSitemap({
+      env: { VITE_SUPABASE_URL: "https://example.supabase.co", VITE_SUPABASE_ANON_KEY: "anon" },
+      out,
+      clientFactory: capture,
+    });
+
+    const xml = readFileSync(out, "utf8");
+    const entry = (path) =>
+      xml.slice(xml.indexOf(`<loc>https://www.jeeneetard.com${path}</loc>`));
+    expect(entry("/course/5/kinematics")).toContain("<lastmod>2026-08-30</lastmod>");
+    expect(entry("/course/6/laws-of-motion")).toContain("<lastmod>2026-04-01</lastmod>");
+    expect(entry("/course/7/work-energy-power").split("</url>")[0])
+      .not.toContain("<lastmod>");
+  });
+
+  it("asks the catalogue for one newest lesson per course, not every lesson", async () => {
+    const out = temporarySitemap();
+    const factory = clientWith({ courses: [{ id: 5, title: "Kinematics" }], goals: [] });
+    const client = factory();
+    await buildSitemap({
+      env: { VITE_SUPABASE_URL: "https://example.supabase.co", VITE_SUPABASE_ANON_KEY: "anon" },
+      out,
+      clientFactory: () => client,
+    });
+
+    // A per-course lesson query would be one request per course; this is one
+    // request with an embedded newest-first limit of 1.
+    const options = client.from("playlists").select().options;
+    expect(options).toContainEqual([
+      "created_at",
+      { referencedTable: "lessons", ascending: false },
+    ]);
+    expect(options).toContainEqual(["limit", 1, { referencedTable: "lessons" }]);
   });
 
   it("writes a static sitemap only when no prior sitemap exists", async () => {
