@@ -10,7 +10,6 @@ const EMPTY = {
   categories: [],
   subjects: [],
   chapters: [],
-  videos: [],
   classLevelRows: [],
   learningGoals: [],
   boards: [],
@@ -38,17 +37,13 @@ export function useAdminData(enabled = true) {
     setError(null);
 
     try {
-      const [channels, categories, subjects, chapters, videos, classLevels,
+      const [channels, categories, subjects, chapters, classLevels,
              learningGoals, boards] =
         await Promise.all([
           supabase.from("institutes_channels").select("id, name").order("name"),
           supabase.from("categories").select("id, name").order("display_order"),
           supabase.from("subjects").select("id, name").order("display_order"),
           supabase.from("chapters").select("id, name, subject_id").order("name"),
-          supabase
-            .from("videos")
-            .select("id, title, youtube_video_id, chapter_id")
-            .order("id", { ascending: false }),
           supabase.from("class_levels").select("id, slug").order("display_order"),
           supabase.from("learning_goals").select("id, name, slug").order("display_order"),
           supabase.from("boards").select("id, name, slug").order("display_order"),
@@ -56,7 +51,7 @@ export function useAdminData(enabled = true) {
 
       // class_levels is optional — the app still works if that migration
       // hasn't run yet, so a failure there is tolerated (empty rows).
-      const failed = [channels, categories, subjects, chapters, videos].find(
+      const failed = [channels, categories, subjects, chapters].find(
         (r) => r.error
       );
       if (failed) {
@@ -70,7 +65,6 @@ export function useAdminData(enabled = true) {
         categories: categories.data ?? [],
         subjects: subjects.data ?? [],
         chapters: chapters.data ?? [],
-        videos: videos.data ?? [],
         classLevelRows: classLevels.error ? [] : classLevels.data ?? [],
         learningGoals: learningGoals.error ? [] : learningGoals.data ?? [],
         boards: boards.error ? [] : boards.data ?? [],
