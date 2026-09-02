@@ -48,6 +48,20 @@
 -- 205 NCERT notes say so, the answer keys say "Answer Key", the papers say
 -- "Paper" -- so this adds only the word the title cannot have: its own kind.
 --
+-- BUILT ON THE ALIAS BODY, NOT THE ANCESTOR. Postgres cannot patch one
+-- expression inside a function, so this file re-emits universal_search whole,
+-- and whatever it does not carry forward is silently discarded. The first
+-- draft of this file was re-emitted from 20260901160000 -- correct when it was
+-- written, because that was the newest body then. While it sat in review,
+-- 20260902170000 replaced the same function with an alias-aware version, and
+-- since db push applies in TIMESTAMP order this file would have run last and
+-- reverted every curated shorthand ("shm", "pnc", "aod", "ktg") with no error
+-- anywhere. Nothing would have caught it: each migration's rehearsal loaded
+-- only its own ancestor, so no test ever executed the chain production gets.
+--
+-- So the body below is 20260902170000's, with the 12 title sites widened, and
+-- the preflight refuses to run at all unless the alias pass is present.
+--
 -- THE INDEXES MOVE WITH THE EXPRESSION. Postgres matches an expression index
 -- by matching the EXPRESSION, so the moment the prefilter stopped saying
 -- search_latin_key(title) the two indexes 0901 built for it went unused and
@@ -73,6 +87,21 @@ begin
   if to_regprocedure('public.search_latin_key(text)') is null
      or to_regprocedure('public.search_rank_tokens(text,text[],text)') is null then
     raise exception 'REFUSING: the shared search helpers are missing';
+  end if;
+  -- ORDERING GUARD. This migration re-emits universal_search WHOLE, because
+  -- Postgres cannot patch one expression inside a function body. That makes it
+  -- a last-writer-wins statement: whatever this file does not carry forward is
+  -- silently discarded. 20260902170000 made the same function alias-aware, and
+  -- an earlier draft of THIS file was re-emitted from the pre-alias 0901
+  -- ancestor -- which would have reverted every curated shorthand ("shm",
+  -- "pnc", "aod") with no error anywhere, on the next db push.
+  --
+  -- So: refuse unless the alias pass this body is built on is actually here.
+  -- If a THIRD migration ever replaces universal_search, it must be re-emitted
+  -- from the latest body, and it should add its own check like this one.
+  if to_regprocedure('public.search_expand_aliases(text)') is null
+     or to_regprocedure('public.search_rank_aliased(text,text[],text,text[],text)') is null then
+    raise exception 'REFUSING: the alias pass (20260902170000_search_aliases.sql) is not applied. This file re-emits universal_search from the alias-aware body, so applying it first would leave a function calling helpers that do not exist.';
   end if;
   if to_regclass('public.study_materials') is null then
     raise exception 'REFUSING: study_materials is missing';
@@ -175,8 +204,8 @@ create or replace function public.universal_search(
     language plpgsql stable
     -- SECURITY INVOKER (the default, and what production has). Do NOT make
     -- this SECURITY DEFINER: every group below relies on the caller's RLS,
-    -- and the study-material blocks in particular would start returning
-    -- unapproved rows the moment it ran as the owner.
+    -- the study-material blocks would start returning unapproved rows, and
+    -- search_aliases would stop being filtered to active rows.
     set search_path to 'public', 'public', 'pg_temp'
     as $_$
 declare
@@ -190,6 +219,12 @@ declare
   q_tokens text[];
   q_content text[];
   q_long   text;
+  -- The alias pass. When no alias fires these are set to the typed values and
+  -- every predicate below collapses to the one it already was.
+  q_alias        text;
+  q_alias_needle text;
+  q_alias_tokens text[];
+  q_alias_long   text;
   lim      int  := least(greatest(coalesce(p_limit, 5), 1), 50);
   off      int  := greatest(coalesce(p_offset, 0), 0);
   want     text[] := case when p_types is null or cardinality(p_types) = 0
@@ -257,12 +292,36 @@ begin
    limit 1;
   q_long := coalesce(q_long, q);
 
+  -- ALIAS PASS. Looked up on the Latin key BEFORE filler removal, because
+  -- "p and c" only exists as a phrase at this point. The expansion is then
+  -- tokenised by search_query_tokens(), the helper whose whole reason to exist
+  -- is that "browse search tokenises identically to the homepage" -- so the
+  -- alias pass gets the same filler filtering and the same longest-token rule
+  -- as the typed pass, from the same code, and cannot drift from it.
+  --
+  -- When nothing expands, all four alias variables become the typed ones. That
+  -- is what makes every added predicate below a duplicate and every added
+  -- LEAST a no-op for the overwhelming majority of searches.
+  q_alias := public.search_expand_aliases(q);
+  if q_alias is not null and q_alias is distinct from q then
+    select t.q, t.q_tokens, t.q_long
+      into q_alias_needle, q_alias_tokens, q_alias_long
+      from public.search_query_tokens(q_alias) t;
+  end if;
+  if q_alias_needle is null then
+    q_alias_needle := q;
+    q_alias_tokens := q_tokens;
+    q_alias_long   := q_long;
+  end if;
+  q_alias_long := coalesce(q_alias_long, q_long);
+
   ---------------------------------------------------------------- faculty
   -- Dynamic SQL: these tables may not exist (see design note 2). A static
   -- reference would make the whole function fail to CREATE on a database
   -- without teachers_v7. Verbatim from the shipped version — faculty ranking is
   -- search_teachers()' business and is deliberately untouched by v11, which is
-  -- also why it is passed the RAW p_query and not the Latin key.
+  -- also why it is passed the RAW p_query and not the Latin key. Aliases are
+  -- catalogue vocabulary, not names, so this block is untouched here too.
   if 'faculty' = any(want) and to_regclass('public.teachers') is not null then
     return query execute $dyn$
       with hits as (
@@ -302,7 +361,8 @@ begin
     return query
     with m as (
       select ch.id, ch.name,
-             public.search_rank_tokens(public.search_latin_key(ch.name), q_tokens, q) as rk,
+             public.search_rank_aliased(public.search_latin_key(ch.name), q_tokens, q,
+                                        q_alias_tokens, q_alias_needle) as rk,
              s.name as subject
         from public.chapters ch
         left join public.subjects s on s.id = ch.subject_id
@@ -311,10 +371,14 @@ begin
        -- chapters cannot dead-end the searcher.
        where exists (select 1 from public.videos v where v.chapter_id = ch.id)
          -- SARGABLE (design note 6). Every disjunct is a gin_trgm_ops member
-         -- applied to the indexed expression verbatim.
+         -- applied to the indexed expression verbatim. The first three are the
+         -- shipped gate, untouched; the last two are the alias pass, and are
+         -- literal duplicates of the first and third when no alias fired.
          and (   public.search_latin_key(ch.name) like '%' || q_long || '%'
               or public.search_latin_key(ch.name) like q || '%'
-              or public.search_latin_key(ch.name) %> q_long )
+              or public.search_latin_key(ch.name) %> q_long
+              or public.search_latin_key(ch.name) like '%' || q_alias_long || '%'
+              or public.search_latin_key(ch.name) %> q_alias_long )
     ), hit as (select * from m where rk is not null),
        counted as (select h.*, count(*) over () as total from hit h)
     select 'chapter'::text, c.id, c.name, c.subject, null::text, null::text,
@@ -334,7 +398,8 @@ begin
     return query
     with m as (
       select pl.id, pl.title,
-             public.search_rank_tokens(public.search_latin_key(pl.title), q_tokens, q) as rk,
+             public.search_rank_aliased(public.search_latin_key(pl.title), q_tokens, q,
+                                        q_alias_tokens, q_alias_needle) as rk,
              nullif(concat_ws(' · ', nullif(pl.teacher,''), ic.name, s.name), '') as ctx,
              -- first chapter this playlist teaches, so the result deep-links
              -- to a watchable page rather than a dead end. Now evaluated only
@@ -350,7 +415,9 @@ begin
         left join public.subjects s on s.id = pl.subject_id
        where (   public.search_latin_key(pl.title) like '%' || q_long || '%'
               or public.search_latin_key(pl.title) like q || '%'
-              or public.search_latin_key(pl.title) %> q_long )
+              or public.search_latin_key(pl.title) %> q_long
+              or public.search_latin_key(pl.title) like '%' || q_alias_long || '%'
+              or public.search_latin_key(pl.title) %> q_alias_long )
     ), hit as (select * from m where rk is not null),
        counted as (select h.*, count(*) over () as total from hit h)
     select 'playlist'::text, c.id, c.title, c.ctx, null::text, null::text,
@@ -368,7 +435,8 @@ begin
     return query
     with m as (
       select v.id, v.title,
-             public.search_rank_tokens(public.search_latin_key(v.title), q_tokens, q) as rk,
+             public.search_rank_aliased(public.search_latin_key(v.title), q_tokens, q,
+                                        q_alias_tokens, q_alias_needle) as rk,
              nullif(concat_ws(' · ', ch.name, s.name), '') as ctx,
              v.chapter_id, v.subject_id,
              v.youtube_video_id,
@@ -387,7 +455,9 @@ begin
         left join public.subjects s  on s.id = v.subject_id
        where (   public.search_latin_key(v.title) like '%' || q_long || '%'
               or public.search_latin_key(v.title) like q || '%'
-              or public.search_latin_key(v.title) %> q_long )
+              or public.search_latin_key(v.title) %> q_long
+              or public.search_latin_key(v.title) like '%' || q_alias_long || '%'
+              or public.search_latin_key(v.title) %> q_alias_long )
     ), hit as (select * from m where rk is not null),
        counted as (select h.*, count(*) over () as total from hit h)
     select 'lecture'::text, c.id, c.title, c.ctx, null::text, null::text,
@@ -410,12 +480,15 @@ begin
     return query
     with m as (
       select ic.id, ic.name,
-             public.search_rank_tokens(public.search_latin_key(ic.name), q_tokens, q) as rk,
+             public.search_rank_aliased(public.search_latin_key(ic.name), q_tokens, q,
+                                        q_alias_tokens, q_alias_needle) as rk,
              (select count(*) from public.playlists pl where pl.channel_id = ic.id) as n
         from public.institutes_channels ic
        where (   public.search_latin_key(ic.name) like '%' || q_long || '%'
               or public.search_latin_key(ic.name) like q || '%'
-              or public.search_latin_key(ic.name) %> q_long )
+              or public.search_latin_key(ic.name) %> q_long
+              or public.search_latin_key(ic.name) like '%' || q_alias_long || '%'
+              or public.search_latin_key(ic.name) %> q_alias_long )
     ), hit as (select * from m where rk is not null),
        counted as (select h.*, count(*) over () as total from hit h)
     select 'institute'::text, c.id, c.name,
@@ -438,7 +511,8 @@ begin
     return query
     with m as (
       select sm.id, sm.title, sm.material_type,
-             public.search_rank_tokens(public.study_material_haystack(sm.title, sm.material_type), q_tokens, q) as rk,
+             public.search_rank_aliased(public.study_material_haystack(sm.title, sm.material_type), q_tokens, q,
+                                        q_alias_tokens, q_alias_needle) as rk,
              -- ONE scope row, the most specific this material has. It has to be
              -- a single row rather than a mix of columns from several, because
              -- the client turns these slugs into a /materials filter set and
@@ -484,7 +558,9 @@ begin
          -- SARGABLE (design note 6), identical in shape to every block above.
          and (   public.study_material_haystack(sm.title, sm.material_type) like '%' || q_long || '%'
               or public.study_material_haystack(sm.title, sm.material_type) like q || '%'
-              or public.study_material_haystack(sm.title, sm.material_type) %> q_long )
+              or public.study_material_haystack(sm.title, sm.material_type) %> q_long
+              or public.study_material_haystack(sm.title, sm.material_type) like '%' || q_alias_long || '%'
+              or public.study_material_haystack(sm.title, sm.material_type) %> q_alias_long )
     ), hit as (select * from m where rk is not null),
        counted as (select h.*, count(*) over () as total from hit h)
     select 'material'::text, c.id, c.title,
@@ -520,7 +596,8 @@ begin
     return query
     with m as (
       select sm.id, sm.title, sm.material_type, sm.source_name, sm.exam_year,
-             public.search_rank_tokens(public.study_material_haystack(sm.title, sm.material_type), q_tokens, q) as rk,
+             public.search_rank_aliased(public.study_material_haystack(sm.title, sm.material_type), q_tokens, q,
+                                        q_alias_tokens, q_alias_needle) as rk,
              -- Does the curated JEE Main papers landing list this paper? That
              -- page (src/useJeeMainPapers.js) selects previous_year_paper rows
              -- whose title matches JEE_MAIN_PAPERS_TITLE_PATTERN, so this is
@@ -563,7 +640,9 @@ begin
                           where s2.material_id = sm.id))
          and (   public.study_material_haystack(sm.title, sm.material_type) like '%' || q_long || '%'
               or public.study_material_haystack(sm.title, sm.material_type) like q || '%'
-              or public.study_material_haystack(sm.title, sm.material_type) %> q_long )
+              or public.study_material_haystack(sm.title, sm.material_type) %> q_long
+              or public.study_material_haystack(sm.title, sm.material_type) like '%' || q_alias_long || '%'
+              or public.study_material_haystack(sm.title, sm.material_type) %> q_alias_long )
     ), hit as (select * from m where rk is not null),
        counted as (select h.*, count(*) over () as total from hit h)
     select 'paper'::text, c.id, c.title,
@@ -643,6 +722,22 @@ begin
   if not exists (select 1 from pg_indexes where schemaname = 'public'
                   and indexname = 'idx_study_materials_haystack_pattern') then
     v_fail := v_fail || 'the prefix index on the haystack expression is missing';
+  end if;
+
+  -- The regression this file nearly shipped: prove the alias pass SURVIVED the
+  -- re-emit. If the body were rebuilt from the pre-alias ancestor again, these
+  -- helpers would be unreferenced and every curated shorthand would go dead.
+  if (select count(*) from pg_proc p
+       where p.pronamespace = 'public'::regnamespace
+         and p.proname = 'universal_search'
+         and p.prosrc like '%search_rank_aliased%') = 0 then
+    v_fail := v_fail || 'universal_search no longer calls search_rank_aliased: the alias pass was reverted by this re-emit';
+  end if;
+  if (select count(*) from pg_proc p
+       where p.pronamespace = 'public'::regnamespace
+         and p.proname = 'universal_search'
+         and p.prosrc like '%study_material_haystack%') = 0 then
+    v_fail := v_fail || 'universal_search does not call study_material_haystack: this migration did nothing';
   end if;
 
   if array_length(v_fail, 1) > 0 then
