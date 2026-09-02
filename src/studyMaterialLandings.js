@@ -166,11 +166,18 @@ export function paperYearMeta(landing, year) {
   };
 }
 
-/** Descending list of the exam years present in a set of papers. */
+/**
+ * Descending list of the exam years present in a set of papers. Prefers the
+ * database's paper_year column (backfilled 2026-09-02 for every paper row);
+ * a row without it keeps the exam_year fallback it always had.
+ */
 export function paperYears(materials = []) {
   const years = new Set();
   for (const material of materials) {
-    const year = Number(material?.examYear ?? material?.exam_year);
+    const year = Number(
+      material?.paperYear ?? material?.paper_year ??
+      material?.examYear ?? material?.exam_year,
+    );
     if (Number.isInteger(year) && YEAR_SEGMENT.test(String(year))) years.add(year);
   }
   return [...years].sort((a, b) => b - a);
@@ -195,12 +202,46 @@ const ANSWER_KEY_EXCLUDED = /\b(?:no|without)\b[^.]{0,80}\banswer\s+keys?\b/i;
 const SOLUTION_INCLUDED = /\bwith\s+(?:worked\s+)?solutions?\b|\b(?:worked\s+)?solutions?\s+(?:are\s+)?included\b/i;
 const SOLUTION_EXCLUDED = /\bno\b[^.]{0,120}\bsolutions?\b|\bwithout\s+solutions?\b/i;
 
+// FLIPPED 2026-09-02 — the paper-metadata migration (supabase/migrations/
+// 20260902093000_study_material_paper_metadata.sql) is APPLIED to production
+// and populated paper_kind / paper_year / exam_session / exam_shift for every
+// previous_year_paper row. A row carrying a non-null paper kind is a
+// backfilled row and is trusted as-is: its NULL exam_session genuinely means
+// "no session". A row WITHOUT the columns — an old cached edge response, a
+// fixture predating the flip — still classifies through the title grammar.
+// Rows arrive in two shapes: the client's camelCase mapped rows
+// (useJeeMainPapers) and the edge middleware's raw snake_case PostgREST rows,
+// so every column read checks both, the way paperYears always has.
+const paperKindOf = (material) =>
+  material?.paperKind ?? material?.paper_kind ?? null;
+
+/**
+ * One row's paper classification — database columns first, title grammar as
+ * the fallback. Same { year, session, shift, kind } shape as parsePaperTitle,
+ * which remains the single fallback authority.
+ */
+export function paperMetadata(material) {
+  const kind = paperKindOf(material);
+  if (kind == null) return parsePaperTitle(material?.title);
+  const year = material?.paperYear ?? material?.paper_year;
+  return {
+    year: year == null ? null : Number(year),
+    session: material?.examSession ?? material?.exam_session ?? null,
+    shift: material?.examShift ?? material?.exam_shift ?? null,
+    kind,
+  };
+}
+
 export function paperIncludesAnswerKey(material) {
+  const kind = paperKindOf(material);
+  if (kind != null) return kind === "answer_key";
   const text = `${material?.title ?? ""} ${material?.description ?? ""}`;
   return ANSWER_KEY_INCLUDED.test(text) && !ANSWER_KEY_EXCLUDED.test(text);
 }
 
 export function paperIncludesSolutions(material) {
+  const kind = paperKindOf(material);
+  if (kind != null) return kind === "paper_with_solutions";
   const text = `${material?.title ?? ""} ${material?.description ?? ""}`;
   return SOLUTION_INCLUDED.test(text) && !SOLUTION_EXCLUDED.test(text);
 }
@@ -217,19 +258,19 @@ export function splitJeeMainPapers(materials = []) {
 // ---------------------------------------------------------------------------
 // The ONE title grammar, shared with the database.
 //
-// The staged migration supabase/migrations/
-// 20260902093000_study_material_paper_metadata.sql backfills paper_kind,
+// The migration supabase/migrations/
+// 20260902093000_study_material_paper_metadata.sql backfilled paper_kind,
 // paper_year, exam_session and exam_shift from titles using EXACTLY these
 // rules, and src/paperMetadataSqlRehearsal.test.js executes that SQL and
 // asserts it agrees with this function title by title. Change one, change
 // both, or that test fails.
 //
-// FOLLOW-UP — where the flip happens: once the owner has applied that
-// migration with `npx supabase db push`, the client should read the four real
-// columns (add them to the SELECT in src/useJeeMainPapers.js) and this parser
-// becomes the fallback for rows predating the backfill, not the authority.
-// Until then the columns DO NOT EXIST in production and selecting them would
-// make PostgREST error every papers page.
+// FLIPPED 2026-09-02 — the migration is applied to production and the client
+// now selects the four real columns (src/useJeeMainPapers.js) and classifies
+// through paperMetadata() above, which prefers them. This parser stays for
+// two jobs: the SQL≡JS contract test keeps the grammar honest for FUTURE
+// seeds (a new title must land in the same columns the pages now trust), and
+// rows without the columns — old cached edge responses — still classify.
 // ---------------------------------------------------------------------------
 
 /**
@@ -270,7 +311,9 @@ export function parsePaperTitle(title) {
  * array — the caller shows NOTHING for it, never a dead link.
  */
 export function groupPapersBySession(papers = [], answerKeys = []) {
-  const sessionOf = (material) => parsePaperTitle(material?.title).session;
+  // Database column first (a backfilled row's null session is trusted as
+  // session-less), title grammar for rows without the columns.
+  const sessionOf = (material) => paperMetadata(material).session;
   const groups = new Map();
   for (const paper of papers) {
     const session = sessionOf(paper);

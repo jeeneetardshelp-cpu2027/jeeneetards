@@ -24,6 +24,9 @@ import { ArrowRight, Users } from "lucide-react";
 import { useTheme } from "./theme.jsx";
 import { ratingDisplay } from "./ratingConfidence.js";
 import ChannelAvatar from "./ChannelAvatar.jsx";
+// Chapter and institute names are catalogue text, sometimes Devanagari, under
+// a document that declares lang="en". See lang.js.
+import { langAttrs } from "./lang.js";
 import { BRAND_TEAL } from "./brandColors.js";
 
 // Pure, exported for tests: given the chapter's courses and the one being
@@ -88,7 +91,12 @@ export default function ChapterTeachers({
         <Users className="h-4 w-4" style={{ color: BRAND_TEAL }} aria-hidden="true" />
         <h2 className={`text-sm font-semibold ${t.text}`}>
           {others.length} other {noun} teach{others.length === 1 ? "es" : ""}{" "}
-          {chapterName ? <span className={t.muted}>{chapterName}</span> : "this chapter"}
+          {/* The chapter name already sits in its own span, so the language
+              tag rides on it and the English sentence around it stays under
+              the document's own lang. */}
+          {chapterName
+            ? <span {...langAttrs(chapterName)} className={t.muted}>{chapterName}</span>
+            : "this chapter"}
         </h2>
       </div>
 
@@ -108,7 +116,10 @@ export default function ChapterTeachers({
                   className="h-9 w-9 shrink-0"
                 />
                 <span className="min-w-0 flex-1">
-                  <span className={`block truncate text-sm font-medium ${t.text}`}>
+                  <span
+                    {...langAttrs(course.institute)}
+                    className={`block truncate text-sm font-medium ${t.text}`}
+                  >
                     {course.institute}
                   </span>
                   <span className={`block truncate text-xs ${t.muted}`}>

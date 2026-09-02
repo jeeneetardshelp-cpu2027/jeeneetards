@@ -209,7 +209,11 @@ async function edgeJson(url, options = {}) {
 }
 
 const PAPER_SELECT = "id,title,description,material_type,source_name,source_url," +
-  "preview_image_url,file_format,language,exam_year,page_count,is_downloadable,rights_status";
+  "preview_image_url,file_format,language,exam_year,page_count,is_downloadable,rights_status," +
+  // The paper-metadata columns (migration applied 2026-09-02), so the edge
+  // classifies papers with the same database-first rules the hydrated page
+  // uses (paperMetadata in src/studyMaterialLandings.js).
+  "paper_kind,paper_year,exam_session,exam_shift";
 
 /**
  * Reviewed previous-year papers for one landing, optionally narrowed to a

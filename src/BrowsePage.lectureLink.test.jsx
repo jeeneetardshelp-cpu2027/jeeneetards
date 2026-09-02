@@ -59,12 +59,12 @@ vi.mock("./supabaseClient", () => ({
   },
 }));
 
-import Dashboard from "./Dashboard.jsx";
+import BrowsePage from "./BrowsePage.jsx";
 
 const renderAt = (url) =>
   render(
     <MemoryRouter initialEntries={[url]}>
-      <Routes><Route path="/browse" element={<Dashboard />} /></Routes>
+      <Routes><Route path="/browse" element={<BrowsePage />} /></Routes>
     </MemoryRouter>,
   );
 

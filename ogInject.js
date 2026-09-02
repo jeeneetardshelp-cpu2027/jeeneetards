@@ -205,8 +205,14 @@ const publicMaterials = (materials) => materials
   .filter((material) => material?.title &&
     /^https:\/\//i.test(material.sourceUrl ?? material.source_url ?? ""));
 
+// Column-first, like the rest of the paper classification since the metadata
+// migration was applied (2026-09-02): paper_year is the backfilled truth, the
+// old examYear fields remain as fallback for rows that predate the columns.
 const paperYearOf = (material) => {
-  const year = Number(material?.examYear ?? material?.exam_year);
+  const year = Number(
+    material?.paperYear ?? material?.paper_year ??
+    material?.examYear ?? material?.exam_year,
+  );
   return Number.isFinite(year) ? year : null;
 };
 

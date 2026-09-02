@@ -22,6 +22,11 @@ describe("JEE Main paper collection", () => {
             source_url: "https://nta.example/paper.pdf",
             file_format: "pdf",
             exam_year: 2024,
+            // The metadata columns the 2026-09-02 migration backfilled.
+            paper_kind: "question_paper",
+            paper_year: 2024,
+            exam_session: "Session 1",
+            exam_shift: "Shift 1",
           }],
           count: 84,
           error: null,
@@ -38,12 +43,22 @@ describe("JEE Main paper collection", () => {
     expect(calls).toContainEqual(["eq", "material_type", "previous_year_paper"]);
     expect(calls).toContainEqual(["ilike", "title", "JEE Main%"]);
     expect(calls).toContainEqual(["range", 60, 119]);
+    // The 2026-09-02 flip: the SELECT reads the real metadata columns.
+    const [, selectedColumns] = calls.find(([name]) => name === "select");
+    for (const column of ["paper_kind", "paper_year", "exam_session", "exam_shift"]) {
+      expect(selectedColumns.split(",")).toContain(column);
+    }
     expect(result.error).toBeNull();
     expect(result.data.total).toBe(84);
     expect(result.data.items[0]).toMatchObject({
       title: "JEE Main 2024 Session 1 - 27 January Shift 1",
       sourceName: "National Testing Agency (JEE Main)",
       scopes: [{ goal: "jee-main" }],
+      // ...and exposes them on the mapped row for the classifiers.
+      paperKind: "question_paper",
+      paperYear: 2024,
+      examSession: "Session 1",
+      examShift: "Shift 1",
     });
   });
 
@@ -84,9 +99,16 @@ describe("JEE Main paper collection", () => {
 
     expect(calls).toContainEqual(["eq", "material_type", "previous_year_paper"]);
     expect(calls).toContainEqual(["ilike", "title", "NEET%"]);
+    // This fixture row carries no metadata columns (the shape of a response
+    // cached before the 2026-09-02 flip): they map to explicit nulls, which
+    // is what sends the classifiers down the title-grammar fallback.
     expect(result.data.items[0]).toMatchObject({
       title: "NEET UG 2024 - Set T1 (English)",
       scopes: [{ goal: "neet" }],
+      paperKind: null,
+      paperYear: null,
+      examSession: null,
+      examShift: null,
     });
   });
 });

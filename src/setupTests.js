@@ -5,7 +5,7 @@
 // cores they failed with "Unable to find role=..." long before the 15s test
 // budget was anywhere near spent. That is why the suite still failed a
 // different handful of files each run (ManageCatalogPanel, CourseSequence,
-// Home.structuredData, Dashboard.goal, phase1Truth, shellSafety) while every
+// Home.structuredData, BrowsePage.goal, phase1Truth, shellSafety) while every
 // one of them passed in isolation.
 //
 // 5s restores the margin testTimeout was meant to give, and stays well under

@@ -4,7 +4,10 @@ import { describe, expect, it, vi } from "vitest";
 
 vi.mock("./AppShell.jsx", () => ({ Page: ({ children }) => <>{children}</> }));
 
-const paper = (id, title, examYear, sourceUrl, goal = "jee-main") => ({
+// Rows carry the paper-metadata columns the real hook has mapped since the
+// 2026-09-02 flip, so the page groups these fixtures the database-first way
+// (session and kind from the columns, not from re-parsing titles).
+const paper = (id, title, examYear, sourceUrl, goal = "jee-main", meta = {}) => ({
   id,
   title,
   description: "Official question paper or key.",
@@ -14,6 +17,10 @@ const paper = (id, title, examYear, sourceUrl, goal = "jee-main") => ({
   sourceUrl,
   fileFormat: "pdf",
   examYear,
+  paperKind: meta.kind ?? "question_paper",
+  paperYear: examYear,
+  examSession: meta.session ?? null,
+  examShift: meta.shift ?? null,
   scopes: [{ goal }],
 });
 
@@ -28,9 +35,12 @@ const papersFor = (year, landing) => {
   }
   return year === 2024
     ? [
-        paper(7, "JEE Main 2024 Session 1 - 27 January Shift 1", 2024, "https://nta.example/paper.pdf"),
-        paper(8, "JEE Main 2024 Session 2 - 4 April Shift 1", 2024, "https://nta.example/s2-paper.pdf"),
-        paper(11, "JEE Main 2024 Session 1 Final Answer Key", 2024, "https://nta.example/key.pdf"),
+        paper(7, "JEE Main 2024 Session 1 - 27 January Shift 1", 2024, "https://nta.example/paper.pdf",
+          "jee-main", { session: "Session 1", shift: "Shift 1" }),
+        paper(8, "JEE Main 2024 Session 2 - 4 April Shift 1", 2024, "https://nta.example/s2-paper.pdf",
+          "jee-main", { session: "Session 2", shift: "Shift 1" }),
+        paper(11, "JEE Main 2024 Session 1 Final Answer Key", 2024, "https://nta.example/key.pdf",
+          "jee-main", { kind: "answer_key", session: "Session 1" }),
       ]
     : [];
 };

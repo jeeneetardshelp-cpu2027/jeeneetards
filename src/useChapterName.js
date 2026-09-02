@@ -3,7 +3,7 @@
 // Search chapter results deep-link /browse?ch=<id> because universal_search
 // returns just the chapter's id (extra.chapter_id) — no chapter, subject or
 // goal slugs — so searchDestinations.js cannot build the canonical
-// ?chapter=<slug> URL. Dashboard's other label sources both miss that link:
+// ?chapter=<slug> URL. BrowsePage's other label sources both miss that link:
 //
 //   * useCanonicalFilters resolves SLUGS to ids; a numeric id passes straight
 //     through with no name attached

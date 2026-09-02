@@ -152,7 +152,7 @@ describe("every routed page reaches the landmark", () => {
   it("finds the route table (guards against this test quietly matching nothing)", () => {
     expect(modules.length).toBeGreaterThan(15);
     expect(modules).toContain("src/Home.jsx");
-    expect(modules).toContain("src/Dashboard.jsx");
+    expect(modules).toContain("src/BrowsePage.jsx");
     expect(modules).toContain("src/forum/ForumFeedPage.jsx");
   });
 

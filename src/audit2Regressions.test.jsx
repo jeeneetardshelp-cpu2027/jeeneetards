@@ -86,13 +86,13 @@ describe("reading progress never destroys saved data", () => {
 // ---------------------------------------------------------------------------
 // 2. "Scope not known yet" must not be encoded as "no chapters allowed".
 //
-// Dashboard emitted [] while the curriculum RPC was loading OR after it errored.
+// BrowsePage emitted [] while the curriculum RPC was loading OR after it errored.
 // FilterPanel then filtered every chapter option away and dropped the whole
 // Chapter section, so a slow or failed lookup was indistinguishable from "this
 // subject has no chapters" -- with no error and no retry.
 // ---------------------------------------------------------------------------
-describe("Dashboard chapter scoping distinguishes unknown from empty", () => {
-  // Mirrors src/Dashboard.jsx's expression exactly; the assertion is on the
+describe("BrowsePage chapter scoping distinguishes unknown from empty", () => {
+  // Mirrors src/BrowsePage.jsx's expression exactly; the assertion is on the
   // contract FilterPanel documents (null = do not scope).
   const scopeValues = ({ ready, goalValue, subjectValue, scopedSubject, chaptersBySubject = {} }) => {
     const shouldScope = Boolean(goalValue && subjectValue);

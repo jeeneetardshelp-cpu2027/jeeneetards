@@ -78,6 +78,8 @@ function ReviewCard({ row, onSaved }) {
           <span className={`block text-xs ${t.faint}`}>{row.institute}{row.subject ? ` · ${row.subject}` : ""}</span>
           <span className="mt-1 flex flex-wrap gap-1">
             {(row.missing_fields ?? []).map((field) => (
+              // Amber stays literal: no warning token in the palette, and the
+              // fg + bg pair is set together so it reads in both themes.
               <span key={field} className="rounded-full bg-amber-50 px-2 py-0.5 text-[11px] text-amber-800">{field}</span>
             ))}
           </span>
@@ -130,10 +132,10 @@ function ReviewCard({ row, onSaved }) {
             />
           </label>
 
-          {error && <p className="rounded-lg bg-rose-50 p-3 text-sm text-rose-800">{error}</p>}
+          {error && <p className="rounded-lg bg-danger-soft p-3 text-sm text-danger">{error}</p>}
           <button
             type="button" onClick={save} disabled={busy || !readyToSave}
-            className="min-h-11 rounded-xl bg-slate-900 px-5 text-sm font-semibold text-white disabled:opacity-40"
+            className={`min-h-11 rounded-xl px-5 text-sm font-semibold ${t.accentBg} ${t.accentInk} disabled:opacity-40`}
           >
             {busy ? "Saving…" : "Approve reviewed metadata"}
           </button>
@@ -168,9 +170,10 @@ export default function ContentQualityPanel() {
           <RefreshCw className="h-4 w-4" /> Refresh
         </button>
       </div>
+      {/* Amber pair — deliberately theme-independent, same reason as above. */}
       {error && <p className="mt-4 rounded-xl bg-amber-50 p-4 text-sm text-amber-900"><AlertTriangle className="mr-2 inline h-4 w-4" />{error}</p>}
       {loading ? (
-        <div className="mt-5 space-y-3" aria-busy="true">{[1,2,3].map((n) => <div key={n} className="h-20 animate-pulse rounded-xl bg-slate-100" />)}</div>
+        <div className="mt-5 space-y-3" aria-busy="true">{[1,2,3].map((n) => <div key={n} className="h-20 animate-pulse rounded-xl bg-surface-2" />)}</div>
       ) : !error && rows.length === 0 ? (
         <div className={`mt-5 rounded-xl border border-dashed p-8 text-center ${t.border}`}>
           <CheckCircle2 className="mx-auto h-5 w-5 text-emerald-600" />

@@ -12,7 +12,7 @@ live schema on 31 Aug 2026 and recorded in the remote migration history, so
 | `20260831140005_production_baseline.sql` | **Applied** (it IS production — 66 tables, 181 functions, 98 RLS policies, recorded via `migration repair`). |
 | `20260901120000_study_days.sql` | **Applied** 31 Aug 2026. Server copy of prep-streak study days (owner-only RLS, mirrors `video_progress`); the frontend sync woke up on its own when this landed. |
 | `20260901160000_universal_search_materials.sql` | **Applied** 1 Sep 2026. `material` and `paper` groups in `universal_search`; notes, formula sheets and previous-year papers are findable from the main search box (verified live). |
-| `20260902093000_study_material_paper_metadata.sql` | **Pending.** Adds `paper_kind`/`paper_year`/`exam_session`/`exam_shift` to `study_materials` with a deterministic title backfill and abort-on-unclassified self-check. The client keeps its title parsing until this is applied; the flip points are marked FOLLOW-UP in `src/useJeeMainPapers.js` and `src/studyMaterialLandings.js`. |
+| `20260902093000_study_material_paper_metadata.sql` | **Applied** 2 Sep 2026, verified live: all 183 paper rows classified (160 question papers / 14 answer keys / 9 with solutions), zero unclassified. The client column flip is the marked FOLLOW-UP in `src/useJeeMainPapers.js` / `src/studyMaterialLandings.js`. |
 
 `npx supabase migration list` shows this local-vs-remote state at any time.
 

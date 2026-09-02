@@ -1,5 +1,8 @@
 import { BookOpen, RefreshCw } from "lucide-react";
 import { Link } from "react-router";
+// Chapter names are catalogue text, sometimes Devanagari, under a document
+// that declares lang="en". See lang.js.
+import { langAttrs } from "./lang.js";
 import StudyMaterialCard from "./StudyMaterialCard.jsx";
 import { RELEASE_CAPABILITIES } from "./releaseCapabilities.js";
 import { useStudyMaterials } from "./useStudyMaterials.js";
@@ -12,7 +15,14 @@ export function StudyMaterialPanelView({
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.14em] text-accent">Continue studying</p>
-          <h2 id="lesson-material-heading" className="mt-1 text-lg font-semibold text-ink">
+          {/* The heading mixes an English lead-in with the chapter name, and a
+              mixed string is tagged as a whole rather than split into spans —
+              the same call lang.js documents. Latin chapters leave no trace. */}
+          <h2
+            id="lesson-material-heading"
+            {...langAttrs(chapterName)}
+            className="mt-1 text-lg font-semibold text-ink"
+          >
             Study material{chapterName ? ` for ${chapterName}` : ""}
           </h2>
         </div>
