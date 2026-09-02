@@ -116,16 +116,18 @@ beforeAll(async () => {
 });
 
 describe("search gap log migration", () => {
-  it("is in the chain only because the Privacy Policy names it", () => {
+  it("is in the chain, with the hold banner gone", () => {
     // This file used to assert a DO NOT APPLY banner, which was the only thing
     // standing between `supabase db push` and collecting student-typed text the
     // policy did not mention. The banner came off on 2 Sep 2026 when the
-    // disclosure landed, and the guard inverts rather than disappears: the file
-    // now sits in supabase/migrations/, so a push WILL create the table, and
-    // the policy must therefore keep naming it. Deleting the disclosure while
-    // this file is in the chain fails here (and in legalTruth.test.js).
+    // disclosure landed, so the assertion inverts: the file now sits in
+    // supabase/migrations/, and a push WILL create the table.
+    //
+    // The other half of that pairing — the policy must keep naming the table —
+    // is asserted in searchGapPrivacyContract.test.js and legalTruth.test.js,
+    // not here. This project runs without a DOM, and testProjects.test.js
+    // rightly refuses a `.jsx` reference in it.
     expect(MIGRATION).toMatch(/^supabase\/migrations\//);
-    expect(readFileSync("src/PrivacyPolicy.jsx", "utf8")).toContain("search_gap_log");
     expect(migration).toContain("search_gap_log");
     expect(migration).not.toContain("DO NOT APPLY YET");
     expect(migration.trimEnd()).toMatch(/commit;$/i);

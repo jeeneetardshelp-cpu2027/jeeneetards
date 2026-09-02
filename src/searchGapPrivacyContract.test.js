@@ -59,6 +59,27 @@ describe("search gap log privacy contract", () => {
     ).toBe(true);
   });
 
+  // The inverse of the test above, needed because unparking made that one
+  // inert: it returns early once the banner is gone, and the banner came off
+  // on 2026-09-02 when the file moved into supabase/migrations/. From here on,
+  // a push creates the table, so the policy must keep naming it.
+  it("keeps naming the table once the migration is in the chain", () => {
+    if (!MIGRATION.startsWith("supabase/migrations/")) return;  // still parked
+    expect(existsSync(MIGRATION), `${MIGRATION} is missing`).toBe(true);
+    expect(
+      read("src/PrivacyPolicy.jsx"),
+      "the migration is in the chain, so the policy must name search_gap_log",
+    ).toContain(TABLE);
+  });
+
+  // WHAT NO TEST HERE CAN CHECK. Whether the table actually exists in
+  // production. The file being in the chain means a push WOULD create it, not
+  // that anyone has pushed. So the policy's "not switched on yet" wording stays
+  // correct until someone pushes, and the change that pushes is the change that
+  // must reword it. That pairing is a human step, recorded in this file's
+  // migration header and in supabase/README.md, because the fact lives in the
+  // database rather than in the repository.
+
   it("does not collect student search text before the policy says so", () => {
     const wired = read("src/useUniversalSearch.js").includes("scheduleSearchGapLog");
     if (!wired) return;                       // nothing is collected; nothing to disclose
