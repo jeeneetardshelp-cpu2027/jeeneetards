@@ -36,6 +36,9 @@ export default function FacultyProfile() {
     .map((item) => item.alias)
     .filter((alias) => alias && alias !== profile?.display_name);
   const aliasLine = verifiedAliases.join(", ");
+  const instituteLine = Array.isArray(profile?.institutes)
+    ? profile.institutes.filter(Boolean).join(", ")
+    : (typeof profile?.institutes === "string" ? profile.institutes : "");
 
   // Breadcrumb instead of a bare Back link: it says WHERE you are, and every
   // crumb is a real destination rather than a guess about history.
@@ -142,6 +145,11 @@ export default function FacultyProfile() {
                 <p className={`mt-1 text-sm ${t.muted}`}>
                   {profile.course_count} course{profile.course_count === 1 ? "" : "s"}
                 </p>
+                {instituteLine ? (
+                  <p {...langAttrs(instituteLine)} className={`mt-1 text-sm ${t.muted}`}>
+                    {instituteLine}
+                  </p>
+                ) : null}
                 {verifiedAliases.length > 0 && (
                   <p className={`mt-1 text-xs ${t.muted}`}>
                     {/* "Also known as" is interface English; the aliases are

@@ -29,6 +29,7 @@ describe("FacultyProfile", () => {
       loading: false, error: null,
       profile: {
         display_name: "Amit Bijarnia", verified: true, course_count: 0,
+        institutes: ["IIT Bombay", "IIT Delhi"],
         aliases: [
           { alias: "Amit Bijarnia", status: "verified" },
           { alias: "ABJ Sir", status: "verified" },
@@ -39,6 +40,7 @@ describe("FacultyProfile", () => {
     };
     renderProfile();
     expect(screen.getByText(/Also known as ABJ Sir/)).toBeDefined();
+    expect(screen.getByText(/IIT Bombay, IIT Delhi/)).toBeDefined();
     expect(screen.queryByText(/A\. Bijarnia/)).toBeNull();
     expect(document.body.textContent).not.toContain("[object Object]");
     expect(document.head.querySelector('[data-schema-key="Person"]')?.textContent)
