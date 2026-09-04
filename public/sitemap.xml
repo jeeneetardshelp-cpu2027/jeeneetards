@@ -235,6 +235,9 @@
     <loc>https://www.jeeneetard.com/browse?goal=jee&amp;class=12&amp;subject=chemistry&amp;chapter=electrochemistry</loc>
   </url>
   <url>
+    <loc>https://www.jeeneetard.com/browse?goal=jee&amp;class=12&amp;subject=chemistry&amp;chapter=general-inorganic-chemistry</loc>
+  </url>
+  <url>
     <loc>https://www.jeeneetard.com/browse?goal=jee&amp;class=12&amp;subject=chemistry&amp;chapter=metallurgy</loc>
   </url>
   <url>
@@ -830,6 +833,9 @@
   </url>
   <url>
     <loc>https://www.jeeneetard.com/materials/jee-main/previous-year-papers/2021</loc>
+  </url>
+  <url>
+    <loc>https://www.jeeneetard.com/materials/jee-main/previous-year-papers/2019</loc>
   </url>
   <url>
     <loc>https://www.jeeneetard.com/materials/jee-main/previous-year-papers/2017</loc>
@@ -2829,6 +2835,30 @@
   <url>
     <loc>https://www.jeeneetard.com/course/505/ns-sir-structural-identification-and-practical-organic</loc>
     <lastmod>2026-08-31</lastmod>
+  </url>
+  <url>
+    <loc>https://www.jeeneetard.com/course/506/abj-sir-gravitation-class-11</loc>
+    <lastmod>2026-09-04</lastmod>
+  </url>
+  <url>
+    <loc>https://www.jeeneetard.com/course/507/alk-sir-general-inorganic-chemistry-reaction-prediction</loc>
+    <lastmod>2026-09-04</lastmod>
+  </url>
+  <url>
+    <loc>https://www.jeeneetard.com/course/508/ns-sir-general-organic-chemistry-part-2</loc>
+    <lastmod>2026-09-04</lastmod>
+  </url>
+  <url>
+    <loc>https://www.jeeneetard.com/course/509/alk-sir-redox-reactions-and-equivalent-concept</loc>
+    <lastmod>2026-09-04</lastmod>
+  </url>
+  <url>
+    <loc>https://www.jeeneetard.com/course/510/abj-sir-fluid-mechanics-class-11</loc>
+    <lastmod>2026-09-04</lastmod>
+  </url>
+  <url>
+    <loc>https://www.jeeneetard.com/course/511/abj-sir-viscosity-class-11</loc>
+    <lastmod>2026-09-04</lastmod>
   </url>
   <url>
     <loc>https://www.jeeneetard.com/faculty/aayudh-yashlaha</loc>
