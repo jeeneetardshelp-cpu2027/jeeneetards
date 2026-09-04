@@ -9,10 +9,11 @@
 //  Four forms: Channel, Chapter, Video, Course.
 // =====================================================================
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { MAIN_CONTENT_ID } from "./AppShell.jsx";
 import { supabase, isSupabaseConfigured } from "./supabaseClient";
 import { useAdminData } from "./useAdminData";
+import { useVideoSearch } from "./useVideoSearch.js";
 import { useReports } from "./useReports.js";
 import { useReviewModeration } from "./useReviewModeration.js";
 import { useTheme } from "./theme.jsx";
@@ -348,7 +349,7 @@ function AddVideoForm({ channels, categories, subjects, chapters, reload }) {
 // ---------------------------------------------------------------------
 //  4. ADD COURSE / PLAYLIST  — pick videos, order = click order
 // ---------------------------------------------------------------------
-function AddCourseForm({ channels, categories, subjects, videos,
+function AddCourseForm({ channels, categories, subjects,
                         learningGoals = [], boards = [], reload }) {
   const [title, setTitle] = useState("");
   const [titleReviewed, setTitleReviewed] = useState(false);
@@ -365,22 +366,25 @@ function AddCourseForm({ channels, categories, subjects, videos,
     contentType: "", language: "", difficulty: "",
   });
   const [search, setSearch] = useState("");
-  const [picked, setPicked] = useState([]); // video ids, in lesson order
+  // {id, title}, in lesson order. The title is carried rather than looked up:
+  // there is no preloaded table to look it up in any more, and a chosen
+  // lecture must keep its name in the list even after the search moves on.
+  const [picked, setPicked] = useState([]);
   const { busy, status, run } = useSubmit(reload);
   const { t } = useTheme();
   const goalSlug = learningGoals.find((g) => String(g.id) === learningGoalId)?.slug;
 
-  const matches = useMemo(() => {
-    const q = search.trim().toLowerCase();
-    const list = q
-      ? videos.filter((v) => v.title.toLowerCase().includes(q))
-      : videos;
-    return list.slice(0, 25);
-  }, [videos, search]);
+  // Asked of the database, not of a preloaded array. The array held the
+  // newest 1000 of 5471 lectures, so searching for an older one said
+  // "No videos match" — the same thing it says when a lecture does not exist.
+  const { results: matches, loading: searching, error: searchError } = useVideoSearch(search);
 
-  const toggle = (id) =>
+  const isPicked = (id) => picked.some((p) => p.id === id);
+  const toggle = (video) =>
     setPicked((prev) =>
-      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
+      prev.some((p) => p.id === video.id)
+        ? prev.filter((p) => p.id !== video.id)
+        : [...prev, { id: video.id, title: video.title }]
     );
 
   const submit = async (e) => {
@@ -412,7 +416,7 @@ function AddCourseForm({ channels, categories, subjects, videos,
           content_type: courseMeta.contentType || null,
           language: courseMeta.language || null,
           difficulty: courseMeta.difficulty || null,
-          video_ids: picked,
+          video_ids: picked.map((p) => p.id),
         }, {
           capability: facultySupported,
           // This is a new course: including ids is useful only when at least
@@ -552,17 +556,17 @@ function AddCourseForm({ channels, categories, subjects, videos,
 
         {picked.length > 0 && (
           <ol className="mt-3 space-y-1">
-            {picked.map((id, i) => {
-              const v = videos.find((x) => x.id === id);
+            {picked.map((v, i) => {
+              const id = v.id;
               return (
                 <li key={id} className={`flex items-center gap-2 text-sm ${t.text}`}>
                   <span className="text-xs" style={{ color: ACCENT.teal }}>
                     {i + 1}
                   </span>
-                  <span className="min-w-0 flex-1 truncate">{v?.title}</span>
+                  <span className="min-w-0 flex-1 truncate">{v.title}</span>
                   <button
                     type="button"
-                    onClick={() => toggle(id)}
+                    onClick={() => toggle(v)}
                     className={`text-xs ${t.faint} hover:underline`}
                   >
                     remove
@@ -574,23 +578,27 @@ function AddCourseForm({ channels, categories, subjects, videos,
         )}
 
         <div className={`mt-3 max-h-56 overflow-y-auto rounded-lg border ${t.border}`}>
-          {matches.length === 0 ? (
+          {searchError ? (
+            <p className={`p-3 text-sm ${t.faint}`}>{searchError}</p>
+          ) : searching ? (
+            <p className={`p-3 text-sm ${t.faint}`}>Searching…</p>
+          ) : matches.length === 0 ? (
             <p className={`p-3 text-sm ${t.faint}`}>No videos match.</p>
           ) : (
             matches.map((v) => (
               <button
                 key={v.id}
                 type="button"
-                onClick={() => toggle(v.id)}
+                onClick={() => toggle(v)}
                 className={`flex w-full items-center gap-2 px-3 py-2 text-left text-sm ${t.hover} ${
-                  picked.includes(v.id) ? t.text : t.muted
+                  isPicked(v.id) ? t.text : t.muted
                 }`}
               >
                 <span
                   className="h-3 w-3 shrink-0 rounded-sm border"
                   style={{
                     borderColor: ACCENT.teal,
-                    backgroundColor: picked.includes(v.id)
+                    backgroundColor: isPicked(v.id)
                       ? ACCENT.teal
                       : "transparent",
                   }}
@@ -1074,7 +1082,6 @@ export default function AdminPanel() {
               channels={admin.channels}
               categories={admin.categories}
               subjects={admin.subjects}
-              videos={admin.videos}
               learningGoals={admin.learningGoals}
               boards={admin.boards}
               reload={admin.reload}
