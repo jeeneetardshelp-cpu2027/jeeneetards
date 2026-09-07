@@ -27,15 +27,26 @@
 -- "p and c" is a shorthand this site SHIPS (20260902170000 maps it to
 -- Permutations and Combinations) and then cannot answer.
 --
--- WHY NOT THE FLOOR THE BROWSE RPCs USE. search_is_servable (20260907091500)
--- guards both browse matchers and mirrors isServableQuery in the client. It is
--- the wrong instrument here, and this was measured before it was rejected: it
--- refuses "ac the of" (11 rows), "ph the of" (7 rows) and "ac kya hai" (11
--- rows) -- Hinglish queries that answer today, for exactly the students the
--- Hinglish filler list exists to serve. Its threshold is correct for the
--- surface it was measured against; universal_search answers more, because of
--- the alias pass and seven pillars. Refusing is the wrong shape for this
--- function. Choosing a better needle is the right one.
+-- WHY NOT THE FLOOR THE BROWSE RPCs USE. search_is_servable guards both browse
+-- matchers, so reusing it here was the first thing tried. It was rejected
+-- twice, for two different reasons, and both are worth recording because the
+-- rule changed underneath the first one.
+--
+--   1. As shipped in 20260907091500 it branched on the token count: several
+--      tokens needed one of FOUR characters. Measured 7 Sep, that refuses
+--      "ac the of" (11 rows), "ph the of" (7 rows) and "ac kya hai" (11 rows)
+--      -- Hinglish queries that answer today, for exactly the students the
+--      Hinglish filler list exists to serve.
+--   2. 20260907160000_browse_servable_floor_correction removed that branch:
+--      the rule is now length(q_long) >= 3, and it no longer over-refuses. It
+--      still cannot help HERE, because a length rule cannot tell "the" from
+--      "and". Both are three characters; "the" is in 685 titles and answers,
+--      "and" is in 1328 and is cancelled. "p and c" anchors on "and", clears
+--      length >= 3, and still times out.
+--
+-- So the instrument is right for the browse matchers and insufficient for this
+-- one either way. Refusing on the SHAPE of the token list cannot separate a
+-- needle that scans from one that does not; only choosing a better needle can.
 --
 -- THE RULE, as five new IMMUTABLE helpers so the call sites cannot drift:
 --   search_min_anchor_len()   the number, in ONE place
@@ -406,13 +417,12 @@ begin
   --   3. otherwise nothing at all, and this function returns rather than scan
   --      the catalogue for three seconds to produce an error banner.
   --
-  -- WHY NOT search_is_servable, which the two browse RPCs use. Measured on
-  -- production 7 Sep 2026, that rule refuses "ac the of" (11 rows), "ph the of"
-  -- (7 rows) and "ac kya hai" (11 rows) -- every one of them a Hinglish query
-  -- that answers today. Its threshold is right for the browse matchers it was
-  -- measured against and wrong here, because universal_search has the alias
-  -- pass and seven pillars and answers more. Refusing is the wrong shape for
-  -- this function; choosing a better needle is the right one.
+  -- WHY NOT search_is_servable, which the two browse RPCs use. Since
+  -- 20260907160000_browse_servable_floor_correction that rule is
+  -- length(q_long) >= 3, and a length rule cannot tell "the" (685 titles,
+  -- answers) from "and" (1328, cancelled). "p and c" anchors on "and", clears
+  -- the rule, and still times out. Refusing on the shape of the token list
+  -- cannot separate a needle that scans from one that does not.
   --
   -- q_long is REASSIGNED rather than shadowed: it appears in twelve disjuncts
   -- across the six pillars below, and one assignment reaches all twelve without

@@ -105,7 +105,7 @@ const GUARDED = [
       },
       {
         name: "anchor floor (the prefilter needle must be able to drive the index)",
-        since: "20260907160000_universal_search_anchor_floor.sql",
+        since: "20260907170000_universal_search_anchor_floor.sql",
         // The whole assignment, not just the function name: that migration's
         // header discusses search_anchor at length, and a marker a comment can
         // satisfy is not a marker. This appears exactly once, in the statement
