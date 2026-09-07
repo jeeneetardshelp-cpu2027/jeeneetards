@@ -41,10 +41,12 @@ import { scheduleSearchMemory } from "./searchHistory.js";
 // "kinematics" 861ms, "emi" 1770ms. The cliff is specific to two characters.
 //
 // Raising the floor here turns those failures into an instant empty result.
-// The RPC's own floor is still `qlen < 2`, so a caller that bypasses this hook
-// can still reach the cliff, and a LONGER query whose tokens are all tiny
-// ("p and c") still times out — that one needs the RPC floor raised or the
-// alias row retired, which is a migration, not a client change.
+// The RPC's own floor is still `qlen < 2` in what is DEPLOYED, so a caller that
+// bypasses this hook can still reach the cliff, and a LONGER query whose tokens
+// are all tiny ("p and c") still times out. The migration that fixes that in
+// the RPC — for /browse and the alias pass as well as this box — is staged as
+// docs/sql/search_q_long_floor_2026-09-07.sql and has not been
+// pushed; see isServableQuery below for how the two floors differ and why.
 export const MIN_QUERY = 3;
 
 /**
@@ -71,9 +73,24 @@ export const MIN_QUERY = 3;
  *                  3-character token and still times out, while "and" alone
  *                  does not).
  *
- * This belongs in the RPC as well — a caller that skips this hook can still
- * reach the cliff — but that means re-emitting a 555-line universal_search on
- * top of the newest body, which is a migration, not a client change.
+ * THE RPC HALF IS WRITTEN, and staged as
+ * docs/sql/search_q_long_floor_2026-09-07.sql. Until that is
+ * pushed, this gate is the ONLY thing standing between a student and a 3.3s
+ * error banner, so do not relax it. After it is pushed, keep it anyway: it
+ * saves a round trip on a query the server would only answer empty.
+ *
+ * Do NOT copy this rule into the RPC. Measured against production on
+ * 2026-09-07, the boundary is different on the two sides of the wire, because
+ * the RPC applies it AFTER filler removal and this hook cannot:
+ *
+ *   here, on TYPED tokens        one token >= 3; two or more, one of >= 4
+ *   there, on POST-FILLER tokens the longest surviving token >= 3, full stop
+ *
+ * "p and c" is why this hook needs the 4 — it types three tokens and the
+ * longest is "and" — and it is also why the RPC does not: "and" is filler, so
+ * the query arrives there as ["p","c"] and a floor of 3 catches it. A floor of
+ * 4 in the RPC would newly break "def int" (200, 1761ms, 33 rows) and "x ray"
+ * (200, 747ms, 8 rows), whose longest surviving token is three characters.
  */
 export function isServableQuery(term) {
   const tokens = String(term ?? "").trim().split(/\s+/).filter(Boolean);
