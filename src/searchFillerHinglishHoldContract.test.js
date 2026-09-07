@@ -2,7 +2,7 @@
 // universal_search has a q_long floor.
 //
 // WHY THIS FILE EXISTS. The word list in
-// docs/sql/search_filler_tokens_hinglish_2026-09-07.sql is measured, screened
+// supabase/migrations/20260907140000_search_filler_tokens_hinglish.sql is measured, screened
 // and correct — four lenses agreed on it, and an independent pass reproduced
 // their counts. It is held back for a reason that has nothing to do with the
 // words.
@@ -38,7 +38,7 @@ import { describe, expect, it } from "vitest";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 
-const PARKED = "docs/sql/search_filler_tokens_hinglish_2026-09-07.sql";
+const PARKED = "supabase/migrations/20260907140000_search_filler_tokens_hinglish.sql";
 const HOLD_MARKER = "DO NOT APPLY YET";
 const CHAIN = "supabase/migrations";
 

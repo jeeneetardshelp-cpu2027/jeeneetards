@@ -1,7 +1,7 @@
 // searchFillerTokensHinglishSqlRehearsal.test.js
 //
 // WHAT IS REAL HERE. These tests EXECUTE the staged migration
-// docs/sql/search_filler_tokens_hinglish_2026-09-07.sql on a
+// supabase/migrations/20260907140000_search_filler_tokens_hinglish.sql on a
 // real PostgreSQL engine (PGlite, Postgres compiled to WASM) with the real
 // pg_trgm extension, so word_similarity, `%>`, the trigram fuzzy tier, the
 // migration's preflight, its catalogue scan for the singular trap and its
@@ -51,7 +51,7 @@ const MATERIALS = "supabase/migrations/20260901160000_universal_search_materials
 const ALIASES = "supabase/migrations/20260902170000_search_aliases.sql";
 const WORDS = "supabase/migrations/20260902180000_universal_search_material_words.sql";
 const RELEVANCE = "supabase/migrations/20260902240000_browse_course_relevance.sql";
-const MIGRATION = "docs/sql/search_filler_tokens_hinglish_2026-09-07.sql";
+const MIGRATION = "supabase/migrations/20260907140000_search_filler_tokens_hinglish.sql";
 
 const baseline = readFileSync(BASELINE, "utf8");
 const materials = readFileSync(MATERIALS, "utf8");
