@@ -11,6 +11,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { supabase, isSupabaseConfigured } from "./supabaseClient";
 import { chapterScopeStageDecision, classSlugsForStage } from "./classLevels.js";
 import { isMissingCatalogRpc } from "./useExplore.js";
+import { MIN_QUERY } from "./useUniversalSearch.js";
 
 const NOT_CONFIGURED = "Supabase isn't configured. Add your keys to .env and restart.";
 
@@ -146,6 +147,25 @@ export function useVideos({
     const term = (search ?? "").trim();
     let searchIds = null;
     let searchIlike = null; // graceful fallback while the match RPC is undeployed
+    // A query shorter than the floor is answered as "no matches" WITHOUT asking
+    // the server, because the server cannot answer it. Measured on production
+    // 2026-09-03, search_video_ids:
+    //   "ac"      HTTP 500 3218ms   57014 canceling statement due to timeout
+    //   "3d"      HTTP 500 3226ms   57014
+    //   "acid"    HTTP 200  325ms   71 rows
+    // Two characters yield one or two trigrams, so the GIN index cannot narrow
+    // candidates and the planner scans. It is not a slow result, it is a failed
+    // request: the branch below turns it into the red "Couldn't search lessons."
+    // banner, for a student who typed "ac" meaning Alternating Current.
+    // search_playlist_ids survives the same input, so only the lecture tab
+    // breaks — which is why /browse looked half-working rather than broken.
+    //
+    // MIN_QUERY is imported rather than redeclared so this floor and the one in
+    // the universal search box cannot drift apart.
+    if (term && term.length < MIN_QUERY) {
+      setState({ videos: [], total: 0, loading: false, error: null, hasMore: false });
+      return;
+    }
     if (term) {
       const { data: idRows, error: searchErr } = await supabase.rpc(
         "search_video_ids", { p_query: term },

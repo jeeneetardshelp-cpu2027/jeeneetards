@@ -12,6 +12,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { supabase, isSupabaseConfigured } from "./supabaseClient";
 import { chapterScopeStageDecision, classSlugsForStage } from "./classLevels.js";
 import { isMissingCatalogRpc } from "./useExplore.js";
+import { MIN_QUERY } from "./useUniversalSearch.js";
 export { classSlugsForStage } from "./classLevels.js";
 
 export const PAGE_SIZE = 12;
@@ -185,6 +186,16 @@ export function usePlaylistBrowse({
     const term = (search ?? "").trim();
     let searchIds = null;
     let searchIlike = null; // graceful fallback while the match RPC is undeployed
+    // The same floor as the lecture tab, for a different reason. This RPC does
+    // NOT time out on two characters -- measured 2026-09-03, "ac" answered 200
+    // in 962ms -- so nothing here is broken. But a two-character query is not a
+    // search: "p and c" returned 197 of the ~500 courses, which is a list, not
+    // an answer. Holding both tabs to one floor also means the two halves of
+    // /browse stop disagreeing about whether a query is searchable at all.
+    if (term && term.length < MIN_QUERY) {
+      setState({ items: [], total: 0, loading: false, error: null, hasMore: false });
+      return;
+    }
     if (term) {
       const { data: idRows, error: searchErr } = await supabase.rpc(
         "search_playlist_ids", { p_query: term },
