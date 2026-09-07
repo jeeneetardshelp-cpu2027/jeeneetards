@@ -55,6 +55,7 @@ import {
   renderStudyMaterialsBody,
   renderNotFoundBody,
   renderPaperYearBody,
+  renderPollsBody,
   renderChapterLandingBody,
 } from "./ogInject.js";
 import { getFacultyGuide } from "./src/facultyGuides.js";
@@ -725,6 +726,28 @@ export default async function middleware(request) {
             }),
           })
         : Promise.resolve(null);
+      // /polls was in the sitemap as index, follow while serving the boot
+      // shell — 5,721 bytes, no <h1> — so no live poll had a crawl path.
+      // Fetched the same way /materials is, and only for the clean landing:
+      // a filtered or sorted variant is noindex, so paying for a query there
+      // would be work nobody reads. poll_mode is not consulted first because
+      // get_polls_feed already returns nothing while polls are off, and one
+      // round trip on a hot path is enough.
+      const isPollsLanding = url.pathname === "/polls" && !url.search;
+      let pollsPromise = Promise.resolve(null);
+      if (isPollsLanding && supaUrl && supaKey) {
+        pollsPromise = edgeJson(`${supaUrl}/rest/v1/rpc/get_polls_feed`, {
+          method: "POST",
+          headers: {
+            apikey: supaKey,
+            Authorization: `Bearer ${supaKey}`,
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({
+            p_sort: "new", p_topic_slug: null, p_limit: 25, p_offset: 0,
+          }),
+        });
+      }
       const isFacultyDirectory = url.pathname === "/faculty" && !url.search;
       const facultyDirectoryPromise = isFacultyDirectory && supaUrl && supaKey
         ? edgeJson(`${supaUrl}/rest/v1/rpc/get_faculty_facets`, {
@@ -741,7 +764,7 @@ export default async function middleware(request) {
             }),
           })
         : Promise.resolve(null);
-      const [shell, directory, exploreRoot, materials, facultyDirectory, chapterCurriculum] =
+      const [shell, directory, exploreRoot, materials, facultyDirectory, chapterCurriculum, pollsFeed] =
         await Promise.all([
           fetchAppShell(request),
           directoryPromise,
@@ -749,6 +772,7 @@ export default async function middleware(request) {
           materialsPromise,
           facultyDirectoryPromise,
           chapterPromise,
+          pollsPromise,
         ]);
       if (!shell) return next();
       // Only a CONFIRMED lookup that actually contains this chapter produces a
@@ -793,6 +817,12 @@ export default async function middleware(request) {
         : [];
       const facultyDirectoryItems = facultyDirectory?.confirmed && Array.isArray(facultyDirectory.data)
         ? facultyDirectory.data
+        : [];
+      // Same rule as every other list here: only a CONFIRMED fetch produces
+      // rows. An unconfirmed one renders the honest "no poll is open right
+      // now" rather than a page claiming a poll it could not verify.
+      const pollItems = pollsFeed?.confirmed && Array.isArray(pollsFeed.data)
+        ? pollsFeed.data
         : [];
       const chapterSiblings = chapterRow
         ? chapterRows
@@ -843,6 +873,8 @@ export default async function middleware(request) {
             ? renderStudyMaterialsBody(routeMeta, materialItems)
           : isFacultyDirectory
             ? renderFacultyDirectoryBody(routeMeta, facultyDirectoryItems)
+          : isPollsLanding
+            ? renderPollsBody(routeMeta, pollItems)
           : chapterRow
             ? renderChapterLandingBody({
                 meta: routeMeta,
