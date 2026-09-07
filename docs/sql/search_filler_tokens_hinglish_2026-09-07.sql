@@ -14,26 +14,40 @@
 -- floor on the RAW QUERY LENGTH, not on q_long, so a ten-character query sails
 -- through it.
 --
--- MEASURED ON PRODUCTION, 7 Sep 2026. "the" and "of" are ALREADY English
--- filler, so "ac the of" is an exact stand-in for what "ac kya hai" becomes
--- once 'kya' and 'hai' join the list -- same q_tokens, same q_long:
+-- THE CLIENT GATE DOES NOT COVER THIS, and the reason is the sharp edge of the
+-- whole problem. isServableQuery (src/useUniversalSearch.js:78) refuses a query
+-- unless a single token is >= 3 characters, or one token of a multi-word query
+-- is >= 4. It reads the RAW tokens. The server strips filler AFTERWARDS. So a
+-- query passes the gate on the strength of a token the server then removes --
+-- and the gate has no way to know, because the filler list lives in the
+-- database.
 --
---   "ac kya hai"     q_long=hai    tokens ["ac","kya","hai"]   200, 1525 ms
---   "ac the of"      q_long=ac     tokens ["ac"]               500, 3205 ms  57014
---   "ph kya hai"     q_long=hai    tokens ["ph","kya","hai"]   200,  634 ms
---   "ph the of"      q_long=ph     tokens ["ph"]               500, 3205 ms  57014
---   "ac xyz"         q_long=xyz    tokens ["ac","xyz"]         200, 1033 ms
+-- MEASURED ON PRODUCTION, 7 Sep 2026, after that gate shipped. Every query
+-- below PASSES isServableQuery today and answers 200. "the" and "of" are
+-- already English filler, so "<survivor> the of" is an exact stand-in for the
+-- post-migration state -- same q_tokens, same q_long:
 --
--- The last row is the control: a SIX-character needle is fine, so the variable
--- is q_long and not the length of what was typed. Ten of thirteen realistic
--- shorthand-plus-Hinglish probes flip this way ("ac kya hai", "ph kya hai",
--- "dc kya hai", "uv kya hai", "3d kya hai", "ac ka matlab", "ac kaise padhe",
--- "p and c ke sawal", "ka kb kya hai", "pe kya hai").
+--   "ac ka matlab"     servable, 200 1709 ms   ->  q_long='ac'  500  57014
+--   "ph kaise padhe"   servable, 200  575 ms   ->  q_long='ph'  500  57014
+--   "ac kaise padhe"   servable, 200  799 ms   ->  q_long='ac'  500  57014
+--   "3d kaise samjhe"  servable, 200  744 ms   ->  q_long='3d'  500  57014
+--   "dc ka matlab"     servable, 200  563 ms   ->  q_long='dc'  500  57014
+--
+-- CONTROL, proving the variable is q_long and not the length of what was typed:
+--   "ac xyz"           q_long=xyz   tokens ["ac","xyz"]   200, 1033 ms
+-- A six-character needle is fine. A two-character q_long is not.
+--
+-- NOTE FOR ANYONE RE-CHECKING THIS: an earlier draft of this banner cited
+-- "ac kya hai" and "ph kya hai". Those are no longer valid evidence --
+-- isServableQuery now refuses both (ac/kya/hai are 2/3/3, so no token reaches
+-- 4) and they never reach the server at all. The cases above were chosen
+-- BECAUSE they clear the gate: in each one the 4+ character token that makes
+-- the query servable is itself a Hindi word this file would strip.
 --
 -- So the students who would break are precisely the ones this file exists to
--- serve: someone asking "what is AC" or "what is pH" the way this catalogue's
--- audience actually asks. They do not get worse results -- they get
--- "Search is unavailable. Please try again." (src/useUniversalSearch.js:211).
+-- serve: someone asking what AC or pH means, or how to study it, the way this
+-- catalogue's audience actually asks. They do not get worse results -- they get
+-- "Search is unavailable. Please try again." (src/useUniversalSearch.js).
 --
 -- WHY IT IS PARKED HERE RATHER THAN LEFT IN THE CHAIN WITH A COMMENT:
 -- `supabase db push` has no per-file selection and applies everything pending

@@ -109,7 +109,11 @@ describe("hinglish filler list stays out of the push chain until q_long has a fl
     // The control matters more than the failing cases: without it, someone
     // reasonably concludes the problem is short queries and "fixes" it by
     // raising MIN_QUERY, which is already 3 and already does not help.
-    for (const evidence of ["ac the of", "ac kya hai", "ac xyz"]) {
+    //
+    // The failing cases must be ones that CLEAR isServableQuery, or the
+    // evidence is stale. An earlier draft cited "ac kya hai", which that gate
+    // now refuses outright — so it proved nothing about this migration.
+    for (const evidence of ["ac ka matlab", "ph kaise padhe", "ac xyz", "isServableQuery"]) {
       expect(body, `the hold's evidence must name ${evidence}`).toContain(evidence);
     }
   });
