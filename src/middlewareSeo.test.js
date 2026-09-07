@@ -260,6 +260,12 @@ describe("edge-rendered discovery landings", () => {
     ["/methodology", "How JEENEETARD curates courses"],
     ["/terms", "Terms of Service &amp; Disclaimer"],
     ["/privacy", "Privacy Policy"],
+    // Both were in the sitemap as index, follow while serving the boot shell
+    // and nothing else — /polls 5,721 bytes and /forum 5,502, neither with an
+    // <h1>. This table is the guard that should have caught it, and the only
+    // reason it did not is that nobody added the rows.
+    ["/polls", "Student polls"],
+    ["/forum", "Student preparation forum"],
   ])("serves crawler-readable HTML for %s", async (pathname, heading) => {
     vi.stubGlobal("fetch", vi.fn(async () => new Response(shell, { status: 200 })));
 
@@ -623,6 +629,51 @@ describe("edge-rendered discovery landings", () => {
     expect(html).toContain(
       '"url":"https://www.jeeneetard.com/course/8"',
     );
+  });
+
+  it("lists the live polls on /polls, each linking to its own page", async () => {
+    vi.stubEnv("VITE_SUPABASE_URL", "https://polls.example");
+    vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
+    vi.stubGlobal("fetch", vi.fn(async (input) => {
+      if (String(input).endsWith("/rpc/get_polls_feed")) {
+        return Response.json([
+          { slug: "is-coaching-worth-it-3", question: "Is coaching worth it?", vote_count: 1 },
+          { slug: "what-stops-you-first-4", question: "What stops you first?", vote_count: 0 },
+        ]);
+      }
+      return new Response(shell, { status: 200 });
+    }));
+
+    const html = await (await middleware(new Request("https://www.jeeneetard.com/polls"))).text();
+    expect(html).toContain("<h1>Student polls</h1>");
+    // The question is the crawlable content, and the link is the crawl path
+    // that every live poll previously lacked.
+    expect(html).toContain('href="/polls/is-coaching-worth-it-3"');
+    expect(html).toContain("Is coaching worth it?");
+    expect(html).toContain('href="/polls/what-stops-you-first-4"');
+    // The count travels with the question, singular and plural both honest.
+    expect(html).toContain("1 vote so far");
+    expect(html).toContain("0 votes so far");
+    expect(html).not.toContain('class="boot"');
+  });
+
+  it("says no poll is open rather than inventing one when the feed is unavailable", async () => {
+    vi.stubEnv("VITE_SUPABASE_URL", "https://polls.example");
+    vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
+    vi.stubGlobal("fetch", vi.fn(async (input) => {
+      // An unconfirmed lookup: the same shape a timeout or a 500 produces.
+      if (String(input).endsWith("/rpc/get_polls_feed")) {
+        return new Response("nope", { status: 500 });
+      }
+      return new Response(shell, { status: 200 });
+    }));
+
+    const html = await (await middleware(new Request("https://www.jeeneetard.com/polls"))).text();
+    // Still a real page — the heading and the honest empty state, never a
+    // fabricated poll and never the bare boot shell.
+    expect(html).toContain("<h1>Student polls</h1>");
+    expect(html).toContain("No poll is open right now.");
+    expect(html).not.toContain('class="boot"');
   });
 
   it("serves the canonical faculty landing as linked crawler-readable profiles", async () => {
