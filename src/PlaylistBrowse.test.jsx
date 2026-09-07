@@ -847,3 +847,32 @@ describe("lectures-tab sort control", () => {
     expect([...sort.options].map((o) => o.text)[0]).toBe("Recommended");
   });
 });
+
+// The course tab's half of the servability guard. usePlaylistBrowse got the
+// same check as useVideos but shipped without a test, so deleting it left the
+// suite green. These assert the branch directly.
+//
+// Note the asymmetry with lectures: search_playlist_ids does NOT time out on
+// these inputs -- measured 2026-09-03, "ac" answered 200 in 962ms. The guard is
+// here so both halves of /browse agree about what is searchable, and because
+// "p and c" matched 197 of ~500 courses, which is a list rather than an answer.
+describe("course search servability floor", () => {
+  it.each([
+    ["ac", "single token below the floor"],
+    ["p c", "two 1-character tokens, 3 characters long"],
+    ["p and c", "longest token is 3, 7 characters long"],
+  ])("answers %j without querying the catalogue (%s)", async (search) => {
+    render(<MemoryRouter><Probe search={search} /></MemoryRouter>);
+    await new Promise((r) => setTimeout(r, 0));
+    expect(calls).toHaveLength(0);
+  });
+
+  it.each(["acid", "class 11", "p block"])(
+    "still queries the catalogue for %j",
+    async (search) => {
+      render(<MemoryRouter><Probe search={search} /></MemoryRouter>);
+      await new Promise((r) => setTimeout(r, 0));
+      expect(calls.length).toBeGreaterThan(0);
+    },
+  );
+});

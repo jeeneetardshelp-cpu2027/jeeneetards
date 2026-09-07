@@ -46,7 +46,6 @@ import {
   LECTURE_PAGE_SIZE, useVideos, LECTURE_SORTS, DEFAULT_LECTURE_SORT, parseLectureSort,
   lectureSortOptions,
 } from "./useBrowse.js";
-import { MIN_QUERY } from "./useUniversalSearch.js";
 
 let seen;
 function Probe(props) {
@@ -149,10 +148,19 @@ describe("paged lecture discovery", () => {
   // planner scans. Before this guard, a student typing "ac" for Alternating
   // Current got the red "Couldn't search lessons." banner.
   //
-  // Asserted against MIN_QUERY rather than a literal 2, so raising or lowering
-  // the floor does not need this test edited to keep meaning something.
-  it("answers a below-floor query without asking the server", async () => {
-    render(<Probe search={"a".repeat(MIN_QUERY - 1)} />);
+  // Driven from isServableQuery, not a length: the first version of this guard
+  // tested `length < MIN_QUERY`, which let "p c", "a b c" and "p and c" through
+  // to the RPC even though useUniversalSearch.js records all three as FAIL 500.
+  // A 1-character token contributes at most one trigram however long the whole
+  // string is, so the string's length was never the rule.
+  it.each([
+    ["ac", "single token below the floor"],
+    ["3d", "single token below the floor"],
+    ["p c", "two 1-character tokens, 3 characters long"],
+    ["a b c", "three 1-character tokens, 5 characters long"],
+    ["p and c", "longest token is 3, 7 characters long"],
+  ])("answers %j without asking the server (%s)", async (term) => {
+    render(<Probe search={term} />);
     await waitFor(() => expect(seen.loading).toBe(false));
     // Neither the match RPC nor the catalogue query ran.
     expect(rpcCalls).toHaveLength(0);
@@ -163,15 +171,21 @@ describe("paged lecture discovery", () => {
     expect(seen.videos).toEqual([]);
   });
 
-  it("still searches at exactly the floor", async () => {
-    rpcResponse = { data: [{ id: 7 }], error: null };
-    render(<Probe search={"a".repeat(MIN_QUERY)} />);
-    await waitFor(() => expect(rpcCalls).toHaveLength(1));
-    expect(rpcCalls[0]).toEqual({
-      name: "search_video_ids",
-      args: { p_query: "a".repeat(MIN_QUERY) },
-    });
-  });
+  // The other half: a servable query must still reach the server, or the guard
+  // has simply broken search. These are the shapes useUniversalSearch.js
+  // measured at HTTP 200.
+  it.each(["acid", "and", "class 11", "p block"])(
+    "still searches %j",
+    async (term) => {
+      rpcResponse = { data: [{ id: 7 }], error: null };
+      render(<Probe search={term} />);
+      await waitFor(() => expect(rpcCalls).toHaveLength(1));
+      expect(rpcCalls[0]).toEqual({
+        name: "search_video_ids",
+        args: { p_query: term },
+      });
+    },
+  );
 
   it("falls back to the old ILIKE when the match function is not deployed", async () => {
     // Deploy-order safety: if the frontend ships before the SQL, the RPC 404s
