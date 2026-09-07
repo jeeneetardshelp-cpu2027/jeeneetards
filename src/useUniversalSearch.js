@@ -41,12 +41,19 @@ import { scheduleSearchMemory } from "./searchHistory.js";
 // "kinematics" 861ms, "emi" 1770ms. The cliff is specific to two characters.
 //
 // Raising the floor here turns those failures into an instant empty result.
-// The RPC's own floor is still `qlen < 2` in what is DEPLOYED, so a caller that
-// bypasses this hook can still reach the cliff, and a LONGER query whose tokens
-// are all tiny ("p and c") still times out. The migration that fixes that in
-// the RPC — for /browse and the alias pass as well as this box — is staged as
-// docs/sql/search_q_long_floor_2026-09-07.sql and has not been
-// pushed; see isServableQuery below for how the two floors differ and why.
+//
+// THE RPC NOW HAS A FLOOR OF ITS OWN, applied 7 Sep 2026:
+// 20260907091500_browse_rpc_servable_floor.sql and
+// 20260907093000_universal_search_q_long_floor.sql. Keep this gate anyway — it
+// saves a round trip on a query the server would only answer empty.
+//
+// It does NOT make every short query servable, and the difference is worth
+// knowing before anyone relaxes this. The floor rescues a query whose anchor
+// was destroyed by FILLER REMOVAL, by falling back to the raw tokens. It cannot
+// manufacture an anchor that never existed: measured on production after the
+// push, a bare "ac", "3d" and "p and c" are all still HTTP 500 / 57014, because
+// their raw tokens are exactly the short ones. This gate is what keeps a
+// student away from those.
 export const MIN_QUERY = 3;
 
 /**
@@ -73,11 +80,11 @@ export const MIN_QUERY = 3;
  *                  3-character token and still times out, while "and" alone
  *                  does not).
  *
- * THE RPC HALF IS WRITTEN, and staged as
- * docs/sql/search_q_long_floor_2026-09-07.sql. Until that is
- * pushed, this gate is the ONLY thing standing between a student and a 3.3s
- * error banner, so do not relax it. After it is pushed, keep it anyway: it
- * saves a round trip on a query the server would only answer empty.
+ * THE RPC HALF IS APPLIED (7 Sep 2026). Keep this gate regardless: it saves a
+ * round trip on a query the server would only answer empty, and it is still
+ * the only thing standing between a student and a 3.3s error banner for the
+ * queries the RPC floor cannot rescue — a bare "ac", "3d" or "p and c", whose
+ * raw tokens are themselves the short ones, measured still 500 after the push.
  *
  * Do NOT copy this rule into the RPC. Measured against production on
  * 2026-09-07, the boundary is different on the two sides of the wire, because
