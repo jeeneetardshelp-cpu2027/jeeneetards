@@ -46,6 +46,7 @@ import {
   LECTURE_PAGE_SIZE, useVideos, LECTURE_SORTS, DEFAULT_LECTURE_SORT, parseLectureSort,
   lectureSortOptions,
 } from "./useBrowse.js";
+import { MIN_QUERY } from "./useUniversalSearch.js";
 
 let seen;
 function Probe(props) {
@@ -139,6 +140,37 @@ describe("paged lecture discovery", () => {
     await waitFor(() => expect(calls).toHaveLength(1));
     expect(rpcCalls).toHaveLength(0);
     expect(calls[0].ilike).toBeNull();
+  });
+
+  // Measured against production 2026-09-03: search_video_ids answered "ac" and
+  // "3d" with HTTP 500 57014 "canceling statement due to statement timeout"
+  // after ~3.2s, while "acid" returned 71 rows in 325ms. Two characters yield
+  // one or two trigrams, so the GIN index cannot narrow candidates and the
+  // planner scans. Before this guard, a student typing "ac" for Alternating
+  // Current got the red "Couldn't search lessons." banner.
+  //
+  // Asserted against MIN_QUERY rather than a literal 2, so raising or lowering
+  // the floor does not need this test edited to keep meaning something.
+  it("answers a below-floor query without asking the server", async () => {
+    render(<Probe search={"a".repeat(MIN_QUERY - 1)} />);
+    await waitFor(() => expect(seen.loading).toBe(false));
+    // Neither the match RPC nor the catalogue query ran.
+    expect(rpcCalls).toHaveLength(0);
+    expect(calls).toHaveLength(0);
+    // And it is an honest empty result, not an error banner.
+    expect(seen.error).toBeNull();
+    expect(seen.total).toBe(0);
+    expect(seen.videos).toEqual([]);
+  });
+
+  it("still searches at exactly the floor", async () => {
+    rpcResponse = { data: [{ id: 7 }], error: null };
+    render(<Probe search={"a".repeat(MIN_QUERY)} />);
+    await waitFor(() => expect(rpcCalls).toHaveLength(1));
+    expect(rpcCalls[0]).toEqual({
+      name: "search_video_ids",
+      args: { p_query: "a".repeat(MIN_QUERY) },
+    });
   });
 
   it("falls back to the old ILIKE when the match function is not deployed", async () => {
