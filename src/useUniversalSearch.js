@@ -47,6 +47,41 @@ import { scheduleSearchMemory } from "./searchHistory.js";
 // alias row retired, which is a migration, not a client change.
 export const MIN_QUERY = 3;
 
+/**
+ * Whether universal_search can actually answer this query, or will burn the
+ * statement timeout and return HTTP 500 instead.
+ *
+ * A length floor alone is not the rule. Measured against production on
+ * 2026-09-03, fifteen queries, HTTP status recorded rather than row count:
+ *
+ *   FAIL 500   ac(2)  3d(2)  "p c"(1,1)  "a b c"(1,1,1)  "p and c"(1,3,1)
+ *   OK   200   and(3) abc(3) org(3) ktg(3) emi(3)
+ *   OK   200   "class 11"(5,2)  "p block"(1,5)  "s block"(1,5)
+ *              "jee 2025"(3,4)  "physics 11"(7,2)
+ *
+ * A short token is NOT the problem: "p block" and "class 11" both carry one
+ * and both answer in about a second. What breaks is having no token selective
+ * enough to anchor the scan — the predicates OR together, so a 1-2 character
+ * token contributes at most one trigram and the planner falls back to a scan.
+ *
+ * The rule that separates all fifteen:
+ *   one token   -> at least MIN_QUERY (3) characters
+ *   two or more -> at least one token of 4, because 3 is not selective enough
+ *                  once it is OR-ed with 1-character noise ("p and c" has a
+ *                  3-character token and still times out, while "and" alone
+ *                  does not).
+ *
+ * This belongs in the RPC as well — a caller that skips this hook can still
+ * reach the cliff — but that means re-emitting a 555-line universal_search on
+ * top of the newest body, which is a migration, not a client change.
+ */
+export function isServableQuery(term) {
+  const tokens = String(term ?? "").trim().split(/\s+/).filter(Boolean);
+  if (tokens.length === 0) return false;
+  if (tokens.length === 1) return tokens[0].length >= MIN_QUERY;
+  return tokens.some((token) => token.length >= MIN_QUERY + 1);
+}
+
 // Requirement 7. 275ms sits in the asked-for 250-300ms band: long enough that
 // a typed word is one request rather than six, short enough to feel live.
 export const DEBOUNCE_MS = 275;
@@ -176,7 +211,11 @@ export function useUniversalSearch(query, { type = null, limit = 5 } = {}) {
       setState({ groups: EMPTY, loading: false, error: null, tooShort: false, query: "" });
       return;
     }
-    if (term.length < MIN_QUERY) {
+    // Reuses the existing tooShort branch rather than adding a state: both
+    // cases are "we are not asking the server, and here is why". "p and c" is
+    // seven characters and still lands here, which is the point — see
+    // isServableQuery for the measurements.
+    if (!isServableQuery(term)) {
       setState({ groups: EMPTY, loading: false, error: null, tooShort: true, query: term });
       return;
     }
