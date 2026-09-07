@@ -10,18 +10,39 @@
 -- and Postgres cancels the statement (57014). The client renders that as
 -- "Search is unavailable. Please try again."
 --
--- MEASURED ON PRODUCTION, 7 Sep 2026 -- queries that fail TODAY, before any
--- new filler word is added, purely because their longest token is two
--- characters:
+-- MEASURED ON PRODUCTION, 7 Sep 2026 -- queries that fail before this
+-- migration, because their longest surviving token is two characters:
 --
---     "p and c"   -> 500 57014, 3/3 runs, ~3.2s   (a CURATED shorthand: the
---                                                  site ships this alias and
---                                                  then cannot answer it)
---     "a and b"   -> 500 57014, 3/3 runs, ~3.3s   (nothing to do with aliases)
+--     "a and b"    -> 500 57014, 3/3 runs, ~3.3s
+--     "ac the of"  -> 500 57014   (an exact stand-in for what "ac ka matlab"
+--     "ph the of"  -> 500 57014    becomes once the Hindi particles are
+--                                  filler: same tokens, same needle)
 --
 -- CONTROL, proving the variable is q_long and not what was typed:
 --     "s and p block" -> 200, 660 ms   ("block" survives, and carries it)
 --     "d and f block" -> 200, 637 ms
+--
+-- AFTER APPLYING (verified 7 Sep 2026): "a and b" 200 / 3304 results,
+-- "ac the of" 200 / 258, "ph the of" 200 / 212. Ordinary searches unchanged --
+-- "kinematics" 1336, "ncert notes" 1025, "shm" 103.
+--
+-- ONE CASE THIS DOES NOT FIX, and an earlier draft of this header wrongly
+-- claimed it did. "p and c" still returns 500 57014. The floor works on it --
+-- the raw tokens are kept and q_long becomes "and" -- but the query stays over
+-- the limit for a different reason, isolated by measurement afterwards:
+--
+--     "x and y"      200, 1696 ms   one-character tokens, no alias
+--     "a and b"      200, 2037 ms   one-character tokens, no alias
+--     "the and for"  200, 1663 ms   "and" itself as the needle
+--     "p and c"      500            one-character tokens AND an alias
+--
+-- The variable is the ALIAS, not the needle. "p and c" expands to
+-- "Permutations and Combinations", and the expansion adds a second set of
+-- predicates to every pillar; on a query already near the ceiling that is what
+-- tips it. It is the only multi-token alias with one-character tokens, so it
+-- is one row rather than a class. No student reaches it either way: both
+-- search surfaces refuse it before any request (isServableQuery), and "pnc"
+-- is a working alias for the same chapter.
 --
 -- WHY NOW. docs/sql/search_filler_tokens_hinglish_2026-09-07.sql is written,
 -- measured and correct, and is HELD out of the chain because applying it would
@@ -52,11 +73,9 @@
 -- (20260902180000). The body below is 20260902180000's, with the guard
 -- extended and nothing else touched -- a test asserts exactly that.
 --
--- AFTER APPLYING, verify on production that these answer 200, then move the
--- Hinglish file into the chain with a fresh timestamp:
---     "p and c"        expected 200
---     "ac the of"      expected 200   ("the"/"of" stand in for stripped Hindi
---     "ph the of"      expected 200    particles: same q_tokens, same q_long)
+-- APPLIED 7 Sep 2026. The two checks that gate the Hinglish word list both
+-- pass: "ac the of" and "ph the of" answer 200. "p and c" does not, for the
+-- unrelated reason above, and was never one of that file's conditions.
 -- ============================================================================
 
 do $preflight$

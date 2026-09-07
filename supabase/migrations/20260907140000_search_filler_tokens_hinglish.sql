@@ -1,85 +1,26 @@
 -- ============================================================================
--- DO NOT APPLY YET -- BLOCKED ON A q_long FLOOR IN universal_search.
+-- UNPARKED 7 Sep 2026. The blocker is gone.
 --
--- The word list below is measured, screened and correct. Applying it TODAY
--- would still be a regression, because of a mechanism this file does not
--- touch and cannot fix.
+-- This file sat in docs/sql/ rather than here, because applying it without a
+-- q_long floor would have turned working queries into errors: universal_search
+-- picks q_long as the longest SURVIVING token and uses it as the index
+-- prefilter, so removing a word can only shorten it, and a two-character
+-- needle makes the planner scan until Postgres cancels the statement.
 --
--- universal_search picks q_long as the LONGEST SURVIVING token and uses it as
--- the index prefilter (`search_latin_key(title) like '%' || q_long || '%'`).
--- Removing tokens can only SHORTEN q_long, and a two-character q_long yields
--- too few trigrams for the GIN index, so the planner scans the catalogue and
--- the statement is cancelled. src/useUniversalSearch.js:32-47 already records
--- that cliff as measured, and mitigates it with MIN_QUERY = 3 -- but that is a
--- floor on the RAW QUERY LENGTH, not on q_long, so a ten-character query sails
--- through it.
+-- 20260907093000_universal_search_q_long_floor.sql added that floor and was
+-- applied on 7 Sep 2026. The two checks this file was waiting on were then
+-- measured against production, before and after:
 --
--- THE CLIENT GATE DOES NOT COVER THIS, and the reason is the sharp edge of the
--- whole problem. isServableQuery (src/useUniversalSearch.js:78) refuses a query
--- unless a single token is >= 3 characters, or one token of a multi-word query
--- is >= 4. It reads the RAW tokens. The server strips filler AFTERWARDS. So a
--- query passes the gate on the strength of a token the server then removes --
--- and the gate has no way to know, because the filler list lives in the
--- database.
+--   "ac the of"   500 57014  ->  200, 258 results
+--   "ph the of"   500 57014  ->  200, 212 results
 --
--- MEASURED ON PRODUCTION, 7 Sep 2026, after that gate shipped. Every query
--- below PASSES isServableQuery today and answers 200. "the" and "of" are
--- already English filler, so "<survivor> the of" is an exact stand-in for the
--- post-migration state -- same q_tokens, same q_long:
+-- Those two are exact stand-ins for what "ac ka matlab" and "ph kaise padhe"
+-- become once the particles below are filler: same surviving tokens, same
+-- needle. "the" and "of" were already English filler, which is what makes
+-- them a fair substitute rather than an analogy.
 --
---   "ac ka matlab"     servable, 200 1709 ms   ->  q_long='ac'  500  57014
---   "ph kaise padhe"   servable, 200  575 ms   ->  q_long='ph'  500  57014
---   "ac kaise padhe"   servable, 200  799 ms   ->  q_long='ac'  500  57014
---   "3d kaise samjhe"  servable, 200  744 ms   ->  q_long='3d'  500  57014
---   "dc ka matlab"     servable, 200  563 ms   ->  q_long='dc'  500  57014
---
--- CONTROL, proving the variable is q_long and not the length of what was typed:
---   "ac xyz"           q_long=xyz   tokens ["ac","xyz"]   200, 1033 ms
--- A six-character needle is fine. A two-character q_long is not.
---
--- NOTE FOR ANYONE RE-CHECKING THIS: an earlier draft of this banner cited
--- "ac kya hai" and "ph kya hai". Those are no longer valid evidence --
--- isServableQuery now refuses both (ac/kya/hai are 2/3/3, so no token reaches
--- 4) and they never reach the server at all. The cases above were chosen
--- BECAUSE they clear the gate: in each one the 4+ character token that makes
--- the query servable is itself a Hindi word this file would strip.
---
--- So the students who would break are precisely the ones this file exists to
--- serve: someone asking what AC or pH means, or how to study it, the way this
--- catalogue's audience actually asks. They do not get worse results -- they get
--- "Search is unavailable. Please try again." (src/useUniversalSearch.js).
---
--- WHY IT IS PARKED HERE RATHER THAN LEFT IN THE CHAIN WITH A COMMENT:
--- `supabase db push` has no per-file selection and applies everything pending
--- at once. On 2 Sep 2026 a migration in this repo went live that way, carried
--- along by somebody else's unrelated push. A banner would not have stopped it.
--- Being outside supabase/migrations/ does.
---
--- STEP 1 IS DONE. supabase/migrations/20260907093000_universal_search_q_long_floor.sql
--- adds the floor, as one condition on the guard that already existed: filler
--- removal now applies only when a surviving token is three characters or
--- more. It is STAGED, not yet applied. This file stays held until it has
--- been pushed AND step 2 below has been checked against production, because
--- no local engine holds enough rows to reproduce the cancellation.
---
--- HOW TO SHIP IT:
---   1. [DONE, staged] Give universal_search a q_long floor -- when the longest surviving
---      token is under three characters, fall back to the raw token list (the
---      empty-filter fallback at 20260902180000 L291-293 is the existing
---      precedent for exactly this shape of rescue). That re-emits
---      universal_search, so it is under the carry-over contract in
---      src/searchFeatureCarryOverSqlContract.test.js: carry the material
---      pillars, the alias pass and the kind-word haystack forward, and add a
---      FEATURES row.
---   2. Verify on production that "ac the of" and "ph the of" answer 200.
---   3. Rename this file back into supabase/migrations/ with a fresh timestamp
---      -- run `ls supabase/migrations/` immediately before choosing it, since
---      this chain gains files from several sessions within the hour.
---
--- The floor is worth having on its own account: "ac", "3d", "p and c",
--- "ka lecture" and "ki notes" all time out TODAY for the same reason, and the
--- client hook already asks for it by name.
--- ============================================================================
+-- Ordinary searches were re-checked at the same time and did not move:
+-- "kinematics" 1336 results, "ncert notes" 1025, "shm" 103.
 --
 -- ONE HINDI CONNECTING WORD EMPTIES AN OTHERWISE WORKING QUERY.
 --

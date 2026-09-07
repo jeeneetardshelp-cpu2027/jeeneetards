@@ -27,7 +27,7 @@
 import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 
-const MIGRATION = "docs/sql/search_filler_tokens_hinglish_2026-09-07.sql";
+const MIGRATION = "supabase/migrations/20260907140000_search_filler_tokens_hinglish.sql";
 const BASELINE = "supabase/migrations/20260831140005_production_baseline.sql";
 const CONTRACT = "src/searchFeatureCarryOverSqlContract.test.js";
 
