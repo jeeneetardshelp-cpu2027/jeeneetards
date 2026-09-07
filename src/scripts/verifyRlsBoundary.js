@@ -88,6 +88,23 @@ const RPC_ONLY = [
 // Readable, but only the columns the product actually shows.
 const COLUMN_SCOPED = [
   ["playlist_ratings", "id,rating,review", ["user_id"], "a review is public; who wrote it is not"],
+  // The table this file was written for and did not list. An audit on
+  // 2026-09-03 found anon reading every student's real name and Google profile
+  // photo:
+  //   GET /rest/v1/profiles?select=id,username,full_name,avatar_url
+  //   -> 200, content-range 0-6/7, 3 rows with full_name and a
+  //      lh3.googleusercontent.com avatar_url
+  // It survived because `select=*` returns 401 42501 and reads as locked; the
+  // grants are column-level, so naming the columns succeeds. That is precisely
+  // the trap the RPC_ONLY comment above describes, and profiles was simply
+  // never added to any list here.
+  //
+  // full_name and avatar_url are written by the new-user trigger from Google's
+  // raw_user_meta_data. A student signing in to save progress did not ask to
+  // publish their legal name and photograph. username is different: it is
+  // claimed deliberately for the forum, and the forum shows it.
+  ["profiles", "username", ["full_name", "avatar_url", "id", "created_at"],
+    "a claimed forum username is public; a student's real name, photo, account id and join date are not"],
 ];
 
 // The catalogue. If these stop being readable, signed-out browsing breaks.
