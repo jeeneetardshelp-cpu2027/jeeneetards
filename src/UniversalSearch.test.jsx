@@ -36,7 +36,7 @@ vi.mock("./supabaseClient", () => ({
 }));
 
 const { default: UniversalSearch, highlightParts } = await import("./UniversalSearch.jsx");
-const { DEBOUNCE_MS, MIN_QUERY, groupRows, appendGroupRows } = await import("./useUniversalSearch.js");
+const { DEBOUNCE_MS, MIN_QUERY, isServableQuery, groupRows, appendGroupRows } = await import("./useUniversalSearch.js");
 
 const row = (over = {}) => ({
   group_key: "faculty", entity_id: 1, title: "Amit Bijarnia",
@@ -496,6 +496,30 @@ describe("short query, loading, error and empty (requirements 6, 8)", () => {
   // 2026-09-02 because a two-character query times out in the RPC rather than
   // returning nothing, and a test naming the old number would have had to be
   // edited rather than simply passing.
+  // Pinned to what production actually did on 2026-09-03, HTTP status recorded
+  // rather than row count. Every false below returned 500 57014 "canceling
+  // statement due to statement timeout" after ~3.2s; every true returned 200.
+  // The true cases are listed deliberately: a stricter guard would be just as
+  // wrong, because "p block" and "class 11" each carry a 1-2 character token
+  // and answer in about a second.
+  it.each([
+    ["ac", false], ["3d", false], ["p c", false], ["a b c", false], ["p and c", false],
+    ["and", true], ["abc", true], ["ktg", true], ["emi", true],
+    ["class 11", true], ["p block", true], ["s block", true],
+    ["jee 2025", true], ["physics 11", true],
+  ])("isServableQuery(%o) === %s, as production answered it", (query, servable) => {
+    expect(isServableQuery(query)).toBe(servable);
+  });
+
+  it("says something actionable when a long query has no searchable word", async () => {
+    renderSearch();
+    type("p and c");
+    await settle();
+    // NOT "type at least 3 characters" — the student typed seven.
+    expect(screen.getByText(/Try a longer word/i)).toBeTruthy();
+    expect(rpcCalls).toHaveLength(0);
+  });
+
   it("refuses a query below the floor without asking the server", async () => {
     renderSearch();
     type("a".repeat(MIN_QUERY - 1));
