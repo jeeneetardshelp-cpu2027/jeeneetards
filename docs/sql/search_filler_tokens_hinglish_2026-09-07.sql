@@ -55,8 +55,15 @@
 -- along by somebody else's unrelated push. A banner would not have stopped it.
 -- Being outside supabase/migrations/ does.
 --
+-- STEP 1 IS DONE. supabase/migrations/20260907093000_universal_search_q_long_floor.sql
+-- adds the floor, as one condition on the guard that already existed: filler
+-- removal now applies only when a surviving token is three characters or
+-- more. It is STAGED, not yet applied. This file stays held until it has
+-- been pushed AND step 2 below has been checked against production, because
+-- no local engine holds enough rows to reproduce the cancellation.
+--
 -- HOW TO SHIP IT:
---   1. Give universal_search a q_long floor -- when the longest surviving
+--   1. [DONE, staged] Give universal_search a q_long floor -- when the longest surviving
 --      token is under three characters, fall back to the raw token list (the
 --      empty-filter fallback at 20260902180000 L291-293 is the existing
 --      precedent for exactly this shape of rescue). That re-emits
