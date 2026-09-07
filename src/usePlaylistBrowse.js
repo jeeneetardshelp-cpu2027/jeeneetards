@@ -12,7 +12,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { supabase, isSupabaseConfigured } from "./supabaseClient";
 import { chapterScopeStageDecision, classSlugsForStage } from "./classLevels.js";
 import { isMissingCatalogRpc } from "./useExplore.js";
-import { MIN_QUERY } from "./useUniversalSearch.js";
+import { isServableQuery } from "./useUniversalSearch.js";
 export { classSlugsForStage } from "./classLevels.js";
 
 export const PAGE_SIZE = 12;
@@ -186,13 +186,17 @@ export function usePlaylistBrowse({
     const term = (search ?? "").trim();
     let searchIds = null;
     let searchIlike = null; // graceful fallback while the match RPC is undeployed
-    // The same floor as the lecture tab, for a different reason. This RPC does
+    // The same test as the lecture tab, for a different reason. This RPC does
     // NOT time out on two characters -- measured 2026-09-03, "ac" answered 200
-    // in 962ms -- so nothing here is broken. But a two-character query is not a
-    // search: "p and c" returned 197 of the ~500 courses, which is a list, not
-    // an answer. Holding both tabs to one floor also means the two halves of
+    // in 962ms -- so nothing here is broken. But such a query is not a search:
+    // "p and c" returned 197 of the ~500 courses, which is a list, not an
+    // answer. Holding both tabs to one rule also means the two halves of
     // /browse stop disagreeing about whether a query is searchable at all.
-    if (term && term.length < MIN_QUERY) {
+    //
+    // isServableQuery, not `length < MIN_QUERY`: the length form did not
+    // actually exclude "p and c" (7 characters), which is the very query this
+    // comment cites as the reason for the guard.
+    if (term && !isServableQuery(term)) {
       setState({ items: [], total: 0, loading: false, error: null, hasMore: false });
       return;
     }
