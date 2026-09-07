@@ -73,7 +73,7 @@ const GUARDED = [
   {
     fn: "universal_search",
     // The search box. Three re-emissions so far.
-    minReemissions: 4,
+    minReemissions: 5,
     features: [
       {
         name: "material and paper pillars",
@@ -102,6 +102,14 @@ const GUARDED = [
         // have matched it — the exact "marker survives in a comment" failure
         // the note at the top of this list warns about.
         marker: /and\s+\(select\s+max\(length\(tok\)\)\s+from\s+unnest\(q_content\)/i,
+      },
+      {
+        name: "alias needle when the typed one cannot drive the index",
+        since: "20260907170000_universal_search_alias_needle.sql",
+        // The condition, for the same reason as the marker above: the phrase
+        // appears in this migration's self-verification too, so match the
+        // executable form rather than the string.
+        marker: /if\s+q_alias_long\s+is\s+distinct\s+from\s+q_long/i,
       },
     ],
   },
