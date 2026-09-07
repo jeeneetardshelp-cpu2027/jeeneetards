@@ -59,7 +59,7 @@ import {
   renderChapterLandingBody,
 } from "./ogInject.js";
 import { getFacultyGuide } from "./src/facultyGuides.js";
-import { RELEASE_CAPABILITIES } from "./src/releaseCapabilities.js";
+import { RELEASE_CAPABILITIES, RELEASE_FEATURES } from "./src/releaseCapabilities.js";
 import {
   PAPER_LANDINGS,
   findPaperLanding,
@@ -733,7 +733,16 @@ export default async function middleware(request) {
       // would be work nobody reads. poll_mode is not consulted first because
       // get_polls_feed already returns nothing while polls are off, and one
       // round trip on a hot path is enough.
-      const isPollsLanding = url.pathname === "/polls" && !url.search;
+      // releaseCapabilities.js is the release contract, and the edge is part
+      // of the release: if the flag is rolled back, the served HTML must stop
+      // advertising the route too, or a crawler indexes a page the app then
+      // refuses to render. Both gated landings are checked in one place.
+      const isPollsLanding = url.pathname === "/polls"
+        && !url.search
+        && RELEASE_FEATURES.polls;
+      const isGatedOffLanding =
+        (url.pathname === "/polls" && !RELEASE_FEATURES.polls)
+        || (url.pathname === "/forum" && !RELEASE_FEATURES.forum);
       let pollsPromise = Promise.resolve(null);
       if (isPollsLanding && supaUrl && supaKey) {
         pollsPromise = edgeJson(`${supaUrl}/rest/v1/rpc/get_polls_feed`, {
@@ -818,12 +827,14 @@ export default async function middleware(request) {
       const facultyDirectoryItems = facultyDirectory?.confirmed && Array.isArray(facultyDirectory.data)
         ? facultyDirectory.data
         : [];
-      // Same rule as every other list here: only a CONFIRMED fetch produces
-      // rows. An unconfirmed one renders the honest "no poll is open right
-      // now" rather than a page claiming a poll it could not verify.
+      // null, NOT []. An unconfirmed lookup and a confirmed-empty feed are
+      // different facts, and renderPollsBody is only allowed to say "no poll is
+      // open right now" about the second. Collapsing them here is what made the
+      // page assert an empty database from a query that never ran — cached by
+      // the CDN, per htmlResponse below, for an hour fresh and 23 more stale.
       const pollItems = pollsFeed?.confirmed && Array.isArray(pollsFeed.data)
         ? pollsFeed.data
-        : [];
+        : null;
       const chapterSiblings = chapterRow
         ? chapterRows
             .filter((row) => row.slug && row.slug !== chapterScope.chapter)
@@ -882,7 +893,9 @@ export default async function middleware(request) {
                 courseCount: Number(chapterRow.course_count ?? 0),
                 siblings: chapterSiblings,
               })
-          : renderLandingBody(url.pathname, routeMeta);
+          : isGatedOffLanding
+            ? ""
+            : renderLandingBody(url.pathname, routeMeta);
       html = injectRootContent(html, body);
       return htmlResponse(html);
     }
