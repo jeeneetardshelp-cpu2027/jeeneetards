@@ -527,15 +527,28 @@ export function renderLandingBody(pathname, meta) {
       description: meta.description,
       links: [["Terms & Disclaimer", "/terms"], ["Home", "/"]],
     },
+    // The claim-free body for /polls. renderPollsBody falls back to this
+    // whenever the poll feed was not confirmed, so the page still has a real
+    // <h1> and a crawl path without asserting anything about what is open.
+    "/polls": {
+      heading: "Student polls",
+      description: meta.description,
+      links: [["Student forum", "/forum"], ["Browse courses", "/browse"], ["Home", "/"]],
+    },
     // Sitemap-advertised as index, follow while serving the boot shell and
     // nothing else, exactly like /polls. A blurb rather than a list of threads
-    // on purpose: the forum is a limited CLOSED BETA (see PrivacyPolicy s.3),
-    // so serving its posts to crawlers would publish a beta's content wider
-    // than the beta itself. What a crawler needs here is what the page is and
-    // where to go instead — which is true whether or not a reader can post.
+    // on purpose — but NOT because threads are private: ForumPublicNotice tells
+    // every poster that posts "can be read by anyone and may be indexed by
+    // search engines", and each thread already has its own indexable URL at
+    // /forum/post/:id with its own title. The landing does not need to reprint
+    // them. What it does need is the sentence the React page shows a visitor
+    // who cannot post, so the served HTML never issues an invitation the app
+    // will not honour (ForumFeedPage.jsx, readOnlyBeta).
     "/forum": {
       heading: "Student preparation forum",
       description: meta.description,
+      note: "Closed beta: only invited student testers can publish."
+        + " Everyone can still read visible discussions.",
       links: [["Browse courses", "/browse"], ["Student polls", "/polls"], ["Home", "/"]],
     },
   };
@@ -561,6 +574,9 @@ export function renderLandingBody(pathname, meta) {
     "<main>",
     `<h1>${escapeHtml(page.heading)}</h1>`,
     `<p>${escapeHtml(page.description)}</p>`,
+    // Optional second sentence for a page whose description alone would
+    // promise more than the page delivers.
+    page.note ? `<p>${escapeHtml(page.note)}</p>` : "",
     `<nav aria-label="Course discovery">${links}</nav>`,
     "</main>",
   ].join("");
@@ -715,20 +731,49 @@ export function renderTestsBody(meta) {
  *
  * A list, like /tests, not a blurb: the useful fact is which questions are
  * open and where each one lives. Built from the rows the feed actually
- * returned, so this HTML cannot advertise a poll the page does not show, and
- * an empty feed renders the honest empty state rather than a fabricated list.
+ * returned, so this HTML cannot advertise a poll the page does not show.
+ *
+ * THREE states, not two, and the third is the one that bit us:
+ *
+ *   rows returned    -> list them
+ *   confirmed empty  -> "No poll is open right now" is a fact we checked
+ *   never confirmed  -> say NOTHING about what is open
+ *
+ * `polls` is an array ONLY when the lookup succeeded. Anything else — null
+ * from a timeout, a 500, or an edge with no Supabase env — is unconfirmed, and
+ * collapsing that into the empty state would state "no poll is open" on the
+ * strength of a query that never ran, while polls are live. The edge caches
+ * this HTML with s-maxage=3600 + stale-while-revalidate=86400, so one 1.5s
+ * blip would pin that falsehood at the CDN for up to a day. The landing blurb
+ * is true whatever the feed would have said, so that is what an unconfirmed
+ * lookup gets — the rule renderStudyMaterialsBody and renderFacultyDirectoryBody
+ * already follow, and the one middleware.js's own paperYearResponse follows
+ * when it refuses to render at all on `!confirmed`.
  */
-export function renderPollsBody(meta, polls = []) {
-  const items = (polls ?? [])
+export function renderPollsBody(meta, polls) {
+  if (!Array.isArray(polls)) return renderLandingBody("/polls", meta);
+
+  const items = polls
     .filter((p) => p && p.slug && p.question)
     .map((p) => {
       const votes = Number(p.vote_count ?? 0);
       // The count travels with the question. A model summarising this page
       // should not present a poll nobody has answered as a settled result.
       const tally = votes === 1 ? "1 vote so far" : `${votes} votes so far`;
-      return `<li><a href="/polls/${escapeHtml(p.slug)}">${escapeHtml(p.question)}</a> — ${escapeHtml(tally)}</li>`;
+      // get_polls_feed returns status in ('live','closed'), and the status it
+      // returns is the EFFECTIVE one — a poll past its closes_at already reads
+      // "closed" — so closed polls sit in these rows indefinitely. The human
+      // card shows a "Closed" pill and disables voting (src/polls/PollCard.jsx);
+      // without this the crawler body would invite a student to answer a poll
+      // that is over, and the two renderings of one row would disagree.
+      const state = p.status === "closed" ? `${tally} (voting closed)` : tally;
+      return `<li><a href="/polls/${escapeHtml(p.slug)}">${escapeHtml(p.question)}</a> — ${escapeHtml(state)}</li>`;
     })
     .join("");
+
+  // Rows came back but none survived the slug/question filter: that is
+  // malformed data, not an empty feed, so it cannot claim emptiness either.
+  if (!items && polls.length > 0) return renderLandingBody("/polls", meta);
 
   return [
     "<main>",
