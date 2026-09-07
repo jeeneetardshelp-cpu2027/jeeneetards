@@ -74,23 +74,47 @@ describe("browse natural-language intent parsing", () => {
     expect(result.params.get("q")).toBe("kinematics");
   });
 
-  // RESCUED WORK-IN-PROGRESS, AND IT FAILS TODAY. The expectation is right and
-  // the implementation is wrong, so it is kept rather than deleted or weakened.
+  // "JEE Main" and "JEE Advanced" name exams, but DIFFICULTIES is labelled
+  // Foundation / Main / Advanced, so both exam names used to be eaten as a
+  // difficulty nobody asked for: "jee main physics" silently became
+  // difficulty=intermediate. There is no exam-scope column to hold the real
+  // meaning, so the honest place for the word is `q`.
   //
-  // "JEE Main" names an exam. DIFFICULTIES in filterModel.js happens to carry
-  // { id: "intermediate", label: "Main" }, so ENUM_INTENTS generates the phrase
-  // "main" and applyBrowseSearchIntent silently consumes it as a DIFFICULTY.
-  // A student searching "jee main physics" would get difficulty=intermediate
-  // they never asked for — the "confident-looking wrong filter" this module's
-  // own header says is worse than a slightly longer query. That label predates
-  // this work (it is in the initial commit), so the author left this red.
-  //
-  // it.fails so the suite stays honest without staying broken: this passes
-  // while the bug exists, and the moment someone fixes the parser it goes red
-  // and has to be promoted back to a plain it().
-  it.fails("keeps JEE Main scope honest because the current schema has no exam-scope filter", () => {
+  // This arrived red inside rescued work-in-progress and was parked as
+  // it.fails. The parser has caught up, so it is a plain it() again.
+  it("keeps JEE Main scope honest because the current schema has no exam-scope filter", () => {
     const result = applyBrowseSearchIntent(new URLSearchParams(), "jee main physics");
     expect(result.params.get("goal")).toBe("jee");
     expect(result.params.get("q")).toBe("main physics");
+    expect(result.params.get("difficulty")).toBeNull();
+  });
+
+  it("does the same for JEE Advanced, which collides with the Advanced difficulty", () => {
+    // Not covered by the rescued test, and broken in exactly the same way —
+    // found by probing the parser rather than by reading it.
+    const result = applyBrowseSearchIntent(new URLSearchParams(), "jee advanced physics");
+    expect(result.params.get("goal")).toBe("jee");
+    expect(result.params.get("q")).toBe("advanced physics");
+    expect(result.params.get("difficulty")).toBeNull();
+  });
+
+  it("still filters difficulty inside a JEE query when the word is not an exam name", () => {
+    // The narrowing is only about the two exam names. "intermediate" is the id
+    // behind the "Main" label, and "Foundation" is nobody's exam, so a student
+    // who really means difficulty can still say so.
+    const byId = applyBrowseSearchIntent(new URLSearchParams(), "jee intermediate physics");
+    expect(byId.params.get("difficulty")).toBe("intermediate");
+
+    const foundation = applyBrowseSearchIntent(new URLSearchParams(), "jee foundation physics");
+    expect(foundation.params.get("difficulty")).toBe("beginner");
+  });
+
+  it("leaves queries outside JEE alone, because no other exam is called Main or Advanced", () => {
+    const neet = applyBrowseSearchIntent(new URLSearchParams(), "neet advanced biology");
+    expect(neet.params.get("goal")).toBe("neet");
+    expect(neet.params.get("difficulty")).toBe("advanced");
+
+    const bare = applyBrowseSearchIntent(new URLSearchParams(), "advanced kinematics");
+    expect(bare.params.get("difficulty")).toBe("advanced");
   });
 });

@@ -397,7 +397,14 @@ export default function UniversalSearch({ query: controlledQuery, footer = null 
           <SearchStarters onPick={runQuery} className="px-1 py-4" />
         ) : tooShort ? (
           <p className={`px-1 py-6 text-center text-sm ${t.muted}`}>
-            Type at least {MIN_QUERY} characters.
+            {/* Two different reasons reach this branch. A one-word query is
+                simply too short. A query like "p and c" is seven characters
+                and still unanswerable, because none of its words is long
+                enough to search on — telling that student to "type at least 3
+                characters" would be wrong and unactionable. */}
+            {(term ?? "").trim().split(/\s+/).filter(Boolean).length > 1
+              ? "Try a longer word — very short words can’t be searched."
+              : `Type at least ${MIN_QUERY} characters.`}
           </p>
         ) : error ? (
           <div className={`rounded-xl border ${t.border} ${t.card} p-6 text-center`}>
