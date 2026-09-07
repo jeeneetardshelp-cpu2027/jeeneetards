@@ -24,11 +24,22 @@
 // src/searchFeatureCarryOverSqlContract.test.js exists to catch at author time
 // and that only the composed arrangement can catch at run time.
 //
-// AND THEN, at the end, it loads the PARKED
-// docs/sql/search_filler_tokens_hinglish_2026-09-07.sql ON TOP, because that
-// list is the reason this migration exists. The parked file is NOT un-parked
-// by this test -- it is read from docs/sql/ and executed in memory, which is
-// what lets the payoff be shown before anyone has to decide about the words.
+// AND THEN, at the end, it loads the Hinglish filler list ON TOP, because that
+// list is the reason this migration exists.
+//
+// Both inputs were parked in docs/sql/ when this file was written, and it
+// asserted they stayed there. On 7 Sep 2026 the Hinglish list was unparked into
+// the chain and applied, which DELETED the docs/sql/ copy and left this file
+// opening a path that no longer existed -- main went red on the ENOENT.
+//
+// Only that path moved. The migration under test is still the DRAFT in
+// docs/sql/, and deliberately so: it is a different, larger file from the one
+// that was applied. The draft floors the ANCHOR through
+// public.search_min_anchor_len(), which is what makes "p and c" anchor on
+// "combinations"; the applied 20260907093000 floors the token count instead,
+// and on production "p and c" still answers 500 57014. Pointing this rehearsal
+// at the applied file fails 20 of its 85 assertions, because they assert the
+// draft's behaviour. That gap is the subject of the draft, not a bug here.
 //
 // WHAT IS NOT REAL. The catalogue is a stand-in: a chapter and a lesson per
 // seeded alias expansion plus a few dozen rows, not production's 5,533 videos.
@@ -53,7 +64,7 @@ const ALIASES = "supabase/migrations/20260902170000_search_aliases.sql";
 const WORDS = "supabase/migrations/20260902180000_universal_search_material_words.sql";
 const RELEVANCE = "supabase/migrations/20260902240000_browse_course_relevance.sql";
 const MIGRATION = "docs/sql/search_q_long_floor_2026-09-07.sql";
-const PARKED = "docs/sql/search_filler_tokens_hinglish_2026-09-07.sql";
+const HINGLISH_SQL = "supabase/migrations/20260907140000_search_filler_tokens_hinglish.sql";
 
 const baseline = readFileSync(BASELINE, "utf8");
 const materials = readFileSync(MATERIALS, "utf8");
@@ -61,7 +72,7 @@ const aliases = readFileSync(ALIASES, "utf8");
 const words = readFileSync(WORDS, "utf8");
 const relevance = readFileSync(RELEVANCE, "utf8");
 const migration = readFileSync(MIGRATION, "utf8");
-const parked = readFileSync(PARKED, "utf8");
+const hinglishSql = readFileSync(HINGLISH_SQL, "utf8");
 
 /** Pull one CREATE OR REPLACE FUNCTION statement out of the baseline dump. */
 function baselineFunction(name) {
@@ -189,7 +200,7 @@ const RESCUED = [
 // fast and honest -- instead of scanning the catalogue into the timeout.
 const UNANCHORED = ["p c", "a b c", "zq", "2d", "b c"];
 
-// The five shapes the PARKED Hinglish list would break, with the anchor each
+// The five shapes the Hinglish list would break, with the anchor each
 // must still resolve to once those words are filler.
 const HINGLISH = [
   ["ac ka matlab", "alternating"],
@@ -204,7 +215,7 @@ const before = {};        // control query -> rows, captured pre-migration
 const beforeAlias = {};   // alias -> rows, captured pre-migration
 const beforeTokens = {};  // query -> q_tokens/q_long, captured pre-migration
 const beforeBrowse = {};  // "fn|query" -> ids, captured pre-migration
-const beforeHinglish = {}; // hinglish query -> rows, captured pre-parked-list
+const beforeHinglish = {}; // hinglish query -> rows, captured before the list
 
 const sql = (strings, ...vals) => String.raw({ raw: strings }, ...vals);
 
@@ -662,13 +673,13 @@ describe("the features of three earlier migrations survived four re-emissions", 
 
 // ---------------------------------------------------------------------------
 // THE PAYOFF. Everything above runs with the deployed English filler list. This
-// block loads the PARKED Hinglish list on top -- the file this migration exists
+// block loads the Hinglish list on top -- the file this migration exists
 // to make safe -- and shows the five shapes it would otherwise break.
 // ---------------------------------------------------------------------------
-describe("with the parked Hinglish filler list applied on top", () => {
+describe("with the Hinglish filler list applied on top", () => {
   beforeAll(async () => {
     for (const [q] of HINGLISH) beforeHinglish[q] = await search(q);
-    await pg.exec(parked);
+    await pg.exec(hinglishSql);
   }, 300_000);
 
   it("really does collapse the anchor -- the hold was not imaginary", async () => {
@@ -720,8 +731,10 @@ describe("with the parked Hinglish filler list applied on top", () => {
     }
   });
 
-  it("does not un-park the file: this test read it from docs/sql/", () => {
-    expect(PARKED.startsWith("docs/sql/")).toBe(true);
-    expect(parked).toContain("DO NOT APPLY YET");
+  it("reads the Hinglish list from the chain it was unparked into", () => {
+    // The Hinglish list was unparked on 7 Sep 2026 and applied, which deleted
+    // the docs/sql/ copy this file used to read. Same words, new home.
+    expect(HINGLISH_SQL.startsWith("supabase/migrations/"), "the Hinglish list is in the chain now").toBe(true);
+    expect(hinglishSql, "an applied migration still carries the hold banner").not.toContain("DO NOT APPLY YET");
   });
 });
