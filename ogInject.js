@@ -21,6 +21,7 @@ import { courseCredit } from "./src/courseCredit.js";
 import { TEST_SECTIONS, ACCESS, findTestSection } from "./src/testPlatforms.js";
 import { buildCourseMetadata } from "./src/courseMetadata.js";
 import { canonicalCoursePath } from "./src/canonicalUrl.js";
+import { readablePathSegment } from "./src/pageMetadata.js";
 import {
   paperYearSchemas,
   studyMaterialLandingSchemas,
@@ -348,6 +349,90 @@ export function renderPaperYearBody(meta, { landing, year }, materials = []) {
 /** The canonical Browse response already renders every course link as HTML.
  *  Describe that same ordered directory for non-JavaScript crawlers; the
  *  client replaces this ItemList with the currently visible page on hydrate. */
+/**
+ * Structured data for a chapter landing — /browse with a confirmed chapter.
+ *
+ * These are 204 of the 879 URLs in the sitemap and the only surface this site
+ * has that YouTube does not: every free course covering one chapter, side by
+ * side. They shipped with no structured data at all, so a crawler saw an
+ * ordinary page at a URL that reads
+ * "/browse?goal=jee&class=11&subject=physics&chapter=kinematics" — a raw query
+ * string, which is what Google prints in the result unless a BreadcrumbList
+ * tells it the hierarchy.
+ *
+ * WHAT IS NOT HERE, and why. No ItemList of the courses. The edge holds the
+ * chapter's name and its verified count, but not the course titles: the
+ * directory fetch runs only for a bare /browse. Listing them would need the
+ * page's own goal/class/subject filter rebuilt at the edge, and a chapter-only
+ * join is not that filter — measured against production, chapter "kinematics"
+ * joins 22 distinct courses while the page for JEE Class 11 Physics says 13.
+ * An ItemList of 22 under a title saying 13 is worse than no ItemList, so this
+ * asserts only the count that was confirmed by the same row the title came
+ * from.
+ *
+ * @param scope   { goal, board, cls, subject } straight off the URL
+ * @param chapter { name, courseCount } the CONFIRMED row, never the slug
+ * @param meta    the route metadata already computed for this page
+ * @param canonicalPath the page's own canonical path, absolutised here
+ */
+export function chapterLandingSchemas({ scope, chapter, meta, canonicalPath } = {}) {
+  const name = String(chapter?.name ?? "").trim();
+  if (!scope?.goal || !name || !canonicalPath) return [];
+  const canonicalUrl = `${SITE}${canonicalPath}`;
+
+  const goalLabel = readablePathSegment(scope.board || scope.goal);
+  const crumbs = [
+    { label: "Home", url: "/" },
+    { label: "Explore", url: "/explore" },
+    { label: goalLabel, url: `/explore/${encodeURIComponent(scope.goal)}` },
+  ];
+
+  // The deeper explore taxonomy exists for the exam goals and not for school,
+  // which is addressed by BOARD instead — /explore/school/class-10/science
+  // redirects back up to /explore/school. A school chapter URL is exactly the
+  // one carrying a board, so that is the test, rather than a hardcoded list of
+  // goals that would drift the first time one is added.
+  const deep = !scope.board;
+  if (deep && scope.cls) {
+    const stage = scope.cls === "dropper" ? "dropper" : `class-${scope.cls}`;
+    crumbs.push({
+      label: scope.cls === "dropper" ? "Dropper" : `Class ${scope.cls}`,
+      url: `/explore/${encodeURIComponent(scope.goal)}/${encodeURIComponent(stage)}`,
+    });
+    if (scope.subject) {
+      crumbs.push({
+        label: readablePathSegment(scope.subject),
+        url: `/explore/${encodeURIComponent(scope.goal)}/${encodeURIComponent(stage)}`
+          + `/${encodeURIComponent(scope.subject)}`,
+      });
+    }
+  }
+  crumbs.push({ label: name, url: canonicalUrl });
+
+  const breadcrumb = breadcrumbListSchema(crumbs);
+  const count = Number(chapter?.courseCount ?? 0);
+
+  const page = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: meta?.title ?? name,
+    url: canonicalUrl,
+    about: { "@type": "Thing", name },
+  };
+  if (meta?.description) page.description = meta.description;
+  // numberOfItems without itemListElement is deliberate: the count is verified,
+  // the titles are not available here. Saying how many without saying which is
+  // the honest half.
+  if (count > 0) {
+    page.mainEntity = { "@type": "ItemList", numberOfItems: count };
+  }
+
+  const out = [];
+  if (breadcrumb) out.push({ key: "BreadcrumbList", schema: breadcrumb });
+  out.push({ key: "CollectionPage", schema: page });
+  return out;
+}
+
 export function browseDirectorySchemas(courses = []) {
   const list = itemListSchema(
     courses
