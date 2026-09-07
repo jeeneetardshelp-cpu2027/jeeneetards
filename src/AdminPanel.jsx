@@ -35,6 +35,7 @@ import ForumReportsPanel from "./forum/ForumReportsPanel.jsx";
 import ForumBetaAdminPanel from "./forum/ForumBetaAdminPanel.jsx";
 import PollReviewPanel from "./polls/PollReviewPanel.jsx";
 import ModerationDigest from "./ModerationDigest.jsx";
+import { RELEASE_FEATURES } from "./releaseCapabilities.js";
 
 export { slugify } from "./adminUI.jsx";
 
@@ -959,7 +960,7 @@ export default function AdminPanel() {
     { id: "faculty", label: "Faculty Review" },
     { id: "reports", label: "Reports" },
     { id: "forum-beta", label: "Forum beta" },
-    { id: "polls", label: "Polls" },
+    ...(RELEASE_FEATURES.polls ? [{ id: "polls", label: "Polls" }] : []),
     { id: "reviews", label: "Reviews" },
   ];
 
@@ -1038,7 +1039,7 @@ export default function AdminPanel() {
             </h2>
             <ForumBetaAdminPanel />
           </section>
-        ) : tab === "polls" ? (
+        ) : tab === "polls" && RELEASE_FEATURES.polls ? (
           <section aria-labelledby="poll-review-heading">
             <h2 id="poll-review-heading" className={`mb-4 text-lg font-semibold ${t.text}`}>
               Student polls

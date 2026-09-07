@@ -527,6 +527,17 @@ export function renderLandingBody(pathname, meta) {
       description: meta.description,
       links: [["Terms & Disclaimer", "/terms"], ["Home", "/"]],
     },
+    // Sitemap-advertised as index, follow while serving the boot shell and
+    // nothing else, exactly like /polls. A blurb rather than a list of threads
+    // on purpose: the forum is a limited CLOSED BETA (see PrivacyPolicy s.3),
+    // so serving its posts to crawlers would publish a beta's content wider
+    // than the beta itself. What a crawler needs here is what the page is and
+    // where to go instead — which is true whether or not a reader can post.
+    "/forum": {
+      heading: "Student preparation forum",
+      description: meta.description,
+      links: [["Browse courses", "/browse"], ["Student polls", "/polls"], ["Home", "/"]],
+    },
   };
   // /tests is a list, not a blurb: the useful facts for an extractive
   // crawler are which exams are covered and where each test actually lives.
@@ -686,6 +697,52 @@ export function renderTestsBody(meta) {
       " affiliated with the organisations listed. Each link opens the platform" +
       " that runs the test.</p>",
     `<ul>${items}</ul>`,
+    '<nav aria-label="Course discovery">',
+    '<a href="/">Home</a> <a href="/explore">Find a course</a> ',
+    '<a href="/browse">Browse courses</a>',
+    "</nav>",
+    "</main>",
+  ].join("");
+}
+
+/**
+ * Crawler-readable body for /polls.
+ *
+ * The page was in the sitemap as index, follow while serving the boot shell
+ * and nothing else — 5,721 bytes with no <h1> — so every live poll had no
+ * crawl path at all. Found by an audit on 2026-09-03; /browse, /materials and
+ * /tests all had bodies and this one was simply never written.
+ *
+ * A list, like /tests, not a blurb: the useful fact is which questions are
+ * open and where each one lives. Built from the rows the feed actually
+ * returned, so this HTML cannot advertise a poll the page does not show, and
+ * an empty feed renders the honest empty state rather than a fabricated list.
+ */
+export function renderPollsBody(meta, polls = []) {
+  const items = (polls ?? [])
+    .filter((p) => p && p.slug && p.question)
+    .map((p) => {
+      const votes = Number(p.vote_count ?? 0);
+      // The count travels with the question. A model summarising this page
+      // should not present a poll nobody has answered as a settled result.
+      const tally = votes === 1 ? "1 vote so far" : `${votes} votes so far`;
+      return `<li><a href="/polls/${escapeHtml(p.slug)}">${escapeHtml(p.question)}</a> — ${escapeHtml(tally)}</li>`;
+    })
+    .join("");
+
+  return [
+    "<main>",
+    "<h1>Student polls</h1>",
+    `<p>${escapeHtml(meta.description)}</p>`,
+    // Said in the served HTML, not only after React runs: these are opinions
+    // students volunteered, not a survey and not advice.
+    "<p>Each poll is a question students answer about their own preparation." +
+      " Reading a poll and its results never needs an account; voting and" +
+      " commenting do. The results are what students chose, not a" +
+      " recommendation from JEENEETARD.</p>",
+    items
+      ? `<ul>${items}</ul>`
+      : "<p>No poll is open right now.</p>",
     '<nav aria-label="Course discovery">',
     '<a href="/">Home</a> <a href="/explore">Find a course</a> ',
     '<a href="/browse">Browse courses</a>',
