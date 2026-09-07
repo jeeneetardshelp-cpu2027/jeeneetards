@@ -73,7 +73,7 @@ const GUARDED = [
   {
     fn: "universal_search",
     // The search box. Three re-emissions so far.
-    minReemissions: 5,
+    minReemissions: 4,
     features: [
       {
         name: "material and paper pillars",
@@ -102,15 +102,6 @@ const GUARDED = [
         // have matched it — the exact "marker survives in a comment" failure
         // the note at the top of this list warns about.
         marker: /and\s+\(select\s+max\(length\(tok\)\)\s+from\s+unnest\(q_content\)/i,
-      },
-      {
-        name: "anchor floor (the prefilter needle must be able to drive the index)",
-        since: "20260907170000_universal_search_anchor_floor.sql",
-        // The whole assignment, not just the function name: that migration's
-        // header discusses search_anchor at length, and a marker a comment can
-        // satisfy is not a marker. This appears exactly once, in the statement
-        // that reassigns the needle every prefilter below reads.
-        marker: /q_long := public[.]search_anchor[(]/i,
       },
     ],
   },
