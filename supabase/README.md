@@ -115,8 +115,12 @@ which is UTF-8 end to end. The SQL Editor and ad-hoc clients are how this
 happened.
 
 A migration that carries non-ASCII text should also prove the encoding survived
-the trip, the way `20260902210000` does — the check is one line, because a
-Devanagari string takes more **bytes** than it has **characters**:
+the trip, the way `20260902220000_repair_hindi_note_titles.sql` does. Both
+halves of that proof rest on one fact: a Devanagari string takes more **bytes**
+than it has **characters**.
+
+The preflight refuses a connection that is already mangling the file, before a
+single row is written:
 
 ```sql
 if length('तोप') = octet_length('तोप') then
@@ -124,7 +128,19 @@ if length('तोप') = octet_length('तोप') then
 end if;
 ```
 
-Without it, a repair run over a bad connection writes question marks over
+The postflight then checks the rows it just wrote, because a preflight proves
+only that the literals in the file arrived intact — not that what landed in the
+table did:
+
+```sql
+select count(*) into v_ascii from public.study_materials
+ where id = any(array[...]) and length(title) = octet_length(title);
+if v_ascii > 0 then
+  raise exception 'REPAIR FAILED: % titles are pure ASCII, so the Devanagari did not survive the connection', v_ascii;
+end if;
+```
+
+Without them, a repair run over a bad connection writes question marks over
 question marks and reports success.
 
 ### Parked in `docs/sql/`, deliberately out of the chain (2 Sep 2026)

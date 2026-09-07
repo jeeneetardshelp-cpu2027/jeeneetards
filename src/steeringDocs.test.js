@@ -90,4 +90,28 @@ describe("steering docs", () => {
     expect(existsSync(resolve(root, "supabase/migrations/20260831140005_production_baseline.sql")))
       .toBe(true);
   });
+
+  // The UTF-8 rule in supabase/README.md tells every future non-ASCII migration
+  // to copy a check out of a named file. It spent a day naming 20260902210000,
+  // which contains no such check — so a reader following the rule found nothing
+  // and, most likely, shipped without the guard. That guard exists because 32
+  // Hindi note titles reached production as question marks and stayed that way
+  // for four weeks.
+  //
+  // Asserted against the FILE rather than the prose, so rewording the rule is
+  // free and pointing it somewhere untrue is not.
+  it("points the UTF-8 rule at a migration that really carries the guard", () => {
+    const readme = read("supabase/README.md");
+    const rule = readme.slice(readme.indexOf("prove the encoding survived"));
+    expect(rule, "supabase/README.md no longer states the UTF-8 rule").not.toBe("");
+
+    const cited = rule.match(/`([0-9]{14}_[a-z0-9_]+[.]sql)`/);
+    expect(cited, "the UTF-8 rule must name the migration file it points at").not.toBeNull();
+
+    const path = `supabase/migrations/${cited[1]}`;
+    expect(existsSync(resolve(root, path)), `${path} does not exist`).toBe(true);
+    // Both halves the rule shows: refuse a bad connection, then prove the rows
+    // that landed are not pure ASCII.
+    expect(read(path), `${cited[1]} carries no octet_length guard`).toContain("octet_length");
+  });
 });
