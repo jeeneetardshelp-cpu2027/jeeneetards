@@ -736,6 +736,92 @@ describe("edge-rendered discovery landings", () => {
     return new Response(shell, { status: 200 });
   });
 
+  // The unit tests for chapterLandingSchemas prove the shape. These prove the
+  // WIRING: that the edge actually puts it in the HTML a crawler receives.
+  // Measured on 2026-09-07, every one of the 204 chapter URLs in the sitemap
+  // served zero JSON-LD while course pages served six types.
+  const ldJson = (html) => [...html.matchAll(
+    /<script type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g)]
+    .map((m) => JSON.parse(m[1]));
+
+  it("ships a breadcrumb and a collection page for a confirmed chapter", async () => {
+    vi.stubEnv("VITE_SUPABASE_URL", "https://catalog.example");
+    vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
+    vi.stubGlobal("fetch", curriculumFetch([
+      { level: "chapter", slug: "kinematics", name: "Kinematics", course_count: 13 },
+    ]));
+
+    const response = await middleware(new Request(
+      "https://www.jeeneetard.com/browse?goal=jee&class=11&subject=physics&chapter=kinematics",
+    ));
+    const html = await response.text();
+    const types = ldJson(html).map((s2) => s2["@type"]);
+    expect(types).toContain("BreadcrumbList");
+    expect(types).toContain("CollectionPage");
+
+    const crumbs = ldJson(html).find((s2) => s2["@type"] === "BreadcrumbList");
+    expect(crumbs.itemListElement.map((c) => c.name))
+      .toEqual(["Home", "Explore", "JEE", "Class 11", "Physics", "Kinematics"]);
+  });
+
+  it("states the same count in the schema as in the title", async () => {
+    vi.stubEnv("VITE_SUPABASE_URL", "https://catalog.example");
+    vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
+    vi.stubGlobal("fetch", curriculumFetch([
+      { level: "chapter", slug: "kinematics", name: "Kinematics", course_count: 13 },
+    ]));
+
+    const response = await middleware(new Request(
+      "https://www.jeeneetard.com/browse?goal=jee&class=11&subject=physics&chapter=kinematics",
+    ));
+    const html = await response.text();
+    const page = ldJson(html).find((s2) => s2["@type"] === "CollectionPage");
+    // Both come from the same confirmed row. If they can drift, one of them is
+    // lying to somebody.
+    expect(page.mainEntity).toEqual({ "@type": "ItemList", numberOfItems: 13 });
+    expect(page.name).toContain("13 free courses");
+    expect(html).toContain("<title>Kinematics — 13 free courses");
+    // Says how many, never which: the edge does not hold the course titles.
+    expect(JSON.stringify(page)).not.toContain("itemListElement");
+  });
+
+  it("ships no chapter schema for a slug the catalogue never confirmed", async () => {
+    vi.stubEnv("VITE_SUPABASE_URL", "https://catalog.example");
+    vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
+    // The curriculum answers, and this chapter is simply not in it.
+    vi.stubGlobal("fetch", curriculumFetch([
+      { level: "chapter", slug: "kinematics", name: "Kinematics", course_count: 13 },
+    ]));
+
+    const response = await middleware(new Request(
+      "https://www.jeeneetard.com/browse?goal=jee&class=11&subject=physics&chapter=not-a-real-chapter",
+    ));
+    const html = await response.text();
+    const types = ldJson(html).map((s2) => s2["@type"]);
+    // Same rule as the title and the robots tag: nothing is asserted about a
+    // chapter nobody confirmed exists.
+    expect(types).not.toContain("CollectionPage");
+    expect(html).toContain('name="robots" content="noindex, follow"');
+  });
+
+  it("stops the school trail at the board, which is where the taxonomy stops", async () => {
+    vi.stubEnv("VITE_SUPABASE_URL", "https://catalog.example");
+    vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
+    vi.stubGlobal("fetch", curriculumFetch([
+      { level: "chapter", slug: "acids-bases-and-salts", name: "Acids, Bases and Salts", course_count: 4 },
+    ]));
+
+    const response = await middleware(new Request(
+      "https://www.jeeneetard.com/browse?goal=school&class=10&board=cbse&subject=science&chapter=acids-bases-and-salts",
+    ));
+    const html = await response.text();
+    const crumbs = ldJson(html).find((s2) => s2["@type"] === "BreadcrumbList");
+    expect(crumbs.itemListElement.map((c) => c.name))
+      .toEqual(["Home", "Explore", "CBSE", "Acids, Bases and Salts"]);
+    // /explore/school/class-10/science 308-redirects to /explore/school.
+    expect(JSON.stringify(crumbs)).not.toContain("/explore/school/class-10");
+  });
+
   it("gives the canonical chapter view its own identity before JavaScript runs", async () => {
     vi.stubEnv("VITE_SUPABASE_URL", "https://catalog.example");
     vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
