@@ -25,6 +25,27 @@ const GOAL_INTENTS = [
   { key: "goal", value: "olympiad", label: "Olympiad", phrases: ["olympiad"] },
 ];
 
+// DIFFICULTIES is labelled Foundation / Main / Advanced, which deliberately
+// echoes how coaching talks about difficulty. Two of those words are also the
+// names of the two JEE exams, so "jee main physics" and "jee advanced physics"
+// read as a difficulty the student never asked for — and the catalogue has no
+// exam-scope column to put the real meaning in, so the honest place for the
+// word is `q`, where ordinary search can still use it.
+//
+// Scoped to a JEE query on purpose. "advanced kinematics" is a difficulty and
+// stays one, and NEET has no exam by either name, so neither is touched. The
+// id "intermediate" also survives, so "jee intermediate physics" still filters.
+//
+// A bare "main" with no goal stays a difficulty. It is ambiguous, but no test
+// pins it and guessing the exam there would be the same overreach in reverse.
+const EXAM_SCOPE_WORDS = new Set(["main", "advanced"]);
+
+const withoutExamScopeWords = (intent) => (
+  intent.key === "difficulty"
+    ? { ...intent, phrases: intent.phrases.filter((x) => !EXAM_SCOPE_WORDS.has(normalize(x))) }
+    : intent
+);
+
 // These aliases are reviewed curriculum mappings, not fuzzy guesses. A
 // chapter intent carries its subject because chapter slugs are only unique
 // inside a subject. Additions to this list should be covered by a test.
@@ -164,9 +185,14 @@ export function parseBrowseSearchIntent(query, { params = new URLSearchParams(),
 
   accept(classIntent(working, params));
 
+  // Goals first, so the rest of the pass knows whether this is a JEE query
+  // before it reads words that mean different things inside one.
+  for (const intent of GOAL_INTENTS) accept(applyIntent(working, params, intent));
+
+  const jeeScope = (filters.goal ?? currentValue(params, "goal")) === "jee";
+
   const intents = [
-    ...GOAL_INTENTS,
-    ...ENUM_INTENTS,
+    ...(jeeScope ? ENUM_INTENTS.map(withoutExamScopeWords) : ENUM_INTENTS),
     ...uniqueOptionIntents(options, "subject"),
     ...uniqueOptionIntents(options, "channel"),
   ];
