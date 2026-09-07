@@ -73,7 +73,7 @@ const GUARDED = [
   {
     fn: "universal_search",
     // The search box. Three re-emissions so far.
-    minReemissions: 3,
+    minReemissions: 4,
     features: [
       {
         name: "material and paper pillars",
@@ -92,6 +92,16 @@ const GUARDED = [
         since: "20260902180000_universal_search_material_words.sql",
         // The helper that widens the haystack in rank AND prefilter.
         marker: /study_material_haystack/,
+      },
+      {
+        name: "q_long floor (filler removal must leave a usable needle)",
+        since: "20260907093000_universal_search_q_long_floor.sql",
+        // The whole condition, not just the function call. `max(length(tok))`
+        // alone also appears inside the migration's self-verification as a
+        // string literal, so a body that dropped the real guard would still
+        // have matched it — the exact "marker survives in a comment" failure
+        // the note at the top of this list warns about.
+        marker: /and\s+\(select\s+max\(length\(tok\)\)\s+from\s+unnest\(q_content\)/i,
       },
     ],
   },
