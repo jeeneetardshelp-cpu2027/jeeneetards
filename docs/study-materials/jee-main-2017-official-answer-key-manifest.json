@@ -1,0 +1,21 @@
+{
+  "preparedOn": "2026-09-04",
+  "officialHomeSnapshotUrl": "https://web.archive.org/web/20170501200650id_/http://www.jeemain.nic.in:80/webinfo/public/home.aspx",
+  "coverage": "JEE Main 2017 Paper 1 answer key for the 2 April offline Sets A-D and the 8 and 9 April online examinations.",
+  "statusNote": "The preserved official homepage labels this file 'JEE (Main) 2017 Paper -1 Answer Key'. The PDF is dated 25 April 2017, after the published 18-22 April answer-key challenge window, but the source itself does not use the word 'final'.",
+  "exclusions": "Paper 2 B.Arch/B.Planning keys, candidate OMR sheets, question papers and third-party worked solutions are excluded.",
+  "hostingPolicy": "Link-only. The PDF is linked through a preserved Internet Archive capture of the original official jeemain.nic.in host and is not mirrored by JEENEETARD.",
+  "resources": [
+    {
+      "title": "JEE Main 2017 Answer Key (Paper 1 B.E./B.Tech)",
+      "officialTitle": "JEE (Main) 2017 Paper -1 Answer Key",
+      "examYear": 2017,
+      "answerKeyDate": "2017-04-25",
+      "offlineSets": ["A", "B", "C", "D"],
+      "onlineExamDates": ["2017-04-08", "2017-04-09"],
+      "pageCount": 6,
+      "sourceUrl": "https://web.archive.org/web/20170430233022id_/http://jeemain.nic.in:80/WebInfo/Handler/FileHandler.ashx?i=File&ii=78&iii=Y",
+      "sha256": "0B8428647E3B557B42B28B6FE6B293F21751BF641497495973055B3CE41F8985"
+    }
+  ]
+}
