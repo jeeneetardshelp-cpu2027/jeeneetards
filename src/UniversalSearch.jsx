@@ -40,7 +40,9 @@
 import { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import { useSearchParams, useNavigate, Link } from "react-router";
 import { Search, X, Loader2, AlertTriangle, Users } from "lucide-react";
-import { useUniversalSearch, GROUPS, MIN_QUERY } from "./useUniversalSearch.js";
+import {
+  useUniversalSearch, GROUPS, MIN_QUERY, unsearchableQueryHint,
+} from "./useUniversalSearch.js";
 import { resultHref } from "./searchDestinations.js";
 import { normalizeForHighlight } from "./searchHighlight.js";
 // Every row here is catalogue text — a teacher, a chapter, a course, a lesson —
@@ -397,14 +399,10 @@ export default function UniversalSearch({ query: controlledQuery, footer = null 
           <SearchStarters onPick={runQuery} className="px-1 py-4" />
         ) : tooShort ? (
           <p className={`px-1 py-6 text-center text-sm ${t.muted}`}>
-            {/* Two different reasons reach this branch. A one-word query is
-                simply too short. A query like "p and c" is seven characters
-                and still unanswerable, because none of its words is long
-                enough to search on — telling that student to "type at least 3
-                characters" would be wrong and unactionable. */}
-            {(term ?? "").trim().split(/\s+/).filter(Boolean).length > 1
-              ? "Try a longer word — very short words can’t be searched."
-              : `Type at least ${MIN_QUERY} characters.`}
+            {/* The two reasons that reach this branch, and the sentence each
+                one needs, live next to isServableQuery — /browse shows the
+                same state and must not word it differently. */}
+            {unsearchableQueryHint(term)}
           </p>
         ) : error ? (
           <div className={`rounded-xl border ${t.border} ${t.card} p-6 text-center`}>

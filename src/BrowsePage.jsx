@@ -29,6 +29,10 @@ import {
   Search, X, Play, AlertTriangle,
 } from "lucide-react";
 import { useVideos, useDebouncedValue, LECTURE_PAGE_SIZE, parseLectureSort } from "./useBrowse.js";
+// The same predicate the hooks use to decide whether to ask the server at all,
+// and the sentence that explains a refusal. Imported rather than re-derived so
+// /browse and the search box cannot describe one state two ways.
+import { isServableQuery, unsearchableQueryHint } from "./useUniversalSearch.js";
 import { useChapterName } from "./useChapterName.js";
 import { GlobalHeader, MAIN_CONTENT_ID } from "./AppShell.jsx";
 import PlaylistBrowse from "./PlaylistBrowse.jsx";
@@ -725,9 +729,18 @@ export default function BrowsePage() {
           ) : videos.length === 0 ? (
             <div className={`rounded-xl border border-dashed ${t.border} ${t.card} p-12 text-center`}>
               <p className={`font-medium ${t.text}`}>
-                {anyFilter
-                  ? "No lessons match your filters."
-                  : "No lessons have been added yet."}
+                {/* A query the server cannot answer is never sent (see
+                    useBrowse.js), so this branch is reached with zero lessons
+                    WITHOUT anything having been searched. Saying "No lessons
+                    match your filters." there claims the catalogue was checked
+                    and came back empty. It was not asked. The search box shows
+                    the same sentence for the same state — one copy, in
+                    useUniversalSearch.js. */}
+                {searchTerm && !isServableQuery(searchTerm)
+                  ? unsearchableQueryHint(searchTerm)
+                  : anyFilter
+                    ? "No lessons match your filters."
+                    : "No lessons have been added yet."}
               </p>
               {anyFilter && (
                 <button
