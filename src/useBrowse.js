@@ -11,7 +11,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { supabase, isSupabaseConfigured } from "./supabaseClient";
 import { chapterScopeStageDecision, classSlugsForStage } from "./classLevels.js";
 import { isMissingCatalogRpc } from "./useExplore.js";
-import { MIN_QUERY } from "./useUniversalSearch.js";
+import { isServableQuery } from "./useUniversalSearch.js";
 
 const NOT_CONFIGURED = "Supabase isn't configured. Add your keys to .env and restart.";
 
@@ -147,9 +147,8 @@ export function useVideos({
     const term = (search ?? "").trim();
     let searchIds = null;
     let searchIlike = null; // graceful fallback while the match RPC is undeployed
-    // A query shorter than the floor is answered as "no matches" WITHOUT asking
-    // the server, because the server cannot answer it. Measured on production
-    // 2026-09-03, search_video_ids:
+    // A query the server cannot answer is answered as "no matches" WITHOUT
+    // asking it. Measured on production 2026-09-03, search_video_ids:
     //   "ac"      HTTP 500 3218ms   57014 canceling statement due to timeout
     //   "3d"      HTTP 500 3226ms   57014
     //   "acid"    HTTP 200  325ms   71 rows
@@ -160,9 +159,15 @@ export function useVideos({
     // search_playlist_ids survives the same input, so only the lecture tab
     // breaks — which is why /browse looked half-working rather than broken.
     //
-    // MIN_QUERY is imported rather than redeclared so this floor and the one in
-    // the universal search box cannot drift apart.
-    if (term && term.length < MIN_QUERY) {
+    // The test is isServableQuery, NOT `length < MIN_QUERY`. A length floor
+    // gets the single-token case right and the multi-token case wrong: "p c",
+    // "a b c" and "p and c" are all 3 characters or more, and all three are
+    // recorded as FAIL 500 in useUniversalSearch.js. Length is not the rule —
+    // per-token selectivity is, because a 1-character token contributes at most
+    // one trigram no matter how long the whole string is. Importing the
+    // predicate rather than re-deriving it is what keeps the three search
+    // surfaces from drifting.
+    if (term && !isServableQuery(term)) {
       setState({ videos: [], total: 0, loading: false, error: null, hasMore: false });
       return;
     }
