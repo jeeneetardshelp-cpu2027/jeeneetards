@@ -47,6 +47,7 @@ import {
   injectRootContent,
   landingSchemas,
   browseDirectorySchemas,
+  chapterLandingSchemas,
   facultyDirectorySchemas,
   renderLandingBody,
   renderBrowseDirectoryBody,
@@ -810,6 +811,18 @@ export default async function middleware(request) {
         : [];
       html = injectStructuredData(html, [
         ...landingSchemas(url.pathname, materialItems),
+        // A confirmed chapter is the one filtered /browse shape offered to
+        // search engines, and it shipped with no structured data at all.
+        // Gated on chapterRow, so the count and the name come from the row
+        // the title was written from -- never from the URL.
+        ...(chapterRow
+          ? chapterLandingSchemas({
+              scope: chapterScope,
+              chapter: { name: chapterRow.name, courseCount: Number(chapterRow.course_count ?? 0) },
+              meta: routeMeta,
+              canonicalPath: routeMeta?.canonicalPath ?? url.pathname,
+            })
+          : []),
         ...(hasDirectory ? browseDirectorySchemas(courseResult.data) : []),
         ...facultyDirectorySchemas(facultyDirectoryItems),
         ...exploreSchemas([], exploreRootOptions),

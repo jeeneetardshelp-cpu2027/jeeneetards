@@ -198,6 +198,32 @@ describe("legal release truth", () => {
       expect(privacy()).toMatch(/forum is not publicly available in this release/i);
     });
 
+    // The gap this file exists to close, found by an audit on 2026-09-03.
+    // Polls shipped on 2 September collecting account-linked votes and
+    // publishing free-text comments, and the Privacy Policy — which enumerates
+    // every server-side path by table name — contained no occurrence of the
+    // word "poll". Nothing failed: there was no poll case anywhere in this
+    // file, so flipping RELEASE_FEATURES.polls was a green build.
+    //
+    // Asserted against the FLAG, not against today's value of it, so this keeps
+    // working whichever way the flag is set.
+    it("describes poll collection consistently with its release flag", async () => {
+      const { RELEASE_FEATURES } = await import("./releaseCapabilities.js");
+      if (!RELEASE_FEATURES.polls) {
+        // Off: nothing is collected, so the page must not claim otherwise.
+        expect(privacy()).not.toMatch(/poll_votes/);
+        return;
+      }
+      // On: the two collections a student cannot see from the poll page itself.
+      expect(privacy()).toMatch(/poll_votes/);
+      expect(privacy()).toMatch(/voting in a student poll needs an account/i);
+      // Votes are account-linked but not publicly attributable — the page must
+      // say BOTH, because either half alone misleads.
+      expect(privacy()).toMatch(/how an individual voted is not shown to anyone/i);
+      // Comments are the genuinely public part.
+      expect(privacy()).toMatch(/a poll comment is published publicly/i);
+    });
+
     it("keeps both legal pages on the same effective date", () => {
       const dateOf = (src) => src.match(/Effective date:\s*([0-9]{1,2} \w+ [0-9]{4})/)?.[1];
       const privacyDate = dateOf(privacy());
