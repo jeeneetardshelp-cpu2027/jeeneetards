@@ -637,8 +637,8 @@ describe("edge-rendered discovery landings", () => {
     vi.stubGlobal("fetch", vi.fn(async (input) => {
       if (String(input).endsWith("/rpc/get_polls_feed")) {
         return Response.json([
-          { slug: "is-coaching-worth-it-3", question: "Is coaching worth it?", vote_count: 1 },
-          { slug: "what-stops-you-first-4", question: "What stops you first?", vote_count: 0 },
+          { slug: "is-coaching-worth-it-3", question: "Is coaching worth it?", vote_count: 1, status: "live" },
+          { slug: "what-stops-you-first-4", question: "What stops you first?", vote_count: 0, status: "live" },
         ]);
       }
       return new Response(shell, { status: 200 });
@@ -657,23 +657,91 @@ describe("edge-rendered discovery landings", () => {
     expect(html).not.toContain('class="boot"');
   });
 
-  it("says no poll is open rather than inventing one when the feed is unavailable", async () => {
+  // This test replaces one that asserted the opposite. It required the page to
+  // say "No poll is open right now" on a 500 and called that honest, which made
+  // a defect look like a guarantee: the sentence is a claim about the database,
+  // and a lookup that never succeeded cannot support it. htmlResponse caches
+  // s-maxage=3600 + stale-while-revalidate=86400, so the falsehood would have
+  // outlived the blip by up to a day.
+  it.each([
+    ["a 500", () => new Response("nope", { status: 500 })],
+    ["a network throw", () => { throw new TypeError("fetch failed"); }],
+    ["a non-JSON body", () => new Response("<html>gateway</html>", { status: 200 })],
+  ])("never claims polls are closed when the feed is unconfirmed by %s", async (_label, fail) => {
     vi.stubEnv("VITE_SUPABASE_URL", "https://polls.example");
     vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
     vi.stubGlobal("fetch", vi.fn(async (input) => {
-      // An unconfirmed lookup: the same shape a timeout or a 500 produces.
+      if (String(input).endsWith("/rpc/get_polls_feed")) return fail();
+      return new Response(shell, { status: 200 });
+    }));
+
+    const html = await (await middleware(new Request("https://www.jeeneetard.com/polls"))).text();
+    // Still a real crawlable page, and still no fabricated poll...
+    expect(html).toContain("<h1>Student polls</h1>");
+    expect(html).not.toContain('class="boot"');
+    expect(html).not.toContain("href=\"/polls/");
+    // ...but it states NOTHING about what is open, because it does not know.
+    expect(html).not.toContain("No poll is open right now.");
+  });
+
+  it("does say no poll is open when the feed CONFIRMS there is none", async () => {
+    vi.stubEnv("VITE_SUPABASE_URL", "https://polls.example");
+    vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
+    vi.stubGlobal("fetch", vi.fn(async (input) => {
+      // 200 with an empty array is a fact we checked, not a failure.
+      if (String(input).endsWith("/rpc/get_polls_feed")) return Response.json([]);
+      return new Response(shell, { status: 200 });
+    }));
+
+    const html = await (await middleware(new Request("https://www.jeeneetard.com/polls"))).text();
+    expect(html).toContain("<h1>Student polls</h1>");
+    expect(html).toContain("No poll is open right now.");
+  });
+
+  it("marks a closed poll closed, so the list cannot invite a vote that is over", async () => {
+    vi.stubEnv("VITE_SUPABASE_URL", "https://polls.example");
+    vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
+    vi.stubGlobal("fetch", vi.fn(async (input) => {
       if (String(input).endsWith("/rpc/get_polls_feed")) {
-        return new Response("nope", { status: 500 });
+        // get_polls_feed returns status in ('live','closed') and the status is
+        // already the effective one, so a closed poll stays in these rows.
+        return Response.json([
+          { slug: "old-question-1", question: "Which subject first?", vote_count: 412, status: "closed" },
+          { slug: "live-question-2", question: "What stops you first?", vote_count: 7, status: "live" },
+        ]);
       }
       return new Response(shell, { status: 200 });
     }));
 
     const html = await (await middleware(new Request("https://www.jeeneetard.com/polls"))).text();
-    // Still a real page — the heading and the honest empty state, never a
-    // fabricated poll and never the bare boot shell.
-    expect(html).toContain("<h1>Student polls</h1>");
-    expect(html).toContain("No poll is open right now.");
-    expect(html).not.toContain('class="boot"');
+    expect(html).toContain("412 votes so far (voting closed)");
+    // The live one is not mislabelled in the other direction.
+    expect(html).toContain("7 votes so far</li>");
+    expect(html).not.toContain("7 votes so far (voting closed)");
+  });
+
+  it("does not pay for a poll feed on a filtered /polls variant, which is noindex", async () => {
+    vi.stubEnv("VITE_SUPABASE_URL", "https://polls.example");
+    vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
+    const fetchSpy = vi.fn(async (input) => {
+      if (String(input).endsWith("/rpc/get_polls_feed")) {
+        return Response.json([
+          { slug: "is-coaching-worth-it-3", question: "Is coaching worth it?", vote_count: 1, status: "live" },
+        ]);
+      }
+      return new Response(shell, { status: 200 });
+    });
+    vi.stubGlobal("fetch", fetchSpy);
+
+    const html = await (await middleware(
+      new Request("https://www.jeeneetard.com/polls?sort=closing"),
+    )).text();
+
+    // The guard the comment justifies: no round trip for a page nobody indexes.
+    expect(fetchSpy.mock.calls.some(([input]) => String(input).endsWith("/rpc/get_polls_feed"))).toBe(false);
+    // And with no feed, no poll is named and nothing is claimed about openness.
+    expect(html).not.toContain("Is coaching worth it?");
+    expect(html).not.toContain("No poll is open right now.");
   });
 
   it("serves the canonical faculty landing as linked crawler-readable profiles", async () => {
