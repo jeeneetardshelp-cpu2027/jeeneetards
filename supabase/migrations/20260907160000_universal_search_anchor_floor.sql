@@ -821,53 +821,53 @@ begin
 
   -- Carry-over: every feature that existed before this re-emission.
   if position('search_rank_aliased' in src) = 0 then
-    v_fail := v_fail || 'the curated shorthand alias pass was dropped by this re-emission';
+    v_fail := v_fail || 'the curated shorthand alias pass was dropped by this re-emission'::text;
   end if;
   if position('study_material_haystack' in src) = 0 then
-    v_fail := v_fail || 'the material kind-word haystack was dropped by this re-emission';
+    v_fail := v_fail || 'the material kind-word haystack was dropped by this re-emission'::text;
   end if;
   if position('''material''' in src) = 0 then
-    v_fail := v_fail || 'the material pillar was dropped by this re-emission';
+    v_fail := v_fail || 'the material pillar was dropped by this re-emission'::text;
   end if;
   -- The floor itself.
   if position('max(length(tok))' in src) = 0 then
-    v_fail := v_fail || 'the q_long floor is not in the body this migration just wrote';
+    v_fail := v_fail || 'the q_long floor is not in the body this migration just wrote'::text;
   end if;
 
   -- The anchor decision took. Text first, because a body that never reassigned
   -- q_long would pass every law below and still scan on "and".
   if position('search_anchor' in src) = 0 then
-    v_fail := v_fail || 'the anchor decision is not in the body this migration just wrote';
+    v_fail := v_fail || 'the anchor decision is not in the body this migration just wrote'::text;
   end if;
 
   -- LAWS, on synthetic input. Pure functions and hand-written arguments, so
   -- these assert the same thing on production, on staging and in a rehearsal,
   -- regardless of what is in the catalogue.
   if public.search_min_anchor_len() <> 3 then
-    v_fail := v_fail || 'the floor is not three characters, and twelve disjuncts depend on it';
+    v_fail := v_fail || 'the floor is not three characters, and twelve disjuncts depend on it'::text;
   end if;
   if public.search_floor_anchor('ac') is not null then
-    v_fail := v_fail || 'a two-character anchor cleared the floor';
+    v_fail := v_fail || 'a two-character anchor cleared the floor'::text;
   end if;
   if public.search_floor_anchor('shm') is distinct from 'shm' then
-    v_fail := v_fail || 'a three-character anchor was rejected by the floor';
+    v_fail := v_fail || 'a three-character anchor was rejected by the floor'::text;
   end if;
   -- An alias may never displace a literal match. This is the law of
   -- 20260902170000, restated for the anchor: whenever the typed content anchor
   -- clears the floor it wins outright, whatever the expansion offers.
   if public.search_anchor('shm', 'harmonic', 'shm') is distinct from 'shm' then
-    v_fail := v_fail || 'an alias displaced a literal match; the typed content anchor must win';
+    v_fail := v_fail || 'an alias displaced a literal match; the typed content anchor must win'::text;
   end if;
   -- Only when the typed side has nothing does the expansion get to carry it,
   -- and then the LONGEST candidate wins -- which is what stops "and" being
   -- chosen over "combinations".
   if public.search_anchor(null, 'combinations', 'and') is distinct from 'combinations' then
-    v_fail := v_fail || 'the raw-token fallback beat a longer alias anchor';
+    v_fail := v_fail || 'the raw-token fallback beat a longer alias anchor'::text;
   end if;
   -- Nothing usable anywhere means no anchor, which the body reads as "return
   -- nothing" rather than "scan the catalogue".
   if public.search_anchor(null, 'ab', 'cd') is not null then
-    v_fail := v_fail || 'an anchor was invented from candidates that cannot drive the index';
+    v_fail := v_fail || 'an anchor was invented from candidates that cannot drive the index'::text;
   end if;
 
   if array_length(v_fail, 1) > 0 then
