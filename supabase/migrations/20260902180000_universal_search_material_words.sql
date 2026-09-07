@@ -698,38 +698,38 @@ begin
     from public.study_material_haystack('Units and Measurement - NCERT Physics', 'full_notes') h
    where h like '%notes%';
   if v_notes = 0 then
-    v_fail := v_fail || 'full_notes haystack does not contain "notes"';
+    v_fail := v_fail || 'full_notes haystack does not contain "notes"'::text;
   end if;
 
   select count(*) into v_pyq
     from public.study_material_haystack('JEE Main 2024 Session 1', 'previous_year_paper') h
    where h like '%pyq%';
   if v_pyq = 0 then
-    v_fail := v_fail || 'previous_year_paper haystack does not contain "pyq"';
+    v_fail := v_fail || 'previous_year_paper haystack does not contain "pyq"'::text;
   end if;
 
   -- The title must survive intact: widening must never cost a match that
   -- already worked.
   if public.study_material_haystack('Units and Measurement - NCERT Physics', 'full_notes')
      not like '%measurement%' then
-    v_fail := v_fail || 'the title was lost from the haystack';
+    v_fail := v_fail || 'the title was lost from the haystack'::text;
   end if;
 
   -- A kind with no words must not gain a trailing separator that could match
   -- a stray token.
   if public.study_material_haystack('Some Title', 'unknown_kind') <> public.search_latin_key('Some Title') then
-    v_fail := v_fail || 'an unknown kind changed the haystack';
+    v_fail := v_fail || 'an unknown kind changed the haystack'::text;
   end if;
 
   -- The prefilter is only sargable if the index on its exact expression got
   -- built. On production this block is the only thing that will notice.
   if not exists (select 1 from pg_indexes where schemaname = 'public'
                   and indexname = 'idx_study_materials_haystack_trgm') then
-    v_fail := v_fail || 'the trigram index on the haystack expression is missing';
+    v_fail := v_fail || 'the trigram index on the haystack expression is missing'::text;
   end if;
   if not exists (select 1 from pg_indexes where schemaname = 'public'
                   and indexname = 'idx_study_materials_haystack_pattern') then
-    v_fail := v_fail || 'the prefix index on the haystack expression is missing';
+    v_fail := v_fail || 'the prefix index on the haystack expression is missing'::text;
   end if;
 
   -- The regression this file nearly shipped: prove the alias pass SURVIVED the
@@ -739,13 +739,13 @@ begin
        where p.pronamespace = 'public'::regnamespace
          and p.proname = 'universal_search'
          and p.prosrc like '%search_rank_aliased%') = 0 then
-    v_fail := v_fail || 'universal_search no longer calls search_rank_aliased: the alias pass was reverted by this re-emit';
+    v_fail := v_fail || 'universal_search no longer calls search_rank_aliased: the alias pass was reverted by this re-emit'::text;
   end if;
   if (select count(*) from pg_proc p
        where p.pronamespace = 'public'::regnamespace
          and p.proname = 'universal_search'
          and p.prosrc like '%study_material_haystack%') = 0 then
-    v_fail := v_fail || 'universal_search does not call study_material_haystack: this migration did nothing';
+    v_fail := v_fail || 'universal_search does not call study_material_haystack: this migration did nothing'::text;
   end if;
 
   if array_length(v_fail, 1) > 0 then
