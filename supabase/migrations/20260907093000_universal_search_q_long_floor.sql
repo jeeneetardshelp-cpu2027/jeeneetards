@@ -618,17 +618,17 @@ begin
 
   -- Carry-over: every feature that existed before this re-emission.
   if position('search_rank_aliased' in src) = 0 then
-    v_fail := v_fail || 'the curated shorthand alias pass was dropped by this re-emission';
+    v_fail := v_fail || 'the curated shorthand alias pass was dropped by this re-emission'::text;
   end if;
   if position('study_material_haystack' in src) = 0 then
-    v_fail := v_fail || 'the material kind-word haystack was dropped by this re-emission';
+    v_fail := v_fail || 'the material kind-word haystack was dropped by this re-emission'::text;
   end if;
   if position('''material''' in src) = 0 then
-    v_fail := v_fail || 'the material pillar was dropped by this re-emission';
+    v_fail := v_fail || 'the material pillar was dropped by this re-emission'::text;
   end if;
   -- The floor itself.
   if position('max(length(tok))' in src) = 0 then
-    v_fail := v_fail || 'the q_long floor is not in the body this migration just wrote';
+    v_fail := v_fail || 'the q_long floor is not in the body this migration just wrote'::text;
   end if;
 
   if array_length(v_fail, 1) > 0 then

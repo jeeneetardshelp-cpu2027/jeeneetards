@@ -40,6 +40,20 @@ const ALIASES = "supabase/migrations/20260902170000_search_aliases.sql";
 const WORDS = "supabase/migrations/20260902180000_universal_search_material_words.sql";
 const RELEVANCE = "supabase/migrations/20260902240000_browse_course_relevance.sql";
 const MIGRATION = "supabase/migrations/20260907091500_browse_rpc_servable_floor.sql";
+// The two migrations that landed between the floor and its correction. They are
+// applied on production, so leaving them out of this chain would rehearse a
+// database that does not exist -- and the Hinglish list in particular changes
+// which tokens survive, which is the whole subject of this file.
+const OTHER_FLOOR =
+  "supabase/migrations/20260907093000_universal_search_q_long_floor.sql";
+const HINGLISH =
+  "supabase/migrations/20260907140000_search_filler_tokens_hinglish.sql";
+// 20260907091500 shipped the floor with the CLIENT's rule -- >= 4 once there is
+// more than one token -- against POST-filler tokens, and silently emptied
+// "def int" and "x ray" on production. This is the correction, and the two
+// queries appear below as must-answer cases so the pair cannot regress again.
+const CORRECTION =
+  "supabase/migrations/20260907160000_browse_servable_floor_correction.sql";
 
 const baseline = readFileSync(BASELINE, "utf8");
 const aliases = readFileSync(ALIASES, "utf8");
@@ -167,7 +181,13 @@ beforeAll(async () => {
       (9005, 'Gravitation Class 11 One Shot', null, 1, 'yt9005'),
       (9006, 'Projectile Motion Numericals', null, 1, 'yt9006'),
       (9007, 'Friction Problems Solved', null, 1, 'yt9007'),
-      (9008, 'Class 11 Physics NCERT Full Course', null, 1, 'yt9008');
+      (9008, 'Class 11 Physics NCERT Full Course', null, 1, 'yt9008'),
+      -- The regression corpus for 20260907160000. Both queries are TWO tokens
+      -- whose longest survivor is exactly 3 characters, which is the one shape
+      -- the original floor got wrong -- and every "still answers" case that
+      -- existed before it was a single token, so none of them could catch it.
+      (9009, 'Definite Integration - One Shot', null, 1, 'yt9009'),
+      (9010, 'X Ray Diffraction and Crystal Structure', null, 1, 'yt9010');
     insert into public.playlists (id, title, teacher, channel_id, subject_id) values
       (7, 'Complete Kinematics', 'ABJ Sir', 3, 1),
       (8, 'Physics One Shot - Aagaz Series', 'ABJ Sir', 3, 1),
@@ -205,6 +225,11 @@ beforeAll(async () => {
   // The migration under test. Its own DO $verify$ block runs here; a wrong
   // floor aborts the transaction and fails this setup.
   await pg.exec(migration);
+  // Then the rest of the chain, in order, so what this file exercises is what
+  // production runs -- not the corrected rule in isolation.
+  await pg.exec(readFileSync(OTHER_FLOOR, "utf8"));
+  await pg.exec(readFileSync(HINGLISH, "utf8"));
+  await pg.exec(readFileSync(CORRECTION, "utf8"));
 }, 120000);
 
 const ids = async (fn, q) =>
@@ -231,6 +256,13 @@ describe("browse matchers: the servable floor", () => {
     ["kinematics", "one long token"],
     ["acid", "one token, exactly 4 characters"],
     ["physics", "one long token"],
+    // THE REGRESSION. Two tokens, longest survivor exactly 3 characters. Both
+    // answered 200 on production -- "def int" 33 rows, "x ray" 8 -- and both
+    // returned 0 under the original floor. Every case above this line is a
+    // single token, which is why the first version of this file passed while
+    // the defect shipped.
+    ["def int", "two tokens, longest survivor exactly 3 characters"],
+    ["x ray", "two tokens, longest survivor exactly 3 characters"],
   ])("still answers %j (%s)", async (q) => {
     const videos = await ids("search_video_ids", q);
     const playlists = await ids("search_playlist_ids", q);
@@ -247,6 +279,44 @@ describe("browse matchers: the servable floor", () => {
       ["p block"],
     );
     expect(rows[0].ok).toBe(true);
+  });
+
+  // Pinned at the helper, not through the catalogue, so this stays a statement
+  // about the RULE and cannot be rescued by a fixture that happens to match.
+  it("decides on the length of the longest survivor alone, not the token count", async () => {
+    const { rows } = await pg.query(
+      `select v.q,
+              t.q_tokens,
+              t.q_long,
+              public.search_is_servable(t.q_tokens, t.q_long) as ok
+         from (values ('def int'), ('x ray'), ('ac ka matlab'), ('p and c'), ('ac')) as v(q)
+         cross join lateral public.search_query_tokens(v.q) t`,
+    );
+    const by = Object.fromEntries(rows.map((r) => [r.q, r]));
+
+    // Two tokens, longest survivor 3 -- servable. The old rule demanded 4 here
+    // purely because there were two of them, and that is what emptied both.
+    expect(by["def int"].q_long).toBe("def");
+    expect(by["def int"].q_tokens).toHaveLength(2);
+    expect(by["def int"].ok).toBe(true);
+    expect(by["x ray"].q_long).toBe("ray");
+    expect(by["x ray"].q_tokens).toHaveLength(2);
+    expect(by["x ray"].ok).toBe(true);
+
+    // One token, 2 characters -- refused. The floor still does its job.
+    expect(by["ac"].q_long).toBe("ac");
+    expect(by["ac"].ok).toBe(false);
+    // Several tokens, longest survivor 1 -- refused. Measured at 57014.
+    expect(by["p and c"].q_long).toBe("c");
+    expect(by["p and c"].ok).toBe(false);
+
+    // KNOWN GAP, asserted so it is visible rather than discovered again. The
+    // Hinglish filler list (20260907140000) makes "ka"/"matlab" filler, and the
+    // shared helper has no rescue floor -- 20260907093000 put one in
+    // universal_search only. So /search answers this and /browse does not. See
+    // the header of 20260907160000; fixing it is its own measured change.
+    expect(by["ac ka matlab"].q_long).toBe("ac");
+    expect(by["ac ka matlab"].ok).toBe(false);
   });
 
   it("exposes the rule as a callable helper, so both matchers share one copy", async () => {
