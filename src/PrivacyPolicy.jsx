@@ -34,6 +34,13 @@ function ExternalLink({ href, children }) {
 export default function PrivacyPolicy() {
   const { t } = useTheme();
   const forumAvailable = RELEASE_FEATURES.forum;
+  // Polls went live on 2 September 2026 and this page did not mention them for
+  // a day: votes are stored against a student's account and comments are
+  // published publicly, while the policy that enumerates every such path by
+  // table name said nothing. Derived from the flag, exactly like the forum
+  // above, so the disclosure appears and disappears with the feature rather
+  // than relying on someone remembering to edit this file.
+  const pollsAvailable = RELEASE_FEATURES.polls;
   return (
     <div className={`min-h-screen ${t.page} ${t.text}`}>
       <GlobalHeader crumbs={[{ label: "Privacy Policy" }]} />
@@ -91,9 +98,12 @@ export default function PrivacyPolicy() {
           </Section>
 
           <Section
-            title={forumAvailable
-              ? "3. Ratings, reviews, forum posts, and content reports"
-              : "3. Ratings, reviews, and content reports"}
+            title={[
+              "3. Ratings, reviews",
+              forumAvailable ? ", forum posts" : "",
+              pollsAvailable ? ", poll votes and comments" : "",
+              ", and content reports",
+            ].join("")}
           >
             <p>
               The course-rating path stores a student account
@@ -120,6 +130,36 @@ export default function PrivacyPolicy() {
                 Students should not publish real names, contact details, schools, coaching batches, account credentials,
                 or other personal information. Reports and moderation records are restricted to authorized moderators.
               </p>
+            )}
+            {pollsAvailable && (
+              <>
+                <p>
+                  Voting in a student poll needs an account.{" "}
+                  <code>poll_votes</code> stores the poll, the option chosen,
+                  the account identifier of the person who chose it, and when.
+                  One vote is kept per person per poll, and changing a vote
+                  replaces the old one rather than adding a second.
+                </p>
+                <p>
+                  <strong>How an individual voted is not shown to anyone
+                  else.</strong> A poll page publishes only the totals for each
+                  option; the row identifying a voter is not readable by other
+                  students or by signed-out visitors, and the site returns a
+                  person&apos;s own choice only to that person, so the option
+                  can be shown as selected when they come back.
+                </p>
+                <p>
+                  <strong>A poll comment is published publicly</strong>,
+                  alongside the forum username that account has claimed, and can
+                  be read by anyone including signed-out visitors. The same
+                  caution applies as to a review: do not write a real name,
+                  school, batch, contact details, or anything else you would not
+                  want a stranger to read. A comment can be deleted by its
+                  author. Reporting a poll or a comment stores the reporter&apos;s
+                  account identifier, and reports are visible only to
+                  administrators.
+                </p>
+              </>
             )}
           </Section>
 
