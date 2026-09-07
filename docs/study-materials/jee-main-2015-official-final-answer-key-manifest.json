@@ -1,0 +1,22 @@
+{
+  "preparedOn": "2026-09-04",
+  "coverage": "JEE Main 2015 Paper 1 final answer key for the 4 April offline Sets A-D and the 10 and 11 April online examinations.",
+  "verification": "The PDF was preserved from the original official jeemain.nic.in host on 19 May 2015. Its official filename is 'Final Answer Key JEE 2015.pdf'. All three pages were downloaded, hashed, text-extracted and visually rendered. Pages 1-2 cover offline Sets A-D; page 3 covers the 10 and 11 April online examinations. The 90-question Physics, Chemistry and Mathematics structure matches the official Paper 1 question papers.",
+  "exclusions": "Paper 2 B.Arch/B.Planning keys, candidate response sheets, question papers and third-party worked solutions are excluded.",
+  "hostingPolicy": "Link-only. The PDF is linked through a preserved Internet Archive capture of the original official jeemain.nic.in host and is not mirrored by JEENEETARD.",
+  "resources": [
+    {
+      "title": "JEE Main 2015 Final Answer Key (Paper 1 B.E./B.Tech)",
+      "officialFilename": "Final Answer Key JEE 2015.pdf",
+      "offlineHeading": "ANSWER KEY JEE (MAIN) - 2015 OFFLINE EXAMINATION",
+      "onlineHeading": "ANSWER KEY JEE (MAIN) - 2015 ONLINE EXAMINATION",
+      "examYear": 2015,
+      "offlineExamDate": "2015-04-04",
+      "offlineSets": ["A", "B", "C", "D"],
+      "onlineExamDates": ["2015-04-10", "2015-04-11"],
+      "pageCount": 3,
+      "sourceUrl": "https://web.archive.org/web/20150519141002id_/http://jeemain.nic.in/webinfo/PDF/Final%20Answer%20Key%20JEE%202015.pdf",
+      "sha256": "7F19B58CB73CB3D0F753A517D5A477D02107D82AF0DC89072F702E615796AF09"
+    }
+  ]
+}
