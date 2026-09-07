@@ -32,7 +32,7 @@ const MATERIALS = "supabase/migrations/20260901160000_universal_search_materials
 const MIGRATION = "supabase/migrations/20260902170000_search_aliases.sql";
 const WORDS = "supabase/migrations/20260902180000_universal_search_material_words.sql";
 const FLOOR = "supabase/migrations/20260907093000_universal_search_q_long_floor.sql";
-const ANCHOR = "supabase/migrations/20260907160000_universal_search_anchor_floor.sql";
+const ANCHOR = "supabase/migrations/20260907170000_universal_search_anchor_floor.sql";
 
 const baseline = readFileSync(BASELINE, "utf8");
 const materials = readFileSync(MATERIALS, "utf8");
