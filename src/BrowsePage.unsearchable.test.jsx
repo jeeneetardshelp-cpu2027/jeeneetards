@@ -70,9 +70,9 @@ describe("/browse explains a query it never sent", () => {
     expect(screen.queryByText(/No lessons match your filters/i)).toBeNull();
   });
 
-  // Several short words. "p and c" is seven characters, so "type at least 3
+  // Several short words. "p c" is three characters, so "type at least 3
   // characters" would be both wrong and unactionable — the student already did.
-  it.each(["p c", "p and c", "a b c"])(
+  it.each(["p c", "a b c", "p n c"])(
     "tells %j that its words are too short, not that it is too short",
     async (q) => {
       renderAt(`/browse?tab=lectures&q=${encodeURIComponent(q)}`);
@@ -80,6 +80,31 @@ describe("/browse explains a query it never sent", () => {
       expect(await screen.findByText(/Try a longer word/i)).toBeTruthy();
       expect(screen.queryByText(/Type at least/i)).toBeNull();
       expect(screen.queryByText(/No lessons match your filters/i)).toBeNull();
+    },
+  );
+
+  // "p and c" is refused for a THIRD reason, and needs a third sentence: it has
+  // a three-character word, so neither "type at least 3 characters" nor "try a
+  // longer word" describes it. Its only long word is a joining word.
+  it("tells \"p and c\" its long word is a joining word, not that it is short", async () => {
+    renderAt("/browse?tab=lectures&q=p%20and%20c");
+
+    expect(await screen.findByText(/more specific word/i)).toBeTruthy();
+    expect(screen.queryByText(/Try a longer word/i)).toBeNull();
+    expect(screen.queryByText(/Type at least/i)).toBeNull();
+    expect(screen.queryByText(/No lessons match your filters/i)).toBeNull();
+  });
+
+  // The queries the old rule refused for having no 4-character word. Each was
+  // measured at HTTP 200 on production, so /browse must actually search them.
+  it.each(["iit jee", "jee adv", "x ray", "def int"])(
+    "searches %j instead of refusing it",
+    async (q) => {
+      renderAt(`/browse?tab=lectures&q=${encodeURIComponent(q)}`);
+
+      expect(await screen.findByText(/No lessons match your filters/i)).toBeTruthy();
+      expect(screen.queryByText(/Try a longer word/i)).toBeNull();
+      expect(screen.queryByText(/more specific word/i)).toBeNull();
     },
   );
 
@@ -102,7 +127,7 @@ describe("/browse explains a query it never sent", () => {
   it("sent no request for the unservable query", async () => {
     renderAt("/browse?tab=lectures&q=p%20and%20c");
 
-    await screen.findByText(/Try a longer word/i);
+    await screen.findByText(/more specific word/i);
     // The guard in useBrowse.js short-circuits before the RPC and before the
     // catalogue query; the message is not the result of a failed round trip.
     await waitFor(() => {

@@ -502,22 +502,82 @@ describe("short query, loading, error and empty (requirements 6, 8)", () => {
   // The true cases are listed deliberately: a stricter guard would be just as
   // wrong, because "p block" and "class 11" each carry a 1-2 character token
   // and answer in about a second.
+  // Re-measured 2026-09-07. The six on the second row were all REFUSED by the
+  // old rule, which wanted a 4-character token once there was more than one
+  // token; each of them answers 200, and in a JEE/NEET catalogue they are
+  // ordinary queries rather than curiosities. "p n c" was added at the same
+  // time as a 500 the rule must keep refusing.
   it.each([
-    ["ac", false], ["3d", false], ["p c", false], ["a b c", false], ["p and c", false],
+    ["ac", false], ["3d", false], ["p c", false], ["a b c", false],
+    ["p and c", false], ["p n c", false],
     ["and", true], ["abc", true], ["ktg", true], ["emi", true],
     ["class 11", true], ["p block", true], ["s block", true],
-    ["jee 2025", true], ["physics 11", true],
+    ["jee 2025", true], ["physics 11", true], ["the and for", true],
+    ["iit jee", true], ["jee adv", true], ["jee pyq", true],
+    ["org che", true], ["x ray", true], ["def int", true],
   ])("isServableQuery(%o) === %s, as production answered it", (query, servable) => {
     expect(isServableQuery(query)).toBe(servable);
   });
+
+  // A lone connective is the query, and the server treats it that way: filler
+  // removal only applies when something survives it, so "and" keeps its own
+  // token and answers 200. "p and c" is the same word in a different role —
+  // scaffolding between two real words — and there it cannot be the anchor.
+  // One rule produces both, which is the whole point of mirroring the server's
+  // guard instead of inventing a second one.
+  it.each([
+    ["and", true], ["the", true], ["the and for", true],
+    ["p and c", false], ["a and b", false], ["x and y", false],
+  ])("connective handling: isServableQuery(%o) === %s", (query, servable) => {
+    expect(isServableQuery(query)).toBe(servable);
+  });
+
+  // The cost of that, stated rather than hidden: these two answer 200 on
+  // production (96 and 31 rows) and are refused here anyway, because their only
+  // three-letter word is "and". They are noise queries, and no real search is
+  // lost to them — "iit jee" above is what the trade buys.
+  it.each(["a and b", "x and y"])(
+    "knowingly refuses %j, which the server would have answered",
+    (query) => {
+      expect(isServableQuery(query)).toBe(false);
+    },
+  );
 
   it("says something actionable when a long query has no searchable word", async () => {
     renderSearch();
     type("p and c");
     await settle();
-    // NOT "type at least 3 characters" — the student typed seven.
-    expect(screen.getByText(/Try a longer word/i)).toBeTruthy();
+    // NOT "type at least 3 characters" — the student typed seven. And not
+    // "try a longer word" either: "and" IS three characters, so the length is
+    // not what is wrong with this query. What is wrong is that its only long
+    // word is a joining word, and that is what the sentence has to say.
+    expect(screen.getByText(/more specific word/i)).toBeTruthy();
+    expect(screen.queryByText(/Type at least/i)).toBeNull();
     expect(rpcCalls).toHaveLength(0);
+  });
+
+  it("still blames the word length when every word really is too short", async () => {
+    renderSearch();
+    type("p c");
+    await settle();
+    // The other half of the branch above. If both refusals collapsed onto one
+    // sentence, one of the two would be describing a different query.
+    expect(screen.getByText(/Try a longer word/i)).toBeTruthy();
+    expect(screen.queryByText(/more specific word/i)).toBeNull();
+    expect(rpcCalls).toHaveLength(0);
+  });
+
+  it("searches the three-letter queries this catalogue is full of", async () => {
+    // The old rule needed a 4-character token once there was more than one
+    // token, which refused "iit jee" (200, 38 rows), "jee adv" (59), "jee pyq"
+    // (43) and "x ray" (8) before any request. In a JEE/NEET catalogue the
+    // three-letter word is the norm, so that floor was expensive.
+    renderSearch();
+    type("iit jee");
+    await settle();
+    expect(rpcCalls.length).toBeGreaterThan(0);
+    expect(screen.queryByText(/Try a longer word/i)).toBeNull();
+    expect(screen.queryByText(/more specific word/i)).toBeNull();
   });
 
   it("refuses a query below the floor without asking the server", async () => {
