@@ -1,0 +1,93 @@
+{
+  "note": "Append-only record of migration versions CONFIRMED applied to production by src/scripts/verifyMigrationStatus.js reading the real database. Never hand-edit: see the header of src/appliedMigrationsLedgerSqlContract.test.js.",
+  "versions": [
+    {
+      "version": "20260831140005",
+      "file": "20260831140005_production_baseline.sql"
+    },
+    {
+      "version": "20260901120000",
+      "file": "20260901120000_study_days.sql"
+    },
+    {
+      "version": "20260901160000",
+      "file": "20260901160000_universal_search_materials.sql"
+    },
+    {
+      "version": "20260902093000",
+      "file": "20260902093000_study_material_paper_metadata.sql"
+    },
+    {
+      "version": "20260902122500",
+      "file": "20260902122500_neet_ug_2025_papers.sql"
+    },
+    {
+      "version": "20260902170000",
+      "file": "20260902170000_search_aliases.sql"
+    },
+    {
+      "version": "20260902180000",
+      "file": "20260902180000_universal_search_material_words.sql"
+    },
+    {
+      "version": "20260902200000",
+      "file": "20260902200000_link_verified_faculty_credits.sql"
+    },
+    {
+      "version": "20260902210000",
+      "file": "20260902210000_search_gap_log.sql"
+    },
+    {
+      "version": "20260902220000",
+      "file": "20260902220000_repair_hindi_note_titles.sql"
+    },
+    {
+      "version": "20260902230000",
+      "file": "20260902230000_remove_search_gap_probe.sql"
+    },
+    {
+      "version": "20260902240000",
+      "file": "20260902240000_browse_course_relevance.sql"
+    },
+    {
+      "version": "20260902250000",
+      "file": "20260902250000_pause_search_gap_collection.sql"
+    },
+    {
+      "version": "20260902260000",
+      "file": "20260902260000_resume_search_gap_collection.sql"
+    },
+    {
+      "version": "20260904085000",
+      "file": "20260904085000_repair_math_tools_course_388.sql"
+    },
+    {
+      "version": "20260904120000",
+      "file": "20260904120000_profiles_only_username_is_public.sql"
+    },
+    {
+      "version": "20260907091500",
+      "file": "20260907091500_browse_rpc_servable_floor.sql"
+    },
+    {
+      "version": "20260907093000",
+      "file": "20260907093000_universal_search_q_long_floor.sql"
+    },
+    {
+      "version": "20260907140000",
+      "file": "20260907140000_search_filler_tokens_hinglish.sql"
+    },
+    {
+      "version": "20260907160000",
+      "file": "20260907160000_browse_servable_floor_correction.sql"
+    },
+    {
+      "version": "20260907170000",
+      "file": "20260907170000_universal_search_anchor_floor.sql"
+    },
+    {
+      "version": "20260907200000",
+      "file": "20260907200000_shared_tokeniser_rescue_floor.sql"
+    }
+  ]
+}

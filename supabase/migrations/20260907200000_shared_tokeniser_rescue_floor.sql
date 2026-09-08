@@ -57,7 +57,31 @@
 --   "kaise padhe"    needle "kaise"        200, 0.33s / 0.30s,  0 rows
 --   "ke numericals"  needle "numericals"   200, 0.29s / 0.29s,  0 rows
 --
--- None is near the ceiling. This does not turn a silent zero into a timeout.
+-- None is near the ceiling, and none of the rescued Hinglish queries became a
+-- timeout. "p and c" did -- see below; the sentence that used to sit here said
+-- "this does not turn a silent zero into a timeout" without that exception, and
+-- it was wrong.
+--
+-- APPLIED 7 Sep 2026, and measured immediately. What it bought:
+--
+--   query           /browse lectures + courses      was
+--   "ac ka matlab"  200, 0.59s, 29 + 4              0 + 0
+--   "ac kya hai"    200, 1.47s, 29 + 4              0 + 0
+--   "ac the of"     200, 2.37s, 48 + 4              0 + 0
+--   "ph kya hai"    200, 0.50s,  0 + 0              0 + 0   (unchanged)
+--
+-- Three of the four. "ph kya hai" is still empty on /browse while /search
+-- answers 22; "ph" has no alias reaching a lecture title, so the rescue gives
+-- it a needle and there is still nothing for the needle to find here. Not a
+-- regression, and not something this file claimed to fix.
+--
+-- Nothing that worked regressed: "kinematics" 172, "s block" 65, "iit jee" 195,
+-- "x ray" 8, "def int" 176, "kinematics ka one shot" 7, "ac one shot" 29,
+-- "shm kya hai" 376. "emi ka matlab", which the note below expected to stay
+-- broken, answers 200 / 1.47s / 452 rows -- so the single 500 recorded for it
+-- earlier was a cold run rather than a standing failure. Every refusal still
+-- refuses: "ac", "3d", "p c", "a b c" and "p n c" all return 0 from both
+-- matchers.
 --
 -- WHAT THIS DOES NOT FIX, so nobody credits it later with more than it did:
 --
@@ -68,13 +92,24 @@
 --     problem and needs its own work.
 --   * "p and c" gains a path it did not have: content [p, c] is too short, so
 --     the rescue keeps [p, and, c] and the needle becomes "and", which clears
---     the floor. universal_search has behaved this way since 20260907093000 and
---     answers 500 for it, so this makes /browse consistent with /search rather
---     than introducing a new class. An "and" needle by itself is cheap on these
---     matchers -- "the and for" is 200 / ~1.3s, 3/3 runs -- and it is the alias
---     expansion on top that tips "p and c" over. No student reaches it:
---     isServableQuery refuses it client-side, because its only three-letter
---     word is a connective.
+--     the floor. THIS COST WAS PAID. Measured after applying: 500 57014, 3/3
+--     runs, ~3.3s, where before it was 200 with 0 rows.
+--
+--     I had guessed it might come in under the ceiling, on the grounds that
+--     these matchers run at about half the cost of universal_search for the
+--     same needle ("the and for" is 1.3s here against 2.4s there). That guess
+--     was wrong: with the alias expansion on top it lands at 3.3s, the same as
+--     universal_search. An "and" needle alone really is cheap; the alias pass
+--     is what tips it, and it costs the same on both surfaces.
+--
+--     Kept, deliberately. universal_search has answered 500 for this query
+--     since 20260907093000, so /browse now agrees with /search instead of
+--     disagreeing, and no student reaches it on either: isServableQuery refuses
+--     "p and c" client-side because its only three-letter word is a connective.
+--     The trade is one unreachable query going from a silent zero to a loud
+--     error, against three real Hinglish query shapes going from zero to
+--     answers. Reverse it with the rollback beside this file if that judgement
+--     ever changes -- restoring the pre-rescue body is a create-or-replace.
 --
 -- ONE FUNCTION, and deliberately so. universal_search, search_video_ids and
 -- search_playlist_ids all call search_query_tokens() at RUNTIME, so they pick
