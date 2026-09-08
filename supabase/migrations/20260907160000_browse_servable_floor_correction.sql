@@ -68,6 +68,19 @@
 -- are untouched and nothing comes under the carry-over contract in
 -- src/searchFeatureCarryOverSqlContract.test.js.
 --
+-- APPLIED 7 Sep 2026. Verified live by calling search_is_servable on production
+-- directly, which pins the rule rather than inferring it from row counts:
+--
+--     ([def,int], "def")  -> true      ([ac], "ac")   -> false
+--     ([x,ray],  "ray")  -> true      ([p,c],  "c")  -> false
+--
+-- and through the matchers: "x ray" 200 / 0.8s / 8 rows, "def int" 200 /
+-- 2.4-3.2s / 176 rows over 4 runs, while "ac", "3d", "p c", "a b c" and
+-- "p and c" all still return 0 from both. One cold run of "def int" returned
+-- 500 57014 before settling: a 3-character needle is admitted by this rule but
+-- is not therefore fast, and that query sits near the ceiling. The floor buys
+-- protection from 1-2 character needles, not a latency guarantee.
+--
 -- Rerunnable: create or replace, grants re-stated.
 -- ============================================================================
 
