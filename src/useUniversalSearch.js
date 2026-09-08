@@ -106,6 +106,28 @@ export function isServableQuery(term) {
   return tokens.some((token) => token.length >= MIN_QUERY + 1);
 }
 
+/**
+ * What to tell a student whose query isServableQuery just refused.
+ *
+ * Two different reasons reach here and they need different sentences. A
+ * one-word query is simply too short. "p and c" is seven characters and still
+ * unanswerable, because none of its words is long enough to search on —
+ * telling that student to "type at least 3 characters" would be both wrong and
+ * unactionable, since they already typed seven.
+ *
+ * It lives beside the predicate rather than at the call sites so that a second
+ * surface cannot show a different sentence for the same state. /browse shows
+ * this too, and used to say "No lessons match your filters." instead — which
+ * claims the catalogue was searched and came back empty, when it was never
+ * asked.
+ */
+export function unsearchableQueryHint(term) {
+  const tokens = String(term ?? "").trim().split(/\s+/).filter(Boolean);
+  return tokens.length > 1
+    ? "Try a longer word — very short words can’t be searched."
+    : `Type at least ${MIN_QUERY} characters.`;
+}
+
 // Requirement 7. 275ms sits in the asked-for 250-300ms band: long enough that
 // a typed word is one request rather than six, short enough to feel live.
 export const DEBOUNCE_MS = 275;

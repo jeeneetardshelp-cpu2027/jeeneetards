@@ -1,0 +1,112 @@
+// What /browse says when it did not search.
+//
+// useBrowse.js refuses a query the server cannot answer and returns an empty
+// result WITHOUT a request. That lands in the same "no lessons" branch as a real
+// empty result, and until now the page said "No lessons match your filters." —
+// which asserts the catalogue was searched and came back empty. It was never
+// asked.
+//
+// The search box already had the honest sentences for this exact state. These
+// tests pin /browse to the same ones, so the two surfaces cannot describe one
+// state two ways.
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { render, screen, waitFor } from "@testing-library/react";
+import { MemoryRouter, Routes, Route } from "react-router";
+
+const calls = [];
+const rpcCalls = [];
+function builder(table) {
+  const rec = { table, cols: null, eq: {}, range: null, orders: [], limits: [] };
+  calls.push(rec);
+  const b = {
+    select(cols, opts) { rec.cols = cols; rec.opts = opts; return b; },
+    order(column, options) { if (!options?.referencedTable) rec.orders.push(column); return b; },
+    limit(count, options) { rec.limits.push([count, options?.referencedTable ?? null]); return b; },
+    range(a, z) { rec.range = [a, z]; return b; },
+    eq(k, v) { rec.eq[k] = v; return b; },
+    ilike() { return b; },
+    in() { return b; },
+    maybeSingle() { return Promise.resolve({ data: null, error: null }); },
+    then(resolve) { return Promise.resolve({ data: [], error: null, count: 0 }).then(resolve); },
+  };
+  return b;
+}
+
+vi.mock("./supabaseClient", () => ({
+  isSupabaseConfigured: true,
+  supabase: {
+    from: (t) => builder(t),
+    rpc: (name, args) => {
+      rpcCalls.push({ name, args });
+      return Promise.resolve({ data: [], error: null });
+    },
+  },
+}));
+
+import BrowsePage from "./BrowsePage.jsx";
+import { MIN_QUERY } from "./useUniversalSearch.js";
+
+const renderAt = (url) =>
+  render(
+    <MemoryRouter initialEntries={[url]}>
+      <Routes><Route path="/browse" element={<BrowsePage />} /></Routes>
+    </MemoryRouter>,
+  );
+
+beforeEach(() => {
+  calls.length = 0;
+  rpcCalls.length = 0;
+});
+
+describe("/browse explains a query it never sent", () => {
+  // One short word: the student can act on "type more characters".
+  it("tells a one-word short query to keep typing", async () => {
+    renderAt("/browse?tab=lectures&q=ac");
+
+    expect(
+      await screen.findByText(new RegExp(`Type at least ${MIN_QUERY} characters`, "i")),
+    ).toBeTruthy();
+    // And it does not claim the catalogue was searched.
+    expect(screen.queryByText(/No lessons match your filters/i)).toBeNull();
+  });
+
+  // Several short words. "p and c" is seven characters, so "type at least 3
+  // characters" would be both wrong and unactionable — the student already did.
+  it.each(["p c", "p and c", "a b c"])(
+    "tells %j that its words are too short, not that it is too short",
+    async (q) => {
+      renderAt(`/browse?tab=lectures&q=${encodeURIComponent(q)}`);
+
+      expect(await screen.findByText(/Try a longer word/i)).toBeTruthy();
+      expect(screen.queryByText(/Type at least/i)).toBeNull();
+      expect(screen.queryByText(/No lessons match your filters/i)).toBeNull();
+    },
+  );
+
+  // The other direction: a servable query that genuinely finds nothing must
+  // still say so. Without this, the fix could swallow every empty result.
+  it("still says nothing matched when a real search came back empty", async () => {
+    renderAt("/browse?tab=lectures&q=kinematics");
+
+    expect(await screen.findByText(/No lessons match your filters/i)).toBeTruthy();
+    expect(screen.queryByText(/Type at least/i)).toBeNull();
+    expect(screen.queryByText(/Try a longer word/i)).toBeNull();
+  });
+
+  it("keeps the empty-catalogue wording when nothing was asked for at all", async () => {
+    renderAt("/browse?tab=lectures");
+
+    expect(await screen.findByText(/No lessons have been added yet/i)).toBeTruthy();
+  });
+
+  it("sent no request for the unservable query", async () => {
+    renderAt("/browse?tab=lectures&q=p%20and%20c");
+
+    await screen.findByText(/Try a longer word/i);
+    // The guard in useBrowse.js short-circuits before the RPC and before the
+    // catalogue query; the message is not the result of a failed round trip.
+    await waitFor(() => {
+      expect(rpcCalls.filter((c) => c.name === "search_video_ids")).toHaveLength(0);
+    });
+  });
+});

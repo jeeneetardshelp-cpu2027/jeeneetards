@@ -31,17 +31,26 @@
 // with an `if (floorLanded()) return;` at the top of all four tests. It lifted
 // on the floor's EXISTENCE — a filename match — not on the floor WORKING. So
 // from the moment that migration was written, this suite reported 4 passed
-// while asserting nothing at all. That mattered, because the floor does not
-// fully work: its own header sets three acceptance queries and the third,
-// "p and c", still answers 500 57014 on production. The floor is a LENGTH rule
-// and that failure is SELECTIVITY -- q_long falls back to the raw tokens, whose
-// longest member there is the stopword "and", in 1328 of 5533 video titles.
-// No student meets it: isServableQuery refuses "p and c" (tokens 1/3/1) on all
-// three surfaces before any RPC call.
+// while asserting nothing at all.
 //
-// So: a gate keyed to a filename reported success for a migration that missed
-// its own bar. Nothing below is conditional, and every test here has been shown
-// to fail when the thing it names is broken.
+// An earlier version of THIS header then justified the rewrite by saying the
+// floor "does not fully work: its own header sets three acceptance queries and
+// the third, 'p and c', still answers 500 57014". That was wrong, and wrong in
+// the same direction as the gate it was complaining about. The floor's three
+// acceptance queries are "a and b", "ac the of" and "ph the of"; all three
+// answer 200 on production, 3 of 3 runs. "p and c" does still answer 500 57014,
+// but it was never one of them -- the floor's own header says "ONE CASE THIS
+// DOES NOT FIX, and an earlier draft of this header wrongly claimed it did",
+// and "was never one of that file's conditions". So the correction re-made the
+// error the file being described had already corrected in itself.
+//
+// The real reason to rewrite rather than delete stands on its own: a gate keyed
+// to a FILENAME cannot report on BEHAVIOUR, whether or not the behaviour is
+// sound. Nothing below is conditional. Each test below has been mutation-tested
+// -- break the thing it names, and that test is the one that goes red.
+//
+// ("p and c" reaches no student either way: isServableQuery refuses it, tokens
+// 1/3/1, on all three surfaces before any RPC call.)
 
 import { describe, expect, it } from "vitest";
 import { existsSync, readFileSync } from "node:fs";

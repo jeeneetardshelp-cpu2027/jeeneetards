@@ -29,6 +29,10 @@ import {
   Search, X, Play, AlertTriangle,
 } from "lucide-react";
 import { useVideos, useDebouncedValue, LECTURE_PAGE_SIZE, parseLectureSort } from "./useBrowse.js";
+// The same predicate the hooks use to decide whether to ask the server at all,
+// and the sentence that explains a refusal. Imported rather than re-derived so
+// /browse and the search box cannot describe one state two ways.
+import { isServableQuery, unsearchableQueryHint } from "./useUniversalSearch.js";
 import { useChapterName } from "./useChapterName.js";
 import { GlobalHeader, MAIN_CONTENT_ID } from "./AppShell.jsx";
 import PlaylistBrowse from "./PlaylistBrowse.jsx";
@@ -560,12 +564,50 @@ export default function BrowsePage() {
               it is resolved or dropped, so this is the only way forward. */}
           {canonical.unresolved?.length > 0 && (
             <div className={`mb-4 rounded-xl border p-4 text-sm ${dark ? "border-amber-900 bg-amber-950/40 text-amber-100" : "border-amber-200 bg-amber-50 text-amber-900"}`}>
-              <p className="font-medium">
-                {canonical.unresolved.map((u) => `“${u.slug}”`).join(", ")}{" "}
-                {canonical.unresolved.length === 1 ? "is not a" : "are not"}{" "}
-                {canonical.unresolved.length === 1 ? canonical.unresolved[0].key : "valid filter"} we know about.
-              </p>
-              <p className="mt-1">This link may be out of date. Results are not shown for a filter we can’t resolve.</p>
+              {/* "ambiguous" is not "unknown": /browse?chapter=thermodynamics
+                  names a chapter that exists in BOTH Physics and Chemistry, so
+                  saying we do not know it would be false. We know two, and the
+                  URL gave us no way to choose.
+
+                  SPLIT BY REASON RATHER THAN BRANCHING ON THE WHOLE LIST. An
+                  earlier version asked `unresolved.length === 1 && [0].reason
+                  === "ambiguous"`, so a single unknown filter alongside the
+                  ambiguous one — /browse?goal=dead-slug&chapter=thermodynamics
+                  — fell through to the generic sentence and told the student we
+                  do not know a chapter we know two of. That is the exact claim
+                  this branch exists to stop making, and 14 chapter slugs are
+                  duplicated across subjects, not one. Each group now speaks for
+                  itself and both can appear together. */}
+              {(() => {
+                const ambiguous = canonical.unresolved.filter((u) => u.reason === "ambiguous");
+                const unknown = canonical.unresolved.filter((u) => u.reason !== "ambiguous");
+                const list = (items) => items.map((u) => `“${u.slug}”`).join(", ");
+                return (
+                  <>
+                    {ambiguous.length > 0 && (
+                      <>
+                        <p className="font-medium">
+                          {list(ambiguous)}{" "}
+                          {ambiguous.length === 1
+                            ? `is a ${ambiguous[0].key} in more than one subject.`
+                            : "name more than one subject’s chapter."}
+                        </p>
+                        <p className="mt-1">Add a subject to say which one, or remove it. Results are not shown while the filter is ambiguous.</p>
+                      </>
+                    )}
+                    {unknown.length > 0 && (
+                      <>
+                        <p className={`font-medium${ambiguous.length > 0 ? " mt-3" : ""}`}>
+                          {list(unknown)}{" "}
+                          {unknown.length === 1 ? "is not a" : "are not"}{" "}
+                          {unknown.length === 1 ? unknown[0].key : "valid filter"} we know about.
+                        </p>
+                        <p className="mt-1">This link may be out of date. Results are not shown for a filter we can’t resolve.</p>
+                      </>
+                    )}
+                  </>
+                );
+              })()}
               <div className="mt-3 flex flex-wrap gap-2">
                 {canonical.unresolved.map((u) => (
                   <button
@@ -725,9 +767,18 @@ export default function BrowsePage() {
           ) : videos.length === 0 ? (
             <div className={`rounded-xl border border-dashed ${t.border} ${t.card} p-12 text-center`}>
               <p className={`font-medium ${t.text}`}>
-                {anyFilter
-                  ? "No lessons match your filters."
-                  : "No lessons have been added yet."}
+                {/* A query the server cannot answer is never sent (see
+                    useBrowse.js), so this branch is reached with zero lessons
+                    WITHOUT anything having been searched. Saying "No lessons
+                    match your filters." there claims the catalogue was checked
+                    and came back empty. It was not asked. The search box shows
+                    the same sentence for the same state — one copy, in
+                    useUniversalSearch.js. */}
+                {searchTerm && !isServableQuery(searchTerm)
+                  ? unsearchableQueryHint(searchTerm)
+                  : anyFilter
+                    ? "No lessons match your filters."
+                    : "No lessons have been added yet."}
               </p>
               {anyFilter && (
                 <button
