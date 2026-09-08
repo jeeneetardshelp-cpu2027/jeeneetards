@@ -37,6 +37,11 @@ const catalogue = vi.hoisted(() => ({
       id: 2,
       title: "Newton's Laws of Motion",
       teacher: "XYZ Sir",
+      // This course resolved to exactly ONE registered teacher, so the page
+      // owns a /faculty page for the human it credits. Course 1 above
+      // deliberately carries no slug — between them the two fixtures cover
+      // both branches of the instructor node.
+      teacherSlug: "xyz-sir",
       institute: "Competition Wallah",
       averageRating: 4.5,
       ratingsCount: 10, // a course WITH real ratings — the other branch
@@ -149,6 +154,8 @@ describe("CourseVideoPage structured data wiring", () => {
     // Honest provider/instructor split (rule 1): the teaching institute is
     // the provider, the teacher is the instructor — never this site.
     expect(course.provider).toEqual({ "@type": "Organization", name: "Mohit Tyagi" });
+    // No linked faculty row resolved for this course, so the Person node
+    // carries no url — a slug is never derived from the credit string.
     expect(course.hasCourseInstance.instructor).toEqual({ "@type": "Person", name: "ABJ Sir" });
     expect(course.url).toBe("https://www.jeeneetard.com/course/1");
     // Real site state today: ratings_count is 0 everywhere, so this must be absent.
@@ -187,6 +194,24 @@ describe("CourseVideoPage structured data wiring", () => {
     // query (useLessonDescription), still lands on the VideoObject.
     await waitFor(() => expect(schemaFor("VideoObject").description)
       .toBe("What a force is and how it changes motion."));
+  });
+
+  it("gives the instructor Person the faculty page this site owns for that teacher", async () => {
+    // The measured bug this closes: /course/398 published
+    // "instructor":{"@type":"Person","name":"Mahendra Singh"} with NO url,
+    // while /faculty/mahendra-singh is a real 200 page listing his courses —
+    // a dangling second identity for a human the site already describes.
+    // The page does not resolve the slug itself; it passes through the one
+    // usePlaylistVideos put on the course, and courseSchema turns it into the
+    // absolute URL FacultyProfile publishes for the same person.
+    renderApp("/course/2");
+    await screen.findByRole("heading", { name: "Introducing force" });
+
+    expect(schemaFor("Course").hasCourseInstance.instructor).toEqual({
+      "@type": "Person",
+      name: "XYZ Sir", // the CREDIT students read, not the registry display_name
+      url: "https://www.jeeneetard.com/faculty/xyz-sir",
+    });
   });
 
   it("replaces rather than duplicates schema when navigating to a different course in place", async () => {

@@ -14,6 +14,7 @@ import { chapterScopeStageDecision, classSlugsForStage } from "./classLevels.js"
 import { isMissingCatalogRpc } from "./useExplore.js";
 import { isServableQuery } from "./useUniversalSearch.js";
 import { fetchSearchQueryTokens, partitionByStrength } from "./searchStrongMatch.js";
+import { FACULTY_SLUG_EMBED, courseTeacherSlug } from "./courseTeacherSlug.js";
 export { classSlugsForStage } from "./classLevels.js";
 
 export const PAGE_SIZE = 12;
@@ -42,6 +43,14 @@ function toCard(row) {
     id: row.id,
     title: row.title,                       // curated title — dominates the card
     teacher: row.teacher ?? null,           // LEGACY free text. Not a resolved identity.
+    // The resolved identity BEHIND that free text, when the faculty registry
+    // names exactly one slugged teacher for this course — the destination for
+    // the credit above, never a replacement for it. Null for the courses whose
+    // credit has no link (128 of them on 2026-09-08) and for every course that
+    // resolves two or more slugs (134 — playlist 91 is two real people, most
+    // of the rest are duplicate registry rows for one). courseTeacherSlug.js
+    // owns that rule, and the counts behind it, for all three read paths.
+    teacherSlug: courseTeacherSlug(row.faculty),
     instituteId: row.institutes_channels?.id ?? null,
     institute: row.institutes_channels?.name ?? null,
     instituteLogoUrl: row.institutes_channels?.logo_url ?? null,
@@ -252,6 +261,13 @@ export function usePlaylistBrowse({
       "id, title, display_order, teacher, average_rating, ratings_count, language, content_type," +
       " difficulty, class_levels, view_count_total, stats_fetched_at, institutes_channels(id, name, logo_url), subjects(name)," +
       " playlist_videos(count), cover:playlist_videos(id, position, videos(youtube_video_id))" +
+      // The linked faculty identity behind `teacher`, so the card's credit can
+      // point at the /faculty page this site already owns for that person.
+      // Not tied to a filter the way every join below it is, BECAUSE it is a
+      // left join: it adds a field to rows, it never removes a row. Its only
+      // condition is the teachers_v7 capability, which empties the fragment
+      // where the faculty tables are absent. See courseTeacherSlug.js.
+      FACULTY_SLUG_EMBED +
       (goalId ? ", playlist_learning_goals!inner(learning_goal_id)" : "") +
       // Board scoping lives in the QUERY, not in a post-filter. CBSE and ICSE
       // must never bleed into each other, and filtering after paging would

@@ -551,6 +551,12 @@ export default function CourseVideoPage() {
             description: metadataForCourse(displayedCourse)?.description,
             institute: course.institute,
             teacher: course.teacher,
+            // The resolved faculty identity behind that credit string, so the
+            // instructor Person node carries the /faculty page this site
+            // already serves for the human instead of dangling. Null (no link,
+            // or two linked teachers) omits instructor.url — courseSchema owns
+            // that rule; this only passes what usePlaylistVideos resolved.
+            teacherSlug: course.teacherSlug,
             averageRating: course.averageRating,
             ratingsCount: course.ratingsCount,
             url: `/course/${playlistId}`,

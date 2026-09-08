@@ -240,6 +240,56 @@ describe("courseSchema", () => {
     expect(schema).not.toHaveProperty("url");
   });
 
+  // The defect this closes: /course/398 published
+  // instructor: {"@type":"Person","name":"Mahendra Singh"} with no url, while
+  // /faculty/mahendra-singh is a real 200 page listing his courses — a
+  // dangling Person node for a human whose page the site owns.
+  it("points the instructor at the faculty page the site already serves for that human", () => {
+    const schema = courseSchema({ ...REAL_COURSE, teacherSlug: "amit-bijarnia" });
+    expect(schema.hasCourseInstance.instructor).toEqual({
+      "@type": "Person",
+      // The credit the student sees, not the linked teacher's display_name.
+      name: "ABJ Sir",
+      url: "https://www.jeeneetard.com/faculty/amit-bijarnia",
+    });
+  });
+
+  it("emits the same absolute URL the faculty page's own Person node carries — one identity, not two", () => {
+    const fromCourse = courseSchema({ ...REAL_COURSE, teacherSlug: "amit-bijarnia" });
+    // Exactly what FacultyProfile.jsx passes as its `schemaUrl`.
+    const fromProfile = personSchema({
+      name: "Amit Bijarnia",
+      url: "/faculty/amit-bijarnia",
+    });
+    expect(fromCourse.hasCourseInstance.instructor.url).toBe(fromProfile.url);
+  });
+
+  it("omits instructor.url entirely — never empty, never guessed — with no resolved slug", () => {
+    // null: no faculty link at all (128 courses today) or two or more linked
+    // teachers (134 today, playlist 91 among them), where picking one would be
+    // a guess. undefined: a caller
+    // that has not been wired up yet. "": a slug column that came back blank.
+    for (const teacherSlug of [null, undefined, ""]) {
+      const schema = courseSchema({ ...REAL_COURSE, teacherSlug });
+      expect(schema.hasCourseInstance.instructor).toEqual({
+        "@type": "Person",
+        name: "ABJ Sir",
+      });
+      expect(schema.hasCourseInstance.instructor).not.toHaveProperty("url");
+      expect(JSON.stringify(schema)).not.toContain("/faculty/");
+    }
+  });
+
+  it("never invents an instructor from a slug alone when there is no credit to name", () => {
+    const schema = courseSchema({
+      ...REAL_COURSE, teacher: null, teacherSlug: "amit-bijarnia",
+    });
+    expect(schema.hasCourseInstance).toEqual({
+      "@type": "CourseInstance",
+      courseMode: "online",
+    });
+  });
+
   it("accepts (and ignores) lessonCount/subjectName/totalDurationSeconds — no correct schema.org Course field exists for them today", () => {
     const schema = courseSchema({
       ...REAL_COURSE,

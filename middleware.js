@@ -59,6 +59,9 @@ import {
   renderChapterLandingBody,
 } from "./ogInject.js";
 import { getFacultyGuide } from "./src/facultyGuides.js";
+// Pure data + one pure function, no React and no Supabase client — safe to
+// pull into the edge runtime, same as the other src/ imports above.
+import { FACULTY_SLUG_EMBED } from "./src/courseTeacherSlug.js";
 import { RELEASE_CAPABILITIES, RELEASE_FEATURES } from "./src/releaseCapabilities.js";
 import {
   PAPER_LANDINGS,
@@ -112,6 +115,24 @@ export async function fetchAppShell(request) {
   return APP_SHELL_PATTERN.test(html) ? html : null;
 }
 const LOOKUP_TIMEOUT_MS = 1500;
+
+// The faculty link the crawler-readable course body needs, appended to the
+// course select below. Taken from the ONE module that owns both the embed
+// shape and the exactly-one-teacher rule, so this third read path cannot come
+// to disagree with the /browse cards and the watch page about which courses
+// have a link. It carries its own facultyRegistry gate and its own reason for
+// being a LEFT join; see src/courseTeacherSlug.js rather than restating it.
+//
+// The whitespace strip is the one thing this caller has to do for itself, and
+// is not a second copy of the rule. The hooks hand their select to supabase-js,
+// which strips unquoted whitespace on the way out, so the shared constant is
+// spelled with the `", "` separator that reads best in a hook. This URL is
+// hand-written: a raw space would leave as %20 and reach PostgREST as a column
+// named " faculty". Everything that survives — `:`, `(`, `)`, `,` — is legal in
+// a query component, which is why the `lessons:playlist_videos(...)` alias in
+// the same select is already spelled literally, and nothing in the string comes
+// from the request.
+const COURSE_FACULTY_EMBED = FACULTY_SLUG_EMBED.replace(/\s+/g, "");
 
 const STATIC_APP_ROUTES = new Set([
   "/", "/admin", "/browse", "/compare", "/explore", "/privacy",
@@ -967,6 +988,7 @@ export default async function middleware(request) {
           `${supaUrl}/rest/v1/playlists?id=eq.${encodeURIComponent(id)}` +
             `&select=title,teacher,average_rating,ratings_count,subjects(name)` +
             `,institutes_channels(name),playlist_videos(count),lessons:playlist_videos(position,videos(title))` +
+            COURSE_FACULTY_EMBED +
             `&lessons.order=position.asc&lessons.limit=60`,
           {
             headers: { apikey: supaKey, Authorization: `Bearer ${supaKey}` },
