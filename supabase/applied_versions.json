@@ -88,6 +88,10 @@
     {
       "version": "20260907200000",
       "file": "20260907200000_shared_tokeniser_rescue_floor.sql"
+    },
+    {
+      "version": "20260908110000",
+      "file": "20260908110000_classify_neet_2025_papers.sql"
     }
   ]
 }
