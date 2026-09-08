@@ -678,7 +678,29 @@ export default function BrowsePage() {
             </div>
           )}
 
-          {RELEASE_CAPABILITIES.facultyRegistry && (
+          {/* NOT ON THE BARE PAGE. Measured at 375x812 on 7 Sep 2026: this row
+              is 252 px of the 656 px a student scrolls past before the first
+              course card — 38% of it — and on a 360x640 budget Android no card
+              is visible at all. What it buys for that space, unscoped, is six
+              names out of 89, covering 118 of 484 courses: a question a student
+              cannot answer before they have picked a subject, because they do
+              not yet know which teachers are even relevant. Hidden here, the
+              first card lands near 404 px and is on screen on that Android.
+
+              It comes back the moment a subject or chapter narrows it, which is
+              when six names start to mean something. Teacher search is still in
+              the header, and /faculty lists every teacher.
+
+              THE EXCEPTION IS NOT OPTIONAL. If the URL already carries
+              ?teacher=, the filter must render even with nothing else chosen —
+              otherwise a student arriving on a shared link sees results
+              silently narrowed to one teacher with no control to see or clear
+              it. That is worse than the 252 px. `facultyCapability` also stays
+              at its initial "loading" while this is hidden, which is harmless
+              precisely because facultyFilterReady above is already true
+              whenever no teacher was requested. */}
+          {RELEASE_CAPABILITIES.facultyRegistry
+            && (canonical.subjectId != null || canonical.chapterId != null || teacherRequested) && (
             <FacultyFilter
               params={params}
               setParams={setParams}

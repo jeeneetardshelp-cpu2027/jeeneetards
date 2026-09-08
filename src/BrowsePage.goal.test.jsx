@@ -125,10 +125,31 @@ describe("BrowsePage route → playlist query", () => {
     expect(q.cols).not.toContain("playlist_learning_goals");
   });
 
-  it("loads scoped faculty facets from the public browse page", async () => {
-    renderAt("/browse");
+  // REWRITTEN 7 Sep 2026, and worth saying why rather than just changing it.
+  // This used to render "/browse" — the BARE page — and assert the facets WERE
+  // fetched. Its name says "scoped", but that meant the facets are scoped to the
+  // visible results, not that the page was narrowed; the URL had no subject and
+  // no chapter.
+  //
+  // That is the behaviour the owner decided against. Measured at 375x812: the
+  // "Taught by" row is 252 px of the 656 px above the first course card, and
+  // unscoped it offers six teachers out of 89 covering 118 of 484 courses — a
+  // question a student cannot answer before picking a subject. So the filter is
+  // no longer rendered there, and the request goes with it.
+  //
+  // The REQUIREMENT underneath survives, split in two: facets must still load
+  // once something narrows them, and must not be requested when nothing does.
+  it("loads scoped faculty facets once a subject narrows them", async () => {
+    renderAt("/browse?goal=jee&subject=physics");
     await screen.findByText("Playlists");
     await waitFor(() => expect(rpcCalls).toContain("get_faculty_facets"));
+  });
+
+  it("asks for no faculty facets at all on the bare browse page", async () => {
+    renderAt("/browse");
+    await screen.findByText("Playlists");
+    await new Promise((r) => setTimeout(r, 120));
+    expect(rpcCalls.filter((n) => n === "get_faculty_facets")).toHaveLength(0);
   });
 
   // The count RPC has no board argument, so the old gate switched counts off
