@@ -135,3 +135,49 @@ describe("/browse explains a query it never sent", () => {
     });
   });
 });
+
+// THE DEFAULT TAB. Every case above pins ?tab=lectures, and that is exactly how
+// this survived: /browse opens on Playlists when no ?tab= is present
+// (BrowsePage.jsx: params.get("tab") === "lectures" ? "lectures" : "playlists"),
+// so the honest copy covered the half of the page students do not land on.
+// A preflight found it on one reconcile, it went unfixed, and a second
+// preflight found it again independently. These pin the tab a student actually
+// gets.
+describe("/browse default tab — the one with no ?tab= in the URL", () => {
+  it.each([
+    ["ac", /Type at least/i],
+    ["p c", /Try a longer word/i],
+    ["p and c", /joining words/i],
+  ])("explains %s instead of claiming the catalogue was searched", async (q, hint) => {
+    renderAt("/browse?q=" + encodeURIComponent(q));
+
+    expect(await screen.findByText(hint)).toBeTruthy();
+    // The two assertions the page used to make about a catalogue it never asked.
+    expect(screen.queryByText(/No courses match this view/i)).toBeNull();
+    expect(screen.queryByText(/No courses are listed for/i)).toBeNull();
+  });
+
+  it("prints no course count for a search it never ran", async () => {
+    renderAt("/browse?q=ac");
+
+    await screen.findByText(/Type at least/i);
+    // "0 courses" is a match count. There was no match attempt to count.
+    expect(screen.queryByText(/^0 courses$/)).toBeNull();
+  });
+
+  it("sends no course query at all for an unservable term", async () => {
+    renderAt("/browse?q=ac");
+
+    await screen.findByText(/Type at least/i);
+    expect(rpcCalls.some((c) => c.name === "search_playlist_ids")).toBe(false);
+  });
+
+  // The control. Without this the three above could pass because the page
+  // renders nothing at all, and nobody would notice.
+  it("still names the filter for a real empty result on a servable query", async () => {
+    renderAt("/browse?q=kinematics");
+
+    expect(await screen.findByText(/No courses match this view/i)).toBeTruthy();
+    expect(screen.queryByText(/Type at least/i)).toBeNull();
+  });
+});

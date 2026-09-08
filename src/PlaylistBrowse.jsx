@@ -24,6 +24,7 @@ import {
   MIN_COMPARE, MAX_COMPARE, SORTS, DEFAULT_SORT, courseSortOptions,
 } from "./filterModel.js";
 import { clearAllChips, dropParam, emptyStateMessage } from "./filterChips.js";
+import { isServableQuery, unsearchableQueryHint } from "./useUniversalSearch.js";
 import { FILTER_PARAMS } from "./filterSchema.js";
 import { makeReturnState } from "./returnTo.js";
 import { useTheme } from "./theme.jsx";
@@ -230,6 +231,18 @@ export default function PlaylistBrowse({
     stage: filters.stage, chapterName: filters.chapterName, subjectName: filters.subjectName,
   });
 
+  // usePlaylistBrowse refuses a query the server cannot answer and returns
+  // {items: [], total: 0} WITHOUT sending anything. Every "empty" rendering
+  // below is reached in that state too, so both the count and the sentence
+  // would be claims about the catalogue drawn from a lookup never made.
+  //
+  // The Individual lectures tab already handles this (BrowsePage.jsx). This
+  // tab is the DEFAULT one — no ?tab= in the URL means Playlists — so until
+  // now the fix covered the half of /browse students do not land on, and the
+  // half they do land on still said "0 courses / No courses match this view"
+  // for a search that never happened.
+  const unsearchable = Boolean(filters.search) && !isServableQuery(filters.search);
+
   const compareIds = comparisonEnabled
     ? (params.get("compare") ?? "").split(",").map(Number).filter((n) => Number.isInteger(n) && n > 0)
     : [];
@@ -308,7 +321,12 @@ export default function PlaylistBrowse({
       <div className="mt-4 flex items-center justify-between gap-3">
         <p className={`text-sm ${t.muted}`}>
           {tab === "lectures" ? "" :
-            loading ? "Loading courses…"
+            // "0 courses" for an unsent query is the same unverified assertion
+            // as the sentence below it, one line higher and in a number, which
+            // reads as more authoritative. No count at all is the honest
+            // rendering: a section with no data hides itself.
+            unsearchable ? ""
+              : loading ? "Loading courses…"
               : total != null ? `${total} course${total === 1 ? "" : "s"}`
               : `${items.length} courses`}
         </p>
@@ -393,8 +411,19 @@ export default function PlaylistBrowse({
             <div className={`mt-8 rounded-2xl border border-dashed ${t.border} ${t.card} p-8 text-center`}>
               {/* A mixed string is tagged as a whole (lang.js); the detail line
                   is fixed English and stays under the document's own lang. */}
-              <p {...langAttrs(emptyTitle)} className={`text-sm font-semibold ${t.text}`}>{emptyTitle}</p>
-              <p className={`mt-1 text-sm ${t.muted}`}>{emptyDetail}</p>
+              {unsearchable ? (
+                // One copy, shared with the search box and the lectures tab,
+                // in useUniversalSearch.js — so the three surfaces cannot
+                // describe the same refusal three different ways.
+                <p className={`text-sm font-semibold ${t.text}`}>
+                  {unsearchableQueryHint(filters.search)}
+                </p>
+              ) : (
+                <>
+                  <p {...langAttrs(emptyTitle)} className={`text-sm font-semibold ${t.text}`}>{emptyTitle}</p>
+                  <p className={`mt-1 text-sm ${t.muted}`}>{emptyDetail}</p>
+                </>
+              )}
               <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
                 {filters.stage && (
                   <button
