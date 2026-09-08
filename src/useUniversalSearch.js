@@ -173,7 +173,11 @@ export function unsearchableQueryHint(term) {
     .split(/\s+/)
     .filter(Boolean);
   if (tokens.some((token) => token.length >= MIN_QUERY)) {
-    return "Try a more specific word — joining words like “and” can’t be searched on their own.";
+    // NOT "can't be searched on their own" — this same file guarantees the
+    // opposite, and pins it with a test: a lone "and" IS the query and is
+    // sent, because the server keeps raw tokens when every one is filler.
+    // What is true is that a joining word cannot ANCHOR a longer query.
+    return "Try a more specific word — joining words like “and” don’t narrow a search.";
   }
   return tokens.length > 1
     ? "Try a longer word — very short words can’t be searched."
