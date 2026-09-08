@@ -4,6 +4,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { supabase, isSupabaseConfigured } from "./supabaseClient";
+import { FACULTY_SLUG_EMBED, courseTeacherSlug } from "./courseTeacherSlug.js";
 
 // forPlaylistId records WHICH course the resolved state belongs to: state
 // survives param-only navigations (the page instance is preserved), so a
@@ -153,6 +154,11 @@ export function mapCourseDetail(playlist, lessonRows) {
       id: playlist.id,
       title: playlist.title,
       teacher: playlist.teacher ?? null,
+      // The linked faculty identity behind that free-text credit — non-null
+      // only when EXACTLY ONE slugged teacher resolves, so a course credited
+      // to two people links to neither. Same helper as the browse cards, so
+      // the card and the page it opens can never disagree.
+      teacherSlug: courseTeacherSlug(playlist.faculty),
       instituteId: playlist.institutes_channels?.id ?? null,
       institute: playlist.institutes_channels?.name ?? null,
       instituteLogoUrl: playlist.institutes_channels?.logo_url ?? null,
@@ -209,7 +215,12 @@ export function usePlaylistVideos(playlistId) {
           "id, title, teacher, average_rating, ratings_count, language, content_type," +
           " difficulty, class_levels, last_verified_at, institutes_channels(id, name, logo_url), subjects(name)," +
           " playlist_learning_goals(learning_goals(name, slug))," +
-          " playlist_class_levels(class_levels(name, slug))",
+          " playlist_class_levels(class_levels(name, slug))" +
+          // Left join, capability-gated, same shape the browse cards and the
+          // edge-rendered crawler body fetch — all three surfaces credit the
+          // same course, so they must resolve the same teacher. See
+          // courseTeacherSlug.js.
+          FACULTY_SLUG_EMBED,
         )
         .eq("id", id);
       if (typeof playlistQuery.abortSignal === "function") {

@@ -88,10 +88,25 @@ export function PlaylistCard({ course, onOpen, to, state, selected, onToggle, di
     <div className="edge-glow hover-lift flex h-full min-h-[15rem] flex-col overflow-hidden rounded-xl border border-hairline bg-surface shadow-e1">
       {/* subject colour spine */}
       <span className="h-1 w-full shrink-0" style={{ background: color }} />
-      <YouTubeThumbnail
-        videoId={course.coverVideoId}
-        className="aspect-video w-full border-b border-hairline"
-      />
+      {/* The cover is the biggest thing on the card and students aim at it
+          first, so it opens the course — but it carries no information the
+          title link beside it does not already carry. It is therefore hidden
+          from the accessibility tree and taken out of the tab order rather
+          than shipped as a second, nameless stop on the same destination.
+          Same `to ? Link : plain` fallback as the "View course" control below. */}
+      {to ? (
+        <Link to={to} state={state} aria-hidden="true" tabIndex={-1} className="block w-full">
+          <YouTubeThumbnail
+            videoId={course.coverVideoId}
+            className="aspect-video w-full border-b border-hairline"
+          />
+        </Link>
+      ) : (
+        <YouTubeThumbnail
+          videoId={course.coverVideoId}
+          className="aspect-video w-full border-b border-hairline"
+        />
+      )}
       <div className="flex flex-1 flex-col p-4 sm:p-5">
         {(kicker || language) && (
           <div className="flex min-w-0 items-start justify-between gap-2">
@@ -112,12 +127,41 @@ export function PlaylistCard({ course, onOpen, to, state, selected, onToggle, di
           </div>
         )}
 
-        {/* curated title leads; clamped so every card is the same shape */}
+        {/* Curated title leads; clamped so every card is the same shape.
+            The <a> goes INSIDE the <h3>, never the other way round: the heading
+            keeps its lang tag and every other class, so the card geometry is
+            identical whether or not the caller supplied `to`, and a crawler
+            still reads one heading that happens to contain one link.
+            On a phone the title was the first thing under the fold that a
+            student could reach — the only control was "View course", 87px
+            below it. Same `to ? Link : plain` fallback as that control.
+
+            `line-clamp-2` sits on the INNER element in both branches, never on
+            the <h3>. Tailwind compiles it to `display:-webkit-box` +
+            `overflow:hidden`, and an ancestor's overflow:hidden clips a
+            descendant's outline — with it on the heading, the link's
+            `focus-visible:outline-offset-2` ring was painted 2-4px outside the
+            anchor's line boxes and cut away on the top, bottom and left,
+            leaving two stray arcs off the right edge on the FIRST tab stop of
+            every card. An element's own overflow does not clip its own
+            outline, so the clamp on the <a> keeps the two-line shape (h3 stays
+            44px, ellipsis unchanged) and the whole ring is drawn. Same reason
+            the credit row below carries no clamp of its own. */}
         <h3
           {...langAttrs(course.title)}
-          className="mt-2 line-clamp-2 text-base font-semibold leading-snug tracking-[-0.015em] text-ink"
+          className="mt-2 text-base font-semibold leading-snug tracking-[-0.015em] text-ink"
         >
-          {course.title}
+          {to ? (
+            <Link
+              to={to}
+              state={state}
+              className="line-clamp-2 rounded-sm transition-colors hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+            >
+              {course.title}
+            </Link>
+          ) : (
+            <span className="line-clamp-2">{course.title}</span>
+          )}
         </h3>
 
         {/* Faculty and institute. Omitted when unknown — an absent line reads
@@ -130,8 +174,37 @@ export function PlaylistCard({ course, onOpen, to, state, selected, onToggle, di
                 {initials || "?"}
               </span>
             )}
-            <span className="line-clamp-1 flex min-w-0 items-center gap-1">
-              {credit.teacher}
+            {/* No `line-clamp-1` here. `flex` already overrides its
+                `display:-webkit-box`, so the only thing it contributed was an
+                `overflow:hidden` that clipped the focus ring of everything
+                inside — the new teacher link and the institute link that was
+                already here. Every child carries its own `truncate`, and this
+                row is `min-w-0`, so the single-line shape is unchanged. */}
+            <span className="flex min-w-0 items-center gap-1">
+              {/* The teacher becomes a link ONLY when exactly one slugged
+                  faculty row resolved — `teacherSlug` is already null for a
+                  course credited to two people, because linking such a card to
+                  whichever row came back first would be a guess. The link text
+                  is the CREDIT the student reads on the card ("ABJ Sir"), not
+                  the registry's display_name, so the card does not rename the
+                  person under the cursor; the aria-label names the destination.
+                  A credit with no linked profile stays plain text — a name is
+                  never turned into a slug (rule 2). Treated as a sibling of the
+                  institute link one branch below: same rounded-sm / hover /
+                  focus-visible treatment. */}
+              {credit.teacher && (
+                course.teacherSlug ? (
+                  <Link
+                    to={`/faculty/${course.teacherSlug}`}
+                    aria-label={`View all courses by ${credit.teacher}`}
+                    className="min-w-0 truncate rounded-sm transition-colors hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                  >
+                    {credit.teacher}
+                  </Link>
+                ) : (
+                  credit.teacher
+                )
+              )}
               {credit.teacher && credit.institute && <span className={t.muted}>·</span>}
               {course.institute && (
                 course.instituteId ? (
