@@ -52,6 +52,11 @@ const HINGLISH =
 // more than one token -- against POST-filler tokens, and silently emptied
 // "def int" and "x ray" on production. This is the correction, and the two
 // queries appear below as must-answer cases so the pair cannot regress again.
+// The rescue floor, moved into the shared tokeniser so the browse matchers get
+// what universal_search has had since 20260907093000. Without it "ac ka matlab"
+// reduced to ["ac"] and /browse answered 0 rows while /search answered 26.
+const RESCUE =
+  "supabase/migrations/20260907200000_shared_tokeniser_rescue_floor.sql";
 const CORRECTION =
   "supabase/migrations/20260907160000_browse_servable_floor_correction.sql";
 
@@ -230,6 +235,7 @@ beforeAll(async () => {
   await pg.exec(readFileSync(OTHER_FLOOR, "utf8"));
   await pg.exec(readFileSync(HINGLISH, "utf8"));
   await pg.exec(readFileSync(CORRECTION, "utf8"));
+  await pg.exec(readFileSync(RESCUE, "utf8"));
 }, 120000);
 
 const ids = async (fn, q) =>
@@ -244,7 +250,11 @@ describe("browse matchers: the servable floor", () => {
     ["3d", "one token, 2 characters"],
     ["p c", "two 1-character tokens, 3 characters overall"],
     ["a b c", "three 1-character tokens, 5 characters overall"],
-    ["p and c", "7 characters overall, longest surviving token far too short"],
+    // "p and c" USED to be here. 20260907200000 moved the rescue floor into the
+    // shared tokeniser, and the rescue keeps ["p","and","c"] because filtering
+    // would leave ["p","c"] -- so its needle is now "and", which clears the
+    // floor. That is deliberate and is covered by its own test below; it makes
+    // /browse behave the way universal_search has since 20260907093000.
   ])("refuses %j (%s), from both matchers", async (q) => {
     expect(await ids("search_video_ids", q)).toEqual([]);
     expect(await ids("search_playlist_ids", q)).toEqual([]);
@@ -306,17 +316,93 @@ describe("browse matchers: the servable floor", () => {
     // One token, 2 characters -- refused. The floor still does its job.
     expect(by["ac"].q_long).toBe("ac");
     expect(by["ac"].ok).toBe(false);
-    // Several tokens, longest survivor 1 -- refused. Measured at 57014.
-    expect(by["p and c"].q_long).toBe("c");
-    expect(by["p and c"].ok).toBe(false);
+    // "p and c" changed with 20260907200000 and the change is intended. The
+    // rescue keeps the raw tokens, because filtering leaves ["p","c"], so the
+    // needle is "and" rather than "c" and the floor lets it through. This is
+    // the one query the rescue costs us; see its own test below.
+    expect(by["p and c"].q_long).toBe("and");
+    expect(by["p and c"].ok).toBe(true);
 
-    // KNOWN GAP, asserted so it is visible rather than discovered again. The
-    // Hinglish filler list (20260907140000) makes "ka"/"matlab" filler, and the
-    // shared helper has no rescue floor -- 20260907093000 put one in
-    // universal_search only. So /search answers this and /browse does not. See
-    // the header of 20260907160000; fixing it is its own measured change.
-    expect(by["ac ka matlab"].q_long).toBe("ac");
-    expect(by["ac ka matlab"].ok).toBe(false);
+    // This was the KNOWN GAP recorded here when the floor landed: the Hinglish
+    // filler list made "ka"/"matlab" filler, the shared helper had no rescue
+    // floor, and /search answered 26 rows where /browse answered 0.
+    // 20260907200000 closed it by moving the rescue into the helper, so the
+    // needle is a real word again and the query is servable on both surfaces.
+    expect(by["ac ka matlab"].q_long).toBe("matlab");
+    expect(by["ac ka matlab"].ok).toBe(true);
+  });
+
+  // The rescue floor, and specifically the thing that made it worth doing: not
+  // that raw tokens match, but that keeping a real needle lets the query reach
+  // the ALIAS pass, which is what actually finds the rows.
+  describe("the rescue floor in the shared tokeniser", () => {
+    it("keeps the raw tokens when filtering would leave nothing usable", async () => {
+      const { rows } = await pg.query(
+        `select t.q_tokens, t.q_long from public.search_query_tokens($1) t`,
+        ["ac ka matlab"],
+      );
+      // "ka" and "matlab" are filler since 20260907140000, so filtering leaves
+      // ["ac"] -- a two-character needle, which is what 57014 is made of.
+      expect(rows[0].q_tokens).toHaveLength(3);
+      expect(rows[0].q_long).toBe("matlab");
+    });
+
+    it("still filters when a usable token survives", async () => {
+      const { rows } = await pg.query(
+        `select t.q_tokens, t.q_long from public.search_query_tokens($1) t`,
+        ["kinematics ka one shot"],
+      );
+      // The other direction. A rescue that fired unconditionally would pass the
+      // test above and quietly stop filler removal from ever working.
+      expect(rows[0].q_long).toBe("kinematics");
+      expect(rows[0].q_tokens).not.toContain("ka");
+    });
+
+    it.each(["ac ka matlab", "ac kya hai", "ac the of"])(
+      "answers %j from the browse matchers, through the alias",
+      async (q) => {
+        // These returned 0 on production while /search returned 26, 26 and 26.
+        // The rows are not a raw-token match -- no title contains all three
+        // typed words. search_rank_tokens has only conjunction tiers, so they
+        // come from "ac" expanding to "Alternating Current".
+        const videos = await ids("search_video_ids", q);
+        expect(videos.length).toBeGreaterThan(0);
+      },
+    );
+
+    it("costs us exactly one query, and it is p and c", async () => {
+      // The rescue is not free. Filtering "p and c" leaves ["p","c"], so the
+      // raw tokens are kept and the needle becomes the stopword "and", which
+      // clears the floor -- where before it was refused outright.
+      //
+      // This is a deliberate trade, not an oversight. universal_search has
+      // behaved this way since 20260907093000, so it makes the two surfaces
+      // agree rather than creating a new class, and no student reaches it:
+      // isServableQuery refuses "p and c" client-side because its only
+      // three-letter word is a connective. On production universal_search
+      // answers 500 57014 for it; an "and" needle alone is cheap on these
+      // matchers ("the and for" is 200 / ~1.3s, 3/3), and it is the alias
+      // expansion on top that tips it over.
+      const { rows } = await pg.query(
+        `select t.q_long, public.search_is_servable(t.q_tokens, t.q_long) as ok
+           from public.search_query_tokens($1) t`,
+        ["p and c"],
+      );
+      expect(rows[0].q_long).toBe("and");
+      expect(rows[0].ok).toBe(true);
+    });
+
+    it("did not manufacture an anchor for a query that never had one", async () => {
+      // The floor from 20260907160000 must still refuse these. If the rescue
+      // had been written to fire whenever filtering shortened q_long, "p c"
+      // would come back as ["p","c"] and still be refused -- but "ac" would
+      // come back servable on a two-character needle, which is the regression
+      // this asserts against.
+      for (const q of ["ac", "3d", "p c", "a b c"]) {
+        expect(await ids("search_video_ids", q)).toEqual([]);
+        expect(await ids("search_playlist_ids", q)).toEqual([]);
+      }
+    });
   });
 
   it("exposes the rule as a callable helper, so both matchers share one copy", async () => {
