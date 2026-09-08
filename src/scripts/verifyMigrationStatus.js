@@ -13,13 +13,19 @@
 // an unreadable claim is not a passing one.
 
 import { execFileSync } from "node:child_process";
-import { readFileSync, readdirSync } from "node:fs";
+import { readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { parseStatusRows, compareStatus } from "./migrationStatusRows.js";
 
 const ROOT = resolve(import.meta.dirname, "../..");
 const CHAIN = resolve(ROOT, "supabase/migrations");
 const README = resolve(ROOT, "supabase/README.md");
+// The offline half of this check. CI cannot reach the database, so what the
+// database said gets written down here, and
+// src/appliedMigrationsLedgerSqlContract.test.js enforces it on every commit.
+// This is the ONLY thing that should ever write that file: each entry is an
+// observation, not a claim.
+const LEDGER = resolve(ROOT, "supabase/applied_versions.json");
 
 const green = (s) => `\x1b[32m${s}\x1b[0m`;
 const red = (s) => `\x1b[31m${s}\x1b[0m`;
@@ -67,6 +73,37 @@ for (const row of rows) {
   const truth = appliedVersions.includes(row.version) ? "applied" : "pending";
   const good = row.claimed === truth;
   console.log(`${good ? green("✓") : red("✗")} ${row.file}: says ${row.claimed ?? "nothing readable"}, is ${truth}`);
+}
+
+// Record what the database just said, so CI can hold the chain to it without
+// credentials. Written even when the comparison fails: the ledger is a record
+// of what production has run, which is true regardless of what the README says
+// about it.
+const fileByVersion = new Map(
+  readdirSync(CHAIN)
+    .filter((f) => /^[0-9]{14}_.+\.sql$/.test(f))
+    .map((f) => [f.slice(0, 14), f]),
+);
+const ledger = {
+  note:
+    "Append-only record of migration versions CONFIRMED applied to production by " +
+    "src/scripts/verifyMigrationStatus.js reading the real database. Never hand-edit: " +
+    "see the header of src/appliedMigrationsLedgerSqlContract.test.js.",
+  versions: [...appliedVersions]
+    .sort()
+    .map((version) => ({ version, file: fileByVersion.get(version) ?? null })),
+};
+const missing = ledger.versions.filter((v) => !v.file);
+writeFileSync(LEDGER, `${JSON.stringify(ledger, null, 2)}\n`);
+console.log(
+  `ledger: supabase/applied_versions.json now records ${ledger.versions.length} applied version(s)` +
+    (missing.length ? red(` — ${missing.length} with NO file in the chain`) : ""),
+);
+if (missing.length) {
+  // Recorded rather than dropped. A version whose file is gone is exactly the
+  // drift this ledger exists to make visible, and writing null keeps the
+  // contract test failing until someone restores the file.
+  for (const entry of missing) console.error(red(`  - ${entry.version} has no file in supabase/migrations/`));
 }
 
 console.log("");
