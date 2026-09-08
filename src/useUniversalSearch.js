@@ -28,114 +28,69 @@ import { scheduleSearchMemory } from "./searchHistory.js";
 
 // Requirement 6. The client checks so we don't spend a round trip learning it.
 //
-// THREE, not the two the RPC still allows. Measured against production on
-// 2026-09-02: a two-character query cannot be served. It yields at most one or
-// two trigrams, so the GIN index cannot narrow candidates and the planner
-// scans — "ac" took 3887ms and "3d" 3217ms against a ~3s statement timeout,
-// and both came back as HTTP 500 `57014 canceling statement due to statement
-// timeout`. Not slow results: a failed request, where a student typing "ac"
-// for Alternating Current sees an error. A non-alias "zq" failed the same way,
-// so this is about query length, not the alias table.
+// TWO characters, and nothing else. This floor has been 2, then 3, then
+// 3-with-a-connective-set, each time to keep a student away from a statement
+// timeout. Re-measured against production on 2026-09-08 — 24 query shapes,
+// 4 runs each, 96 requests, serial with a gap so the probe did not create the
+// load it was measuring — the length rule does not predict the timeout at all:
 //
-// For comparison, at the same moment: "electromagnetic induction" 606ms,
-// "kinematics" 861ms, "emi" 1770ms. The cliff is specific to two characters.
+//   REFUSED by the old rule, and every one of them answers:
+//     "ac"       200,  58 rows, ~0.9s   row 1 is the Alternating Current chapter
+//     "3d"       200,   8 rows, ~0.8s   Vectors and Three-Dimensional Geometry
+//     "p and c"  200,  36 rows, ~1.0s   Permutations and Combinations
+//     "p c"  "a b c"  "p n c"  "s p"    200, 0 rows, ~250ms
 //
-// Raising the floor here turns those failures into an instant empty result.
+//   ADMITTED by the old rule, and the ONLY failure in all 96 runs:
+//     "def int"  500 57014 on 1 of 4 runs, ~3.2s
 //
-// THE RPC NOW HAS A FLOOR OF ITS OWN, applied 7 Sep 2026:
-// 20260907091500_browse_rpc_servable_floor.sql and
-// 20260907093000_universal_search_q_long_floor.sql. Keep this gate anyway — it
-// saves a round trip on a query the server would only answer empty.
+// So the rule refused fast, useful searches and let the one query that actually
+// times out straight through. The 500s it was built on were real when they were
+// measured on 2 Sep; the server-side floors applied on 7 Sep (20260907091500,
+// 20260907093000, 20260907160000) fixed them, and this gate was never updated.
 //
-// It does NOT make every short query servable, and the difference is worth
-// knowing before anyone relaxes this. The floor rescues a query whose anchor
-// was destroyed by FILLER REMOVAL, by falling back to the raw tokens. It cannot
-// manufacture an anchor that never existed: measured on production after the
-// push, a bare "ac", "3d" and "p and c" are all still HTTP 500 / 57014, because
-// their raw tokens are exactly the short ones. This gate is what keeps a
-// student away from those.
-export const MIN_QUERY = 3;
+// WHAT TIMES OUT IS COST, NOT TOKEN LENGTH. Everything near the ~3.2s ceiling is
+// a broad query returning many rows — "and" 240 rows/2.3s, "and c" 204/2.4s,
+// "a and b" 154/2.1s, "def int" 58/1.7s-3.2s — and a client that sees only the
+// typed string cannot predict which of those will tip over. Nothing here can.
+//
+// It no longer has to. The server's own floor answers what it cannot serve with
+// zero rows in about 250ms, and a real timeout renders as an honest error with
+// a Try again button (UniversalSearch.jsx), never as "nothing matches". So the
+// job this gate was doing is done elsewhere, and better.
+//
+// What is left is input quality, not protection: a query whose every token is a
+// single character has nothing to search on, and measurably returns nothing.
+export const MIN_QUERY = 2;
 
 /**
- * Whether universal_search can actually answer this query, or will burn the
- * statement timeout and return HTTP 500 instead.
+ * Whether this query is worth sending at all.
  *
- * A length floor alone is not the rule. Measured against production on
- * 2026-09-03, fifteen queries, HTTP status recorded rather than row count:
+ * ONE token of MIN_QUERY (2) characters. That is the whole rule, and it comes
+ * from the measurement in the header rather than from a theory about trigrams:
+ * every query carrying a 2-character token answers, and every query without one
+ * comes back empty in about a quarter of a second.
  *
- *   FAIL 500   ac(2)  3d(2)  "p c"(1,1)  "a b c"(1,1,1)  "p and c"(1,3,1)
- *   OK   200   and(3) abc(3) org(3) ktg(3) emi(3)
- *   OK   200   "class 11"(5,2)  "p block"(1,5)  "s block"(1,5)
- *              "jee 2025"(3,4)  "physics 11"(7,2)
+ * THERE IS NO CONNECTIVE SET ANY MORE. It existed to keep "p and c" out, on the
+ * grounds that its only 3-letter word was "and". But "p and c" returns the
+ * Permutations and Combinations chapter as row 1 — keeping it out was the
+ * defect, not the feature. "a and b" and "x and y", the queries that set was
+ * defended as being worth the trade, answer 200 with 154 and 61 rows.
  *
- * A short token is NOT the problem: "p block" and "class 11" both carry one
- * and both answer in about a second. What breaks is having no token selective
- * enough to anchor the scan — the predicates OR together, so a 1-2 character
- * token contributes at most one trigram and the planner falls back to a scan.
- *
- * THE RULE: drop the connectives, and require one surviving token of MIN_QUERY
- * (3) characters — but if dropping them would leave nothing, keep them all.
- * That last clause is not a special case; it is the server's own guard, which
- * filters filler only when something survives the filter. It is why a lone
- * "and" is still searchable (200 on production) while the "and" in "p and c" is
- * not an anchor. How many tokens were typed is deliberately NOT part of it.
- *
- * It used to be "one token >= 3; two or more, one of >= 4". That 4 was carrying
- * a single query — "p and c", whose only 3-character token is "and" — and it
- * charged every other multi-word search for it. In a JEE/NEET catalogue the
- * three-letter word is the norm, not the exception, so the bill was large.
- * Every one of these was refused before a request was ever made, and every one
- * of them answers. Measured against production 2026-09-07:
- *
- *   "iit jee"  200, 1.2s, 38 rows      "org che"  200, 1.7s, 46 rows
- *   "jee adv"  200, 1.2s, 59 rows      "x ray"    200, 1.0s,  8 rows
- *   "jee pyq"  200, 1.4s, 43 rows      "def int"  200, 2.0s, 28 rows
- *
- * "x ray" is a real chapter and finds MORE than "x rays" (8 rows against 4).
- * Blocking all of that to keep one query out was the wrong trade, so the
- * connective set does that job directly instead: a joining word cannot be the
- * anchor, because the server strips it as filler before choosing the token it
- * actually searches on.
- *
- * Still refused, and each still measured at 500 57014 on 2026-09-07: "ac"(2),
- * "3d"(2), "p c", "a b c" and "p n c" (no token over 1), and "p and c". That
- * chapter is reachable — "pnc" 200/24 rows, "permutations" 200/24 rows — and
- * the alias, not the length, is what makes the long form time out.
- *
- * The cost of the connective set, stated plainly: "a and b" and "x and y"
- * answer 200 on the server and are refused here, because their only 3-letter
- * word is "and". They are noise queries and no student loses a real search to
- * them, which is the trade "iit jee" is worth.
- *
- * Do NOT copy this rule into the RPC, and do not grow CONNECTIVES into a copy
- * of public.search_filler_tokens(). The two sides do not see the same tokens:
- * this hook gets what was TYPED, the RPC gets what SURVIVES filler removal —
- * 240 words, Hinglish included. Copying the OLD rule across that boundary is
- * exactly how 20260907091500 silently emptied "def int" and "x ray"; the
- * post-mortem is in the header of
- * supabase/migrations/20260907160000_browse_servable_floor_correction.sql. The
- * set below is the English joining words that change this decision, and nothing
- * else.
+ * Do not re-derive this from any server rule, and do not grow it back into a
+ * mirror of one. The two sides do not see the same tokens: this hook gets what
+ * was TYPED, the RPC gets what survives filler removal — 240 words, Hinglish
+ * included. Copying a client rule across that boundary is exactly how
+ * 20260907091500 silently emptied "def int" and "x ray"; the post-mortem is in
+ * the header of
+ * supabase/migrations/20260907160000_browse_servable_floor_correction.sql.
  */
-const CONNECTIVES = new Set([
-  "and", "the", "for", "of", "in", "on", "at", "to", "or", "an", "is", "it",
-]);
-
 export function isServableQuery(term) {
   const tokens = String(term ?? "")
     .trim()
-    .toLowerCase()
     .split(/\s+/)
     .filter(Boolean);
-  // Mirror the server's own guard, which is "if filtering would leave nothing,
-  // do not filter" — public.search_query_tokens keeps the raw tokens when every
-  // one of them is filler. So a lone "and" IS the query and stays searchable
-  // (measured 200 on production, and pinned by a test), while the "and" in
-  // "p and c" is scaffolding between two real words and cannot be the anchor.
-  const content = tokens.filter((token) => !CONNECTIVES.has(token));
-  const anchors = content.length > 0 ? content : tokens;
-  // An empty query has no anchor at all, so it falls out here as false.
-  return anchors.some((token) => token.length >= MIN_QUERY);
+  // An empty query has no token at all, so it falls out here as false.
+  return tokens.some((token) => token.length >= MIN_QUERY);
 }
 
 /**
@@ -167,20 +122,11 @@ export function isServableQuery(term) {
  * asked.
  */
 export function unsearchableQueryHint(term) {
-  const tokens = String(term ?? "")
-    .trim()
-    .toLowerCase()
-    .split(/\s+/)
-    .filter(Boolean);
-  if (tokens.some((token) => token.length >= MIN_QUERY)) {
-    // NOT "can't be searched on their own" — this same file guarantees the
-    // opposite, and pins it with a test: a lone "and" IS the query and is
-    // sent, because the server keeps raw tokens when every one is filler.
-    // What is true is that a joining word cannot ANCHOR a longer query.
-    return "Try a more specific word — joining words like “and” don’t narrow a search.";
-  }
+  const tokens = String(term ?? "").trim().split(/\s+/).filter(Boolean);
+  // Two sentences now, not three. The connective case is gone with the
+  // connective set: "p and c" is sent, and answers with its own chapter.
   return tokens.length > 1
-    ? "Try a longer word — very short words can’t be searched."
+    ? "Try a longer word — single letters can’t be searched."
     : `Type at least ${MIN_QUERY} characters.`;
 }
 

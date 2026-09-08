@@ -49,10 +49,11 @@ export const MAX_RECENT_SEARCHES = 8;
 // rememberSearch in the first place, because a search that was never run
 // cannot have settled with results.
 //
-// MIN_QUERY has already moved once (2 -> 3, when two-character searches were
-// found to be unservable), which is why searchHistory.test.js asserts the
-// relationship rather than the number, and asserts every starter is long
-// enough for the box to run it.
+// MIN_QUERY has now moved twice — 2 -> 3 on 2026-09-02, when two-character
+// searches were measured unservable, and back to 2 on 2026-09-08, when they
+// were measured servable again after the server-side floors landed. That is
+// exactly why searchHistory.test.js asserts the RELATIONSHIP rather than the
+// number, and asserts every starter is long enough for the box to run it.
 export const RECENT_SEARCH_MIN_LENGTH = 2;
 
 // The same ceiling searchGapLog.js uses. A pasted essay is not a search.

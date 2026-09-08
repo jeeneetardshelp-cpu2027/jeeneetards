@@ -170,12 +170,13 @@ describe("paged lecture discovery", () => {
   // to the RPC even though useUniversalSearch.js records all three as FAIL 500.
   // A 1-character token contributes at most one trigram however long the whole
   // string is, so the string's length was never the rule.
+  // Re-measured 2026-09-08: "ac", "3d" and "p and c" all answer 200 now, with
+  // the right chapter as row 1, so they are SENT and no longer belong here.
+  // What is still refused is a query whose every token is one character.
   it.each([
-    ["ac", "single token below the floor"],
-    ["3d", "single token below the floor"],
-    ["p c", "two 1-character tokens, 3 characters long"],
-    ["a b c", "three 1-character tokens, 5 characters long"],
-    ["p and c", "longest token is 3, 7 characters long"],
+    ["p c", "two 1-character tokens"],
+    ["a b c", "three 1-character tokens"],
+    ["p n c", "three 1-character tokens"],
   ])("answers %j without asking the server (%s)", async (term) => {
     render(<Probe search={term} />);
     await waitFor(() => expect(seen.loading).toBe(false));
