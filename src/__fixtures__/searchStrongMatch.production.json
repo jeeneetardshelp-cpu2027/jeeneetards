@@ -1,0 +1,2477 @@
+{
+ "measuredAt": "2026-09-08T09:28:50.819Z",
+ "queries": {
+  "kinematics": {
+   "qTokens": [
+    "kinematics"
+   ],
+   "rankedIds": [
+    3888,
+    1511,
+    4978,
+    4979,
+    4980,
+    4981,
+    4982,
+    4983,
+    4984,
+    4985,
+    4986,
+    3889,
+    3895,
+    4002,
+    4003,
+    4004,
+    4005,
+    4006,
+    4007,
+    4008,
+    4987,
+    4988,
+    4989,
+    4990,
+    4991,
+    4992,
+    4993,
+    14,
+    3700,
+    3698,
+    3699,
+    1322,
+    4768,
+    4769,
+    4771,
+    4772,
+    4773,
+    4770,
+    3613,
+    389,
+    384,
+    386,
+    2051,
+    2052,
+    2053,
+    2054,
+    2055,
+    2056,
+    3153,
+    3154,
+    3155,
+    3156,
+    3157,
+    3158,
+    3159,
+    3160,
+    3161,
+    3162,
+    3163,
+    3164,
+    3165,
+    3166,
+    3167,
+    3168,
+    3169,
+    3170,
+    3171,
+    3172,
+    3173,
+    3174,
+    3175,
+    3176,
+    3177,
+    3178,
+    3179,
+    3180,
+    3181,
+    3182,
+    3183,
+    3184,
+    3185,
+    3186,
+    3187,
+    3188,
+    3189,
+    3190,
+    1498,
+    4198,
+    4205,
+    2515,
+    2516,
+    2517,
+    2518,
+    2519,
+    2520,
+    2521,
+    2522,
+    2523,
+    4201,
+    1586,
+    4199,
+    4202,
+    4200,
+    1370,
+    4204,
+    5190,
+    5191,
+    5192,
+    4203,
+    5302,
+    5526,
+    5527,
+    5525,
+    5528,
+    5529,
+    5530,
+    5532,
+    5533,
+    5534,
+    5536,
+    5538,
+    5539,
+    5284,
+    5535,
+    5537,
+    5540,
+    5545,
+    5546,
+    5548,
+    5552,
+    5555,
+    5543,
+    5547,
+    5553,
+    5554,
+    5549,
+    5283,
+    5541,
+    4648,
+    4649,
+    4650,
+    4651,
+    4652,
+    4653,
+    4654,
+    4655,
+    4656,
+    5544,
+    5550,
+    5281,
+    5288,
+    5290,
+    5282,
+    5291,
+    5542,
+    5292,
+    5295,
+    5280,
+    5285,
+    5286,
+    5287,
+    5293,
+    5294,
+    5296,
+    5297,
+    5298,
+    5299,
+    5300,
+    5301,
+    5524,
+    5531,
+    5551
+   ],
+   "rows": [
+    {
+     "id": 3888,
+     "title": "Kinematics 2D",
+     "durationSeconds": 12917,
+     "createdAt": "2026-08-03T12:47:40.053337+00:00"
+    },
+    {
+     "id": 1511,
+     "title": "Kinematics One Shot",
+     "durationSeconds": 9630,
+     "createdAt": "2026-07-27T19:48:40.641344+00:00"
+    },
+    {
+     "id": 4978,
+     "title": "Kinematics: Lecture 1",
+     "durationSeconds": 1740,
+     "createdAt": "2026-08-19T16:29:25.673575+00:00"
+    },
+    {
+     "id": 4979,
+     "title": "Kinematics: Lecture 2",
+     "durationSeconds": 2536,
+     "createdAt": "2026-08-19T16:29:25.673575+00:00"
+    },
+    {
+     "id": 4980,
+     "title": "Kinematics: Lecture 3",
+     "durationSeconds": 4974,
+     "createdAt": "2026-08-19T16:29:25.673575+00:00"
+    },
+    {
+     "id": 4981,
+     "title": "Kinematics: Lecture 4",
+     "durationSeconds": 4039,
+     "createdAt": "2026-08-19T16:29:25.673575+00:00"
+    },
+    {
+     "id": 4982,
+     "title": "Kinematics: Lecture 5",
+     "durationSeconds": 4346,
+     "createdAt": "2026-08-19T16:29:25.673575+00:00"
+    },
+    {
+     "id": 4983,
+     "title": "Kinematics: Lecture 6",
+     "durationSeconds": 4681,
+     "createdAt": "2026-08-19T16:29:25.673575+00:00"
+    },
+    {
+     "id": 4984,
+     "title": "Kinematics: Lecture 7",
+     "durationSeconds": 4554,
+     "createdAt": "2026-08-19T16:29:25.673575+00:00"
+    },
+    {
+     "id": 4985,
+     "title": "Kinematics: Lecture 8",
+     "durationSeconds": 1723,
+     "createdAt": "2026-08-19T16:29:25.673575+00:00"
+    },
+    {
+     "id": 4986,
+     "title": "Kinematics: Lecture 9",
+     "durationSeconds": 1703,
+     "createdAt": "2026-08-19T16:29:25.673575+00:00"
+    },
+    {
+     "id": 3889,
+     "title": "Kinematics 1D (Part 2)",
+     "durationSeconds": 12924,
+     "createdAt": "2026-08-03T12:47:40.053337+00:00"
+    },
+    {
+     "id": 3895,
+     "title": "Kinematics 1D (Part 1)",
+     "durationSeconds": 16021,
+     "createdAt": "2026-08-03T12:47:40.053337+00:00"
+    },
+    {
+     "id": 4002,
+     "title": "Kinematics 1D (Part 1)",
+     "durationSeconds": 1143,
+     "createdAt": "2026-08-03T18:05:44.020602+00:00"
+    },
+    {
+     "id": 4003,
+     "title": "Kinematics 1D (Part 2)",
+     "durationSeconds": 1567,
+     "createdAt": "2026-08-03T18:05:44.020602+00:00"
+    },
+    {
+     "id": 4004,
+     "title": "Kinematics 1D (Part 3)",
+     "durationSeconds": 1391,
+     "createdAt": "2026-08-03T18:05:44.020602+00:00"
+    },
+    {
+     "id": 4005,
+     "title": "Kinematics 1D (Part 4)",
+     "durationSeconds": 788,
+     "createdAt": "2026-08-03T18:05:44.020602+00:00"
+    },
+    {
+     "id": 4006,
+     "title": "Kinematics 2D (Part 1)",
+     "durationSeconds": 1707,
+     "createdAt": "2026-08-03T18:05:44.020602+00:00"
+    },
+    {
+     "id": 4007,
+     "title": "Kinematics 2D (Part 2)",
+     "durationSeconds": 1147,
+     "createdAt": "2026-08-03T18:05:44.020602+00:00"
+    },
+    {
+     "id": 4008,
+     "title": "Kinematics 2D (Part 3)",
+     "durationSeconds": 1058,
+     "createdAt": "2026-08-03T18:05:44.020602+00:00"
+    },
+    {
+     "id": 4987,
+     "title": "Kinematics: Lecture 10",
+     "durationSeconds": 3387,
+     "createdAt": "2026-08-19T16:29:25.673575+00:00"
+    },
+    {
+     "id": 4988,
+     "title": "Kinematics: Lecture 11",
+     "durationSeconds": 4218,
+     "createdAt": "2026-08-19T16:29:25.673575+00:00"
+    },
+    {
+     "id": 4989,
+     "title": "Kinematics: Lecture 12",
+     "durationSeconds": 2897,
+     "createdAt": "2026-08-19T16:29:25.673575+00:00"
+    },
+    {
+     "id": 4990,
+     "title": "Kinematics: Lecture 13",
+     "durationSeconds": 3751,
+     "createdAt": "2026-08-19T16:29:25.673575+00:00"
+    },
+    {
+     "id": 4991,
+     "title": "Kinematics: Lecture 14",
+     "durationSeconds": 2336,
+     "createdAt": "2026-08-19T16:29:25.673575+00:00"
+    },
+    {
+     "id": 4992,
+     "title": "Kinematics: Lecture 15",
+     "durationSeconds": 3817,
+     "createdAt": "2026-08-19T16:29:25.673575+00:00"
+    },
+    {
+     "id": 4993,
+     "title": "Kinematics: Lecture 16",
+     "durationSeconds": 3823,
+     "createdAt": "2026-08-19T16:29:25.673575+00:00"
+    },
+    {
+     "id": 14,
+     "title": "Kinematics JEE Advanced PYQ (2004-2023)",
+     "durationSeconds": 4718,
+     "createdAt": "2026-07-20T20:16:17.402137+00:00"
+    },
+    {
+     "id": 3700,
+     "title": "Kinematics Motion in a Plane — One Shot",
+     "durationSeconds": 19788,
+     "createdAt": "2026-08-03T10:53:04.981837+00:00"
+    },
+    {
+     "id": 3698,
+     "title": "Kinematics Motion in a Straight Line — One Shot",
+     "durationSeconds": 17141,
+     "createdAt": "2026-08-03T10:53:04.981837+00:00"
+    },
+    {
+     "id": 3699,
+     "title": "Kinematics Motion Under Gravity and Graph — One Shot",
+     "durationSeconds": 15375,
+     "createdAt": "2026-08-03T10:53:04.981837+00:00"
+    },
+    {
+     "id": 1322,
+     "title": "Motion in a Plane and Kinematics of Circular Motion in One Shot with PYQ",
+     "durationSeconds": 22887,
+     "createdAt": "2026-07-27T12:44:11.221683+00:00"
+    },
+    {
+     "id": 4768,
+     "title": "NEET 2020: Kinematics 1D - L 1 | Class 11 | NEET Physics | Unacademy NEET | Mahendra Sir",
+     "durationSeconds": 3035,
+     "createdAt": "2026-08-06T12:39:22.931053+00:00"
+    },
+    {
+     "id": 4769,
+     "title": "NEET 2020: Kinematics 1D - L 2 | Class 11 | NEET Physics | Unacademy NEET | Mahendra Sir",
+     "durationSeconds": 3031,
+     "createdAt": "2026-08-06T12:39:22.931053+00:00"
+    },
+    {
+     "id": 4771,
+     "title": "NEET 2020: Kinematics 1D - L 4 | Class 11 | NEET Physics | Unacademy NEET | Mahendra Sir",
+     "durationSeconds": 3328,
+     "createdAt": "2026-08-06T12:39:22.931053+00:00"
+    },
+    {
+     "id": 4772,
+     "title": "NEET 2020: Kinematics 1D - L 5 | Class 11 | NEET Physics | Unacademy NEET | Mahendra Sir",
+     "durationSeconds": 3363,
+     "createdAt": "2026-08-06T12:39:22.931053+00:00"
+    },
+    {
+     "id": 4773,
+     "title": "NEET 2020: Kinematics 1D - L 6 | Class 11 | NEET Physics | Unacademy NEET | Mahendra Sir",
+     "durationSeconds": 3514,
+     "createdAt": "2026-08-06T12:39:22.931053+00:00"
+    },
+    {
+     "id": 4770,
+     "title": "NEET 2020: Kinematics 1D - L 3 | Class 11 |  NEET Physics | Unacademy NEET | Mahendra Sir",
+     "durationSeconds": 3353,
+     "createdAt": "2026-08-06T12:39:22.931053+00:00"
+    },
+    {
+     "id": 3613,
+     "title": "Chemical Kinetics",
+     "durationSeconds": 17698,
+     "createdAt": "2026-08-03T10:20:29.747481+00:00"
+    },
+    {
+     "id": 389,
+     "title": "Nth Order Kinetics",
+     "durationSeconds": 1067,
+     "createdAt": "2026-07-25T13:01:42.232876+00:00"
+    },
+    {
+     "id": 384,
+     "title": "Zero Order Kinetics",
+     "durationSeconds": 739,
+     "createdAt": "2026-07-25T13:01:42.232876+00:00"
+    },
+    {
+     "id": 386,
+     "title": "First Order Kinetics",
+     "durationSeconds": 1568,
+     "createdAt": "2026-07-25T13:01:42.232876+00:00"
+    },
+    {
+     "id": 2051,
+     "title": "Chemical Kinetics (L-6)",
+     "durationSeconds": 4786,
+     "createdAt": "2026-07-29T09:10:26.077814+00:00"
+    },
+    {
+     "id": 2052,
+     "title": "Chemical Kinetics (L-5)",
+     "durationSeconds": 5360,
+     "createdAt": "2026-07-29T09:10:26.077814+00:00"
+    },
+    {
+     "id": 2053,
+     "title": "Chemical Kinetics (L-4)",
+     "durationSeconds": 5466,
+     "createdAt": "2026-07-29T09:10:26.077814+00:00"
+    },
+    {
+     "id": 2054,
+     "title": "Chemical Kinetics (L-3)",
+     "durationSeconds": 5583,
+     "createdAt": "2026-07-29T09:10:26.077814+00:00"
+    },
+    {
+     "id": 2055,
+     "title": "Chemical Kinetics (L-2)",
+     "durationSeconds": 5234,
+     "createdAt": "2026-07-29T09:10:26.077814+00:00"
+    },
+    {
+     "id": 2056,
+     "title": "Chemical Kinetics (L-1)",
+     "durationSeconds": 5322,
+     "createdAt": "2026-07-29T09:10:26.077814+00:00"
+    },
+    {
+     "id": 3153,
+     "title": "Basic Mathematics (Part 1)",
+     "durationSeconds": 607,
+     "createdAt": "2026-08-03T09:29:50.263215+00:00"
+    },
+    {
+     "id": 3154,
+     "title": "Basic Mathematics (Part 2)",
+     "durationSeconds": 624,
+     "createdAt": "2026-08-03T09:29:50.263215+00:00"
+    },
+    {
+     "id": 3155,
+     "title": "Basic Mathematics (Part 3)",
+     "durationSeconds": 682,
+     "createdAt": "2026-08-03T09:29:50.263215+00:00"
+    },
+    {
+     "id": 3156,
+     "title": "Basic Mathematics (Part 4)",
+     "durationSeconds": 640,
+     "createdAt": "2026-08-03T09:29:50.263215+00:00"
+    },
+    {
+     "id": 3157,
+     "title": "Basic Mathematics (Part 5)",
+     "durationSeconds": 584,
+     "createdAt": "2026-08-03T09:29:50.263215+00:00"
+    },
+    {
+     "id": 3158,
+     "title": "Basic Mathematics (Part 6)",
+     "durationSeconds": 578,
+     "createdAt": "2026-08-03T09:29:50.263215+00:00"
+    },
+    {
+     "id": 3159,
+     "title": "Basic Mathematics (Part 7)",
+     "durationSeconds": 573,
+     "createdAt": "2026-08-03T09:29:50.263215+00:00"
+    },
+    {
+     "id": 3160,
+     "title": "Basic Mathematics (Part 8)",
+     "durationSeconds": 398,
+     "createdAt": "2026-08-03T09:29:50.263215+00:00"
+    },
+    {
+     "id": 3161,
+     "title": "Basic Mathematics (Part 9)",
+     "durationSeconds": 496,
+     "createdAt": "2026-08-03T09:29:50.263215+00:00"
+    },
+    {
+     "id": 3162,
+     "title": "Basic Mathematics (Part 10)",
+     "durationSeconds": 670,
+     "createdAt": "2026-08-03T09:29:50.263215+00:00"
+    },
+    {
+     "id": 3163,
+     "title": "Basic Mathematics (Part 11)",
+     "durationSeconds": 402,
+     "createdAt": "2026-08-03T09:29:50.263215+00:00"
+    },
+    {
+     "id": 3164,
+     "title": "Basic Mathematics (Part 12)",
+     "durationSeconds": 642,
+     "createdAt": "2026-08-03T09:29:50.263215+00:00"
+    },
+    {
+     "id": 3165,
+     "title": "Basic Mathematics (Part 13)",
+     "durationSeconds": 563,
+     "createdAt": "2026-08-03T09:29:50.263215+00:00"
+    },
+    {
+     "id": 3166,
+     "title": "Basic Mathematics (Part 14)",
+     "durationSeconds": 530,
+     "createdAt": "2026-08-03T09:29:50.263215+00:00"
+    },
+    {
+     "id": 3167,
+     "title": "Basic Mathematics (Part 15)",
+     "durationSeconds": 338,
+     "createdAt": "2026-08-03T09:29:50.263215+00:00"
+    },
+    {
+     "id": 3168,
+     "title": "Basic Mathematics (Part 16)",
+     "durationSeconds": 639,
+     "createdAt": "2026-08-03T09:29:50.263215+00:00"
+    },
+    {
+     "id": 3169,
+     "title": "Basic Mathematics (Part 17)",
+     "durationSeconds": 722,
+     "createdAt": "2026-08-03T09:29:50.263215+00:00"
+    },
+    {
+     "id": 3170,
+     "title": "Basic Mathematics (Part 18)",
+     "durationSeconds": 546,
+     "createdAt": "2026-08-03T09:29:50.263215+00:00"
+    },
+    {
+     "id": 3171,
+     "title": "Basic Mathematics (Part 19)",
+     "durationSeconds": 472,
+     "createdAt": "2026-08-03T09:29:50.263215+00:00"
+    },
+    {
+     "id": 3172,
+     "title": "Basic Mathematics (Part 20)",
+     "durationSeconds": 608,
+     "createdAt": "2026-08-03T09:29:50.263215+00:00"
+    },
+    {
+     "id": 3173,
+     "title": "Basic Mathematics (Part 21)",
+     "durationSeconds": 620,
+     "createdAt": "2026-08-03T09:29:50.263215+00:00"
+    },
+    {
+     "id": 3174,
+     "title": "Basic Mathematics (Part 22)",
+     "durationSeconds": 517,
+     "createdAt": "2026-08-03T09:29:50.263215+00:00"
+    },
+    {
+     "id": 3175,
+     "title": "Basic Mathematics (Part 23)",
+     "durationSeconds": 451,
+     "createdAt": "2026-08-03T09:29:50.263215+00:00"
+    },
+    {
+     "id": 3176,
+     "title": "Basic Mathematics (Part 24)",
+     "durationSeconds": 650,
+     "createdAt": "2026-08-03T09:29:50.263215+00:00"
+    },
+    {
+     "id": 3177,
+     "title": "Basic Mathematics (Part 25)",
+     "durationSeconds": 518,
+     "createdAt": "2026-08-03T09:29:50.263215+00:00"
+    },
+    {
+     "id": 3178,
+     "title": "Basic Mathematics (Part 26)",
+     "durationSeconds": 462,
+     "createdAt": "2026-08-03T09:29:50.263215+00:00"
+    },
+    {
+     "id": 3179,
+     "title": "Basic Mathematics (Part 27)",
+     "durationSeconds": 543,
+     "createdAt": "2026-08-03T09:29:50.263215+00:00"
+    },
+    {
+     "id": 3180,
+     "title": "Basic Mathematics (Part 28)",
+     "durationSeconds": 568,
+     "createdAt": "2026-08-03T09:29:50.263215+00:00"
+    },
+    {
+     "id": 3181,
+     "title": "Basic Mathematics (Part 29)",
+     "durationSeconds": 764,
+     "createdAt": "2026-08-03T09:29:50.263215+00:00"
+    },
+    {
+     "id": 3182,
+     "title": "Basic Mathematics (Part 30)",
+     "durationSeconds": 599,
+     "createdAt": "2026-08-03T09:29:50.263215+00:00"
+    },
+    {
+     "id": 3183,
+     "title": "Basic Mathematics (Part 31)",
+     "durationSeconds": 653,
+     "createdAt": "2026-08-03T09:29:50.263215+00:00"
+    },
+    {
+     "id": 3184,
+     "title": "Basic Mathematics (Part 32)",
+     "durationSeconds": 604,
+     "createdAt": "2026-08-03T09:29:50.263215+00:00"
+    },
+    {
+     "id": 3185,
+     "title": "Basic Mathematics (Part 33)",
+     "durationSeconds": 555,
+     "createdAt": "2026-08-03T09:29:50.263215+00:00"
+    },
+    {
+     "id": 3186,
+     "title": "Basic Mathematics (Part 34)",
+     "durationSeconds": 647,
+     "createdAt": "2026-08-03T09:29:50.263215+00:00"
+    },
+    {
+     "id": 3187,
+     "title": "Basic Mathematics (Part 35)",
+     "durationSeconds": 609,
+     "createdAt": "2026-08-03T09:29:50.263215+00:00"
+    },
+    {
+     "id": 3188,
+     "title": "Basic Mathematics (Part 36)",
+     "durationSeconds": 612,
+     "createdAt": "2026-08-03T09:29:50.263215+00:00"
+    },
+    {
+     "id": 3189,
+     "title": "Basic Mathematics (Part 37)",
+     "durationSeconds": 608,
+     "createdAt": "2026-08-03T09:29:50.263215+00:00"
+    },
+    {
+     "id": 3190,
+     "title": "Basic Mathematics (Part 38)",
+     "durationSeconds": 614,
+     "createdAt": "2026-08-03T09:29:50.263215+00:00"
+    },
+    {
+     "id": 1498,
+     "title": "Chemical Kinetics in One Shot",
+     "durationSeconds": 8837,
+     "createdAt": "2026-07-27T19:48:25.85479+00:00"
+    },
+    {
+     "id": 4198,
+     "title": "Chemical Kinetics — Rate of Reaction",
+     "durationSeconds": 5402,
+     "createdAt": "2026-08-03T19:06:49.442594+00:00"
+    },
+    {
+     "id": 4205,
+     "title": "Chemical Kinetics — Nuclear Chemistry",
+     "durationSeconds": 4009,
+     "createdAt": "2026-08-03T19:06:49.442594+00:00"
+    },
+    {
+     "id": 2515,
+     "title": "Fundamentals of Mathematics — Lecture 1",
+     "durationSeconds": 5135,
+     "createdAt": "2026-07-30T17:41:25.132333+00:00"
+    },
+    {
+     "id": 2516,
+     "title": "Fundamentals of Mathematics — Lecture 2",
+     "durationSeconds": 5223,
+     "createdAt": "2026-07-30T17:41:25.132333+00:00"
+    },
+    {
+     "id": 2517,
+     "title": "Fundamentals of Mathematics — Lecture 3",
+     "durationSeconds": 4940,
+     "createdAt": "2026-07-30T17:41:25.132333+00:00"
+    },
+    {
+     "id": 2518,
+     "title": "Fundamentals of Mathematics — Lecture 4",
+     "durationSeconds": 4703,
+     "createdAt": "2026-07-30T17:41:25.132333+00:00"
+    },
+    {
+     "id": 2519,
+     "title": "Fundamentals of Mathematics — Lecture 5",
+     "durationSeconds": 5011,
+     "createdAt": "2026-07-30T17:41:25.132333+00:00"
+    },
+    {
+     "id": 2520,
+     "title": "Fundamentals of Mathematics — Lecture 6",
+     "durationSeconds": 5352,
+     "createdAt": "2026-07-30T17:41:25.132333+00:00"
+    },
+    {
+     "id": 2521,
+     "title": "Fundamentals of Mathematics — Lecture 7",
+     "durationSeconds": 5151,
+     "createdAt": "2026-07-30T17:41:25.132333+00:00"
+    },
+    {
+     "id": 2522,
+     "title": "Fundamentals of Mathematics — Lecture 8",
+     "durationSeconds": 5004,
+     "createdAt": "2026-07-30T17:41:25.132333+00:00"
+    },
+    {
+     "id": 2523,
+     "title": "Fundamentals of Mathematics — Lecture 9",
+     "durationSeconds": 5117,
+     "createdAt": "2026-07-30T17:41:25.132333+00:00"
+    },
+    {
+     "id": 4201,
+     "title": "Chemical Kinetics — Integrated Rate Laws",
+     "durationSeconds": 5378,
+     "createdAt": "2026-08-03T19:06:49.442594+00:00"
+    },
+    {
+     "id": 1586,
+     "title": "Chemical Kinetics in 76 Minutes — Full Chapter",
+     "durationSeconds": 4577,
+     "createdAt": "2026-07-27T19:49:40.686426+00:00"
+    },
+    {
+     "id": 4199,
+     "title": "Chemical Kinetics — Rate Law, Order & Molecularity",
+     "durationSeconds": 5164,
+     "createdAt": "2026-08-03T19:06:49.442594+00:00"
+    },
+    {
+     "id": 4202,
+     "title": "Chemical Kinetics — Applications of First Order Kinetics",
+     "durationSeconds": 5528,
+     "createdAt": "2026-08-03T19:06:49.442594+00:00"
+    },
+    {
+     "id": 4200,
+     "title": "Chemical Kinetics — Elementary & Non Elementary Reactions",
+     "durationSeconds": 5547,
+     "createdAt": "2026-08-03T19:06:49.442594+00:00"
+    },
+    {
+     "id": 1370,
+     "title": "Chemical Kinetics in One Shot: All Concepts, Tricks and PYQ",
+     "durationSeconds": 11665,
+     "createdAt": "2026-07-27T12:46:10.558347+00:00"
+    },
+    {
+     "id": 4204,
+     "title": "Chemical Kinetics — Radioactivity, 2nd & nth Order Reactions",
+     "durationSeconds": 4498,
+     "createdAt": "2026-08-03T19:06:49.442594+00:00"
+    },
+    {
+     "id": 5190,
+     "title": "JEE Advanced 2022 | Paper 1 | Q4 | Mathematics | Complex numbers",
+     "durationSeconds": 319,
+     "createdAt": "2026-08-21T13:40:09.73141+00:00"
+    },
+    {
+     "id": 5191,
+     "title": "JEE Advanced 2022 | Paper 1 | Q5 | Mathematics | Complex numbers",
+     "durationSeconds": 145,
+     "createdAt": "2026-08-21T13:40:09.73141+00:00"
+    },
+    {
+     "id": 5192,
+     "title": "JEE Advanced 2022 | Paper 2 | Q11 | Mathematics | Complex numbers",
+     "durationSeconds": 314,
+     "createdAt": "2026-08-21T13:40:09.73141+00:00"
+    },
+    {
+     "id": 4203,
+     "title": "Chemical Kinetics — Applications of First Order Kinetics — Lecture 6",
+     "durationSeconds": 4013,
+     "createdAt": "2026-08-03T19:06:49.442594+00:00"
+    },
+    {
+     "id": 5302,
+     "title": "L32 | IITJEE | Fundamental of Mathematics Revision 2 | Prashant Jain",
+     "durationSeconds": 5636,
+     "createdAt": "2026-08-25T11:26:08.945537+00:00"
+    },
+    {
+     "id": 5526,
+     "title": "Class 11 Physics | Kinetic Theory of Gases | #3 Gas Laws | For JEE & NEET",
+     "durationSeconds": 620,
+     "createdAt": "2026-08-31T09:52:18.662462+00:00"
+    },
+    {
+     "id": 5527,
+     "title": "Class 11 Physics | Kinetic Theory of Gases | #4 State of Gas | For JEE & NEET",
+     "durationSeconds": 359,
+     "createdAt": "2026-08-31T09:52:18.662462+00:00"
+    },
+    {
+     "id": 5525,
+     "title": "Class 11 Physics | Kinetic Theory of Gases | #2 Behaviour of Real Gases | For JEE & NEET",
+     "durationSeconds": 419,
+     "createdAt": "2026-08-31T09:52:18.662462+00:00"
+    },
+    {
+     "id": 5528,
+     "title": "Class 11 Physics | Kinetic Theory of Gases | #5 Solved Example-1 on KTG | For JEE & NEET",
+     "durationSeconds": 103,
+     "createdAt": "2026-08-31T09:52:18.662462+00:00"
+    },
+    {
+     "id": 5529,
+     "title": "Class 11 Physics | Kinetic Theory of Gases | #6 Solved Example-2 on KTG | For JEE & NEET",
+     "durationSeconds": 206,
+     "createdAt": "2026-08-31T09:52:18.662462+00:00"
+    },
+    {
+     "id": 5530,
+     "title": "Class 11 Physics | Kinetic Theory of Gases | #7 Solved Example-3 on KTG  | For JEE & NEET",
+     "durationSeconds": 95,
+     "createdAt": "2026-08-31T09:52:18.662462+00:00"
+    },
+    {
+     "id": 5532,
+     "title": "Class 11 Physics | Kinetic Theory of Gases | #9 Modified form of Gas Law | For JEE & NEET",
+     "durationSeconds": 197,
+     "createdAt": "2026-08-31T09:52:18.662462+00:00"
+    },
+    {
+     "id": 5533,
+     "title": "Class 11 Physics | Kinetic Theory of Gases | #10 Solved Example-4 on KTG | For JEE & NEET",
+     "durationSeconds": 133,
+     "createdAt": "2026-08-31T09:52:18.662462+00:00"
+    },
+    {
+     "id": 5534,
+     "title": "Class 11 Physics | Kinetic Theory of Gases | #11 Solved Example-5 on KTG | For JEE & NEET",
+     "durationSeconds": 284,
+     "createdAt": "2026-08-31T09:52:18.662462+00:00"
+    },
+    {
+     "id": 5536,
+     "title": "Class 11 Physics | Kinetic Theory of Gases | #13 Solved Example-7 on KTG | For JEE & NEET",
+     "durationSeconds": 107,
+     "createdAt": "2026-08-31T09:52:18.662462+00:00"
+    },
+    {
+     "id": 5538,
+     "title": "Class 11 Physics | Kinetic Theory of Gases | #15 Solved Example-8 on KTG | For JEE & NEET",
+     "durationSeconds": 214,
+     "createdAt": "2026-08-31T09:52:18.662462+00:00"
+    },
+    {
+     "id": 5539,
+     "title": "Class 11 Physics | Kinetic Theory of Gases | #16 Solved Example-9 on KTG | For JEE & NEET",
+     "durationSeconds": 216,
+     "createdAt": "2026-08-31T09:52:18.662462+00:00"
+    },
+    {
+     "id": 5284,
+     "title": "L-5 Set Theory | Fundamental of Mathematics | Class XI JEE Main & Advanced | Prashant Jain",
+     "durationSeconds": 5466,
+     "createdAt": "2026-08-25T11:26:08.945537+00:00"
+    },
+    {
+     "id": 5535,
+     "title": "Class 11 Physics | Kinetic Theory of Gases  | #12 Solved Example-6 on KTG | For JEE & NEET",
+     "durationSeconds": 260,
+     "createdAt": "2026-08-31T09:52:18.662462+00:00"
+    },
+    {
+     "id": 5537,
+     "title": "Class 11 Physics | Kinetic Theory of Gases | #14 Air Pressure & Barometer | For JEE & NEET",
+     "durationSeconds": 540,
+     "createdAt": "2026-08-31T09:52:18.662462+00:00"
+    },
+    {
+     "id": 5540,
+     "title": "Class 11 Physics | Kinetic Theory of Gases | #17 Solved Example-10 on KTG | For JEE & NEET",
+     "durationSeconds": 260,
+     "createdAt": "2026-08-31T09:52:18.662462+00:00"
+    },
+    {
+     "id": 5545,
+     "title": "Class 11 Physics | Kinetic Theory of Gases | #22 Solved Example-11 on KTG | For JEE & NEET",
+     "durationSeconds": 110,
+     "createdAt": "2026-08-31T09:52:18.662462+00:00"
+    },
+    {
+     "id": 5546,
+     "title": "Class 11 Physics | Kinetic Theory of Gases | #23 Solved Example-12 on KTG | For JEE & NEET",
+     "durationSeconds": 142,
+     "createdAt": "2026-08-31T09:52:18.662462+00:00"
+    },
+    {
+     "id": 5548,
+     "title": "Class 11 Physics | Kinetic Theory of Gases | #25 Solved Example-14 on KTG | For JEE & NEET",
+     "durationSeconds": 123,
+     "createdAt": "2026-08-31T09:52:18.662462+00:00"
+    },
+    {
+     "id": 5552,
+     "title": "Class 11 Physics | Kinetic Theory of Gases | #29 Solved Example-15 on KTG | For JEE & NEET",
+     "durationSeconds": 136,
+     "createdAt": "2026-08-31T09:52:18.662462+00:00"
+    },
+    {
+     "id": 5555,
+     "title": "Class 11 Physics | Kinetic Theory of Gases | #32 Solved Example-18 on KTG | For JEE & NEET",
+     "durationSeconds": 173,
+     "createdAt": "2026-08-31T09:52:18.662462+00:00"
+    },
+    {
+     "id": 5543,
+     "title": "Class 11 Physics | Kinetic Theory of Gases | #20 Pressure Exerted by a Gas | For JEE & NEET",
+     "durationSeconds": 558,
+     "createdAt": "2026-08-31T09:52:18.662462+00:00"
+    },
+    {
+     "id": 5547,
+     "title": "Class 11 Physics | Kinetic Theory of Gases | #24 Solved Example-13 on KTG |  For JEE & NEET",
+     "durationSeconds": 362,
+     "createdAt": "2026-08-31T09:52:18.662462+00:00"
+    },
+    {
+     "id": 5553,
+     "title": "Class 11 Physics | Kinetic Theory of Gases | #30 Solved Example-16 on KTG  | For JEE & NEET",
+     "durationSeconds": 185,
+     "createdAt": "2026-08-31T09:52:18.662462+00:00"
+    },
+    {
+     "id": 5554,
+     "title": "Class 11 Physics | Kinetic Theory of Gases  | #31 Solved Example-17 on KTG |  For JEE & NEET",
+     "durationSeconds": 354,
+     "createdAt": "2026-08-31T09:52:18.662462+00:00"
+    },
+    {
+     "id": 5549,
+     "title": "Class 11 Physics | Kinetic Theory of Gases | #26 Degrees of Freedom & Equipartition of Energy",
+     "durationSeconds": 464,
+     "createdAt": "2026-08-31T09:52:18.662462+00:00"
+    },
+    {
+     "id": 5283,
+     "title": "L-4 Complex Number | Fundamental of Mathematics | Class XI JEE Main & Advanced | Prashant Jain",
+     "durationSeconds": 5915,
+     "createdAt": "2026-08-25T11:26:08.945537+00:00"
+    },
+    {
+     "id": 5541,
+     "title": "Class 11 Physics | Kinetic Theory of Gases | #18 Different Molecular Speeds for a Gas Molecule",
+     "durationSeconds": 753,
+     "createdAt": "2026-08-31T09:52:18.662462+00:00"
+    },
+    {
+     "id": 4648,
+     "title": "NEET Chemistry: Chemical Kinetics - L1 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anoop Sir",
+     "durationSeconds": 3520,
+     "createdAt": "2026-08-05T10:08:38.392235+00:00"
+    },
+    {
+     "id": 4649,
+     "title": "NEET Chemistry: Chemical Kinetics - L2 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anoop Sir",
+     "durationSeconds": 3511,
+     "createdAt": "2026-08-05T10:08:38.392235+00:00"
+    },
+    {
+     "id": 4650,
+     "title": "NEET Chemistry: Chemical Kinetics - L3 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anoop Sir",
+     "durationSeconds": 3473,
+     "createdAt": "2026-08-05T10:08:38.392235+00:00"
+    },
+    {
+     "id": 4651,
+     "title": "NEET Chemistry: Chemical Kinetics - L4 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anoop Sir",
+     "durationSeconds": 3290,
+     "createdAt": "2026-08-05T10:08:38.392235+00:00"
+    },
+    {
+     "id": 4652,
+     "title": "NEET Chemistry: Chemical Kinetics - L5 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anoop Sir",
+     "durationSeconds": 3605,
+     "createdAt": "2026-08-05T10:08:38.392235+00:00"
+    },
+    {
+     "id": 4653,
+     "title": "NEET Chemistry: Chemical Kinetics - L6 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anoop Sir",
+     "durationSeconds": 3541,
+     "createdAt": "2026-08-05T10:08:38.392235+00:00"
+    },
+    {
+     "id": 4654,
+     "title": "NEET Chemistry: Chemical Kinetics - L7 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anoop Sir",
+     "durationSeconds": 3640,
+     "createdAt": "2026-08-05T10:08:38.392235+00:00"
+    },
+    {
+     "id": 4655,
+     "title": "NEET Chemistry: Chemical Kinetics - L8 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anoop Sir",
+     "durationSeconds": 3535,
+     "createdAt": "2026-08-05T10:08:38.392235+00:00"
+    },
+    {
+     "id": 4656,
+     "title": "NEET Chemistry: Chemical Kinetics - L9 | Class 12 | Live Daily 2.0 | Unacademy NEET | Anoop Sir",
+     "durationSeconds": 3643,
+     "createdAt": "2026-08-05T10:08:38.392235+00:00"
+    },
+    {
+     "id": 5544,
+     "title": "Class 11 Physics | Kinetic Theory of Gases | #21 Translational Kinetic Energy of a Gas Molecule",
+     "durationSeconds": 232,
+     "createdAt": "2026-08-31T09:52:18.662462+00:00"
+    },
+    {
+     "id": 5550,
+     "title": "Class 11 Physics | Kinetic Theory of Gases | #27 Degrees of Freedom for Different Gas Molecules",
+     "durationSeconds": 451,
+     "createdAt": "2026-08-31T09:52:18.662462+00:00"
+    },
+    {
+     "id": 5281,
+     "title": "L-2 Polynomial Theory | Fundamental Of Mathematics | Class XI JEE Main & Advanced | Prashant Jain",
+     "durationSeconds": 5543,
+     "createdAt": "2026-08-25T11:26:08.945537+00:00"
+    },
+    {
+     "id": 5288,
+     "title": "L-9 Wavy Curve Method | Fundamental of Mathematics | Class XI JEE Main & Advanced | Prashant Jain",
+     "durationSeconds": 5807,
+     "createdAt": "2026-08-25T11:26:08.945537+00:00"
+    },
+    {
+     "id": 5290,
+     "title": "L-11 Graph of Polynomials | Fundamental of Mathematics|Class XI JEE Main & Advanced|Prashant Jain",
+     "durationSeconds": 5678,
+     "createdAt": "2026-08-25T11:26:08.945537+00:00"
+    },
+    {
+     "id": 5282,
+     "title": "L-3 Ratio & Proportion | Fundamental of Mathematics | Class XI JEE Main & Advanced | Prashant Jain",
+     "durationSeconds": 5455,
+     "createdAt": "2026-08-25T11:26:08.945537+00:00"
+    },
+    {
+     "id": 5291,
+     "title": "L-12 Modulus Equations | Fundamental of Mathematics | Class XI JEE Main & Advanced | Prashant Jain",
+     "durationSeconds": 5441,
+     "createdAt": "2026-08-25T11:26:08.945537+00:00"
+    },
+    {
+     "id": 5542,
+     "title": "Class 11 Physics | Kinetic Theory of Gases | #19 Distribution of Molecular Speeds | For JEE & NEET",
+     "durationSeconds": 389,
+     "createdAt": "2026-08-31T09:52:18.662462+00:00"
+    },
+    {
+     "id": 5292,
+     "title": "L-13 Modulus Inequality | Fundamental of Mathematics | Class XI JEE Main & Advanced | Prashant Jain",
+     "durationSeconds": 5245,
+     "createdAt": "2026-08-25T11:26:08.945537+00:00"
+    },
+    {
+     "id": 5295,
+     "title": "L-16 Logarithm Equation | Fundamental of Mathematics | Class XI JEE Main & Advanced | Prashant Jain",
+     "durationSeconds": 4405,
+     "createdAt": "2026-08-25T11:26:08.945537+00:00"
+    },
+    {
+     "id": 5280,
+     "title": "L-1 Elementary Number Theory | Fundamental of Mathematics|Class XI JEE Main & Advanced|Prashant Jain",
+     "durationSeconds": 7057,
+     "createdAt": "2026-08-25T11:26:08.945537+00:00"
+    },
+    {
+     "id": 5285,
+     "title": "L-6 Theory of Cardinal No. |Fundamental of Mathematics| Class XI JEE Main & Advanced | Prashant Jain",
+     "durationSeconds": 4996,
+     "createdAt": "2026-08-25T11:26:08.945537+00:00"
+    },
+    {
+     "id": 5286,
+     "title": "L-7 Relations & Functions| Fundamental of Mathematics | Class XI JEE Main & Advanced | Prashant Jain",
+     "durationSeconds": 4900,
+     "createdAt": "2026-08-25T11:26:08.945537+00:00"
+    },
+    {
+     "id": 5287,
+     "title": "L-8 Classification of Relation|Fundamental of Mathematics|Class XI JEE Main & Advanced|Prashant Jain",
+     "durationSeconds": 5168,
+     "createdAt": "2026-08-25T11:26:08.945537+00:00"
+    },
+    {
+     "id": 5293,
+     "title": "L-14 Logarithm & Exponents | Fundamental of Mathematics | Class XI JEE Main & Advanced|Prashant Jain",
+     "durationSeconds": 2647,
+     "createdAt": "2026-08-25T11:26:08.945537+00:00"
+    },
+    {
+     "id": 5294,
+     "title": "L-15 Characteristic & mantissa|Fundamental of Mathematics|Class XI JEE Main & Advanced|Prashant Jain",
+     "durationSeconds": 5549,
+     "createdAt": "2026-08-25T11:26:08.945537+00:00"
+    },
+    {
+     "id": 5296,
+     "title": "L-17 Logarithmic Inequality | Fundamental of Mathematics|Class XI JEE Main & Advanced |Prashant Jain",
+     "durationSeconds": 4405,
+     "createdAt": "2026-08-25T11:26:08.945537+00:00"
+    },
+    {
+     "id": 5297,
+     "title": "L-18 Irrational Inequalities | Fundamental of Mathematics|Class XI JEE Main & Advanced|Prashant Jain",
+     "durationSeconds": 3783,
+     "createdAt": "2026-08-25T11:26:08.945537+00:00"
+    },
+    {
+     "id": 5298,
+     "title": "L-19 Greatest Integer Function|Fundamental of Mathematics|Class XI JEE Main & Advanced|Prashant Jain",
+     "durationSeconds": 6286,
+     "createdAt": "2026-08-25T11:26:08.945537+00:00"
+    },
+    {
+     "id": 5299,
+     "title": "L-20 Problems on GIF and FPF | Fundamental of Mathematics|Class XI JEE Main & Advanced|Prashant Jain",
+     "durationSeconds": 5604,
+     "createdAt": "2026-08-25T11:26:08.945537+00:00"
+    },
+    {
+     "id": 5300,
+     "title": "L-21 Graphical Transformation |Fundamental of Mathematics|Class XI JEE Main & Advanced|Prashant Jain",
+     "durationSeconds": 5894,
+     "createdAt": "2026-08-25T11:26:08.945537+00:00"
+    },
+    {
+     "id": 5301,
+     "title": "L-22 Composite Functions | Fundamental of Mathematics | Class XI JEE Main & Advanced | Prashant Jain",
+     "durationSeconds": 8580,
+     "createdAt": "2026-08-25T11:26:08.945537+00:00"
+    },
+    {
+     "id": 5524,
+     "title": "Class 11 Physics | Kinetic Theory of Gases | #1 Introduction to Kinetic Theory of Gases | JEE & NEET",
+     "durationSeconds": 1047,
+     "createdAt": "2026-08-31T09:52:18.662462+00:00"
+    },
+    {
+     "id": 5531,
+     "title": "Class 11 Physics | Kinetic Theory of Gases | #8 Avogadro's Hypothesis & Dalton's Law |For JEE & NEET",
+     "durationSeconds": 362,
+     "createdAt": "2026-08-31T09:52:18.662462+00:00"
+    },
+    {
+     "id": 5551,
+     "title": "Class 11 Physics | Kinetic Theory of Gases | #28 Degrees of Freedom for a Gaseous Mixture|JEE & NEET",
+     "durationSeconds": 477,
+     "createdAt": "2026-08-31T09:52:18.662462+00:00"
+    }
+   ]
+  },
+  "friction problems": {
+   "qTokens": [
+    "friction"
+   ],
+   "rankedIds": [
+    2138,
+    4051,
+    41,
+    3890,
+    3891,
+    2137,
+    43,
+    42,
+    1546,
+    1595,
+    1512,
+    227,
+    39,
+    1323,
+    4732,
+    4733,
+    4734,
+    4735,
+    19,
+    20,
+    1458,
+    3663,
+    3412,
+    1836,
+    3549,
+    1452,
+    18,
+    4864,
+    4865,
+    4863,
+    4944,
+    74,
+    3524,
+    3133,
+    3442,
+    5027,
+    5034,
+    5028,
+    5582,
+    5583,
+    5584,
+    5585,
+    5586,
+    5587,
+    5588,
+    5013,
+    5298
+   ],
+   "rows": [
+    {
+     "id": 2138,
+     "title": "Friction",
+     "durationSeconds": 4547,
+     "createdAt": "2026-07-30T08:27:27.39453+00:00"
+    },
+    {
+     "id": 4051,
+     "title": "Friction",
+     "durationSeconds": 2028,
+     "createdAt": "2026-08-03T18:05:44.020602+00:00"
+    },
+    {
+     "id": 41,
+     "title": "Kinetic Friction",
+     "durationSeconds": 5604,
+     "createdAt": "2026-07-20T20:34:20.033447+00:00"
+    },
+    {
+     "id": 3890,
+     "title": "Friction (Part 2)",
+     "durationSeconds": 8601,
+     "createdAt": "2026-08-03T12:47:40.053337+00:00"
+    },
+    {
+     "id": 3891,
+     "title": "Friction (Part 1)",
+     "durationSeconds": 10881,
+     "createdAt": "2026-08-03T12:47:40.053337+00:00"
+    },
+    {
+     "id": 2137,
+     "title": "Pseudo Force & Friction",
+     "durationSeconds": 6203,
+     "createdAt": "2026-07-30T08:27:27.39453+00:00"
+    },
+    {
+     "id": 43,
+     "title": "Examples on Static Friction",
+     "durationSeconds": 3267,
+     "createdAt": "2026-07-20T20:34:20.033447+00:00"
+    },
+    {
+     "id": 42,
+     "title": "Static Friction and Limiting Friction",
+     "durationSeconds": 2364,
+     "createdAt": "2026-07-20T20:34:20.033447+00:00"
+    },
+    {
+     "id": 1546,
+     "title": "Friction — One Shot (Concepts + PYQs)",
+     "durationSeconds": 8660,
+     "createdAt": "2026-07-27T19:49:24.798735+00:00"
+    },
+    {
+     "id": 1595,
+     "title": "Friction in 56 Minutes — Full Chapter",
+     "durationSeconds": 3425,
+     "createdAt": "2026-07-27T19:49:48.600222+00:00"
+    },
+    {
+     "id": 1512,
+     "title": "Newton's Laws of Motion + Friction One Shot",
+     "durationSeconds": 10153,
+     "createdAt": "2026-07-27T19:48:40.641344+00:00"
+    },
+    {
+     "id": 227,
+     "title": "Work Done by Friction, Variable Force and Spring",
+     "durationSeconds": 5393,
+     "createdAt": "2026-07-25T10:53:21.056073+00:00"
+    },
+    {
+     "id": 39,
+     "title": "JEE Advanced Physics PYQs: NLM & Friction 2004 to 2023",
+     "durationSeconds": 4695,
+     "createdAt": "2026-07-20T20:33:16.126889+00:00"
+    },
+    {
+     "id": 1323,
+     "title": "Newton's Laws of Motion and Friction in One Shot with PYQ",
+     "durationSeconds": 26332,
+     "createdAt": "2026-07-27T12:44:11.221683+00:00"
+    },
+    {
+     "id": 4732,
+     "title": "NEET: Friction - L1 | Class 11 | Live Daily 2.0 | Unacademy NEET | Mahendra Sir",
+     "durationSeconds": 3711,
+     "createdAt": "2026-08-06T09:55:24.977378+00:00"
+    },
+    {
+     "id": 4733,
+     "title": "NEET: Friction - L2 | Class 11 | Live Daily 2.0 | Unacademy NEET | Mahendra Sir",
+     "durationSeconds": 3556,
+     "createdAt": "2026-08-06T09:55:24.977378+00:00"
+    },
+    {
+     "id": 4734,
+     "title": "NEET: Friction - L3 | Class 11 | Live Daily 2.0 | Unacademy NEET | Mahendra Sir",
+     "durationSeconds": 3640,
+     "createdAt": "2026-08-06T09:55:24.977378+00:00"
+    },
+    {
+     "id": 4735,
+     "title": "NEET: Friction - L4 | Class 11 | Live Daily 2.0 | Unacademy NEET | Mahendra Sir",
+     "durationSeconds": 3611,
+     "createdAt": "2026-08-06T09:55:24.977378+00:00"
+    },
+    {
+     "id": 19,
+     "title": "Projection from Tower",
+     "durationSeconds": 2083,
+     "createdAt": "2026-07-20T20:19:24.174468+00:00"
+    },
+    {
+     "id": 20,
+     "title": "Example on Projection from Tower",
+     "durationSeconds": 543,
+     "createdAt": "2026-07-20T20:19:24.174468+00:00"
+    },
+    {
+     "id": 1458,
+     "title": "Human Reproduction — Full Chapter",
+     "durationSeconds": 16040,
+     "createdAt": "2026-07-27T13:05:09.363215+00:00"
+    },
+    {
+     "id": 3663,
+     "title": "Mole Fraction and Molality (Part 7)",
+     "durationSeconds": 3782,
+     "createdAt": "2026-08-03T10:21:15.053378+00:00"
+    },
+    {
+     "id": 3412,
+     "title": "Function finding domain using graphs",
+     "durationSeconds": 920,
+     "createdAt": "2026-08-03T09:30:33.115072+00:00"
+    },
+    {
+     "id": 1836,
+     "title": "Post Fertilisation: Fruit and Apomixis",
+     "durationSeconds": 4667,
+     "createdAt": "2026-07-28T12:30:00.16235+00:00"
+    },
+    {
+     "id": 3549,
+     "title": "Function: Finding period using the LCM",
+     "durationSeconds": 838,
+     "createdAt": "2026-08-03T09:30:33.115072+00:00"
+    },
+    {
+     "id": 1452,
+     "title": "Human Reproduction — Full Chapter in 94 Minutes",
+     "durationSeconds": 5680,
+     "createdAt": "2026-07-27T12:50:02.145628+00:00"
+    },
+    {
+     "id": 18,
+     "title": "Equation of Trajectory and Projection from Tower",
+     "durationSeconds": 2836,
+     "createdAt": "2026-07-20T20:19:24.174468+00:00"
+    },
+    {
+     "id": 4864,
+     "title": "Inverse Function | Functions | JEE 2027 | MathonGo",
+     "durationSeconds": 3985,
+     "createdAt": "2026-08-19T10:39:10.80078+00:00"
+    },
+    {
+     "id": 4865,
+     "title": "Odd Even Function | Functions | JEE 2027 | MathonGo",
+     "durationSeconds": 3358,
+     "createdAt": "2026-08-19T10:39:10.80078+00:00"
+    },
+    {
+     "id": 4863,
+     "title": "Composite Function | Functions | JEE 2027 | MathonGo",
+     "durationSeconds": 4413,
+     "createdAt": "2026-08-19T10:39:10.80078+00:00"
+    },
+    {
+     "id": 4944,
+     "title": "INDEFINITE INTEGRATION PART 17:PARTIAL FRACTION FULL",
+     "durationSeconds": 3412,
+     "createdAt": "2026-08-19T12:53:51.779894+00:00"
+    },
+    {
+     "id": 74,
+     "title": "Irodov Q.3.2 — Interaction Force Between Two Copper...",
+     "durationSeconds": 339,
+     "createdAt": "2026-07-25T08:40:10.67558+00:00"
+    },
+    {
+     "id": 3524,
+     "title": "Function: Function Definition, Domain, Codomain, and Range",
+     "durationSeconds": 550,
+     "createdAt": "2026-08-03T09:30:33.115072+00:00"
+    },
+    {
+     "id": 3133,
+     "title": "Solution Of Triangle — Sine and Cosine Rule Projection Formula",
+     "durationSeconds": 3298,
+     "createdAt": "2026-08-03T09:29:22.551331+00:00"
+    },
+    {
+     "id": 3442,
+     "title": "Function Elementary Graphs Introduction to fractional part function",
+     "durationSeconds": 841,
+     "createdAt": "2026-08-03T09:30:33.115072+00:00"
+    },
+    {
+     "id": 5027,
+     "title": "Q12.  INTEGRATION CHALLENGE: Can You Solve This? (Reduction Formula) | Om Sharma",
+     "durationSeconds": 1185,
+     "createdAt": "2026-08-19T18:10:09.438759+00:00"
+    },
+    {
+     "id": 5034,
+     "title": "Q5. Tough Newton Rule Question from Quadratic Equation| OM Sharma| #jee2025 #jee2026",
+     "durationSeconds": 800,
+     "createdAt": "2026-08-19T18:10:09.438759+00:00"
+    },
+    {
+     "id": 5028,
+     "title": "Q11. Boost Your JEE Score: Master Tricky Integration Problem with Reduction Formula | OM Sharma",
+     "durationSeconds": 660,
+     "createdAt": "2026-08-19T18:10:09.438759+00:00"
+    },
+    {
+     "id": 5582,
+     "title": "1 General Inorganic Chemistry | Reaction Prediction | IIT JEE Main Advanced | Chemistry Class 12",
+     "durationSeconds": 1956,
+     "createdAt": "2026-09-04T11:21:13.565821+00:00"
+    },
+    {
+     "id": 5583,
+     "title": "2 General Inorganic Chemistry | Reaction Prediction | IIT JEE Main Advanced | Chemistry Class 12",
+     "durationSeconds": 1962,
+     "createdAt": "2026-09-04T11:21:13.565821+00:00"
+    },
+    {
+     "id": 5584,
+     "title": "3 General Inorganic Chemistry | Reaction Prediction | IIT JEE Main Advanced | Chemistry Class 12",
+     "durationSeconds": 1194,
+     "createdAt": "2026-09-04T11:21:13.565821+00:00"
+    },
+    {
+     "id": 5585,
+     "title": "4 General Inorganic Chemistry | Reaction Prediction | IIT JEE Main Advanced | Chemistry Class 12",
+     "durationSeconds": 2723,
+     "createdAt": "2026-09-04T11:21:13.565821+00:00"
+    },
+    {
+     "id": 5586,
+     "title": "5 General Inorganic Chemistry | Reaction Prediction | IIT JEE Main Advanced | Chemistry Class 12",
+     "durationSeconds": 2252,
+     "createdAt": "2026-09-04T11:21:13.565821+00:00"
+    },
+    {
+     "id": 5587,
+     "title": "6 General Inorganic Chemistry | Reaction Prediction | IIT JEE Main Advanced | Chemistry Class 12",
+     "durationSeconds": 2648,
+     "createdAt": "2026-09-04T11:21:13.565821+00:00"
+    },
+    {
+     "id": 5588,
+     "title": "7 General Inorganic Chemistry | Reaction Prediction | IIT JEE Main Advanced | Chemistry Class 12",
+     "durationSeconds": 1387,
+     "createdAt": "2026-09-04T11:21:13.565821+00:00"
+    },
+    {
+     "id": 5013,
+     "title": "Circular Motion |Pathfinder Solution|Normal & Tangential Acceleration From Potential Energy Function",
+     "durationSeconds": 721,
+     "createdAt": "2026-08-19T17:50:13.328281+00:00"
+    },
+    {
+     "id": 5298,
+     "title": "L-19 Greatest Integer Function|Fundamental of Mathematics|Class XI JEE Main & Advanced|Prashant Jain",
+     "durationSeconds": 6286,
+     "createdAt": "2026-08-25T11:26:08.945537+00:00"
+    }
+   ]
+  },
+  "trigonometry": {
+   "qTokens": [
+    "trigonometry"
+   ],
+   "rankedIds": [
+    1893,
+    2346,
+    2347,
+    2348,
+    2349,
+    2350,
+    2351,
+    2352,
+    2353,
+    2354,
+    2355,
+    2356,
+    3105,
+    5355,
+    5356,
+    5357,
+    5358,
+    5359,
+    5352,
+    5353,
+    5354,
+    5350,
+    5351,
+    4905,
+    5304,
+    5311,
+    5303,
+    5307,
+    5309,
+    5312,
+    5310,
+    5308,
+    5305,
+    5306,
+    4432,
+    1894,
+    1923,
+    1924,
+    4353,
+    4434,
+    3750,
+    3751,
+    4433,
+    4344,
+    685,
+    686,
+    3449,
+    4351,
+    4352,
+    3225,
+    689,
+    3754,
+    3755,
+    2409,
+    2410,
+    2411,
+    3738,
+    3455,
+    687,
+    688,
+    3450,
+    690,
+    683,
+    3454,
+    3259,
+    3260,
+    3261,
+    3264,
+    3267,
+    3268,
+    3269,
+    684,
+    691,
+    3227,
+    3228,
+    3270,
+    3271,
+    3272,
+    5362,
+    3262,
+    3263,
+    3265,
+    3266,
+    3435,
+    3453,
+    4945,
+    3439,
+    3451,
+    3452,
+    3482,
+    5024
+   ],
+   "rows": [
+    {
+     "id": 1893,
+     "title": "Trigonometry One Shot",
+     "durationSeconds": 20090,
+     "createdAt": "2026-07-29T05:08:19.295198+00:00"
+    },
+    {
+     "id": 2346,
+     "title": "Trigonometry — Lecture 1",
+     "durationSeconds": 3740,
+     "createdAt": "2026-07-30T11:35:00.316324+00:00"
+    },
+    {
+     "id": 2347,
+     "title": "Trigonometry — Lecture 2",
+     "durationSeconds": 4170,
+     "createdAt": "2026-07-30T11:35:00.316324+00:00"
+    },
+    {
+     "id": 2348,
+     "title": "Trigonometry — Lecture 3",
+     "durationSeconds": 4544,
+     "createdAt": "2026-07-30T11:35:00.316324+00:00"
+    },
+    {
+     "id": 2349,
+     "title": "Trigonometry — Lecture 4",
+     "durationSeconds": 4318,
+     "createdAt": "2026-07-30T11:35:00.316324+00:00"
+    },
+    {
+     "id": 2350,
+     "title": "Trigonometry — Lecture 5",
+     "durationSeconds": 4488,
+     "createdAt": "2026-07-30T11:35:00.316324+00:00"
+    },
+    {
+     "id": 2351,
+     "title": "Trigonometry — Lecture 6",
+     "durationSeconds": 4458,
+     "createdAt": "2026-07-30T11:35:00.316324+00:00"
+    },
+    {
+     "id": 2352,
+     "title": "Trigonometry — Lecture 7",
+     "durationSeconds": 4667,
+     "createdAt": "2026-07-30T11:35:00.316324+00:00"
+    },
+    {
+     "id": 2353,
+     "title": "Trigonometry — Lecture 8",
+     "durationSeconds": 4265,
+     "createdAt": "2026-07-30T11:35:00.316324+00:00"
+    },
+    {
+     "id": 2354,
+     "title": "Trigonometry — Lecture 9",
+     "durationSeconds": 4347,
+     "createdAt": "2026-07-30T11:35:00.316324+00:00"
+    },
+    {
+     "id": 2355,
+     "title": "Trigonometry — Lecture 10",
+     "durationSeconds": 3875,
+     "createdAt": "2026-07-30T11:35:00.316324+00:00"
+    },
+    {
+     "id": 2356,
+     "title": "Trigonometry — Lecture 11",
+     "durationSeconds": 3972,
+     "createdAt": "2026-07-30T11:35:00.316324+00:00"
+    },
+    {
+     "id": 3105,
+     "title": "Trigonometry — toughest cos⁷θ question solved in 3 methods",
+     "durationSeconds": 1390,
+     "createdAt": "2026-07-31T12:41:08.974511+00:00"
+    },
+    {
+     "id": 5355,
+     "title": "TRIGONOMETRY FOR JEE  ADVANCED| L6 |#JEEMAIN | #JEEADVANCED",
+     "durationSeconds": 7814,
+     "createdAt": "2026-08-25T13:31:43.884981+00:00"
+    },
+    {
+     "id": 5356,
+     "title": "TRIGONOMETRY FOR JEE  ADVANCED| L7 |#JEEMAIN | #JEEADVANCED",
+     "durationSeconds": 2410,
+     "createdAt": "2026-08-25T13:31:43.884981+00:00"
+    },
+    {
+     "id": 5357,
+     "title": "TRIGONOMETRY FOR JEE  ADVANCED| L8 |#JEEMAIN | #JEEADVANCED",
+     "durationSeconds": 5576,
+     "createdAt": "2026-08-25T13:31:43.884981+00:00"
+    },
+    {
+     "id": 5358,
+     "title": "TRIGONOMETRY FOR JEE  ADVANCED| L9 |#JEEMAIN | #JEEADVANCED",
+     "durationSeconds": 2768,
+     "createdAt": "2026-08-25T13:31:43.884981+00:00"
+    },
+    {
+     "id": 5359,
+     "title": "TRIGONOMETRY FOR JEE  ADVANCED| L10 |#JEEMAIN | #JEEADVANCED",
+     "durationSeconds": 3221,
+     "createdAt": "2026-08-25T13:31:43.884981+00:00"
+    },
+    {
+     "id": 5352,
+     "title": "TRIGONOMETRY for JEE  ADVANCED BY AM SIR | L 3|#JEEMAIN | #JEEADVANCED",
+     "durationSeconds": 5320,
+     "createdAt": "2026-08-25T13:31:43.884981+00:00"
+    },
+    {
+     "id": 5353,
+     "title": "TRIGONOMETRY for JEE  ADVANCED BY AM SIR | L 3|#JEEMAIN | #JEEADVANCED",
+     "durationSeconds": 3129,
+     "createdAt": "2026-08-25T13:31:43.884981+00:00"
+    },
+    {
+     "id": 5354,
+     "title": "TRIGONOMETRY for JEE  ADVANCED BY AM SIR | L 5|#JEEMAIN | #JEEADVANCED",
+     "durationSeconds": 3645,
+     "createdAt": "2026-08-25T13:31:43.884981+00:00"
+    },
+    {
+     "id": 5350,
+     "title": "TRIGONOMETRY for JEE  ADVANCED BY AM SIR |  L1 |#JEEMAIN | #JEEADVANCED",
+     "durationSeconds": 4097,
+     "createdAt": "2026-08-25T13:31:43.884981+00:00"
+    },
+    {
+     "id": 5351,
+     "title": "TRIGONOMETRY for JEE  ADVANCED BY AM SIR |  L2 |#JEEMAIN | #JEEADVANCED",
+     "durationSeconds": 4937,
+     "createdAt": "2026-08-25T13:31:43.884981+00:00"
+    },
+    {
+     "id": 4905,
+     "title": "TRIGONOMETRY | Class 11 Maths  CBSE + JEE + NDA | Foundation Series | Bridge Course |",
+     "durationSeconds": 5128,
+     "createdAt": "2026-08-19T11:43:18.092063+00:00"
+    },
+    {
+     "id": 5304,
+     "title": "Trigonometry Lec 2 | Ratios & Identities | JEE  Mains & Advanced Math | Class 11 + JEE",
+     "durationSeconds": 3921,
+     "createdAt": "2026-08-25T11:51:53.661623+00:00"
+    },
+    {
+     "id": 5311,
+     "title": "Trigonometry Lec 9 | Conditional Identities | JEE  Mains & Advanced Math | Class 11 + JEE",
+     "durationSeconds": 4448,
+     "createdAt": "2026-08-25T11:51:53.661623+00:00"
+    },
+    {
+     "id": 5303,
+     "title": "Trigonometry Lec 1 | Angle & Its Measurement | JEE  Mains & Advanced Math | Class 11 + JEE",
+     "durationSeconds": 4962,
+     "createdAt": "2026-08-25T11:51:53.661623+00:00"
+    },
+    {
+     "id": 5307,
+     "title": "Trigonometry Lec 5 | Compound Angle Identities  | JEE  Mains & Advanced Math | Class 11 + JEE",
+     "durationSeconds": 4280,
+     "createdAt": "2026-08-25T11:51:53.661623+00:00"
+    },
+    {
+     "id": 5309,
+     "title": "Trigonometry Lec 7 |Trigo Fn at Multiple Angles | JEE  Mains & Advanced Math | Class 11 + JEE",
+     "durationSeconds": 6256,
+     "createdAt": "2026-08-25T11:51:53.661623+00:00"
+    },
+    {
+     "id": 5312,
+     "title": "Trigonometry Lec 10 | Max & Min Value of Trigo Fn | JEE  Mains & Advanced Math | Class 11 & JEE",
+     "durationSeconds": 5000,
+     "createdAt": "2026-08-25T11:51:53.661623+00:00"
+    },
+    {
+     "id": 5310,
+     "title": "Trigonometry Lec 8 |Trigo Fn at 15, 18, 22.5 Degree | JEE  Mains & Advanced Math | Class 11 + JEE",
+     "durationSeconds": 2732,
+     "createdAt": "2026-08-25T11:51:53.661623+00:00"
+    },
+    {
+     "id": 5308,
+     "title": "Trigonometry Lec 6 | Factorisation & Defactorisation | JEE  Mains & Advanced Math | Class 11 + JEE",
+     "durationSeconds": 4216,
+     "createdAt": "2026-08-25T11:51:53.661623+00:00"
+    },
+    {
+     "id": 5305,
+     "title": "Trigonometry Lec 3 | Trigo Function at Allied Angles  | JEE  Mains & Advanced Math | Class 11 + JEE",
+     "durationSeconds": 5866,
+     "createdAt": "2026-08-25T11:51:53.661623+00:00"
+    },
+    {
+     "id": 5306,
+     "title": "Trigonometry Lec 4 | Graphs of Trigonometric Function  | JEE  Mains & Advanced Math | Class 11 + JEE",
+     "durationSeconds": 4753,
+     "createdAt": "2026-08-25T11:51:53.661623+00:00"
+    },
+    {
+     "id": 4432,
+     "title": "Basics of Trigonometry",
+     "durationSeconds": 1296,
+     "createdAt": "2026-08-04T09:51:43.690254+00:00"
+    },
+    {
+     "id": 1894,
+     "title": "Some Applications of Trigonometry One Shot",
+     "durationSeconds": 13053,
+     "createdAt": "2026-07-29T05:08:19.295198+00:00"
+    },
+    {
+     "id": 1923,
+     "title": "Introduction to Trigonometry One Shot — Most Important Questions",
+     "durationSeconds": 3812,
+     "createdAt": "2026-07-29T05:31:21.893362+00:00"
+    },
+    {
+     "id": 1924,
+     "title": "Some Applications of Trigonometry One Shot — Most Important Questions",
+     "durationSeconds": 3883,
+     "createdAt": "2026-07-29T05:31:21.893362+00:00"
+    },
+    {
+     "id": 4353,
+     "title": "Trigonometric Equations",
+     "durationSeconds": 2755,
+     "createdAt": "2026-08-04T08:28:29.582962+00:00"
+    },
+    {
+     "id": 4434,
+     "title": "General Trigonometric Formulae",
+     "durationSeconds": 1360,
+     "createdAt": "2026-08-04T09:51:43.690254+00:00"
+    },
+    {
+     "id": 3750,
+     "title": "Trigonometric Equations (Part 2)",
+     "durationSeconds": 11571,
+     "createdAt": "2026-08-03T11:05:24.811385+00:00"
+    },
+    {
+     "id": 3751,
+     "title": "Trigonometric Equations (Part 1)",
+     "durationSeconds": 11146,
+     "createdAt": "2026-08-03T11:05:24.811385+00:00"
+    },
+    {
+     "id": 4433,
+     "title": "Trigonometric Ratios of Higher Angles",
+     "durationSeconds": 2236,
+     "createdAt": "2026-08-04T09:51:43.690254+00:00"
+    },
+    {
+     "id": 4344,
+     "title": "Trigonometric Ratio of Compound Angles",
+     "durationSeconds": 3726,
+     "createdAt": "2026-08-04T08:28:29.582962+00:00"
+    },
+    {
+     "id": 685,
+     "title": "Inverse Trigonometric Functions (Part 3)",
+     "durationSeconds": 1707,
+     "createdAt": "2026-07-25T17:15:43.270025+00:00"
+    },
+    {
+     "id": 686,
+     "title": "Inverse Trigonometric Functions (Part 4)",
+     "durationSeconds": 1867,
+     "createdAt": "2026-07-25T17:15:43.270025+00:00"
+    },
+    {
+     "id": 3449,
+     "title": "Function: Inverse Trigonometric Function",
+     "durationSeconds": 754,
+     "createdAt": "2026-08-03T09:30:33.115072+00:00"
+    },
+    {
+     "id": 4351,
+     "title": "Inverse Trigonometric Functions (Part 1)",
+     "durationSeconds": 2069,
+     "createdAt": "2026-08-04T08:28:29.582962+00:00"
+    },
+    {
+     "id": 4352,
+     "title": "Inverse Trigonometric Functions (Part 2)",
+     "durationSeconds": 1138,
+     "createdAt": "2026-08-04T08:28:29.582962+00:00"
+    },
+    {
+     "id": 3225,
+     "title": "Integration by Trigonometric substitution",
+     "durationSeconds": 454,
+     "createdAt": "2026-08-03T09:30:04.729496+00:00"
+    },
+    {
+     "id": 689,
+     "title": "Trigonometric Equations — General Solution",
+     "durationSeconds": 3570,
+     "createdAt": "2026-07-25T17:22:28.588303+00:00"
+    },
+    {
+     "id": 3754,
+     "title": "Trigonometric Ratios & Identities (Part 2)",
+     "durationSeconds": 7896,
+     "createdAt": "2026-08-03T11:05:24.811385+00:00"
+    },
+    {
+     "id": 3755,
+     "title": "Trigonometric Ratios & Identities (Part 1)",
+     "durationSeconds": 9571,
+     "createdAt": "2026-08-03T11:05:24.811385+00:00"
+    },
+    {
+     "id": 2409,
+     "title": "Inverse Trigonometric Functions — Lecture 1",
+     "durationSeconds": 4419,
+     "createdAt": "2026-07-30T11:54:35.838762+00:00"
+    },
+    {
+     "id": 2410,
+     "title": "Inverse Trigonometric Functions — Lecture 2",
+     "durationSeconds": 4037,
+     "createdAt": "2026-07-30T11:54:35.838762+00:00"
+    },
+    {
+     "id": 2411,
+     "title": "Inverse Trigonometric Functions — Lecture 3",
+     "durationSeconds": 5054,
+     "createdAt": "2026-07-30T11:54:35.838762+00:00"
+    },
+    {
+     "id": 3738,
+     "title": "Function and Inverse Trigonometric Function",
+     "durationSeconds": 32199,
+     "createdAt": "2026-08-03T11:05:09.371149+00:00"
+    },
+    {
+     "id": 3455,
+     "title": "Function Inverse Trigonometric (Formula set)",
+     "durationSeconds": 641,
+     "createdAt": "2026-08-03T09:30:33.115072+00:00"
+    },
+    {
+     "id": 687,
+     "title": "Inverse Trigonometric Functions — Illustrations",
+     "durationSeconds": 824,
+     "createdAt": "2026-07-25T17:15:43.270025+00:00"
+    },
+    {
+     "id": 688,
+     "title": "Inverse Trigonometric Functions — Sum of Series",
+     "durationSeconds": 2856,
+     "createdAt": "2026-07-25T17:15:43.270025+00:00"
+    },
+    {
+     "id": 3450,
+     "title": "Function Inverse Trigonometric Function (Part 2)",
+     "durationSeconds": 602,
+     "createdAt": "2026-08-03T09:30:33.115072+00:00"
+    },
+    {
+     "id": 690,
+     "title": "Solving Different Types of Trigonometric Equations",
+     "durationSeconds": 2684,
+     "createdAt": "2026-07-25T17:22:28.588303+00:00"
+    },
+    {
+     "id": 683,
+     "title": "Inverse Trigonometric Functions — Basic Illustrations",
+     "durationSeconds": 3439,
+     "createdAt": "2026-07-25T17:15:43.270025+00:00"
+    },
+    {
+     "id": 3454,
+     "title": "Function Inverse Trigonometric (important formula set)",
+     "durationSeconds": 701,
+     "createdAt": "2026-08-03T09:30:33.115072+00:00"
+    },
+    {
+     "id": 3259,
+     "title": "Integration: Example of Trigonometric Integration (T 1)",
+     "durationSeconds": 516,
+     "createdAt": "2026-08-03T09:30:04.729496+00:00"
+    },
+    {
+     "id": 3260,
+     "title": "Integration: Example of Trigonometric Integration (T 2)",
+     "durationSeconds": 551,
+     "createdAt": "2026-08-03T09:30:04.729496+00:00"
+    },
+    {
+     "id": 3261,
+     "title": "Integration: Example of Trigonometric Integration (T 3)",
+     "durationSeconds": 904,
+     "createdAt": "2026-08-03T09:30:04.729496+00:00"
+    },
+    {
+     "id": 3264,
+     "title": "Integration: Example of Trigonometric Integration (T 5)",
+     "durationSeconds": 565,
+     "createdAt": "2026-08-03T09:30:04.729496+00:00"
+    },
+    {
+     "id": 3267,
+     "title": "Integration: Example of Trigonometric Integration (T 7)",
+     "durationSeconds": 718,
+     "createdAt": "2026-08-03T09:30:04.729496+00:00"
+    },
+    {
+     "id": 3268,
+     "title": "Integration: Example of Trigonometric Integration (T 8)",
+     "durationSeconds": 603,
+     "createdAt": "2026-08-03T09:30:04.729496+00:00"
+    },
+    {
+     "id": 3269,
+     "title": "Integration: Example of Trigonometric Integration (T 9)",
+     "durationSeconds": 505,
+     "createdAt": "2026-08-03T09:30:04.729496+00:00"
+    },
+    {
+     "id": 684,
+     "title": "Inverse Trigonometric Functions — Graphs of T(T^(-1)(x))",
+     "durationSeconds": 2645,
+     "createdAt": "2026-07-25T17:15:43.270025+00:00"
+    },
+    {
+     "id": 691,
+     "title": "Solving Different Types of Trigonometric Equations (Part 2)",
+     "durationSeconds": 3873,
+     "createdAt": "2026-07-25T17:22:28.588303+00:00"
+    },
+    {
+     "id": 3227,
+     "title": "Example of Integration Trigonometric Substitution (Part 37)",
+     "durationSeconds": 768,
+     "createdAt": "2026-08-03T09:30:04.729496+00:00"
+    },
+    {
+     "id": 3228,
+     "title": "Example of Integration Trigonometric Substitution (Part 38)",
+     "durationSeconds": 751,
+     "createdAt": "2026-08-03T09:30:04.729496+00:00"
+    },
+    {
+     "id": 3270,
+     "title": "Integration: Example of Trigonometric Integration (Part 80)",
+     "durationSeconds": 641,
+     "createdAt": "2026-08-03T09:30:04.729496+00:00"
+    },
+    {
+     "id": 3271,
+     "title": "Integration: Example of Trigonometric Integration (Part 81)",
+     "durationSeconds": 458,
+     "createdAt": "2026-08-03T09:30:04.729496+00:00"
+    },
+    {
+     "id": 3272,
+     "title": "Integration: Example of Trigonometric Integration (Part 82)",
+     "durationSeconds": 738,
+     "createdAt": "2026-08-03T09:30:04.729496+00:00"
+    },
+    {
+     "id": 5362,
+     "title": "Inverse Trigonometric Functions Class 12 | JEE Main & Advanced",
+     "durationSeconds": 13448,
+     "createdAt": "2026-08-25T13:52:20.777263+00:00"
+    },
+    {
+     "id": 3262,
+     "title": "Integration: Example of Trigonometric Integration (T 4) (Part 72)",
+     "durationSeconds": 672,
+     "createdAt": "2026-08-03T09:30:04.729496+00:00"
+    },
+    {
+     "id": 3263,
+     "title": "Integration: Example of Trigonometric Integration (T 4) (Part 73)",
+     "durationSeconds": 582,
+     "createdAt": "2026-08-03T09:30:04.729496+00:00"
+    },
+    {
+     "id": 3265,
+     "title": "Integration: Example of Trigonometric Integration (T 6) (Part 75)",
+     "durationSeconds": 714,
+     "createdAt": "2026-08-03T09:30:04.729496+00:00"
+    },
+    {
+     "id": 3266,
+     "title": "Integration: Example of Trigonometric Integration (T 6) (Part 76)",
+     "durationSeconds": 883,
+     "createdAt": "2026-08-03T09:30:04.729496+00:00"
+    },
+    {
+     "id": 3435,
+     "title": "Function Elementary Graphs Trigonometric function, the graph of sin/cos",
+     "durationSeconds": 851,
+     "createdAt": "2026-08-03T09:30:33.115072+00:00"
+    },
+    {
+     "id": 3453,
+     "title": "Function Inverse Trigonometric: Graphs of inverse trigonometric function",
+     "durationSeconds": 720,
+     "createdAt": "2026-08-03T09:30:33.115072+00:00"
+    },
+    {
+     "id": 4945,
+     "title": "INDEFINITE INTEGRATION PART 18:TRIGONOMETRIC INTEGRATION AND IIT QUESTIONS",
+     "durationSeconds": 2564,
+     "createdAt": "2026-08-19T12:53:51.779894+00:00"
+    },
+    {
+     "id": 3439,
+     "title": "Function Elementary Graphs — Trigonometric functions with domain, range, period",
+     "durationSeconds": 370,
+     "createdAt": "2026-08-03T09:30:33.115072+00:00"
+    },
+    {
+     "id": 3451,
+     "title": "Function Inverse Trigonometric: Example inverse trigonometric function with the given",
+     "durationSeconds": 726,
+     "createdAt": "2026-08-03T09:30:33.115072+00:00"
+    },
+    {
+     "id": 3452,
+     "title": "Function Inverse Trigonometric: inverse trigonometric functions with their domain and",
+     "durationSeconds": 672,
+     "createdAt": "2026-08-03T09:30:33.115072+00:00"
+    },
+    {
+     "id": 3482,
+     "title": "Function Domain and Range: trigonometric function and trigonometric inverse functions",
+     "durationSeconds": 504,
+     "createdAt": "2026-08-03T09:30:33.115072+00:00"
+    },
+    {
+     "id": 5024,
+     "title": "Q15. Can You Solve This? Logarithm, Progression & Trigonometric Equation Challenge! OM Sharma",
+     "durationSeconds": 739,
+     "createdAt": "2026-08-19T18:10:09.438759+00:00"
+    }
+   ]
+  },
+  "kinamatics": {
+   "qTokens": [
+    "kinamatics"
+   ],
+   "rankedIds": [
+    3888,
+    1511,
+    4978,
+    4979,
+    4980,
+    4981,
+    4982,
+    4983,
+    4984,
+    4985,
+    4986,
+    3889,
+    3895,
+    4002,
+    4003,
+    4004,
+    4005,
+    4006,
+    4007,
+    4008,
+    4987,
+    4988,
+    4989,
+    4990,
+    4991,
+    4992,
+    4993,
+    14,
+    3700,
+    3698,
+    3699,
+    1322,
+    4768,
+    4769,
+    4771,
+    4772,
+    4773,
+    4770
+   ],
+   "rows": [
+    {
+     "id": 3888,
+     "title": "Kinematics 2D",
+     "durationSeconds": 12917,
+     "createdAt": "2026-08-03T12:47:40.053337+00:00"
+    },
+    {
+     "id": 1511,
+     "title": "Kinematics One Shot",
+     "durationSeconds": 9630,
+     "createdAt": "2026-07-27T19:48:40.641344+00:00"
+    },
+    {
+     "id": 4978,
+     "title": "Kinematics: Lecture 1",
+     "durationSeconds": 1740,
+     "createdAt": "2026-08-19T16:29:25.673575+00:00"
+    },
+    {
+     "id": 4979,
+     "title": "Kinematics: Lecture 2",
+     "durationSeconds": 2536,
+     "createdAt": "2026-08-19T16:29:25.673575+00:00"
+    },
+    {
+     "id": 4980,
+     "title": "Kinematics: Lecture 3",
+     "durationSeconds": 4974,
+     "createdAt": "2026-08-19T16:29:25.673575+00:00"
+    },
+    {
+     "id": 4981,
+     "title": "Kinematics: Lecture 4",
+     "durationSeconds": 4039,
+     "createdAt": "2026-08-19T16:29:25.673575+00:00"
+    },
+    {
+     "id": 4982,
+     "title": "Kinematics: Lecture 5",
+     "durationSeconds": 4346,
+     "createdAt": "2026-08-19T16:29:25.673575+00:00"
+    },
+    {
+     "id": 4983,
+     "title": "Kinematics: Lecture 6",
+     "durationSeconds": 4681,
+     "createdAt": "2026-08-19T16:29:25.673575+00:00"
+    },
+    {
+     "id": 4984,
+     "title": "Kinematics: Lecture 7",
+     "durationSeconds": 4554,
+     "createdAt": "2026-08-19T16:29:25.673575+00:00"
+    },
+    {
+     "id": 4985,
+     "title": "Kinematics: Lecture 8",
+     "durationSeconds": 1723,
+     "createdAt": "2026-08-19T16:29:25.673575+00:00"
+    },
+    {
+     "id": 4986,
+     "title": "Kinematics: Lecture 9",
+     "durationSeconds": 1703,
+     "createdAt": "2026-08-19T16:29:25.673575+00:00"
+    },
+    {
+     "id": 3889,
+     "title": "Kinematics 1D (Part 2)",
+     "durationSeconds": 12924,
+     "createdAt": "2026-08-03T12:47:40.053337+00:00"
+    },
+    {
+     "id": 3895,
+     "title": "Kinematics 1D (Part 1)",
+     "durationSeconds": 16021,
+     "createdAt": "2026-08-03T12:47:40.053337+00:00"
+    },
+    {
+     "id": 4002,
+     "title": "Kinematics 1D (Part 1)",
+     "durationSeconds": 1143,
+     "createdAt": "2026-08-03T18:05:44.020602+00:00"
+    },
+    {
+     "id": 4003,
+     "title": "Kinematics 1D (Part 2)",
+     "durationSeconds": 1567,
+     "createdAt": "2026-08-03T18:05:44.020602+00:00"
+    },
+    {
+     "id": 4004,
+     "title": "Kinematics 1D (Part 3)",
+     "durationSeconds": 1391,
+     "createdAt": "2026-08-03T18:05:44.020602+00:00"
+    },
+    {
+     "id": 4005,
+     "title": "Kinematics 1D (Part 4)",
+     "durationSeconds": 788,
+     "createdAt": "2026-08-03T18:05:44.020602+00:00"
+    },
+    {
+     "id": 4006,
+     "title": "Kinematics 2D (Part 1)",
+     "durationSeconds": 1707,
+     "createdAt": "2026-08-03T18:05:44.020602+00:00"
+    },
+    {
+     "id": 4007,
+     "title": "Kinematics 2D (Part 2)",
+     "durationSeconds": 1147,
+     "createdAt": "2026-08-03T18:05:44.020602+00:00"
+    },
+    {
+     "id": 4008,
+     "title": "Kinematics 2D (Part 3)",
+     "durationSeconds": 1058,
+     "createdAt": "2026-08-03T18:05:44.020602+00:00"
+    },
+    {
+     "id": 4987,
+     "title": "Kinematics: Lecture 10",
+     "durationSeconds": 3387,
+     "createdAt": "2026-08-19T16:29:25.673575+00:00"
+    },
+    {
+     "id": 4988,
+     "title": "Kinematics: Lecture 11",
+     "durationSeconds": 4218,
+     "createdAt": "2026-08-19T16:29:25.673575+00:00"
+    },
+    {
+     "id": 4989,
+     "title": "Kinematics: Lecture 12",
+     "durationSeconds": 2897,
+     "createdAt": "2026-08-19T16:29:25.673575+00:00"
+    },
+    {
+     "id": 4990,
+     "title": "Kinematics: Lecture 13",
+     "durationSeconds": 3751,
+     "createdAt": "2026-08-19T16:29:25.673575+00:00"
+    },
+    {
+     "id": 4991,
+     "title": "Kinematics: Lecture 14",
+     "durationSeconds": 2336,
+     "createdAt": "2026-08-19T16:29:25.673575+00:00"
+    },
+    {
+     "id": 4992,
+     "title": "Kinematics: Lecture 15",
+     "durationSeconds": 3817,
+     "createdAt": "2026-08-19T16:29:25.673575+00:00"
+    },
+    {
+     "id": 4993,
+     "title": "Kinematics: Lecture 16",
+     "durationSeconds": 3823,
+     "createdAt": "2026-08-19T16:29:25.673575+00:00"
+    },
+    {
+     "id": 14,
+     "title": "Kinematics JEE Advanced PYQ (2004-2023)",
+     "durationSeconds": 4718,
+     "createdAt": "2026-07-20T20:16:17.402137+00:00"
+    },
+    {
+     "id": 3700,
+     "title": "Kinematics Motion in a Plane — One Shot",
+     "durationSeconds": 19788,
+     "createdAt": "2026-08-03T10:53:04.981837+00:00"
+    },
+    {
+     "id": 3698,
+     "title": "Kinematics Motion in a Straight Line — One Shot",
+     "durationSeconds": 17141,
+     "createdAt": "2026-08-03T10:53:04.981837+00:00"
+    },
+    {
+     "id": 3699,
+     "title": "Kinematics Motion Under Gravity and Graph — One Shot",
+     "durationSeconds": 15375,
+     "createdAt": "2026-08-03T10:53:04.981837+00:00"
+    },
+    {
+     "id": 1322,
+     "title": "Motion in a Plane and Kinematics of Circular Motion in One Shot with PYQ",
+     "durationSeconds": 22887,
+     "createdAt": "2026-07-27T12:44:11.221683+00:00"
+    },
+    {
+     "id": 4768,
+     "title": "NEET 2020: Kinematics 1D - L 1 | Class 11 | NEET Physics | Unacademy NEET | Mahendra Sir",
+     "durationSeconds": 3035,
+     "createdAt": "2026-08-06T12:39:22.931053+00:00"
+    },
+    {
+     "id": 4769,
+     "title": "NEET 2020: Kinematics 1D - L 2 | Class 11 | NEET Physics | Unacademy NEET | Mahendra Sir",
+     "durationSeconds": 3031,
+     "createdAt": "2026-08-06T12:39:22.931053+00:00"
+    },
+    {
+     "id": 4771,
+     "title": "NEET 2020: Kinematics 1D - L 4 | Class 11 | NEET Physics | Unacademy NEET | Mahendra Sir",
+     "durationSeconds": 3328,
+     "createdAt": "2026-08-06T12:39:22.931053+00:00"
+    },
+    {
+     "id": 4772,
+     "title": "NEET 2020: Kinematics 1D - L 5 | Class 11 | NEET Physics | Unacademy NEET | Mahendra Sir",
+     "durationSeconds": 3363,
+     "createdAt": "2026-08-06T12:39:22.931053+00:00"
+    },
+    {
+     "id": 4773,
+     "title": "NEET 2020: Kinematics 1D - L 6 | Class 11 | NEET Physics | Unacademy NEET | Mahendra Sir",
+     "durationSeconds": 3514,
+     "createdAt": "2026-08-06T12:39:22.931053+00:00"
+    },
+    {
+     "id": 4770,
+     "title": "NEET 2020: Kinematics 1D - L 3 | Class 11 |  NEET Physics | Unacademy NEET | Mahendra Sir",
+     "durationSeconds": 3353,
+     "createdAt": "2026-08-06T12:39:22.931053+00:00"
+    }
+   ]
+  }
+ }
+}

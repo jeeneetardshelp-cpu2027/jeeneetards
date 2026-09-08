@@ -12,6 +12,7 @@ import { supabase, isSupabaseConfigured } from "./supabaseClient";
 import { chapterScopeStageDecision, classSlugsForStage } from "./classLevels.js";
 import { isMissingCatalogRpc } from "./useExplore.js";
 import { isServableQuery } from "./useUniversalSearch.js";
+import { fetchSearchQueryTokens, partitionByStrength } from "./searchStrongMatch.js";
 
 const NOT_CONFIGURED = "Supabase isn't configured. Add your keys to .env and restart.";
 
@@ -91,7 +92,7 @@ export function useVideos({
   language, contentType, difficulty, search, sort, page = 0, enabled = true,
 }) {
   const [state, setState] = useState({
-    videos: [], total: null, loading: true, error: null, hasMore: false,
+    videos: [], total: null, strongTotal: null, loading: true, error: null, hasMore: false,
   });
   const generation = useRef(0);
   const languageKey = JSON.stringify(language ?? []);
@@ -106,11 +107,11 @@ export function useVideos({
     const contentTypeValues = JSON.parse(contentTypeKey);
     const difficultyValues = JSON.parse(difficultyKey);
     if (!enabled) {
-      setState({ videos: [], total: null, loading: true, error: null, hasMore: false });
+      setState({ videos: [], total: null, strongTotal: null, loading: true, error: null, hasMore: false });
       return;
     }
     if (!isSupabaseConfigured) {
-      setState({ videos: [], total: null, loading: false, error: NOT_CONFIGURED, hasMore: false });
+      setState({ videos: [], total: null, strongTotal: null, loading: false, error: NOT_CONFIGURED, hasMore: false });
       return;
     }
 
@@ -120,7 +121,7 @@ export function useVideos({
       ? chapterScopeStageDecision(reviewedChapterClasses, stage)
       : "fallback";
     if (chapterStage === "mismatch") {
-      setState({ videos: [], total: 0, loading: false, error: null, hasMore: false });
+      setState({ videos: [], total: 0, strongTotal: null, loading: false, error: null, hasMore: false });
       return;
     }
     const classSlugs = chapterStage === "match" ? null : classSlugsForStage(stage);
@@ -147,6 +148,12 @@ export function useVideos({
     const term = (search ?? "").trim();
     let searchIds = null;
     let searchIlike = null; // graceful fallback while the match RPC is undeployed
+    // The query's CONTENT TOKENS, straight from the server's own tokeniser
+    // (search_query_tokens — the helper universal_search and both browse RPCs
+    // already share). They are what tells a title that literally matches from
+    // one the fuzzy tier brought along; see searchStrongMatch.js for why they
+    // are fetched rather than re-derived here.
+    let queryTokens = [];
     // A query the server cannot answer is answered as "no matches" WITHOUT
     // asking it. Measured on production 2026-09-03, search_video_ids:
     //   "ac"      HTTP 500 3218ms   57014 canceling statement due to timeout
@@ -168,14 +175,21 @@ export function useVideos({
     // predicate rather than re-deriving it is what keeps the three search
     // surfaces from drifting.
     if (term && !isServableQuery(term)) {
-      setState({ videos: [], total: 0, loading: false, error: null, hasMore: false });
+      setState({ videos: [], total: 0, strongTotal: null, loading: false, error: null, hasMore: false });
       return;
     }
     if (term) {
-      const { data: idRows, error: searchErr } = await supabase.rpc(
-        "search_video_ids", { p_query: term },
-      );
+      // ALONGSIDE, not after. The tokens are needed only once the rows are in
+      // hand, so making them a second round trip would add latency to every
+      // debounced keystroke for nothing. fetchSearchQueryTokens never rejects:
+      // a missing or failing helper yields no tokens and the page keeps
+      // today's behaviour exactly.
+      const [{ data: idRows, error: searchErr }, tokens] = await Promise.all([
+        supabase.rpc("search_video_ids", { p_query: term }),
+        fetchSearchQueryTokens(supabase, term),
+      ]);
       if (!current()) return;
+      queryTokens = tokens;
       if (searchErr) {
         if (isMissingCatalogRpc(searchErr)) {
           // search_video_ids not deployed yet (see the note in usePlaylistBrowse):
@@ -184,7 +198,7 @@ export function useVideos({
           searchIlike = term;
         } else {
           console.error("videos search:", searchErr);
-          setState({ videos: [], total: null, loading: false, error: "Couldn't search lessons.", hasMore: false });
+          setState({ videos: [], total: null, strongTotal: null, loading: false, error: "Couldn't search lessons.", hasMore: false });
           return;
         }
       } else {
@@ -192,7 +206,7 @@ export function useVideos({
         // No title matched: answer empty rather than letting an empty .in() or a
         // dropped filter show the whole catalogue.
         if (searchIds.length === 0) {
-          setState({ videos: [], total: 0, loading: false, error: null, hasMore: false });
+          setState({ videos: [], total: 0, strongTotal: null, loading: false, error: null, hasMore: false });
           return;
         }
       }
@@ -242,21 +256,53 @@ export function useVideos({
     // at, because /browse debounces at 300ms and so pays it per keystroke:
     // "phy" 229 ids / 92 KB, "physics" 211 / 85 KB, "kin" 212 / 80 KB,
     // "friction problems" 40 / 15 KB, "notes" 23 / 9 KB — against ~9 KB for a
-    // 24-row page. Nothing came near the 500 cap, so the realistic ceiling is
-    // ~90 KB of JSON (uncompressed; the wire figure is smaller and could not
-    // be read cross-origin), roughly what one or two of the page's own video
-    // thumbnails cost. The two-request alternative — ids-only, then .in() the
+    // 24-row page.
+    //
+    // RE-MEASURED 8 Sep 2026, and the line that used to sit here was wrong.
+    // It said "Nothing came near the 500 cap, so the realistic ceiling is
+    // ~90 KB" and told the next reader to re-measure if that ever changed.
+    // It already had: four ordinary student queries sit EXACTLY at the cap —
+    // "neet" 500 ids / 211 KB, "the" 500 / 193 KB, "lecture" 500 / 188 KB,
+    // "jee" 500 / 180 KB, with "chemistry" at 394 / 159 KB. The real ceiling is
+    // 211 KB, 2.3x what was claimed, and this change extends that cost from one
+    // sort to four.
+    //
+    // It is still worth paying, on the figure the earlier note could not read
+    // cross-origin: gzipped on the wire the cap costs ~18 KB against ~0.9 KB
+    // for a single page, and latency is flat (427 ms vs 243 ms). But the number
+    // in a comment should be the measured one, not the reassuring one.
+    // The two-request alternative — ids-only, then .in() the
     // 24 page ids — would trade that for a second round trip on every
     // debounced keystroke plus a duplicated join builder. At this size the
     // round trip is the thing a student on mobile data actually feels, so it
     // is not worth it. If a future catalogue makes broad queries hit the 500
     // cap, re-measure before assuming that still holds.
     //
+    // TWO JOBS, TWO FLAGS. One flag used to drive both the RANGE (fetch the
+    // whole match set) and the COMPARATOR (re-order it by rank), which meant
+    // only the default sort ever saw the whole set. Splitting them is what this
+    // change is:
+    //
+    //   fullSet     — a term is active, so fetch every matching row, on EVERY
+    //                 sort. The RPC's 500-id cap bounds it and the default sort
+    //                 has been paying this exact cost since 2 Sep; the measured
+    //                 ceiling is 211 KB of JSON, ~18 KB gzipped on the wire.
+    //   byRelevance — and the student has not chosen a sort, so the server's
+    //                 ranking is the order. Unchanged.
+    //
     // Only the DEFAULT sort becomes relevance. A student who picked "Shortest
-    // first" asked for shortest, and gets shortest.
-    const byRelevance = Boolean(searchIds) && effectiveSort === DEFAULT_LECTURE_SORT;
-    const from = byRelevance ? 0 : page * LECTURE_PAGE_SIZE;
-    const to = byRelevance
+    // first" still gets shortest — but SHORTEST AMONG THE LESSONS THAT ACTUALLY
+    // MATCH first, then shortest among the rest. Measured on production
+    // 2026-09-08, "kinematics" returns 172 rows of which 38 have the word in
+    // the title, and the entire first page under "Shortest first" was Kinetic
+    // Theory of Gases clips: "shortest" was being applied to everything the
+    // fuzzy tier admitted rather than to the rows the student was looking for.
+    // Nothing is removed and the count is untouched — the 134 loose matches
+    // follow the 38, on the same page ordering, one block later.
+    const fullSet = Boolean(searchIds);
+    const byRelevance = fullSet && effectiveSort === DEFAULT_LECTURE_SORT;
+    const from = fullSet ? 0 : page * LECTURE_PAGE_SIZE;
+    const to = fullSet
       ? Math.max(searchIds.length - 1, 0)
       : page * LECTURE_PAGE_SIZE + LECTURE_PAGE_SIZE - 1;
     let q = applyOrder(supabase.from("videos").select(cols, { count: "exact" }))
@@ -285,11 +331,11 @@ export function useVideos({
       if (error) {
         const outOfRange = error.code === "PGRST103" || /range not satisfiable/i.test(error.message || "");
         if (outOfRange) {
-          setState({ videos: [], total: count ?? null, loading: false, error: null, hasMore: false });
+          setState({ videos: [], total: count ?? null, strongTotal: null, loading: false, error: null, hasMore: false });
           return;
         }
         console.error("videos:", error);
-        setState({ videos: [], total: null, loading: false, error: "Couldn't load lessons.", hasMore: false });
+        setState({ videos: [], total: null, strongTotal: null, loading: false, error: "Couldn't load lessons.", hasMore: false });
         return;
       }
 
@@ -307,13 +353,45 @@ export function useVideos({
         // and the card says so rather than promising a destination.
         playlistId: r.membership?.[0]?.playlist_id ?? null,
       }));
-      // Under relevance the request above fetched the ENTIRE filtered match
+      // With a term active the request above fetched the ENTIRE filtered match
       // set, so its size is the true total even if the count header were ever
       // missing, and the page is cut from it AFTER reordering — which is what
-      // makes page 2 continue the ranking instead of restarting it.
+      // makes page 2 continue the ordering instead of restarting it.
       let total = count ?? null;
+      if (fullSet && total == null) total = videos.length;
+
+      // HOW MANY OF THESE ARE REALLY ABOUT WHAT WAS TYPED. Computed on every
+      // sort, from the whole match set, and reported so the heading can stop
+      // saying "172 lessons" for 38 kinematics lectures. null means the
+      // question was not asked (no term) or could not be answered (no tokens),
+      // never a fabricated zero.
+      let strongTotal = null;
+      if (fullSet && queryTokens.length > 0) {
+        const { strong, weak } = partitionByStrength(videos, queryTokens);
+        strongTotal = strong.length;
+        // STRONG FIRST, THEN THE REST — but only when the ordering is the
+        // student's chosen sort. Under relevance the ranking already puts the
+        // real matches on top (24 of 24 on page 1, measured), and running both
+        // would leave neither control honest.
+        //
+        // Both blocks come out of order-preserving passes over rows the
+        // DATABASE already sorted, so "shortest" still means shortest inside
+        // each block without this file owning a comparator. That matters:
+        // mirroring the .order() chains in JS would mean re-deriving Postgres's
+        // null placement (asc NULLS LAST, desc NULLS FIRST unless nullsFirst
+        // says otherwise) on the wrong side of the wire — and it is not even
+        // possible here, because `cols` above selects neither duration_seconds
+        // nor created_at. The rows would have to grow columns to be re-sorted
+        // into the order they already arrived in.
+        //
+        // When the strong block is EVERYTHING or NOTHING this concatenation is
+        // the input array, element for element — which is why "trigonometry"
+        // (91 of 91) and the typo "kinamatics" (0 of 38) come out byte-identical
+        // to the pre-change page under every sort.
+        if (!byRelevance) videos = [...strong, ...weak];
+      }
+
       if (byRelevance) {
-        if (total == null) total = videos.length;
         const rankOf = new Map(searchIds.map((id, i) => [id, i]));
         const rank = (v) => rankOf.get(v.id) ?? Number.MAX_SAFE_INTEGER;
         videos = videos
@@ -323,9 +401,14 @@ export function useVideos({
           // for a row the id list somehow did not name.
           .sort((a, b) => rank(a) - rank(b) || a.id - b.id)
           .slice(page * LECTURE_PAGE_SIZE, (page + 1) * LECTURE_PAGE_SIZE);
+      } else if (fullSet) {
+        // The whole match set is in hand on this sort too, so the page is cut
+        // here rather than by range(). Paging is still driven by `total`, which
+        // is the database's count and has not moved.
+        videos = videos.slice(page * LECTURE_PAGE_SIZE, (page + 1) * LECTURE_PAGE_SIZE);
       }
       setState({
-        videos, total, loading: false, error: null,
+        videos, total, strongTotal, loading: false, error: null,
         hasMore: total != null
           ? (page + 1) * LECTURE_PAGE_SIZE < total
           : videos.length === LECTURE_PAGE_SIZE,
@@ -333,7 +416,7 @@ export function useVideos({
     } catch (err) {
       if (!current()) return;
       console.error("videos:", err);
-      setState({ videos: [], total: null, loading: false, error: "Couldn't reach the database.", hasMore: false });
+      setState({ videos: [], total: null, strongTotal: null, loading: false, error: "Couldn't reach the database.", hasMore: false });
     }
   }, [enabled, goalId, subjectId, chapterId, stage, channelId, teacherId,
       chapterClassKey,

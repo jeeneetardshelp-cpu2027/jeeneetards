@@ -49,7 +49,16 @@ function makeBuilder(table) {
 }
 const supabaseMock = {
   from: (t) => makeBuilder(t),
-  rpc: (name, args) => { rpcCalls.push({ name, args }); return Promise.resolve(rpcResponse); },
+  rpc: (name, args) => {
+    rpcCalls.push({ name, args });
+    // search_query_tokens rides alongside the match RPC. No content tokens
+    // here: these tests are about the FILTERS, and the strong-match partition
+    // (searchStrongMatchFirst.test.jsx) stands down without them.
+    return Promise.resolve(
+      name === "search_query_tokens"
+        ? { data: [{ qlen: 0, q: "", q_tokens: [], q_long: "" }], error: null }
+        : rpcResponse);
+  },
 };
 vi.mock("./supabaseClient", () => ({
   isSupabaseConfigured: true,
@@ -183,7 +192,8 @@ describe("every filter changes the database query", () => {
     // to search_playlist_ids and the returned ids filter the catalogue.
     rpcResponse = { data: [{ id: 2 }, { id: 4 }], error: null };
     const { q, state } = await run({ search: "  friction problems  " });
-    expect(rpcCalls).toEqual([{ name: "search_playlist_ids", args: { p_query: "friction problems" } }]);
+    expect(rpcCalls.filter((c) => c.name === "search_playlist_ids")).toEqual([
+      { name: "search_playlist_ids", args: { p_query: "friction problems" } }]);
     expect(q.in.id).toEqual([2, 4]);
     expect(q.ilike).toBeNull();
     // The .in("id") composes with paging/count like every other filter.
@@ -194,7 +204,8 @@ describe("every filter changes the database query", () => {
   it("a search that matches nothing yields an empty page without a catalogue query", async () => {
     rpcResponse = { data: [], error: null };
     const { state } = await run({ search: "zzzznotathing" });
-    expect(rpcCalls).toEqual([{ name: "search_playlist_ids", args: { p_query: "zzzznotathing" } }]);
+    expect(rpcCalls.filter((c) => c.name === "search_playlist_ids")).toEqual([
+      { name: "search_playlist_ids", args: { p_query: "zzzznotathing" } }]);
     expect(calls.filter((c) => c.table === "playlists")).toHaveLength(0);
     expect(state.total).toBe(0);
     expect(state.items).toEqual([]);
@@ -212,7 +223,8 @@ describe("every filter changes the database query", () => {
     // match so course search still works if the frontend ships before the SQL.
     rpcResponse = { data: null, error: { code: "PGRST202", message: "Could not find the function public.search_playlist_ids" } };
     const { q, state } = await run({ search: "friction" });
-    expect(rpcCalls).toEqual([{ name: "search_playlist_ids", args: { p_query: "friction" } }]);
+    expect(rpcCalls.filter((c) => c.name === "search_playlist_ids")).toEqual([
+      { name: "search_playlist_ids", args: { p_query: "friction" } }]);
     expect(q.ilike).toEqual(["title", "%friction%"]);
     expect(q.in.id).toBeUndefined();
     expect(state.error).toBeNull();
