@@ -564,12 +564,50 @@ export default function BrowsePage() {
               it is resolved or dropped, so this is the only way forward. */}
           {canonical.unresolved?.length > 0 && (
             <div className={`mb-4 rounded-xl border p-4 text-sm ${dark ? "border-amber-900 bg-amber-950/40 text-amber-100" : "border-amber-200 bg-amber-50 text-amber-900"}`}>
-              <p className="font-medium">
-                {canonical.unresolved.map((u) => `“${u.slug}”`).join(", ")}{" "}
-                {canonical.unresolved.length === 1 ? "is not a" : "are not"}{" "}
-                {canonical.unresolved.length === 1 ? canonical.unresolved[0].key : "valid filter"} we know about.
-              </p>
-              <p className="mt-1">This link may be out of date. Results are not shown for a filter we can’t resolve.</p>
+              {/* "ambiguous" is not "unknown": /browse?chapter=thermodynamics
+                  names a chapter that exists in BOTH Physics and Chemistry, so
+                  saying we do not know it would be false. We know two, and the
+                  URL gave us no way to choose.
+
+                  SPLIT BY REASON RATHER THAN BRANCHING ON THE WHOLE LIST. An
+                  earlier version asked `unresolved.length === 1 && [0].reason
+                  === "ambiguous"`, so a single unknown filter alongside the
+                  ambiguous one — /browse?goal=dead-slug&chapter=thermodynamics
+                  — fell through to the generic sentence and told the student we
+                  do not know a chapter we know two of. That is the exact claim
+                  this branch exists to stop making, and 14 chapter slugs are
+                  duplicated across subjects, not one. Each group now speaks for
+                  itself and both can appear together. */}
+              {(() => {
+                const ambiguous = canonical.unresolved.filter((u) => u.reason === "ambiguous");
+                const unknown = canonical.unresolved.filter((u) => u.reason !== "ambiguous");
+                const list = (items) => items.map((u) => `“${u.slug}”`).join(", ");
+                return (
+                  <>
+                    {ambiguous.length > 0 && (
+                      <>
+                        <p className="font-medium">
+                          {list(ambiguous)}{" "}
+                          {ambiguous.length === 1
+                            ? `is a ${ambiguous[0].key} in more than one subject.`
+                            : "name more than one subject’s chapter."}
+                        </p>
+                        <p className="mt-1">Add a subject to say which one, or remove it. Results are not shown while the filter is ambiguous.</p>
+                      </>
+                    )}
+                    {unknown.length > 0 && (
+                      <>
+                        <p className={`font-medium${ambiguous.length > 0 ? " mt-3" : ""}`}>
+                          {list(unknown)}{" "}
+                          {unknown.length === 1 ? "is not a" : "are not"}{" "}
+                          {unknown.length === 1 ? unknown[0].key : "valid filter"} we know about.
+                        </p>
+                        <p className="mt-1">This link may be out of date. Results are not shown for a filter we can’t resolve.</p>
+                      </>
+                    )}
+                  </>
+                );
+              })()}
               <div className="mt-3 flex flex-wrap gap-2">
                 {canonical.unresolved.map((u) => (
                   <button

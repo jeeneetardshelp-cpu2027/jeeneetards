@@ -40,16 +40,35 @@ function builder(table) {
     in() { return b; },
     // The legacy-chapter label lookup (useChapterName) resolves nothing here;
     // BrowsePage.legacyChapterChip.test.jsx covers the labelled path.
-    // A board slug DOES resolve here: useCanonicalFilters stays un-ready until
-    // every slug in the URL becomes an id, so without this row a board view
-    // could never reach the facet-count request the test below asserts.
+    // These slugs DO resolve: useCanonicalFilters stays un-ready until every
+    // slug in the URL becomes an id, so without them a board view could never
+    // reach the facet-count request the test below asserts, and a chapter URL
+    // could never reach the playlist query at all. Anything not listed here
+    // resolves to nothing, which is what the "still resolving" tests rely on.
     maybeSingle() {
-      if (rec.table === "boards" && rec.eq.slug === "cbse") {
-        return Promise.resolve({ data: { id: 1, slug: "cbse", name: "CBSE" }, error: null });
-      }
-      return Promise.resolve({ data: null, error: null });
+      const known = {
+        boards: { cbse: { id: 1, name: "CBSE" } },
+        learning_goals: { jee: { id: 9, name: "JEE" } },
+        subjects: { physics: { id: 5, name: "Physics" } },
+      }[rec.table]?.[rec.eq.slug];
+      return Promise.resolve({
+        data: known ? { ...known, slug: rec.eq.slug } : null, error: null,
+      });
     },
-    then(resolve) { return Promise.resolve({ data: [], error: null, count: 0 }).then(resolve); },
+    then(resolve) {
+      // The chapter resolves in ONE request that carries its own subject scope
+      // and its class levels, so the page never spends a wave on either.
+      if (rec.table === "chapters" && rec.eq.slug === "kinematics") {
+        const scoped = rec.eq["subjects.slug"] === "physics" || rec.eq.subject_id != null;
+        return Promise.resolve({
+          data: scoped
+            ? [{ id: 77, slug: "kinematics", name: "Kinematics", chapter_class_levels: [] }]
+            : [],
+          error: null,
+        }).then(resolve);
+      }
+      return Promise.resolve({ data: [], error: null, count: 0 }).then(resolve);
+    },
   };
   return b;
 }
@@ -119,13 +138,35 @@ describe("BrowsePage route → playlist query", () => {
   // get_faculty_facets used to fire twice per load: once with every id null,
   // while useCanonicalFilters was still turning the URL slugs into ids, and
   // again when they arrived. The hook has always taken an `enabled` flag; the
-  // call site passed none. Slugs never resolve in this harness, so a page that
-  // waits correctly asks nothing at all here — and one that does not, asks.
+  // call site passed none. This subject slug resolves to nothing in this
+  // harness, so the page never becomes ready: one that waits correctly asks
+  // nothing at all here — and one that does not, asks.
   it("does not ask for faculty facets before the URL slugs have resolved", async () => {
-    renderAt("/browse?goal=jee&subject=physics");
+    renderAt("/browse?goal=jee&subject=no-such-subject");
     await waitFor(() => expect(calls.length).toBeGreaterThan(0));
     await new Promise((r) => setTimeout(r, 120));
     expect(rpcCalls.filter((n) => n === "get_faculty_facets")).toHaveLength(0);
+  });
+
+  // The arrival path Google hands students: 204 of the 205 /browse URLs in
+  // public/sitemap.xml carry a chapter=. It used to cost three DEPENDENT round
+  // trips inside useCanonicalFilters before the catalogue could even be asked.
+  it("resolves a chapter URL in one wave and carries the chapter into the query", async () => {
+    renderAt("/browse?goal=jee&class=11&subject=physics&chapter=kinematics");
+    await screen.findByText("Playlists");
+    await waitFor(() => expect(playlistQuery()).toBeTruthy());
+
+    // stringified on the way into the query, as every other filter here is
+    expect(String(playlistQuery().eq["pv.videos.chapter_id"])).toBe("77");
+    // ONE resolver request, scoped by the subject SLUG straight from the URL.
+    // (The filter dropdown asks for the chapter LIST too; that is a different
+    // question, so match on the slug predicate only this lookup carries.)
+    const chapters = calls.filter((c) => c.table === "chapters" && c.eq.slug != null);
+    expect(chapters).toHaveLength(1);
+    expect(chapters[0].eq["subjects.slug"]).toBe("physics");
+    expect(chapters[0].eq.subject_id).toBeUndefined();
+    // and no follow-up wave for the class scope
+    expect(calls.filter((c) => c.table === "chapter_class_levels")).toHaveLength(0);
   });
   it("still asks for facet counts on a board view", async () => {
     renderAt("/browse?goal=4&board=cbse&class=10");
