@@ -203,6 +203,23 @@ Push applies **every** pending migration in timestamp order — there is no
 per-file selection. Review `migration list` first so you know exactly what
 will run.
 
+Do not take the status column above on trust when you do:
+
+```
+npm run verify:migration-status
+```
+
+Read-only. It compares every row in that table against what the database
+actually reports, and exits non-zero on a mismatch. On 7 Sep 2026 this table
+carried five false status claims in one day — two of them inside commits
+written to correct earlier false claims — and CI stayed green through all of
+them, because prose is not executable.
+
+It also catches the case a chain-walking check cannot see: a migration the
+database has applied whose file is no longer in `supabase/migrations/`, so a
+fresh environment rebuilt from the chain would not match production. That is
+reported today for `20260907170000`, pushed and then reverted out of the chain.
+
 ### When a held file is in the way
 
 Sooner or later a file that must not run yet will sit in front of one you want.
