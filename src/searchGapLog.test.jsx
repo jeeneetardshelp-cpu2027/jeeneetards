@@ -92,6 +92,52 @@ describe("logging searches that found nothing", () => {
     });
   });
 
+  it("still logs when the student gives up and leaves the page", async () => {
+    // THE BUG THIS FIXES. The hook used to cancel the pending log from its
+    // effect cleanup, and that cleanup runs on unmount. So the single most
+    // likely thing a student does after seeing no results -- close the tab,
+    // hit back, follow a link -- discarded the row.
+    //
+    // Measured on production 8 Sep 2026: six days after collection went live,
+    // search_gap_log held ONE row, dated the day it was switched on, while six
+    // of eight plausible servable queries return zero results. The feature was
+    // deployed and disclosed and recording almost nothing.
+    RPC_ROWS = [];
+    const view = renderHook(() => useUniversalSearch("thermodynamics viva questions"));
+
+    await settle();
+    expect(gapCalls()).toHaveLength(0);
+
+    // The student leaves before the settle window elapses.
+    view.unmount();
+    await waitOutGapDelay();
+
+    expect(gapCalls()).toHaveLength(1);
+    expect(gapCalls()[0].args).toEqual({
+      p_query: "thermodynamics viva questions",
+      p_result_count: 0,
+    });
+  });
+
+  it("still refuses the prefix when the student keeps typing after unmount logic changed", async () => {
+    // The other half: supersession must survive the move. It now lives in
+    // searchGapLog.js's single pending slot rather than in the hook's cleanup,
+    // so a newer schedule has to replace an older one on its own.
+    RPC_ROWS = [];
+    const view = renderHook(({ q }) => useUniversalSearch(q), {
+      initialProps: { q: "electrochem" },
+    });
+    await settle();
+
+    view.rerender({ q: "electrochemistry numericals" });
+    await settle();
+    await waitOutGapDelay();
+
+    // Exactly one row, and it is the query the student finished typing.
+    expect(gapCalls()).toHaveLength(1);
+    expect(gapCalls()[0].args.p_query).toBe("electrochemistry numericals");
+  });
+
   it("sends the query and a count, and nothing that identifies anyone", async () => {
     RPC_ROWS = [];
     renderHook(() => useUniversalSearch("ray optics revision sheet"));

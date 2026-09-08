@@ -121,9 +121,37 @@ export function logSearchGap(query, resultCount = 0) {
  * Returns a cancel function — call it from an effect cleanup so a superseded
  * or in-flight search never becomes a row.
  */
+// One pending slot, module level, exactly as src/searchHistory.js keeps one.
+// A NEW schedule replaces the one before it, which is what stops "kine" being
+// logged on the way to "kinematics" -- the hook re-schedules as soon as the
+// longer query settles.
+//
+// WHY THIS MOVED HERE. Supersession used to be the caller's job: the hook
+// cancelled from its effect cleanup. That cleanup runs on every dependency
+// change AND on unmount, so it also discarded searches that had genuinely
+// settled with nothing -- and a student who searches, sees nothing and leaves
+// is the ordinary case, not an edge one. Measured on production 8 Sep 2026:
+// six days after collection went live, search_gap_log held ONE row, dated the
+// day it was switched on, while six of eight plausible servable queries return
+// zero results. The feature was deployed, disclosed in the privacy policy in
+// the present tense, and recording almost nothing.
+let pending = null;
+
 export function scheduleSearchGapLog(query, { resultCount = 0, delay = GAP_LOG_DELAY_MS } = {}) {
   const term = (query ?? "").trim();
   if (!isSupabaseConfigured || term.length < GAP_LOG_MIN_LENGTH) return () => {};
-  const timer = setTimeout(() => logSearchGap(term, resultCount), delay);
-  return () => clearTimeout(timer);
+
+  clearTimeout(pending);
+  const timer = setTimeout(() => {
+    pending = null;
+    logSearchGap(term, resultCount);
+  }, delay);
+  pending = timer;
+
+  // Still returns a canceller, for tests and for a caller with a real reason to
+  // withdraw one. The hook no longer calls it from its cleanup.
+  return () => {
+    clearTimeout(timer);
+    if (pending === timer) pending = null;
+  };
 }
