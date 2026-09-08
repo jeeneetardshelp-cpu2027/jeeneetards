@@ -168,25 +168,33 @@ let REQUIRE_CHAPTER_SUBJECT_SCOPE = false;
 let SCOPE_ROWS = [];
 
 function makeBuilder(table) {
-  const rec = { table, cols: null, eq: {}, in: {}, range: null };
+  const rec = { table, cols: null, eq: {}, in: {}, range: null, limit: null };
   const b = {
     select(c) { rec.cols = c; return b; },
     order() { return b; }, range(a, z) { rec.range = [a, z]; return b; },
+    limit(n) { rec.limit = n; return b; },
     eq(k, v) { rec.eq[k] = v; return b; },
     ilike() { return b; }, in(k, v) { rec.in[k] = v; return b; },
     maybeSingle() {
-      if (REQUIRE_CHAPTER_SUBJECT_SCOPE && table === "chapters" && rec.eq.subject_id == null) {
-        return Promise.resolve({
-          data: null,
-          error: { message: "multiple rows returned", code: "PGRST116" },
-        });
-      }
       // dimension lookup: resolve the slug, or report "not found"
       const id = table === "subjects" ? 2 : 42;
       return Promise.resolve({ data: RESOLVE_SLUG ? { id, slug: rec.eq.slug, name: "Kinematics" } : null, error: null });
     },
     then(resolve) {
       if (FAIL) return Promise.resolve({ data: null, error: { message: "boom", code: "500" } }).then(resolve);
+      if (table === "chapters") {
+        // Two subjects really do share a chapter slug, so an UNSCOPED lookup
+        // legitimately sees both rows. The resolver now asks for two and reads
+        // the count itself instead of letting maybeSingle() call it an error.
+        const scoped = rec.eq["subjects.slug"] != null || rec.eq.subject_id != null;
+        if (!RESOLVE_SLUG) return Promise.resolve({ data: [], error: null }).then(resolve);
+        const one = {
+          id: 42, slug: rec.eq.slug, name: "Kinematics",
+          chapter_class_levels: SCOPE_ROWS,
+        };
+        const rows = REQUIRE_CHAPTER_SUBJECT_SCOPE && !scoped ? [one, { ...one, id: 43 }] : [one];
+        return Promise.resolve({ data: rows.slice(0, rec.limit ?? rows.length), error: null }).then(resolve);
+      }
       if (table === "chapter_class_levels")
         return Promise.resolve({ data: SCOPE_ROWS, error: null }).then(resolve);
       return Promise.resolve({ data: ROWS, error: null, count: ROWS.length }).then(resolve);
@@ -246,13 +254,19 @@ describe("no catalogue request before slugs resolve", () => {
     render(<MemoryRouter><Wired qs="class=12&chapter=kinematics" /></MemoryRouter>);
     await waitFor(() => expect(seen.canonical.ready).toBe(true));
     expect(seen.canonical.chapterClassSlugs).toEqual(["class-12"]);
-    expect(calls.filter((call) => call.table === "chapter_class_levels")).toHaveLength(1);
+    // The scope now rides on the chapter row itself. What matters to the
+    // student is unchanged — results stay gated until it is known — but it
+    // costs no separate wave. canonicalChapterWave.test.jsx pins the fallback
+    // for a database that does not have the junction at all.
+    expect(calls.filter((call) => call.table === "chapter_class_levels")).toHaveLength(0);
+    expect(calls.find((call) => call.table === "chapters").cols)
+      .toContain("chapter_class_levels(class_levels(slug))");
   });
 
   it.each([
-    ["canonical subject slug", "subject=chemistry&chapter=thermodynamics"],
-    ["legacy subject id", "sub=2&chapter=thermodynamics"],
-  ])("scopes a duplicated chapter slug for a %s", async (_label, qs) => {
+    ["canonical subject slug", "subject=chemistry&chapter=thermodynamics", { slug: "thermodynamics", "subjects.slug": "chemistry" }],
+    ["legacy subject id", "sub=2&chapter=thermodynamics", { slug: "thermodynamics", subject_id: 2 }],
+  ])("scopes a duplicated chapter slug for a %s", async (_label, qs, expectedScope) => {
     REQUIRE_CHAPTER_SUBJECT_SCOPE = true;
     render(
       <MemoryRouter>
@@ -262,9 +276,45 @@ describe("no catalogue request before slugs resolve", () => {
 
     await waitFor(() => expect(seen.canonical.ready).toBe(true));
     const chapterCall = calls.find((call) => call.table === "chapters");
-    expect(chapterCall.eq).toEqual({ slug: "thermodynamics", subject_id: 2 });
+    // The disambiguator is whatever the URL already carries — a slug for the
+    // canonical link, an id for the legacy one. Neither has to be fetched
+    // first, which is what let the chapter join the opening wave.
+    expect(chapterCall.eq).toEqual(expectedScope);
     expect(catalogueCalls()).toHaveLength(1);
     expect(catalogueCalls()[0].eq["pv.videos.chapter_id"]).toBe(42);
+  });
+
+  it("does not fire the chapter lookup behind the subject lookup", async () => {
+    // The bug this replaced: the chapter waited for the subject's ID, so a
+    // chapter link — 204 of the 205 /browse URLs in the sitemap — spent a
+    // whole extra round trip before it could ask, and another after that for
+    // the class scope.
+    render(<MemoryRouter><Wired qs="goal=jee&subject=physics&chapter=kinematics" /></MemoryRouter>);
+
+    // SYNCHRONOUSLY after mount, with nothing awaited: all three lookups are
+    // already issued. In the old shape only two could be, because the third
+    // had no subject id to scope itself with yet.
+    expect(calls.map((call) => call.table).filter((t) => t !== "playlists"))
+      .toEqual(["learning_goals", "subjects", "chapters"]);
+
+    await waitFor(() => expect(seen.canonical.ready).toBe(true));
+    expect(calls.filter((call) => call.table === "chapters")).toHaveLength(1);
+    expect(calls.filter((call) => call.table === "chapter_class_levels")).toHaveLength(0);
+  });
+
+  it("an ambiguous chapter slug is refused rather than guessed at", async () => {
+    // Two subjects share the slug and the URL names no subject. Guessing would
+    // put Chemistry courses under a Physics heading; erroring would offer a
+    // Retry that can never succeed.
+    REQUIRE_CHAPTER_SUBJECT_SCOPE = true;
+    render(<MemoryRouter><Wired qs="chapter=thermodynamics" /></MemoryRouter>);
+
+    await waitFor(() => expect(seen.canonical.unresolved.length).toBe(1));
+    expect(seen.canonical.unresolved[0])
+      .toEqual({ key: "chapter", slug: "thermodynamics", reason: "ambiguous" });
+    expect(seen.canonical.ready).toBe(false);
+    expect(seen.canonical.error).toBeNull();
+    expect(catalogueCalls()).toHaveLength(0);      // the crux, again
   });
 
   it("holds the skeleton while unresolved rather than showing anything", async () => {
