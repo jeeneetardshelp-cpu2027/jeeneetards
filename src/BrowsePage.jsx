@@ -362,7 +362,10 @@ export default function BrowsePage() {
 
   // The inactive tab sends no catalogue request. At library scale a student
   // viewing courses must not also download lectures in the background.
-  const { videos, total: lectureTotal, loading, error, hasMore, reload } = useVideos({
+  const {
+    videos, total: lectureTotal, strongTotal: lectureStrongTotal,
+    loading, error, hasMore, reload,
+  } = useVideos({
     goalId: category,
     subjectId: subject,
     chapterId: chapter,
@@ -520,6 +523,28 @@ export default function BrowsePage() {
 
   const anyFilter = category || subject || chapter || teacherRequested || urlQuery;
 
+  // THE COUNT, HONESTLY. The lecture search is deliberately fuzzy — trigram
+  // similarity is what lets "kinamatics" find Kinematics — so the result set is
+  // wider than the question. Measured on production 2026-09-08, "kinematics"
+  // returns 172 lessons of which 38 have the word in the title, and the heading
+  // said "172 lessons": a number four and a half times the size of the answer.
+  //
+  // useVideos now has the whole match set in hand on every sort and reports how
+  // many of it literally match, so the heading can name both. Paging is still
+  // driven by the real total; nothing was removed to make this number smaller.
+  //
+  // HIDE WHEN IT ADDS NOTHING, never a placeholder. There is no second number
+  // to show when no term is active (null), when the tokeniser could not answer
+  // (null), when every result matches ("trigonometry": 91 of 91) or when none
+  // does (the typo "kinamatics": 0 of 38) — in all four the page says what it
+  // has always said.
+  const lectureCount = lectureTotal ?? videos.length;
+  const lectureCountLabel =
+    lectureStrongTotal != null && lectureStrongTotal > 0 && lectureStrongTotal < lectureCount
+      ? `${lectureStrongTotal} title match${lectureStrongTotal === 1 ? "" : "es"}`
+        + ` of ${lectureCount} lesson${lectureCount === 1 ? "" : "s"}`
+      : `${lectureCount} lesson${lectureCount === 1 ? "" : "s"}`;
+
   return (
     <div className={`min-h-screen ${t.page} ${t.text}`}>
       {/* ---------- HEADER ---------- */}
@@ -547,9 +572,7 @@ export default function BrowsePage() {
             {/* The video count describes the LECTURES tab only. On Playlists it
                 would contradict the course count PlaylistBrowse renders. */}
             {tab === "lectures" && !loading && !error && (
-              <span className={`text-sm ${t.muted}`}>
-                {lectureTotal ?? videos.length} lesson{(lectureTotal ?? videos.length) === 1 ? "" : "s"}
-              </span>
+              <span className={`text-sm ${t.muted}`}>{lectureCountLabel}</span>
             )}
           </div>
 

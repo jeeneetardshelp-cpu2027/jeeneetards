@@ -13,6 +13,7 @@ import { supabase, isSupabaseConfigured } from "./supabaseClient";
 import { chapterScopeStageDecision, classSlugsForStage } from "./classLevels.js";
 import { isMissingCatalogRpc } from "./useExplore.js";
 import { isServableQuery } from "./useUniversalSearch.js";
+import { fetchSearchQueryTokens, partitionByStrength } from "./searchStrongMatch.js";
 export { classSlugsForStage } from "./classLevels.js";
 
 export const PAGE_SIZE = 12;
@@ -128,7 +129,7 @@ export function usePlaylistBrowse({
   enabled = true,
 }) {
   const [state, setState] = useState({
-    items: [], total: null, loading: true, error: null, hasMore: false,
+    items: [], total: null, strongTotal: null, loading: true, error: null, hasMore: false,
   });
   const languageKey = JSON.stringify(language ?? []);
   const contentTypeKey = JSON.stringify(contentType ?? []);
@@ -151,7 +152,7 @@ export function usePlaylistBrowse({
       ? chapterScopeStageDecision(reviewedChapterClasses, stage)
       : "fallback";
     if (chapterStage === "mismatch") {
-      setState({ items: [], total: 0, loading: false, error: null, hasMore: false });
+      setState({ items: [], total: 0, strongTotal: null, loading: false, error: null, hasMore: false });
       return;
     }
     const classSlugs = chapterStage === "match" ? null : classSlugsForStage(stage);
@@ -160,11 +161,11 @@ export function usePlaylistBrowse({
     const difficultyValues = JSON.parse(difficultyKey);
     if (!enabled) {
       // Hold the skeleton rather than showing a stale or unfiltered list.
-      setState({ items: [], total: null, loading: true, error: null, hasMore: false });
+      setState({ items: [], total: null, strongTotal: null, loading: true, error: null, hasMore: false });
       return;
     }
     if (!isSupabaseConfigured) {
-      setState({ items: [], total: null, loading: false, error: "Supabase isn't configured.", hasMore: false });
+      setState({ items: [], total: null, strongTotal: null, loading: false, error: "Supabase isn't configured.", hasMore: false });
       return;
     }
     setState((s) => ({ ...s, loading: true, error: null }));
@@ -186,6 +187,11 @@ export function usePlaylistBrowse({
     const term = (search ?? "").trim();
     let searchIds = null;
     let searchIlike = null; // graceful fallback while the match RPC is undeployed
+    // The query's CONTENT TOKENS as the SERVER tokenises them — the same
+    // search_query_tokens helper the ranking itself is built on. They are what
+    // separates a course whose title literally matches from one the trigram
+    // tier brought along. See searchStrongMatch.js.
+    let queryTokens = [];
     // The same test as the lecture tab, for a different reason. This RPC does
     // NOT time out on two characters -- measured 2026-09-03, "ac" answered 200
     // in 962ms -- so nothing here is broken. But such a query is not a search:
@@ -197,14 +203,20 @@ export function usePlaylistBrowse({
     // actually exclude "p and c" (7 characters), which is the very query this
     // comment cites as the reason for the guard.
     if (term && !isServableQuery(term)) {
-      setState({ items: [], total: 0, loading: false, error: null, hasMore: false });
+      setState({ items: [], total: 0, strongTotal: null, loading: false, error: null, hasMore: false });
       return;
     }
     if (term) {
-      const { data: idRows, error: searchErr } = await supabase.rpc(
-        "search_playlist_ids", { p_query: term },
-      );
+      // ALONGSIDE, not after: the tokens are only needed once the rows are in
+      // hand, so a second round trip would cost every debounced keystroke for
+      // nothing. fetchSearchQueryTokens never rejects — no tokens means no
+      // partition and today's behaviour exactly.
+      const [{ data: idRows, error: searchErr }, tokens] = await Promise.all([
+        supabase.rpc("search_playlist_ids", { p_query: term }),
+        fetchSearchQueryTokens(supabase, term),
+      ]);
       if (!current()) return;
+      queryTokens = tokens;
       if (searchErr) {
         if (isMissingCatalogRpc(searchErr)) {
           // The browse-search functions (docs/sql/browse_search_2026-08-25.sql)
@@ -214,7 +226,7 @@ export function usePlaylistBrowse({
           searchIlike = term;
         } else {
           console.error("playlist browse search:", searchErr);
-          setState({ items: [], total: null, loading: false, error: "Couldn't search courses.", hasMore: false });
+          setState({ items: [], total: null, strongTotal: null, loading: false, error: "Couldn't search courses.", hasMore: false });
           return;
         }
       } else {
@@ -222,7 +234,7 @@ export function usePlaylistBrowse({
         // No title matched. An empty .in() is ambiguous in PostgREST and an
         // unfiltered query would wrongly show everything, so answer empty here.
         if (searchIds.length === 0) {
-          setState({ items: [], total: 0, loading: false, error: null, hasMore: false });
+          setState({ items: [], total: 0, strongTotal: null, loading: false, error: null, hasMore: false });
           return;
         }
       }
@@ -295,9 +307,26 @@ export function usePlaylistBrowse({
     // a factor of five of it. If the catalogue ever makes broad queries hit the
     // RPC's 500 cap, re-measure before assuming that still holds.
     //
+    // TWO JOBS, TWO FLAGS. One flag used to drive both the RANGE (fetch the
+    // whole match set) and the COMPARATOR (re-order it by rank), so only the
+    // default sort ever saw the whole set:
+    //
+    //   fullSet     — a term is active, so fetch every matching course, on
+    //                 EVERY sort. The RPC's 500-id cap bounds it, and the
+    //                 default sort has been paying this exact cost since 2 Sep
+    //                 (measured ceiling: the whole table, 484 rows / 322 KB,
+    //                 which no real query came within a factor of five of).
+    //   byRelevance — and the student has not chosen a sort, so the server's
+    //                 ranking is the order. Unchanged.
+    //
     // Only the DEFAULT sort becomes relevance. A student who picked "Most
-    // viewed" asked for most viewed, and gets most viewed.
-    const byRelevance = Boolean(searchIds) && effectiveSort === "recommended";
+    // popular" still gets most popular — but MOST POPULAR AMONG THE COURSES
+    // THAT ACTUALLY MATCH first, then the rest. The Courses tab had the lecture
+    // tab's exact bug: with 44 of 48 "kinematics" matches trigram-fuzzy, "Most
+    // popular" ranked the fuzzy majority and buried the two courses actually
+    // called Kinematics. Nothing is removed and the count does not move.
+    const fullSet = Boolean(searchIds);
+    const byRelevance = fullSet && effectiveSort === "recommended";
 
     // The sort the student chose (?sort=) selects the ordering. "recommended"
     // still leads with curated display_order (new courses default to 1,000,000,
@@ -317,11 +346,11 @@ export function usePlaylistBrowse({
         .order("position", { ascending: true, referencedTable: "cover" })
         .order("id", { ascending: true, referencedTable: "cover" })
         .range(0, 0, { referencedTable: "cover" })
-        // Under relevance this is the WHOLE bounded match set, not a page: the
-        // page is cut from it after the ranking is re-applied below.
+        // With a term active this is the WHOLE bounded match set, not a page:
+        // the page is cut from it after the ordering is re-applied below.
         .range(
-          byRelevance ? 0 : page * pageSize,
-          byRelevance
+          fullSet ? 0 : page * pageSize,
+          fullSet
             ? Math.max(searchIds.length - 1, 0)
             : page * pageSize + pageSize - 1,
         );
@@ -363,21 +392,41 @@ export function usePlaylistBrowse({
       // real query against staging — the mocked builder could not surface it.)
       const outOfRange = error.code === "PGRST103" || /range not satisfiable/i.test(error.message || "");
       if (outOfRange) {
-        setState({ items: [], total: count ?? null, loading: false, error: null, hasMore: false });
+        setState({ items: [], total: count ?? null, strongTotal: null, loading: false, error: null, hasMore: false });
         return;
       }
       console.error("playlist browse:", error);
-      setState({ items: [], total: null, loading: false, error: "Couldn't load courses.", hasMore: false });
+      setState({ items: [], total: null, strongTotal: null, loading: false, error: "Couldn't load courses.", hasMore: false });
       return;
     }
     let items = (data ?? []).map(toCard);
-    // Under relevance the request above fetched the ENTIRE filtered match set,
-    // so its size is the true total even if the count header were ever missing,
-    // and the page is cut from it AFTER reordering — which is what makes page 2
-    // continue the ranking instead of restarting it.
+    // With a term active the request above fetched the ENTIRE filtered match
+    // set, so its size is the true total even if the count header were ever
+    // missing, and the page is cut from it AFTER reordering — which is what
+    // makes page 2 continue the ordering instead of restarting it.
     let total = count ?? null;
+    if (fullSet && total == null) total = items.length;
+
+    // How many of these courses are really about what was typed. Reported on
+    // every sort; null when there is no term or no tokens to judge with, never
+    // a fabricated zero.
+    let strongTotal = null;
+    if (fullSet && queryTokens.length > 0) {
+      const { strong, weak } = partitionByStrength(items, queryTokens);
+      strongTotal = strong.length;
+      // Strong first, then the rest — only when the ordering is the student's
+      // chosen sort; under relevance the ranking already does this. Both blocks
+      // come from order-preserving passes over rows the DATABASE sorted, so
+      // "Most popular" still means most popular inside each block without this
+      // file owning a comparator — which it could not be: `cols` above selects
+      // neither popularity_score nor created_at, so the two sorts that use them
+      // could not be re-derived here even if that were the right side of the
+      // wire to do it on. When the strong block is everything or nothing this
+      // concatenation is the input array, element for element.
+      if (!byRelevance) items = [...strong, ...weak];
+    }
+
     if (byRelevance) {
-      if (total == null) total = items.length;
       const rankOf = new Map(searchIds.map((id, i) => [id, i]));
       const rank = (c) => rankOf.get(c.id) ?? Number.MAX_SAFE_INTEGER;
       items = [...items]
@@ -386,6 +435,11 @@ export function usePlaylistBrowse({
         // for a row the id list somehow did not name.
         .sort((a, b) => rank(a) - rank(b) || a.id - b.id)
         .slice(page * pageSize, (page + 1) * pageSize);
+    } else if (fullSet) {
+      // The whole match set is in hand on this sort too, so the page is cut
+      // here rather than by range(). Paging still runs off `total`, which is
+      // the database's count and has not moved.
+      items = items.slice(page * pageSize, (page + 1) * pageSize);
     }
     // "recommended" is display_order -> popularity_score -> title, but 472/477
     // production rows share display_order=1000000 and popularity_score is 0 on
@@ -408,7 +462,7 @@ export function usePlaylistBrowse({
       items = [...items].sort((a, b) => (b.lectures ?? 0) - (a.lectures ?? 0));
     }
     setState({
-      items, total, loading: false, error: null,
+      items, total, strongTotal, loading: false, error: null,
       hasMore: total != null ? (page + 1) * pageSize < total : items.length === pageSize,
     });
   }, [enabled, goalId, boardId, subjectId, chapterId, stage, channelId, teacherId,

@@ -1,0 +1,545 @@
+{
+ "measuredAt": "2026-09-08T09:34:41.265Z",
+ "queries": {
+  "kinematics": {
+   "qTokens": [
+    "kinematics"
+   ],
+   "rankedIds": [
+    425,
+    13,
+    5,
+    459,
+    410,
+    45,
+    299,
+    324,
+    327,
+    200,
+    367,
+    382,
+    199,
+    204,
+    201,
+    228,
+    308,
+    325,
+    193,
+    229,
+    195,
+    203,
+    206,
+    381,
+    483,
+    171,
+    194,
+    202,
+    461,
+    211,
+    213,
+    326,
+    197,
+    207,
+    489,
+    205,
+    209,
+    230,
+    232,
+    210,
+    233,
+    488,
+    212,
+    444,
+    231,
+    236,
+    464,
+    208
+   ],
+   "rows": [
+    {
+     "id": 425,
+     "title": "Kinematics 1D",
+     "viewCountTotal": 1036356,
+     "popularityScore": 0.3384,
+     "createdAt": "2026-08-06T12:39:22.931053+00:00"
+    },
+    {
+     "id": 13,
+     "title": "Kinematics| Irodov solutions",
+     "viewCountTotal": 616545,
+     "popularityScore": 0.3661,
+     "createdAt": "2026-07-25T08:15:02.898481+00:00"
+    },
+    {
+     "id": 5,
+     "title": "Rectilinear Motion (Kinematics)",
+     "viewCountTotal": 2805570,
+     "popularityScore": 0.4033,
+     "createdAt": "2026-07-20T20:16:17.872138+00:00"
+    },
+    {
+     "id": 459,
+     "title": "Rohit Mishra JEE Advanced Kinematics",
+     "viewCountTotal": 133530,
+     "popularityScore": 0.2802,
+     "createdAt": "2026-08-19T16:29:25.673575+00:00"
+    },
+    {
+     "id": 410,
+     "title": "Chemical Kinetics",
+     "viewCountTotal": 146023,
+     "popularityScore": 0.2983,
+     "createdAt": "2026-08-05T10:08:38.392235+00:00"
+    },
+    {
+     "id": 45,
+     "title": "CHEMISTRY-CHEMICAL KINETICS",
+     "viewCountTotal": 1208242,
+     "popularityScore": 0.3579,
+     "createdAt": "2026-07-25T13:01:42.232876+00:00"
+    },
+    {
+     "id": 299,
+     "title": "Rank Boosters — Mathematics",
+     "viewCountTotal": 11984,
+     "popularityScore": 2.956,
+     "createdAt": "2026-07-31T12:41:08.974511+00:00"
+    },
+    {
+     "id": 324,
+     "title": "Hyperbola — JEE Mathematics",
+     "viewCountTotal": 4896,
+     "popularityScore": 0.8135,
+     "createdAt": "2026-08-03T11:04:19.482652+00:00"
+    },
+    {
+     "id": 327,
+     "title": "Mathematics Foundation Series",
+     "viewCountTotal": 56985,
+     "popularityScore": 0.6482,
+     "createdAt": "2026-08-03T11:05:24.811385+00:00"
+    },
+    {
+     "id": 200,
+     "title": "Ellipse | Class XI Mathematics",
+     "viewCountTotal": 11462,
+     "popularityScore": 1.3301,
+     "createdAt": "2026-07-30T11:30:20.634723+00:00"
+    },
+    {
+     "id": 367,
+     "title": "Chemical Kinetics — JEE Wallah",
+     "viewCountTotal": 109516,
+     "popularityScore": 0.4478,
+     "createdAt": "2026-08-03T19:06:49.442594+00:00"
+    },
+    {
+     "id": 382,
+     "title": "Saralised Mathematics — eSaral",
+     "viewCountTotal": 30506,
+     "popularityScore": 0.283,
+     "createdAt": "2026-08-04T08:28:45.150755+00:00"
+    },
+    {
+     "id": 199,
+     "title": "Parabola | Class XI Mathematics",
+     "viewCountTotal": 24684,
+     "popularityScore": 1.4274,
+     "createdAt": "2026-07-30T11:29:34.216972+00:00"
+    },
+    {
+     "id": 204,
+     "title": "Circle I Class - XI Mathematics",
+     "viewCountTotal": 30167,
+     "popularityScore": 1.3121,
+     "createdAt": "2026-07-30T11:38:38.300773+00:00"
+    },
+    {
+     "id": 201,
+     "title": "Hyperbola | Class XI Mathematics",
+     "viewCountTotal": 12820,
+     "popularityScore": 1.3356,
+     "createdAt": "2026-07-30T11:31:10.025313+00:00"
+    },
+    {
+     "id": 228,
+     "title": "Matrices | Class XII Mathematics",
+     "viewCountTotal": 35042,
+     "popularityScore": 1.2861,
+     "createdAt": "2026-07-30T13:32:23.241311+00:00"
+    },
+    {
+     "id": 308,
+     "title": "Basic Mathematics and Inequalities",
+     "viewCountTotal": 5570052,
+     "popularityScore": 0.191,
+     "createdAt": "2026-08-03T09:29:50.263215+00:00"
+    },
+    {
+     "id": 325,
+     "title": "Binomial Theorem — JEE Mathematics",
+     "viewCountTotal": 7134,
+     "popularityScore": 0.8071,
+     "createdAt": "2026-08-03T11:04:36.133019+00:00"
+    },
+    {
+     "id": 193,
+     "title": "Statistics I Class - XI Mathematics",
+     "viewCountTotal": 9838,
+     "popularityScore": 1.4682,
+     "createdAt": "2026-07-30T08:48:00.434171+00:00"
+    },
+    {
+     "id": 229,
+     "title": "Determinants | Class XII Mathematics",
+     "viewCountTotal": 30595,
+     "popularityScore": 1.4047,
+     "createdAt": "2026-07-30T13:32:23.241311+00:00"
+    },
+    {
+     "id": 195,
+     "title": "Probability I Class - XII Mathematics",
+     "viewCountTotal": 24307,
+     "popularityScore": 1.2546,
+     "createdAt": "2026-07-30T10:40:02.264049+00:00"
+    },
+    {
+     "id": 203,
+     "title": "Trigonometry I Class - XI Mathematics",
+     "viewCountTotal": 144347,
+     "popularityScore": 1.3206,
+     "createdAt": "2026-07-30T11:35:00.316324+00:00"
+    },
+    {
+     "id": 206,
+     "title": "Straight Line I Class - XI Mathematics",
+     "viewCountTotal": 69776,
+     "popularityScore": 1.3986,
+     "createdAt": "2026-07-30T11:39:09.902703+00:00"
+    },
+    {
+     "id": 381,
+     "title": "Mathematics Topicwise Revision — eSaral",
+     "viewCountTotal": 703814,
+     "popularityScore": 0.2947,
+     "createdAt": "2026-08-04T08:28:29.582962+00:00"
+    },
+    {
+     "id": 483,
+     "title": "PJ Math 101 Fundamentals of Mathematics",
+     "viewCountTotal": 35278,
+     "popularityScore": 0.3107,
+     "createdAt": "2026-08-25T11:26:08.945537+00:00"
+    },
+    {
+     "id": 171,
+     "title": "Chemical Kinetics I Class - XII Chemistry",
+     "viewCountTotal": 50761,
+     "popularityScore": 1.4244,
+     "createdAt": "2026-07-29T09:10:26.077814+00:00"
+    },
+    {
+     "id": 194,
+     "title": "Complex Numbers I Class - XII Mathematics",
+     "viewCountTotal": 40342,
+     "popularityScore": 1.3855,
+     "createdAt": "2026-07-30T10:39:28.427399+00:00"
+    },
+    {
+     "id": 202,
+     "title": "Binomial theorem I Class - XI Mathematics",
+     "viewCountTotal": 73192,
+     "popularityScore": 1.2943,
+     "createdAt": "2026-07-30T11:34:35.39423+00:00"
+    },
+    {
+     "id": 461,
+     "title": "Vora Classes Raftaar Mathematics Revision",
+     "viewCountTotal": 772048,
+     "popularityScore": 0.6278,
+     "createdAt": "2026-08-19T17:37:38.140529+00:00"
+    },
+    {
+     "id": 211,
+     "title": "Sequence & Series I Class - XI Mathematics",
+     "viewCountTotal": 106467,
+     "popularityScore": 1.364,
+     "createdAt": "2026-07-30T11:54:22.647081+00:00"
+    },
+    {
+     "id": 213,
+     "title": "Quadratic Equation I Class - XI Mathematics",
+     "viewCountTotal": 120099,
+     "popularityScore": 1.3034,
+     "createdAt": "2026-07-30T11:54:49.366251+00:00"
+    },
+    {
+     "id": 326,
+     "title": "Mathematics One Shot — JEE Main and Advanced",
+     "viewCountTotal": 418741,
+     "popularityScore": 1.9235,
+     "createdAt": "2026-08-03T11:05:09.371149+00:00"
+    },
+    {
+     "id": 197,
+     "title": "Relation & function | Class - XII Mathematics",
+     "viewCountTotal": 290360,
+     "popularityScore": 1.3386,
+     "createdAt": "2026-07-30T11:21:02.369551+00:00"
+    },
+    {
+     "id": 207,
+     "title": "Solution of triangle I Class - XI Mathematics",
+     "viewCountTotal": 13495,
+     "popularityScore": 1.1997,
+     "createdAt": "2026-07-30T11:42:47.760407+00:00"
+    },
+    {
+     "id": 489,
+     "title": "JEE Nexus Class 12 Mathematics One-Shot Series",
+     "viewCountTotal": 6925157,
+     "popularityScore": 1.1074,
+     "createdAt": "2026-08-25T13:52:20.777263+00:00"
+    },
+    {
+     "id": 205,
+     "title": "Differential Equation I Class - XII Mathematics",
+     "viewCountTotal": 13862,
+     "popularityScore": 1.2588,
+     "createdAt": "2026-07-30T11:38:53.880725+00:00"
+    },
+    {
+     "id": 209,
+     "title": "Application of Integrals | Class XII Mathematics",
+     "viewCountTotal": 12800,
+     "popularityScore": 1.2779,
+     "createdAt": "2026-07-30T11:51:09.69714+00:00"
+    },
+    {
+     "id": 230,
+     "title": "Indefinite Integration I Class - XII Mathematics",
+     "viewCountTotal": 51725,
+     "popularityScore": 1.3596,
+     "createdAt": "2026-07-30T14:18:54.358217+00:00"
+    },
+    {
+     "id": 232,
+     "title": "Modulus & Graphs (MOD) I Class - XII Mathematics",
+     "viewCountTotal": 12505,
+     "popularityScore": 1.2129,
+     "createdAt": "2026-07-30T17:40:37.58584+00:00"
+    },
+    {
+     "id": 210,
+     "title": "Permutation & combination I Class - XI Mathematics",
+     "viewCountTotal": 86119,
+     "popularityScore": 1.3801,
+     "createdAt": "2026-07-30T11:54:08.437375+00:00"
+    },
+    {
+     "id": 233,
+     "title": "Fundamental of mathematics | Class - XI Mathematics",
+     "viewCountTotal": 191799,
+     "popularityScore": 1.3605,
+     "createdAt": "2026-07-30T17:41:25.132333+00:00"
+    },
+    {
+     "id": 488,
+     "title": "Indian Mathematics Lectures Trigonometry Full Syllabus",
+     "viewCountTotal": 5112,
+     "popularityScore": 0.8765,
+     "createdAt": "2026-08-25T13:31:43.884981+00:00"
+    },
+    {
+     "id": 212,
+     "title": "Inverse Trigonometric Functions l Class - XII MATHEMATICS",
+     "viewCountTotal": 10278,
+     "popularityScore": 1.1411,
+     "createdAt": "2026-07-30T11:54:35.838762+00:00"
+    },
+    {
+     "id": 444,
+     "title": "Functions | Complete Chapter | JEE Mathematics | MathonGo",
+     "viewCountTotal": 12544,
+     "popularityScore": 2.258,
+     "createdAt": "2026-08-19T10:39:10.80078+00:00"
+    },
+    {
+     "id": 231,
+     "title": "Applications of Derivatives (AOD) I Class - XII Mathematics",
+     "viewCountTotal": 46998,
+     "popularityScore": 1.2583,
+     "createdAt": "2026-07-30T17:39:30.541552+00:00"
+    },
+    {
+     "id": 236,
+     "title": "Limits, Continuity & Differentiability l Class - XII MATHEMATICS",
+     "viewCountTotal": 120852,
+     "popularityScore": 1.3466,
+     "createdAt": "2026-07-30T18:32:33.332936+00:00"
+    },
+    {
+     "id": 464,
+     "title": "Om Sharma Challenging Mathematics Question Bank for JEE Advanced",
+     "viewCountTotal": 26591,
+     "popularityScore": 0.8033,
+     "createdAt": "2026-08-19T18:10:09.438759+00:00"
+    },
+    {
+     "id": 208,
+     "title": "Definite Integration & Its Applications I Class - XII Mathematics",
+     "viewCountTotal": 23239,
+     "popularityScore": 1.2606,
+     "createdAt": "2026-07-30T11:50:37.181475+00:00"
+    }
+   ]
+  },
+  "friction problems": {
+   "qTokens": [
+    "friction"
+   ],
+   "rankedIds": [
+    9,
+    420,
+    501,
+    332,
+    507
+   ],
+   "rows": [
+    {
+     "id": 9,
+     "title": "Friction",
+     "viewCountTotal": 884398,
+     "popularityScore": 0.3881,
+     "createdAt": "2026-07-20T20:34:20.486715+00:00"
+    },
+    {
+     "id": 420,
+     "title": "Friction",
+     "viewCountTotal": 119028,
+     "popularityScore": 0.3329,
+     "createdAt": "2026-08-06T09:55:24.977378+00:00"
+    },
+    {
+     "id": 501,
+     "title": "Biomentors Human Reproduction for NEET",
+     "viewCountTotal": 1932505,
+     "popularityScore": 0.3704,
+     "createdAt": "2026-08-27T12:24:58.505224+00:00"
+    },
+    {
+     "id": 332,
+     "title": "Principle of Mathematical Induction — Foundation",
+     "viewCountTotal": 983,
+     "popularityScore": 0.6452,
+     "createdAt": "2026-08-03T12:30:26.09401+00:00"
+    },
+    {
+     "id": 507,
+     "title": "ALK Sir General Inorganic Chemistry — Reaction Prediction",
+     "viewCountTotal": 0,
+     "popularityScore": 0,
+     "createdAt": "2026-09-04T11:21:13.565821+00:00"
+    }
+   ]
+  },
+  "trigonometry": {
+   "qTokens": [
+    "trigonometry"
+   ],
+   "rankedIds": [
+    203,
+    484,
+    488,
+    69,
+    68,
+    212
+   ],
+   "rows": [
+    {
+     "id": 203,
+     "title": "Trigonometry I Class - XI Mathematics",
+     "viewCountTotal": 144347,
+     "popularityScore": 1.3206,
+     "createdAt": "2026-07-30T11:35:00.316324+00:00"
+    },
+    {
+     "id": 484,
+     "title": "VidyaWise JEE Trigonometry",
+     "viewCountTotal": 15572,
+     "popularityScore": 0.5632,
+     "createdAt": "2026-08-25T11:51:53.661623+00:00"
+    },
+    {
+     "id": 488,
+     "title": "Indian Mathematics Lectures Trigonometry Full Syllabus",
+     "viewCountTotal": 5112,
+     "popularityScore": 0.8765,
+     "createdAt": "2026-08-25T13:31:43.884981+00:00"
+    },
+    {
+     "id": 69,
+     "title": "Trigonometric Equations",
+     "viewCountTotal": 393305,
+     "popularityScore": 0.2341,
+     "createdAt": "2026-07-25T17:22:28.588303+00:00"
+    },
+    {
+     "id": 68,
+     "title": "Inverse Trigonometric Functions",
+     "viewCountTotal": 789927,
+     "popularityScore": 0.2177,
+     "createdAt": "2026-07-25T17:15:43.270025+00:00"
+    },
+    {
+     "id": 212,
+     "title": "Inverse Trigonometric Functions l Class - XII MATHEMATICS",
+     "viewCountTotal": 10278,
+     "popularityScore": 1.1411,
+     "createdAt": "2026-07-30T11:54:35.838762+00:00"
+    }
+   ]
+  },
+  "kinamatics": {
+   "qTokens": [
+    "kinamatics"
+   ],
+   "rankedIds": [
+    425,
+    13,
+    5,
+    459
+   ],
+   "rows": [
+    {
+     "id": 425,
+     "title": "Kinematics 1D",
+     "viewCountTotal": 1036356,
+     "popularityScore": 0.3384,
+     "createdAt": "2026-08-06T12:39:22.931053+00:00"
+    },
+    {
+     "id": 13,
+     "title": "Kinematics| Irodov solutions",
+     "viewCountTotal": 616545,
+     "popularityScore": 0.3661,
+     "createdAt": "2026-07-25T08:15:02.898481+00:00"
+    },
+    {
+     "id": 5,
+     "title": "Rectilinear Motion (Kinematics)",
+     "viewCountTotal": 2805570,
+     "popularityScore": 0.4033,
+     "createdAt": "2026-07-20T20:16:17.872138+00:00"
+    },
+    {
+     "id": 459,
+     "title": "Rohit Mishra JEE Advanced Kinematics",
+     "viewCountTotal": 133530,
+     "popularityScore": 0.2802,
+     "createdAt": "2026-08-19T16:29:25.673575+00:00"
+    }
+   ]
+  }
+ }
+}

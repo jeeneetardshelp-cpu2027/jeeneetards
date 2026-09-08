@@ -18,7 +18,8 @@ import { render, waitFor } from "@testing-library/react";
 const calls = [];
 const rpcCalls = [];
 let response;
-let rpcResponse;
+let rpcResponse;      // search_playlist_ids
+let tokensResponse;   // search_query_tokens — the SERVER's tokenisation
 
 function builder(table) {
   const rec = {
@@ -53,7 +54,11 @@ vi.mock("./supabaseClient", () => ({
   isSupabaseConfigured: true,
   supabase: {
     from: (table) => builder(table),
-    rpc: (name, args) => { rpcCalls.push({ name, args }); return Promise.resolve(rpcResponse); },
+    rpc: (name, args) => {
+      rpcCalls.push({ name, args });
+      return Promise.resolve(
+        name === "search_query_tokens" ? tokensResponse : rpcResponse);
+    },
   },
 }));
 
@@ -83,6 +88,9 @@ beforeEach(() => {
   seen = undefined;
   response = { data: [], error: null, count: 0 };
   rpcResponse = { data: [], error: null };
+  // No content tokens by default: the strong-match partition stands down and
+  // every assertion here is about the behaviour that predates it.
+  tokensResponse = { data: [{ qlen: 0, q: "", q_tokens: [], q_long: "" }], error: null };
 });
 
 describe("course search relevance order", () => {
@@ -97,7 +105,11 @@ describe("course search relevance order", () => {
     // bounded request rather than an unbounded fetch.
     render(<Probe search="kinematics" page={0} />);
     await waitFor(() => expect(calls).toHaveLength(1));
-    expect(rpcCalls).toEqual([{ name: "search_playlist_ids", args: { p_query: "kinematics" } }]);
+    expect(rpcCalls.filter((c) => c.name === "search_playlist_ids")).toEqual([
+      { name: "search_playlist_ids", args: { p_query: "kinematics" } }]);
+    // Fired alongside it, on the same trimmed term.
+    expect(rpcCalls.filter((c) => c.name === "search_query_tokens")).toEqual([
+      { name: "search_query_tokens", args: { p_query: "kinematics" } }]);
     expect(calls[0].range).toEqual([0, RANKED.length - 1]);
     expect(calls[0].in.id).toEqual(RANKED);
     // The database ordering is untouched; the ranking is applied to the rows.
@@ -143,13 +155,19 @@ describe("course search relevance order", () => {
   });
 
   it("lets an explicitly chosen sort win over relevance", async () => {
-    // "Recently added" is a request for recent. It keeps normal paging and the
-    // database's ordering, exactly as before.
+    // "Recently added" is a request for recent, and the DATABASE still answers
+    // it — the .order() chain is untouched. What changed is the range: the
+    // whole bounded match set is fetched on this sort too, so the courses that
+    // actually match can lead (see searchStrongMatchFirst.test.jsx). With no
+    // content tokens there is no partition, so this is the server's order.
     render(<Probe search="kinematics" sort="recent" page={1} />);
     await waitFor(() => expect(seen.loading).toBe(false));
     expect(calls[0].orders).toEqual(["created_at desc", "id"]);
-    expect(calls[0].range).toEqual([PAGE_SIZE, 2 * PAGE_SIZE - 1]);
-    expect(ids()).toEqual(BY_ID);          // the server's rows, unreordered
+    expect(calls[0].range).toEqual([0, RANKED.length - 1]);
+    // Page 1 of the server's rows, cut on the client from the same order.
+    expect(ids()).toEqual(BY_ID.slice(PAGE_SIZE, 2 * PAGE_SIZE));
+    // Relevance did NOT take over: this is not the ranked order.
+    expect(ids()).not.toEqual(RANKED.slice(PAGE_SIZE, 2 * PAGE_SIZE));
   });
 
   it("pages normally with no term, exactly as it did before", async () => {

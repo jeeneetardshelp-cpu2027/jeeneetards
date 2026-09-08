@@ -195,7 +195,7 @@ export default function PlaylistBrowse({
       return next;
     });
 
-  const { items, total, loading, error, hasMore, reload } = usePlaylistBrowse({
+  const { items, total, strongTotal, loading, error, hasMore, reload } = usePlaylistBrowse({
     // goalId was the defect: accepted by the hook, never supplied by the page.
     goalId: filters.goal, subjectId: filters.subject,
     boardId: filters.board, stage: filters.stage,
@@ -320,6 +320,12 @@ export default function PlaylistBrowse({
           of filters. */}
       <div className="mt-4 flex items-center justify-between gap-3">
         <p className={`text-sm ${t.muted}`}>
+          {/* The same honest count the Lectures tab shows, in the same words.
+              usePlaylistBrowse already computed strongTotal and nothing read
+              it, so this tab said "48 courses" while leading with the 4 that
+              actually match — the inflation the partition was written to stop,
+              one tab over. Hidden when it adds nothing: no term, no tokens,
+              everything matched, or nothing did. */}
           {tab === "lectures" ? "" :
             // "0 courses" for an unsent query is the same unverified assertion
             // as the sentence below it, one line higher and in a number, which
@@ -327,7 +333,11 @@ export default function PlaylistBrowse({
             // rendering: a section with no data hides itself.
             unsearchable ? ""
               : loading ? "Loading courses…"
-              : total != null ? `${total} course${total === 1 ? "" : "s"}`
+              : total != null
+                ? (strongTotal != null && strongTotal > 0 && strongTotal < total
+                    ? `${strongTotal} title match${strongTotal === 1 ? "" : "es"}`
+                      + ` of ${total} course${total === 1 ? "" : "s"}`
+                    : `${total} course${total === 1 ? "" : "s"}`)
               : `${items.length} courses`}
         </p>
         <div className="flex items-center gap-2">

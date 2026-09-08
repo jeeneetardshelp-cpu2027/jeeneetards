@@ -408,7 +408,13 @@ export function useUniversalSearch(query, { type = null, limit = 5 } = {}) {
     // gap. All three are needed.
     return () => {
       clearTimeout(timer);
-      cancelGapLog.current?.();
+      // DELIBERATELY NOT cancelling the gap log here any more. This cleanup
+      // runs on every dependency change and on unmount, and a student who
+      // searches, sees nothing and navigates away is the ordinary case -- so
+      // cancelling here threw away the very searches this log exists to
+      // capture. Supersession now lives in searchGapLog.js's single pending
+      // slot, where a newer schedule replaces an older one, so a prefix still
+      // never reaches the server.
       cancelGapLog.current = null;
     };
   }, [query, type, limit, page, nonce]);

@@ -4,7 +4,8 @@ import { render, waitFor } from "@testing-library/react";
 const calls = [];
 const rpcCalls = [];
 let response;
-let rpcResponse;
+let rpcResponse;      // search_video_ids
+let tokensResponse;   // search_query_tokens — the SERVER's tokenisation
 
 function builder(table) {
   const rec = {
@@ -38,7 +39,11 @@ vi.mock("./supabaseClient.js", () => ({
   isSupabaseConfigured: true,
   supabase: {
     from: (table) => builder(table),
-    rpc: (name, args) => { rpcCalls.push({ name, args }); return Promise.resolve(rpcResponse); },
+    rpc: (name, args) => {
+      rpcCalls.push({ name, args });
+      return Promise.resolve(
+        name === "search_query_tokens" ? tokensResponse : rpcResponse);
+    },
   },
 }));
 
@@ -59,7 +64,14 @@ beforeEach(() => {
   seen = undefined;
   response = { data: [], error: null, count: 0 };
   rpcResponse = { data: [], error: null };
+  // No content tokens by default: the strong-match partition stands down and
+  // every assertion below is about the behaviour that predates it.
+  tokensResponse = { data: [{ qlen: 0, q: "", q_tokens: [], q_long: "" }], error: null };
 });
+
+// Both search RPCs fire together for one term. Naming them separately keeps the
+// assertions readable now that a search is two calls, not one.
+const rpcFor = (name) => rpcCalls.filter((c) => c.name === name);
 
 describe("paged lecture discovery", () => {
   it("issues no request while disabled", async () => {
@@ -117,7 +129,11 @@ describe("paged lecture discovery", () => {
       subject_id: 2,
       chapter_id: 3,
     });
-    expect(rpcCalls).toEqual([{ name: "search_video_ids", args: { p_query: "vectors" } }]);
+    expect(rpcFor("search_video_ids")).toEqual([
+      { name: "search_video_ids", args: { p_query: "vectors" } }]);
+    // The tokeniser is asked about the SAME trimmed term, on the server.
+    expect(rpcFor("search_query_tokens")).toEqual([
+      { name: "search_query_tokens", args: { p_query: "vectors" } }]);
     expect(calls[0].in.id).toEqual([9, 42]);
     expect(calls[0].ilike).toBeNull();
   });
@@ -128,7 +144,8 @@ describe("paged lecture discovery", () => {
     await waitFor(() => expect(seen.loading).toBe(false));
     // The match RPC ran; the main videos query did not (an empty .in() or a
     // dropped filter would wrongly show the whole catalogue).
-    expect(rpcCalls).toEqual([{ name: "search_video_ids", args: { p_query: "qwertyzxcv" } }]);
+    expect(rpcFor("search_video_ids")).toEqual([
+      { name: "search_video_ids", args: { p_query: "qwertyzxcv" } }]);
     expect(calls).toHaveLength(0);
     expect(seen.total).toBe(0);
     expect(seen.videos).toEqual([]);
@@ -179,8 +196,8 @@ describe("paged lecture discovery", () => {
     async (term) => {
       rpcResponse = { data: [{ id: 7 }], error: null };
       render(<Probe search={term} />);
-      await waitFor(() => expect(rpcCalls).toHaveLength(1));
-      expect(rpcCalls[0]).toEqual({
+      await waitFor(() => expect(rpcFor("search_video_ids")).toHaveLength(1));
+      expect(rpcFor("search_video_ids")[0]).toEqual({
         name: "search_video_ids",
         args: { p_query: term },
       });
@@ -193,7 +210,8 @@ describe("paged lecture discovery", () => {
     rpcResponse = { data: null, error: { code: "PGRST202", message: "Could not find the function public.search_video_ids" } };
     render(<Probe search="vectors" />);
     await waitFor(() => expect(calls).toHaveLength(1));
-    expect(rpcCalls).toEqual([{ name: "search_video_ids", args: { p_query: "vectors" } }]);
+    expect(rpcFor("search_video_ids")).toEqual([
+      { name: "search_video_ids", args: { p_query: "vectors" } }]);
     expect(calls[0].ilike).toEqual(["title", "%vectors%"]);
     expect(calls[0].in.id).toBeUndefined();
     expect(seen.error).toBeNull();
@@ -373,13 +391,20 @@ describe("search relevance order", () => {
   });
 
   it("lets an explicitly chosen sort win over relevance", async () => {
-    // "Shortest first" is a request for shortest. It keeps normal paging and
-    // the database's ordering, exactly as before.
+    // "Shortest first" is a request for shortest, and the DATABASE still
+    // answers it — the .order() chain is untouched. What changed is the range:
+    // the whole bounded match set is fetched on this sort too, so the rows that
+    // actually match can lead (see the strong-match suite). With no content
+    // tokens there is no partition, so this is the server's ordering verbatim.
     render(<Probe search="friction problems" sort="shortest" page={1} />);
     await waitFor(() => expect(seen.loading).toBe(false));
     expect(calls[0].orders).toEqual(["duration_seconds nullslast", "id"]);
-    expect(calls[0].range).toEqual([LECTURE_PAGE_SIZE, 2 * LECTURE_PAGE_SIZE - 1]);
-    expect(ids()).toEqual(BY_ID);          // the server's rows, unreordered
+    expect(calls[0].range).toEqual([0, RANKED.length - 1]);
+    // Page 1 of the server's rows, cut on the client from the same order.
+    expect(ids()).toEqual(BY_ID.slice(LECTURE_PAGE_SIZE));
+    expect(seen.total).toBe(RANKED.length);
+    // Relevance did NOT take over: this is not the ranked order.
+    expect(ids()).not.toEqual(RANKED.slice(LECTURE_PAGE_SIZE));
   });
 
   it("pages normally with no term, exactly as it did before", async () => {

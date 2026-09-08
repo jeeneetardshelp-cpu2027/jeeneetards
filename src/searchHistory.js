@@ -170,12 +170,14 @@ let pending = null;
 /**
  * Schedule a remember for a query that has just settled WITH results.
  *
- * Deliberately NOT cancelled from the hook's effect cleanup, unlike
- * scheduleSearchGapLog. A gap log is a permanent shared row, so a superseded
- * one must never be sent; this is a device-local note about a search that
- * genuinely worked, and cancelling on unmount would throw away precisely the
- * best searches — the ones the student clicked a result from within a second.
- * Superseding is handled by the single slot above instead.
+ * Deliberately NOT cancelled from the hook's effect cleanup. Cancelling on
+ * unmount would throw away precisely the best searches — the ones the student
+ * clicked a result from within a second. Superseding is handled by the single
+ * slot above instead.
+ *
+ * scheduleSearchGapLog now works the same way, and for the same reason: it used
+ * to be cancelled from the cleanup, and that discarded the settled zero-result
+ * searches it exists to record. Both supersede through their own slot.
  *
  * Returns a cancel function anyway, for tests and for a caller that has a real
  * reason to withdraw one.
