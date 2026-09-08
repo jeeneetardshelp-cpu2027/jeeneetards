@@ -70,6 +70,24 @@
 -- t.q_long the way universal_search does it -- record fields are not
 -- assignable in plpgsql.
 --
+-- APPLIED 8 Sep 2026, and measured immediately, three runs each:
+--
+--     query      lectures + courses        was
+--     "ac"       45 + 7,  ~0.3s            0 + 0
+--     "3d"        4 + 1,  ~0.3s            0 + 0
+--     "p and c"  32 + 2,  0.40s            3.1s, flipping to 500 under load
+--
+-- "p and c" is the one worth reading twice: 3.1s to 0.40s, because the
+-- prefilter stopped scanning on "and". It was a tenth of a second under the
+-- statement timeout and is now nowhere near it.
+--
+-- Refusals intact -- "p c", "a b c" and "p n c" return 0 rows from both
+-- matchers in ~0.22s. Nothing regressed: kinematics 172+48, "iit jee" 195+2,
+-- "x ray" 8+0, "def int" 176+6, "s block" 65+16, "ac ka matlab" 29+4,
+-- "emi ka matlab" 452+106, "shm kya hai" 376+32. On the live site,
+-- /browse?q=ac renders 7 courses led by Alternating Current where it had said
+-- "No courses match this view."
+--
 -- Rerunnable: create or replace, grants re-stated.
 -- ============================================================================
 
