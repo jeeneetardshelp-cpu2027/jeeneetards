@@ -496,74 +496,65 @@ describe("short query, loading, error and empty (requirements 6, 8)", () => {
   // 2026-09-02 because a two-character query times out in the RPC rather than
   // returning nothing, and a test naming the old number would have had to be
   // edited rather than simply passing.
-  // Pinned to what production actually did on 2026-09-03, HTTP status recorded
-  // rather than row count. Every false below returned 500 57014 "canceling
-  // statement due to statement timeout" after ~3.2s; every true returned 200.
-  // The true cases are listed deliberately: a stricter guard would be just as
-  // wrong, because "p block" and "class 11" each carry a 1-2 character token
-  // and answer in about a second.
-  // Re-measured 2026-09-07. The six on the second row were all REFUSED by the
-  // old rule, which wanted a 4-character token once there was more than one
-  // token; each of them answers 200, and in a JEE/NEET catalogue they are
-  // ordinary queries rather than curiosities. "p n c" was added at the same
-  // time as a 500 the rule must keep refusing.
+  // RE-MEASURED 2026-09-08, and the previous table was wrong in both
+  // directions. 24 query shapes, 4 runs each, 96 requests, serial with a gap so
+  // the probe did not create the load it was measuring.
+  //
+  // Every query the old rule REFUSED answers 200 — three of them with the
+  // exactly-right chapter as row 1 — and the single 500 in all 96 runs was a
+  // query the old rule ADMITTED. The 500s the old table recorded were real on
+  // 2 Sep; the server-side floors applied on 7 Sep fixed them, and this test
+  // kept asserting the old world under the name "as production answered it".
+  //
+  //   ac       200,  58 rows, ~0.9s   Alternating Current
+  //   3d       200,   8 rows, ~0.8s   Vectors and Three-Dimensional Geometry
+  //   p and c  200,  36 rows, ~1.0s   Permutations and Combinations
+  //   a and b  200, 154 rows, ~2.1s   x and y  200, 61 rows, ~1.8s
+  //   p c / a b c / p n c / s p       200,  0 rows, ~250ms
+  //   def int  500 57014 on 1 of 4    <- admitted then, and admitted now
   it.each([
-    ["ac", false], ["3d", false], ["p c", false], ["a b c", false],
-    ["p and c", false], ["p n c", false],
-    ["and", true], ["abc", true], ["ktg", true], ["emi", true],
-    ["class 11", true], ["p block", true], ["s block", true],
+    // Refused: every token is a single character, and each of these measurably
+    // returns zero rows. Nothing to search on, so nothing is lost by not asking.
+    ["p c", false], ["a b c", false], ["p n c", false], ["s p", false],
+    ["a", false], ["p", false],
+    // Sent: each carries a token of 2+ characters, and each answers.
+    ["ac", true], ["3d", true], ["p and c", true], ["a and b", true],
+    ["x and y", true], ["and", true], ["abc", true], ["ktg", true],
+    ["emi", true], ["class 11", true], ["p block", true], ["s block", true],
     ["jee 2025", true], ["physics 11", true], ["the and for", true],
     ["iit jee", true], ["jee adv", true], ["jee pyq", true],
     ["org che", true], ["x ray", true], ["def int", true],
-  ])("isServableQuery(%o) === %s, as production answered it", (query, servable) => {
+  ])("isServableQuery(%o) === %s, as production answered it on 2026-09-08", (query, servable) => {
     expect(isServableQuery(query)).toBe(servable);
   });
 
-  // A lone connective is the query, and the server treats it that way: filler
-  // removal only applies when something survives it, so "and" keeps its own
-  // token and answers 200. "p and c" is the same word in a different role —
-  // scaffolding between two real words — and there it cannot be the anchor.
-  // One rule produces both, which is the whole point of mirroring the server's
-  // guard instead of inventing a second one.
+  // The queries the connective set used to refuse. Each returns real rows, so
+  // refusing them was the defect. "p and c" is the one the set was built for.
   it.each([
-    ["and", true], ["the", true], ["the and for", true],
-    ["p and c", false], ["a and b", false], ["x and y", false],
-  ])("connective handling: isServableQuery(%o) === %s", (query, servable) => {
-    expect(isServableQuery(query)).toBe(servable);
+    ["p and c", /permutations/i], ["a and b", null], ["x and y", null],
+  ])("sends %o, which the connective set used to refuse", (query) => {
+    expect(isServableQuery(query)).toBe(true);
   });
 
-  // The cost of that, stated rather than hidden: these two answer 200 on
-  // production (96 and 31 rows) and are refused here anyway, because their only
-  // three-letter word is "and". They are noise queries, and no real search is
-  // lost to them — "iit jee" above is what the trade buys.
-  it.each(["a and b", "x and y"])(
-    "knowingly refuses %j, which the server would have answered",
-    (query) => {
-      expect(isServableQuery(query)).toBe(false);
-    },
-  );
-
-  it("says something actionable when a long query has no searchable word", async () => {
+  it("asks the server for “p and c”, which returns its own chapter", async () => {
     renderSearch();
     type("p and c");
     await settle();
-    // NOT "type at least 3 characters" — the student typed seven. And not
-    // "try a longer word" either: "and" IS three characters, so the length is
-    // not what is wrong with this query. What is wrong is that its only long
-    // word is a joining word, and that is what the sentence has to say.
-    expect(screen.getByText(/more specific word/i)).toBeTruthy();
+    // The old assertion here demanded the OPPOSITE: that this query be refused
+    // and the student shown "try a more specific word". Production returns the
+    // Permutations and Combinations chapter as row 1 in about a second.
+    expect(rpcCalls.length).toBeGreaterThan(0);
     expect(screen.queryByText(/Type at least/i)).toBeNull();
-    expect(rpcCalls).toHaveLength(0);
+    expect(screen.queryByText(/Try a longer word/i)).toBeNull();
   });
 
-  it("still blames the word length when every word really is too short", async () => {
+  it("still refuses a query whose every word is one letter", async () => {
     renderSearch();
     type("p c");
     await settle();
-    // The other half of the branch above. If both refusals collapsed onto one
-    // sentence, one of the two would be describing a different query.
+    // The one refusal left, and it is about input quality rather than about
+    // protecting the server: "p c" returns zero rows in ~250ms either way.
     expect(screen.getByText(/Try a longer word/i)).toBeTruthy();
-    expect(screen.queryByText(/more specific word/i)).toBeNull();
     expect(rpcCalls).toHaveLength(0);
   });
 

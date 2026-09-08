@@ -31,12 +31,40 @@
 -- the drift supabase/README.md exists to prevent, so the file is restored to
 -- match what production actually runs.
 --
+-- IT FIXES MORE THAN "p and c", AND THIS WAS ALMOST THE REASON IT WAS DROPPED.
+-- The paragraph above says "what this migration reliably fixes is p and c", and
+-- that sentence was cited on 8 Sep 2026 as grounds to remove it. It undercounts
+-- by five. Re-measured on production that day, p_limit 20, three runs each,
+-- against the same queries this file's own defect table and
+-- src/useUniversalSearch.js both record as 500 57014 before it:
+--
+--     "ac"       500  ->  200 x3, 33 rows
+--     "3d"       500  ->  200 x3,  8 rows
+--     "p c"      500  ->  200 x3,  0 rows
+--     "a b c"    500  ->  200 x3,  0 rows
+--     "p n c"    500  ->  200 x3,  0 rows
+--     "p and c"  500  ->  200 x3, 24 rows
+--
+-- Six for six, and the mechanism was checked directly rather than inferred:
+--
+--     search_floor_anchor('ac')          -> null
+--     search_floor_anchor('3d')          -> null
+--     search_floor_anchor('c')           -> null
+--     search_floor_anchor('kinematics')  -> "kinematics"
+--
+-- A null anchor makes every LIKE and %> disjunct built from it null, so that
+-- pillar contributes no scan at all -- and the rows still arrive, because the
+-- ALIAS pass supplies "alternating current" for "ac". "p and c" is the same
+-- idea one step further: its typed content anchor ("c") cannot clear the floor,
+-- so search_anchor falls through to the alias anchor and the prefilter scans on
+-- "permutations" (selective) instead of "and" (1328 of 5533 titles).
+--
 -- IF THE BEHAVIOUR SHOULD GO, that is a NEW migration re-emitting the function
--- without the anchor block -- not a file deletion. Weigh it against what it
--- costs: "p and c" goes back to an error, and undoing it re-emits the same 888
--- lines anyway. No student reaches that query today, because both surfaces
--- refuse it before any request, so the case for removal is about carrying less
--- code rather than about a user-visible defect.
+-- without the anchor block -- not a file deletion. Weigh it against the six
+-- above, not against one. No student reaches most of them, because both
+-- surfaces refuse short queries before any request, so this is not a
+-- user-visible defect today -- but "it only fixes one query" is not a true
+-- reason to carry less code, and it is the reason that was nearly acted on.
 -- ============================================================================
 -- universal_search: choose a needle the trigram index can scan, instead of
 -- scanning the catalogue until Postgres cancels the statement.

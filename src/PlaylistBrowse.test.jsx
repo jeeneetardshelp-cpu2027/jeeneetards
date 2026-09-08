@@ -857,10 +857,11 @@ describe("lectures-tab sort control", () => {
 // here so both halves of /browse agree about what is searchable, and because
 // "p and c" matched 197 of ~500 courses, which is a list rather than an answer.
 describe("course search servability floor", () => {
+  // Re-measured 2026-09-08: "ac" (58 rows) and "p and c" (36 rows) answer and
+  // are sent. Only an all-single-letter query is still refused.
   it.each([
-    ["ac", "single token below the floor"],
-    ["p c", "two 1-character tokens, 3 characters long"],
-    ["p and c", "longest token is 3, 7 characters long"],
+    ["p c", "two 1-character tokens"],
+    ["a b c", "three 1-character tokens"],
   ])("answers %j without querying the catalogue (%s)", async (search) => {
     render(<MemoryRouter><Probe search={search} /></MemoryRouter>);
     await new Promise((r) => setTimeout(r, 0));
