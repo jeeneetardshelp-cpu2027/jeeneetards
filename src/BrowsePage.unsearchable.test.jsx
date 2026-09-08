@@ -60,8 +60,11 @@ beforeEach(() => {
 
 describe("/browse explains a query it never sent", () => {
   // One short word: the student can act on "type more characters".
-  it("tells a one-word short query to keep typing", async () => {
-    renderAt("/browse?tab=lectures&q=ac");
+  it("tells a one-letter query to keep typing", async () => {
+    // Was "ac" until 2026-09-08. "ac" now answers 200 with 58 rows and the
+    // Alternating Current chapter as row 1, so it is sent; a single letter is
+    // what is left with nothing to search on.
+    renderAt("/browse?tab=lectures&q=p");
 
     expect(
       await screen.findByText(new RegExp(`Type at least ${MIN_QUERY} characters`, "i")),
@@ -83,16 +86,26 @@ describe("/browse explains a query it never sent", () => {
     },
   );
 
-  // "p and c" is refused for a THIRD reason, and needs a third sentence: it has
+  // The third sentence, and the case that needed it, are gone: "p and c" is
+  // sent now and answers with its own chapter. What remains below is the
+  // proof that a genuinely unsearchable query still sends nothing.
+  //
+  // Was: "p and c" is refused for a THIRD reason, and needs a third sentence: it has
   // a three-character word, so neither "type at least 3 characters" nor "try a
-  // longer word" describes it. Its only long word is a joining word.
-  it("tells \"p and c\" its long word is a joining word, not that it is short", async () => {
+  // longer word" described it. Production answers it 200 with 36 rows and the
+  // Permutations and Combinations chapter as row 1, so it is sent.
+  it("sends “p and c” instead of refusing it", async () => {
     renderAt("/browse?tab=lectures&q=p%20and%20c");
 
-    expect(await screen.findByText(/more specific word/i)).toBeTruthy();
-    expect(screen.queryByText(/Try a longer word/i)).toBeNull();
-    expect(screen.queryByText(/Type at least/i)).toBeNull();
-    expect(screen.queryByText(/No lessons match your filters/i)).toBeNull();
+    await waitFor(() => {
+      // No refusal sentence of any kind: this query is not refused any more.
+      expect(screen.queryByText(/Try a longer word/i)).toBeNull();
+      expect(screen.queryByText(/Type at least/i)).toBeNull();
+    });
+    // And with the mock returning nothing, "No lessons match your filters" is
+    // now the CORRECT sentence — the catalogue really was asked. That is the
+    // difference this whole file exists to keep straight.
+    expect(screen.getByText(/No lessons match your filters/i)).toBeTruthy();
   });
 
   // The queries the old rule refused for having no 4-character word. Each was
@@ -125,9 +138,9 @@ describe("/browse explains a query it never sent", () => {
   });
 
   it("sent no request for the unservable query", async () => {
-    renderAt("/browse?tab=lectures&q=p%20and%20c");
+    renderAt("/browse?tab=lectures&q=p%20c");
 
-    await screen.findByText(/more specific word/i);
+    await screen.findByText(/Try a longer word/i);
     // The guard in useBrowse.js short-circuits before the RPC and before the
     // catalogue query; the message is not the result of a failed round trip.
     await waitFor(() => {
@@ -145,9 +158,9 @@ describe("/browse explains a query it never sent", () => {
 // gets.
 describe("/browse default tab — the one with no ?tab= in the URL", () => {
   it.each([
-    ["ac", /Type at least/i],
+    ["p", /Type at least/i],
     ["p c", /Try a longer word/i],
-    ["p and c", /joining words/i],
+    ["a b c", /Try a longer word/i],
   ])("explains %s instead of claiming the catalogue was searched", async (q, hint) => {
     renderAt("/browse?q=" + encodeURIComponent(q));
 
@@ -158,17 +171,17 @@ describe("/browse default tab — the one with no ?tab= in the URL", () => {
   });
 
   it("prints no course count for a search it never ran", async () => {
-    renderAt("/browse?q=ac");
+    renderAt("/browse?q=p%20c");
 
-    await screen.findByText(/Type at least/i);
+    await screen.findByText(/Try a longer word/i);
     // "0 courses" is a match count. There was no match attempt to count.
     expect(screen.queryByText(/^0 courses$/)).toBeNull();
   });
 
   it("sends no course query at all for an unservable term", async () => {
-    renderAt("/browse?q=ac");
+    renderAt("/browse?q=p%20c");
 
-    await screen.findByText(/Type at least/i);
+    await screen.findByText(/Try a longer word/i);
     expect(rpcCalls.some((c) => c.name === "search_playlist_ids")).toBe(false);
   });
 
