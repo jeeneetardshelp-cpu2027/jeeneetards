@@ -100,7 +100,8 @@
     "verify:polls-staging-readiness": "node src/scripts/verifyPollsStagingReadiness.js",
     "verify:polls-staging-install": "node src/scripts/verifyPollsStagingInstall.js",
     "verify:polls-production": "node src/scripts/verifyPollsProduction.js",
-    "verify:study-materials": "node src/scripts/verifyStudyMaterialStorage.js"
+    "verify:study-materials": "node src/scripts/verifyStudyMaterialStorage.js",
+    "verify:migration-status": "node src/scripts/verifyMigrationStatus.js"
   },
   "dependencies": {
     "@resvg/resvg-js": "^2.6.2",

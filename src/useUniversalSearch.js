@@ -73,37 +73,111 @@ export const MIN_QUERY = 3;
  * enough to anchor the scan — the predicates OR together, so a 1-2 character
  * token contributes at most one trigram and the planner falls back to a scan.
  *
- * The rule that separates all fifteen:
- *   one token   -> at least MIN_QUERY (3) characters
- *   two or more -> at least one token of 4, because 3 is not selective enough
- *                  once it is OR-ed with 1-character noise ("p and c" has a
- *                  3-character token and still times out, while "and" alone
- *                  does not).
+ * THE RULE: drop the connectives, and require one surviving token of MIN_QUERY
+ * (3) characters — but if dropping them would leave nothing, keep them all.
+ * That last clause is not a special case; it is the server's own guard, which
+ * filters filler only when something survives the filter. It is why a lone
+ * "and" is still searchable (200 on production) while the "and" in "p and c" is
+ * not an anchor. How many tokens were typed is deliberately NOT part of it.
  *
- * THE RPC HALF IS APPLIED (7 Sep 2026). Keep this gate regardless: it saves a
- * round trip on a query the server would only answer empty, and it is still
- * the only thing standing between a student and a 3.3s error banner for the
- * queries the RPC floor cannot rescue — a bare "ac", "3d" or "p and c", whose
- * raw tokens are themselves the short ones, measured still 500 after the push.
+ * It used to be "one token >= 3; two or more, one of >= 4". That 4 was carrying
+ * a single query — "p and c", whose only 3-character token is "and" — and it
+ * charged every other multi-word search for it. In a JEE/NEET catalogue the
+ * three-letter word is the norm, not the exception, so the bill was large.
+ * Every one of these was refused before a request was ever made, and every one
+ * of them answers. Measured against production 2026-09-07:
  *
- * Do NOT copy this rule into the RPC. Measured against production on
- * 2026-09-07, the boundary is different on the two sides of the wire, because
- * the RPC applies it AFTER filler removal and this hook cannot:
+ *   "iit jee"  200, 1.2s, 38 rows      "org che"  200, 1.7s, 46 rows
+ *   "jee adv"  200, 1.2s, 59 rows      "x ray"    200, 1.0s,  8 rows
+ *   "jee pyq"  200, 1.4s, 43 rows      "def int"  200, 2.0s, 28 rows
  *
- *   here, on TYPED tokens        one token >= 3; two or more, one of >= 4
- *   there, on POST-FILLER tokens the longest surviving token >= 3, full stop
+ * "x ray" is a real chapter and finds MORE than "x rays" (8 rows against 4).
+ * Blocking all of that to keep one query out was the wrong trade, so the
+ * connective set does that job directly instead: a joining word cannot be the
+ * anchor, because the server strips it as filler before choosing the token it
+ * actually searches on.
  *
- * "p and c" is why this hook needs the 4 — it types three tokens and the
- * longest is "and" — and it is also why the RPC does not: "and" is filler, so
- * the query arrives there as ["p","c"] and a floor of 3 catches it. A floor of
- * 4 in the RPC would newly break "def int" (200, 1761ms, 33 rows) and "x ray"
- * (200, 747ms, 8 rows), whose longest surviving token is three characters.
+ * Still refused, and each still measured at 500 57014 on 2026-09-07: "ac"(2),
+ * "3d"(2), "p c", "a b c" and "p n c" (no token over 1), and "p and c". That
+ * chapter is reachable — "pnc" 200/24 rows, "permutations" 200/24 rows — and
+ * the alias, not the length, is what makes the long form time out.
+ *
+ * The cost of the connective set, stated plainly: "a and b" and "x and y"
+ * answer 200 on the server and are refused here, because their only 3-letter
+ * word is "and". They are noise queries and no student loses a real search to
+ * them, which is the trade "iit jee" is worth.
+ *
+ * Do NOT copy this rule into the RPC, and do not grow CONNECTIVES into a copy
+ * of public.search_filler_tokens(). The two sides do not see the same tokens:
+ * this hook gets what was TYPED, the RPC gets what SURVIVES filler removal —
+ * 240 words, Hinglish included. Copying the OLD rule across that boundary is
+ * exactly how 20260907091500 silently emptied "def int" and "x ray"; the
+ * post-mortem is in the header of
+ * supabase/migrations/20260907160000_browse_servable_floor_correction.sql. The
+ * set below is the English joining words that change this decision, and nothing
+ * else.
  */
+const CONNECTIVES = new Set([
+  "and", "the", "for", "of", "in", "on", "at", "to", "or", "an", "is", "it",
+]);
+
 export function isServableQuery(term) {
-  const tokens = String(term ?? "").trim().split(/\s+/).filter(Boolean);
-  if (tokens.length === 0) return false;
-  if (tokens.length === 1) return tokens[0].length >= MIN_QUERY;
-  return tokens.some((token) => token.length >= MIN_QUERY + 1);
+  const tokens = String(term ?? "")
+    .trim()
+    .toLowerCase()
+    .split(/\s+/)
+    .filter(Boolean);
+  // Mirror the server's own guard, which is "if filtering would leave nothing,
+  // do not filter" — public.search_query_tokens keeps the raw tokens when every
+  // one of them is filler. So a lone "and" IS the query and stays searchable
+  // (measured 200 on production, and pinned by a test), while the "and" in
+  // "p and c" is scaffolding between two real words and cannot be the anchor.
+  const content = tokens.filter((token) => !CONNECTIVES.has(token));
+  const anchors = content.length > 0 ? content : tokens;
+  // An empty query has no anchor at all, so it falls out here as false.
+  return anchors.some((token) => token.length >= MIN_QUERY);
+}
+
+/**
+ * What to tell a student whose query isServableQuery just refused.
+ *
+ * THREE different reasons reach here and they need different sentences. Each
+ * one has to be true of the query in the box, because a hint that describes
+ * some other query is worse than no hint — the student does what it says, it
+ * does not help, and now the box is lying to them.
+ *
+ *   "ac"       one word, too short          -> say how many characters
+ *   "p c"      several words, all too short -> say the WORDS are too short;
+ *                                              "type at least 3 characters" is
+ *                                              wrong and unactionable at three
+ *   "p and c"  long enough, but the only    -> say that, because the student
+ *              long word is a joining word     already typed seven characters
+ *                                              and a longer word is not what
+ *                                              they are missing
+ *
+ * The third case is new: isServableQuery no longer counts a connective as an
+ * anchor, so a query can now be refused while containing a word of three or
+ * more characters. Without this branch "p and c" would be told to type at
+ * least 3 characters, which it plainly has.
+ *
+ * It lives beside the predicate rather than at the call sites so that a second
+ * surface cannot show a different sentence for the same state. /browse shows
+ * this too, and used to say "No lessons match your filters." instead — which
+ * claims the catalogue was searched and came back empty, when it was never
+ * asked.
+ */
+export function unsearchableQueryHint(term) {
+  const tokens = String(term ?? "")
+    .trim()
+    .toLowerCase()
+    .split(/\s+/)
+    .filter(Boolean);
+  if (tokens.some((token) => token.length >= MIN_QUERY)) {
+    return "Try a more specific word — joining words like “and” can’t be searched on their own.";
+  }
+  return tokens.length > 1
+    ? "Try a longer word — very short words can’t be searched."
+    : `Type at least ${MIN_QUERY} characters.`;
 }
 
 // Requirement 7. 275ms sits in the asked-for 250-300ms band: long enough that
