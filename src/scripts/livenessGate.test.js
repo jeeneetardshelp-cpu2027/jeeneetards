@@ -6,8 +6,16 @@
 // The most important assertions here are therefore the ones that say "this must
 // NOT come back clean" — a regression that turns any of them green would put
 // the original bug straight back.
+//
+// The opposite bug is a FALSE RED, and it happened: the 7 and 14 Sep 2026
+// scheduled runs failed because nothing was due for a check and the runner
+// wrote no report on that path. A job that goes red on quiet weeks teaches
+// everyone to ignore red. The nothing-due fixture below is built by the
+// runner's own function, not typed here, so these tests prove the gate accepts
+// what the runner actually writes.
 import { describe, expect, it } from "vitest";
 import { buildGateVerdict, renderGateSummary } from "./livenessGate.js";
+import { buildNothingDueReport } from "./videoLiveness.js";
 
 const clean = { dry_run: false, dead: [], newly_blocked: [], recovered: [] };
 const withDead = {
@@ -16,6 +24,9 @@ const withDead = {
   newly_blocked: [],
   recovered: [],
 };
+const nothingDue = buildNothingDueReport({
+  nowIso: "2026-09-15T00:00:00.000Z", dryRun: false, totalVideos: 5559, maxAgeDays: 30,
+});
 
 describe("buildGateVerdict", () => {
   it("passes a clean report", () => {
@@ -54,6 +65,20 @@ describe("buildGateVerdict", () => {
     const v = buildGateVerdict({ ...withDead, dry_run: true });
     expect(v.needsAttention).toBe(true);
     expect(v.dryRun).toBe(true);
+  });
+
+  it("passes a run where nothing was due, so a quiet week is not a red one", () => {
+    // The normal weekly result: every video verified within 30 days, YouTube
+    // never called.
+    const v = buildGateVerdict(nothingDue);
+    expect(v.needsAttention).toBe(false);
+    expect(v.unreadable).toBe(false);
+    expect(v.nothingDue).toEqual({ total_videos: 5559, max_age_days: 30 });
+  });
+
+  it("still fails a nothing-due report that somehow carries a finding", () => {
+    // The note explains an empty run. It must never excuse a non-empty one.
+    expect(buildGateVerdict({ ...nothingDue, dead: withDead.dead }).needsAttention).toBe(true);
   });
 
   // The fail-safe cases. "We could not tell" must never be reported as "clean".
@@ -106,5 +131,25 @@ describe("renderGateSummary", () => {
   it("says a dry run did not write, so a red run is not mistaken for a change", () => {
     const text = renderGateSummary(buildGateVerdict({ ...withDead, dry_run: true }));
     expect(text).toContain("Dry run");
+  });
+
+  it("says nothing was due, rather than claiming a check found nothing", () => {
+    const text = renderGateSummary(buildGateVerdict(nothingDue));
+    expect(text).toContain("No lesson was due for a check");
+    expect(text).toContain("5559 videos were verified within the last 30 days");
+    expect(text).toContain("nothing was sent to YouTube");
+    expect(text).not.toContain("No dead or newly-blocked lessons");
+  });
+
+  it("keeps the checked-and-clean wording for a run that actually checked", () => {
+    const text = renderGateSummary(buildGateVerdict(clean));
+    expect(text).toContain("No dead or newly-blocked lessons");
+    expect(text).not.toContain("No lesson was due");
+  });
+
+  it("does not invent counts when a nothing-due note is missing its numbers", () => {
+    const text = renderGateSummary(buildGateVerdict({ ...nothingDue, nothing_due: {} }));
+    expect(text).toContain("No lesson was due for a check");
+    expect(text).not.toMatch(/undefined|NaN/);
   });
 });

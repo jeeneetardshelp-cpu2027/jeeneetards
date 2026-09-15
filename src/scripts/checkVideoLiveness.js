@@ -24,7 +24,9 @@
 //      node src/scripts/checkVideoLiveness.js --max-age 30  # skip videos verified within 30d
 //
 //  A report of every dead / newly-blocked video is written to
-//  tmp/video-liveness-report.json for the owner to act on. Idempotent.
+//  tmp/video-liveness-report.json for the owner to act on — on every run that
+//  reads the catalogue, including one where nothing is due, because the
+//  workflow's verdict step treats a missing report as a failure. Idempotent.
 // =====================================================================
 
 import { createClient } from "@supabase/supabase-js";
@@ -32,7 +34,9 @@ import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
 import { getVideoDetails } from "./youtubeNode.js";
-import { planLivenessUpdate, groupUpdates, buildLivenessSql, LIVE_STATUSES } from "./videoLiveness.js";
+import {
+  planLivenessUpdate, groupUpdates, buildLivenessSql, buildNothingDueReport, LIVE_STATUSES,
+} from "./videoLiveness.js";
 
 const WRITE_CHUNK = 500; // rows per update round-trip
 
@@ -56,6 +60,21 @@ function numFlag(name, fallback) {
 
 const fail = (m) => { console.error(`\x1b[31m✗ ${m}\x1b[0m`); process.exit(1); };
 const ok = (m) => console.log(`\x1b[32m✓ ${m}\x1b[0m`);
+
+// The report is the workflow's evidence, so it is written on every path that
+// reaches a verdict — including "nothing due". The verdict step
+// (checkLivenessReport.js) fails on a missing report by design, because it
+// cannot tell a quiet week from a broken run; the fix for a false red belongs
+// here, in always writing one, never there. One function names the file, so no
+// two paths can write it to different places.
+function writeReport(report) {
+  const here = dirname(fileURLToPath(import.meta.url));
+  const reportDir = resolve(here, "../../tmp");
+  mkdirSync(reportDir, { recursive: true });
+  const reportPath = resolve(reportDir, "video-liveness-report.json");
+  writeFileSync(reportPath, JSON.stringify(report, null, 2));
+  return { reportDir, reportPath };
+}
 
 async function main() {
   const dryRun = process.argv.includes("--dry-run");
@@ -93,6 +112,9 @@ async function main() {
     videos.push(...data);
     if (data.length < PAGE) break;
   }
+  // Deliberately NO report on this path. On production an empty read means the
+  // read is broken, not that the catalogue is clean, so the verdict step should
+  // find nothing to read and go red.
   if (!videos.length) { ok("No videos in catalog — nothing to do."); process.exit(0); }
 
   // 2. Skip videos verified recently (so a scheduled run is cheap), then take
@@ -117,7 +139,17 @@ async function main() {
     `${maxAgeDays > 0 ? ` (skipping those verified within ${maxAgeDays}d)` : ""}` +
     `${Number.isFinite(limit) ? ` (--limit ${limit})` : ""}.`,
   );
-  if (!due.length) { ok("Everything already fresh — nothing to check."); process.exit(0); }
+  if (!due.length) {
+    // The normal result on most weekly runs: each video is checked about
+    // monthly, so a run usually finds nothing due and never calls YouTube.
+    // Write the report anyway (see writeReport). Without it the verdict step
+    // cannot tell this quiet week from a broken run, and goes red.
+    const { reportPath } = writeReport(
+      buildNothingDueReport({ nowIso, dryRun, totalVideos: videos.length, maxAgeDays }),
+    );
+    ok(`Everything already fresh — nothing to check. Report written to ${reportPath}.`);
+    process.exit(0);
+  }
 
   // 3. Ask YouTube. getVideoDetails batches 50 ids/call and omits any video the
   //    API would not return — that omission is the "dead" signal.
@@ -172,11 +204,7 @@ async function main() {
       .filter((u) => u.embedding_status === "embeddable" && u.previous !== null)
       .map((u) => ({ id: u.id, youtube_video_id: u.youtube_video_id, was: u.previous })),
   };
-  const here = dirname(fileURLToPath(import.meta.url));
-  const reportDir = resolve(here, "../../tmp");
-  mkdirSync(reportDir, { recursive: true });
-  const reportPath = resolve(reportDir, "video-liveness-report.json");
-  writeFileSync(reportPath, JSON.stringify(report, null, 2));
+  const { reportDir, reportPath } = writeReport(report);
   ok(`Report written to ${reportPath} (${report.dead.length} dead, ${report.newly_blocked.length} newly blocked).`);
 
   // Also emit a reviewable SQL file with just the status changes, for the

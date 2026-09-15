@@ -7,11 +7,53 @@
 // thousands of rows on every pass.
 import { describe, expect, it } from "vitest";
 import {
-  classifyVideo, planLivenessUpdate, groupUpdates, buildLivenessSql, LIVE_STATUSES,
+  classifyVideo, planLivenessUpdate, groupUpdates, buildLivenessSql, buildNothingDueReport,
+  LIVE_STATUSES,
 } from "./videoLiveness.js";
 
 const embeddable = { embeddingStatus: "embeddable" };
 const notEmbeddable = { embeddingStatus: "blocked" };
+
+// The report a run writes when nothing is due. Until 15 Sep 2026 the runner
+// wrote none on that path, and the workflow's verdict step — correctly —
+// failed on the missing file, so every quiet week went red.
+describe("buildNothingDueReport", () => {
+  const nowIso = "2026-09-15T00:00:00.000Z";
+
+  it("writes the same report shape a full run writes, with nothing in it", () => {
+    const r = buildNothingDueReport({ nowIso, dryRun: false, totalVideos: 5559, maxAgeDays: 30 });
+    expect(r.generated_at).toBe(nowIso);
+    expect(r.dead).toEqual([]);
+    expect(r.newly_blocked).toEqual([]);
+    expect(r.recovered).toEqual([]);
+  });
+
+  it("carries exactly the summary keys a full run reports, all zero", () => {
+    // Compared against a NON-empty plan, so an empty object on both sides
+    // cannot satisfy it.
+    const full = planLivenessUpdate(
+      [{ id: 1, youtube_video_id: "a", embedding_status: "embeddable" }],
+      new Map([["a", embeddable]]),
+      nowIso,
+    ).summary;
+    const r = buildNothingDueReport({ nowIso, dryRun: false, totalVideos: 1, maxAgeDays: 30 });
+    expect(Object.keys(full).length).toBeGreaterThan(0);
+    expect(Object.keys(r.summary).sort()).toEqual(Object.keys(full).sort());
+    for (const n of Object.values(r.summary)) expect(n).toBe(0);
+  });
+
+  it("records why nothing was checked, so the summary need not guess", () => {
+    const r = buildNothingDueReport({ nowIso, dryRun: false, totalVideos: 5559, maxAgeDays: 30 });
+    expect(r.nothing_due).toEqual({ total_videos: 5559, max_age_days: 30 });
+  });
+
+  it("passes dry_run through as a real boolean", () => {
+    expect(buildNothingDueReport({ nowIso, dryRun: true, totalVideos: 1, maxAgeDays: 30 }).dry_run)
+      .toBe(true);
+    expect(buildNothingDueReport({ nowIso, dryRun: undefined, totalVideos: 1, maxAgeDays: 30 }).dry_run)
+      .toBe(false);
+  });
+});
 
 describe("classifyVideo", () => {
   it("marks a video the API omitted as unavailable and not alive", () => {
