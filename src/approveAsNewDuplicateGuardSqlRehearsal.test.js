@@ -16,7 +16,9 @@
 // unverified teacher's exact name counted. A stub would encode my reading of
 // that and share its mistakes, which is how an earlier rehearsal in this repo
 // certified a candidate filter the migration had dropped. So the real function
-// runs, with pg_trgm for its fuzzy tier.
+// runs, with pg_trgm for its fuzzy tier -- and the guard is tested in BOTH
+// directions: it must refuse a rank-1 match, and it must not refuse a mere
+// prefix, part or near-spelling of an existing name.
 //
 // WHY THE GRANTS CAN FAIL HERE. The migration DROPs and creates both functions.
 // Production's default privileges grant every created function to anon and
@@ -122,6 +124,7 @@ end $roles$;
 
 create extension if not exists pg_trgm with schema public;
 create schema if not exists auth;
+grant usage on schema auth to anon, authenticated, service_role;
 create or replace function auth.uid() returns uuid language sql stable as $$ select null::uuid $$;
 create or replace function auth.role() returns text language sql stable as $$ select 'service_role'::text $$;
 create or replace function public.is_admin() returns boolean language sql stable as $$ select true $$;
@@ -141,9 +144,12 @@ const FIXTURE = `
 insert into public.institutes_channels (id, name, youtube_channel_id) values
   (1, 'Physics Wallah', 'UC-pw'), (2, 'Competishun', 'UC-competishun');
 
+-- Zubin Mehta is teacher #1 on purpose: a pending MULTI-PERSON proposal carries
+-- his name below. A self-test that simply took the first teacher would run its
+-- group case into that proposal and fail on "names more than one person".
 insert into public.teachers (display_name, verified) values
-  ('Alakh Pandey', true), ('Amit Bijarnia', true), ('Saleem Ahmad', true),
-  ('Neeraj Saini', true), ('Tarun Kumar', false);
+  ('Zubin Mehta', true), ('Alakh Pandey', true), ('Amit Bijarnia', true),
+  ('Saleem Ahmad', true), ('Neeraj Saini', true), ('Tarun Kumar', false);
 
 insert into public.teacher_aliases (teacher_id, alias, alias_type, status)
 select t.id, a.alias, a.alias_type, a.status
@@ -184,7 +190,14 @@ select v.raw, public.normalize_person_name(v.raw), v.n, v.kind
     ('Alakh Pandey', 2, 'single'), ('ABJ Sir', 1, 'single'), ('Saleem Sir', 1, 'single'),
     ('Tarun Kumar Sir', 1, 'single'), ('Vikas Gupta', 1, 'single'), ('NS', 1, 'single'),
     ('Anand Mani', 1, 'single'), ('Dr. Anand Mani', 1, 'single'),
-    ('Mohit Goenka', 1, 'single'), ('Amit & Priya', 1, 'multi-person')
+    ('Mohit Goenka', 1, 'single'), ('Amit & Priya', 1, 'multi-person'),
+    -- Neighbours of Alakh Pandey that are NOT rank-1 matches.
+    ('Alakh', 1, 'single'), ('Pandey', 1, 'single'), ('Alakh Pandy', 1, 'single'),
+    -- New people, for the flags that ride along.
+    ('Nitin Vijay', 1, 'single'), ('Kavya Iyer', 1, 'single'), ('Meera Nair', 1, 'single'),
+    -- A spelling nobody answers to, typed over later with an existing name.
+    ('Zeta Qa Spelling', 1, 'single'),
+    ('Zubin Mehta,', 1, 'multi-person')
   ) as v(raw, n, kind);
 `;
 
@@ -200,10 +213,10 @@ let after; // grants once the migration has run on a world with default privileg
 let countsBeforeMigration;
 let countsAfterMigration;
 
-async function privileges(fn) {
+async function privileges(fn, db = pg) {
   const out = {};
   for (const role of ROLES) {
-    out[role] = (await pg.query("select has_function_privilege($1, $2, 'EXECUTE') as ok", [role, fn])).rows[0].ok;
+    out[role] = (await db.query("select has_function_privilege($1, $2, 'EXECUTE') as ok", [role, fn])).rows[0].ok;
   }
   return out;
 }
@@ -230,21 +243,26 @@ const normalizedOf = async (raw) =>
   (await pg.query("select public.normalize_person_name($1) as n", [raw])).rows[0].n;
 const proposal = async (raw) =>
   (await pg.query("select * from public.teacher_name_proposals where raw_teacher = $1", [raw])).rows[0];
-const teacherIdOf = async (slug) =>
-  (await pg.query("select id from public.teachers where slug = $1", [slug])).rows[0]?.id;
+const teacherBySlug = async (slug) =>
+  (await pg.query("select id, display_name, verified from public.teachers where slug = $1", [slug])).rows[0];
+const teacherIdOf = async (slug) => (await teacherBySlug(slug))?.id;
 
-/** Calls the group function the way the admin panel does; resolves to the error or the result. */
-async function approveGroup(raw, display, acknowledged) {
-  const args = [await normalizedOf(raw), display, false];
-  const sql = acknowledged === undefined
-    ? "select public.approve_faculty_review_group_as_new($1, $2, $3) as r"
-    : "select public.approve_faculty_review_group_as_new($1, $2, $3, $4) as r";
-  if (acknowledged !== undefined) args.push(acknowledged);
+/** Resolves to { result } or { error } instead of throwing. */
+async function attempt(sql, args) {
   try {
-    return { result: (await pg.query(sql, args)).rows[0].r };
+    return { result: (await pg.query(sql, args)).rows[0]?.r };
   } catch (error) {
     return { error };
   }
+}
+
+/** Calls the group function the way the admin panel does. */
+async function approveGroup(raw, display, acknowledged) {
+  const args = [await normalizedOf(raw), display, false];
+  if (acknowledged === undefined) {
+    return attempt("select public.approve_faculty_review_group_as_new($1, $2, $3) as r", args);
+  }
+  return attempt("select public.approve_faculty_review_group_as_new($1, $2, $3, $4) as r", [...args, acknowledged]);
 }
 
 beforeAll(async () => {
@@ -269,6 +287,7 @@ describe("refuses to create a teacher that existing faculty already answer to", 
     ["an unverified teacher's exact name, as create_teacher counts it", "Tarun Kumar Sir", "Tarun Kumar", "tarun-kumar"],
   ])("%s", async (_label, raw, typed, slug) => {
     const start = await counts();
+    const matched = await teacherBySlug(slug);
 
     // The panel's call has three arguments; the default must be "not acknowledged".
     const { error, result } = await approveGroup(raw, typed);
@@ -276,9 +295,9 @@ describe("refuses to create a teacher that existing faculty already answer to", 
     expect(result).toBeUndefined();
     expect(error.code).toBe("23514");
     expect(error.hint).toBe("duplicate_faculty");
-    const matches = JSON.parse(error.detail);
-    expect(matches.map((m) => m.slug)).toContain(slug);
-    expect(error.message).toMatch(/Existing faculty already match/);
+    expect(JSON.parse(error.detail)).toContainEqual({ teacher_id: matched.id, display_name: matched.display_name, slug });
+    // The curator is told WHO, so "a different person?" can be answered.
+    expect(error.message).toContain(`${matched.display_name} (#${matched.id})`);
     // Nothing written: the proposal is still waiting for a decision.
     expect(await counts()).toEqual(start);
     expect((await proposal(raw)).status).toBe("pending");
@@ -301,6 +320,31 @@ describe("refuses to create a teacher that existing faculty already answer to", 
     const id = (await proposal("ABJ Sir")).id;
     await expect(pg.query("select public.approve_proposal_as_new($1, $2, false)", [id, "Zeta Different"]))
       .rejects.toMatchObject({ code: "23514", hint: "duplicate_faculty" });
+  });
+
+  it.each([
+    ["the group function", async () =>
+      pg.query("select public.approve_faculty_review_group_as_new($1, 'Alakh Pandey', false, null)", [await normalizedOf("Alakh Pandey")])],
+    ["the per-proposal function", async () =>
+      pg.query("select public.approve_proposal_as_new($1, null, false, null)", [(await proposal("ABJ Sir")).id])],
+  ])("treats a null acknowledgement as no acknowledgement (%s)", async (_label, call) => {
+    // `not null` is null in SQL: without coalesce a JSON null skipped this
+    // check AND create_teacher's own.
+    const start = await counts();
+    await expect(call()).rejects.toMatchObject({ code: "23514", hint: "duplicate_faculty" });
+    expect(await counts()).toEqual(start);
+  });
+
+  it.each([
+    ["several people", "Amit & Priya", /looks like more than one person/],
+    ["a team", "Physics Department", /looks like a team or department/],
+    ["a blank name", "   ", /display_name is required/],
+  ])("rejects a typed name that could never be created (%s) before asking about duplicates", async (_label, typed, message) => {
+    // "ABJ Sir" matches Amit Bijarnia, so a duplicate refusal was available --
+    // but "create anyway" would then fail on the name itself.
+    const { error } = await approveGroup("ABJ Sir", typed);
+    expect(error?.code).not.toBe("23514");
+    expect(error?.message).toMatch(message);
   });
 });
 
@@ -327,6 +371,22 @@ describe("still creates a genuinely new person without being asked", () => {
     const { result, error } = await approveGroup("NS", "NS");
     expect(error).toBeUndefined();
     expect(result.duplicate_acknowledged).toBe(false);
+  });
+
+  it.each([
+    ["a prefix of an existing name", "Alakh", 3],
+    ["part of an existing name", "Pandey", 4],
+    ["a near-spelling of an existing name", "Alakh Pandy", 5],
+  ])("does not refuse %s, which is a neighbour, not a match", async (_label, name, rank) => {
+    // Non-vacuous: the neighbour really is there, at exactly that rank.
+    const best = (await pg.query(
+      "select min(match_rank)::int as r from public.search_teachers_internal($1, 5, true)", [name])).rows[0].r;
+    expect(best).toBe(rank);
+
+    const { result, error } = await approveGroup(name, name);
+
+    expect(error).toBeUndefined();
+    expect(result.matched_existing).toEqual([]);
   });
 
   it("links every spelling in a group to the one new teacher, and verifies the shared alias", async () => {
@@ -360,6 +420,28 @@ describe("still creates a genuinely new person without being asked", () => {
       "select alias_type, status from public.teacher_aliases where teacher_id = $1", [teacher])).rows)
       .toEqual([{ alias_type: "nickname", status: "verified" }]);
   });
+
+  it.each([
+    ["the per-proposal function", "Nitin Vijay", "nitin-vijay",
+      (id) => pg.query("select public.approve_proposal_as_new($1, null, true)", [id])],
+    ["the group function", "Kavya Iyer", "kavya-iyer",
+      async () => pg.query("select public.approve_faculty_review_group_as_new($1, 'Kavya Iyer', true)", [await normalizedOf("Kavya Iyer")])],
+  ])("creates a verified teacher when asked to, through %s", async (_label, raw, slug, call) => {
+    await call((await proposal(raw)).id);
+    const teacher = await teacherBySlug(slug);
+    expect(teacher.verified).toBe(true);
+    expect((await pg.query(
+      "select alias_type, status from public.teacher_aliases where teacher_id = $1", [teacher.id])).rows)
+      .toEqual([{ alias_type: "full-name", status: "verified" }]);
+  });
+
+  it("reports the acknowledgement it was given, even when nothing matched", async () => {
+    const { result, error } = await attempt(
+      "select public.approve_proposal_as_new($1, null, false, true) as r", [(await proposal("Meera Nair")).id]);
+    expect(error).toBeUndefined();
+    expect(result.duplicate_acknowledged).toBe(true);
+    expect(result.matched_existing).toEqual([]);
+  });
 });
 
 describe("creates a same-name person only when told it is a different person", () => {
@@ -376,6 +458,14 @@ describe("creates a same-name person only when told it is a different person", (
     const note = (await pg.query(
       "select note from public.teacher_proposal_decisions where proposal_id = $1", [row.id])).rows[0].note;
     expect(note).toContain(`Alakh Pandey (#${original})`);
+  });
+
+  it("lists every existing record with that name, so the next decision sees them all", async () => {
+    // Two Alakh Pandeys exist now. A third attempt must name both.
+    const { error } = await attempt(
+      "select public.approve_proposal_as_new($1, 'Alakh Pandey', false) as r", [(await proposal("Zeta Qa Spelling")).id]);
+    expect(error?.hint).toBe("duplicate_faculty");
+    expect(JSON.parse(error.detail).map((m) => m.slug).sort()).toEqual(["alakh-pandey", "alakh-pandey-2"]);
   });
 });
 
@@ -397,16 +487,41 @@ describe("keeps the rest of the baseline behaviour", () => {
       .rejects.toThrow(/no pending proposals/);
   });
 
+  it("still refuses a signed-in user who is not an admin, in each function's own check", async () => {
+    // The group function is executable by `authenticated`; its is_admin() check
+    // is all that stops a signed-in student from creating faculty. Each call is
+    // shaped so that WITHOUT that function's own check it would fail
+    // differently ('no pending proposals' / 'invalid proposal_id').
+    const db = await world();
+    await db.exec(DEFAULT_PRIVILEGES);
+    await db.exec(MIGRATION);
+    await db.exec(`
+      create or replace function public.is_admin() returns boolean language sql stable as $$ select false $$;
+      create or replace function auth.role() returns text language sql stable as $$ select 'authenticated'::text $$;
+    `);
+    await db.exec("set session authorization authenticated");
+    await expect(db.query("select public.approve_faculty_review_group_as_new('nobody here', 'Nobody', false)"))
+      .rejects.toMatchObject({ code: "42501" });
+    await db.exec("reset session authorization");
+    await db.exec("set session authorization service_role");
+    await expect(db.query("select public.approve_proposal_as_new(-1, 'Nobody', false)"))
+      .rejects.toMatchObject({ code: "42501" });
+    await db.exec("reset session authorization");
+    await db.close();
+  }, 120000);
+
   it.each(["approve_proposal_as_new", "approve_faculty_review_group_as_new"])(
     "%s keeps every statement of the baseline body except the ones this migration exists to change",
     (name) => {
       // A re-emitted body is compared line by line, not by signature: the
-      // lesson of the candidate filter 20260908120000 silently dropped.
-      const statements = (sql) => sql.split("\n")
+      // lesson of the candidate filter 20260908120000 silently dropped. Lines
+      // must be present EXACTLY, not as a substring, and block comments are
+      // removed first, so an extended or commented-out check does not count.
+      const statements = (sql) => sql.replace(/\/\*[\s\S]*?\*\//g, "").split("\n")
         .map((l) => l.replace(/--.*$/, "").trim().replace(/\s+/g, " "))
         .filter((l) => l && !/^(CREATE OR REPLACE FUNCTION|LANGUAGE|SET "search_path"|AS \$\$|end; \$\$;)/.test(l));
       const start = MIGRATION.indexOf(`create function public.${name}(`);
-      const created = MIGRATION.slice(start, MIGRATION.indexOf("$fn$;", start));
+      const created = new Set(statements(MIGRATION.slice(start, MIGRATION.indexOf("$fn$;", start))));
       const changed = [
         // the bypass itself
         "v_new := public.create_teacher(coalesce(p_display_name, trim(p.raw_teacher)), '[]'::jsonb, p_verified, true);",
@@ -420,10 +535,9 @@ describe("keeps the rest of the baseline behaviour", () => {
         "declare r record; v_result jsonb; v_teacher_id bigint; v_done int := 0; v_links int := 0;",
         "v_result := public.approve_proposal_as_new(r.id, p_display_name, p_verified);",
       ];
-      const createdText = statements(created).join("\n");
       const missing = statements(baselineFunction(name))
         .filter((line) => !changed.includes(line))
-        .filter((line) => !createdText.includes(line));
+        .filter((line) => !created.has(line));
       expect(missing).toEqual([]);
     },
   );
@@ -458,9 +572,35 @@ describe("grants, on a world with Supabase's default privileges", () => {
 });
 
 describe("the migration's own self-test", () => {
+  const selftestBlock = () =>
+    MIGRATION.slice(MIGRATION.indexOf("do $selftest$"), MIGRATION.indexOf("$selftest$;") + "$selftest$;".length);
+
   it("left nothing behind on the database it ran against", () => {
     expect(countsAfterMigration).toEqual(countsBeforeMigration);
   });
+
+  it("ran on this fixture, whose first teacher's name has a pending multi-person proposal", async () => {
+    expect((await pg.query("select slug from public.teachers order by id limit 1")).rows[0].slug).toBe("zubin-mehta");
+    expect(await proposal("Zubin Mehta,")).toMatchObject({ kind: "multi-person", status: "pending", normalized: "zubin mehta" });
+  });
+
+  it("would have failed on that queue if it had simply taken the first teacher", async () => {
+    // So the teacher choice is what keeps the review queue from deciding
+    // whether the migration applies.
+    const quiet = [
+      "   where not exists (select 1 from public.teacher_name_proposals q",
+      "                      where q.normalized = t.canonical_name",
+      "                        and q.status in ('pending','deferred'))",
+      "     and not public.looks_like_multiple_people(t.display_name)",
+    ].join("\n");
+    const naive = MIGRATION.replace(quiet, "   where not public.looks_like_multiple_people(t.display_name)");
+    expect(naive).not.toBe(MIGRATION);
+
+    const db = await world();
+    await db.exec(DEFAULT_PRIVILEGES);
+    await expect(db.exec(naive)).rejects.toThrow(/names more than one person/);
+    await db.close();
+  }, 120000);
 
   it("fails, and writes nothing, when the functions still bypass the check", async () => {
     // A world where the four-argument functions exist but simply forward to the
@@ -474,7 +614,7 @@ describe("the migration's own self-test", () => {
         language sql as $f$ select public.approve_faculty_review_group_as_new($1, $2, $3) $f$;
     `);
     const start = await counts(db);
-    const block = MIGRATION.slice(MIGRATION.indexOf("do $selftest$"), MIGRATION.indexOf("$selftest$;") + "$selftest$;".length);
+    const block = selftestBlock();
     expect(block).toContain("APPROVE-AS-NEW SELF-TEST FAILED");
 
     await expect(db.exec(block)).rejects.toThrow(/APPROVE-AS-NEW SELF-TEST FAILED/);

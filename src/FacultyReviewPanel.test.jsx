@@ -215,4 +215,73 @@ describe("FacultyReviewPanel", () => {
     expect(await screen.findByText(/Existing faculty already match/)).toBeTruthy();
     expect(screen.queryByRole("button", { name: /different person/i })).toBeNull();
   });
+
+  it("names who matched and links to them, even when they are not among the suggested faculty", async () => {
+    // Typed "Alakh Pandey" over a course credited "ABJ Sir": the database
+    // refuses on the typed name, and Alakh Pandey is not in this group's
+    // candidates, so without this the only ways out were "create anyway" --
+    // the 8 Sep duplicate -- or rejecting the name.
+    mocks.action
+      .mockRejectedValueOnce(Object.assign(
+        new Error('Existing faculty already match "Alakh Pandey": Alakh Pandey (#29). Link this name to them, or confirm it is a different person to create a separate record.'),
+        { code: "23514", hint: "duplicate_faculty", details: '[{"slug": "alakh-pandey", "teacher_id": 29, "display_name": "Alakh Pandey"}]' },
+      ))
+      .mockResolvedValueOnce({ ok: true });
+    render(<FacultyReviewPanel />);
+    fireEvent.click(screen.getByRole("button", { name: /ABJ Sir/i }));
+    fireEvent.change(screen.getByLabelText(/Create as a new person/i), { target: { value: "Alakh Pandey" } });
+    fireEvent.click(screen.getByRole("button", { name: /Create separately/i }));
+
+    const link = await screen.findByRole("button", { name: "Link to Alakh Pandey" });
+    expect(screen.getByRole("alert").textContent).toContain("Alakh Pandey (#29)");
+    fireEvent.click(link);
+    await waitFor(() => expect(mocks.action).toHaveBeenLastCalledWith(
+      "approve_group_as_existing",
+      { p_normalized: "abj", p_teacher_id: 29, p_add_alias: true },
+    ));
+  });
+
+  it("shows the refusal for a name typed with a trailing space", async () => {
+    // The call sends the trimmed name, so the alert must compare trimmed too,
+    // or a refusal would vanish without a word.
+    mocks.action.mockRejectedValueOnce(duplicateRefusal());
+    render(<FacultyReviewPanel />);
+    fireEvent.click(screen.getByRole("button", { name: /ABJ Sir/i }));
+    fireEvent.change(screen.getByLabelText(/Create as a new person/i), { target: { value: "ABJ Sir " } });
+    fireEvent.click(screen.getByRole("button", { name: /Create separately/i }));
+
+    expect(await screen.findByRole("button", { name: /different person/i })).toBeTruthy();
+  });
+
+  it("never shows one group's refusal under another group with the same typed name", async () => {
+    // Confirming there would create a teacher for the FIRST group's courses.
+    const OTHER = {
+      normalized: "abj two", kind: "single", total_occurrences: 1,
+      variants: [{ proposal_id: 3, raw_teacher: "A.B.J. Sir", occurrences: 1 }],
+      candidates: [],
+    };
+    mocks.review = { groups: [SINGLE, OTHER], loading: false, error: null, unavailable: false, reload };
+    mocks.action.mockRejectedValueOnce(duplicateRefusal());
+    render(<FacultyReviewPanel />);
+    fireEvent.click(screen.getByRole("button", { name: /ABJ Sir \(3\)/ }));
+    fireEvent.click(screen.getByRole("button", { name: /Create separately/i }));
+    await screen.findByRole("button", { name: /different person/i });
+
+    fireEvent.click(screen.getByRole("button", { name: /A\.B\.J\. Sir/ }));
+    fireEvent.change(screen.getByLabelText(/Create as a new person/i), { target: { value: "ABJ Sir" } });
+
+    expect(screen.queryByRole("button", { name: /different person/i })).toBeNull();
+  });
+
+  it("holds the name still while a request is out, so a refusal cannot land on an edited name", async () => {
+    let settle;
+    mocks.action.mockImplementationOnce(() => new Promise((resolve) => { settle = resolve; }));
+    render(<FacultyReviewPanel />);
+    fireEvent.click(screen.getByRole("button", { name: /ABJ Sir/i }));
+    fireEvent.click(screen.getByRole("button", { name: /Create separately/i }));
+
+    expect(screen.getByLabelText(/Create as a new person/i).disabled).toBe(true);
+    settle({ ok: true });
+    await waitFor(() => expect(reload).toHaveBeenCalled());
+  });
 });

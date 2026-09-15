@@ -47,7 +47,18 @@ export default function FacultyReviewPanel() {
       await reload();
     } catch (err) {
       if (isDuplicateFacultyRefusal(err) && !args.p_duplicate_acknowledged) {
-        setDuplicate({ fn, args, success, text: err.message });
+        // The database lists who matched in details, as JSON. Those are the
+        // people the curator may mean, whether or not the queue suggested them.
+        let matches = [];
+        try {
+          const parsed = JSON.parse(err.details ?? "[]");
+          if (Array.isArray(parsed)) {
+            matches = parsed.filter((m) => Number.isInteger(m?.teacher_id) && typeof m?.display_name === "string");
+          }
+        } catch {
+          matches = [];
+        }
+        setDuplicate({ fn, args, success, text: err.message, matches });
       } else {
         setMessage({ ok: false, text: err.message });
       }
@@ -212,6 +223,9 @@ export default function FacultyReviewPanel() {
                           <input
                             id={`new-faculty-${group.normalized}`}
                             value={displayName}
+                            // Held still while a request is out: a refusal is shown only
+                            // for the name it refused, so an edit mid-flight would hide it.
+                            disabled={busy}
                             onChange={(e) => setDisplayName(e.target.value)}
                             className={`min-h-11 min-w-0 flex-1 rounded-xl border ${t.border} ${t.input} ${t.text} px-3 text-sm outline-none focus:ring-2 focus:ring-accent-line`}
                           />
@@ -234,7 +248,29 @@ export default function FacultyReviewPanel() {
                           // else. Amber pair, deliberately theme-independent, as above.
                           <div role="alert" className="mt-3 rounded-lg bg-amber-50 p-3 text-xs text-amber-900">
                             <p>{duplicate.text}</p>
-                            <p className="mt-1">If it is the same person, link the name to them instead.</p>
+                            {duplicate.matches.length > 0 ? (
+                              <>
+                                <p className="mt-2">If it is the same person, link the name to them:</p>
+                                <div className="mt-1 flex flex-wrap gap-2">
+                                  {duplicate.matches.map((match) => (
+                                    <button
+                                      key={match.teacher_id}
+                                      type="button" disabled={busy}
+                                      onClick={() => act(
+                                        "approve_group_as_existing",
+                                        { p_normalized: group.normalized, p_teacher_id: match.teacher_id, p_add_alias: true },
+                                        `Linked every variant to ${match.display_name}.`,
+                                      )}
+                                      className="min-h-11 rounded-xl border border-amber-300 px-4 text-sm font-medium text-amber-900 disabled:opacity-40"
+                                    >
+                                      Link to {match.display_name}
+                                    </button>
+                                  ))}
+                                </div>
+                              </>
+                            ) : (
+                              <p className="mt-1">If it is the same person, link the name to them instead.</p>
+                            )}
                             <button
                               type="button" disabled={busy}
                               onClick={() => act(
@@ -242,7 +278,7 @@ export default function FacultyReviewPanel() {
                                 { ...duplicate.args, p_duplicate_acknowledged: true },
                                 duplicate.success,
                               )}
-                              className="mt-2 min-h-11 rounded-xl border border-amber-300 bg-white px-4 text-sm font-medium text-amber-900 disabled:opacity-40"
+                              className="mt-2 min-h-11 rounded-xl border border-amber-300 px-4 text-sm font-medium text-amber-900 disabled:opacity-40"
                             >
                               Yes, a different person — create anyway
                             </button>

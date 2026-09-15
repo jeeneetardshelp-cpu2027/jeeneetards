@@ -33,6 +33,12 @@
 -- WHAT CHANGES
 --   * approve_proposal_as_new checks the name being created AND the spelling
 --     the courses carry (raw_teacher). create_teacher only ever saw the first.
+--   * Only an explicit true acknowledges. A null counts as no acknowledgement;
+--     `not null` is null in SQL, which would otherwise skip this check and
+--     create_teacher's own.
+--   * A name create_teacher would reject anyway -- blank, several people, a
+--     team -- is rejected first, in create_teacher's own words, so the panel
+--     never asks the curator to confirm something that cannot be created.
 --   * approve_faculty_review_group_as_new passes the flag to that check, which
 --     runs on the group's first proposal and aborts the whole group when it
 --     refuses. The first spelling stands for all of them: the scan stores
@@ -40,8 +46,8 @@
 --     on that same normalisation.
 --   * A refusal is errcode check_violation (23514) with hint
 --     'duplicate_faculty' and the matches as JSON in detail, so the panel can
---     tell it from every other failure. Nothing is written; the proposal stays
---     pending.
+--     tell it from every other failure and offer to link to each match.
+--     Nothing is written; the proposal stays pending.
 --   * An acknowledged creation names the faculty it was created beside in the
 --     decision log's note. Both results report duplicate_acknowledged and
 --     matched_existing in place of the dead 'similar_existing' key.
@@ -59,16 +65,19 @@
 -- The verify block checks has_function_privilege here, on the real database,
 -- which is the only place those defaults apply.
 --
--- DEPLOY ORDER DOES NOT MATTER. PostgREST resolves the panel's existing
--- three-argument call to the new function through the default. The panel sends
--- p_duplicate_acknowledged only when retrying a refusal, which the old
--- function never produces.
+-- DEPLOY ORDER. Nothing breaks in either order. PostgREST resolves the panel's
+-- existing three-argument call to the new function through the default, and
+-- the new panel sends p_duplicate_acknowledged only when retrying this
+-- refusal, which the old function never produces. But until the panel on
+-- `release` has this change, a genuinely different person who shares a name
+-- cannot be confirmed from the panel. Ship the panel before, or with, the push.
 --
 -- THE SELF-TEST refuses a matching spelling, a matching name and a matching
--- group, and creates only when acknowledged -- against a real teacher, inside
--- subtransactions that are rolled back -- then checks nothing was left behind.
--- It consumes a few identity values (sequences do not roll back); it writes no
--- rows.
+-- group, and creates only when acknowledged. It runs against a real teacher
+-- whose name has no pending or deferred proposal, so whatever happens to be in
+-- the review queue cannot decide its outcome, inside subtransactions that are
+-- rolled back, then checks nothing was left behind. It consumes a few identity
+-- values (sequences do not roll back); it writes no rows.
 -- ============================================================================
 
 do $preflight$
@@ -87,7 +96,9 @@ begin
      or to_regprocedure('public.search_teachers_internal(text,integer,boolean)') is null
      or to_regprocedure('public.approve_proposal_as_existing(bigint,bigint,boolean)') is null
      or to_regprocedure('public.add_teacher_alias(bigint,text,text,boolean)') is null
-     or to_regprocedure('public.log_proposal_decision(bigint,text,text,bigint[],text)') is null then
+     or to_regprocedure('public.log_proposal_decision(bigint,text,text,bigint[],text)') is null
+     or to_regprocedure('public.looks_like_multiple_people(text)') is null
+     or to_regprocedure('public.looks_like_organization(text)') is null then
     raise exception 'REFUSING: a function these approvals call is missing or has a different signature';
   end if;
 end
@@ -107,6 +118,7 @@ set search_path to ''
 as $fn$
 declare p record; v_new jsonb; v_tid bigint; v_links int := 0;
         v_name text; v_matches jsonb; v_list text; v_note text;
+        v_ack boolean := coalesce(p_duplicate_acknowledged, false);
 begin
   if not (public.is_admin() or auth.role() = 'service_role'
           or session_user in ('postgres','supabase_admin')) then
@@ -124,8 +136,17 @@ begin
 
   v_name := coalesce(p_display_name, trim(p.raw_teacher));
 
-  -- create_teacher's own test (match_rank 1: an exact display name or a
-  -- verified alias), run on the name being created AND on the spelling the
+  -- create_teacher's own refusals, first and in its own words, so a name that
+  -- could never be created is not offered as "a different person" to confirm.
+  if public.normalize_person_name(v_name) is null then
+    raise exception 'display_name is required'; end if;
+  if public.looks_like_multiple_people(v_name) then
+    raise exception 'display_name "%" looks like more than one person', v_name; end if;
+  if public.looks_like_organization(v_name) then
+    raise exception 'display_name "%" looks like a team or department, not a person', v_name; end if;
+
+  -- create_teacher's own duplicate test (match_rank 1: an exact display name or
+  -- a verified alias), run on the name being created AND on the spelling the
   -- courses carry.
   select jsonb_agg(jsonb_build_object('teacher_id', m.teacher_id, 'display_name', m.display_name,
                                       'slug', m.slug) order by m.teacher_id),
@@ -136,7 +157,7 @@ begin
             cross join lateral public.search_teachers_internal(n.name, 5, true) s
            where s.match_rank = 1) m;
 
-  if v_matches is not null and not p_duplicate_acknowledged then
+  if v_matches is not null and not v_ack then
     raise exception 'Existing faculty already match "%": %. Link this name to them, or confirm it is a different person to create a separate record.', v_name, v_list
       using errcode = 'check_violation', hint = 'duplicate_faculty', detail = v_matches::text;
   end if;
@@ -144,7 +165,7 @@ begin
     v_note := format('Created as a different person beside existing faculty: %s', v_list);
   end if;
 
-  v_new := public.create_teacher(v_name, '[]'::jsonb, p_verified, p_duplicate_acknowledged);
+  v_new := public.create_teacher(v_name, '[]'::jsonb, p_verified, v_ack);
   v_tid := (v_new->>'teacher_id')::bigint;
 
   if coalesce(p_display_name, '') <> '' and p_display_name <> p.raw_teacher then
@@ -166,7 +187,7 @@ begin
 
   return jsonb_build_object('proposal_id', p_proposal_id, 'teacher_id', v_tid,
                             'playlists_linked', v_links,
-                            'duplicate_acknowledged', p_duplicate_acknowledged,
+                            'duplicate_acknowledged', v_ack,
                             'matched_existing', coalesce(v_matches, '[]'::jsonb));
 end; $fn$;
 
@@ -197,7 +218,7 @@ begin
       -- scan_free_text_teachers stores normalize_person_name(raw_teacher) as
       -- normalized, and the check matches on that same normalisation, so
       -- every spelling in a group matches exactly the same faculty.
-      v_result := public.approve_proposal_as_new(r.id, p_display_name, p_verified, p_duplicate_acknowledged);
+      v_result := public.approve_proposal_as_new(r.id, p_display_name, p_verified, coalesce(p_duplicate_acknowledged, false));
       v_teacher_id := (v_result->>'teacher_id')::bigint;
       v_matches := v_result->'matched_existing';
     else
@@ -210,7 +231,7 @@ begin
 
   return jsonb_build_object('normalized', p_normalized, 'variants_resolved', v_done,
     'teacher_id', v_teacher_id, 'playlists_linked', v_links,
-    'duplicate_acknowledged', p_duplicate_acknowledged,
+    'duplicate_acknowledged', coalesce(p_duplicate_acknowledged, false),
     'matched_existing', coalesce(v_matches, '[]'::jsonb));
 end; $fn$;
 
@@ -278,9 +299,18 @@ declare
   v_hint text;
   v_result jsonb;
 begin
-  select t.id, t.display_name into v_teacher from public.teachers t order by t.id limit 1;
+  -- A teacher whose name has no pending or deferred proposal, so case 3's group
+  -- call meets only the proposal this block inserts, whatever is in the queue.
+  select t.id, t.display_name into v_teacher
+    from public.teachers t
+   where not exists (select 1 from public.teacher_name_proposals q
+                      where q.normalized = t.canonical_name
+                        and q.status in ('pending','deferred'))
+     and not public.looks_like_multiple_people(t.display_name)
+     and not public.looks_like_organization(t.display_name)
+   order by t.id limit 1;
   if not found then
-    raise exception 'REFUSING: there is no teacher to test the duplicate check against';
+    raise exception 'REFUSING: no teacher has a name free of pending proposals to test the duplicate check against';
   end if;
   select count(*) into v_teachers from public.teachers;
   select count(*) into v_proposals from public.teacher_name_proposals;
