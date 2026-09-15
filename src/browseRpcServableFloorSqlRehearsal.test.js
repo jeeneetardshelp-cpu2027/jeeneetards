@@ -55,6 +55,13 @@ const HINGLISH =
 // The rescue floor, moved into the shared tokeniser so the browse matchers get
 // what universal_search has had since 20260907093000. Without it "ac ka matlab"
 // reduced to ["ac"] and /browse answered 0 rows while /search answered 26.
+// The anchor floor, and the migration that gives the browse matchers the same
+// needle selection universal_search has had since it. Both are in the chain, so
+// leaving them out would rehearse a database nobody runs.
+const ANCHOR_FLOOR =
+  "supabase/migrations/20260907170000_universal_search_anchor_floor.sql";
+const BROWSE_ANCHOR =
+  "supabase/migrations/20260908140000_browse_matchers_anchor_floor.sql";
 const RESCUE =
   "supabase/migrations/20260907200000_shared_tokeniser_rescue_floor.sql";
 const CORRECTION =
@@ -235,7 +242,9 @@ beforeAll(async () => {
   await pg.exec(readFileSync(OTHER_FLOOR, "utf8"));
   await pg.exec(readFileSync(HINGLISH, "utf8"));
   await pg.exec(readFileSync(CORRECTION, "utf8"));
+  await pg.exec(readFileSync(ANCHOR_FLOOR, "utf8"));
   await pg.exec(readFileSync(RESCUE, "utf8"));
+  await pg.exec(readFileSync(BROWSE_ANCHOR, "utf8"));
 }, 120000);
 
 const ids = async (fn, q) =>
@@ -246,8 +255,10 @@ describe("browse matchers: the servable floor", () => {
   // guard tested `qlen`, the length of the whole string, so only the first was
   // refused -- and even that one only because qlen happened to be 2.
   it.each([
-    ["ac", "one token, 2 characters"],
-    ["3d", "one token, 2 characters"],
+    // "ac" and "3d" USED to be here, refused on the length of their typed
+    // token. 20260908140000 gives these matchers the anchor floor, so both now
+    // reach their alias expansion and answer -- see the block at the end of
+    // this file. What stays refused is a query with no anchor anywhere.
     ["p c", "two 1-character tokens, 3 characters overall"],
     ["a b c", "three 1-character tokens, 5 characters overall"],
     // "p and c" USED to be here. 20260907200000 moved the rescue floor into the
@@ -392,13 +403,16 @@ describe("browse matchers: the servable floor", () => {
       expect(rows[0].ok).toBe(true);
     });
 
-    it("did not manufacture an anchor for a query that never had one", async () => {
-      // The floor from 20260907160000 must still refuse these. If the rescue
-      // had been written to fire whenever filtering shortened q_long, "p c"
-      // would come back as ["p","c"] and still be refused -- but "ac" would
-      // come back servable on a two-character needle, which is the regression
-      // this asserts against.
-      for (const q of ["ac", "3d", "p c", "a b c"]) {
+    it("does not manufacture an anchor for a query that never had one", async () => {
+      // A query whose every token is one character has nothing to search on
+      // and no alias to borrow one from, so search_anchor returns null and both
+      // matchers return before scanning.
+      //
+      // "ac" and "3d" are deliberately NOT in this list any more. They have two
+      // characters and an alias, and since 20260908140000 they answer through
+      // it. The distinction this test now draws is "no anchor anywhere" rather
+      // than "the typed token is short", which is the whole change.
+      for (const q of ["p c", "a b c", "p n c"]) {
         expect(await ids("search_video_ids", q)).toEqual([]);
         expect(await ids("search_playlist_ids", q)).toEqual([]);
       }
@@ -427,5 +441,71 @@ describe("browse matchers: the servable floor", () => {
     expect(rows, "the kinematics fixture is missing").toHaveLength(1);
     expect(await ids("search_video_ids", "kinematics")).toContain(rows[0].id);
     expect(await ids("search_playlist_ids", "kinematics")).toContain(7);
+  });
+
+  // 20260908140000: the browse matchers pick their needle the way
+  // universal_search has since 20260907170000 -- typed content anchor if it
+  // clears the floor, else the alias expansion's anchor, else refuse.
+  describe("the anchor floor on the browse matchers", () => {
+    it("answers \"ac\" through its alias, where a length rule refused it", async () => {
+      // The split this closes. Measured on production 8 Sep: /search returned
+      // 33 rows for "ac" with Alternating Current as row 1, while /browse
+      // returned 0 -- fast, because it refused before the alias pass ran.
+      const videos = await ids("search_video_ids", "ac");
+      const playlists = await ids("search_playlist_ids", "ac");
+      expect(videos.length + playlists.length).toBeGreaterThan(0);
+
+      // And specifically the aliased chapter, not some incidental "ac" prefix
+      // match -- otherwise this passes on a fixture that proves nothing.
+      const { rows } = await pg.query(
+        `select id from public.videos where title = 'Alternating Current - One Shot'`,
+      );
+      expect(rows, "the Alternating Current fixture is missing").toHaveLength(1);
+      expect(videos).toContain(rows[0].id);
+    });
+
+    it("scans on the alias anchor, not on the stopword the raw tokens offer", async () => {
+      // "p and c" is why this is an anchor rule and not a length rule. Its
+      // typed content anchor is "c", so the length rule let it through on the
+      // raw fallback "and" -- 1328 of 5533 production titles -- and it measured
+      // 3.1s against a ~3.2s statement timeout, flipping to 500 under load.
+      // search_anchor passes over "and" and takes the expansion's anchor.
+      const { rows } = await pg.query(
+        `select public.search_anchor(
+                  public.search_token_anchor(public.search_content_tokens(t.q_tokens)),
+                  ta.q_long,
+                  t.q_long) as anchor
+           from public.search_query_tokens('p and c') t
+           cross join lateral public.search_query_tokens(
+             public.search_expand_aliases(t.q)) ta`,
+      );
+      // "combinations", not "permutations": both are twelve characters, and
+      // search_token_anchor breaks ties alphabetically so one query always
+      // produces one plan. Either is selective; the point is that neither is
+      // "and".
+      expect(rows[0].anchor).toBe("combinations");
+      expect(rows[0].anchor).not.toBe("and");
+    });
+
+    it("keeps the ranking and the cap both matchers' clients depend on", async () => {
+      // Re-emitting a body is how features get silently dropped, which is what
+      // src/searchFeatureCarryOverSqlContract.test.js exists for. These two are
+      // asserted here as well because the failure is invisible at the UI:
+      // usePlaylistBrowse reads array position AS relevance, and fetches the
+      // whole set in one request on the strength of the cap.
+      for (const fn of ["search_video_ids", "search_playlist_ids"]) {
+        const { rows } = await pg.query(
+          `select pg_get_functiondef(('public.' || $1 || '(text)')::regprocedure) as src`,
+          [fn],
+        );
+        expect(rows[0].src, `${fn} lost its relevance ordering`)
+          .toMatch(/order by public\.search_rank_aliased/i);
+        expect(rows[0].src, `${fn} lost the 500-id cap`).toMatch(/limit\s+500/i);
+        // And the rule it replaced is gone rather than left in front of it,
+        // where it would veto every alias anchor.
+        expect(rows[0].src, `${fn} still calls search_is_servable`)
+          .not.toMatch(/search_is_servable/);
+      }
+    });
   });
 });
