@@ -134,6 +134,54 @@ describe("course overview truthfulness", () => {
   });
 });
 
+// The site already owns /faculty/:slug pages, and until now the watch page
+// credited a teacher it had a page for without ever linking to it — the
+// crawler saw "Teacher: Mahendra Singh" with no href and a Person node with no
+// url, while /faculty/mahendra-singh listed his nine courses.
+describe("the teacher credit reaches the faculty page", () => {
+  const lessons = [{ id: 1, videoId: "video-1", position: 1 }];
+
+  const show = (overrides = {}) => {
+    const { course } = mapCourseDetail(playlist(), [row(1, 1)]);
+    return render(
+      <MemoryRouter>
+        <ThemeProvider>
+          <CourseOverview
+            course={{ ...course, ...overrides }}
+            lessons={lessons}
+            onStart={() => {}}
+          />
+        </ThemeProvider>
+      </MemoryRouter>,
+    );
+  };
+
+  it("links the credit the student reads, not the registry's display name", () => {
+    show({ teacherSlug: "amit-bijarnia" });
+    // The row is credited "ABJ Sir"; the faculty row behind it is Amit
+    // Bijarnia. 94 courses differ like this, and the visible text has to stay
+    // the credit — only the destination knows the display name.
+    const link = screen.getByRole("link", { name: "View all courses by ABJ Sir" });
+    expect(link.getAttribute("href")).toBe("/faculty/amit-bijarnia");
+    expect(screen.getByText("ABJ Sir").tagName).toBe("A");
+  });
+
+  // 128 courses carry a free-text teacher with no slugged registry row behind
+  // them (measured 2026-09-08; courseTeacherSlug.js owns the counts).
+  it.each([["no teacher resolved", null], ["the field is absent", undefined]])(
+    "leaves the credit as plain text when %s",
+    (_label, teacherSlug) => {
+      show({ teacherSlug });
+      expect(screen.getByText("ABJ Sir").tagName).toBe("SPAN");
+      expect(screen.queryByRole("link", { name: /ABJ Sir/ })).toBeNull();
+      // and the institute beside it still links, so the fallback is the
+      // teacher's alone.
+      expect(screen.getByRole("link", { name: "View all courses from Competishun" })
+        .getAttribute("href")).toBe("/browse?channel=81");
+    },
+  );
+});
+
 describe("course progress", () => {
   beforeEach(() => localStorage.clear());
 
