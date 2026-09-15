@@ -94,8 +94,20 @@
       "file": "20260908110000_classify_neet_2025_papers.sql"
     },
     {
+      "version": "20260908120000",
+      "file": "20260908120000_queue_self_named_channel_signal.sql"
+    },
+    {
       "version": "20260908140000",
       "file": "20260908140000_browse_matchers_anchor_floor.sql"
+    },
+    {
+      "version": "20260908150000",
+      "file": "20260908150000_universal_search_second_anchor.sql"
+    },
+    {
+      "version": "20260915100000",
+      "file": "20260915100000_restore_review_queue_grants.sql"
     }
   ]
 }
