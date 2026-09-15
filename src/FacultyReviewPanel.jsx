@@ -18,6 +18,13 @@ function channelsText(context) {
     + (channels.length > 3 ? ` +${channels.length - 3} more` : "");
 }
 
+// 20260915130000: approving a name "as new" that existing faculty already answer
+// to is refused with check_violation and this hint, unless the call says it is a
+// different person. Told apart by code and hint, never by the wording.
+function isDuplicateFacultyRefusal(err) {
+  return err?.code === "23514" && err?.hint === "duplicate_faculty";
+}
+
 export default function FacultyReviewPanel() {
   const { t } = useTheme();
   const { groups, loading, error, unavailable, reload } = useFacultyReview();
@@ -26,16 +33,35 @@ export default function FacultyReviewPanel() {
   const [displayName, setDisplayName] = useState("");
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState(null);
+  // The refused "create separately" call, kept so the curator can say this is a
+  // different person. Shown only while the group and the typed name still match
+  // what was refused.
+  const [duplicate, setDuplicate] = useState(null);
 
   const act = async (fn, args, success) => {
-    setBusy(true); setMessage(null);
+    setBusy(true); setMessage(null); setDuplicate(null);
     try {
       await runFacultyReviewAction(fn, args);
       setMessage({ ok: true, text: success });
       setActive(null); setSelected([]); setDisplayName("");
       await reload();
     } catch (err) {
-      setMessage({ ok: false, text: err.message });
+      if (isDuplicateFacultyRefusal(err) && !args.p_duplicate_acknowledged) {
+        // The database lists who matched in details, as JSON. Those are the
+        // people the curator may mean, whether or not the queue suggested them.
+        let matches = [];
+        try {
+          const parsed = JSON.parse(err.details ?? "[]");
+          if (Array.isArray(parsed)) {
+            matches = parsed.filter((m) => Number.isInteger(m?.teacher_id) && typeof m?.display_name === "string");
+          }
+        } catch {
+          matches = [];
+        }
+        setDuplicate({ fn, args, success, text: err.message, matches });
+      } else {
+        setMessage({ ok: false, text: err.message });
+      }
     } finally {
       setBusy(false);
     }
@@ -197,6 +223,9 @@ export default function FacultyReviewPanel() {
                           <input
                             id={`new-faculty-${group.normalized}`}
                             value={displayName}
+                            // Held still while a request is out: a refusal is shown only
+                            // for the name it refused, so an edit mid-flight would hide it.
+                            disabled={busy}
                             onChange={(e) => setDisplayName(e.target.value)}
                             className={`min-h-11 min-w-0 flex-1 rounded-xl border ${t.border} ${t.input} ${t.text} px-3 text-sm outline-none focus:ring-2 focus:ring-accent-line`}
                           />
@@ -212,6 +241,49 @@ export default function FacultyReviewPanel() {
                             Create separately
                           </button>
                         </div>
+                        {duplicate?.args.p_normalized === group.normalized
+                          && duplicate.args.p_display_name === displayName.trim() && (
+                          // The database found existing faculty who already answer
+                          // to this name. Only the curator can say it is somebody
+                          // else. Amber pair, deliberately theme-independent, as above.
+                          <div role="alert" className="mt-3 rounded-lg bg-amber-50 p-3 text-xs text-amber-900">
+                            <p>{duplicate.text}</p>
+                            {duplicate.matches.length > 0 ? (
+                              <>
+                                <p className="mt-2">If it is the same person, link the name to them:</p>
+                                <div className="mt-1 flex flex-wrap gap-2">
+                                  {duplicate.matches.map((match) => (
+                                    <button
+                                      key={match.teacher_id}
+                                      type="button" disabled={busy}
+                                      onClick={() => act(
+                                        "approve_group_as_existing",
+                                        { p_normalized: group.normalized, p_teacher_id: match.teacher_id, p_add_alias: true },
+                                        `Linked every variant to ${match.display_name}.`,
+                                      )}
+                                      className="min-h-11 rounded-xl border border-amber-300 px-4 text-sm font-medium text-amber-900 disabled:opacity-40"
+                                    >
+                                      Link to {match.display_name}
+                                    </button>
+                                  ))}
+                                </div>
+                              </>
+                            ) : (
+                              <p className="mt-1">If it is the same person, link the name to them instead.</p>
+                            )}
+                            <button
+                              type="button" disabled={busy}
+                              onClick={() => act(
+                                duplicate.fn,
+                                { ...duplicate.args, p_duplicate_acknowledged: true },
+                                duplicate.success,
+                              )}
+                              className="mt-2 min-h-11 rounded-xl border border-amber-300 px-4 text-sm font-medium text-amber-900 disabled:opacity-40"
+                            >
+                              Yes, a different person — create anyway
+                            </button>
+                          </div>
+                        )}
                       </div>
                     )}
 
