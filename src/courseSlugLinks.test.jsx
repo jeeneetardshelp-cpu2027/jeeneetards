@@ -26,7 +26,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { TopRated } from "./HomeSections.jsx";
 import { ThemeProvider } from "./theme.jsx";
 import { useCourseMetadata } from "./PageMetadata.jsx";
-import { renderBrowseDirectoryBody } from "../ogInject.js";
+import { browseDirectorySchemas, renderBrowseDirectoryBody, renderFacultyBody } from "../ogInject.js";
 
 const LATIN = {
   id: 398,
@@ -78,6 +78,60 @@ describe("the edge's browse directory body", () => {
 
   it("keeps the id-only address for a title with no ASCII", () => {
     expect(body).toContain('<a href="/course/212">');
+  });
+});
+
+// The two edge emitters that still spent a redirect on every course. Both were
+// found live on 15 Sep 2026: /browse's ItemList listed all 490 courses by bare
+// id while the SAME page's HTML links above were slugged, and every faculty
+// profile's course list was bare (159 redirecting links on six profiles).
+describe("the edge's browse ItemList", () => {
+  const items = browseDirectorySchemas([LATIN, DEVANAGARI])[0].schema.itemListElement;
+  const paths = items.map((item) => new URL(item.url).pathname);
+
+  it("lists each course by its canonical slugged address", () => {
+    expect(paths[0]).toBe("/course/398/rectilinear-motion-kinematics");
+  });
+
+  it("keeps the id-only address for a title with no ASCII", () => {
+    expect(paths[1]).toBe("/course/212");
+  });
+
+  // The regression that shipped: two emitters on one page, disagreeing.
+  it("names exactly the addresses the same page's HTML links", () => {
+    const body = renderBrowseDirectoryBody(
+      { description: "Every free course." },
+      { courses: [LATIN, DEVANAGARI] },
+    );
+    const hrefs = body.split('<a href="').slice(1)
+      .map((part) => part.slice(0, part.indexOf('"')))
+      .filter((href) => href.startsWith("/course/"));
+    expect(paths).toEqual(hrefs);
+  });
+});
+
+describe("the edge's faculty profile body", () => {
+  const body = renderFacultyBody(
+    {
+      display_name: "A. Sharma",
+      aliases: [],
+      courses: [
+        { playlist_id: 398, title: LATIN.title, subject: "Physics", role: "instructor" },
+        { playlist_id: 212, title: DEVANAGARI.title },
+      ],
+    },
+    { description: "Faculty profile." },
+    null,
+  );
+
+  it("links each course by its canonical slugged address", () => {
+    expect(body).toContain('<a href="/course/398/rectilinear-motion-kinematics">');
+    expect(body).not.toContain('href="/course/398"');
+  });
+
+  it("keeps the id-only address for a title with no ASCII", () => {
+    expect(body).toContain('<a href="/course/212">');
+    expect(body).not.toContain("%");
   });
 });
 

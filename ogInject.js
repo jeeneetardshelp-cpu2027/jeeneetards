@@ -439,7 +439,11 @@ export function browseDirectorySchemas(courses = []) {
       .filter((course) => course?.id && course?.title)
       .map((course, index) => ({
         title: course.title,
-        url: `/course/${encodeURIComponent(course.id)}`,
+        // The same address the directory's HTML links below and the sitemap
+        // lists. This was the bare id, so the live /browse page (15 Sep 2026)
+        // gave Google all 490 courses two ways at once: slugged in its links,
+        // and bare -- every one a 308 -- in this ItemList.
+        url: canonicalCoursePath(course.id, course.title),
         position: index + 1,
       })),
   );
@@ -999,7 +1003,12 @@ export function renderFacultyBody(profile, meta, guide = getFacultyGuide(profile
       .filter(Boolean)
       .map(escapeHtml)
       .join(" - ");
-    return `<li><a href="/course/${encodeURIComponent(course.playlist_id)}">` +
+    // Canonical address, not the bare id, for the reason renderBrowseDirectoryBody
+    // gives: every course on a faculty page cost a crawler a 308 to the slugged
+    // URL (15 Sep 2026: 159 redirecting links across six sampled profiles). The
+    // title is already required by the filter above, and canonicalCoursePath
+    // keeps a Devanagari title on its bare id, which is its canonical address.
+    return `<li><a href="${escapeHtml(canonicalCoursePath(course.playlist_id, course.title))}">` +
       `${escapeHtml(course.title)}</a>${details ? ` (${details})` : ""}</li>`;
   }).join("");
   const facts = (guide?.facts ?? []).map((fact) =>

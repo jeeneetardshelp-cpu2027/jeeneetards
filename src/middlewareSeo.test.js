@@ -623,12 +623,17 @@ describe("edge-rendered discovery landings", () => {
     expect(html).toContain('<a href="/terms">Terms</a>');
     expect(html).toContain('<a href="/privacy">Privacy</a>');
     expect(html).toContain('data-schema-key="ItemList"');
+    // The ItemList names the SAME addresses as the links above. These two
+    // assertions used to pin the bare id, so the page's JSON-LD contradicted its
+    // own HTML -- and the sitemap -- on every course, with a 308 behind each.
     expect(html).toContain(
-      '"url":"https://www.jeeneetard.com/course/5"',
+      '"url":"https://www.jeeneetard.com/course/5/kinematics"',
     );
     expect(html).toContain(
-      '"url":"https://www.jeeneetard.com/course/8"',
+      '"url":"https://www.jeeneetard.com/course/8/newton-s-laws-of-motion"',
     );
+    expect(html).not.toContain('"url":"https://www.jeeneetard.com/course/5"');
+    expect(html).not.toContain('"url":"https://www.jeeneetard.com/course/8"');
   });
 
   it("lists the live polls on /polls, each linking to its own page", async () => {
@@ -1549,7 +1554,9 @@ describe("edge-rendered discovery landings", () => {
     expect(html).toContain("<h1>Amit Bijarnia</h1>");
     expect(html).toContain("Also known as ABJ Sir");
     expect(html).not.toContain("A. Bijarnia");
-    expect(html).toContain('href="/course/5"');
+    // Canonical, not the bare id: the bare form is a 308 on every course.
+    expect(html).toContain('href="/course/5/kinematics"');
+    expect(html).not.toContain('href="/course/5"');
     expect(html).toContain('data-schema-key="Person"');
     expect(html).toContain('data-schema-key="BreadcrumbList"');
     expect(html).toContain('<section id="source-backed-profile">');
