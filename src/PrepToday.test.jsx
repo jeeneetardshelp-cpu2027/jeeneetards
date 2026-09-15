@@ -6,17 +6,31 @@
 //    rather than counting negative;
 //  - the streak never shames, never denies a study day it cannot see, and the
 //    goal stays the student's to set;
-//  - the chosen exam lane persists (ll_exam_lane_v1) and the band reopens on it.
-import { render, screen, fireEvent, cleanup } from "@testing-library/react";
+//  - the chosen exam lane persists (ll_exam_lane_v1) and the band reopens on it,
+//    and never shows another lane's countdown in its place.
+import { render, screen, fireEvent, cleanup, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ThemeProvider } from "./theme.jsx";
 import PrepToday, { shareMessage, streakMessage, streakUncounted } from "./PrepToday.jsx";
-import { findExam, examCountdown } from "./examCalendar.js";
+import { EXAM_CALENDAR, findExam, examCountdown } from "./examCalendar.js";
 
 const STREAK_KEY = "ll_streak_v1";
 const PROGRESS_KEY = "ll_progress_v1";
 const LANE_KEY = "ll_exam_lane_v1";
+
+// The shipped calendar as expected exams, checked a week before this file's
+// fixed "today". The real entries change with the calendar's routine edits,
+// re-checking and confirming an exam, and a check dated after the clock does
+// not count, so the band's tests must not read those fields.
+const CHECKED_ON = "2026-08-25";
+const CALENDAR = EXAM_CALENDAR.map((exam) => ({
+  ...exam, status: "expected", date: null, checkedOn: CHECKED_ON,
+}));
+/** CALENDAR with one lane's entries last checked long enough ago to have expired. */
+const expiredLane = (goal) => CALENDAR.map((exam) => (
+  exam.goal === goal ? { ...exam, checkedOn: "2026-06-01" } : exam
+));
 
 const ENTRY = {
   playlistId: 374, chapterId: 27, courseTitle: "Rotational Motion",
@@ -24,10 +38,10 @@ const ENTRY = {
   lastPosition: 3, totalLessons: 12, updatedAt: 1_000_000,
 };
 
-const renderBand = (entries = []) => render(
+const renderBand = (entries = [], calendar = CALENDAR) => render(
   <ThemeProvider>
     <MemoryRouter>
-      <PrepToday entries={entries} />
+      <PrepToday entries={entries} calendar={calendar} />
     </MemoryRouter>
   </ThemeProvider>,
 );
@@ -140,6 +154,70 @@ describe("PrepToday", () => {
     expect(screen.getByText(/to JEE Main 2027 \(Session 1\)/)).toBeTruthy();
   });
 
+  it("shows no countdown, rather than another exam's, when the chosen lane has none", () => {
+    // From 12 Oct 2026, when the CBSE check expires, falling back to the first
+    // lane with a countdown would have shown a student who chose Boards a JEE
+    // Main countdown with the JEE tab pressed, and nothing saying why.
+    localStorage.setItem(LANE_KEY, "school");
+    seedStreak(["2026-08-31", "2026-09-01"], 2);
+    const { container } = renderBand([], expiredLane("school"));
+
+    // The rest of the band still has something true to say.
+    expect(screen.getByText("days in a row")).toBeTruthy();
+    expect(container.querySelector("section").textContent)
+      .not.toMatch(/about|days? to |announced|NTA|IIT|CBSE/);
+    expect(screen.queryByRole("button", { name: /Share countdown/ })).toBeNull();
+    expect(screen.queryByRole("link", { name: /Official/ })).toBeNull();
+    // The choice stays the student's, so re-checking the entry brings it back.
+    expect(localStorage.getItem(LANE_KEY)).toBe("school");
+  });
+
+  it("keeps the other lanes' tabs, none pressed, so that student can choose again", () => {
+    // The tabs are the only place a lane is chosen. Hiding them with the
+    // countdown would leave a student who chose Boards no way to reach the JEE
+    // or NEET countdown until someone re-checked CBSE.
+    localStorage.setItem(LANE_KEY, "school");
+    seedStreak(["2026-09-01"], 2);
+    renderBand([], expiredLane("school"));
+
+    const tabs = within(screen.getByRole("group", { name: "Choose exam" })).getAllByRole("button");
+    expect(tabs.map((tab) => [tab.textContent, tab.getAttribute("aria-pressed")]))
+      .toEqual([["JEE", "false"], ["NEET", "false"]]);
+
+    fireEvent.click(screen.getByRole("button", { name: "JEE" }));
+    expect(screen.getByText(/to JEE Main 2027 \(Session 1\)/)).toBeTruthy();
+    expect(localStorage.getItem(LANE_KEY)).toBe("jee");
+  });
+
+  it("still opens a student with no stored lane on the first lane that has a countdown", () => {
+    seedStreak(["2026-09-01"], 2);
+    renderBand([], expiredLane("jee"));
+    expect(screen.getByText(/to NEET UG 2027/)).toBeTruthy();
+    expect(screen.getByRole("button", { name: "NEET" }).getAttribute("aria-pressed")).toBe("true");
+    // Opening on a lane is not choosing it. Saving the default would make this
+    // student a NEET chooser, and cost them this fallback the next time.
+    expect(localStorage.getItem(LANE_KEY)).toBeNull();
+  });
+
+  it("reads the shipped calendar when none is passed, as the homepage does", () => {
+    // Home.jsx renders <PrepToday entries={...} /> with no calendar. Counting
+    // from the day the first JEE entry was checked keeps this true through
+    // every re-check, and fails if the default stops reaching EXAM_CALENDAR.
+    const jee = EXAM_CALENDAR.find((exam) => exam.goal === "jee");
+    const [y, m, d] = jee.checkedOn.split("-").map(Number);
+    vi.setSystemTime(new Date(y, m - 1, d, 10, 0, 0));
+    seedStreak([jee.checkedOn], 2);
+    render(
+      <ThemeProvider>
+        <MemoryRouter>
+          <PrepToday entries={[]} />
+        </MemoryRouter>
+      </ThemeProvider>,
+    );
+    expect(screen.getByText(/^to JEE /)).toBeTruthy();
+    expect(screen.getByRole("button", { name: /Share countdown/ })).toBeTruthy();
+  });
+
   it("copies a share message carrying the exam and a link home", () => {
     const writeText = vi.fn().mockResolvedValue();
     vi.stubGlobal("navigator", { clipboard: { writeText } });
@@ -226,7 +304,8 @@ describe("does not deny a study day it cannot see", () => {
 });
 
 describe("shareMessage", () => {
-  const exam = findExam("neet-ug-2027");
+  // An expected entry, checked before the day these cases count from; see CALENDAR above.
+  const exam = { ...findExam("neet-ug-2027"), status: "expected", date: null, checkedOn: CHECKED_ON };
 
   it("carries the not-announced caveat with the number", () => {
     const text = shareMessage(exam, examCountdown(exam, new Date("2026-09-01T09:00:00Z")), "https://x.test");

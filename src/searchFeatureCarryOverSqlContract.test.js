@@ -46,6 +46,15 @@
 // is what lets src/usePlaylistBrowse.js fetch the whole match set in one
 // bounded request instead of an unbounded one.
 //
+// Both browse matchers earned a third guarded feature on 8 Sep 2026: the
+// anchor floor. Before 20260908140000 they refused any query whose longest
+// typed token was under three characters BEFORE the alias pass ran, so "ac"
+// answered 0 rows on /browse while the search box, which already chose its
+// needle through search_anchor, returned the Alternating Current chapter
+// first. A re-emission built from any earlier body brings that split back
+// without an error, and it is the kind of regression nobody reports: an empty
+// result looks like the catalogue simply not having the course.
+//
 // ADDING A FEATURE. If you re-emit one of these functions, add a row to its
 // `features` with a marker that appears in YOUR body and the file that
 // introduced it. From then on, anyone who re-emits it without carrying your
@@ -133,6 +142,19 @@ const GUARDED = [
         since: "20260902170000_search_aliases.sql",
         marker: /order\s+by\s+public\.search_rank_aliased/i,
       },
+      {
+        // THE ANCHOR FLOOR. The needle is chosen AFTER the alias pass by
+        // search_anchor, so a short typed word with a good alias ("ac" ->
+        // Alternating Current) is searched instead of refused. A body rebuilt
+        // from any earlier copy guards on search_is_servable before the alias
+        // pass instead, and /browse?q=ac silently answers nothing again while
+        // every other feature here stays intact. The marker matches only an
+        // assignment FROM the call, so a comment that merely names
+        // search_anchor cannot satisfy it.
+        name: "anchor floor (the needle is chosen after the alias pass)",
+        since: "20260908140000_browse_matchers_anchor_floor.sql",
+        marker: /:=\s*public\.search_anchor\(/i,
+      },
     ],
   },
   {
@@ -162,6 +184,13 @@ const GUARDED = [
         name: "500-id cap the whole-set fetch depends on",
         since: "20260902240000_browse_course_relevance.sql",
         marker: /limit\s+500/i,
+      },
+      {
+        // Same floor, same reason, and it matters more here: Courses is the
+        // DEFAULT tab, so this is the result a searching student meets first.
+        name: "anchor floor (the needle is chosen after the alias pass)",
+        since: "20260908140000_browse_matchers_anchor_floor.sql",
+        marker: /:=\s*public\.search_anchor\(/i,
       },
     ],
   },
