@@ -24,6 +24,9 @@ import { courseTeacherSlug } from "./src/courseTeacherSlug.js";
 import { TEST_SECTIONS, ACCESS, findTestSection } from "./src/testPlatforms.js";
 import { buildCourseMetadata } from "./src/courseMetadata.js";
 import { canonicalCoursePath } from "./src/canonicalUrl.js";
+// One map for the page and this body, so a crawler and a student are sent to
+// the same lectures from a mock-test or paper page.
+import { LECTURE_LINK_PROMPT, lectureLinkForExam, lectureLinkText } from "./src/examLectureLinks.js";
 import { readablePathSegment } from "./src/pageMetadata.js";
 import {
   paperYearSchemas,
@@ -341,6 +344,7 @@ export function renderPaperYearBody(meta, { landing, year }, materials = []) {
       groups.withSolutions,
       "No reviewed paper with worked solutions is listed for this year. Official answer keys are not labelled as worked solutions.",
     ),
+    lectureLinkHtml(landing.id),
     `<nav aria-label="${escapeHtml(`All ${exam} papers`)}">` +
       `<a href="${escapeHtml(landing.path)}">${escapeHtml(`All ${exam} papers by year`)}</a> ` +
       '<a href="/materials">All study material</a> ' +
@@ -844,9 +848,22 @@ export function renderExamTestsBody(section, meta) {
     items
       ? `<ul>${items}</ul>`
       : `<p>No ${label} test source is listed yet.</p>`,
+    lectureLinkHtml(section.id),
     `<nav aria-label="Other exams">${others}</nav>`,
     "</main>",
   ].join("");
+}
+
+/**
+ * The crawlable way back from a mock-test or paper page to the lectures for a
+ * chapter, or "" for an exam with no single lecture lane. Same words and
+ * destination as the React page, both from examLectureLinks.js.
+ */
+function lectureLinkHtml(examId) {
+  const link = lectureLinkForExam(examId);
+  if (!link) return "";
+  return `<p>${escapeHtml(LECTURE_LINK_PROMPT)} ` +
+    `<a href="${escapeHtml(link.path)}">${escapeHtml(lectureLinkText(link))}</a></p>`;
 }
 
 /** Honest crawler-readable content for responses that carry HTTP 404. */

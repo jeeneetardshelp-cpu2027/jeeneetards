@@ -1,7 +1,9 @@
 // examCalendar: the date logic behind the countdown, and the honesty rules
-// that stop it stating an estimate as fact or counting past a finished exam.
+// that stop it stating an estimate as fact, counting past a finished exam, or
+// repeating "not announced yet" after anyone last checked.
 import { describe, expect, it } from "vitest";
 import {
+  CHECK_EXPIRES_AFTER_DAYS,
   EXAM_CALENDAR,
   examCountdown,
   examLabel,
@@ -17,8 +19,14 @@ const ANNOUNCED = {
   status: "announced", date: "2027-01-24",
   expectedFrom: "2027-01-21", expectedTo: "2027-01-31",
   expectedLabel: "late January 2027", authority: "NTA", officialUrl: "https://example.invalid/",
+  // Checked shortly before every date these fixtures count from, so the expiry
+  // rule stays out of the way of the tests that are not about it.
+  checkedOn: "2026-12-20",
 };
 const EXPECTED = { ...ANNOUNCED, slug: "test-expected", status: "expected", date: null };
+
+/** The shipped calendar, re-checked on `iso`: for tests about ordering, not expiry. */
+const checkedAt = (iso) => EXAM_CALENDAR.map((exam) => ({ ...exam, checkedOn: iso }));
 
 describe("the shipped calendar is honest by construction", () => {
   it("never ships a precise date unless the exam is marked announced", () => {
@@ -36,6 +44,15 @@ describe("the shipped calendar is honest by construction", () => {
       expect(exam.authority, exam.slug).toBeTruthy();
       expect(exam.officialUrl, exam.slug).toMatch(/^https:\/\//);
       expect(exam.expectedFrom, exam.slug).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    }
+  });
+
+  it("records when every entry was last checked, and the check precedes the exam", () => {
+    for (const exam of EXAM_CALENDAR) {
+      expect(exam.checkedOn, exam.slug).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      // A check dated after the exam window opens is a typo, most likely a
+      // wrong year, and would keep the countdown alive long after anyone looked.
+      expect(Date.parse(exam.checkedOn) < Date.parse(exam.expectedFrom), exam.slug).toBe(true);
     }
   });
 });
@@ -78,8 +95,10 @@ describe("nextExam", () => {
     // Well before everything: JEE's soonest is session 1.
     const jee = nextExam("jee", at("2026-09-01"));
     expect(jee.exam.slug).toBe("jee-main-2027-session-1");
-    // After session 1's window opens, session 2 becomes the soonest.
-    const later = nextExam("jee", at("2027-02-01"));
+    // After session 1's window opens, session 2 becomes the soonest. The shipped
+    // checks would have expired by February, so this ordering test uses entries
+    // checked shortly before its own date.
+    const later = nextExam("jee", at("2027-02-01"), checkedAt("2027-01-25"));
     expect(later.exam.slug).toBe("jee-main-2027-session-2");
   });
 
@@ -106,7 +125,10 @@ describe("labels and lookup", () => {
 // Every pre-existing case used T09:00Z — inside the safe window — so nothing
 // covered the small hours this audience actually studies in.
 describe("counts from the student's own calendar day", () => {
-  const exam = { slug: "x", name: "X", status: "announced", date: "2027-01-20", goal: "jee" };
+  const exam = {
+    slug: "x", name: "X", status: "announced", date: "2027-01-20", goal: "jee",
+    checkedOn: "2027-01-01",
+  };
 
   it("uses the local date, not the UTC date, to decide 'today'", () => {
     // Build a moment whose LOCAL day is 2027-01-20 in whatever zone the runner
@@ -116,5 +138,54 @@ describe("counts from the student's own calendar day", () => {
     // And the day before is exactly 1, not 0 or 2.
     const dayBefore = new Date(2027, 0, 19, 23, 0, 0);
     expect(examCountdown(exam, dayBefore).days).toBe(1);
+  });
+});
+
+// "NTA has not announced dates yet" goes false the day the bulletin appears,
+// and nothing in the file changes when it does. These pin the rule that a
+// countdown nobody has re-checked disappears instead of repeating it.
+describe("a countdown expires when nobody has re-checked it", () => {
+  const checkedOn = "2026-11-01";
+  const exam = { ...EXPECTED, checkedOn }; // window opens 2027-01-21
+  // Local-time constructor: the same calendar-day convention examCountdown uses.
+  const daysAfterCheck = (n) => new Date(2026, 10, 1 + n, 12, 0, 0);
+
+  it("shows on the day of the check and on the last day the check is good for", () => {
+    expect(examCountdown(exam, daysAfterCheck(0))).not.toBeNull();
+    expect(examCountdown(exam, daysAfterCheck(CHECK_EXPIRES_AFTER_DAYS))).not.toBeNull();
+  });
+
+  it("disappears the day after the check expires", () => {
+    expect(examCountdown(exam, daysAfterCheck(CHECK_EXPIRES_AFTER_DAYS + 1))).toBeNull();
+  });
+
+  it("expires an announced date too, because dates get moved", () => {
+    const announced = { ...ANNOUNCED, checkedOn };
+    expect(examCountdown(announced, daysAfterCheck(CHECK_EXPIRES_AFTER_DAYS))).not.toBeNull();
+    expect(examCountdown(announced, daysAfterCheck(CHECK_EXPIRES_AFTER_DAYS + 1))).toBeNull();
+  });
+
+  it("never shows an entry with no usable record of being checked", () => {
+    expect(examCountdown({ ...EXPECTED, checkedOn: undefined }, at("2027-01-01"))).toBeNull();
+    expect(examCountdown({ ...EXPECTED, checkedOn: null }, at("2027-01-01"))).toBeNull();
+    expect(examCountdown({ ...EXPECTED, checkedOn: "recently" }, at("2027-01-01"))).toBeNull();
+  });
+
+  it("lets nextExam fall through to an exam whose check is still good", () => {
+    const stale = { ...EXPECTED, slug: "stale-but-sooner", checkedOn: "2026-06-01" };
+    const fresh = { ...EXPECTED, slug: "fresh-but-later", expectedFrom: "2027-01-28", checkedOn };
+    expect(nextExam("jee", daysAfterCheck(10), [stale, fresh]).exam.slug).toBe("fresh-but-later");
+    expect(nextExam("jee", daysAfterCheck(10), [stale])).toBeNull();
+  });
+
+  it("expires every shipped entry the day after its own check runs out", () => {
+    for (const shipped of EXAM_CALENDAR) {
+      const [y, m, d] = shipped.checkedOn.split("-").map(Number);
+      expect(examCountdown(shipped, new Date(y, m - 1, d, 12)), shipped.slug).not.toBeNull();
+      expect(
+        examCountdown(shipped, new Date(y, m - 1, d + CHECK_EXPIRES_AFTER_DAYS + 1, 12)),
+        shipped.slug,
+      ).toBeNull();
+    }
   });
 });
