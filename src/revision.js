@@ -172,9 +172,11 @@ export function recordChapterCleared(input, now = new Date()) {
   return item;
 }
 
-function advance(state, id, at, via) {
+/** Move each listed record one rung up the ladder, in a single write. */
+function advanceIds(state, ids, at, via) {
+  const targets = new Set(ids);
   const items = state.items.map((item) => {
-    if (item.id !== id) return item;
+    if (!targets.has(item.id)) return item;
     const step = Math.min(item.step + 1, REVISION_LADDER.length);
     return {
       ...item,
@@ -186,7 +188,11 @@ function advance(state, id, at, via) {
     };
   });
   write({ ...state, items });
-  return items.find((item) => item.id === id) ?? null;
+  return items.filter((item) => targets.has(item.id));
+}
+
+function advance(state, id, at, via) {
+  return advanceIds(state, [id], at, via)[0] ?? null;
 }
 
 /** The student's own "I've revised this" — their assertion, not our inference. */
@@ -203,15 +209,30 @@ export function markChapterRevised({ courseId, chapterId }, now = new Date()) {
  * cooldown, so one evening's replaying cannot walk a chapter up the ladder.
  * Never creates a record: a chapter that was never cleared is not being
  * revised, it is being learned.
+ *
+ * ANY COURSE COUNTS. Records are kept per course, but revising is about the
+ * chapter. ChapterRevision deliberately recommends a one-shot from a DIFFERENT
+ * course, so also matching on the course meant the one revision the site
+ * itself suggested was never counted, and the chapter kept coming due. Every
+ * cleared record for this chapter, in whichever course it was finished, moves
+ * up a rung, each on its own cooldown.
+ *
+ * Returns the watched course's own record when that one moved, otherwise the
+ * first record that moved, otherwise null.
  */
 export function recordChapterWatched({ courseId, chapterId }, now = new Date()) {
-  const id = itemId(courseId, chapterId);
+  const chapter = positiveInt(chapterId);
+  if (!chapter) return null;
+  const at = now.getTime();
   const state = read();
-  const item = state.items.find((existing) => existing.id === id);
-  if (!item) return null;
-  const last = Math.max(item.clearedAt, item.revisedAt ?? 0);
-  if (now.getTime() - last < WATCH_COOLDOWN_DAYS * DAY_MS) return null;
-  return advance(state, id, now.getTime(), "watched");
+  const due = state.items.filter((item) => (
+    item.chapterId === chapter
+    && at - Math.max(item.clearedAt, item.revisedAt ?? 0) >= WATCH_COOLDOWN_DAYS * DAY_MS
+  ));
+  if (due.length === 0) return null;
+  const moved = advanceIds(state, due.map((item) => item.id), at, "watched");
+  const watchedId = itemId(courseId, chapter);
+  return moved.find((item) => item.id === watchedId) ?? moved[0] ?? null;
 }
 
 /**

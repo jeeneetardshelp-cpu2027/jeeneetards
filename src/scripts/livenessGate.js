@@ -15,12 +15,18 @@
 // wrong shape means we do NOT know whether the catalogue is healthy, and
 // "unknown" must never be reported as "clean" — that is precisely the silent
 // pass this file exists to remove. Unreadable therefore fails too.
+//
+// The opposite failure matters as well. A run where nothing was DUE for a check
+// is healthy, and it has to go green, or a red run stops meaning anything. The
+// runner writes a report on that path (buildNothingDueReport); this reads it
+// like any other, and the summary says nothing was checked rather than implying
+// a check found nothing.
 
 /**
  * @param {unknown} report  parsed tmp/video-liveness-report.json
  * @returns {{ needsAttention: boolean, unreadable: boolean, reason: string|null,
  *            dead: object[], newlyBlocked: object[], recovered: object[],
- *            dryRun: boolean }}
+ *            dryRun: boolean, nothingDue: object|null }}
  */
 export function buildGateVerdict(report) {
   const unreadable = (reason) => ({
@@ -31,6 +37,7 @@ export function buildGateVerdict(report) {
     newlyBlocked: [],
     recovered: [],
     dryRun: false,
+    nothingDue: null,
   });
 
   if (!report || typeof report !== "object" || Array.isArray(report)) {
@@ -45,6 +52,7 @@ export function buildGateVerdict(report) {
 
   const dead = report.dead;
   const newlyBlocked = report.newly_blocked;
+  const note = report.nothing_due;
   return {
     // Both warrant a look. 'dead' needs a removal decision (which can empty a
     // chapter, so it is deliberately the owner's call). 'blocked' still has an
@@ -59,6 +67,10 @@ export function buildGateVerdict(report) {
     // A dry run detects exactly what a real run detects; only the write is
     // skipped. So a finding in a dry run is still a finding and still fails.
     dryRun: report.dry_run === true,
+    // Why nothing was checked, when that is what happened. It explains an empty
+    // run for the summary; it never excuses a finding — needsAttention above is
+    // decided by the lists alone.
+    nothingDue: note && typeof note === "object" && !Array.isArray(note) ? note : null,
   };
 }
 
@@ -86,6 +98,17 @@ export function renderGateSummary(verdict) {
   }
 
   if (!verdict.needsAttention) {
+    if (verdict.nothingDue) {
+      // "No dead lessons" would imply lessons were checked. None were, so say
+      // that — and only quote numbers the report actually carried.
+      const total = verdict.nothingDue.total_videos;
+      const days = verdict.nothingDue.max_age_days;
+      const scope = Number.isFinite(total) && Number.isFinite(days)
+        ? `All ${plural(total, "video was", "videos were")} verified within the last ${plural(days, "day", "days")}`
+        : "Every video was verified recently";
+      lines.push("", `No lesson was due for a check. ${scope}, so nothing was sent to YouTube this run.`);
+      return lines.join("\n");
+    }
     lines.push("", "No dead or newly-blocked lessons. Nothing to do.");
     if (verdict.recovered.length) {
       lines.push("", `${plural(verdict.recovered.length, "lesson", "lessons")} recovered and now embed again.`);
