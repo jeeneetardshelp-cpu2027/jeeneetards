@@ -1836,3 +1836,160 @@ describe("edge-rendered discovery landings", () => {
     expect(html).toContain("<title>Faculty page not found | JEENEETARD</title>");
   });
 });
+
+// ---------------------------------------------------------------------------
+// The other half of the faculty loop.
+//
+// /faculty/<slug> already lists a teacher's courses and links out to every one
+// of them. Measured on production, /course/398 fetched as Googlebot answered
+// with "<dt>Teacher</dt><dd>Mahendra Singh</dd>", zero href="/faculty/..."
+// anywhere in the body, and an instructor Person node carrying no url — while
+// /faculty/mahendra-singh is a real 200 page listing his nine courses. The site
+// was publishing a second, dangling identity for a human whose page it owns,
+// and a reader without JavaScript met his name as a dead end.
+//
+// These assert the served HTML, in the same style as the /browse directory
+// above: the anchor a crawler can actually follow, not an internal shape.
+// ---------------------------------------------------------------------------
+describe("course pages linking their teacher's faculty profile", () => {
+  const CANONICAL = "https://www.jeeneetard.com/course/13/rectilinear-motion-kinematics";
+
+  const stubCourseRow = (row) => {
+    vi.stubEnv("VITE_SUPABASE_URL", "https://catalog.example");
+    vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
+    const fetchSpy = vi.fn(async (input) => {
+      if (String(input).includes("/rest/v1/playlists")) {
+        return Response.json([
+          { title: "Rectilinear Motion (Kinematics)", lessons: [], ...row },
+        ]);
+      }
+      return new Response(shell, { status: 200 });
+    });
+    vi.stubGlobal("fetch", fetchSpy);
+    return fetchSpy;
+  };
+
+  const courseHtml = async (row) => {
+    stubCourseRow(row);
+    return (await middleware(new Request(CANONICAL))).text();
+  };
+
+  it("asks for the faculty slug as a LEFT join on the existing course lookup", async () => {
+    const fetchSpy = stubCourseRow({ teacher: "ABJ Sir" });
+
+    await middleware(new Request(CANONICAL));
+
+    const lookup = fetchSpy.mock.calls
+      .map(([input]) => String(input))
+      .find((url) => url.includes("/rest/v1/playlists"));
+    expect(lookup).toContain("faculty:playlist_teachers(teachers(slug))");
+    // Hand-written URL, not a supabase-js select: the shared constant carries
+    // the `", "` separator the hooks read best, and a raw space here would
+    // leave as %20 and reach PostgREST as a column named " faculty".
+    expect(lookup).not.toMatch(/[\s]|%20/);
+    // Never `!inner`. 206 of 490 playlists have no playlist_teachers row, and
+    // an inner join would drop each of them from its own course page — the
+    // lookup would come back empty and this middleware would answer 404 for a
+    // course that exists.
+    expect(lookup).not.toContain("playlist_teachers!inner");
+    // usePlaylistBrowse.js owns the `pt:` alias for its conditional teacherId
+    // FILTER. Different job; the two must not collide in one select.
+    expect(lookup).not.toContain("pt:playlist_teachers");
+    // One round trip, not two: the slug rides along on the row already fetched.
+    expect(fetchSpy.mock.calls
+      .filter(([input]) => String(input).includes("/rest/v1/")).length).toBe(1);
+  });
+
+  it("links the teacher credit when exactly one slug resolves", async () => {
+    const html = await courseHtml({
+      teacher: "ABJ Sir",
+      faculty: [{ teachers: { slug: "amit-bijarnia" } }],
+    });
+
+    // The link text is the CREDIT a student reads, not the registry's
+    // display_name ("Amit Bijarnia") — 94 credit strings differ from it, and
+    // the link is supposed to change where the words go, not what they say.
+    expect(html).toContain(
+      '<dt>Teacher</dt><dd><a href="/faculty/amit-bijarnia">ABJ Sir</a></dd>',
+    );
+    // The JSON-LD Person stops being a dangling second identity for the same
+    // human, on the same page, in the same response.
+    expect(html).toContain('"instructor":{"@type":"Person","name":"ABJ Sir"');
+    expect(html).toContain('"url":"https://www.jeeneetard.com/faculty/amit-bijarnia"');
+  });
+
+  it("leaves the credit as plain text when no slug resolves", async () => {
+    // 128 courses carry a free-text teacher with no slugged registry row.
+    // Rendering nothing beats rendering a guess: a slug derived from the name
+    // would be a 404 wearing a teacher's name.
+    const html = await courseHtml({ teacher: "ABJ Sir", faculty: [] });
+
+    expect(html).toContain("<dt>Teacher</dt><dd>ABJ Sir</dd>");
+    expect(html).not.toContain('href="/faculty/');
+  });
+
+  it("leaves the credit as plain text when two slugs resolve", async () => {
+    // Playlist 91, "Biology | NEET - Vardaan Series", is credited to two
+    // registered teachers. Linking whichever row PostgREST returned first
+    // would file one person's courses under the other's name.
+    const html = await courseHtml({
+      teacher: "Vardaan Faculty",
+      faculty: [
+        { teachers: { slug: "amit-bijarnia" } },
+        { teachers: { slug: "mohit-tyagi" } },
+      ],
+    });
+
+    expect(html).toContain("<dt>Teacher</dt><dd>Vardaan Faculty</dd>");
+    expect(html).not.toContain('href="/faculty/amit-bijarnia"');
+    expect(html).not.toContain('href="/faculty/mohit-tyagi"');
+    expect(html).not.toContain('"url":"https://www.jeeneetard.com/faculty/');
+  });
+
+  it("renders the course unchanged when the embed comes back absent", async () => {
+    // The embed is capability-gated, so a deployment without the faculty
+    // tables never sends the key at all. An absent embed must read exactly
+    // like zero links — not throw, and not cost the page its metadata.
+    const html = await courseHtml({ teacher: "ABJ Sir" });
+
+    expect(html).toContain("<dt>Teacher</dt><dd>ABJ Sir</dd>");
+    expect(html).not.toContain('href="/faculty/');
+    expect(html).toContain("<h1>Rectilinear Motion (Kinematics)</h1>");
+  });
+
+  it("cannot link a credit that was suppressed as the channel's own name", async () => {
+    // 132 courses store the channel name in `teacher`. courseCredit drops that
+    // row, and a dropped row has nothing to wrap — a suppressed credit must
+    // not reappear as a link just because a slug happened to resolve.
+    const html = await courseHtml({
+      teacher: "Competishun+",
+      institutes_channels: { name: "Competishun+" },
+      faculty: [{ teachers: { slug: "mohit-tyagi" } }],
+    });
+
+    expect(html).not.toContain("<dt>Teacher</dt>");
+    expect(html).toContain("<dt>Channel</dt><dd>Competishun+</dd>");
+    expect(html).not.toContain('href="/faculty/');
+  });
+
+  it("escapes both the href and the credit, and gives no other row an anchor", async () => {
+    const html = await courseHtml({
+      teacher: '<img src=x onerror=alert(1)>',
+      subjects: { name: '<a href="/evil">Physics</a>' },
+      faculty: [{ teachers: { slug: 'x"><script>alert(1)</script>' } }],
+    });
+
+    expect(html).not.toContain("<img src=x");
+    expect(html).not.toContain("<script>alert(1)</script>");
+    // The slug still reaches the href — percent-encoded, so it can only ever
+    // be one path segment under /faculty/, never a second attribute.
+    expect(html).toContain('<a href="/faculty/x%22%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E">');
+    expect(html).toContain("&lt;img src=x onerror=alert(1)&gt;");
+    // Only the Teacher row carries an href. Every other row is a [label,
+    // value] pair and renders exactly as it did before.
+    expect(html).not.toContain('href="/evil"');
+    expect(html).toContain(
+      "<dt>Subject</dt><dd>&lt;a href=&quot;/evil&quot;&gt;Physics&lt;/a&gt;</dd>",
+    );
+  });
+});

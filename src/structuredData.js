@@ -116,12 +116,19 @@ export function durationToIso8601(seconds) {
  * submission is feature-flagged off), so this must — and does — produce no
  * aggregateRating anywhere yet. bestRating/worstRating are 5/1, matching
  * playlist_ratings' real `check (rating between 1 and 5)` constraint.
+ *
+ * `teacher` is the CREDIT string students see on the card ("ABJ Sir"), which
+ * is often not the linked teacher's display_name — it stays the Person's
+ * `name` either way, because that is the name this page actually publishes.
+ * `teacherSlug` is the separate, resolved faculty slug (see below); it is
+ * never derived from `teacher`.
  */
 export function courseSchema({
   title,
   description,
   institute,
   teacher,
+  teacherSlug,
   averageRating,
   ratingsCount,
   url,
@@ -136,7 +143,29 @@ export function courseSchema({
   if (institute) schema.provider = { "@type": "Organization", name: institute };
 
   const courseInstance = { "@type": "CourseInstance", courseMode: "online" };
-  if (teacher) courseInstance.instructor = { "@type": "Person", name: teacher };
+  if (teacher) {
+    const instructor = { "@type": "Person", name: teacher };
+    // The site OWNS a real, 200-serving /faculty/<slug> page for this human,
+    // so a Person node with no url published a second, dangling identity for
+    // someone we already describe. `url` closes that: it is built with the
+    // same toAbsoluteUrl, from the same `/faculty/<slug>` path string
+    // FacultyProfile.jsx feeds personSchema as its `schemaUrl` — so the two
+    // nodes carry a character-identical URL and read as ONE identity rather
+    // than two. (Deliberately NOT encodeURIComponent'd, for exactly that
+    // reason: FacultyProfile does not encode either, and a URL that differed
+    // from the profile page's own would defeat the point.)
+    //
+    // The slug is resolved upstream and passed in — never derived from the
+    // credit string. It is absent for the 128 courses whose free-text teacher
+    // has no faculty link, and for the 134 credited to two or more linked
+    // teachers (playlist 91 among them), where naming one of them would be a
+    // guess. In both cases
+    // the key is omitted entirely rather than emitted empty or invented:
+    // same rule as `provider` above, and the same rule the on-page credit
+    // follows when it stays plain text.
+    if (teacherSlug) instructor.url = toAbsoluteUrl(`/faculty/${teacherSlug}`);
+    courseInstance.instructor = instructor;
+  }
   schema.hasCourseInstance = courseInstance;
 
   if (url) schema.url = toAbsoluteUrl(url);

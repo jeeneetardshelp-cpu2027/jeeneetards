@@ -81,12 +81,37 @@ export default function CourseOverview({
           </h2>
           {(credit.teacher || credit.institute) && (
             <div className={`mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm ${t.muted}`}>
+              {/* The credit becomes a link only when the course resolved to
+                  exactly ONE teacher with a faculty page. `teacherSlug` is
+                  null for the 128 courses whose free-text teacher has no
+                  slugged registry row behind it, and null for the 134 credited
+                  to two or more registered people — linking whichever row came
+                  back first would put the wrong human under someone else's name.
+                  Those stay plain text; a slug guessed from the credit string
+                  would be a 404 wearing a teacher's name. Same
+                  `id ? Link : span` shape as the institute below.
+                  The visible text stays the CREDIT a student reads ("ABJ
+                  Sir"), not the registry's display_name, so the sentence on
+                  the card does not change under them; the aria-label is what
+                  names the destination. */}
               {credit.teacher && (
-                <span className="inline-flex items-center gap-2">
+                course.teacherSlug ? (
+                <Link
+                  to={`/faculty/${course.teacherSlug}`}
+                  aria-label={`View all courses by ${credit.teacher}`}
+                  className="inline-flex items-center gap-2 rounded-sm transition-colors hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                >
                   <span className="grid h-6 w-6 place-items-center rounded-full text-[0.6rem] font-bold"
                     style={{ background: color, color: ink }} aria-hidden="true">{initials || "?"}</span>
                   {credit.teacher}
-                </span>
+                </Link>
+                ) : (
+                  <span className="inline-flex items-center gap-2">
+                    <span className="grid h-6 w-6 place-items-center rounded-full text-[0.6rem] font-bold"
+                      style={{ background: color, color: ink }} aria-hidden="true">{initials || "?"}</span>
+                    {credit.teacher}
+                  </span>
+                )
               )}
               {course.institute && (
                 course.instituteId ? (

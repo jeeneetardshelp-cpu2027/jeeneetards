@@ -17,6 +17,9 @@ import {
 } from "./src/structuredData.js";
 import { getFacultyGuide } from "./src/facultyGuides.js";
 import { courseCredit } from "./src/courseCredit.js";
+// The exactly-one-slugged-teacher rule, shared with usePlaylistBrowse.js and
+// usePlaylistVideos.js so every surface links, or refuses to link, the same set.
+import { courseTeacherSlug } from "./src/courseTeacherSlug.js";
 // Pure data, no React — safe to pull into the edge runtime.
 import { TEST_SECTIONS, ACCESS, findTestSection } from "./src/testPlatforms.js";
 import { buildCourseMetadata } from "./src/courseMetadata.js";
@@ -871,6 +874,32 @@ export function renderNotFoundBody(pathname, heading = "Page not found") {
 // the container on mount, so the block is replaced rather than duplicated.
 // ---------------------------------------------------------------------------
 
+/** The one /faculty destination a course's teacher credit may carry, or null.
+ *
+ *  `faculty` is the LEFT-joined `playlist_teachers(teachers(slug))` embed the
+ *  edge adds to the course lookup, and courseTeacherSlug is the SAME rule the
+ *  /browse cards and the watch page apply to it — exactly one slugged teacher
+ *  or nothing at all, so this body and those two surfaces can never disagree
+ *  about playlist 91. Everything else it decides (why two is null, why zero is
+ *  null, why a slug is never derived from a name) is documented there.
+ *
+ *  An ABSENT `faculty` key reads exactly like zero links, which is what lets
+ *  the capability gate drop the embed from the select — or a deployment
+ *  without the faculty tables never send it — without this file having to
+ *  know either happened. */
+const courseFacultySlug = (course) => courseTeacherSlug(course?.faculty);
+
+/** The one address for a faculty slug, as this file writes it into HTML.
+ *
+ *  encodeURIComponent is the identity function for every slug the registry
+ *  actually holds ([a-z0-9-]), so the crawler's <a href>, the JSON-LD
+ *  instructor.url and the client's <Link to> stay character-identical and
+ *  read as ONE identity — the whole point of linking at all. It only bites
+ *  on a malformed slug, and there it is doing the right thing: a stray `/`
+ *  or `?` cannot turn a faculty link into some other address. escapeHtml on
+ *  top is what makes it safe as an attribute value. */
+const facultyHref = (slug) => `/faculty/${encodeURIComponent(slug)}`;
+
 /** Schemas for a course page, built with the SAME builders the client uses so
  *  server and client can never disagree. Returns [{key, schema}]. */
 export function courseSchemas(course, meta) {
@@ -880,6 +909,11 @@ export function courseSchemas(course, meta) {
     description: meta.description,
     institute: course.institutes_channels?.name ?? null,
     teacher: course.teacher ?? null,
+    // Resolved upstream and passed in — courseSchema builds instructor.url
+    // from it, so the Person node this page publishes stops being a dangling
+    // second identity for a human whose /faculty page the site already owns.
+    // Null (no link, or two) simply omits the key, exactly as `provider` does.
+    teacherSlug: courseFacultySlug(course),
     averageRating: course.average_rating,
     ratingsCount: course.ratings_count,
     url: meta.url,
@@ -960,13 +994,30 @@ export function renderCourseBody(course, meta, lessons = []) {
   // Report that total instead of making a 75-lesson course look like it has
   // only the 60 titles included in the crawler-readable preview.
   const totalLessons = Number(course.playlist_videos?.[0]?.count ?? lessons.length);
+  // /faculty/<slug> already lists that person's courses and links OUT to each
+  // one (renderFacultyBody, below); the course body linked back to nothing, so
+  // a crawler — and a reader with JavaScript off — met the teacher's name as a
+  // dead end on the very page the profile points at. Null whenever the course
+  // did not resolve to exactly one registered teacher, which keeps the 128
+  // free-text-only credits, and the 134 credited to two or more people, as the
+  // plain text they are today.
+  const teacherSlug = courseFacultySlug(course);
+  // Rows are [label, value] — plus, for the teacher alone, an optional href.
   const rows = [
     course.subjects?.name ? ["Subject", course.subjects.name] : null,
     // A "teacher" that is only the channel's own name would print the same
     // string on both rows of the crawler-readable table.
+    //
+    // The href hangs off this branch on purpose: a credit suppressed as a
+    // duplicate of the Channel produces no row at all, so it cannot come back
+    // as a link. The text stays the CREDIT the student sees ("ABJ Sir"), not
+    // the registry's display_name — the link changes where the words go, never
+    // what they say.
     courseCredit({
       teacher: course.teacher, institute: course.institutes_channels?.name,
-    }).teacher ? ["Teacher", course.teacher] : null,
+    }).teacher
+      ? ["Teacher", course.teacher, teacherSlug ? facultyHref(teacherSlug) : null]
+      : null,
     course.institutes_channels?.name ? ["Channel", course.institutes_channels.name] : null,
     totalLessons > 0 ? ["Lessons", String(totalLessons)] : null,
   ].filter(Boolean);
@@ -980,8 +1031,16 @@ export function renderCourseBody(course, meta, lessons = []) {
     `<nav aria-label="Breadcrumb"><a href="/">Home</a> › <a href="/browse">Browse courses</a> › <span>${t}</span></nav>`,
     `<h1>${t}</h1>`,
     `<p>${escapeHtml(meta.description)}</p>`,
+    // Every value is still escaped, and so is the href — the anchor adds a
+    // destination, never an escape hatch. Only the teacher row supplies a
+    // third element, so for every other row `href` is undefined and the
+    // output is byte-for-byte what it was before.
     rows.length
-      ? `<dl>${rows.map(([k, v]) => `<dt>${escapeHtml(k)}</dt><dd>${escapeHtml(v)}</dd>`).join("")}</dl>`
+      ? `<dl>${rows.map(([k, v, href]) => `<dt>${escapeHtml(k)}</dt><dd>` +
+          (href
+            ? `<a href="${escapeHtml(href)}">${escapeHtml(v)}</a>`
+            : escapeHtml(v)) +
+          `</dd>`).join("")}</dl>`
       : "",
     lessonItems ? `<h2>Lessons in this course</h2><ol>${lessonItems}</ol>` : "",
     `<p><a href="${escapeHtml(meta.url)}">Open this free course on JEENEETARD</a></p>`,

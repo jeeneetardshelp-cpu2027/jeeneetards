@@ -246,3 +246,51 @@ describe("bounded course detail query", () => {
     expect(calls.slice(2).every((call) => call.signal && !call.signal.aborted)).toBe(true);
   });
 });
+
+// The watch page's half of the faculty link. Same rule, same helper and — the
+// point of sharing one — the same answer the /browse card already gave for
+// this course, so the credit does not become a link only after the click.
+describe("course faculty link", () => {
+  const linked = (slug) => ({ teachers: { slug } });
+
+  it("asks for the linked teacher's slug as a left join under its own alias", async () => {
+    render(<Probe />);
+    await waitFor(() => expect(seen.loading).toBe(false));
+    expect(calls[0].cols).toContain("faculty:playlist_teachers(teachers(slug))");
+    // A course with no faculty link must still load its own page.
+    expect(calls[0].cols).not.toContain("!inner");
+  });
+
+  it("resolves the one linked teacher without touching the credit", async () => {
+    playlistData.teacher = "ABJ Sir";
+    playlistData.faculty = [linked("amit-bijarnia")];
+    render(<Probe />);
+    await waitFor(() => expect(seen.loading).toBe(false));
+    expect(seen.course.teacher).toBe("ABJ Sir");
+    expect(seen.course.teacherSlug).toBe("amit-bijarnia");
+  });
+
+  it("links neither teacher when two are credited", async () => {
+    // Playlist 91 again — the whole reason the field is null rather than first.
+    playlistData.teacher = "Vardaan Faculty";
+    playlistData.faculty = [linked("teacher-one"), linked("teacher-two")];
+    render(<Probe />);
+    await waitFor(() => expect(seen.loading).toBe(false));
+    expect(seen.course.teacher).toBe("Vardaan Faculty");
+    expect(seen.course.teacherSlug).toBeNull();
+  });
+
+  it.each([
+    ["no faculty rows", []],
+    ["a link whose teacher is null", [{ teachers: null }]],
+    ["a linked teacher with no slug", [{ teachers: { slug: "" } }]],
+    ["no embed at all", undefined],
+  ])("leaves the credit plain text with %s", async (_label, faculty) => {
+    playlistData.teacher = "Mahendra Singh";
+    playlistData.faculty = faculty;
+    render(<Probe />);
+    await waitFor(() => expect(seen.loading).toBe(false));
+    expect(seen.course.teacher).toBe("Mahendra Singh");
+    expect(seen.course.teacherSlug).toBeNull();
+  });
+});
