@@ -17,9 +17,10 @@
 // request and hands the same rows to every panel below the player; this one
 // keeps the one-shots and revision series, ChapterTeachers keeps the other
 // institutes. Filtering that set in the database instead would mean a second
-// round trip, and — because the browse query pages at 12 while the busiest
-// chapter has 22 courses — an unfiltered page is not guaranteed to contain a
-// chapter's one-shots anyway. See CHAPTER_COURSES_PAGE_SIZE in CourseVideoPage.
+// round trip. The shared request is sized to hold a whole chapter
+// (CHAPTER_COURSES_PAGE_SIZE in CourseVideoPage, pinned by
+// oneChapterQuery.test.js), because the default page of 12 would truncate the
+// busiest chapters and quietly drop some of their one-shots.
 //
 // Those rows are chapter-scoped, so they carry a real summed duration and "47m"
 // is measured rather than guessed; when it is missing the card omits it instead
