@@ -83,7 +83,7 @@ export function streakMessage({ current, studiedToday, done, goal }) {
   return "Watch one lesson to start a streak.";
 }
 
-export default function PrepToday({ entries = [] }) {
+export default function PrepToday({ entries = [], calendar = EXAM_CALENDAR }) {
   const { t } = useTheme();
 
   // Streak and today's count: read once on mount — the homepage does not play
@@ -93,8 +93,9 @@ export default function PrepToday({ entries = [] }) {
   const [goal, setGoal] = useState(() => getDailyGoal());
 
   // Which lanes actually have an upcoming exam — a lane whose exams have all
-  // passed must not offer an empty tab.
-  const lanes = LANES.filter((lane) => nextExam(lane.goal));
+  // passed, or whose check has expired, must not offer an empty tab. `calendar`
+  // is the shipped one; tests pass entries checked relative to their own clock.
+  const lanes = LANES.filter((lane) => nextExam(lane.goal, undefined, calendar));
   // The remembered lane wins; the read is lazy and getExamLane swallows a
   // throwing storage. A student with nothing stored gets the first live lane,
   // which is exactly the old default.
@@ -118,11 +119,16 @@ export default function PrepToday({ entries = [] }) {
   // and has no answer for someone who has not started.
   if (!hasWatch && !hasStreak) return null;
 
-  // A remembered lane whose exams have all passed must not pin an empty tab.
-  const activeLane = lanes.some((row) => row.goal === lane)
-    ? lane
+  // A student who chose a lane sees that lane's countdown or none. Falling back
+  // to the first live lane would have shown a student who chose Boards a JEE
+  // Main countdown with the JEE tab pressed from 12 Oct 2026, when the CBSE
+  // check expires, with nothing saying the Boards one had gone. Only a student
+  // with nothing stored gets the first live lane. The stored choice is left
+  // alone, so the countdown comes back by itself once the entry is re-checked.
+  const activeLane = lane
+    ? (lanes.some((row) => row.goal === lane) ? lane : null)
     : (lanes[0]?.goal ?? null);
-  const entry = EXAM_CALENDAR.length > 0 && activeLane ? nextExam(activeLane) : null;
+  const entry = calendar.length > 0 && activeLane ? nextExam(activeLane, undefined, calendar) : null;
 
   const uncounted = streakUncounted({
     current: stats.current, studiedToday: stats.studiedToday, studiedTodayCount: today,
@@ -164,7 +170,11 @@ export default function PrepToday({ entries = [] }) {
             <h2 id="prep-today-heading" className={`text-sm font-semibold ${t.text}`}>
               Your prep today
             </h2>
-            {entry && lanes.length > 1 && (
+            {/* With a countdown, the tabs appear once there is a choice to make.
+                A student whose chosen lane has no countdown keeps the tabs for
+                the lanes that do, none pressed: they are the only place a lane
+                is chosen, and every one leads to a checked countdown. */}
+            {(entry ? lanes.length > 1 : lanes.length > 0) && (
               <div role="group" aria-label="Choose exam" className="flex flex-wrap gap-2">
                 {lanes.map((row) => (
                   <button
