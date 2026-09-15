@@ -1842,6 +1842,86 @@ describe("edge-rendered discovery landings", () => {
     expect(html).toContain('name="robots" content="noindex, nofollow"');
     expect(html).toContain("<title>Faculty page not found | JEENEETARD</title>");
   });
+
+  // The 40 duplicate profiles deleted on 2026-09-15 were in the sitemap for a
+  // week. Once the lookup confirms a copy is gone, its address goes to the
+  // person it duplicated. See src/retiredFacultySlugs.js.
+  const stubFacultyLookup = (answer) => {
+    vi.stubEnv("VITE_SUPABASE_URL", "https://catalog.example");
+    vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
+    vi.stubGlobal("fetch", vi.fn(async (input) =>
+      String(input).includes("/rest/v1/rpc/get_faculty_profile")
+        ? answer()
+        : new Response(shell, { status: 200 })));
+  };
+
+  it.each([
+    ["/faculty/alakh-pandey-2", "/faculty/alakh-pandey"],
+    ["/faculty/abj", "/faculty/amit-bijarnia"],
+    ["/faculty/saleem", "/faculty/saleem-ahmad"],
+  ])("redirects the removed duplicate %s to %s once the lookup confirms it is gone", async (path, target) => {
+    stubFacultyLookup(() => Response.json(null));
+
+    const response = await middleware(new Request(`https://www.jeeneetard.com${path}`));
+
+    expect(response.status).toBe(308);
+    expect(response.headers.get("location")).toBe(`https://www.jeeneetard.com${target}`);
+  });
+
+  it("keeps the query string across a retired faculty redirect", async () => {
+    stubFacultyLookup(() => Response.json(null));
+
+    const response = await middleware(
+      new Request("https://www.jeeneetard.com/faculty/abj?ref=share"),
+    );
+
+    expect(response.headers.get("location"))
+      .toBe("https://www.jeeneetard.com/faculty/amit-bijarnia?ref=share");
+  });
+
+  it("serves a real teacher who holds a retired slug instead of redirecting", async () => {
+    // The slug trigger would give a genuine second Vikas Gupta this slug.
+    stubFacultyLookup(() => Response.json({
+      id: 900,
+      display_name: "Vikas Gupta",
+      slug: "vikas-gupta-2",
+      verified: false,
+      aliases: [],
+      institutes: [],
+      course_count: 0,
+      courses: [],
+    }));
+
+    const response = await middleware(
+      new Request("https://www.jeeneetard.com/faculty/vikas-gupta-2"),
+    );
+
+    expect(response.status).toBe(200);
+    expect(await response.text()).toContain("<h1>Vikas Gupta</h1>");
+  });
+
+  it("does not redirect a retired slug when the lookup is unconfirmed", async () => {
+    stubFacultyLookup(() => new Response("temporarily unavailable", { status: 503 }));
+
+    const response = await middleware(
+      new Request("https://www.jeeneetard.com/faculty/alakh-pandey-2"),
+    );
+
+    expect(response.headers.get("x-middleware-next")).toBe("1");
+  });
+
+  it.each(["constructor", "toString", "hasOwnProperty"])(
+    "still 404s /faculty/%s — only the map's own entries redirect",
+    async (slug) => {
+      stubFacultyLookup(() => Response.json(null));
+
+      const response = await middleware(
+        new Request(`https://www.jeeneetard.com/faculty/${slug}`),
+      );
+
+      expect(response.status).toBe(404);
+    },
+  );
 });
 
 // ---------------------------------------------------------------------------
