@@ -127,4 +127,92 @@ describe("FacultyReviewPanel", () => {
       { p_normalized: "amit priya", p_teacher_ids: [7, 8], p_override_kind: false },
     ));
   });
+
+  // 8 Sep 2026: names that existing faculty already answered to were approved
+  // "as new" and made 40 duplicate teachers. The database now refuses that
+  // (check_violation, hint duplicate_faculty) unless the call says it is a
+  // different person, and this panel is where a curator says so.
+  const duplicateRefusal = () => Object.assign(
+    new Error('Existing faculty already match "ABJ Sir": Amit Bijarnia (#7). Link this name to them, or confirm it is a different person to create a separate record.'),
+    { code: "23514", hint: "duplicate_faculty" },
+  );
+
+  it("asks before creating a person existing faculty already answer to", async () => {
+    mocks.action.mockRejectedValueOnce(duplicateRefusal()).mockResolvedValueOnce({ ok: true });
+    render(<FacultyReviewPanel />);
+    fireEvent.click(screen.getByRole("button", { name: /ABJ Sir/i }));
+    fireEvent.click(screen.getByRole("button", { name: /Create separately/i }));
+
+    const confirm = await screen.findByRole("button", { name: /different person/i });
+    expect(screen.getByText(/Existing faculty already match/)).toBeTruthy();
+    // The first attempt never claims to have checked: no acknowledgement sent.
+    expect(mocks.action).toHaveBeenCalledTimes(1);
+    expect(mocks.action.mock.calls[0]).toEqual([
+      "approve_faculty_review_group_as_new",
+      { p_normalized: "abj", p_display_name: "ABJ Sir", p_verified: false },
+    ]);
+    expect(mocks.action.mock.calls[0][1]).not.toHaveProperty("p_duplicate_acknowledged");
+
+    fireEvent.click(confirm);
+    await waitFor(() => expect(mocks.action).toHaveBeenCalledTimes(2));
+    expect(mocks.action.mock.calls[1]).toEqual([
+      "approve_faculty_review_group_as_new",
+      { p_normalized: "abj", p_display_name: "ABJ Sir", p_verified: false, p_duplicate_acknowledged: true },
+    ]);
+  });
+
+  it("offers no override for any other failure", async () => {
+    mocks.action.mockRejectedValueOnce(Object.assign(new Error("not authorized"), { code: "42501" }));
+    render(<FacultyReviewPanel />);
+    fireEvent.click(screen.getByRole("button", { name: /ABJ Sir/i }));
+    fireEvent.click(screen.getByRole("button", { name: /Create separately/i }));
+
+    expect(await screen.findByText("not authorized")).toBeTruthy();
+    expect(screen.queryByRole("button", { name: /different person/i })).toBeNull();
+  });
+
+  it("offers no override for a check_violation that is not the duplicate check", async () => {
+    mocks.action.mockRejectedValueOnce(Object.assign(new Error("new row violates check constraint"), { code: "23514" }));
+    render(<FacultyReviewPanel />);
+    fireEvent.click(screen.getByRole("button", { name: /ABJ Sir/i }));
+    fireEvent.click(screen.getByRole("button", { name: /Create separately/i }));
+
+    expect(await screen.findByText(/violates check constraint/)).toBeTruthy();
+    expect(screen.queryByRole("button", { name: /different person/i })).toBeNull();
+  });
+
+  it("forgets the confirmation once the name is edited, because that name was not checked", async () => {
+    mocks.action.mockRejectedValueOnce(duplicateRefusal());
+    render(<FacultyReviewPanel />);
+    fireEvent.click(screen.getByRole("button", { name: /ABJ Sir/i }));
+    fireEvent.click(screen.getByRole("button", { name: /Create separately/i }));
+    await screen.findByRole("button", { name: /different person/i });
+
+    fireEvent.change(screen.getByLabelText(/Create as a new person/i), { target: { value: "Abhay Jain" } });
+
+    expect(screen.queryByRole("button", { name: /different person/i })).toBeNull();
+  });
+
+  it("offers no override for the hint without the database's check_violation code", async () => {
+    mocks.action.mockRejectedValueOnce(Object.assign(new Error("something else"), { code: "P0001", hint: "duplicate_faculty" }));
+    render(<FacultyReviewPanel />);
+    fireEvent.click(screen.getByRole("button", { name: /ABJ Sir/i }));
+    fireEvent.click(screen.getByRole("button", { name: /Create separately/i }));
+
+    expect(await screen.findByText("something else")).toBeTruthy();
+    expect(screen.queryByRole("button", { name: /different person/i })).toBeNull();
+  });
+
+  it("does not ask again when the confirmed attempt is refused too", async () => {
+    // Asking a second time would loop the curator; the refusal is shown instead.
+    mocks.action.mockRejectedValueOnce(duplicateRefusal()).mockRejectedValueOnce(duplicateRefusal());
+    render(<FacultyReviewPanel />);
+    fireEvent.click(screen.getByRole("button", { name: /ABJ Sir/i }));
+    fireEvent.click(screen.getByRole("button", { name: /Create separately/i }));
+    fireEvent.click(await screen.findByRole("button", { name: /different person/i }));
+
+    await waitFor(() => expect(mocks.action).toHaveBeenCalledTimes(2));
+    expect(await screen.findByText(/Existing faculty already match/)).toBeTruthy();
+    expect(screen.queryByRole("button", { name: /different person/i })).toBeNull();
+  });
 });

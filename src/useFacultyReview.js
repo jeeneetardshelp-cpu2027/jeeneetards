@@ -116,6 +116,15 @@ export function useFacultyReview(status = "pending") {
 
 export async function runFacultyReviewAction(fn, args = {}) {
   const { data, error } = await supabase.rpc(fn, args);
-  if (error) throw new Error(error.message || "Faculty review failed.");
+  if (error) {
+    // Postgres's code and hint travel with the message: the panel tells "existing
+    // faculty already answer to this name" (23514, duplicate_faculty) apart from
+    // every other failure by them, never by the wording.
+    throw Object.assign(new Error(error.message || "Faculty review failed."), {
+      code: error.code,
+      hint: error.hint,
+      details: error.details,
+    });
+  }
   return data;
 }
