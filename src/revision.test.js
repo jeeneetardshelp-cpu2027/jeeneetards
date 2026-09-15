@@ -194,6 +194,55 @@ describe("revision signals", () => {
     expect(dueForRevision(3, at(7))).toHaveLength(0);
   });
 
+  // THE bug this guards. ChapterRevision recommends a one-shot from a DIFFERENT
+  // course, and watching it used to change nothing: the chapter kept coming due
+  // after the student had revised it exactly the way the site suggested.
+  it("counts a re-watch of the same chapter in a different course", () => {
+    recordChapterCleared(CHAPTER, CLEARED);
+    const oneShot = { courseId: 912, chapterId: CHAPTER.chapterId };
+
+    const advanced = recordChapterWatched(oneShot, at(8));
+    expect(advanced.id).toBe("374:27");
+    expect(advanced.step).toBe(1);
+    expect(advanced.revisedVia).toBe("watched");
+    expect(dueForRevision(3, at(8))).toHaveLength(0);
+    // It revises the existing record and never creates one for the one-shot.
+    expect(readStore().items.map((item) => item.id)).toEqual(["374:27"]);
+  });
+
+  it("ignores a different chapter, even in the same course", () => {
+    recordChapterCleared(CHAPTER, CLEARED);
+    expect(recordChapterWatched({ courseId: CHAPTER.courseId, chapterId: 28 }, at(8))).toBeNull();
+    expect(readStore().items[0].step).toBe(0);
+  });
+
+  it("keeps the cooldown when the re-watch is in another course", () => {
+    recordChapterCleared(CHAPTER, CLEARED);
+    expect(recordChapterWatched({ courseId: 912, chapterId: 27 }, at(2))).toBeNull();
+    expect(readStore().items[0].step).toBe(0);
+  });
+
+  it("moves every course's record for the chapter, each on its own cooldown", () => {
+    recordChapterCleared(CHAPTER, CLEARED);
+    // The same chapter, finished again later in a second course.
+    recordChapterCleared({ ...CHAPTER, courseId: 500, courseTitle: "Physics One-shots" }, at(6));
+    const steps = () => Object.fromEntries(readStore().items.map((item) => [item.id, item.step]));
+
+    // Day 8: the first record is past its cooldown; the second, cleared on day 6, is not.
+    expect(recordChapterWatched({ courseId: 912, chapterId: 27 }, at(8)).id).toBe("374:27");
+    expect(steps()).toEqual({ "374:27": 1, "500:27": 0 });
+
+    // Day 10: the second has earned credit; the first is inside its new cooldown.
+    expect(recordChapterWatched({ courseId: 912, chapterId: 27 }, at(10)).id).toBe("500:27");
+    expect(steps()).toEqual({ "374:27": 1, "500:27": 1 });
+  });
+
+  it("returns the watched course's own record when that one moved", () => {
+    recordChapterCleared(CHAPTER, CLEARED);
+    recordChapterCleared({ ...CHAPTER, courseId: 500 }, CLEARED);
+    expect(recordChapterWatched({ courseId: 500, chapterId: 27 }, at(8)).id).toBe("500:27");
+  });
+
   it("never invents a record for a chapter that was never cleared", () => {
     // Watching a chapter you never finished is learning, not revising.
     expect(recordChapterWatched(CHAPTER, at(30))).toBeNull();

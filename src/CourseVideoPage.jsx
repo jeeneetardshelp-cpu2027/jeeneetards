@@ -387,9 +387,10 @@ export default function CourseVideoPage() {
       watched: true,
     }, { force: true });
     // A student replaying a chapter they already finished IS revising it, so
-    // the revision queue must stop suggesting it. No-op unless that chapter
-    // was cleared, and rate-limited inside the store so one evening of
-    // replaying cannot walk a chapter up the ladder.
+    // the revision queue must stop suggesting it. That holds in any course,
+    // including the one-shot ChapterRevision recommends on this page. No-op
+    // unless that chapter was cleared, and rate-limited inside the store so
+    // one evening of replaying cannot walk a chapter up the ladder.
     recordChapterWatched({
       courseId: course.id,
       chapterId: activeLesson.chapter?.id ?? chapterId,
