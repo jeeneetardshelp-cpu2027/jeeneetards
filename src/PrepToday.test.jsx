@@ -237,7 +237,7 @@ describe("shareMessage", () => {
   });
 
   it("adds no caveat to an announced exam", () => {
-    const announced = { ...exam, status: "announced", date: "2027-05-02" };
+    const announced = { ...exam, status: "announced", date: "2027-05-02", checkedOn: "2027-04-20" };
     const text = shareMessage(announced, examCountdown(announced, new Date("2027-05-01T09:00:00Z")), "https://x.test");
     expect(text).not.toMatch(/has not announced dates yet/);
   });
@@ -249,7 +249,7 @@ describe("shareMessage", () => {
   });
 
   it("drops the hedge for an announced exam and handles exam day", () => {
-    const announced = { ...exam, status: "announced", date: "2027-05-02" };
+    const announced = { ...exam, status: "announced", date: "2027-05-02", checkedOn: "2027-04-20" };
     const text = shareMessage(announced, examCountdown(announced, new Date("2027-05-01T09:00:00Z")), "https://x.test");
     expect(text).toMatch(/^1 day to /);
     expect(text).not.toMatch(/^About/);

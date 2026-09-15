@@ -12,12 +12,47 @@
 //   1. Open the official notification (officialUrl below).
 //   2. Set status: "announced" and date: "YYYY-MM-DD" (the exam's FIRST day).
 //   3. Leave expectedFrom/expectedTo alone — they are only read while expected.
+//   4. Set checkedOn to the day you looked.
 // The countdown then switches from "about N days" to an exact "N days", and
 // the "dates not yet announced" line disappears on its own.
+//
+// TO RE-CHECK AN EXAM that is still not announced: open officialUrl, and if
+// nothing has changed, set checkedOn to today. Nothing else.
 //
 // Never invent a precise date to make the countdown look better. A student
 // planning revision around a fabricated date is the single worst failure this
 // site could ship.
+//
+// LAST CHECKED, and why a countdown expires.
+// "NTA has not announced dates yet" is true on the day someone looks and false
+// on the day the information bulletin appears. NTA published the JEE Main 2026
+// bulletin on 31 Oct 2025 and the 2025 one on 28 Oct 2024. Nothing in this file
+// changes when that happens, so the sentence would go on being shown after it
+// stopped being true. An announced date can be moved too.
+//
+// So every entry records `checkedOn`: the day a person last read the official
+// source and found the entry still accurate. examCountdown() returns null once
+// that check is more than CHECK_EXPIRES_AFTER_DAYS old, and the countdown
+// disappears instead of repeating something nobody has verified. An entry with
+// no checkedOn counts as never checked and is not shown.
+//
+// Recorded checks:
+//   15 Sep 2026  jeemain.nta.nic.in and neet.nta.nic.in read directly. The
+//                newest notices on both were for the 2026 exams, with nothing
+//                for 2027. Applies to both JEE Main sessions and NEET UG, which
+//                disappear from 31 Oct 2026 unless re-checked.
+//   27 Aug 2026  jeeadv.ac.in and cbse.gov.in served no readable text to the
+//                15 Sep check, so JEE Advanced and CBSE keep the day their
+//                windows were written (commit 69fcfdb). Stamping 15 Sep on them
+//                would record a check that did not happen. They disappear from
+//                12 Oct 2026 unless someone opens those sites and re-checks.
+
+/**
+ * How many days a check stays good. Long enough that a re-check fits easily
+ * between releases, short enough that a stale "not announced yet" cannot
+ * outlive a bulletin season.
+ */
+export const CHECK_EXPIRES_AFTER_DAYS = 45;
 
 /** Exams the countdown knows about, soonest first within a goal. */
 export const EXAM_CALENDAR = Object.freeze([
@@ -33,6 +68,7 @@ export const EXAM_CALENDAR = Object.freeze([
     expectedLabel: "late January 2027",
     authority: "NTA",
     officialUrl: "https://jeemain.nta.nic.in/",
+    checkedOn: "2026-09-15",
   },
   {
     slug: "jee-main-2027-session-2",
@@ -46,6 +82,7 @@ export const EXAM_CALENDAR = Object.freeze([
     expectedLabel: "early April 2027",
     authority: "NTA",
     officialUrl: "https://jeemain.nta.nic.in/",
+    checkedOn: "2026-09-15",
   },
   {
     slug: "jee-advanced-2027",
@@ -59,6 +96,7 @@ export const EXAM_CALENDAR = Object.freeze([
     expectedLabel: "late May 2027",
     authority: "IIT (JAB)",
     officialUrl: "https://jeeadv.ac.in/",
+    checkedOn: "2026-08-27",
   },
   {
     slug: "neet-ug-2027",
@@ -72,6 +110,7 @@ export const EXAM_CALENDAR = Object.freeze([
     expectedLabel: "early May 2027",
     authority: "NTA",
     officialUrl: "https://neet.nta.nic.in/",
+    checkedOn: "2026-09-15",
   },
   {
     slug: "cbse-class-12-2027",
@@ -85,6 +124,7 @@ export const EXAM_CALENDAR = Object.freeze([
     expectedLabel: "February–April 2027",
     authority: "CBSE",
     officialUrl: "https://www.cbse.gov.in/",
+    checkedOn: "2026-08-27",
   },
 ]);
 
@@ -106,9 +146,21 @@ export function targetDay(exam) {
 }
 
 /**
+ * Whether the entry's last check is recent enough to show it. `day` is the
+ * student's calendar day as a midnight-UTC timestamp, the same unit targetDay
+ * returns. A missing or malformed checkedOn is never recent.
+ */
+function recentlyChecked(exam, day) {
+  const checked = parseDay(exam.checkedOn);
+  if (checked == null) return false;
+  return Math.round((day - checked) / DAY_MS) <= CHECK_EXPIRES_AFTER_DAYS;
+}
+
+/**
  * Days from `today` until the exam, and whether that number is approximate.
- * Returns null when there is no usable date, or once the exam has passed —
- * a countdown that has run out must disappear, not show a negative number.
+ * Returns null when there is no usable date, once the exam has passed (a
+ * countdown that has run out must disappear, not show a negative number), and
+ * once nobody has checked the entry for CHECK_EXPIRES_AFTER_DAYS.
  */
 export function examCountdown(exam, today = new Date()) {
   const target = targetDay(exam);
@@ -127,6 +179,9 @@ export function examCountdown(exam, today = new Date()) {
   );
   const days = Math.round((target - now) / DAY_MS);
   if (days < 0) return null;
+  // See LAST CHECKED above. Past this point the sentence below is no longer
+  // something the site knows to be true, so it is not said at all.
+  if (!recentlyChecked(exam, now)) return null;
   return {
     days,
     approximate: exam.status !== "announced",
@@ -140,10 +195,12 @@ export function examCountdown(exam, today = new Date()) {
 
 /**
  * The soonest upcoming exam for a goal ("jee" | "neet" | "school"), or the
- * soonest overall when no goal is given. Past exams are skipped.
+ * soonest overall when no goal is given. Past exams, and entries whose check
+ * has expired, are skipped. `calendar` exists so tests can supply entries
+ * checked relative to their own dates.
  */
-export function nextExam(goal = null, today = new Date()) {
-  const upcoming = EXAM_CALENDAR
+export function nextExam(goal = null, today = new Date(), calendar = EXAM_CALENDAR) {
+  const upcoming = calendar
     .filter((exam) => (goal ? exam.goal === goal : true))
     .map((exam) => ({ exam, countdown: examCountdown(exam, today) }))
     .filter((entry) => entry.countdown !== null)
