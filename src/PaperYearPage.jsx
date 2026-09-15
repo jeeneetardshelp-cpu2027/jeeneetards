@@ -33,6 +33,7 @@ import {
   splitJeeMainPapers,
 } from "./studyMaterialLandings.js";
 import { useJeeMainPapers } from "./useJeeMainPapers.js";
+import { LECTURE_LINK_PROMPT, lectureLinkForExam, lectureLinkText } from "./examLectureLinks.js";
 
 function PaperGrid({ items, typeLabel }) {
   return (
@@ -152,6 +153,9 @@ export default function PaperYearPage() {
   const { landing, year } = route;
   const exam = landing.examLabel;
   const meta = paperYearMeta(landing, year);
+  // A student working through a paper finds the chapter they are weak in. This
+  // is the way back to its lectures, the same link the edge body carries.
+  const lectures = lectureLinkForExam(landing.id);
 
   // A year with nothing reviewed in it is not a page. Say so, exactly as the
   // edge does, instead of publishing an empty year.
@@ -225,6 +229,20 @@ export default function PaperYearPage() {
             emptyDescription="No reviewed paper with worked solutions is listed for this year. Official answer keys are not labelled as worked solutions."
           />
         </div>
+      )}
+
+      {/* A link only: the picker hands off to /browse, so this page never lists
+          courses itself (guarded in noSecondResultSystem.test.js). */}
+      {lectures && (
+        <p className="mb-8 text-sm text-ink-2">
+          {LECTURE_LINK_PROMPT}{" "}
+          <Link
+            to={lectures.path}
+            className="inline-flex min-h-11 items-center font-semibold text-accent"
+          >
+            {lectureLinkText(lectures)}
+          </Link>
+        </p>
       )}
     </Page>
   );

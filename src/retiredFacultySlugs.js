@@ -71,8 +71,10 @@ export const RETIRED_FACULTY_SLUGS = Object.freeze({
 
 /**
  * The slug a removed duplicate profile should send its visitors to, or null.
- * Own entries only: /faculty/constructor must not find Object.prototype.
+ * Own entries only: /faculty/constructor must not find Object.prototype. The
+ * long-standing hasOwnProperty.call spelling, not Object.hasOwn, so this edge
+ * path does not depend on how new the Edge Runtime's JavaScript is.
  */
 export function retiredFacultyTarget(slug) {
-  return Object.hasOwn(RETIRED_FACULTY_SLUGS, slug) ? RETIRED_FACULTY_SLUGS[slug] : null;
+  return Object.prototype.hasOwnProperty.call(RETIRED_FACULTY_SLUGS, slug) ? RETIRED_FACULTY_SLUGS[slug] : null;
 }

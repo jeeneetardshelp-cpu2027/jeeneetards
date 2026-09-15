@@ -1846,30 +1846,56 @@ describe("edge-rendered discovery landings", () => {
   // The 40 duplicate profiles deleted on 2026-09-15 were in the sitemap for a
   // week. Once the lookup confirms a copy is gone, its address goes to the
   // person it duplicated. See src/retiredFacultySlugs.js.
-  const stubFacultyLookup = (answer) => {
+  //
+  // The stub answers at the exact RPC address and by the slug the middleware
+  // actually asked for: slugs in `missing` get production's null, any other
+  // slug gets a real profile. A middleware that looked up the wrong slug — say
+  // the redirect target — would be handed a profile and serve a 200 at the
+  // retired address, and these tests would see it.
+  const FACULTY_RPC = "https://catalog.example/rest/v1/rpc/get_faculty_profile";
+  const profileFor = (slug, display_name = "A Real Teacher") => ({
+    id: 900,
+    display_name,
+    slug,
+    verified: false,
+    aliases: [],
+    institutes: [],
+    course_count: 0,
+    courses: [],
+  });
+  const stubFacultyLookup = ({ missing = [], lookup } = {}) => {
     vi.stubEnv("VITE_SUPABASE_URL", "https://catalog.example");
     vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
-    vi.stubGlobal("fetch", vi.fn(async (input) =>
-      String(input).includes("/rest/v1/rpc/get_faculty_profile")
-        ? answer()
-        : new Response(shell, { status: 200 })));
+    const asked = [];
+    vi.stubGlobal("fetch", vi.fn(async (input, init) => {
+      if (String(input) !== FACULTY_RPC) return new Response(shell, { status: 200 });
+      const slug = JSON.parse(init.body).p_slug;
+      asked.push(slug);
+      if (lookup) return lookup(slug);
+      return Response.json(missing.includes(slug) ? null : profileFor(slug));
+    }));
+    return asked;
   };
 
   it.each([
-    ["/faculty/alakh-pandey-2", "/faculty/alakh-pandey"],
-    ["/faculty/abj", "/faculty/amit-bijarnia"],
-    ["/faculty/saleem", "/faculty/saleem-ahmad"],
-  ])("redirects the removed duplicate %s to %s once the lookup confirms it is gone", async (path, target) => {
-    stubFacultyLookup(() => Response.json(null));
+    ["https://www.jeeneetard.com/faculty/alakh-pandey-2", "https://www.jeeneetard.com/faculty/alakh-pandey"],
+    ["https://www.jeeneetard.com/faculty/abj", "https://www.jeeneetard.com/faculty/amit-bijarnia"],
+    ["https://www.jeeneetard.com/faculty/saleem", "https://www.jeeneetard.com/faculty/saleem-ahmad"],
+    // The request's own origin: a preview deployment redirects within itself.
+    ["https://preview.example/faculty/alk", "https://preview.example/faculty/alok-kumar"],
+  ])("redirects the removed duplicate %s to %s once the lookup confirms it is gone", async (requested, target) => {
+    const slug = new URL(requested).pathname.split("/").pop();
+    const asked = stubFacultyLookup({ missing: [slug] });
 
-    const response = await middleware(new Request(`https://www.jeeneetard.com${path}`));
+    const response = await middleware(new Request(requested));
 
+    expect(asked).toEqual([slug]);
     expect(response.status).toBe(308);
-    expect(response.headers.get("location")).toBe(`https://www.jeeneetard.com${target}`);
+    expect(response.headers.get("location")).toBe(target);
   });
 
   it("keeps the query string across a retired faculty redirect", async () => {
-    stubFacultyLookup(() => Response.json(null));
+    stubFacultyLookup({ missing: ["abj"] });
 
     const response = await middleware(
       new Request("https://www.jeeneetard.com/faculty/abj?ref=share"),
@@ -1881,47 +1907,55 @@ describe("edge-rendered discovery landings", () => {
 
   it("serves a real teacher who holds a retired slug instead of redirecting", async () => {
     // The slug trigger would give a genuine second Vikas Gupta this slug.
-    stubFacultyLookup(() => Response.json({
-      id: 900,
-      display_name: "Vikas Gupta",
-      slug: "vikas-gupta-2",
-      verified: false,
-      aliases: [],
-      institutes: [],
-      course_count: 0,
-      courses: [],
-    }));
+    const asked = stubFacultyLookup({
+      lookup: (slug) => Response.json(
+        slug === "vikas-gupta-2" ? profileFor("vikas-gupta-2", "Vikas Gupta") : null,
+      ),
+    });
 
     const response = await middleware(
       new Request("https://www.jeeneetard.com/faculty/vikas-gupta-2"),
     );
 
+    expect(asked).toEqual(["vikas-gupta-2"]);
     expect(response.status).toBe(200);
     expect(await response.text()).toContain("<h1>Vikas Gupta</h1>");
   });
 
-  it("does not redirect a retired slug when the lookup is unconfirmed", async () => {
-    stubFacultyLookup(() => new Response("temporarily unavailable", { status: 503 }));
+  // Unconfirmed means anything but a 200 answer: an error status, or a fetch
+  // that never returns (the 1500 ms abort, a network reset). None of them may
+  // become a permanent, CDN-cached redirect.
+  it.each([
+    ["a 503", () => new Response("temporarily unavailable", { status: 503 })],
+    ["a 404 from PostgREST", () => Response.json({ code: "PGRST202" }, { status: 404 })],
+    ["a 401 after a key rotation", () => Response.json({ message: "Invalid API key" }, { status: 401 })],
+    ["a timeout abort", () => Promise.reject(new DOMException("The operation was aborted.", "AbortError"))],
+    ["a network failure", () => Promise.reject(new TypeError("fetch failed"))],
+  ])("does not redirect a retired slug when the lookup ends in %s", async (_label, lookup) => {
+    stubFacultyLookup({ lookup });
 
     const response = await middleware(
       new Request("https://www.jeeneetard.com/faculty/alakh-pandey-2"),
     );
 
     expect(response.headers.get("x-middleware-next")).toBe("1");
+    expect(response.headers.get("location")).toBeNull();
   });
 
-  it.each(["constructor", "toString", "hasOwnProperty"])(
-    "still 404s /faculty/%s — only the map's own entries redirect",
-    async (slug) => {
-      stubFacultyLookup(() => Response.json(null));
+  it.each([
+    "constructor", "toString", "hasOwnProperty",
+    // Not a numbering rule: an unlisted numbered slug is an ordinary missing
+    // page, even when its base slug is a real teacher.
+    "vikas-gupta-3", "mohit-tyagi-2", "not-a-real-faculty-2",
+  ])("still 404s /faculty/%s — only the map's own entries redirect", async (slug) => {
+    stubFacultyLookup({ missing: [slug] });
 
-      const response = await middleware(
-        new Request(`https://www.jeeneetard.com/faculty/${slug}`),
-      );
+    const response = await middleware(
+      new Request(`https://www.jeeneetard.com/faculty/${slug}`),
+    );
 
-      expect(response.status).toBe(404);
-    },
-  );
+    expect(response.status).toBe(404);
+  });
 });
 
 // ---------------------------------------------------------------------------
