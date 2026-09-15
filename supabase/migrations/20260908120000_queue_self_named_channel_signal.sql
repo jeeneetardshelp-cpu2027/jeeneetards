@@ -42,6 +42,36 @@
 -- on a channel of that name. A teacher with one self-named course among many is
 -- a person, not an organisation, and must not be flagged.
 --
+-- FIXED 15 Sep 2026, BEFORE IT EVER RAN. Two defects, one cause.
+--
+-- 1. THE COLUMN. Both playlists references named pl.institute_channel_id.
+--    Production has no such column: playlists carries channel_id, bigint NOT
+--    NULL (20260831140005_production_baseline.sql). Checked read-only against
+--    production on 15 Sep: selecting playlists.institute_channel_id returns
+--    42703 column does not exist, selecting channel_id returns rows. So this
+--    file could not apply, and because db push stops at the first failure it
+--    also held back 20260908150000 behind it. Both references now use
+--    pl.channel_id.
+--
+-- 2. A DROPPED FILTER. Production's get_proposal_groups only offers
+--    candidates with match_rank <= 2. The body below had lost that predicate,
+--    so applying it would have widened the list of existing faculty offered to
+--    a reviewer with weaker matches -- a behaviour change nobody asked for, in
+--    a migration whose promise is one new column and nothing else. Restored,
+--    verbatim from the baseline.
+--
+-- THE COMMON CAUSE was the rehearsal. It hand-typed what it needed: a
+-- playlists table containing the invented column, and a
+-- search_teachers_internal stub with five output columns where production
+-- returns thirteen, none of them match_rank. Against that fixture the wrong
+-- column ran, and the right filter could not have run at all, so the test
+-- passed a migration production would reject and could not see the
+-- regression. src/queueSelfNamedChannelSqlRehearsal.test.js now takes the
+-- tables, the pre-migration functions and their grants from the baseline,
+-- stubs search_teachers_internal with the baseline signature, and asserts
+-- that the filter, the grants and every existing output column survive the
+-- drop-and-recreate.
+--
 -- Return-type change, so these two are DROPped and recreated rather than
 -- replaced -- Postgres refuses `create or replace` when the output columns
 -- change. Grants are restated because a drop takes them with it.
@@ -84,6 +114,7 @@ returns table (
                      'display_name', c.display_name, 'match_type', c.match_type,
                      'institutes', c.institutes, 'course_count', c.course_count))
                      from public.search_teachers_internal(min(p.raw_teacher), 5, true) c
+                     where c.match_rank <= 2
                   ), '[]'::jsonb),
          -- TRUE only when the name carries no course that sits anywhere else.
          -- Whitespace is collapsed and case folded, nothing more: this must
@@ -95,7 +126,7 @@ returns table (
                         = lower(regexp_replace(btrim(pl.teacher), '[[:space:]]+', ' ', 'g'))
                   ) = count(*)
              from public.playlists pl
-             left join public.institutes_channels ic on ic.id = pl.institute_channel_id
+             left join public.institutes_channels ic on ic.id = pl.channel_id
             where pl.teacher = any (array_agg(p.raw_teacher))
          ), false)
     from public.teacher_name_proposals p
@@ -167,7 +198,7 @@ begin
   select count(*) into v_drift
     from public.get_proposal_groups('pending') g
    where g.self_named_channel
-     and (select count(distinct pl.institute_channel_id)
+     and (select count(distinct pl.channel_id)
             from public.playlists pl
            where pl.teacher in (select jsonb_array_elements(g.variants) ->> 'raw_teacher')) > 1;
   if v_drift > 0 then
