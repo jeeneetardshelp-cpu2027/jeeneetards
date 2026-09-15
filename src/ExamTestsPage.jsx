@@ -25,6 +25,7 @@ import { OnSiteResourceCard, ResourceCard, SECTION_ART } from "./testCards.jsx";
 import { RELEASE_CAPABILITIES } from "./releaseCapabilities.js";
 import { ON_SITE_TEST_RESOURCES } from "./studyMaterialLandings.js";
 import { testPageSchemas } from "./testPageStructuredData.js";
+import { LECTURE_LINK_PROMPT, lectureLinkForExam, lectureLinkText } from "./examLectureLinks.js";
 import {
   TEST_SECTIONS,
   findTestSection,
@@ -56,6 +57,10 @@ export default function ExamTestsPage() {
   const onSite = RELEASE_CAPABILITIES.studyMaterials
     ? ON_SITE_TEST_RESOURCES[section.id] ?? null
     : null;
+  // Every card above leads off the site. This is the way back, to the lectures
+  // for the chapter a student just lost marks in. Null for an exam with no
+  // single lecture lane (the boards, olympiad).
+  const lectures = lectureLinkForExam(section.id);
 
   return (
     <div className="min-h-screen bg-canvas text-ink">
@@ -123,6 +128,22 @@ export default function ExamTestsPage() {
                 ))}
                 {onSite && <OnSiteResourceCard resource={onSite} />}
               </ul>
+            </Reveal>
+          )}
+
+          {/* A link only. The picker hands off to /browse, so this page never
+              lists courses itself (guarded in noSecondResultSystem.test.js). */}
+          {lectures && (
+            <Reveal className="mt-12">
+              <p className="text-sm text-ink-2">
+                {LECTURE_LINK_PROMPT}{" "}
+                <Link
+                  to={lectures.path}
+                  className="inline-flex min-h-11 items-center font-semibold text-accent hover:opacity-80"
+                >
+                  {lectureLinkText(lectures)}
+                </Link>
+              </p>
             </Reveal>
           )}
 

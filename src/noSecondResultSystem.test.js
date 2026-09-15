@@ -145,3 +145,20 @@ describe("one header for every student-facing route", () => {
     expect(code("FacultyProfile.jsx")).toMatch(/<GlobalHeader\b/);
   });
 });
+
+describe("mock-test and paper pages link to lectures, never list them", () => {
+  // They send a student to the guided chapter picker (examLectureLinks.js), and
+  // Explore hands off to /browse. A course list here would be a second result
+  // system growing out of a link.
+  const PAGES = ["ExamTestsPage.jsx", "PaperYearPage.jsx"];
+
+  it.each(PAGES)("%s uses the shared lecture link", (file) => {
+    expect(code(file)).toMatch(/\blectureLinkForExam\(/);
+  });
+
+  it.each(PAGES)("%s does not fetch or render courses", (file) => {
+    const src = code(file);
+    for (const banned of ["usePlaylistBrowse", "PlaylistCard", "useChapterCourses", "CourseCard", "get_chapter_courses"])
+      expect([banned, new RegExp(`\\b${banned}\\b`).test(src)]).toEqual([banned, false]);
+  });
+});
