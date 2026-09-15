@@ -34,7 +34,8 @@
 // source and found the entry still accurate. examCountdown() returns null once
 // that check is more than CHECK_EXPIRES_AFTER_DAYS old, and the countdown
 // disappears instead of repeating something nobody has verified. An entry with
-// no checkedOn counts as never checked and is not shown.
+// no checkedOn counts as never checked and is not shown, and so does one dated
+// more than a day ahead of the student's calendar, which can only be a typo.
 //
 // Recorded checks:
 //   15 Sep 2026  jeemain.nta.nic.in and neet.nta.nic.in read directly. The
@@ -149,11 +150,19 @@ export function targetDay(exam) {
  * Whether the entry's last check is recent enough to show it. `day` is the
  * student's calendar day as a midnight-UTC timestamp, the same unit targetDay
  * returns. A missing or malformed checkedOn is never recent.
+ *
+ * Nor is one dated more than a day after `day`: nobody can check the day after
+ * tomorrow, so that is a typo. Its age came out negative and passed the window,
+ * so "2026-12-15" typed for "2026-09-15" would have kept "not announced yet" up
+ * to 29 Jan 2027, or the exam if sooner, instead of 30 Oct 2026. One day of
+ * slack stays, for a student west of India whose calendar is still on the
+ * previous day when a check stamped in IST ships.
  */
 function recentlyChecked(exam, day) {
   const checked = parseDay(exam.checkedOn);
   if (checked == null) return false;
-  return Math.round((day - checked) / DAY_MS) <= CHECK_EXPIRES_AFTER_DAYS;
+  const age = Math.round((day - checked) / DAY_MS);
+  return age >= -1 && age <= CHECK_EXPIRES_AFTER_DAYS;
 }
 
 /**

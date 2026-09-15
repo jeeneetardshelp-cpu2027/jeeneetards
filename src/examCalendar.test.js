@@ -47,12 +47,14 @@ describe("the shipped calendar is honest by construction", () => {
     }
   });
 
-  it("records when every entry was last checked, and the check precedes the exam", () => {
+  it("records when every entry was last checked, and no check is dated after its exam", () => {
     for (const exam of EXAM_CALENDAR) {
       expect(exam.checkedOn, exam.slug).toMatch(/^\d{4}-\d{2}-\d{2}$/);
-      // A check dated after the exam window opens is a typo, most likely a
-      // wrong year, and would keep the countdown alive long after anyone looked.
-      expect(Date.parse(exam.checkedOn) < Date.parse(exam.expectedFrom), exam.slug).toBe(true);
+      // A check dated after the day the countdown counts to is a typo, most
+      // likely a wrong year. Compared with that day rather than expectedFrom:
+      // an announced exam keeps its old window, and re-checking it close to
+      // the real date must not turn CI red.
+      expect(Date.parse(`${exam.checkedOn}T00:00:00Z`) <= targetDay(exam), exam.slug).toBe(true);
     }
   });
 });
@@ -91,24 +93,27 @@ describe("examCountdown", () => {
 });
 
 describe("nextExam", () => {
+  // Every case here uses entries checked shortly before its own date. The
+  // shipped stamps move each time someone re-checks an exam, the one routine
+  // edit examCalendar.js asks for, and a check dated after the clock no longer
+  // counts, so a test about ordering must not read them.
   it("picks the soonest upcoming exam in a lane and skips finished ones", () => {
     // Well before everything: JEE's soonest is session 1.
-    const jee = nextExam("jee", at("2026-09-01"));
+    const jee = nextExam("jee", at("2026-09-01"), checkedAt("2026-08-25"));
     expect(jee.exam.slug).toBe("jee-main-2027-session-1");
-    // After session 1's window opens, session 2 becomes the soonest. The shipped
-    // checks would have expired by February, so this ordering test uses entries
-    // checked shortly before its own date.
+    // After session 1's window opens, session 2 becomes the soonest.
     const later = nextExam("jee", at("2027-02-01"), checkedAt("2027-01-25"));
     expect(later.exam.slug).toBe("jee-main-2027-session-2");
   });
 
   it("returns null once a lane has no upcoming exam left", () => {
-    expect(nextExam("jee", at("2030-01-01"))).toBeNull();
-    expect(nextExam("not-a-goal", at("2026-09-01"))).toBeNull();
+    expect(nextExam("jee", at("2030-01-01"), checkedAt("2029-12-25"))).toBeNull();
+    expect(nextExam("not-a-goal", at("2026-09-01"), checkedAt("2026-08-25"))).toBeNull();
   });
 
   it("falls back to the soonest across all lanes with no goal", () => {
-    expect(nextExam(null, at("2026-09-01")).exam.slug).toBe("jee-main-2027-session-1");
+    expect(nextExam(null, at("2026-09-01"), checkedAt("2026-08-25")).exam.slug)
+      .toBe("jee-main-2027-session-1");
   });
 });
 
@@ -176,6 +181,29 @@ describe("a countdown expires when nobody has re-checked it", () => {
     const fresh = { ...EXPECTED, slug: "fresh-but-later", expectedFrom: "2027-01-28", checkedOn };
     expect(nextExam("jee", daysAfterCheck(10), [stale, fresh]).exam.slug).toBe("fresh-but-later");
     expect(nextExam("jee", daysAfterCheck(10), [stale])).toBeNull();
+  });
+
+  it("keeps a check good for 45 days, stated in dates rather than the constant", () => {
+    // Every other case moves with CHECK_EXPIRES_AFTER_DAYS, so any window from
+    // 35 to 81 days left them all green. Checked 1 Nov: shown 16 Dec, gone 17 Dec.
+    expect(examCountdown(exam, new Date(2026, 11, 16, 12))).not.toBeNull();
+    expect(examCountdown(exam, new Date(2026, 11, 17, 12))).toBeNull();
+  });
+
+  it("does not count a check dated two or more days ahead as fresh", () => {
+    // Nobody can check tomorrow, so a future stamp is a typo. Its age came out
+    // negative, and a negative age passed the window: "2026-12-15" typed for
+    // "2026-09-15" kept "not announced yet" up until the exam window opened.
+    const typo = { ...EXPECTED, checkedOn: "2026-12-15" };
+    expect(examCountdown(typo, new Date(2026, 8, 15, 12))).toBeNull();
+    expect(examCountdown(typo, new Date(2026, 11, 13, 12))).toBeNull();
+  });
+
+  it("allows one day of slack, for a student whose calendar is behind India's", () => {
+    // A check stamped in IST can ship while a student west of India is still on
+    // the previous day. Two days ahead is not a time zone.
+    expect(examCountdown(exam, daysAfterCheck(-1))).not.toBeNull();
+    expect(examCountdown(exam, daysAfterCheck(-2))).toBeNull();
   });
 
   it("expires every shipped entry the day after its own check runs out", () => {
