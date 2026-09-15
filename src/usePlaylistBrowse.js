@@ -46,9 +46,9 @@ function toCard(row) {
     // The resolved identity BEHIND that free text, when the faculty registry
     // names exactly one slugged teacher for this course — the destination for
     // the credit above, never a replacement for it. Null for the courses whose
-    // credit has no link (128 of them on 2026-09-08) and for every course that
-    // resolves two or more slugs (134 — playlist 91 is two real people, most
-    // of the rest are duplicate registry rows for one). courseTeacherSlug.js
+    // credit has no link (128 of them on 2026-09-15) and for every course that
+    // resolves two or more slugs (15, all real co-teaching, playlist 91 among
+    // them). courseTeacherSlug.js
     // owns that rule, and the counts behind it, for all three read paths.
     teacherSlug: courseTeacherSlug(row.faculty),
     instituteId: row.institutes_channels?.id ?? null,

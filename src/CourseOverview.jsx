@@ -84,7 +84,7 @@ export default function CourseOverview({
               {/* The credit becomes a link only when the course resolved to
                   exactly ONE teacher with a faculty page. `teacherSlug` is
                   null for the 128 courses whose free-text teacher has no
-                  slugged registry row behind it, and null for the 134 credited
+                  slugged registry row behind it, and null for the 15 credited
                   to two or more registered people — linking whichever row came
                   back first would put the wrong human under someone else's name.
                   Those stay plain text; a slug guessed from the credit string

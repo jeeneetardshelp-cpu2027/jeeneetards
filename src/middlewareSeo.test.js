@@ -2008,7 +2008,7 @@ describe("course pages linking their teacher's faculty profile", () => {
     // the `", "` separator the hooks read best, and a raw space here would
     // leave as %20 and reach PostgREST as a column named " faculty".
     expect(lookup).not.toMatch(/[\s]|%20/);
-    // Never `!inner`. 206 of 490 playlists have no playlist_teachers row, and
+    // Never `!inner`. 206 of 493 playlists have no playlist_teachers row, and
     // an inner join would drop each of them from its own course page — the
     // lookup would come back empty and this middleware would answer 404 for a
     // course that exists.
