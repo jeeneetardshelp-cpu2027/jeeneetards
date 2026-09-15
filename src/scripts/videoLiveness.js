@@ -125,3 +125,32 @@ export function planLivenessUpdate(videos, details, nowIso) {
   }
   return { summary, byStatus, updates, dead };
 }
+
+/**
+ * The report a run writes when nothing is due for a check: every video was
+ * verified within the --max-age window, so YouTube is not called at all.
+ *
+ * This is the NORMAL result on most weekly runs — each video is checked about
+ * monthly — and until 15 Sep 2026 the runner exited on this path WITHOUT
+ * writing a report. The workflow's verdict step then found no file and, as
+ * designed, failed on "unknown". So every quiet week went red, which is worse
+ * than noise: a genuinely broken run looked exactly the same.
+ *
+ * Same shape as the report a full run writes, so livenessGate needs no special
+ * case to accept it: empty dead / newly_blocked / recovered, and a summary with
+ * the very keys planLivenessUpdate produces (taken from it, so they cannot
+ * drift), all zero. `nothing_due` records WHY nothing was checked, so the
+ * summary can say that instead of implying a check found nothing.
+ */
+export function buildNothingDueReport({ nowIso, dryRun, totalVideos, maxAgeDays }) {
+  const { summary } = planLivenessUpdate([], new Map(), nowIso);
+  return {
+    generated_at: nowIso,
+    dry_run: dryRun === true,
+    summary,
+    nothing_due: { total_videos: totalVideos, max_age_days: maxAgeDays },
+    newly_blocked: [],
+    dead: [],
+    recovered: [],
+  };
+}
