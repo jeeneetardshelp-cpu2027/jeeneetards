@@ -59,6 +59,7 @@ import {
   renderChapterLandingBody,
 } from "./ogInject.js";
 import { getFacultyGuide } from "./src/facultyGuides.js";
+import { retiredFacultyTarget } from "./src/retiredFacultySlugs.js";
 // Pure data + one pure function, no React and no Supabase client — safe to
 // pull into the edge runtime, same as the other src/ imports above.
 import { FACULTY_SLUG_EMBED } from "./src/courseTeacherSlug.js";
@@ -953,6 +954,13 @@ export default async function middleware(request) {
         clearTimeout(timer);
       }
       if (lookupConfirmed && !profile) {
+        // A profile address we published and then removed goes to the person
+        // it duplicated — only now that the lookup has confirmed no teacher
+        // holds the slug. See src/retiredFacultySlugs.js.
+        const retiredTarget = retiredFacultyTarget(slug);
+        if (retiredTarget) {
+          return redirectResponse(url, `/faculty/${retiredTarget}${url.search}`);
+        }
         return notFoundResponse(request, url, "Faculty page not found");
       }
       if (!lookupConfirmed) return next();

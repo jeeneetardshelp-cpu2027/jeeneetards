@@ -1,5 +1,6 @@
 // queueSelfNamedChannelSqlRehearsal.test.js — the queue's new signal, on a real
-// engine, against tables and functions taken from the production baseline.
+// engine, against tables, functions and privileges taken from the production
+// baseline.
 //
 // WHAT THIS PROVES that production data cannot. On the live catalogue every
 // organisation that trips this signal happens to be an organisation, so a rule
@@ -16,15 +17,37 @@
 // on production (42703). Its search_teachers_internal stub had five output
 // columns where production returns thirteen, with no match_rank -- which is
 // also why nothing here could notice that the migration had dropped
-// production's `match_rank <= 2` candidate filter. A fixture typed from the
-// same mental model as the migration shares its mistakes. So every table the
-// migration reads, both functions it replaces, their grants, and the signature
-// of the function it calls are now read out of
-// 20260831140005_production_baseline.sql.
+// production's `match_rank <= 2` candidate filter. So every table the migration
+// reads, both functions it replaces, their grants, and the signature of the
+// function it calls are read out of 20260831140005_production_baseline.sql.
 //
-// The migration DROPs and recreates two functions, so getting past the exec is
-// itself an assertion: the preflight refuses if either is missing, and its own
-// self-test runs inside the same statement.
+// AND WHY THE GRANTS CHECK USED TO LIE. The second version then asserted that
+// EXECUTE privileges were "identical before and after the drop" -- and passed,
+// while the same migration on production handed the admin faculty review queue
+// to the public anon key: get_proposal_groups went from 401 42501 to 200 with
+// 7 rows. Production carries Supabase's default privileges:
+//
+//     ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public"
+//       GRANT ALL ON FUNCTIONS TO "anon";          (and authenticated, ...)
+//
+// so a function that is DROPped and CREATEd is granted straight to anon and
+// authenticated, and `revoke all ... from public` does not remove a direct role
+// grant. PGlite starts with no default privileges, so here the recreated
+// function got exactly what the SQL named and there was nothing to find. The
+// test reproduced the SQL and not the platform, and certified the leak.
+//
+// So the rehearsal now applies the baseline's own ALTER DEFAULT PRIVILEGES
+// before the migration runs -- after the pre-migration functions exist, because
+// on production they predate those defaults' effect too -- and runs the chain
+// as production ran it: 20260908120000, which must visibly leak, then
+// 20260915100000, which must restore production's grants exactly. PGlite still
+// does not reproduce PostgREST, auth.* or event triggers; default privileges
+// are the one platform fact these two migrations depend on, and that one is now
+// here.
+//
+// The migrations DROP and recreate two functions, so getting past each exec is
+// itself an assertion: the preflights refuse if a function is missing, and both
+// self-tests run inside the same statements.
 
 import { readFileSync } from "node:fs";
 import { PGlite } from "@electric-sql/pglite";
@@ -32,6 +55,8 @@ import { beforeAll, describe, expect, it } from "vitest";
 
 const MIGRATION = readFileSync(
   "supabase/migrations/20260908120000_queue_self_named_channel_signal.sql", "utf8");
+const GRANTS_FIX = readFileSync(
+  "supabase/migrations/20260915100000_restore_review_queue_grants.sql", "utf8");
 const BASELINE = readFileSync(
   "supabase/migrations/20260831140005_production_baseline.sql", "utf8");
 
@@ -71,6 +96,11 @@ function baselineSignature(name) {
   expect(cut, `no LANGUAGE clause for ${name}`).toBeGreaterThan(-1);
   return fn.slice(0, cut);
 }
+
+/** Every ALTER DEFAULT PRIVILEGES statement the baseline records, verbatim. */
+const DEFAULT_PRIVILEGES = BASELINE.split("\n")
+  .filter((line) => line.startsWith("ALTER DEFAULT PRIVILEGES "))
+  .join("\n");
 
 /** "TABLE(a text, b bigint)" -> ["a text", "b bigint"] */
 const resultColumns = (result) =>
@@ -114,8 +144,9 @@ ${baselineTable("teacher_name_proposals")}
 
 ${TEACHER_SEARCH_STUB}
 
--- The functions as production runs them TODAY, with their real grants, so the
--- drop-and-recreate is measured against the truth rather than a guess.
+-- The functions as production ran them BEFORE 20260908120000, with their real
+-- grants, so the drop-and-recreate is measured against the truth rather than a
+-- guess.
 ${baselineFunction("get_proposal_groups")}
 ${baselinePrivileges("get_proposal_groups")}
 ${baselineFunction("get_faculty_review_groups")}
@@ -159,12 +190,16 @@ insert into public.teacher_name_proposals (id, raw_teacher, normalized, occurren
   (7, 'Ghost Teacher', 'ghost teacher', 1, 'single');
 `;
 
-const FUNCTIONS = ["public.get_proposal_groups(text)", "public.get_faculty_review_groups(text)"];
+const PROPOSALS = "public.get_proposal_groups(text)";
+const REVIEW = "public.get_faculty_review_groups(text)";
+const FUNCTIONS = [PROPOSALS, REVIEW];
 const ROLES = ["anon", "authenticated", "service_role"];
 
 let pg;
 let rows;
-let before;
+let before; // the baseline, as production had it before 20260908120000
+let leaked; // after 20260908120000 alone, as production had it on 15 Sep
+let after; // after 20260915100000, as production has it now
 
 /** Result shape and EXECUTE privileges of both functions, as the engine reports them. */
 async function snapshot() {
@@ -187,8 +222,17 @@ beforeAll(async () => {
   await pg.exec(WORLD);
   await pg.exec(FIXTURE);
   before = await snapshot();
+  // Supabase's default privileges, from the baseline. Applied AFTER the
+  // pre-migration functions exist, exactly as on production, so they reach
+  // only what is created from here on -- which is what 20260908120000 does.
+  await pg.exec(DEFAULT_PRIVILEGES);
   // The migration's preflight and three self-test assertions run inside this.
   await pg.exec(MIGRATION);
+  leaked = await snapshot();
+  // The fix production applied the same day; its own has_function_privilege
+  // self-test runs inside this and would abort the setup if it failed.
+  await pg.exec(GRANTS_FIX);
+  after = await snapshot();
   rows = (await pg.query("select * from public.get_faculty_review_groups('pending')")).rows;
 }, 120000);
 
@@ -264,30 +308,52 @@ describe("it adds a fact and changes nothing else", () => {
     expect(offered).toEqual([101]);
   });
 
-  it.each(FUNCTIONS)("%s keeps every output column production returns today", (fn) => {
-    const now = (async () => (await snapshot())[fn].columns)();
-    return now.then((columns) => {
-      for (const column of before[fn].columns) expect(columns).toContain(column);
-      // And the only addition is the signal itself.
-      expect(columns.filter((c) => !before[fn].columns.includes(c)))
-        .toEqual(["self_named_channel boolean"]);
-    });
+  it.each(FUNCTIONS)("%s keeps every output column production returned before", (fn) => {
+    for (const column of before[fn].columns) expect(after[fn].columns).toContain(column);
+    // And the only addition is the signal itself.
+    expect(after[fn].columns.filter((c) => !before[fn].columns.includes(c)))
+      .toEqual(["self_named_channel boolean"]);
   });
+});
 
-  it.each(FUNCTIONS)("%s keeps exactly production's grants through the drop", async (fn) => {
-    // A DROP takes a function's grants with it. The admin queue calls
-    // get_faculty_review_groups as an authenticated user; if the restated
-    // grants lost that, the queue would break on apply while every other test
-    // here stayed green.
-    expect((await snapshot())[fn].privileges).toEqual(before[fn].privileges);
+describe("grants, on a world that has Supabase's default privileges", () => {
+  it("takes the default privileges from the baseline, not from a hand-typed copy", () => {
+    // Guards everything below. Without these statements a recreated function
+    // gets exactly what the SQL names, the leak cannot happen, and the grants
+    // assertions pass whatever the migrations do -- which is how this file
+    // certified the leak the first time.
+    expect(DEFAULT_PRIVILEGES).toContain('GRANT ALL ON FUNCTIONS TO "anon"');
+    expect(DEFAULT_PRIVILEGES).toContain('GRANT ALL ON FUNCTIONS TO "authenticated"');
   });
 
   it("was measured against grants that actually exist, not a vacuous match", () => {
-    // Guards the assertion above: if the baseline grants had failed to load,
-    // "before" and "after" could agree on everything being false.
-    expect(before["public.get_faculty_review_groups(text)"].privileges.authenticated).toBe(true);
-    expect(before["public.get_proposal_groups(text)"].privileges.service_role).toBe(true);
-    expect(before["public.get_proposal_groups(text)"].privileges.authenticated).toBe(false);
+    // If the baseline grants had failed to load, "before" and "after" could
+    // agree on everything being false.
+    expect(before[REVIEW].privileges.authenticated).toBe(true);
+    expect(before[PROPOSALS].privileges.service_role).toBe(true);
+    expect(before[PROPOSALS].privileges.anon).toBe(false);
+    expect(before[PROPOSALS].privileges.authenticated).toBe(false);
+  });
+
+  it("reproduces the 15 Sep leak: 20260908120000 alone hands the admin queue to anon", () => {
+    // Measured on production after that push: anon -> get_proposal_groups
+    // went from 401 42501 to 200 with 7 rows. get_proposal_groups is SECURITY
+    // DEFINER with no check of its own, so this grant was the whole exposure.
+    expect(leaked[PROPOSALS].privileges).toEqual({
+      anon: true, authenticated: true, service_role: true,
+    });
+    // get_faculty_review_groups became executable by anon too; its own
+    // is_admin() check is what still refused rows.
+    expect(leaked[REVIEW].privileges.anon).toBe(true);
+    // This is the assertion the second version of this file made after the
+    // migration -- "identical to before" -- and it is FALSE on the platform.
+    expect(leaked[PROPOSALS].privileges).not.toEqual(before[PROPOSALS].privileges);
+  });
+
+  it.each(FUNCTIONS)("%s ends the chain with exactly production's grants", (fn) => {
+    // After 20260915100000: get_proposal_groups service_role only;
+    // get_faculty_review_groups authenticated and service_role.
+    expect(after[fn].privileges).toEqual(before[fn].privileges);
   });
 });
 
