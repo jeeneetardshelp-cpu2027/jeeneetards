@@ -6,9 +6,9 @@
 // reads on the card ("ABJ Sir"), not a resolved identity; courseCredit.js
 // owns how that string is displayed. Separately, playlist_teachers links the
 // course to real `teachers` rows, which own a slug and a /faculty/<slug> page.
-// Measured against production on 2026-09-08, identically under the anon key
-// and the service_role key (so these are not an RLS artifact): 490 playlists,
-// 284 with a link to a slugged teacher, 412 with free text, 128 with free text
+// Measured against production on 2026-09-15, identically under the anon key
+// and the service_role key (so these are not an RLS artifact): 493 playlists,
+// 287 with a link to a slugged teacher, 415 with free text, 128 with free text
 // and NO link to a slugged teacher, and every linked course also has the free
 // text. So the link is a destination for a name the page is already showing —
 // never a replacement for it, and never something to invent when it is absent.
@@ -19,20 +19,18 @@
 //
 // EXACTLY ONE, OR NOTHING. A course credited to two people must not link to
 // whichever row PostgREST happened to return first, so two or more resolved
-// teachers give null and the credit stays plain text. Playlist 91 ("Biology |
-// NEET - Vardaan Series") is the honest version of that case: two real humans,
-// samapti-sinha and tarun-kumar. It is NOT the only multi-linked course. Of
-// the 284 linked courses, 150 resolve exactly one slug and link; 134 resolve
-// two or more and stay plain text. Most of that 134 is registry duplication
-// rather than co-teaching — 51 link two rows carrying the IDENTICAL
-// display_name, and others link two aliases of one person (playlist 5, credit
-// "ABJ Sir", links both `amit-bijarnia` and `abj`; the teachers table now
-// holds 131 slugged rows with 29 display_names appearing more than once).
-// That is the registry's problem to fix by de-duplicating teachers, and those
-// courses will link themselves once it is fixed. The rule here does not bend
-// for it: the alternative is the page CHOOSING a destination. The house rule
-// the rest of the catalogue already follows: render nothing rather than a
-// placeholder or a guess. A slug is never derived from a name.
+// teachers give null and the credit stays plain text. Of the 287 linked
+// courses, 272 resolve exactly one slug and link; 15 resolve two and stay plain
+// text, and all 15 are real co-teaching: 14 credit pushpendu and sachin-kapur,
+// and playlist 91 ("Biology | NEET - Vardaan Series") credits samapti-sinha and
+// tarun-kumar. On 2026-09-08 the split was 150 and 134, and most of that 134
+// was the registry listing one person twice (`abj` beside `amit-bijarnia`, for
+// instance) until #334 removed the duplicate profiles and sent their addresses
+// to the real teacher through retiredFacultySlugs.js. Those courses linked
+// themselves once the registry was fixed, with no change here. The rule does
+// not bend either way: the alternative is the page CHOOSING a destination. The
+// house rule the rest of the catalogue already follows: render nothing rather
+// than a placeholder or a guess. A slug is never derived from a name.
 //
 // This lives in one module because all THREE read paths need it — the /browse
 // cards (usePlaylistBrowse.js), the watch page (usePlaylistVideos.js) and the

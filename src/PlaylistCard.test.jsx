@@ -191,7 +191,7 @@ describe("PlaylistCard", () => {
 
   it("keeps the teacher as plain text when no single faculty page owns the credit", () => {
     // teacherSlug is null both for the 128 free-text credits with no linked
-    // teacher at all and for the 134 credited to TWO OR MORE slugged teachers.
+    // teacher at all and for the 15 credited to TWO OR MORE slugged teachers.
     // Either way the card says the name and stops: a slug is never derived
     // from a name, and a shared credit is never resolved by guessing (rule 2).
     show(richCourse({ teacherSlug: null }));

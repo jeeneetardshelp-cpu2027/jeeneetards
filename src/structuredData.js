@@ -157,7 +157,7 @@ export function courseSchema({
     //
     // The slug is resolved upstream and passed in — never derived from the
     // credit string. It is absent for the 128 courses whose free-text teacher
-    // has no faculty link, and for the 134 credited to two or more linked
+    // has no faculty link, and for the 15 credited to two or more linked
     // teachers (playlist 91 among them), where naming one of them would be a
     // guess. In both cases
     // the key is omitted entirely rather than emitted empty or invented:
