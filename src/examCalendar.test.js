@@ -57,6 +57,29 @@ describe("the shipped calendar is honest by construction", () => {
       expect(Date.parse(`${exam.checkedOn}T00:00:00Z`) <= targetDay(exam), exam.slug).toBe(true);
     }
   });
+
+  it("uses only days that exist, in every date field", () => {
+    // The shape checks above pass "2027-02-29", and expectedTo is never parsed
+    // at all. Checked from the parts rather than with Date.parse, the call that
+    // rolled impossible days forward in the first place.
+    const isRealDay = (value) => {
+      const parts = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(value));
+      if (!parts) return false;
+      const [year, month, day] = parts.slice(1).map(Number);
+      const utc = new Date(Date.UTC(year, month - 1, day));
+      return utc.getUTCFullYear() === year
+        && utc.getUTCMonth() === month - 1
+        && utc.getUTCDate() === day;
+    };
+    for (const exam of EXAM_CALENDAR) {
+      const fields = exam.status === "announced"
+        ? ["date", "expectedFrom", "expectedTo", "checkedOn"]
+        : ["expectedFrom", "expectedTo", "checkedOn"];
+      for (const field of fields) {
+        expect(isRealDay(exam[field]), `${exam.slug} ${field} ${exam[field]}`).toBe(true);
+      }
+    }
+  });
 });
 
 describe("examCountdown", () => {
@@ -89,6 +112,44 @@ describe("examCountdown", () => {
     expect(examCountdown(null)).toBeNull();
     expect(examCountdown({ ...EXPECTED, expectedFrom: "someday" })).toBeNull();
     expect(examCountdown({ ...ANNOUNCED, date: "24-01-2027" })).toBeNull();
+  });
+});
+
+// Date.parse rolls an impossible day forward instead of rejecting it:
+// "2027-02-29" read as 1 Mar 2027 and "2026-09-31" as 1 Oct 2026. Both pass the
+// YYYY-MM-DD shape check. Each clock below sits where the rolled-forward day
+// used to produce a countdown, with a fresh check, so these fail if it returns.
+describe("a day that does not exist is not a date", () => {
+  it("shows no countdown to an exam announced for 29 Feb in a non-leap year", () => {
+    // Read as 1 Mar: an exact "1 day" on 28 Feb and "Today" on 1 Mar, beside
+    // "exam day 2027-02-29".
+    const typo = { ...ANNOUNCED, date: "2027-02-29", checkedOn: "2027-02-20" };
+    expect(examCountdown(typo, at("2027-02-28"))).toBeNull();
+    expect(examCountdown(typo, at("2027-03-01"))).toBeNull();
+  });
+
+  it("shows no countdown to an expected window opening on 31 Sep", () => {
+    const typo = { ...EXPECTED, expectedFrom: "2026-09-31", checkedOn: "2026-09-15" };
+    expect(examCountdown(typo, at("2026-09-20"))).toBeNull();
+  });
+
+  it("treats a check dated 31 Sep as no record of a check", () => {
+    // Read as 1 Oct it counted as fresh, and on 15 Nov it kept a countdown up a
+    // day longer than a 30 Sep check allows.
+    const typo = { ...EXPECTED, checkedOn: "2026-09-31" };
+    expect(examCountdown(typo, at("2026-10-15"))).toBeNull();
+    expect(examCountdown(typo, at("2026-11-15"))).toBeNull();
+  });
+
+  it("still accepts a real leap day as the exam day, the window start or the check", () => {
+    const announced = { ...ANNOUNCED, date: "2028-02-29", checkedOn: "2028-02-20" };
+    expect(examCountdown(announced, at("2028-02-28"))).toMatchObject({ days: 1, approximate: false });
+    expect(examCountdown(announced, at("2028-02-29")).days).toBe(0);
+    expect(examCountdown(announced, at("2028-02-29")).detail).toContain("exam day 2028-02-29");
+    const expected = { ...EXPECTED, expectedFrom: "2028-02-29", checkedOn: "2028-02-20" };
+    expect(examCountdown(expected, at("2028-02-28"))).toMatchObject({ days: 1, approximate: true });
+    const checked = { ...EXPECTED, expectedFrom: "2028-03-10", checkedOn: "2028-02-29" };
+    expect(examCountdown(checked, at("2028-03-01"))).toMatchObject({ days: 9 });
   });
 });
 

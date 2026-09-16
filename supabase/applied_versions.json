@@ -108,6 +108,10 @@
     {
       "version": "20260915100000",
       "file": "20260915100000_restore_review_queue_grants.sql"
+    },
+    {
+      "version": "20260915130000",
+      "file": "20260915130000_approve_as_new_checks_existing_faculty.sql"
     }
   ]
 }
