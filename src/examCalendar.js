@@ -131,11 +131,18 @@ export const EXAM_CALENDAR = Object.freeze([
 
 const DAY_MS = 86400000;
 
-/** Midnight UTC for a YYYY-MM-DD string; null if unparseable. */
+/**
+ * Midnight UTC for a YYYY-MM-DD string; null if unparseable, or if no such day
+ * exists. Date.parse rolls an impossible day forward instead of rejecting it:
+ * "2027-02-29" read as 1 Mar 2027, so a typo in a confirmed exam counted to the
+ * wrong day as an exact number, with the typo shown beside it as the exam day.
+ */
 function parseDay(value) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(String(value ?? ""))) return null;
   const time = Date.parse(`${value}T00:00:00Z`);
-  return Number.isFinite(time) ? time : null;
+  if (!Number.isFinite(time)) return null;
+  // A real day reads back as itself; a rolled-forward one does not.
+  return new Date(time).toISOString().slice(0, 10) === value ? time : null;
 }
 
 /** The day a countdown counts to: the announced date, else the window start. */
