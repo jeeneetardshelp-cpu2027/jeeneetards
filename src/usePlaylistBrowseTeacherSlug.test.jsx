@@ -70,8 +70,9 @@ describe("usePlaylistBrowse faculty link", () => {
     expect(calls).toHaveLength(1);
     expect(calls[0].table).toBe("playlists");
     expect(calls[0].cols).toContain("faculty:playlist_teachers(teachers(slug))");
-    // Unconditional, and never inner: 206 production courses have no faculty
-    // link and every one of them must still appear in the catalogue.
+    // Unconditional, and never inner: many production courses have no faculty
+    // link (THE COUNTS in courseTeacherSlug.js), and every one of them must
+    // still appear in the catalogue.
     expect(calls[0].cols).not.toContain("playlist_teachers!inner");
   });
 

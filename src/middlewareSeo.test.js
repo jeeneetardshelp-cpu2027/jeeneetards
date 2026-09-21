@@ -2008,8 +2008,9 @@ describe("course pages linking their teacher's faculty profile", () => {
     // the `", "` separator the hooks read best, and a raw space here would
     // leave as %20 and reach PostgREST as a column named " faculty".
     expect(lookup).not.toMatch(/[\s]|%20/);
-    // Never `!inner`. 206 of 490 playlists have no playlist_teachers row, and
-    // an inner join would drop each of them from its own course page — the
+    // Never `!inner`. Many playlists have no playlist_teachers row (THE COUNTS
+    // in courseTeacherSlug.js say how many), and an inner join would drop each
+    // of them from its own course page — the
     // lookup would come back empty and this middleware would answer 404 for a
     // course that exists.
     expect(lookup).not.toContain("playlist_teachers!inner");
@@ -2040,7 +2041,8 @@ describe("course pages linking their teacher's faculty profile", () => {
   });
 
   it("leaves the credit as plain text when no slug resolves", async () => {
-    // 128 courses carry a free-text teacher with no slugged registry row.
+    // Courses whose free-text teacher has no slugged registry row (THE COUNTS
+    // in courseTeacherSlug.js say how many).
     // Rendering nothing beats rendering a guess: a slug derived from the name
     // would be a 404 wearing a teacher's name.
     const html = await courseHtml({ teacher: "ABJ Sir", faculty: [] });

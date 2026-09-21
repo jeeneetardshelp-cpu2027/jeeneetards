@@ -1019,9 +1019,9 @@ export function renderCourseBody(course, meta, lessons = []) {
   // one (renderFacultyBody, below); the course body linked back to nothing, so
   // a crawler — and a reader with JavaScript off — met the teacher's name as a
   // dead end on the very page the profile points at. Null whenever the course
-  // did not resolve to exactly one registered teacher, which keeps the 128
-  // free-text-only credits, and the 134 credited to two or more people, as the
-  // plain text they are today.
+  // did not resolve to exactly one registered teacher, which keeps a
+  // free-text-only credit, and one credited to two or more people, as plain
+  // text (THE COUNTS in courseTeacherSlug.js say how many of each).
   const teacherSlug = courseFacultySlug(course);
   // Rows are [label, value] — plus, for the teacher alone, an optional href.
   const rows = [
