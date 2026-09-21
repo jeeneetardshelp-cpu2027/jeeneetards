@@ -125,6 +125,10 @@ export default function FacultyDirectory() {
     goalId: goal?.id ?? null,
     subjectId: subject?.id ?? null,
     enabled: !options.loading && !options.error,
+    // Failed dimension lists are not "still loading": nothing is coming, and
+    // the error card below already says so. Without this the facets hook held
+    // loading:true for ever and the page ORed it into its own loading flag.
+    blocked: Boolean(options.error),
   });
   const shouldSearch = debouncedQuery.length >= 2;
   const facultySearch = useTeacherSearch(shouldSearch ? debouncedQuery : "", 50);
@@ -277,7 +281,11 @@ export default function FacultyDirectory() {
           <div className="mt-10 flex items-center justify-between gap-4">
             <div>
               <p aria-live="polite" className="text-sm font-semibold text-ink">
-                {loading ? "Loading faculty…" : resultLabel}
+                {/* A failed lookup counted nothing. visibleFaculty is [] then, so
+                    resultLabel reads "0 faculty members" over the error card:
+                    a number nothing measured. The error card says what
+                    happened; the count hides itself. */}
+                {loading ? "Loading faculty…" : error ? "" : resultLabel}
               </p>
               {goal || subject ? (
                 <p className="mt-1 text-xs text-ink-3">

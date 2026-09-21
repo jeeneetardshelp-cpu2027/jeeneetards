@@ -84,6 +84,8 @@ describe("FacultyDirectory", () => {
       goalId: 1,
       subjectId: 2,
       enabled: true,
+      // the dimension lists loaded, so nothing is blocking the facets
+      blocked: false,
     });
   });
 

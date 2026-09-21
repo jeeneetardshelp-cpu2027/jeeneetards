@@ -147,14 +147,31 @@ export function useFacultyFacets({
   subjectId = null,
   goalId = null,
   enabled = true,
+  // WHY the gate is shut, which `enabled` alone cannot say.
+  //
+  //   false  a prerequisite is still resolving. Something IS coming, so keep
+  //          reporting loading and let the caller hold its skeleton.
+  //   true   a prerequisite FAILED. Nothing is coming until the student acts,
+  //          and the caller already renders that failure.
+  //
+  // Answering both with loading:true is what left /faculty saying "Loading
+  // faculty…" above its own "Faculty directory unavailable" card, aria-busy
+  // and all. Either way no request is issued: being blocked is not a reason
+  // to ask. Ignored while `enabled` is true.
+  blocked = false,
 } = {}) {
   const [generation, setGeneration] = useState(0);
-  const [state, setState] = useState({ facets: [], loading: true, error: null, unavailable: false });
+  const [state, setState] = useState(() => ({
+    facets: [], loading: enabled || !blocked, error: null, unavailable: false,
+  }));
 
   useEffect(() => {
     let active = true;
     if (!enabled) {
-      setState({ facets: [], loading: true, error: null, unavailable: false });
+      // No error of its own when blocked: the failure belongs to the caller's
+      // prerequisite, and a second message would say the same thing twice,
+      // behind a retry that could not fix it.
+      setState({ facets: [], loading: !blocked, error: null, unavailable: false });
       return;
     }
     if (!isSupabaseConfigured) { setState({ facets: [], loading: false, error: NOT_CONFIGURED }); return; }
@@ -182,7 +199,7 @@ export function useFacultyFacets({
         setState({ facets: data ?? [], loading: false, error: null });
       });
     return () => { active = false; };
-  }, [chapterId, subjectId, goalId, enabled, generation]);
+  }, [chapterId, subjectId, goalId, enabled, blocked, generation]);
 
   return { ...state, retry: () => setGeneration((n) => n + 1) };
 }
@@ -262,7 +279,12 @@ export function useTeacherPlaylistIds(teacherId) {
   return state;
 }
 
+// One faculty page. A failed lookup is not "no such teacher": it reports the
+// error, and `retry` is the page's Try again, the same lookup for the same
+// slug asked again. The request deadline now ENDS a slow lookup in that error,
+// and with only [slug] behind the effect the one way to ask again was a reload.
 export function useFacultyProfile(slug) {
+  const [generation, setGeneration] = useState(0);
   const [state, setState] = useState({ profile: null, loading: true, error: null });
 
   useEffect(() => {
@@ -283,9 +305,9 @@ export function useFacultyProfile(slug) {
         setState({ profile: data ?? null, loading: false, error: null });
       });
     return () => { active = false; };
-  }, [slug]);
+  }, [slug, generation]);
 
-  return state;
+  return { ...state, retry: () => setGeneration((n) => n + 1) };
 }
 
 // Admin only: near-duplicate warning before creating a new faculty record.

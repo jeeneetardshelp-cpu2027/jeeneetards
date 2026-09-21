@@ -18,7 +18,9 @@
 import { useState, useEffect } from "react";
 import { Link, useSearchParams } from "react-router";
 import { useCanonicalFilters } from "./useCanonicalFilters.js";
-import { applyFilterChange, buildChips, removeChip, clearAllChips } from "./filterChips.js";
+import {
+  applyFilterChange, buildChips, removeChip, clearAllChips, scopeLevel, scopeName,
+} from "./filterChips.js";
 import { filterByKey } from "./filterSchema.js";
 import FilterPanel, { LanguageChips, honestLanguageOptions } from "./FilterPanel.jsx";
 import { useFilterOptions } from "./useFilterOptions.js";
@@ -297,6 +299,25 @@ export default function BrowsePage() {
   const teacherRequested = validated.teacherId;
   const facultyFilterReady = !teacherRequested || facultyCapability === "available";
   const teacherId = facultyCapability === "available" ? teacherRequested : null;
+  // The faculty check came back and was not a yes: the amber "cannot be
+  // verified" panel below renders, and says results are held back.
+  const facultyFilterBlocked = Boolean(teacherRequested)
+    && facultyCapability !== "available" && facultyCapability !== "loading";
+
+  // WHY the catalogue gate is shut, which `enabled` alone cannot say. True only
+  // when nothing more is coming without the student acting AND this page
+  // already renders the reason above the results:
+  //
+  //   canonical.blocked      the "Couldn't load this selection" card, or the
+  //                          unresolved-filter panel with its Remove buttons
+  //   facultyFilterBlocked   the "cannot be verified" panel
+  //
+  // A gate shut because an answer is still on its way is NOT blocked, and keeps
+  // its skeleton. Before this the two were one state: the hooks answered both
+  // with loading:true, and slug-scoped /browse — every Explore drill-down,
+  // chapter landing and sitemap link — pulsed skeletons for ever under the card
+  // that had already said the lookup failed.
+  const catalogueBlocked = Boolean(canonical.blocked) || facultyFilterBlocked;
 
   // Rewrite the URL once when it carries junk, duplicates, or the legacy
   // `institute=` key, so what is shared afterwards is canonical. `replace` so
@@ -380,6 +401,7 @@ export default function BrowsePage() {
     sort: lectureSort,
     page,
     enabled: canonical.ready && facultyFilterReady && tab === "lectures",
+    blocked: catalogueBlocked,
   });
 
   const clearAll = () => {
@@ -436,10 +458,10 @@ export default function BrowsePage() {
   // no other source already knows it; an unresolved name still falls back to
   // the raw value below rather than a guess.
   const resolvedChapterName = optionName("chapter", chapterRaw);
-  const legacyChapterName = useChapterName(canonical.chapterId, {
+  const legacyChapter = useChapterName(canonical.chapterId, {
     enabled: chapterRaw != null && resolvedChapterName == null,
   });
-  const chapterName = resolvedChapterName ?? legacyChapterName;
+  const chapterName = resolvedChapterName ?? legacyChapter.name;
   const facetCounts = useBrowseFacets({
     goal: goalValue,
     stage: canonical.stage,
@@ -470,10 +492,6 @@ export default function BrowsePage() {
   // Exact when every active filter reached the RPC; an upper bound otherwise.
   const countsExact = !teacherRequested && !canonical.board;
   const searchTerm = urlQuery.trim();
-  const scopeHeading = chapterName ?? subjectName ?? goalName ?? null;
-  const heading = searchTerm
-    ? `Search results for “${searchTerm}”${scopeHeading ? ` in ${scopeHeading}` : ""}`
-    : scopeHeading ?? (tab === "playlists" ? "All courses" : "All lessons");
 
   // Chip labels come from the tree we already resolved, keyed by whatever the
   // URL actually holds (slug OR legacy id) so both forms render a real name.
@@ -495,6 +513,46 @@ export default function BrowsePage() {
     ),
   };
   const chips = buildChips(params, chipNames);
+
+  // THE HEADING NAMES THE MOST SPECIFIC SCOPE THE URL ASKED FOR, OR NONE.
+  //
+  // It was chapterName ?? subjectName ?? goalName ?? "All courses", so a name
+  // that had not arrived fell straight through. Measured with only the
+  // chapter-name lookup aborted: /browse?ch=7 headed "All courses" over a chip
+  // reading "7" and course cards fetched with pv.videos.chapter_id=eq.7. Two
+  // relatives of that claim went with it:
+  //
+  //   * a BROADER name borrowed instead — ?sub=3&ch=7 headed one chapter's
+  //     courses "Mathematics"
+  //   * scopes the heading never names — ?class=11, ?teacher=7, ?channel=3 —
+  //     said "All courses" over narrowed results even when everything loaded
+  //
+  // So only the most specific curriculum level in the URL may name the page,
+  // and while its name is unknown — still loading, failed, or a slug that
+  // matched nothing — the heading says the list is filtered. That is true in
+  // all three, so a pending name that turns out to have failed changes nothing
+  // here: the failure is said beside the chips, never by flashing the heading.
+  // "All" is kept for the one state it describes: no chip on screen and no
+  // teacher narrowing the results.
+  //
+  // CLASS AND BOARD ARE LEVELS TOO: goal -> class or board -> subject ->
+  // chapter. Leaving them out headed /browse?goal=jee&class=11 "JEE" over one
+  // class of JEE, and ?goal=school&board=cbse "School" over one board. Neither
+  // is a name this heading uses (the chip beside it says which), so when one of
+  // them is the most specific level the heading says the list is filtered.
+  //
+  // The rule lives in filterChips.js (scopeLevel, scopeName), and the empty
+  // state PlaylistBrowse renders under this heading takes the same scope, so
+  // the box names the same level as the heading or none — never a wider one.
+  const scope = scopeLevel(params);
+  const scopeHeading = scopeName({ scope, goalName, subjectName, chapterName });
+  const narrowed = chips.length > 0 || Boolean(teacherRequested);
+  const heading = searchTerm
+    ? `Search results for “${searchTerm}”${scopeHeading ? ` in ${scopeHeading}` : ""}`
+    : scopeHeading
+      ?? (narrowed
+        ? (tab === "playlists" ? "Filtered courses" : "Filtered lessons")
+        : (tab === "playlists" ? "All courses" : "All lessons"));
 
   // One "are the counts still settling?" answer, shared by the panel and the
   // mobile language row, so the two cannot apply the honest-filters rule at
@@ -571,7 +629,9 @@ export default function BrowsePage() {
             <h1 {...langAttrs(heading)} className={`text-lg font-semibold ${t.text}`}>{heading}</h1>
             {/* The video count describes the LECTURES tab only. On Playlists it
                 would contradict the course count PlaylistBrowse renders. */}
-            {tab === "lectures" && !loading && !error && (
+            {/* Nor when blocked: nothing was counted, and videos is [] then, so
+                the label would read "0 lessons" under the failure card. */}
+            {tab === "lectures" && !loading && !error && !catalogueBlocked && (
               <span className={`text-sm ${t.muted}`}>{lectureCountLabel}</span>
             )}
           </div>
@@ -656,12 +716,39 @@ export default function BrowsePage() {
             <div className={`mb-4 rounded-xl border ${t.border} ${t.card} p-4 text-sm`}>
               <p className={`font-medium ${t.text}`}>{canonical.error}</p>
               <button
-                onClick={canonical.retry}
+                // Retries the selection as a whole. An outage that failed this
+                // lookup usually failed the chapter-name lookup beside it, and
+                // the line below stands aside while this card is up — so one
+                // press has to re-ask both.
+                onClick={() => {
+                  canonical.retry();
+                  if (legacyChapter.error) legacyChapter.retry();
+                }}
                 className={`mt-3 min-h-11 rounded-xl border ${t.border} px-4 text-sm font-medium ${t.hover}`}
               >
                 Try again
               </button>
             </div>
+          )}
+
+          {/* Only the chapter's NAME could not be fetched. The chip showing its
+              number and the heading saying "Filtered courses" are both true,
+              but "7" means nothing to a student who clicked "Rotational Motion"
+              in search, and without this nothing on the page could ask again.
+              Not while the selection card above is up — its Try again re-asks
+              this too, and one outage gets one button. Not while the lookup is
+              pending, which is not a failure; nor when it answered with no
+              row, which asking again cannot change. */}
+          {legacyChapter.error && !canonical.error && (
+            <p className={`mb-4 text-sm ${t.muted}`}>
+              Couldn’t load this chapter’s name.{" "}
+              <button
+                onClick={legacyChapter.retry}
+                className="min-h-11 font-medium text-accent underline"
+              >
+                Try again
+              </button>
+            </p>
           )}
 
           <BrowseLanguageChips
@@ -721,8 +808,20 @@ export default function BrowsePage() {
               it. That is worse than the 252 px. `facultyCapability` also stays
               at its initial "loading" while this is hidden, which is harmless
               precisely because facultyFilterReady above is already true
-              whenever no teacher was requested. */}
+              whenever no teacher was requested.
+
+              NOR WHILE THE SELECTION ITSELF IS BLOCKED, ?teacher= included.
+              With the lookup failed or unresolved there is no scope to count
+              teachers in and no results for a teacher to narrow silently, so
+              the exception has nothing to protect; the error card's Try again
+              and the unresolved panel's Clear all filters are the ways out.
+              Rendering it there cost one of two things: its facets hook, gated
+              on canonical.ready, pulsed a skeleton under the failure for ever —
+              or, told it was blocked, reported "available" through
+              onAvailabilityChange for a capability nobody checked. It returns
+              the moment the selection resolves. */}
           {RELEASE_CAPABILITIES.facultyRegistry
+            && !canonical.blocked
             && (canonical.subjectId != null || canonical.chapterId != null || teacherRequested) && (
             <FacultyFilter
               params={params}
@@ -739,7 +838,7 @@ export default function BrowsePage() {
             />
           )}
 
-          {teacherRequested && facultyCapability !== "available" && facultyCapability !== "loading" && (
+          {facultyFilterBlocked && (
             <div className={`mt-3 rounded-xl border p-4 text-sm ${dark ? "border-amber-900 bg-amber-950/40 text-amber-100" : "border-amber-200 bg-amber-50 text-amber-900"}`}>
               <p className="font-medium">This faculty filter cannot be verified on the current database.</p>
               <p className="mt-1">Results are held back rather than silently showing courses from every teacher.</p>
@@ -784,12 +883,21 @@ export default function BrowsePage() {
                        // request carries no chapter predicate and briefly shows
                        // the whole library under a filtered heading.
                        enabled: canonical.ready && facultyFilterReady,
+                       // WHY that gate is shut: true only when nothing more is
+                       // coming and the reason is already on screen above.
+                       // usePlaylistBrowse takes it as `blocked`.
+                       blocked: catalogueBlocked,
                        teacherId,
-                       chapterName, subjectName }}
+                       // The same scope the heading is named from, so the
+                       // empty state cannot name a wider level than it.
+                       chapterName, subjectName, scope }}
             lectureTotal={lectureTotal}
             lectureLoading={loading}
             lectureView={<>
-          {loading ? (
+          {/* Blocked renders nothing: the reason is already on screen above,
+              a skeleton would promise lessons that are not coming, and the
+              empty state would claim a search that never ran. */}
+          {catalogueBlocked ? null : loading ? (
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
               {Array.from({ length: 6 }).map((_, i) => (
                 <SkeletonCard key={i} />

@@ -29,7 +29,7 @@ import { canonicalCoursePath } from "./canonicalUrl.js";
 import { orderExamsByLane } from "./examLane.js";
 import { Container } from "./AppShell.jsx";
 import {
-  Accordion, Button, Eyebrow, IconTile, Pill, SectionHead, Skeleton,
+  Accordion, Button, ErrorState, Eyebrow, IconTile, Pill, SectionHead, Skeleton,
   Stat, Surface,
 } from "./ui.jsx";
 import { Reveal, useParallax, useReveal } from "./motion.jsx";
@@ -159,9 +159,13 @@ export function Hero({ searchField, chips, stats }) {
               sheen
               padded={false}
               // Columns track the item count so the rail is never a 4-up grid
-              // holding 3 figures with a dead cell on the end.
+              // holding 3 figures with a dead cell on the end — or a 3-up grid
+              // holding 2, which is what is left when a lookup failed and its
+              // figure hid itself.
               className={`mx-auto grid max-w-4xl grid-cols-2 gap-x-6 gap-y-8 p-8 sm:p-10 ${
-                stats.length >= 4 ? "sm:grid-cols-4" : "sm:grid-cols-3"
+                stats.length >= 4
+                  ? "sm:grid-cols-4"
+                  : stats.length === 3 ? "sm:grid-cols-3" : "sm:grid-cols-2"
               }`}
             >
               {stats.map((s) => (
@@ -337,7 +341,7 @@ const EXAM_ICON = {
   olympiad: Sparkles,
 };
 
-export function ExamGrid({ exams }) {
+export function ExamGrid({ exams, error = null, onRetry = null }) {
   // The student's remembered exam (the countdown's persisted JEE/NEET/Boards
   // choice, examLane.js) leads the grid; everything else keeps its order and
   // the layout does not change. With nothing remembered this is a no-op.
@@ -356,6 +360,18 @@ export function ExamGrid({ exams }) {
         }
       />
 
+      {/* The goals lookup failed, so no card below can say whether its exam
+          has courses. Say so once, above them, with the same lookup again —
+          before this the only way back was reloading the page. */}
+      {error && (
+        <ErrorState
+          className="mt-10"
+          title={error}
+          detail="Until it loads, the exams below can't show whether they have courses."
+          onRetry={onRetry}
+        />
+      )}
+
       <div className="mt-16 grid grid-cols-2 gap-4 lg:grid-cols-4">
         {ordered.map((exam, i) => {
           const tint = EXAM_TINT[exam.id] ?? "var(--accent)";
@@ -364,9 +380,13 @@ export function ExamGrid({ exams }) {
             <>
               <div className="flex items-start justify-between gap-3">
                 <IconTile icon={Icon} tint={tint} size="lg" />
-                <Pill tone={exam.available ? "accent" : "quiet"}>
-                  {exam.available ? "Live" : "Soon"}
-                </Pill>
+                {/* No pill while the lookup has not answered: "Soon" on an
+                    exam whose status is unknown claims it has no courses. */}
+                {!exam.availabilityUnknown && (
+                  <Pill tone={exam.available ? "accent" : "quiet"}>
+                    {exam.available ? "Live" : "Soon"}
+                  </Pill>
+                )}
               </div>
               <h3 className="text-h3 mt-8 text-ink">{exam.label}</h3>
               <p className="mt-2 text-sm text-ink-3">

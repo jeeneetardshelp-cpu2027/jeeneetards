@@ -162,6 +162,43 @@ const CLASS_NAME = {
   "class-12": "Class 12", dropper: "Dropper",
 };
 
+// ---------------------------------------------------------------- scope
+
+// The curriculum levels, narrowest first. Class and board sit between the exam
+// and the subject: each narrows the exam's list, and neither is narrower than a
+// subject or a chapter.
+const SCOPE_LADDER = ["chapter", "subject", "class", "board", "goal"];
+
+/**
+ * The narrowest curriculum level the URL filters by, or null.
+ *
+ * Read from the URL, never from the names, because a name cannot say whether
+ * its level is active: no chapter name means EITHER "no chapter filter" OR "a
+ * chapter filter whose name is still loading, failed, or matched nothing", and
+ * those two need opposite wording. Legacy keys (?sub=, ?ch=, ?stage=) count.
+ * Channel, language, type, difficulty, teacher and search narrow the results
+ * too, but none of them is a level the view could be named after.
+ */
+export function scopeLevel(params) {
+  return SCOPE_LADDER.find((level) =>
+    [level, ...(ALIASES[level] ?? [])].some((key) => params.get(key))) ?? null;
+}
+
+/**
+ * The one name a view may go by: its narrowest level's name, or null.
+ *
+ * Never a wider level's name in its place. "Physics" over one chapter's courses
+ * and "JEE" over one class of JEE both name more than the results hold. A
+ * chapter, subject or exam is named only once its name is known; a class or
+ * board is not named here at all, and its chip says which.
+ */
+export function scopeName({ scope, goalName, subjectName, chapterName } = {}) {
+  if (scope === "chapter") return chapterName ?? null;
+  if (scope === "subject") return subjectName ?? null;
+  if (scope === "goal") return goalName ?? null;
+  return null;
+}
+
 /**
  * What to say when a filtered view is empty.
  *
@@ -172,15 +209,37 @@ const CLASS_NAME = {
  * The wording is deliberately "not classified yet" rather than "none exist":
  * an untagged course is excluded because we do not KNOW its class, which is a
  * gap in our metadata, not a fact about the library.
+ *
+ * WHICH NAME, OR NONE. `scope` is scopeLevel() for the page's URL, and the
+ * title names that level through the same scopeName as BrowsePage's heading, so
+ * the box can never name a wider scope than the heading above it. Picking
+ * chapterName ?? subjectName instead read "No courses are listed for Physics
+ * yet." on /browse?sub=1&ch=7&type=pyq while Friction's name was still loading,
+ * although /browse?sub=1&type=pyq listed 6 courses — and the landing name then
+ * turned that false claim into a true one. With the level unnamed, the class
+ * wording stays (the class comes from the URL, not a lookup) but speaks for
+ * this view rather than for the whole class. The exam is never named.
+ *
+ * Without `scope` the helper can only go by the names it was handed, which is
+ * right only when every active level's name is already known.
  */
-export function emptyStateMessage({ stage, chapterName, subjectName } = {}) {
+export function emptyStateMessage({ stage, scope, chapterName, subjectName } = {}) {
   const cls = CLASS_NAME[stage] ?? null;
-  const where = chapterName ?? subjectName ?? null;
+  const where = scope === undefined
+    ? (chapterName ?? subjectName ?? null)
+    : scopeName({ scope, chapterName, subjectName });
+  // A subject or chapter narrows this view, and its name is not known.
+  const unnamed = where == null && (scope === "chapter" || scope === "subject");
 
   if (cls && where)
     return {
       title: `No ${cls} courses are classified for ${where} yet.`,
       detail: "Other classes may cover this chapter. Courses without a class tag are not shown here.",
+    };
+  if (cls && unnamed)
+    return {
+      title: `No ${cls} courses match this view.`,
+      detail: "Courses without a class tag are not shown when a class is selected.",
     };
   if (cls)
     return {

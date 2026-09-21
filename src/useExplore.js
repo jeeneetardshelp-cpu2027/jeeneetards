@@ -79,12 +79,16 @@ export function useLearningGoals() {
 // leading to a dead end, exactly like goals.
 // A failed query is NOT an empty board list. If the request errors we report
 // the error, because "every board says Coming soon" and "the database is
-// unreachable" look identical to a student otherwise.
+// unreachable" look identical to a student otherwise. `retry` is the student's
+// Try again: it asks for the boards again and nothing else (no automatic retry
+// here). A missing boards capability is `unavailable`, never an error, so it
+// offers nothing to retry.
 export function useBoards(enabled = true) {
   const [boards, setBoards] = useState([]);
   const [loading, setLoading] = useState(enabled);
   const [error, setError] = useState(null);
   const [unavailable, setUnavailable] = useState(false);
+  const [nonce, setNonce] = useState(0);
 
   useEffect(() => {
     let active = true;
@@ -138,26 +142,55 @@ export function useBoards(enabled = true) {
       });
 
     return () => { active = false; };
-  }, [enabled]);
+  }, [enabled, nonce]);
 
-  return { boards, loading, error, unavailable };
+  return { boards, loading, error, unavailable, retry: () => setNonce((n) => n + 1) };
 }
 
+// Reference data, but still a request. A failed lookup is NOT an empty list of
+// stages: this used to read only `data`, so an aborted request left the stage
+// step saying "Nothing here yet." It reports loading and error like the hooks
+// around it, and `retry` is the student's Try again (no automatic retry here).
 export function useClassLevels() {
   const [classLevels, setClassLevels] = useState([]);
+  const [loading, setLoading] = useState(isSupabaseConfigured);
+  const [error, setError] = useState(null);
+  const [nonce, setNonce] = useState(0);
 
   useEffect(() => {
     let active = true;
-    if (!isSupabaseConfigured) return;
+    if (!isSupabaseConfigured) {
+      setError("The course guide isn't available right now.");
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
+    setError(null);
+
+    const fail = (reason) => {
+      if (!active) return;
+      console.error("class levels:", reason);
+      setClassLevels([]);
+      setError("We couldn't load the available stages.");
+      setLoading(false);
+    };
+
     supabase
       .from("class_levels")
       .select("id, name, slug")
       .order("display_order")
-      .then(({ data }) => active && setClassLevels(data ?? []));
-    return () => { active = false; };
-  }, []);
+      .then((result) => {
+        if (!active) return;
+        if (result.error) { fail(result.error); return; }
+        setClassLevels(result.data ?? []);
+        setLoading(false);
+      })
+      .catch(fail);
 
-  return { classLevels };
+    return () => { active = false; };
+  }, [nonce]);
+
+  return { classLevels, loading, error, retry: () => setNonce((n) => n + 1) };
 }
 
 // Class levels are reference data, but not every valid class has catalogue
@@ -167,7 +200,11 @@ export function usePopulatedClasses(goal, enabled = true) {
   const [classSlugs, setClassSlugs] = useState([]);
   const [loading, setLoading] = useState(Boolean(enabled && goal));
   const [error, setError] = useState(null);
-  const [loadedGoal, setLoadedGoal] = useState(null);
+  // The goal whose request SETTLED — answered or failed. State survives a
+  // param-only navigation (Back from /explore/neet to /explore/jee keeps this
+  // instance), so the first render for a new goal still holds the old goal's
+  // slugs or error; both are reported only for the goal they belong to.
+  const [settledGoal, setSettledGoal] = useState(null);
   const [nonce, setNonce] = useState(0);
 
   useEffect(() => {
@@ -176,21 +213,21 @@ export function usePopulatedClasses(goal, enabled = true) {
       setClassSlugs([]);
       setLoading(false);
       setError(null);
-      setLoadedGoal(null);
+      setSettledGoal(null);
       return;
     }
     if (!isSupabaseConfigured) {
       setClassSlugs([]);
       setLoading(false);
       setError("The course guide isn't available right now.");
-      setLoadedGoal(null);
+      setSettledGoal(goal);
       return;
     }
 
     const candidates = CLASS_LEVELS_BY_GOAL[goal] ?? [];
     setLoading(true);
     setError(null);
-    setLoadedGoal(null);
+    setSettledGoal(null);
 
     Promise.all(candidates.map(async (classSlug) => {
       const result = await supabase.rpc("get_browse_curriculum", {
@@ -203,25 +240,29 @@ export function usePopulatedClasses(goal, enabled = true) {
     })).then((results) => {
       if (!active) return;
       setClassSlugs(results.filter((item) => item.populated).map((item) => item.classSlug));
-      setLoadedGoal(goal);
+      setSettledGoal(goal);
       setLoading(false);
     }).catch((reason) => {
       if (!active) return;
       console.error("browse curriculum classes:", reason);
       setClassSlugs([]);
       setError("We couldn't load the available stages.");
-      setLoadedGoal(null);
+      // Settled for this goal. Leaving it unset kept `ready` false with nothing
+      // in flight, which the stage step drew as a skeleton that never ended.
+      setSettledGoal(goal);
       setLoading(false);
     });
 
     return () => { active = false; };
   }, [goal, enabled, nonce]);
 
+  const current = enabled && Boolean(goal) && settledGoal === goal;
   return {
     classSlugs,
     loading,
-    error,
-    ready: enabled && loadedGoal === goal,
+    error: current ? error : null,
+    // True only for a SUCCESSFUL answer for exactly this goal.
+    ready: current && !error,
     retry: () => setNonce((value) => value + 1),
   };
 }

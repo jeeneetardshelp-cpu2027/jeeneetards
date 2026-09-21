@@ -361,5 +361,24 @@ export function useCanonicalFilters(params) {
     return () => { active = false; };
   }, [canonicalKey, nonce]);
 
-  return { ...state, retry: () => setNonce((n) => n + 1) };
+  // `blocked` says WHY `ready` is false, which `ready` alone cannot:
+  //
+  //   false  still resolving, or nothing to resolve. An answer is on its way,
+  //          so a consumer gated on `ready` is right to hold its skeleton.
+  //   true   the lookup FAILED (`error`), or the database answered and a slug
+  //          matched nothing (`unresolved`). Nothing more is coming until the
+  //          student acts — Try again, or remove the filter — and the page
+  //          already renders which.
+  //
+  // Before this, both reached BrowsePage as ready:false, the catalogue hooks
+  // answered both with loading:true, and every slug-scoped /browse URL pulsed
+  // skeletons for ever directly under the card that said the lookup had failed.
+  //
+  // Derived from `loading` and the outcome, never from `ready` alone: the
+  // initial state is loading:false AND ready:false before the effect has run,
+  // and reading that as blocked would flash the skeleton off on first paint.
+  const blocked = !state.loading && !state.ready
+    && (state.error != null || state.unresolved.length > 0);
+
+  return { ...state, blocked, retry: () => setNonce((n) => n + 1) };
 }

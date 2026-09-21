@@ -19,17 +19,29 @@ function recoveryLinkPresent(location) {
   );
 }
 
-export default function PasswordReset() {
+// `reloadPage` is the Try again below. auth-js checks a recovery link only as
+// the page loads, and leaves a link it could not check in the URL, so a reload
+// is the retry. A prop only because jsdom will not let a test observe
+// window.location.reload.
+export default function PasswordReset({ reloadPage = () => window.location.reload() }) {
   const { t } = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
-  const { session, loading } = useSession();
+  const { session, loading, urlSignInFailure } = useSession();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmation, setConfirmation] = useState("");
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState(null);
-  const canChoosePassword = Boolean(session?.user) || recoveryLinkPresent(location);
+  const linkPresent = recoveryLinkPresent(location);
+  // A link in the URL is not a link that worked. auth-js checks it with GET
+  // /auth/v1/user and, when that fails, saves nothing and leaves the link where
+  // it is. Offering the new-password form then gave a submit that could only
+  // fail ("Auth session missing!") or — with another account still signed in on
+  // this device — would change THAT account's password. So a failed check says
+  // so instead: "unreachable" can be retried, "rejected" needs a new link.
+  const linkFailure = linkPresent ? urlSignInFailure ?? null : null;
+  const canChoosePassword = !linkFailure && (Boolean(session?.user) || linkPresent);
 
   const requestReset = async (event) => {
     event.preventDefault();
@@ -101,6 +113,25 @@ export default function PasswordReset() {
             <p role="status" className={`mt-4 text-sm ${t.muted}`}>
               Checking the recovery link...
             </p>
+          ) : linkFailure === "unreachable" ? (
+            <div className="mt-6 max-w-md space-y-4">
+              <div role="alert" className="space-y-1 text-sm">
+                <p style={{ color: "#dc2626" }}>
+                  Your recovery link could not be checked right now.
+                </p>
+                <p className={t.muted}>
+                  The link may still be valid. Check your connection, then try again.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => reloadPage()}
+                className="min-h-11 rounded-lg px-4 py-2 text-sm font-semibold text-white"
+                style={{ backgroundColor: BRAND_TEAL }}
+              >
+                Try again
+              </button>
+            </div>
           ) : canChoosePassword ? (
             <form onSubmit={updatePassword} className="mt-6 max-w-md space-y-4">
               <label className="block text-sm font-medium">
@@ -138,6 +169,11 @@ export default function PasswordReset() {
             </form>
           ) : (
             <form onSubmit={requestReset} className="mt-6 max-w-md space-y-4">
+              {linkFailure && (
+                <p role="alert" className="text-sm" style={{ color: "#dc2626" }}>
+                  This recovery link could not be verified. Request a new one below.
+                </p>
+              )}
               <p className={`text-sm ${t.muted}`}>
                 Enter the email address used for the account. The reset link will
                 return to this page.
