@@ -265,10 +265,10 @@ describe("courseSchema", () => {
   });
 
   it("omits instructor.url entirely — never empty, never guessed — with no resolved slug", () => {
-    // null: no faculty link at all (128 courses today) or two or more linked
-    // teachers (134 today, playlist 91 among them), where picking one would be
-    // a guess. undefined: a caller
-    // that has not been wired up yet. "": a slug column that came back blank.
+    // null: no faculty link at all, or two or more linked teachers (playlist
+    // 91 among them), where picking one would be a guess; THE COUNTS in
+    // courseTeacherSlug.js say how many of each. undefined: a caller that has
+    // not been wired up yet. "": a slug column that came back blank.
     for (const teacherSlug of [null, undefined, ""]) {
       const schema = courseSchema({ ...REAL_COURSE, teacherSlug });
       expect(schema.hasCourseInstance.instructor).toEqual({

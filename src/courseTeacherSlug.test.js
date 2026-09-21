@@ -23,8 +23,9 @@ describe("courseTeacherSlug", () => {
   });
 
   it("links nothing when the course has no faculty rows", () => {
-    // 128 production courses (2026-09-08): free-text credit, no link to a
-    // slugged teacher. They stay plain text.
+    // Production courses with a free-text credit and no link to a slugged
+    // teacher (THE COUNTS in courseTeacherSlug.js say how many). They stay
+    // plain text.
     expect(courseTeacherSlug([])).toBeNull();
   });
 
@@ -89,7 +90,7 @@ describe("courseTeacherSlug", () => {
 
 describe("FACULTY_SLUG_EMBED", () => {
   it("is a left join under an alias of its own", () => {
-    // !inner here would drop the 206 courses with no faculty link from every
+    // !inner here would drop every course with no faculty link from every
     // listing; the `faculty:` alias keeps it clear of usePlaylistBrowse's
     // separate, conditional `pt:` inner join used by the faculty FILTER.
     expect(FACULTY_SLUG_EMBED).toBe(", faculty:playlist_teachers(teachers(slug))");
