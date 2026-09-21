@@ -12,9 +12,12 @@
 // finished the last lesson sees it immediately, and it is still there a minute
 // later when they actually want to send it.
 //
-// The shared link is /course/:id/chapter/:id, which already renders a rich
-// preview card through /api/og — so what lands in WhatsApp is the course card,
-// not a bare URL.
+// The shared link is /course/:id/chapter/:id. For a chapter the catalogue
+// confirms in that course, the edge (middleware.js) gives it the chapter's own
+// og:title/description and points og:image at /api/og?course=:id&chapter=:id,
+// so what lands in WhatsApp names the chapter and this course's lecture count
+// in it. Until 15 Sep 2026 it carried the whole course's card instead. A
+// chapter the edge cannot confirm or name still unfurls as the course card.
 //
 // No <Reveal>: reveal blocks ship at opacity:0 until a useReveal() root
 // observes them, which has shipped a blank section twice in this codebase.
