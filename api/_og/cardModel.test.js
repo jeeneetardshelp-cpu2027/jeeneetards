@@ -12,6 +12,9 @@ import fontBold from "./fontBold.js";
 import {
   CARD_HEIGHT,
   CARD_WIDTH,
+  chapterCardModel,
+  chapterCardText,
+  chapterCardTree,
   courseCardModel,
   courseCardTree,
   needsStaticFallback,
@@ -133,6 +136,100 @@ describe("satori render", () => {
       ],
     });
     expect(svg.startsWith("<svg")).toBe(true);
+    expect(svg).toContain('width="1200"');
+    expect(svg).toContain('height="630"');
+  }, 30_000);
+});
+
+// The chapter card: what /course/:id/chapter/:chapterId previews draw.
+describe("chapterCardModel", () => {
+  it("combines the chapter with the course it is from", () => {
+    const model = chapterCardModel(ROW, { name: "Moment of Inertia", lectures: 6 });
+    expect(model).toEqual({
+      chapter: "Moment of Inertia",
+      courseTitle: ROW.title,
+      teacher: "Mahendra Singh",
+      channel: "Unacademy NEET",
+      subject: "Physics",
+      lectures: 6,
+    });
+    // No rating field at all — a course's rating is not a chapter's.
+    expect(model).not.toHaveProperty("rating");
+  });
+
+  it("returns null without a chapter name or a course, so the handler picks another card", () => {
+    expect(chapterCardModel(ROW, null)).toBeNull();
+    expect(chapterCardModel(ROW, { name: "  ", lectures: 3 })).toBeNull();
+    expect(chapterCardModel(null, { name: "Moment of Inertia", lectures: 3 })).toBeNull();
+  });
+
+  it("drops an unusable lecture count rather than drawing it", () => {
+    for (const lectures of [0, null, undefined, -1, 2.5, "abc"]) {
+      expect(chapterCardModel(ROW, { name: "Moment of Inertia", lectures }).lectures).toBeNull();
+    }
+  });
+
+  it("feeds every drawn string to the static-fallback gate", () => {
+    const model = chapterCardModel(ROW, { name: "Moment of Inertia", lectures: 6 });
+    const text = chapterCardText(model);
+    for (const part of ["Moment of Inertia", ROW.title, "Mahendra Singh", "Unacademy NEET"]) {
+      expect(text).toContain(part);
+    }
+    expect(needsStaticFallback(chapterCardText({ ...model, chapter: "द्विपद प्रमेय" }))).toBe(true);
+    expect(needsStaticFallback(chapterCardText({ ...model, courseTitle: "भौतिकी" }))).toBe(true);
+    expect(needsStaticFallback(chapterCardText({ ...model, teacher: "Physics 🚀" }))).toBe(true);
+    expect(needsStaticFallback(chapterCardText({ ...model, channel: "物理" }))).toBe(true);
+  });
+});
+
+describe("chapterCardTree", () => {
+  const tree = (lectures, row = ROW) =>
+    texts(chapterCardTree(chapterCardModel(row, { name: "Moment of Inertia", lectures })));
+
+  it("draws the chapter name, the course line, the byline and the free chip", () => {
+    const t = tree(6);
+    expect(t).toContain("Moment of Inertia");
+    expect(t).toContain(`From the course: ${ROW.title}`);
+    expect(t).toContain("Mahendra Singh  —  Unacademy NEET");
+    expect(t).toContain("PHYSICS");
+    expect(t).toContain("Free — no account to browse");
+    expect(t).toContain("JEENEETARD");
+  });
+
+  it("pluralises the lecture chip, and omits it without a count", () => {
+    expect(tree(6)).toContain("6 lectures in this chapter");
+    expect(tree(1)).toContain("1 lecture in this chapter");
+    expect(tree(1)).not.toContain("1 lectures in this chapter");
+    expect(tree(null).some((s) => s.includes("in this chapter"))).toBe(false);
+  });
+
+  it("never shows rating text, even when the course's rating is confident", () => {
+    // ROW is 4.6 from 12 ratings — the course card shows it (see above).
+    expect(courseCardModel(ROW).rating.kind).toBe("scored");
+    const t = tree(6);
+    expect(t.some((s) => /\/5|rating|★/i.test(s))).toBe(false);
+    // Nor a below-confidence one.
+    expect(tree(6, { ...ROW, ratings_count: 2 }).some((s) => /rating/i.test(s))).toBe(false);
+  });
+
+  it("shares the course card's frame and subject spine", () => {
+    const chapter = chapterCardTree(chapterCardModel(ROW, { name: "Moment of Inertia", lectures: 6 }));
+    expect(chapter.props.style).toEqual(courseCardTree(courseCardModel(ROW)).props.style);
+    expect(chapter.props.children[0].props.style.backgroundColor).toBe(SUBJECT_COLORS.physics);
+  });
+
+  it("renders through satori at 1200x630", async () => {
+    const svg = await satori(
+      chapterCardTree(chapterCardModel(ROW, { name: "Moment of Inertia", lectures: 6 })),
+      {
+        width: CARD_WIDTH,
+        height: CARD_HEIGHT,
+        fonts: [
+          { name: "KaTeX Main", data: fontRegular, weight: 400, style: "normal" },
+          { name: "KaTeX Main", data: fontBold, weight: 700, style: "normal" },
+        ],
+      },
+    );
     expect(svg).toContain('width="1200"');
     expect(svg).toContain('height="630"');
   }, 30_000);
