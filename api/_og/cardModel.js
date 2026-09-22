@@ -1,14 +1,22 @@
-// api/_og/cardModel.js — the pure half of the /api/og course-card renderer.
+// api/_og/cardModel.js — the pure half of the /api/og card renderer.
 //
 // Everything here is deliberately side-effect free so it can be unit-tested
 // without a serverless runtime: parse and validate the ?course= id, decide
 // whether the embedded fonts can render a title at all, normalise the
 // PostgREST row into a card model, and build the satori element tree.
 //
-// HONESTY RULE. The card shows a star score ONLY when the site itself would:
-// it reuses ratingDisplay from src/ratingConfidence.js (the "one
+// TWO CARDS, ONE LOOK. The course card (/api/og?course=<id>) and the chapter
+// card (/api/og?course=<id>&chapter=<chapterId>) share the frame, header,
+// kicker, byline and chip helpers below. The chapter card exists because the
+// most-shared URL is /course/:id/chapter/:chapterId — the link ChapterCleared
+// builds — and as measured on 15 Sep 2026 every one of those previews showed
+// the WHOLE course's card underneath a "Cleared <chapter>" message.
+//
+// HONESTY RULE. The course card shows a star score ONLY when the site itself
+// would: it reuses ratingDisplay from src/ratingConfidence.js (the "one
 // rating-confidence rule for every student-facing surface"), so a WhatsApp
-// preview can never claim a confidence the course page refuses to show.
+// preview can never claim a confidence the course page refuses to show. The
+// chapter card shows no rating at all — a course's rating is not a chapter's.
 //
 // FONTS. The renderer embeds the KaTeX Main serif (Latin coverage only). A
 // title containing scripts those fonts cannot draw — Devanagari most of all —
@@ -21,7 +29,10 @@ import { ratingDisplay } from "../../src/ratingConfidence.js";
 export const CARD_WIDTH = 1200;
 export const CARD_HEIGHT = 630;
 
-/** ?course= must be a positive integer id; anything else is not a course. */
+/**
+ * ?course= must be a positive integer id; anything else is not a course.
+ * ?chapter= uses the same rule — chapter ids are the same bigint shape.
+ */
 export function parseCourseId(value) {
   const raw = String(value ?? "").trim();
   if (!/^\d{1,12}$/.test(raw)) return null;
@@ -50,18 +61,55 @@ function truncate(text, max) {
   return s.length <= max ? s : `${s.slice(0, max - 1).trimEnd()}…`;
 }
 
+/** A lecture count worth drawing: a positive integer, else null (no chip). */
+function lectureCount(value) {
+  const n = Number(value ?? 0);
+  return Number.isSafeInteger(n) && n > 0 ? n : null;
+}
+
 /** Normalise the PostgREST playlists row into what the card actually draws. */
 export function courseCardModel(row) {
   if (!row || typeof row !== "object" || !row.title) return null;
-  const lectures = Number(row.playlist_videos?.[0]?.count ?? 0);
   return {
     title: truncate(row.title, 90),
     teacher: truncate(row.teacher ?? "", 40),
     channel: truncate(row.institutes_channels?.name ?? "", 40),
     subject: String(row.subjects?.name ?? "").trim(),
-    lectures: Number.isFinite(lectures) && lectures > 0 ? lectures : null,
+    lectures: lectureCount(row.playlist_videos?.[0]?.count),
     rating: ratingDisplay(row.average_rating, row.ratings_count),
   };
+}
+
+/**
+ * The chapter card's model: the chapter as the headline, the course it belongs
+ * to as context. `chapterInfo` is { name, lectures }, where lectures counts
+ * THIS course's lectures in the chapter — never a catalogue-wide count.
+ * Measured against production 16 Sep 2026: chapter 78 (Binomial Theorem) has
+ * 92 lectures in course 88 but 114 across the catalogue, so the wrong count
+ * would overstate the chapter by a quarter.
+ *
+ * Returns null without a usable course row or chapter name, so the handler
+ * draws the course card instead. Deliberately carries NO rating.
+ */
+export function chapterCardModel(courseRow, chapterInfo) {
+  const course = courseCardModel(courseRow);
+  const name = String(chapterInfo?.name ?? "").trim();
+  if (!course || !name) return null;
+  return {
+    chapter: truncate(name, 90),
+    // 50 keeps "From the course: …" on ONE line at 30px in the 1062px text
+    // column (70 wrapped to two in a worst-case render), leaving the chips room.
+    courseTitle: truncate(course.title, 50),
+    teacher: course.teacher,
+    channel: course.channel,
+    subject: course.subject,
+    lectures: lectureCount(chapterInfo.lectures),
+  };
+}
+
+/** Every string the chapter card draws, for the needsStaticFallback gate. */
+export function chapterCardText(model) {
+  return `${model.chapter}${model.courseTitle}${model.teacher}${model.channel}`;
 }
 
 const el = (type, style, children) => ({ type, props: { style, children } });
@@ -78,29 +126,35 @@ function chip(text, color = INK_2, borderColor = "#26312E") {
   }, text);
 }
 
+const freeChip = () => chip("Free — no account to browse", "#6FD9CC", "#1E4B47");
+
+/** The big headline: course title on one card, chapter name on the other. */
+function headline(text) {
+  return el("div", {
+    display: "block",
+    lineClamp: 2,
+    marginTop: 18,
+    fontSize: 62,
+    fontWeight: 700,
+    lineHeight: 1.15,
+    color: INK,
+  }, text);
+}
+
+function byline(model) {
+  const text = [model.teacher, model.channel].filter(Boolean).join("  —  ");
+  return text
+    ? el("div", { display: "flex", marginTop: 22, fontSize: 30, color: INK_2 }, text)
+    : el("div", { display: "flex" });
+}
+
 /**
- * The 1200x630 card as a satori element tree. Plain objects only — no JSX, no
- * React — so tests can walk it and the handler can hand it straight to satori.
+ * The shared 1200x630 frame: subject-coloured spine, wordmark header, subject
+ * kicker, the card-specific `body` blocks, and the chips pinned to the bottom.
+ * Both cards go through here so their visual language cannot drift apart.
  */
-export function courseCardTree(model) {
-  const spine = subjectColor(model.subject);
-  const byline = [model.teacher, model.channel].filter(Boolean).join("  —  ");
-
-  const stats = [];
-  if (model.lectures) {
-    stats.push(chip(`${model.lectures} lectures`));
-  }
-  if (model.rating?.kind === "scored") {
-    stats.push(chip(
-      `${model.rating.score.toFixed(1)}/5  —  ${model.rating.count} student ratings`,
-      "#F0C24B",
-      "#4A3E1F",
-    ));
-  } else if (model.rating?.kind === "low") {
-    stats.push(chip(model.rating.text));
-  }
-  stats.push(chip("Free — no account to browse", "#6FD9CC", "#1E4B47"));
-
+function cardFrame(subject, body, stats) {
+  const spine = subjectColor(subject);
   return el("div", {
     width: CARD_WIDTH,
     height: CARD_HEIGHT,
@@ -131,20 +185,8 @@ export function courseCardTree(model) {
         fontSize: 26,
         letterSpacing: 4,
         color: spine,
-      }, (model.subject || "Course").toUpperCase()),
-      // The course title, the card's whole point.
-      el("div", {
-        display: "block",
-        lineClamp: 2,
-        marginTop: 18,
-        fontSize: 62,
-        fontWeight: 700,
-        lineHeight: 1.15,
-        color: INK,
-      }, model.title),
-      byline
-        ? el("div", { display: "flex", marginTop: 22, fontSize: 30, color: INK_2 }, byline)
-        : el("div", { display: "flex" }),
+      }, (subject || "Course").toUpperCase()),
+      ...body,
       // Stats chips pinned to the bottom.
       el("div", {
         display: "flex",
@@ -154,6 +196,53 @@ export function courseCardTree(model) {
       }, stats),
     ]),
   ]);
+}
+
+/**
+ * The 1200x630 course card as a satori element tree. Plain objects only — no
+ * JSX, no React — so tests can walk it and the handler can hand it straight to
+ * satori.
+ */
+export function courseCardTree(model) {
+  const stats = [];
+  if (model.lectures) {
+    stats.push(chip(`${model.lectures} lectures`));
+  }
+  if (model.rating?.kind === "scored") {
+    stats.push(chip(
+      `${model.rating.score.toFixed(1)}/5  —  ${model.rating.count} student ratings`,
+      "#F0C24B",
+      "#4A3E1F",
+    ));
+  } else if (model.rating?.kind === "low") {
+    stats.push(chip(model.rating.text));
+  }
+  stats.push(freeChip());
+
+  // The course title, the card's whole point.
+  return cardFrame(model.subject, [headline(model.title), byline(model)], stats);
+}
+
+/**
+ * The 1200x630 chapter card: the chapter name as the headline, the course it
+ * is from beneath it, then the same teacher/channel byline as the course card.
+ * The chips carry only what was counted for THIS chapter in THIS course — and
+ * no rating chip, because no chapter-level rating exists to stand behind.
+ */
+export function chapterCardTree(model) {
+  const stats = [];
+  if (model.lectures) {
+    const noun = model.lectures === 1 ? "lecture" : "lectures";
+    stats.push(chip(`${model.lectures} ${noun} in this chapter`));
+  }
+  stats.push(freeChip());
+
+  return cardFrame(model.subject, [
+    headline(model.chapter),
+    el("div", { display: "flex", marginTop: 20, fontSize: 30, color: INK_2 },
+      `From the course: ${model.courseTitle}`),
+    byline(model),
+  ], stats);
 }
 
 export const CARD_BACKGROUNDS = { CANVAS, SURFACE, BRAND_TEAL };

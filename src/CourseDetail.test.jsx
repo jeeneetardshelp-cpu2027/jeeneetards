@@ -166,8 +166,8 @@ describe("the teacher credit reaches the faculty page", () => {
     expect(screen.getByText("ABJ Sir").tagName).toBe("A");
   });
 
-  // 128 courses carry a free-text teacher with no slugged registry row behind
-  // them (measured 2026-09-08; courseTeacherSlug.js owns the counts).
+  // Courses whose free-text teacher has no slugged registry row behind them
+  // (THE COUNTS in courseTeacherSlug.js say how many).
   it.each([["no teacher resolved", null], ["the field is absent", undefined]])(
     "leaves the credit as plain text when %s",
     (_label, teacherSlug) => {

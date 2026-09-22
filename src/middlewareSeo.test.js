@@ -1694,6 +1694,210 @@ describe("edge-rendered discovery landings", () => {
   });
 
   // ------------------------------------------------------------------
+  // A chapter sub-URL is shared as that chapter.
+  //
+  // ChapterCleared shares /course/:id/chapter/:chapterId. Measured 15 Sep
+  // 2026, every such link unfurled with the WHOLE course's og tags and card,
+  // so "Cleared Rotational Motion" arrived above a card that never named the
+  // chapter. Only the share tags move; everything a search engine reads stays
+  // course-level, because useCourseMetadata keeps it that way after hydration.
+  // ------------------------------------------------------------------
+  const chapterCourse = {
+    title: "Rectilinear Motion (Kinematics)",
+    teacher: "Ashish Arora",
+    subjects: { name: "Physics" },
+    institutes_channels: { name: "Physics Galaxy" },
+    playlist_videos: [{ count: 24 }],
+    lessons: [],
+  };
+  const stubChapter = ({ course = chapterCourse, rows, contentRange = "0-0/3" } = {}) => {
+    vi.stubEnv("VITE_SUPABASE_URL", "https://catalog.example");
+    vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-test-key");
+    const fetchSpy = vi.fn(async (input) => {
+      const url = String(input);
+      if (url.includes("/rest/v1/playlists")) return Response.json([course]);
+      if (url.includes("/rest/v1/playlist_videos")) {
+        return Response.json(
+          rows ?? [{ playlist_id: 13, videos: { chapter_id: 8, chapters: { name: "Relative Motion" } } }],
+          { headers: contentRange ? { "content-range": contentRange } : {} },
+        );
+      }
+      return new Response(shell, { status: 200 });
+    });
+    vi.stubGlobal("fetch", fetchSpy);
+    return fetchSpy;
+  };
+  const tag = (html, pattern) => html.match(pattern)?.[0] ?? null;
+  const searchTags = (html) => ({
+    title: tag(html, /<title>[\s\S]*?<\/title>/),
+    description: tag(html, /<meta name="description" content="[^"]*" \/>/),
+    robots: tag(html, /<meta name="robots" content="[^"]*" \/>/),
+    canonical: tag(html, /<link rel="canonical"[^>]*>/),
+  });
+  const shareContent = (html, attr, name) =>
+    html.match(new RegExp(`<meta ${attr}="${name}" content="([^"]*)"`))?.[1] ?? null;
+
+  it("asks for the chapter name and this course's count in the same one lookup", async () => {
+    const fetchSpy = stubChapter();
+
+    await middleware(new Request("https://www.jeeneetard.com/course/13/chapter/8"));
+
+    const chapterCalls = fetchSpy.mock.calls.filter(([input]) =>
+      String(input).includes("/rest/v1/playlist_videos"));
+    expect(chapterCalls).toHaveLength(1);
+    const [input, init] = chapterCalls[0];
+    expect(String(input)).toContain("playlist_id=eq.13");
+    expect(String(input)).toContain("videos!inner(chapter_id,chapters(name))");
+    expect(String(input)).toContain("videos.chapter_id=eq.8");
+    expect(String(input)).toContain("limit=1");
+    expect(new Headers(init.headers).get("prefer")).toBe("count=exact");
+  });
+
+  it("gives a confirmed chapter its own share tags and card, and nothing else", async () => {
+    stubChapter();
+    const chapterHtml = await (await middleware(
+      new Request("https://www.jeeneetard.com/course/13/chapter/8"),
+    )).text();
+    stubChapter();
+    const courseHtml = await (await middleware(
+      new Request("https://www.jeeneetard.com/course/13/rectilinear-motion-kinematics"),
+    )).text();
+
+    const title = "Relative Motion — Rectilinear Motion (Kinematics) | JEENEETARD";
+    const description =
+      "3 free lectures on Relative Motion from the course Rectilinear Motion (Kinematics), " +
+      "taught by Ashish Arora.";
+    const image = "https://www.jeeneetard.com/api/og?course=13&amp;chapter=8";
+    expect(shareContent(chapterHtml, "property", "og:title")).toBe(title);
+    expect(shareContent(chapterHtml, "name", "twitter:title")).toBe(title);
+    expect(shareContent(chapterHtml, "property", "og:description")).toBe(description);
+    expect(shareContent(chapterHtml, "name", "twitter:description")).toBe(description);
+    expect(shareContent(chapterHtml, "property", "og:url"))
+      .toBe("https://www.jeeneetard.com/course/13/chapter/8");
+    expect(shareContent(chapterHtml, "property", "og:image")).toBe(image);
+    expect(shareContent(chapterHtml, "name", "twitter:image")).toBe(image);
+
+    // What a search engine reads is the course page's, tag for tag.
+    expect(searchTags(chapterHtml)).toEqual(searchTags(courseHtml));
+    expect(searchTags(chapterHtml).canonical).toBe(
+      '<link rel="canonical" href="https://www.jeeneetard.com/course/13/rectilinear-motion-kinematics" />',
+    );
+    expect(searchTags(chapterHtml).title).not.toContain("Relative Motion");
+  });
+
+  it("says one lecture, and names no teacher the course does not credit", async () => {
+    stubChapter({
+      // courseCredit drops a teacher that only repeats the channel's name.
+      course: { ...chapterCourse, teacher: "Physics Galaxy" },
+      contentRange: "0-0/1",
+    });
+    const html = await (await middleware(
+      new Request("https://www.jeeneetard.com/course/13/chapter/8"),
+    )).text();
+
+    expect(shareContent(html, "property", "og:description")).toBe(
+      "1 free lecture on Relative Motion from the course Rectilinear Motion (Kinematics).",
+    );
+  });
+
+  it("states no number when the count could not be read", async () => {
+    stubChapter({ contentRange: null });
+    const html = await (await middleware(
+      new Request("https://www.jeeneetard.com/course/13/chapter/8"),
+    )).text();
+
+    const description = shareContent(html, "property", "og:description");
+    expect(description).toBe(
+      "Relative Motion, a chapter of the free course Rectilinear Motion (Kinematics), " +
+        "taught by Ashish Arora.",
+    );
+    expect(description).not.toMatch(/\d/);
+  });
+
+  it("keeps today's course tags when the chapter lookup returns no name", async () => {
+    stubChapter({ rows: [{ playlist_id: 13, videos: { chapter_id: 8, chapters: null } }] });
+    const response = await middleware(
+      new Request("https://www.jeeneetard.com/course/13/chapter/8"),
+    );
+    const chapterHtml = await response.text();
+    stubChapter();
+    const courseHtml = await (await middleware(
+      new Request("https://www.jeeneetard.com/course/13/rectilinear-motion-kinematics"),
+    )).text();
+
+    expect(response.status).toBe(200);
+    // Same course, same canonical, no share fields: the whole page is the
+    // course page's, byte for byte.
+    expect(chapterHtml).toBe(courseHtml);
+    expect(chapterHtml).not.toContain("chapter=8");
+  });
+
+  it("escapes a hostile chapter name and keeps $ sequences literal", async () => {
+    const name = `"Waves" <b>& $& $' $1 Sound</b>`;
+    stubChapter({
+      rows: [{ playlist_id: 13, videos: { chapter_id: 8, chapters: { name } } }],
+    });
+    const html = await (await middleware(
+      new Request("https://www.jeeneetard.com/course/13/chapter/8"),
+    )).text();
+
+    const escaped = "&quot;Waves&quot; &lt;b&gt;&amp; $&amp; $' $1 Sound&lt;/b&gt;";
+    expect(shareContent(html, "property", "og:title"))
+      .toBe(`${escaped} — Rectilinear Motion (Kinematics) | JEENEETARD`);
+    expect(shareContent(html, "name", "twitter:description"))
+      .toContain(`on ${escaped} from the course`);
+    expect(html).not.toContain("<b>& $&");
+    // A $& expanded by replace() would have pasted the matched tag back in.
+    expect(html.match(/<meta property="og:title"/g)).toHaveLength(1);
+  });
+
+  it("leaves the plain course page exactly as it was before share fields existed", async () => {
+    stubChapter();
+    const html = await (await middleware(
+      new Request("https://www.jeeneetard.com/course/13/rectilinear-motion-kinematics"),
+    )).text();
+
+    // The pre-chapter injection, copied verbatim from ogInject.js as it stood
+    // on d78cc82, applied to the same course meta. Any leakage of the share
+    // fields into a caller that passes none shows up as a byte difference.
+    const { courseMeta, injectCourseMeta } = await import("../ogInject.js");
+    const meta = courseMeta(chapterCourse, "13");
+    const e = (v) => String(v ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    const t = e(meta.title); const d = e(meta.description); const u = e(meta.url);
+    const img = e(meta.image);
+    const legacyHead = shell
+      .replace(/<title>[\s\S]*?<\/title>/, () => `<title>${t}</title>`)
+      .replace(/(<meta name="description" content=")[^"]*(")/, (m, a, z) => `${a}${d}${z}`)
+      .replace(/(<meta name="robots" content=")[^"]*(")/, (m, a, z) => `${a}${e(meta.robots)}${z}`)
+      .replace(/(<meta property="og:title" content=")[^"]*(")/, (m, a, z) => `${a}${t}${z}`)
+      .replace(/(<meta property="og:description" content=")[^"]*(")/, (m, a, z) => `${a}${d}${z}`)
+      .replace(/(<meta property="og:url" content=")[^"]*(")/, (m, a, z) => `${a}${u}${z}`)
+      .replace(/(<meta property="og:type" content=")[^"]*(")/, (m, a, z) => `${a}${e(meta.type)}${z}`)
+      .replace(/(<meta name="twitter:title" content=")[^"]*(")/, (m, a, z) => `${a}${t}${z}`)
+      .replace(/(<meta name="twitter:description" content=")[^"]*(")/, (m, a, z) => `${a}${d}${z}`)
+      .replace(/(<meta property="og:image" content=")[^"]*(")/, (m, a, z) => `${a}${img}${z}`)
+      .replace(/(<meta name="twitter:image" content=")[^"]*(")/, (m, a, z) => `${a}${img}${z}`)
+      .replace(/<title>/, () => `<link rel="canonical" href="${u}" />\n    <title>`);
+
+    // The helper itself, byte for byte.
+    expect(injectCourseMeta(shell, meta)).toBe(legacyHead);
+    // And the served page: every tag the injection writes matches the legacy
+    // output (JSON-LD and the crawler body are added after it, untouched here).
+    const written = [
+      /<title>[\s\S]*?<\/title>/,
+      /<link rel="canonical"[^>]*>/,
+      /<meta name="(?:description|robots|twitter:[a-z]+)" content="[^"]*"/g,
+      /<meta property="og:[a-z:]+" content="[^"]*"/g,
+    ];
+    for (const pattern of written) {
+      expect(Array.from(html.match(pattern) ?? [])).toEqual(Array.from(legacyHead.match(pattern) ?? []));
+    }
+    expect(shareContent(html, "property", "og:image")).toBe("https://www.jeeneetard.com/api/og?course=13");
+    expect(html).not.toContain("chapter=");
+  });
+
+  // ------------------------------------------------------------------
   // One address per course: /course/:id/:slug.
   //
   // /course/398 carried no keywords for a search engine, and a link pasted
@@ -2008,8 +2212,9 @@ describe("course pages linking their teacher's faculty profile", () => {
     // the `", "` separator the hooks read best, and a raw space here would
     // leave as %20 and reach PostgREST as a column named " faculty".
     expect(lookup).not.toMatch(/[\s]|%20/);
-    // Never `!inner`. 206 of 490 playlists have no playlist_teachers row, and
-    // an inner join would drop each of them from its own course page — the
+    // Never `!inner`. Many playlists have no playlist_teachers row (THE COUNTS
+    // in courseTeacherSlug.js say how many), and an inner join would drop each
+    // of them from its own course page — the
     // lookup would come back empty and this middleware would answer 404 for a
     // course that exists.
     expect(lookup).not.toContain("playlist_teachers!inner");
@@ -2040,7 +2245,8 @@ describe("course pages linking their teacher's faculty profile", () => {
   });
 
   it("leaves the credit as plain text when no slug resolves", async () => {
-    // 128 courses carry a free-text teacher with no slugged registry row.
+    // Courses whose free-text teacher has no slugged registry row (THE COUNTS
+    // in courseTeacherSlug.js say how many).
     // Rendering nothing beats rendering a guess: a slug derived from the name
     // would be a 404 wearing a teacher's name.
     const html = await courseHtml({ teacher: "ABJ Sir", faculty: [] });

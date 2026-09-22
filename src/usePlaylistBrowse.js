@@ -45,11 +45,10 @@ function toCard(row) {
     teacher: row.teacher ?? null,           // LEGACY free text. Not a resolved identity.
     // The resolved identity BEHIND that free text, when the faculty registry
     // names exactly one slugged teacher for this course — the destination for
-    // the credit above, never a replacement for it. Null for the courses whose
-    // credit has no link (128 of them on 2026-09-08) and for every course that
-    // resolves two or more slugs (134 — playlist 91 is two real people, most
-    // of the rest are duplicate registry rows for one). courseTeacherSlug.js
-    // owns that rule, and the counts behind it, for all three read paths.
+    // the credit above, never a replacement for it. Null for a course whose
+    // credit has no link and for every course that resolves two or more slugs
+    // (playlist 91 is two real people). courseTeacherSlug.js owns that rule
+    // for all three read paths, and THE COUNTS behind it.
     teacherSlug: courseTeacherSlug(row.faculty),
     instituteId: row.institutes_channels?.id ?? null,
     institute: row.institutes_channels?.name ?? null,

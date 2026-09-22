@@ -34,6 +34,7 @@ import { canonicalChapterView } from "./src/chapterLanding.js";
 import { exploreStepHeading } from "./src/exploreHeading.js";
 import { getSubjectGuide } from "./src/subjectGuides.js";
 import {
+  chapterShareMeta,
   courseMeta,
   injectCourseMeta,
   injectRouteMeta,
@@ -1019,23 +1020,43 @@ export default async function middleware(request) {
       const controller = new AbortController();
       const timer = setTimeout(() => controller.abort(), LOOKUP_TIMEOUT_MS);
       try {
+        // Still ONE request that decides membership exactly as before (a row
+        // exists or it does not). It now also carries what the share tags
+        // need: the chapter's name, embedded on the one row, and — via
+        // count=exact, which PostgREST computes over the same !inner-filtered
+        // join — how many of THIS course's lectures are in the chapter,
+        // returned in Content-Range ("0-0/2") without shipping those rows.
+        // Checked against production 16 Sep 2026: course 300 / chapter 21
+        // answers 206 "0-0/2" with name "Work, Energy and Power" (course has 4
+        // lectures; the chapter has 70 course-lecture rows catalogue-wide);
+        // course 300 / chapter 1 answers 200 "*/0" with [] — the 404 path.
         const res = await fetch(
           `${supaUrl}/rest/v1/playlist_videos` +
             `?playlist_id=eq.${encodeURIComponent(id)}` +
-            `&select=playlist_id,videos!inner(chapter_id)` +
+            `&select=playlist_id,videos!inner(chapter_id,chapters(name))` +
             `&videos.chapter_id=eq.${encodeURIComponent(chapterId)}` +
             `&limit=1`,
           {
-            headers: { apikey: supaKey, Authorization: `Bearer ${supaKey}` },
+            headers: {
+              apikey: supaKey,
+              Authorization: `Bearer ${supaKey}`,
+              Prefer: "count=exact",
+            },
             signal: controller.signal,
           },
         );
+        // 206 Partial Content is how PostgREST answers a counted, limited
+        // read of more than one row — res.ok covers it.
         if (!res.ok) return { exists: false, confirmed: false };
         const rows = await res.json();
-        return {
-          exists: Array.isArray(rows) && rows.length > 0,
-          confirmed: true,
-        };
+        const exists = Array.isArray(rows) && rows.length > 0;
+        const rawName = exists ? rows[0]?.videos?.chapters?.name : null;
+        const name = typeof rawName === "string" && rawName.trim() ? rawName.trim() : null;
+        // An unreadable Content-Range leaves the count unknown (null), and the
+        // share tags then say no number rather than a guessed one.
+        const total = /\/(\d+)\s*$/.exec(res.headers.get("content-range") ?? "");
+        const lectureCount = exists && total ? Number(total[1]) : null;
+        return { exists, confirmed: true, name, lectureCount };
       } finally {
         clearTimeout(timer);
       }
@@ -1099,7 +1120,18 @@ export default async function middleware(request) {
     // Meta first, then JSON-LD, then the crawler-readable body. Each step is
     // independent: if one pattern does not match the shell it leaves the HTML
     // unchanged rather than corrupting it.
-    let html = injectCourseMeta(shell, meta);
+    // A confirmed chapter with a name is shared AS that chapter: only the
+    // og:/twitter: tags and the preview card change. <title>, description,
+    // robots and canonical stay the course's (see injectCourseMeta). No name,
+    // or no chapter at all, and the head is exactly the course page's.
+    const shareMeta = chapterLookup?.name
+      ? chapterShareMeta(course, id, {
+        id: chapterId,
+        name: chapterLookup.name,
+        lectureCount: chapterLookup.lectureCount,
+      })
+      : null;
+    let html = injectCourseMeta(shell, shareMeta ? { ...meta, ...shareMeta } : meta);
     html = injectStructuredData(html, courseSchemas(course, meta));
     html = injectRootContent(html, renderCourseBody(course, meta, lessons));
 
