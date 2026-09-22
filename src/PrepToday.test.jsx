@@ -107,13 +107,28 @@ describe("PrepToday", () => {
     expect(screen.getByText(/to JEE Main 2027 \(Session 1\)/)).toBeTruthy();
     expect(screen.getByText(/NTA has not announced dates yet/)).toBeTruthy();
     expect(screen.getByRole("link", { name: /Official NTA site/ }).getAttribute("href"))
-      .toBe("https://jeemain.nta.nic.in/");
+      .toBe("https://nta.ac.in/");
 
     // The resume card keeps its link and its lesson context.
     expect(screen.getByText("Continue watching")).toBeTruthy();
     const link = screen.getByRole("link", { name: /Rotational Motion/ });
     expect(link.getAttribute("href")).toBe("/course/374/chapter/27?v=abcdEFGH123");
     expect(link.textContent).toMatch(/lesson 3 of 12/);
+  });
+
+  it("shows a tentative calendar's dates as tentative, never as nothing announced", () => {
+    // NTA's calendar of 16 Sep 2026 proposes dates it calls tentative. "Has not
+    // announced dates yet" would be false; an exact count would claim too much.
+    seedStreak(["2026-09-01"], 2);
+    const calendar = CALENDAR.map((exam) => (exam.slug === "jee-main-2027-session-1"
+      ? { ...exam, status: "tentative", expectedFrom: "2027-01-22", expectedLabel: "22–24 and 28–30 Jan 2027" }
+      : exam));
+    renderBand([], calendar);
+    expect(screen.getByText("about")).toBeTruthy();
+    expect(screen.getByText(
+      "NTA's tentative calendar: 22–24 and 28–30 Jan 2027 · final dates come with the information bulletin",
+    )).toBeTruthy();
+    expect(screen.queryByText(/has not announced/)).toBeNull();
   });
 
   it("keeps every continue-watching entry reachable, top one as the primary card", () => {
@@ -313,6 +328,17 @@ describe("shareMessage", () => {
     // group without it is a guess wearing the clothes of a fact.
     expect(text).toMatch(/has not announced dates yet/);
     expect(text).toContain(exam.expectedLabel);
+  });
+
+  it("says a tentative calendar is tentative, not that nothing is announced", () => {
+    const tentative = {
+      ...findExam("jee-main-2027-session-1"), status: "tentative", date: null,
+      expectedFrom: "2027-01-22", expectedLabel: "22–24 and 28–30 Jan 2027", checkedOn: CHECKED_ON,
+    };
+    const text = shareMessage(tentative, examCountdown(tentative, new Date("2026-09-01T09:00:00Z")), "https://x.test");
+    expect(text).toBe(
+      "About 143 days to JEE Main 2027 (Session 1). NTA's calendar lists 22–24 and 28–30 Jan 2027 as tentative. Free chapter-wise lectures: https://x.test/",
+    );
   });
 
   it("adds no caveat to an announced exam", () => {

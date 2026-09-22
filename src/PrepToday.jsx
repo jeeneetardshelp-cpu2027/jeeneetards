@@ -10,9 +10,10 @@
 //
 // The pieces keep their honesty rules too:
 //  - The countdown never dresses an estimate up as an official date (see
-//    examCalendar.js): while an exam is `expected` it says "about N days",
-//    names the authority, states plainly that dates are not announced, and
-//    links the official page. The share text carries the same caveat.
+//    examCalendar.js): until an exam is `announced` it says "about N days",
+//    names the authority, states plainly that dates are not announced (or are
+//    only the authority's tentative ones), and links the official page. The
+//    share text carries the same caveat.
 //  - The streak stays DELIBERATELY GENTLE, because the users are 14-18: the
 //    student's own number and nothing else — no leaderboard, no "you lost
 //    your streak!" guilt, no red. A missed day simply starts a new count.
@@ -57,9 +58,12 @@ export function shareMessage(exam, countdown, origin = "https://www.jeeneetard.c
   // currently an ESTIMATE, so without this 100% of shared countdowns travel as
   // bare numbers into batch groups, stripped of the one fact that makes them
   // honest — the date is not announced yet.
-  const caveat = countdown.approximate && exam.expectedLabel
-    ? ` ${exam.authority ?? "The exam board"} has not announced dates yet (expected ${exam.expectedLabel}).`
-    : "";
+  const authority = exam.authority ?? "The exam board";
+  const caveat = !countdown.approximate || !exam.expectedLabel
+    ? ""
+    : exam.status === "tentative"
+      ? ` ${authority}'s calendar lists ${exam.expectedLabel} as tentative.`
+      : ` ${authority} has not announced dates yet (expected ${exam.expectedLabel}).`;
   return `${days} to ${examLabel(exam)}.${caveat} Free chapter-wise lectures: ${origin}/`;
 }
 
