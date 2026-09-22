@@ -106,8 +106,10 @@ describe("PrepToday", () => {
     expect(screen.getByText("about")).toBeTruthy();
     expect(screen.getByText(/to JEE Main 2027 \(Session 1\)/)).toBeTruthy();
     expect(screen.getByText(/NTA has not announced dates yet/)).toBeTruthy();
+    // The entry's own link, whichever official page the calendar points it at:
+    // pinning today's address here broke CI whenever an entry's link moved.
     expect(screen.getByRole("link", { name: /Official NTA site/ }).getAttribute("href"))
-      .toBe("https://nta.ac.in/");
+      .toBe(CALENDAR.find((exam) => exam.slug === "jee-main-2027-session-1").officialUrl);
 
     // The resume card keeps its link and its lesson context.
     expect(screen.getByText("Continue watching")).toBeTruthy();
@@ -150,6 +152,10 @@ describe("PrepToday", () => {
     fireEvent.click(screen.getByRole("button", { name: "NEET" }));
     expect(screen.getByText(/to NEET UG 2027/)).toBeTruthy();
     expect(screen.getByRole("button", { name: "NEET" }).getAttribute("aria-pressed")).toBe("true");
+    // The link follows the lane: a band that linked one address for every exam
+    // would send a NEET student to JEE Main's source.
+    expect(screen.getByRole("link", { name: /Official NTA site/ }).getAttribute("href"))
+      .toBe(CALENDAR.find((exam) => exam.slug === "neet-ug-2027").officialUrl);
     // The choice persists for the next visit — and for the exam grid's order.
     expect(localStorage.getItem(LANE_KEY)).toBe("neet");
   });
@@ -160,6 +166,8 @@ describe("PrepToday", () => {
     renderBand();
     expect(screen.getByText(/to CBSE Class 12 boards 2027/)).toBeTruthy();
     expect(screen.getByRole("button", { name: "Boards" }).getAttribute("aria-pressed")).toBe("true");
+    expect(screen.getByRole("link", { name: /Official CBSE site/ }).getAttribute("href"))
+      .toBe(CALENDAR.find((exam) => exam.slug === "cbse-class-12-2027").officialUrl);
   });
 
   it("falls back to the default lane when the stored value is garbage", () => {
@@ -328,6 +336,36 @@ describe("shareMessage", () => {
     // group without it is a guess wearing the clothes of a fact.
     expect(text).toMatch(/has not announced dates yet/);
     expect(text).toContain(exam.expectedLabel);
+  });
+
+  it("words an expected exam's share text exactly as the band does", () => {
+    // The tentative sentence sits beside this one in shareMessage. Pinned only by
+    // pattern, "(proposed early May 2027)" could replace "(expected ...)" and
+    // credit this site's own estimate to NTA as a proposal. Local noon: the same
+    // calendar day in every zone.
+    const countdown = examCountdown(exam, new Date(2026, 8, 1, 12));
+    expect(shareMessage(exam, countdown, "https://x.test")).toBe(
+      `About ${countdown.days} days to NEET UG 2027. NTA has not announced dates yet `
+      + `(expected ${exam.expectedLabel}). Free chapter-wise lectures: https://x.test/`,
+    );
+  });
+
+  it("keeps the caveat on the first day of a window that is not confirmed", () => {
+    // Day 0 reads "Today", with no "About". The caveat is what still says the
+    // date is not final, so it must survive that day too.
+    const tentative = {
+      ...findExam("jee-main-2027-session-1"), status: "tentative", date: null,
+      expectedFrom: "2027-01-22", expectedLabel: "22–24 and 28–30 Jan 2027", checkedOn: "2027-01-10",
+    };
+    expect(shareMessage(tentative, examCountdown(tentative, new Date(2027, 0, 22, 12)), "https://x.test")).toBe(
+      "Today to JEE Main 2027 (Session 1). NTA's calendar lists 22–24 and 28–30 Jan 2027 as tentative. "
+      + "Free chapter-wise lectures: https://x.test/",
+    );
+    const [year, month, day] = exam.expectedFrom.split("-").map(Number);
+    const expected = { ...exam, checkedOn: exam.expectedFrom };
+    expect(shareMessage(expected, examCountdown(expected, new Date(year, month - 1, day, 12)), "https://x.test"))
+      .toBe(`Today to NEET UG 2027. NTA has not announced dates yet (expected ${exam.expectedLabel}). `
+        + "Free chapter-wise lectures: https://x.test/");
   });
 
   it("says a tentative calendar is tentative, not that nothing is announced", () => {
