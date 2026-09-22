@@ -88,6 +88,34 @@ describe("the shipped calendar is honest by construction", () => {
       expect(["expected", "tentative", "announced"], exam.slug).toContain(exam.status);
     }
   });
+
+  it("gives every exam not yet announced a label to show", () => {
+    // The band prints "Expected <label>" or "<authority>'s tentative calendar:
+    // <label>". Without one it reads "undefined", and the share text drops its
+    // caveat altogether, sending a bare number.
+    for (const exam of EXAM_CALENDAR) {
+      if (exam.status === "announced") continue;
+      expect(String(exam.expectedLabel ?? "").trim(), exam.slug).not.toBe("");
+    }
+  });
+
+  it("labels a tentative entry with the days it counts to", () => {
+    // A tentative label quotes the authority's own days, so it has to agree with
+    // the dates the countdown uses: it starts on expectedFrom's day, its last day
+    // is expectedTo's, and it names that month and year. Counting to 21 Jan under
+    // "22–24 and 28–30 Jan 2027", or marking an estimate like "early April 2027"
+    // tentative, fails here.
+    const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    for (const exam of EXAM_CALENDAR.filter((entry) => entry.status === "tentative")) {
+      const [year, month, day] = exam.expectedFrom.split("-").map(Number);
+      const lastDay = Number(exam.expectedTo.split("-")[2]);
+      const days = (exam.expectedLabel.match(/\d+/g) ?? []).map(Number).filter((n) => n <= 31);
+      expect(days[0], `${exam.slug} first day`).toBe(day);
+      expect(days.at(-1), `${exam.slug} last day`).toBe(lastDay);
+      expect(exam.expectedLabel, exam.slug).toContain(MONTHS[month - 1]);
+      expect(exam.expectedLabel, exam.slug).toContain(String(year));
+    }
+  });
 });
 
 describe("examCountdown", () => {
