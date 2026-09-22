@@ -11,6 +11,8 @@
 // never appear, which is the kind of bug that ships silently. Match on
 // `lesson.videoId`, and only that.
 
+import { courseCredit } from "./courseCredit.js";
+
 /**
  * How much of one chapter the student has finished.
  *
@@ -64,7 +66,16 @@ export function chapterShareMessage({ chapterName, total, byline, url }) {
   return `Cleared ${name} — all ${lectures}${taught}. Free chapter-wise lectures: ${url}`;
 }
 
-/** "Ashish Arora — Physics Wallah", skipping whichever half is missing. */
+/**
+ * "Ashish Arora — Physics Wallah", skipping whichever half is missing.
+ *
+ * Credited through courseCredit first, so a teacher who is only the channel's
+ * own name again is dropped and the channel kept: "Mohit Tyagi", never "Mohit
+ * Tyagi — Mohit Tyagi". The rule and its counts live in src/courseCredit.js.
+ * This one byline feeds the watch page's share text, the cleared-chapter
+ * message and that card's "Taught by" line.
+ */
 export function courseByline(teacher, institute) {
-  return [teacher, institute].filter(Boolean).join(" — ") || null;
+  const credit = courseCredit({ teacher, institute });
+  return [credit.teacher, credit.institute].filter(Boolean).join(" — ") || null;
 }

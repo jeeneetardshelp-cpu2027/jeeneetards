@@ -9,6 +9,7 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
+  chapterShareMeta,
   courseMeta,
   escapeHtml,
   injectCourseMeta,
@@ -367,8 +368,9 @@ describe("renderCourseBody + injectRootContent", () => {
   const meta = courseMeta(course, 5);
   const body = renderCourseBody(course, meta, ["Lesson one", "Lesson two"]);
 
-  // 132 courses store the channel name in `teacher`, which printed the same
-  // string on both rows of the crawler-readable table.
+  // Many courses store the channel name in `teacher` (counts:
+  // src/courseCredit.js), which printed the same string on both rows of the
+  // crawler-readable table.
   it("omits the Teacher row when it only repeats the Channel", () => {
     const dup = renderCourseBody(
       { ...course, teacher: "Competishun+", institutes_channels: { name: "Competishun+" } },
@@ -503,5 +505,37 @@ describe("og:type follows the route's declared type", () => {
   it("defaults to website when a caller supplies no type", () => {
     const html = injectRouteMeta(shell, { title: "T", description: "D", canonicalPath: "/x" });
     expect(html).toContain('<meta property="og:type" content="website" />');
+  });
+});
+
+// chapterShareMeta for course 88, where both repeats meet (production, 22 Sep
+// 2026): its teacher is its channel, "Mohit Tyagi", and its one chapter is
+// named "Binomial Theorem", like the course. courseCredit drops the teacher
+// and namesMatch (src/courseMetadata.js) names the chapter once, so the shared
+// link says each name once. middlewareSeo.test.js covers each rule alone, end
+// to end.
+describe("chapterShareMeta, when the teacher and the chapter both repeat", () => {
+  const DISCLOSURE = "Watch with YouTube's privacy-enhanced player; ads or recommendations may appear.";
+  const course88 = {
+    title: "Binomial Theorem",
+    teacher: "Mohit Tyagi",
+    institutes_channels: { name: "Mohit Tyagi" },
+  };
+  const chapter78 = (lectureCount) => ({ id: 78, name: "Binomial Theorem", lectureCount });
+
+  it("names the chapter once and credits no teacher, with a count", () => {
+    expect(chapterShareMeta(course88, 88, chapter78(92))).toEqual({
+      ogTitle: "Binomial Theorem | JEENEETARD",
+      ogDescription: `92 free lectures on Binomial Theorem. ${DISCLOSURE}`,
+      ogUrl: "https://www.jeeneetard.com/course/88/chapter/78",
+      image: "https://www.jeeneetard.com/api/og?course=88&chapter=78",
+    });
+  });
+
+  it("says no number it lacks, a zero count included", () => {
+    for (const count of [null, 0]) {
+      expect(chapterShareMeta(course88, 88, chapter78(count)).ogDescription)
+        .toBe(`Binomial Theorem, a free course. ${DISCLOSURE}`);
+    }
   });
 });

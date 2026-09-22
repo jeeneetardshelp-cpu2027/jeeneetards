@@ -11,9 +11,10 @@
 // CHAPTERS. The link ChapterCleared shares is /course/:id/chapter/:chapterId,
 // and as measured on 15 Sep 2026 its preview carried the whole COURSE's card.
 // ?course=<id>&chapter=<chapterId> renders a chapter card instead: the chapter
-// name, the course it is from, and how many of that course's lectures are in
-// it. The chapter half is strictly best-effort — if it cannot be confirmed the
-// course card is drawn, never the static image and never a 500.
+// name, the course it is from (unless it is named just like the chapter; see
+// api/_og/cardModel.js), and how many of that course's lectures are in it. The
+// chapter half is strictly best-effort — if it cannot be confirmed the course
+// card is drawn, never the static image and never a 500.
 //
 // FAIL OPEN, ALWAYS. A link preview must never break: any invalid id, missing
 // course, database hiccup, unsupported title script, or render failure

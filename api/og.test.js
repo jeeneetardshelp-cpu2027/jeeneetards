@@ -308,3 +308,95 @@ describe("chapter card", () => {
     expect(chapterCardTree).not.toHaveBeenCalled();
   });
 });
+
+// Course 88 through the real handler: teacher and channel are both "Mohit
+// Tyagi" and its one chapter is "Binomial Theorem", exactly like the course,
+// so its chapter preview used to say both names twice. The teacher rule and
+// its counts live in src/courseCredit.js, the chapter rule (namesMatch) in
+// src/courseMetadata.js; this proves the served PNG uses both.
+describe("a course whose names repeat", () => {
+  const COURSE_88 = {
+    title: "Binomial Theorem",
+    teacher: "Mohit Tyagi",
+    average_rating: null,
+    ratings_count: 0,
+    subjects: { name: "Mathematics" },
+    institutes_channels: { name: "Mohit Tyagi" },
+    playlist_videos: [{ count: 92 }],
+  };
+
+  function stub88() {
+    vi.stubEnv("VITE_SUPABASE_URL", "https://project.supabase.co");
+    vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-key");
+    vi.stubGlobal("fetch", vi.fn(async (input) => {
+      if (String(input).includes("/rest/v1/playlist_videos")) {
+        return new Response(
+          JSON.stringify([{ videos: { chapter_id: 78, chapters: { name: "Binomial Theorem" } } }]),
+          { status: 206, headers: { "content-type": "application/json", "content-range": "0-0/92" } },
+        );
+      }
+      return new Response(JSON.stringify([COURSE_88]), {
+        status: 200,
+        headers: { "content-type": "application/json" },
+      });
+    }));
+  }
+
+  function drawn(node, out = []) {
+    if (typeof node === "string") { out.push(node); return out; }
+    if (Array.isArray(node)) { node.forEach((n) => drawn(n, out)); return out; }
+    if (node?.props?.children) drawn(node.props.children, out);
+    return out;
+  }
+  const saidTimes = (strings, name) => strings.join(" | ").split(name).length - 1;
+
+  it("draws the chapter card with no course line and a one-name byline, as a PNG", async () => {
+    stub88();
+    const res = fakeRes();
+    await handler(request("?course=88&chapter=78"), res);
+
+    expect(res.statusCode).toBe(200);
+    expect(res.headers["content-type"]).toBe("image/png");
+    expect(res.body.subarray(0, 4)).toEqual(Buffer.from([0x89, 0x50, 0x4e, 0x47]));
+    expect(chapterCardTree).toHaveBeenCalledTimes(1);
+    expect(courseCardTree).not.toHaveBeenCalled();
+    expect(chapterCardTree.mock.calls[0][0]).toEqual({
+      chapter: "Binomial Theorem",
+      courseTitle: "",
+      teacher: "",
+      channel: "Mohit Tyagi",
+      subject: "Mathematics",
+      lectures: 92,
+    });
+    const t = drawn(chapterCardTree.mock.results[0].value);
+    expect(t.some((s) => s.includes("From the course"))).toBe(false);
+    expect(saidTimes(t, "Binomial Theorem")).toBe(1);
+    expect(saidTimes(t, "Mohit Tyagi")).toBe(1);
+  }, 30_000);
+
+  it("draws the course card with a one-name byline, as a PNG", async () => {
+    stub88();
+    const res = fakeRes();
+    await handler(request("?course=88"), res);
+
+    expect(res.statusCode).toBe(200);
+    expect(res.headers["content-type"]).toBe("image/png");
+    expect(courseCardTree).toHaveBeenCalledTimes(1);
+    expect(courseCardTree.mock.calls[0][0]).toMatchObject({ teacher: "", channel: "Mohit Tyagi" });
+    expect(saidTimes(drawn(courseCardTree.mock.results[0].value), "Mohit Tyagi")).toBe(1);
+  }, 30_000);
+
+  it("still gates the one name it draws against the embedded font", async () => {
+    // The dropped teacher is not drawn, but the kept channel is: an emoji in it
+    // must still send the course card to the static image.
+    vi.stubEnv("VITE_SUPABASE_URL", "https://project.supabase.co");
+    vi.stubEnv("VITE_SUPABASE_ANON_KEY", "anon-key");
+    const row = { ...COURSE_88, teacher: "Mohit Tyagi 🚀", institutes_channels: { name: "Mohit Tyagi 🚀" } };
+    vi.stubGlobal("fetch", vi.fn(async () => new Response(JSON.stringify([row]), { status: 200 })));
+    const res = fakeRes();
+    await handler(request("?course=88"), res);
+    expect(res.statusCode).toBe(302);
+    expect(res.headers.location).toBe(FALLBACK);
+    expect(courseCardTree).not.toHaveBeenCalled();
+  });
+});

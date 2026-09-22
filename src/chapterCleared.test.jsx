@@ -70,6 +70,45 @@ describe("chapterShareMessage", () => {
   });
 });
 
+// courseByline credits through courseCredit (src/courseCredit.js, where the
+// rule and the production counts live): a teacher who is only the channel's
+// own name again is dropped and the channel kept.
+describe("courseByline", () => {
+  it("names a teacher who IS the channel once", () => {
+    expect(courseByline("Mohit Tyagi", "Mohit Tyagi")).toBe("Mohit Tyagi");
+  });
+
+  it("treats a case-only difference as the same name, keeping the channel's spelling", () => {
+    expect(courseByline("Sunlike Study", "Sunlike study")).toBe("Sunlike study");
+    expect(courseByline("  Mohit  Tyagi ", "Mohit Tyagi")).toBe("Mohit Tyagi");
+  });
+
+  it("reads exactly as before for every other pair", () => {
+    expect(courseByline("Ashish Arora", "Physics Wallah")).toBe("Ashish Arora — Physics Wallah");
+    expect(courseByline("Ashish Arora", null)).toBe("Ashish Arora");
+    expect(courseByline(null, "Physics Wallah")).toBe("Physics Wallah");
+    expect(courseByline("", "Physics Wallah")).toBe("Physics Wallah");
+    expect(courseByline(null, null)).toBeNull();
+    expect(courseByline("", "")).toBeNull();
+    expect(courseByline(undefined, undefined)).toBeNull();
+    // One name only CONTAINING the other is two names.
+    expect(courseByline("Alakh Pandey", "Alakh Pandey - Class 9th & 10th"))
+      .toBe("Alakh Pandey — Alakh Pandey - Class 9th & 10th");
+  });
+
+  it("keeps the cleared message from saying the teacher twice", () => {
+    expect(chapterShareMessage({
+      chapterName: "Binomial Theorem",
+      total: 92,
+      byline: courseByline("Mohit Tyagi", "Mohit Tyagi"),
+      url: "https://www.jeeneetard.com/course/88/chapter/78",
+    })).toBe(
+      "Cleared Binomial Theorem — all 92 lectures, taught by Mohit Tyagi. "
+      + "Free chapter-wise lectures: https://www.jeeneetard.com/course/88/chapter/78",
+    );
+  });
+});
+
 const show = (props) => render(
   <ThemeProvider>
     <ChapterCleared
@@ -148,6 +187,17 @@ describe("<ChapterCleared>", () => {
     show({ completedIds: ["vidA", "vidB"] });
     expect(document.body.textContent).toMatch(/Rotational Motion 2\/2 lectures/);
   });
+
+  it("says who taught it once when the teacher is the channel", () => {
+    show({ completedIds: ["vidA", "vidB"], teacher: "Mohit Tyagi", institute: "Mohit Tyagi" });
+    expect(screen.getByText("Taught by Mohit Tyagi")).toBeTruthy();
+    expect(document.body.textContent).not.toMatch(/Mohit Tyagi — Mohit Tyagi/);
+  });
+
+  it("says it once for a case-only difference too", () => {
+    show({ completedIds: ["vidA", "vidB"], teacher: "Sunlike Study", institute: "Sunlike study" });
+    expect(screen.getByText("Taught by Sunlike study")).toBeTruthy();
+  });
 });
 
 describe("<ChapterCleared> sharing", () => {
@@ -172,5 +222,13 @@ describe("<ChapterCleared> sharing", () => {
     expect(text).toContain(`${window.location.origin}/course/374/chapter/27`);
     expect(text).toContain("Cleared Rotational Motion — all 2 lectures");
     expect(await screen.findByRole("button", { name: "Copied" })).toBeTruthy();
+  });
+
+  it("copies a message that names a teacher who IS the channel once", () => {
+    show({ completedIds: ["vidA", "vidB"], teacher: "Mohit Tyagi", institute: "Mohit Tyagi" });
+    fireEvent.click(screen.getByRole("button", { name: /Share this/ }));
+    const text = writeText.mock.calls[0][0];
+    expect(text).toContain("Cleared Rotational Motion — all 2 lectures, taught by Mohit Tyagi. ");
+    expect(text.split("Mohit Tyagi")).toHaveLength(2);
   });
 });

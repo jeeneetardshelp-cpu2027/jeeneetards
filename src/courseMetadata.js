@@ -40,9 +40,10 @@ export function buildCourseMetadata(course) {
   if (!courseTitle) return null;
 
   const subject = String(course?.subject ?? course?.subjects?.name ?? "").trim();
-  // 132 courses store the channel's own name in `teacher`, so the raw pair
-  // renders "by Competishun+ from Competishun+". courseCredit drops the
-  // duplicate and keeps the linked institute.
+  // Many courses store the channel's own name in `teacher` (the counts live
+  // in src/courseCredit.js), so the raw pair renders "by Competishun+ from
+  // Competishun+". courseCredit drops the duplicate and keeps the linked
+  // institute.
   const credit = courseCredit({
     teacher: course?.teacher,
     institute: course?.institute ?? course?.institutes_channels?.name,
