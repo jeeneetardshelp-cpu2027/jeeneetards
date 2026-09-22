@@ -1,23 +1,40 @@
 // examCalendar.js — the exam dates the countdown counts to.
 //
 // HONESTY RULE, and the whole reason this file has a `status` field.
-// A countdown is only as truthful as its date. As of writing, NTA/CBSE had
-// announced none of the 2027 dates, so every entry below ships as `expected`:
-// a WINDOW derived from the long-standing pattern of previous years, never a
-// precise date presented as official. The UI shows an expected exam as
+// A countdown is only as truthful as its date. Every entry is one of:
+//   expected   a WINDOW derived from the long-standing pattern of previous
+//              years, because the authority has published nothing yet.
+//   tentative  the authority has published proposed dates but calls them
+//              tentative and not a notification, as NTA's Examination Calendar
+//              of 16 Sep 2026 does. expectedFrom/expectedTo/expectedLabel hold
+//              THOSE dates, and officialUrl is where they were published.
+//   announced  the official notification gives the date.
+// Nothing short of `announced` is presented as official: the UI shows it as
 // "about N days" with the authority named and the official link beside it, so
 // a student can always check the source themselves.
 //
 // TO CONFIRM AN EXAM (the only edit this file should normally need):
 //   1. Open the official notification (officialUrl below).
 //   2. Set status: "announced" and date: "YYYY-MM-DD" (the exam's FIRST day).
-//   3. Leave expectedFrom/expectedTo alone — they are only read while expected.
+//   3. Leave expectedFrom/expectedTo alone — they are only read until then.
 //   4. Set checkedOn to the day you looked.
 // The countdown then switches from "about N days" to an exact "N days", and
 // the "dates not yet announced" line disappears on its own.
 //
+// TO RECORD A TENTATIVE CALENDAR (dates published, but marked tentative):
+//   1. Set status: "tentative" and leave date: null.
+//   2. Set expectedFrom to the first proposed day, expectedTo to the last, and
+//      expectedLabel to the dates as published.
+//   3. Point officialUrl at the page that publishes them. Set checkedOn.
+// The countdown stays "about N days", counts to the first proposed day, and
+// names whose tentative calendar the dates come from. Its line promises an
+// information bulletin, which is how NTA and JAB confirm an exam; reword it
+// before marking a CBSE entry tentative.
+//
 // TO RE-CHECK AN EXAM that is still not announced: open officialUrl, and if
-// nothing has changed, set checkedOn to today. Nothing else.
+// nothing has changed, set checkedOn to today. Nothing else. For an NTA exam,
+// read nta.ac.in's notices and Exam Calendar as well as the exam portal: the
+// 16 Sep 2026 calendar appeared there and not on jeemain or neet.
 //
 // Never invent a precise date to make the countdown look better. A student
 // planning revision around a fabricated date is the single worst failure this
@@ -38,15 +55,33 @@
 // more than a day ahead of the student's calendar, which can only be a typo.
 //
 // Recorded checks:
+//   21 Sep 2026  jeeadv.ac.in and cbse.gov.in read in a browser. jeeadv.ac.in
+//                was still the JEE (Advanced) 2026 site, and its newest notice
+//                (16 Jul 2026, JoSAA round 5) said nothing about 2027. The
+//                newest cbse.gov.in notice was the circular on the List of
+//                Candidates for the 2027 exams (dated 17 Sep, posted 21 Sep);
+//                its signed pages give no exam dates, only "February–March"
+//                for Class X's first exam. Applies to JEE Advanced and CBSE,
+//                which disappear from 6 Nov 2026 unless re-checked.
+//   21 Sep 2026  nta.ac.in read directly. NTA's Examination Calendar, with a
+//                public notice dated 16 Sep 2026, proposes JEE (Main) Session 1
+//                for 22–24 and 28–30 Jan 2027 (buffer 31 Jan). It calls the
+//                dates tentative, and the notice says the calendar "does not
+//                constitute a notification for any particular examination".
+//                jeemain.nta.nic.in still showed only 2026 notices. So Session
+//                1 is `tentative`, and disappears from 6 Nov 2026 unless
+//                re-checked. The calendar stops at March 2027, so it says
+//                nothing yet about Session 2 or NEET UG.
 //   15 Sep 2026  jeemain.nta.nic.in and neet.nta.nic.in read directly. The
 //                newest notices on both were for the 2026 exams, with nothing
-//                for 2027. Applies to both JEE Main sessions and NEET UG, which
-//                disappear from 31 Oct 2026 unless re-checked.
+//                for 2027. Applies to JEE Main Session 2 and NEET UG (Session 1
+//                was re-checked on 21 Sep), which disappear from 31 Oct 2026
+//                unless re-checked.
 //   27 Aug 2026  jeeadv.ac.in and cbse.gov.in served no readable text to the
-//                15 Sep check, so JEE Advanced and CBSE keep the day their
+//                15 Sep check, so JEE Advanced and CBSE kept the day their
 //                windows were written (commit 69fcfdb). Stamping 15 Sep on them
-//                would record a check that did not happen. They disappear from
-//                12 Oct 2026 unless someone opens those sites and re-checks.
+//                would have recorded a check that did not happen. Replaced by
+//                the 21 Sep check.
 
 /**
  * How many days a check stays good. Long enough that a re-check fits easily
@@ -62,14 +97,14 @@ export const EXAM_CALENDAR = Object.freeze([
     name: "JEE Main 2027",
     qualifier: "Session 1",
     goal: "jee",
-    status: "expected",
+    status: "tentative",
     date: null,
-    expectedFrom: "2027-01-21",
-    expectedTo: "2027-01-31",
-    expectedLabel: "late January 2027",
+    expectedFrom: "2027-01-22",
+    expectedTo: "2027-01-30",
+    expectedLabel: "22–24 and 28–30 Jan 2027",
     authority: "NTA",
-    officialUrl: "https://jeemain.nta.nic.in/",
-    checkedOn: "2026-09-15",
+    officialUrl: "https://nta.ac.in/",
+    checkedOn: "2026-09-21",
   },
   {
     slug: "jee-main-2027-session-2",
@@ -97,7 +132,7 @@ export const EXAM_CALENDAR = Object.freeze([
     expectedLabel: "late May 2027",
     authority: "IIT (JAB)",
     officialUrl: "https://jeeadv.ac.in/",
-    checkedOn: "2026-08-27",
+    checkedOn: "2026-09-21",
   },
   {
     slug: "neet-ug-2027",
@@ -125,7 +160,7 @@ export const EXAM_CALENDAR = Object.freeze([
     expectedLabel: "February–April 2027",
     authority: "CBSE",
     officialUrl: "https://www.cbse.gov.in/",
-    checkedOn: "2026-08-27",
+    checkedOn: "2026-09-21",
   },
 ]);
 
@@ -201,11 +236,14 @@ export function examCountdown(exam, today = new Date()) {
   return {
     days,
     approximate: exam.status !== "announced",
-    // An announced exam states its date; an expected one states its window and
-    // says plainly that the authority has not announced yet.
+    // An announced exam states its date. A tentative one says whose calendar
+    // its dates come from and that they are not final. An expected one states
+    // its window and says plainly that the authority has not announced yet.
     detail: exam.status === "announced"
       ? `${exam.authority} · exam day ${exam.date}`
-      : `Expected ${exam.expectedLabel} — ${exam.authority} has not announced dates yet`,
+      : exam.status === "tentative"
+        ? `${exam.authority}'s tentative calendar: ${exam.expectedLabel} · final dates come with the information bulletin`
+        : `Expected ${exam.expectedLabel} — ${exam.authority} has not announced dates yet`,
   };
 }
 

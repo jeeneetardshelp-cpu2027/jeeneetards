@@ -80,6 +80,14 @@ describe("the shipped calendar is honest by construction", () => {
       }
     }
   });
+
+  it("gives every entry a status the countdown knows", () => {
+    // Anything else quietly renders as `expected`: safe, but a typo such as
+    // "tenative" would show the wrong sentence and nothing would say so.
+    for (const exam of EXAM_CALENDAR) {
+      expect(["expected", "tentative", "announced"], exam.slug).toContain(exam.status);
+    }
+  });
 });
 
 describe("examCountdown", () => {
@@ -150,6 +158,39 @@ describe("a day that does not exist is not a date", () => {
     expect(examCountdown(expected, at("2028-02-28"))).toMatchObject({ days: 1, approximate: true });
     const checked = { ...EXPECTED, expectedFrom: "2028-03-10", checkedOn: "2028-02-29" };
     expect(examCountdown(checked, at("2028-03-01"))).toMatchObject({ days: 9 });
+  });
+});
+
+// NTA's Examination Calendar of 16 Sep 2026 published JEE Main 2027 Session 1
+// dates that it calls tentative and "not a notification". "Has not announced
+// dates yet" is no longer true of them, and an exact count would claim more
+// than NTA does, so they are a state of their own.
+describe("a tentative calendar", () => {
+  const TENTATIVE = {
+    ...EXPECTED, slug: "test-tentative", status: "tentative",
+    expectedFrom: "2027-01-22", expectedTo: "2027-01-30", expectedLabel: "22–24 and 28–30 Jan 2027",
+  };
+
+  it("counts to the first proposed day, and only approximately", () => {
+    expect(targetDay(TENTATIVE)).toBe(Date.parse("2027-01-22T00:00:00Z"));
+    expect(examCountdown(TENTATIVE, at("2027-01-01"))).toMatchObject({ days: 21, approximate: true });
+  });
+
+  it("names whose tentative calendar it is, and that the dates are not final", () => {
+    expect(examCountdown(TENTATIVE, at("2027-01-01")).detail).toBe(
+      "NTA's tentative calendar: 22–24 and 28–30 Jan 2027 · final dates come with the information bulletin",
+    );
+  });
+
+  it("leaves an expected exam's wording alone", () => {
+    expect(examCountdown(EXPECTED, at("2027-01-01")).detail)
+      .toBe("Expected late January 2027 — NTA has not announced dates yet");
+  });
+
+  it("expires like every other entry", () => {
+    const checked = { ...TENTATIVE, checkedOn: "2026-11-01" };
+    expect(examCountdown(checked, new Date(2026, 11, 16, 12))).not.toBeNull();
+    expect(examCountdown(checked, new Date(2026, 11, 17, 12))).toBeNull();
   });
 });
 
