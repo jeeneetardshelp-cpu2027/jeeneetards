@@ -25,6 +25,7 @@
 
 import { BRAND_TEAL, subjectColor } from "../../src/brandColors.js";
 import { ratingDisplay } from "../../src/ratingConfidence.js";
+import { namesMatch } from "../../src/courseMetadata.js";
 
 export const CARD_WIDTH = 1200;
 export const CARD_HEIGHT = 630;
@@ -99,7 +100,10 @@ export function chapterCardModel(courseRow, chapterInfo) {
     chapter: truncate(name, 90),
     // 50 keeps "From the course: …" on ONE line at 30px in the 1062px text
     // column (70 wrapped to two in a worst-case render), leaving the chips room.
-    courseTitle: truncate(course.title, 50),
+    // Empty when the course is named after this chapter (compared in full,
+    // before truncating): "From the course: Friction" under a "Friction"
+    // headline says nothing, so the tree leaves the line out.
+    courseTitle: namesMatch(name, courseRow.title) ? "" : truncate(course.title, 50),
     teacher: course.teacher,
     channel: course.channel,
     subject: course.subject,
@@ -239,8 +243,10 @@ export function chapterCardTree(model) {
 
   return cardFrame(model.subject, [
     headline(model.chapter),
-    el("div", { display: "flex", marginTop: 20, fontSize: 30, color: INK_2 },
-      `From the course: ${model.courseTitle}`),
+    ...(model.courseTitle
+      ? [el("div", { display: "flex", marginTop: 20, fontSize: 30, color: INK_2 },
+        `From the course: ${model.courseTitle}`)]
+      : []),
     byline(model),
   ], stats);
 }

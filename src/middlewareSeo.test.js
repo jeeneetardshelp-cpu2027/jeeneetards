@@ -1766,7 +1766,8 @@ describe("edge-rendered discovery landings", () => {
     const title = "Relative Motion — Rectilinear Motion (Kinematics) | JEENEETARD";
     const description =
       "3 free lectures on Relative Motion from the course Rectilinear Motion (Kinematics), " +
-      "taught by Ashish Arora.";
+      "taught by Ashish Arora. " +
+      "Watch with YouTube's privacy-enhanced player; ads or recommendations may appear.";
     const image = "https://www.jeeneetard.com/api/og?course=13&amp;chapter=8";
     expect(shareContent(chapterHtml, "property", "og:title")).toBe(title);
     expect(shareContent(chapterHtml, "name", "twitter:title")).toBe(title);
@@ -1796,7 +1797,8 @@ describe("edge-rendered discovery landings", () => {
     )).text();
 
     expect(shareContent(html, "property", "og:description")).toBe(
-      "1 free lecture on Relative Motion from the course Rectilinear Motion (Kinematics).",
+      "1 free lecture on Relative Motion from the course Rectilinear Motion (Kinematics). " +
+        "Watch with YouTube's privacy-enhanced player; ads or recommendations may appear.",
     );
   });
 
@@ -1809,9 +1811,69 @@ describe("edge-rendered discovery landings", () => {
     const description = shareContent(html, "property", "og:description");
     expect(description).toBe(
       "Relative Motion, a chapter of the free course Rectilinear Motion (Kinematics), " +
-        "taught by Ashish Arora.",
+        "taught by Ashish Arora. " +
+        "Watch with YouTube's privacy-enhanced player; ads or recommendations may appear.",
     );
     expect(description).not.toMatch(/\d/);
+  });
+
+  // A one-chapter course is often named after its chapter. "Friction —
+  // Friction" and "…on Friction from the course Friction" said the same word
+  // twice on 85 of 1,376 course-chapter pages (production, 22 Sep 2026).
+  it("names the chapter once when the course is named after it", async () => {
+    stubChapter({
+      course: { ...chapterCourse, title: "Friction" },
+      rows: [{ playlist_id: 13, videos: { chapter_id: 8, chapters: { name: "Friction" } } }],
+      contentRange: "0-0/5",
+    });
+    const html = await (await middleware(
+      new Request("https://www.jeeneetard.com/course/13/chapter/8"),
+    )).text();
+
+    expect(shareContent(html, "property", "og:title")).toBe("Friction | JEENEETARD");
+    expect(shareContent(html, "name", "twitter:title")).toBe("Friction | JEENEETARD");
+    const description =
+      "5 free lectures on Friction, taught by Ashish Arora. " +
+      "Watch with YouTube's privacy-enhanced player; ads or recommendations may appear.";
+    expect(shareContent(html, "property", "og:description")).toBe(description);
+    expect(shareContent(html, "name", "twitter:description")).toBe(description);
+    // The card still names the chapter; only the repeated course line goes.
+    expect(shareContent(html, "property", "og:image"))
+      .toBe("https://www.jeeneetard.com/api/og?course=13&amp;chapter=8");
+  });
+
+  it("treats case, spacing and punctuation as the same name, and says no number it lacks", async () => {
+    stubChapter({
+      course: { ...chapterCourse, title: "WORK, ENERGY AND POWER" },
+      rows: [{ playlist_id: 13, videos: { chapter_id: 8, chapters: { name: "Work Energy and  Power" } } }],
+      contentRange: null,
+    });
+    const html = await (await middleware(
+      new Request("https://www.jeeneetard.com/course/13/chapter/8"),
+    )).text();
+
+    expect(shareContent(html, "property", "og:title")).toBe("Work Energy and  Power | JEENEETARD");
+    expect(shareContent(html, "property", "og:description")).toBe(
+      "Work Energy and  Power, a free course, taught by Ashish Arora. " +
+        "Watch with YouTube's privacy-enhanced player; ads or recommendations may appear.",
+    );
+  });
+
+  it("keeps the course line when the title only starts with the chapter's name", async () => {
+    // "Kinematics| Irodov solutions" says which course; dropping it would lose that.
+    stubChapter({
+      course: { ...chapterCourse, title: "Kinematics| Irodov solutions" },
+      rows: [{ playlist_id: 13, videos: { chapter_id: 8, chapters: { name: "Kinematics" } } }],
+      contentRange: "0-0/24",
+    });
+    const html = await (await middleware(
+      new Request("https://www.jeeneetard.com/course/13/chapter/8"),
+    )).text();
+
+    expect(shareContent(html, "property", "og:title"))
+      .toBe("Kinematics — Kinematics| Irodov solutions | JEENEETARD");
+    expect(shareContent(html, "property", "og:description"))
+      .toContain("24 free lectures on Kinematics from the course Kinematics| Irodov solutions,");
   });
 
   it("keeps today's course tags when the chapter lookup returns no name", async () => {
