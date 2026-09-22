@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildCourseMetadata } from "./courseMetadata.js";
+import { buildCourseMetadata, namesMatch, PLAYER_DISCLOSURE } from "./courseMetadata.js";
 
 describe("course metadata", () => {
   it("keeps course identity in otherwise identical snippets", () => {
@@ -49,5 +49,44 @@ describe("course metadata", () => {
     expect(buildCourseMetadata(null)).toBeNull();
     const metadata = buildCourseMetadata({ title: "A".repeat(220), lectures: 3 });
     expect(metadata.description.length).toBeLessThanOrEqual(160);
+  });
+
+  it("says the player may show ads, from the one shared sentence", () => {
+    const metadata = buildCourseMetadata({ title: "Friction", lectures: 3 });
+    expect(PLAYER_DISCLOSURE).toContain("ads or recommendations may appear");
+    expect(metadata.description.endsWith(PLAYER_DISCLOSURE)).toBe(true);
+  });
+});
+
+describe("namesMatch", () => {
+  it("matches a chapter named exactly like its course", () => {
+    expect(namesMatch("Friction", "Friction")).toBe(true);
+  });
+
+  it("ignores case, spacing and punctuation", () => {
+    expect(namesMatch("Work Energy and  Power", "WORK, ENERGY AND POWER")).toBe(true);
+    expect(namesMatch(" Surface Chemistry. ", "surface chemistry")).toBe(true);
+  });
+
+  it("does not match a title that only starts with the name", () => {
+    expect(namesMatch("Kinematics", "Kinematics| Irodov solutions")).toBe(false);
+    expect(namesMatch("Friction", "Friction by ABJ Sir")).toBe(false);
+  });
+
+  it("does not treat a different word as punctuation", () => {
+    // "&" and "and" are different text; guessing they match would drop a
+    // course line that differs from its chapter.
+    expect(namesMatch("Work, Energy & Power", "Work, Energy and Power")).toBe(false);
+  });
+
+  it("compares Devanagari by its letters, marks included", () => {
+    expect(namesMatch("गति के नियम", "गति के  नियम")).toBe(true);
+    expect(namesMatch("गति के नियम", "गति का नियम")).toBe(false);
+  });
+
+  it("never matches an empty or punctuation-only name", () => {
+    expect(namesMatch("", "")).toBe(false);
+    expect(namesMatch(null, undefined)).toBe(false);
+    expect(namesMatch("—", "–")).toBe(false);
   });
 });

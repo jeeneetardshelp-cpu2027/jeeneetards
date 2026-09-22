@@ -22,7 +22,7 @@ import { courseCredit } from "./src/courseCredit.js";
 import { courseTeacherSlug } from "./src/courseTeacherSlug.js";
 // Pure data, no React — safe to pull into the edge runtime.
 import { TEST_SECTIONS, ACCESS, findTestSection } from "./src/testPlatforms.js";
-import { buildCourseMetadata } from "./src/courseMetadata.js";
+import { buildCourseMetadata, namesMatch, PLAYER_DISCLOSURE } from "./src/courseMetadata.js";
 import { canonicalCoursePath } from "./src/canonicalUrl.js";
 // One map for the page and this body, so a crawler and a student are sent to
 // the same lectures from a mock-test or paper page.
@@ -90,6 +90,12 @@ export function courseMeta(course, id) {
  * 15 Sep 2026), so "Cleared Rotational Motion" landed above a card that never
  * named the chapter.
  *
+ * A chapter whose name IS the course's title (namesMatch: 85 of 1,376 pages on
+ * 22 Sep 2026, "Friction" in the course "Friction") is named once, not as
+ * "Friction — Friction". And the description ends with PLAYER_DISCLOSURE,
+ * whole, like the course snippet it stands in for when shared: it calls the
+ * lectures free, and free must not read as ad-free.
+ *
  * Everything said here is read from the catalogue: the chapter name, the
  * count of THIS course's lectures in that chapter, and the teacher only when
  * courseCredit credits one. The count is the course's, never the catalogue's:
@@ -124,13 +130,18 @@ export function chapterShareMeta(course, id, chapter) {
   }).teacher ?? "").trim();
   const count = Number(chapter.lectureCount);
   const taught = teacher ? `, taught by ${teacher}` : "";
-  const ogDescription = Number.isInteger(count) && count > 0
-    ? `${count} free ${count === 1 ? "lecture" : "lectures"} on ${chapterName} ` +
-      `from the course ${courseTitle}${taught}.`
-    : `${chapterName}, a chapter of the free course ${courseTitle}${taught}.`;
+  const nameOnce = namesMatch(chapterName, courseTitle);
+  const fromCourse = nameOnce ? "" : ` from the course ${courseTitle}`;
+  const facts = Number.isInteger(count) && count > 0
+    ? `${count} free ${count === 1 ? "lecture" : "lectures"} on ${chapterName}${fromCourse}${taught}.`
+    : nameOnce
+      ? `${chapterName}, a free course${taught}.`
+      : `${chapterName}, a chapter of the free course ${courseTitle}${taught}.`;
   return {
-    ogTitle: `${chapterName} — ${courseTitle} | JEENEETARD`,
-    ogDescription,
+    ogTitle: nameOnce
+      ? `${chapterName} | JEENEETARD`
+      : `${chapterName} — ${courseTitle} | JEENEETARD`,
+    ogDescription: `${facts} ${PLAYER_DISCLOSURE}`,
     ogUrl: `${SITE}/course/${courseId}/chapter/${chapterId}`,
     image: `${SITE}/api/og?course=${courseId}&chapter=${chapterId}`,
   };

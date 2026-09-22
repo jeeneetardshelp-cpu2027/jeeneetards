@@ -196,6 +196,27 @@ describe("chapterCardTree", () => {
     expect(t).toContain("JEENEETARD");
   });
 
+  it("leaves out the course line when the course is named after the chapter", () => {
+    // "From the course: Friction" under a "Friction" headline says nothing.
+    // Compared on the FULL title, so a long one truncated for the card still
+    // matches, and case or punctuation never keeps the line.
+    const named = (title, chapter) => texts(chapterCardTree(
+      chapterCardModel({ ...ROW, title }, { name: chapter, lectures: 5 }),
+    ));
+    const same = named("Friction", "friction.");
+    expect(same).toContain("friction.");
+    expect(same.some((s) => s.startsWith("From the course"))).toBe(false);
+    expect(same).toContain("Mahendra Singh  —  Unacademy NEET");
+    expect(same).toContain("5 lectures in this chapter");
+
+    const long = "A".repeat(70);
+    expect(named(long, long.toLowerCase()).some((s) => s.startsWith("From the course"))).toBe(false);
+
+    // A title that says more than the chapter keeps its line.
+    expect(named("Kinematics| Irodov solutions", "Kinematics"))
+      .toContain("From the course: Kinematics| Irodov solutions");
+  });
+
   it("pluralises the lecture chip, and omits it without a count", () => {
     expect(tree(6)).toContain("6 lectures in this chapter");
     expect(tree(1)).toContain("1 lecture in this chapter");
