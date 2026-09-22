@@ -6,33 +6,45 @@
 // reads on the card ("ABJ Sir"), not a resolved identity; courseCredit.js
 // owns how that string is displayed. Separately, playlist_teachers links the
 // course to real `teachers` rows, which own a slug and a /faculty/<slug> page.
-// Measured against production on 2026-09-08, identically under the anon key
-// and the service_role key (so these are not an RLS artifact): 490 playlists,
-// 284 with a link to a slugged teacher, 412 with free text, 128 with free text
-// and NO link to a slugged teacher, and every linked course also has the free
-// text. So the link is a destination for a name the page is already showing —
-// never a replacement for it, and never something to invent when it is absent.
-// Re-measure before reasoning from these; the registry moves under them. That
-// is the same stance as the migration that created these links, whose header
+// Every linked course also has the free text, so the link is a destination
+// for a name the page is already showing — never a replacement for it, and
+// never something to invent when it is absent.
+//
+// THE COUNTS live here and nowhere else. Other files that need a number point
+// at this block instead of keeping a copy, because the numbers move whenever
+// the registry does. Copies had spread to thirteen other comments, in this
+// file and ten others, and each registry change left some of them wrong: the
+// duplicate profiles deleted on 15 Sep 2026, then six teachers added and
+// linked to 27 courses on 21 Sep. Re-measure before reasoning from them, then
+// edit only this block.
+// Measured against production on 2026-09-21 with the anon key, which is what
+// every page reads with, paging past PostgREST's 1,000-row cap:
+//   493 playlists
+//   415 carry free text in `teacher`
+//   314 link to at least one slugged teacher, and all 314 carry free text too
+//   299 of those resolve exactly one slug, so the credit links
+//    15 resolve two or more, so the credit stays plain text (see below)
+//   101 carry free text and NO link to a slugged teacher
+//   179 have no playlist_teachers row at all
+//    97 teachers, no display_name appearing twice
+// The migration that created these links takes the same stance: its header
 // (supabase/migrations/20260902200000_link_verified_faculty_credits.sql)
 // date-stamps its counts and RAISES rather than acts when they have drifted.
 //
 // EXACTLY ONE, OR NOTHING. A course credited to two people must not link to
 // whichever row PostgREST happened to return first, so two or more resolved
-// teachers give null and the credit stays plain text. Playlist 91 ("Biology |
-// NEET - Vardaan Series") is the honest version of that case: two real humans,
-// samapti-sinha and tarun-kumar. It is NOT the only multi-linked course. Of
-// the 284 linked courses, 150 resolve exactly one slug and link; 134 resolve
-// two or more and stay plain text. Most of that 134 is registry duplication
-// rather than co-teaching — 51 link two rows carrying the IDENTICAL
-// display_name, and others link two aliases of one person (playlist 5, credit
-// "ABJ Sir", links both `amit-bijarnia` and `abj`; the teachers table now
-// holds 131 slugged rows with 29 display_names appearing more than once).
-// That is the registry's problem to fix by de-duplicating teachers, and those
-// courses will link themselves once it is fixed. The rule here does not bend
-// for it: the alternative is the page CHOOSING a destination. The house rule
-// the rest of the catalogue already follows: render nothing rather than a
-// placeholder or a guess. A slug is never derived from a name.
+// teachers give null and the credit stays plain text. All 15 such courses are
+// real co-teaching: 14 link both pushpendu and sachin-kapur, and playlist 91
+// ("Biology | NEET - Vardaan Series") links samapti-sinha and tarun-kumar.
+// It was not always that clean. On 2026-09-08, 134 courses resolved two or
+// more slugs, most of them because the registry listed one person twice
+// (`abj` beside `amit-bijarnia`, for instance). Those copies were deleted on
+// 2026-09-15, and #334 sent their addresses to the real teacher through
+// retiredFacultySlugs.js. The courses linked themselves once the registry was
+// fixed, with no change here. The rule does not bend either way: the
+// alternative is the page CHOOSING a destination. The house rule the rest of
+// the catalogue already follows: render nothing rather than a placeholder or
+// a guess. A slug is never derived from a name.
 //
 // This lives in one module because all THREE read paths need it — the /browse
 // cards (usePlaylistBrowse.js), the watch page (usePlaylistVideos.js) and the
@@ -46,9 +58,10 @@ import { RELEASE_CAPABILITIES } from "./releaseCapabilities.js";
 // concatenates a whitespace-stripped copy, for the reason it states there),
 // leading comma included so it drops out cleanly when the capability is off.
 //
-// A LEFT join, deliberately: `playlist_teachers!inner` would drop the 206
-// production playlists that have no faculty link at all — the embed answers a
-// question about a course, it does not filter which courses exist. (The
+// A LEFT join, deliberately: `playlist_teachers!inner` would drop every
+// production playlist with no faculty link at all (THE COUNTS above say how
+// many) — the embed answers a question about a course, it does not filter
+// which courses exist. (The
 // conditional `pt:playlist_teachers!inner(teacher_id)` in usePlaylistBrowse is
 // a different thing entirely: that one IS the faculty filter, which is why it
 // is inner, and why this one carries its own alias.)

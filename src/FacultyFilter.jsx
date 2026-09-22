@@ -26,7 +26,7 @@ export function readTeacherFilter(params) {
 
 export function FacultyFilter({ params, setParams, scope = {}, onAvailabilityChange = null }) {
   const { t, dark } = useTheme();
-  const { facets, loading, error, unavailable } = useFacultyFacets(scope);
+  const { facets, loading, error, unavailable, retry } = useFacultyFacets(scope);
   const selected = readTeacherFilter(params);
   const [query, setQuery] = useState("");
   const debounced = useDebouncedValue(query, 250);
@@ -60,9 +60,26 @@ export function FacultyFilter({ params, setParams, scope = {}, onAvailabilityCha
   // Feature-gate: if the faculty tables are not deployed, show nothing at all.
   if (unavailable) return null;
 
-  // A failed facet query must not look like "no faculty here".
+  // A failed facet query must not look like "no faculty here" — nor be a dead
+  // end. Nothing else on /browse asks get_faculty_facets again, so without
+  // this button the line outlived the network coming back, and a ?teacher=
+  // link stayed held behind BrowsePage's "cannot be verified" panel. retry
+  // re-sends the same lookup; while it is out, the loading branch below takes
+  // over — the skeleton here, "loading" to onAvailabilityChange.
   if (error) {
-    return <p className={`mt-3 text-sm ${t.muted}`}>{error}</p>;
+    return (
+      <div className="mt-3 text-sm">
+        <p className={t.muted}>{error}</p>
+        {retry && (
+          <button
+            onClick={retry}
+            className={`mt-2 min-h-11 rounded-xl border ${t.border} px-4 font-medium ${t.hover}`}
+          >
+            Try loading faculty filters again
+          </button>
+        )}
+      </div>
+    );
   }
   if (loading) {
     // The resolved unscoped filter can wrap to several chip rows on a phone.

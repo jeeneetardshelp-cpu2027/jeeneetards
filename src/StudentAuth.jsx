@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { supabase } from "./supabaseClient";
 import { useTheme } from "./theme.jsx";
+import { useSession } from "./useSession.js";
 import { RELEASE_FEATURES } from "./releaseCapabilities.js";
 import { BRAND_TEAL } from "./brandColors.js";
 
@@ -19,16 +20,31 @@ function GoogleG() {
   );
 }
 
+// A sign-in carried in the URL: Google sign-in comes back to the page it
+// started from (redirectTo below) with #access_token=..., and so does an email
+// confirmation.
+function signInInUrl() {
+  return typeof window !== "undefined" && /(?:^#|&)access_token=/.test(window.location.hash);
+}
+
 // Shared by student-owned actions such as ratings and reports. A successful
 // auth change is observed by useSession in the parent, which replaces this
 // form with the action the student originally opened.
-function StudentAuthForm() {
+//
+// When auth-js could NOT check a sign-in in the URL it saves nothing, so the
+// student lands back on this form — which used to say nothing about the
+// sign-in they had just finished. It says so now. auth-js leaves the link in
+// the URL on that failure, so reloadPage (a prop only because jsdom will not
+// let a test observe a reload) is a real retry.
+function StudentAuthForm({ reloadPage }) {
   const { t } = useTheme();
+  const { urlSignInFailure } = useSession();
   const [mode, setMode] = useState("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState(null);
+  const linkFailure = signInInUrl() ? urlSignInFailure ?? null : null;
 
   const submit = async (event) => {
     event.preventDefault();
@@ -68,6 +84,24 @@ function StudentAuthForm() {
   const input = `mt-1 min-h-11 w-full rounded-lg border ${t.border} ${t.input} ${t.text} px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-teal-500`;
   return (
     <form onSubmit={submit} className="mt-3 space-y-3">
+      {linkFailure && (
+        <div className="space-y-2">
+          <p role="alert" className="text-xs" style={{ color: ACCENT.red }}>
+            {linkFailure === "unreachable"
+              ? "Your sign-in could not be finished right now. Check your connection, then try again."
+              : "Your sign-in could not be verified. Please sign in again."}
+          </p>
+          {linkFailure === "unreachable" && (
+            <button
+              type="button"
+              onClick={() => reloadPage()}
+              className={`min-h-11 rounded-lg border ${t.border} ${t.text} px-4 py-2 text-sm font-semibold transition hover:opacity-90`}
+            >
+              Try again
+            </button>
+          )}
+        </div>
+      )}
       {RELEASE_FEATURES.googleAuth && (
         <div className="space-y-3">
           <button
@@ -149,6 +183,9 @@ function StudentAuthForm() {
 // Public account creation is an explicit release decision. Keeping the guard
 // here as well as at each contribution surface prevents an accidental mount
 // from exposing sign-up in the browse-only release.
-export default function StudentAuth({ enabled = RELEASE_FEATURES.studentAccounts }) {
-  return enabled ? <StudentAuthForm /> : null;
+export default function StudentAuth({
+  enabled = RELEASE_FEATURES.studentAccounts,
+  reloadPage = () => window.location.reload(),
+}) {
+  return enabled ? <StudentAuthForm reloadPage={reloadPage} /> : null;
 }

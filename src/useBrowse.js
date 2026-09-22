@@ -86,14 +86,23 @@ export function useDebouncedValue(value, delay = 300) {
 
 // Server-side filtered, paged video list. The `enabled` gate prevents an
 // unresolved slug—or the inactive Playlists tab—from issuing a broad query.
+//
+// `blocked` says WHY that gate is shut, which `enabled` alone cannot. false: a
+// prerequisite is still resolving, so report loading and keep the skeleton.
+// true: a prerequisite FAILED or matched nothing, nothing is coming until the
+// student acts, and the caller already renders that — so report NOT loading,
+// with no error of its own (a second message would repeat the caller's behind
+// a retry that could not fix it). Either way no request is issued. Ignored
+// while `enabled` is true.
 export function useVideos({
   goalId, subjectId, chapterId, stage, channelId, teacherId,
   chapterClassSlugs = null,
   language, contentType, difficulty, search, sort, page = 0, enabled = true,
+  blocked = false,
 }) {
-  const [state, setState] = useState({
-    videos: [], total: null, strongTotal: null, loading: true, error: null, hasMore: false,
-  });
+  const [state, setState] = useState(() => ({
+    videos: [], total: null, strongTotal: null, loading: enabled || !blocked, error: null, hasMore: false,
+  }));
   const generation = useRef(0);
   const languageKey = JSON.stringify(language ?? []);
   const contentTypeKey = JSON.stringify(contentType ?? []);
@@ -107,7 +116,9 @@ export function useVideos({
     const contentTypeValues = JSON.parse(contentTypeKey);
     const difficultyValues = JSON.parse(difficultyKey);
     if (!enabled) {
-      setState({ videos: [], total: null, strongTotal: null, loading: true, error: null, hasMore: false });
+      // total stays null either way: a blocked list counted nothing, and the
+      // caller must not turn it into "0 lessons".
+      setState({ videos: [], total: null, strongTotal: null, loading: !blocked, error: null, hasMore: false });
       return;
     }
     if (!isSupabaseConfigured) {
@@ -418,7 +429,7 @@ export function useVideos({
       console.error("videos:", err);
       setState({ videos: [], total: null, strongTotal: null, loading: false, error: "Couldn't reach the database.", hasMore: false });
     }
-  }, [enabled, goalId, subjectId, chapterId, stage, channelId, teacherId,
+  }, [enabled, blocked, goalId, subjectId, chapterId, stage, channelId, teacherId,
       chapterClassKey,
       languageKey, contentTypeKey, difficultyKey, search, sort, page]);
 

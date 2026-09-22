@@ -156,11 +156,11 @@ export function courseSchema({
     // from the profile page's own would defeat the point.)
     //
     // The slug is resolved upstream and passed in — never derived from the
-    // credit string. It is absent for the 128 courses whose free-text teacher
-    // has no faculty link, and for the 134 credited to two or more linked
-    // teachers (playlist 91 among them), where naming one of them would be a
-    // guess. In both cases
-    // the key is omitted entirely rather than emitted empty or invented:
+    // credit string. It is absent for a course whose free-text teacher has no
+    // faculty link, and for one credited to two or more linked teachers
+    // (playlist 91 among them), where naming one of them would be a guess.
+    // THE COUNTS in courseTeacherSlug's header say how many of each. In both
+    // cases the key is omitted entirely rather than emitted empty or invented:
     // same rule as `provider` above, and the same rule the on-page credit
     // follows when it stays plain text.
     if (teacherSlug) instructor.url = toAbsoluteUrl(`/faculty/${teacherSlug}`);

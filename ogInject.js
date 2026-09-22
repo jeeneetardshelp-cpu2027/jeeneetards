@@ -80,6 +80,63 @@ export function courseMeta(course, id) {
 }
 
 /**
+ * Share-only tags for a confirmed chapter of a course: the fields
+ * injectCourseMeta accepts as ogTitle / ogDescription / ogUrl, plus the
+ * chapter preview card as image. Spread over courseMeta() for the head
+ * injection ONLY — the JSON-LD and crawler body keep the plain course meta.
+ *
+ * Why: ChapterCleared shares /course/:id/chapter/:chapterId, and until this
+ * every such link unfurled with the whole course's title and card (measured
+ * 15 Sep 2026), so "Cleared Rotational Motion" landed above a card that never
+ * named the chapter.
+ *
+ * Everything said here is read from the catalogue: the chapter name, the
+ * count of THIS course's lectures in that chapter, and the teacher only when
+ * courseCredit credits one. The count is the course's, never the catalogue's:
+ * on production (16 Sep 2026) course 300 has 2 of its 4 lectures in "Work,
+ * Energy and Power" while 70 course-lecture rows catalogue-wide sit in that
+ * chapter. A count we could not read is left out, never guessed.
+ *
+ * @param {object} course  the PostgREST course row middleware already read
+ * @param {number|string} id
+ * @param {{ id: number|string, name: string, lectureCount: number|null }} chapter
+ * @returns {null | { ogTitle: string, ogDescription: string, ogUrl: string, image: string }}
+ */
+export function chapterShareMeta(course, id, chapter) {
+  const chapterName = String(chapter?.name ?? "").trim();
+  const courseTitle = String(course?.title ?? "").trim();
+  // The route regex accepts any digits, so /course/013/chapter/08 reaches
+  // here. /api/og 308s every non-canonical query (padded ids included), and a
+  // scraper that meets a redirect on og:image may drop the card, so write the
+  // ids the way api/_og/cardModel.js parseCourseId reads them.
+  const positiveId = (value) => {
+    const raw = String(value ?? "").trim();
+    if (!/^\d{1,12}$/.test(raw)) return null;
+    const n = Number(raw);
+    return Number.isSafeInteger(n) && n > 0 ? n : null;
+  };
+  const courseId = positiveId(id);
+  const chapterId = positiveId(chapter?.id);
+  if (!chapterName || !courseTitle || !courseId || !chapterId) return null;
+  const teacher = String(courseCredit({
+    teacher: course?.teacher,
+    institute: course?.institutes_channels?.name,
+  }).teacher ?? "").trim();
+  const count = Number(chapter.lectureCount);
+  const taught = teacher ? `, taught by ${teacher}` : "";
+  const ogDescription = Number.isInteger(count) && count > 0
+    ? `${count} free ${count === 1 ? "lecture" : "lectures"} on ${chapterName} ` +
+      `from the course ${courseTitle}${taught}.`
+    : `${chapterName}, a chapter of the free course ${courseTitle}${taught}.`;
+  return {
+    ogTitle: `${chapterName} — ${courseTitle} | JEENEETARD`,
+    ogDescription,
+    ogUrl: `${SITE}/course/${courseId}/chapter/${chapterId}`,
+    image: `${SITE}/api/og?course=${courseId}&chapter=${chapterId}`,
+  };
+}
+
+/**
  * Swap the generic homepage <head> tags in the built index.html shell for a
  * course's own. Relies on the tags being single-line (see index.html). Any tag
  * that does not match is simply left as-is — a partial rewrite is still valid
@@ -89,6 +146,15 @@ export function injectCourseMeta(html, meta) {
   const t = escapeHtml(meta.title);
   const d = escapeHtml(meta.description);
   const u = escapeHtml(meta.url);
+  // Share-only overrides. A chapter sub-URL is shared as that chapter
+  // (chapterShareMeta), but its <title>, description, robots and canonical
+  // stay course-level: after hydration useCourseMetadata keeps exactly those
+  // on /course/:id/chapter/:chapterId, and the edge must not tell a search
+  // engine something the hydrated page then contradicts. Each defaults to the
+  // course value, so a caller that passes none gets byte-identical output.
+  const ot = meta.ogTitle ? escapeHtml(meta.ogTitle) : t;
+  const od = meta.ogDescription ? escapeHtml(meta.ogDescription) : d;
+  const ou = meta.ogUrl ? escapeHtml(meta.ogUrl) : u;
   const robots = escapeHtml(meta.robots || "index, follow");
   const type = escapeHtml(meta.type || "website");
   // Function replacements throughout: a string replacement would expand `$`
@@ -98,12 +164,12 @@ export function injectCourseMeta(html, meta) {
     .replace(/<title>[\s\S]*?<\/title>/, () => `<title>${t}</title>`)
     .replace(/(<meta name="description" content=")[^"]*(")/, (m, a, z) => `${a}${d}${z}`)
     .replace(/(<meta name="robots" content=")[^"]*(")/, (m, a, z) => `${a}${robots}${z}`)
-    .replace(/(<meta property="og:title" content=")[^"]*(")/, (m, a, z) => `${a}${t}${z}`)
-    .replace(/(<meta property="og:description" content=")[^"]*(")/, (m, a, z) => `${a}${d}${z}`)
-    .replace(/(<meta property="og:url" content=")[^"]*(")/, (m, a, z) => `${a}${u}${z}`)
+    .replace(/(<meta property="og:title" content=")[^"]*(")/, (m, a, z) => `${a}${ot}${z}`)
+    .replace(/(<meta property="og:description" content=")[^"]*(")/, (m, a, z) => `${a}${od}${z}`)
+    .replace(/(<meta property="og:url" content=")[^"]*(")/, (m, a, z) => `${a}${ou}${z}`)
     .replace(/(<meta property="og:type" content=")[^"]*(")/, (m, a, z) => `${a}${type}${z}`)
-    .replace(/(<meta name="twitter:title" content=")[^"]*(")/, (m, a, z) => `${a}${t}${z}`)
-    .replace(/(<meta name="twitter:description" content=")[^"]*(")/, (m, a, z) => `${a}${d}${z}`);
+    .replace(/(<meta name="twitter:title" content=")[^"]*(")/, (m, a, z) => `${a}${ot}${z}`)
+    .replace(/(<meta name="twitter:description" content=")[^"]*(")/, (m, a, z) => `${a}${od}${z}`);
   // Course pages carry their own preview card (/api/og renders the course's
   // title/teacher/rating as a PNG, falling back to the static
   // social-preview.png for anything it cannot render). Opt-in via meta.image
@@ -1019,9 +1085,9 @@ export function renderCourseBody(course, meta, lessons = []) {
   // one (renderFacultyBody, below); the course body linked back to nothing, so
   // a crawler — and a reader with JavaScript off — met the teacher's name as a
   // dead end on the very page the profile points at. Null whenever the course
-  // did not resolve to exactly one registered teacher, which keeps the 128
-  // free-text-only credits, and the 134 credited to two or more people, as the
-  // plain text they are today.
+  // did not resolve to exactly one registered teacher, which keeps a
+  // free-text-only credit, and one credited to two or more people, as plain
+  // text (THE COUNTS in courseTeacherSlug.js say how many of each).
   const teacherSlug = courseFacultySlug(course);
   // Rows are [label, value] — plus, for the teacher alone, an optional href.
   const rows = [

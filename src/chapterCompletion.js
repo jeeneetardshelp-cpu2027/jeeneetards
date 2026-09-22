@@ -51,9 +51,11 @@ export function chapterCompletion(lessons, completedIds, chapterId) {
  * measured, names the teacher only when one is known, and always carries the
  * deep link home — that link is what makes the share worth anything.
  *
- * The /course/:id/chapter/:id URL already renders a rich preview card via
- * /api/og (middleware's course matcher covers the chapter form), so no separate
- * image work is needed for this to look right in WhatsApp.
+ * The /course/:id/chapter/:id URL unfurls as the CHAPTER: middleware.js
+ * confirms the chapter is in the course, then writes chapter-level og:/twitter:
+ * tags and an og:image of /api/og?course=:id&chapter=:id (the chapter name and
+ * this course's lecture count in it). An unconfirmed or unnamed chapter falls
+ * back to the course card. No image work is needed here either way.
  */
 export function chapterShareMessage({ chapterName, total, byline, url }) {
   const name = chapterName || "this chapter";

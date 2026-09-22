@@ -331,8 +331,21 @@ export default function StudyMaterialsPage() {
           </Filter>
         </div>
 
+        {/* Its own way out. The Try again under the results re-sends
+            get_study_materials and nothing else, so a curriculum lookup that
+            failed stayed failed after the network came back: this alert, and
+            a Class and a Subject offering nothing but "All". catalog.retry
+            re-sends the curriculum lookup alone; while it is out the alert
+            goes and the selects it feeds are disabled — pending, not failed. */}
         {catalog.error && (
-          <p role="alert" className="mt-4 text-sm text-danger">{catalog.error}</p>
+          <div role="alert" className="mt-4 text-sm text-danger">
+            <p>{catalog.error}</p>
+            {catalog.retry && (
+              <button type="button" onClick={catalog.retry} className="mt-2 min-h-11 rounded-lg px-4 font-semibold text-accent">
+                Try loading filters again
+              </button>
+            )}
+          </div>
         )}
 
         <fieldset className="mt-5 border-t border-hairline pt-5">

@@ -75,9 +75,12 @@ export default function Explore() {
   const {
     goals, loading: goalsLoading, error: goalsError, retry: retryGoals,
   } = useLearningGoals();
-  const { classLevels } = useClassLevels();
+  const {
+    classLevels, loading: classLevelsLoading, error: classLevelsError,
+    retry: retryClassLevels,
+  } = useClassLevels();
   const { boards, loading: boardsLoading, error: boardsError,
-          unavailable: boardsUnavailable } = useBoards(isSchool);
+          unavailable: boardsUnavailable, retry: retryBoards } = useBoards(isSchool);
   const boardNode = boards.find((x) => x.slug === board);
   // Path builder that knows about the extra stage.
   const p = (...rest) => path(goal, ...(isSchool ? [board, ...rest] : rest));
@@ -92,6 +95,24 @@ export default function Explore() {
     ready: classesReady,
     retry: retryClasses,
   } = usePopulatedClasses(goalNode?.slug, classStepActive);
+  // The stage step waits on TWO lookups: the class_levels rows (the names) and,
+  // while no class is in the URL, one catalogue check per offered class. A
+  // FAILED lookup ends the wait with its error and one Try again that asks
+  // again for whatever failed; a PENDING one keeps the skeleton. The step's
+  // loading used to be `classesLoading || !classesReady` — a failure is never
+  // ready, so a failed check pulsed forever — and class_levels was not
+  // consulted at all, so while it was pending or after it failed the step read
+  // "Nothing here yet." With a class already in the URL (a deep link waiting
+  // on its class_levels row) the class checks never run, so only class_levels
+  // can hold the step.
+  const stageError = classLevelsError || (classStepActive ? classesError : null);
+  const stageLoading = !stageError && Boolean(
+    classLevelsLoading || (classStepActive && (classesLoading || !classesReady)),
+  );
+  const retryStages = () => {
+    if (classLevelsError) retryClassLevels();
+    if (classStepActive && classesError) retryClasses();
+  };
   const {
     subjects, chaptersBySubject, loading: catLoading,
     error: catalogError, ready: catalogReady, retry: retryCatalog,
@@ -293,20 +314,23 @@ export default function Explore() {
               We are still preparing board-wise content. JEE and NEET are ready now.
             </p>
           </div>
-        ) : isSchool && !boardNode && boardsError ? (
-          <p className={`mt-6 text-sm ${t.muted}`}>{boardsError}</p>
         ) : isSchool && !boardNode ? (
+          // A failed boards lookup is this step's error, under this step's
+          // heading, with the same Try again as the stage step. It used to be a
+          // bare paragraph outside Step, with nothing that could ask again.
           <Step
             title={exploreStepHeading("board", stepScope)}
             loading={boardsLoading}
+            error={boardsError}
+            onRetry={retryBoards}
             options={stepOptions}
           />
         ) : !classNode ? (
           <Step
             title={exploreStepHeading("class", stepScope)}
-            loading={classesLoading || !classesReady}
-            error={classesError}
-            onRetry={retryClasses}
+            loading={stageLoading}
+            error={stageError}
+            onRetry={retryStages}
             options={stepOptions}
           />
         ) : !subjectNode ? (

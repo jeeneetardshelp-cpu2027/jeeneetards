@@ -203,6 +203,9 @@ export default function PlaylistBrowse({
     // Do not run the course query behind the Individual lectures tab. At
     // library scale both tabs querying at once doubles work for no user value.
     enabled: filters.enabled !== false && tab === "playlists",
+    // WHY the gate is shut (BrowsePage's catalogueBlocked): the lookup failed or
+    // came back unknown, and the page already says so above. See usePlaylistBrowse.
+    blocked: filters.blocked === true,
     channelId: filters.channelId, language: filters.language,
     contentType: filters.contentType, difficulty: filters.difficulty,
     teacherId: filters.teacherId,
@@ -227,8 +230,13 @@ export default function PlaylistBrowse({
   // can never disagree about how many filters are on.
   const activeFilterCount = FILTER_PARAMS.filter((k) => params.get(k)).length;
 
+  // `scope` is the narrowest curriculum level in the URL (BrowsePage passes
+  // scopeLevel). Without it a chapter whose name had not arrived was reported
+  // under its SUBJECT's name — "No courses are listed for Physics yet." over a
+  // Friction filter — so the box claimed more than the results held.
   const { title: emptyTitle, detail: emptyDetail } = emptyStateMessage({
-    stage: filters.stage, chapterName: filters.chapterName, subjectName: filters.subjectName,
+    stage: filters.stage, scope: filters.scope,
+    chapterName: filters.chapterName, subjectName: filters.subjectName,
   });
 
   // usePlaylistBrowse refuses a query the server cannot answer and returns
@@ -293,6 +301,32 @@ export default function PlaylistBrowse({
     [canListCourses, items, page, filters.chapter],
   );
 
+  // ---- the mobile drawer's Show button ----
+  // On a phone the sheet covers the results, so this label is the only thing
+  // the student has to go on — which makes it the last place that may state a
+  // number nobody established. Four states have no count to give:
+  //
+  //   loading             nothing has been counted yet
+  //   error               the request failed: total is null and items is
+  //                       empty, so `total ?? items.length` read "Show 0
+  //                       courses" for a catalogue that never answered
+  //   unsearchable        the hook returns total: 0 WITHOUT sending a query,
+  //                       the same unsent-query zero the count line above
+  //                       already refuses to print
+  //   lectureTotal null   useVideos' total, null on its own failure, where
+  //                       `lectureTotal ?? 0` read "Show 0 lessons"
+  //
+  // In all four the button drops the number and stays usable — "Show courses"
+  // / "Show lessons", exactly what a request that hangs renders today. A count
+  // the app really has still prints, singular and plural intact.
+  const drawerNoun = tab === "lectures" ? "lesson" : "course";
+  const drawerCount = tab === "lectures"
+    ? (lectureLoading || unsearchable ? null : lectureTotal)
+    : (filters.blocked || loading || error || unsearchable ? null : total ?? items.length);
+  const showLabel = drawerCount == null
+    ? `Show ${drawerNoun}s`
+    : `Show ${drawerCount} ${drawerNoun}${drawerCount === 1 ? "" : "s"}`;
+
   return (
     <>
       {/* ---- tabs: playlists lead, lectures are secondary ---- */}
@@ -331,8 +365,21 @@ export default function PlaylistBrowse({
             // as the sentence below it, one line higher and in a number, which
             // reads as more authoritative. No count at all is the honest
             // rendering: a section with no data hides itself.
-            unsearchable ? ""
+            filters.blocked || unsearchable ? ""
               : loading ? "Loading courses…"
+              // A FAILED request establishes no count either, and that same
+              // reasoning was never applied to it: the error state falls
+              // through to `items.length` below, which the hook leaves at 0
+              // (total: null, items: []), so an aborted request printed
+              // "0 courses" — a claim about a catalogue that never answered.
+              // The request deadline in supabaseClient.js is what makes this
+              // state reachable at all; before it the same query simply hung.
+              // The Individual lectures tab has always printed nothing here
+              // (BrowsePage.jsx guards its count on !loading && !error), and
+              // ModerationDigest.jsx states the rule the whole app follows:
+              // never show a 0 you cannot vouch for. Same rule, same words —
+              // the error panel below says what happened and offers Retry.
+              : error ? ""
               : total != null
                 ? (strongTotal != null && strongTotal > 0 && strongTotal < total
                     ? `${strongTotal} title match${strongTotal === 1 ? "" : "es"}`
@@ -393,7 +440,7 @@ export default function PlaylistBrowse({
         <div className="mt-5">{lectureView}</div>
       ) : (
         <>
-          {error ? (
+          {filters.blocked ? null : error ? (
             // A failed request is not an empty catalogue. It gets its own
             // state with a real Retry that re-runs the SAME query — the URL
             // and every filter are untouched, so retrying cannot silently
@@ -587,13 +634,7 @@ export default function PlaylistBrowse({
                 onClick={() => setSheetOpen(false)}
                 className="min-h-11 flex-1 rounded-md bg-accent px-4 text-sm font-semibold text-accent-ink transition hover:brightness-110"
               >
-                {tab === "lectures"
-                  ? lectureLoading
-                    ? "Show lessons"
-                    : `Show ${lectureTotal ?? 0} lesson${(lectureTotal ?? 0) === 1 ? "" : "s"}`
-                  : loading
-                    ? "Show courses"
-                    : `Show ${total ?? items.length} course${(total ?? items.length) === 1 ? "" : "s"}`}
+                {showLabel}
               </button>
             </div>
           </div>

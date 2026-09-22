@@ -199,27 +199,50 @@ export default function JeeMainPapersPage() {
         </nav>
       )}
 
+      {/* Each card's second line counts one group of what the hook LOADED.
+          A failed load leaves items empty with loading already false, so
+          every count here used to read off an empty array and state "0
+          reviewed papers" / "0 official answer keys" — the archive declared
+          empty on the strength of a request that never answered. (The
+          request deadline in supabaseClient.js is what turns yesterday's
+          hang into this state, so it is now the ordinary way a slow network
+          ends.) A count nobody established gets no line at all: the heading
+          and its link stay, and the directory view below reports the failure
+          with its Try again. Same rule as ModerationDigest.jsx — never show
+          a 0 you cannot vouch for. */}
       <nav aria-label={`${exam} resource collections`} className="my-8 grid gap-4 sm:grid-cols-3">
         <a href="#question-papers" className="rounded-xl border border-hairline bg-surface p-5 transition-colors hover:border-accent-line">
           <FileText aria-hidden="true" className="h-5 w-5 text-accent" />
           <p className="mt-4 text-lg font-semibold text-ink">Question papers only</p>
-          <p className="mt-1 text-sm text-ink-3">
-            {papers.loading ? "Loading reviewed papers…" : `${groups.questionOnly.length} reviewed paper${groups.questionOnly.length === 1 ? "" : "s"}`}
-          </p>
+          {papers.loading ? (
+            <p className="mt-1 text-sm text-ink-3">Loading reviewed papers…</p>
+          ) : papers.error ? null : (
+            <p className="mt-1 text-sm text-ink-3">
+              {`${groups.questionOnly.length} reviewed paper${groups.questionOnly.length === 1 ? "" : "s"}`}
+            </p>
+          )}
         </a>
         <a href="#official-answer-keys" className="rounded-xl border border-hairline bg-surface p-5 transition-colors hover:border-accent-line">
           <FileCheck2 aria-hidden="true" className="h-5 w-5 text-accent" />
           <p className="mt-4 text-lg font-semibold text-ink">Official answer keys</p>
-          <p className="mt-1 text-sm text-ink-3">
-            {papers.loading ? "Checking official answer keys…" : `${groups.answerKeys.length} official answer key${groups.answerKeys.length === 1 ? "" : "s"}`}
-          </p>
+          {papers.loading ? (
+            <p className="mt-1 text-sm text-ink-3">Checking official answer keys…</p>
+          ) : papers.error ? null : (
+            <p className="mt-1 text-sm text-ink-3">
+              {`${groups.answerKeys.length} official answer key${groups.answerKeys.length === 1 ? "" : "s"}`}
+            </p>
+          )}
         </a>
         <a href="#papers-with-solutions" className="rounded-xl border border-hairline bg-surface p-5 transition-colors hover:border-accent-line">
           <ListChecks aria-hidden="true" className="h-5 w-5 text-accent" />
           <p className="mt-4 text-lg font-semibold text-ink">Papers with solutions</p>
-          <p className="mt-1 text-sm text-ink-3">
-            {papers.loading ? "Checking reviewed solutions…" : `${groups.withSolutions.length} reviewed paper${groups.withSolutions.length === 1 ? "" : "s"}`}
-          </p>
+          {papers.loading ? (
+            <p className="mt-1 text-sm text-ink-3">Checking reviewed solutions…</p>
+          ) : papers.error ? null : (
+            <p className="mt-1 text-sm text-ink-3">
+              {`${groups.withSolutions.length} reviewed paper${groups.withSolutions.length === 1 ? "" : "s"}`}
+            </p>
+          )}
         </a>
       </nav>
 
