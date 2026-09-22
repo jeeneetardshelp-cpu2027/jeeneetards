@@ -6,7 +6,9 @@
 // returns a same-named chapter from another subject.
 
 import { describe, it, expect } from "vitest";
-import { buildChips, removeChip, clearAllChips, CHIP_ORDER, dropParam, emptyStateMessage } from "./filterChips.js";
+import {
+  buildChips, removeChip, clearAllChips, CHIP_ORDER, dropParam, emptyStateMessage, scopeLevel, scopeName,
+} from "./filterChips.js";
 
 const P = (qs) => new URLSearchParams(qs);
 const FULL = "goal=jee&class=11&subject=physics&chapter=kinematics";
@@ -152,6 +154,92 @@ describe("contextual empty state", () => {
       expect(m.title.length).toBeGreaterThan(10);
       expect(m.detail).toBeTruthy();
     }
+  });
+});
+
+// Names alone cannot tell "no chapter filter" from "a chapter filter whose name
+// has not arrived". Measured on /browse?sub=1&ch=7&type=pyq with the
+// chapter-name lookups pending: the box under "Filtered courses" read "No
+// courses are listed for Physics yet." while /browse?sub=1&type=pyq listed 6
+// courses, and flipped to "...for Friction yet." when the name landed. So the
+// caller says which level is active, and the helper names that level or nothing.
+describe("the most specific curriculum level names the view, or nothing does", () => {
+  it("finds the narrowest level in the URL, legacy keys included", () => {
+    expect(scopeLevel(P(FULL))).toBe("chapter");
+    expect(scopeLevel(P("sub=1&ch=7&type=pyq"))).toBe("chapter");
+    expect(scopeLevel(P("goal=jee&class=11&subject=physics"))).toBe("subject");
+    expect(scopeLevel(P("goal=3&sub=5"))).toBe("subject");
+    expect(scopeLevel(P("goal=jee&class=11"))).toBe("class");
+    expect(scopeLevel(P("goal=jee&stage=12"))).toBe("class");
+    expect(scopeLevel(P("goal=school&board=cbse"))).toBe("board");
+    expect(scopeLevel(P("goal=jee"))).toBe("goal");
+  });
+
+  it("ignores filters that are not a curriculum level", () => {
+    expect(scopeLevel(P(""))).toBeNull();
+    expect(scopeLevel(P("channel=3&language=hindi&type=full-course&teacher=7&q=torque&sort=rating&tab=lectures"))).toBeNull();
+  });
+
+  it("names the active level when its name is known", () => {
+    const names = { goalName: "JEE", subjectName: "Physics", chapterName: "Friction" };
+    expect(scopeName({ scope: "chapter", ...names })).toBe("Friction");
+    expect(scopeName({ scope: "subject", ...names })).toBe("Physics");
+    expect(scopeName({ scope: "goal", ...names })).toBe("JEE");
+  });
+
+  it("never borrows a wider level's name while the active one is unknown", () => {
+    expect(scopeName({ scope: "chapter", goalName: "JEE", subjectName: "Physics" })).toBeNull();
+    expect(scopeName({ scope: "subject", goalName: "JEE" })).toBeNull();
+    // A class or board narrows the exam: its name must not head the result.
+    expect(scopeName({ scope: "class", goalName: "JEE" })).toBeNull();
+    expect(scopeName({ scope: "board", goalName: "School" })).toBeNull();
+    expect(scopeName({ scope: null, goalName: "JEE" })).toBeNull();
+  });
+});
+
+describe("the empty state obeys the same scope", () => {
+  it("does not name the subject over a chapter whose name is unknown", () => {
+    const m = emptyStateMessage({ scope: "chapter", subjectName: "Physics" });
+    expect(m.title).not.toMatch(/Physics/);
+    expect(m.title).toBe("No courses match this view.");
+  });
+
+  it("names the chapter once its name is known", () => {
+    expect(emptyStateMessage({ scope: "chapter", subjectName: "Physics", chapterName: "Friction" }).title)
+      .toBe("No courses are listed for Friction yet.");
+  });
+
+  it("keeps the class wording but names nothing when the chapter is unknown", () => {
+    const m = emptyStateMessage({ scope: "chapter", stage: "class-11", subjectName: "Physics" });
+    expect(m.title).toBe("No Class 11 courses match this view.");
+    // Not "No Class 11 courses are classified yet.": that is a claim about the
+    // whole class, wider than one chapter's results.
+    expect(m.title).not.toMatch(/classified yet/);
+    expect(m.detail).toMatch(/without a class tag are not shown/i);
+  });
+
+  it("the same for a subject whose name is unknown", () => {
+    expect(emptyStateMessage({ scope: "subject", stage: "class-11" }).title)
+      .toBe("No Class 11 courses match this view.");
+    expect(emptyStateMessage({ scope: "subject" }).title).toBe("No courses match this view.");
+  });
+
+  // The existing "falls back to the subject when there is no chapter" case, with
+  // the caller saying so: no chapter filter is active, the subject is the view.
+  it("still names the subject when the subject is the active level", () => {
+    expect(emptyStateMessage({ scope: "subject", stage: "dropper", subjectName: "Physics" }).title)
+      .toBe("No Dropper courses are classified for Physics yet.");
+    expect(emptyStateMessage({ scope: "subject", subjectName: "Physics" }).title)
+      .toBe("No courses are listed for Physics yet.");
+  });
+
+  it("a class that is the active level keeps its own sentence", () => {
+    expect(emptyStateMessage({ scope: "class", stage: "class-11" }).title)
+      .toBe("No Class 11 courses are classified yet.");
+  });
+
+  it("never names the exam", () => {
+    expect(emptyStateMessage({ scope: "goal" }).title).toBe("No courses match this view.");
   });
 });
 

@@ -98,7 +98,12 @@ export function examCardState(
       : available
         ? `${count} ${count === 1 ? "course" : "courses"} · Choose class and subject`
         : "Coming soon";
-  return { available, hint, count };
+  // Loading or failed, the lookup has not said whether this exam has courses,
+  // so the card must not say "Soon" (or "Live") either: it used to label every
+  // live exam "Soon" whenever the lookup merely failed. A School card held back
+  // by its release capability IS known — it is not offered yet.
+  const availabilityUnknown = !boardBlocked && (loading || Boolean(error));
+  return { available, hint, count, availabilityUnknown };
 }
 
 export default function Home() {
@@ -145,7 +150,9 @@ export default function Home() {
     };
   }, [userId]);
 
-  const { goals, loading: goalsLoading, error: goalsError } = useLearningGoals();
+  const {
+    goals, loading: goalsLoading, error: goalsError, retry: retryGoals,
+  } = useLearningGoals();
   // One catalogue request serves the hero stat rail, rated strip, and
   // library-wide course total. Channels come from their complete bounded
   // dimension query below; a page of courses can never prove which channels
@@ -166,11 +173,16 @@ export default function Home() {
     [goals, goalsLoading, goalsError],
   );
 
+  // examCardState marks no exam available until the goals lookup has ANSWERED,
+  // so while it is in flight, or after it failed, this is a zero nobody
+  // counted. The rail below prints it only when it is positive.
   const liveTracks = exams.filter((exam) => exam.available).length;
-  // Prefer the catalogue's own total; fall back to summing the per-goal counts
-  // so the figure is never blank while the course query is in flight.
-  const courseCount =
-    total ?? (goals ?? []).reduce((sum, goal) => sum + Number(goal.count ?? 0), 0);
+  // The catalogue's own total, or nothing. This used to fall back to summing
+  // the per-goal counts while the course query was in flight or had failed,
+  // but a course can carry more than one goal, so that sum is not a course
+  // total. Measured read-only against production on 15 Sep 2026: the goal
+  // counts summed to 590 against 493 distinct courses (97 carry two or more).
+  const courseCount = total ?? null;
 
   const topRated = useMemo(() => pickTopRated(items, 3), [items]);
 
@@ -179,22 +191,27 @@ export default function Home() {
   // never a course's provider (that's courseSchema's job, on the course page).
   useStructuredData([websiteSchema(), organizationSchema()], []);
 
-  // The rail is a teaser, not the statistics band: three figures, and only
-  // rendered once at least one of them is real, so it never animates to zero.
-  const heroStats = courseCount > 0
+  // The rail is a teaser, not the statistics band: up to three figures, each
+  // shown only once it is real, and the rail only once at least one counted
+  // figure exists, so it never animates to zero. A lookup that failed removes
+  // its own figure instead of leaving a zero, or a guess, in its place.
+  const countedStats = [
+    courseCount > 0 && {
+      value: courseCount,
+      label: "Free courses",
+      note: "Curriculum-tagged",
+      to: "/browse",
+    },
+    liveTracks > 0 && {
+      value: liveTracks,
+      label: "Exam tracks",
+      note: examTracksCaption(exams),
+      to: "/explore",
+    },
+  ].filter(Boolean);
+  const heroStats = countedStats.length > 0
     ? [
-        {
-          value: courseCount,
-          label: "Free courses",
-          note: "Curriculum-tagged",
-          to: "/browse",
-        },
-        {
-          value: liveTracks,
-          label: "Exam tracks",
-          note: examTracksCaption(exams),
-          to: "/explore",
-        },
+        ...countedStats,
         { value: "₹0", numeric: false, label: "Forever", note: "No account needed" },
       ]
     : [];
@@ -250,6 +267,8 @@ export default function Home() {
           <Landing
             continueWatching={continueWatching}
             exams={exams}
+            goalsError={goalsError}
+            onRetryGoals={retryGoals}
             institutes={channels}
             channelsLoading={channelsLoading}
             topRated={topRated}
@@ -357,8 +376,8 @@ function TrustChips() {
 //  The search box itself is at the very top, in the hero.
 // ---------------------------------------------------------------------
 function Landing({
-  continueWatching, exams, institutes, topRated, catalogueLoading,
-  channelsLoading,
+  continueWatching, exams, goalsError, onRetryGoals, institutes, topRated,
+  catalogueLoading, channelsLoading,
 }) {
   return (
     <>
@@ -375,7 +394,7 @@ function Landing({
 
       {/* The tool comes before any argument for it. The student's remembered
           exam lane (chosen in the countdown above) leads the grid. */}
-      <ExamGrid exams={exams} />
+      <ExamGrid exams={exams} error={goalsError} onRetry={onRetryGoals} />
 
       {/* Inert until the polls release flag flips: nothing renders — and the
           lazy chunk is never even fetched — while polls are unreleased. */}

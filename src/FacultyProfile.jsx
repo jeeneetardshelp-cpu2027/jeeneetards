@@ -27,7 +27,7 @@ import { getFacultyGuide } from "./facultyGuides.js";
 
 export default function FacultyProfile() {
   const { slug } = useParams();
-  const { profile, loading, error } = useFacultyProfile(slug);
+  const { profile, loading, error, retry } = useFacultyProfile(slug);
   const { t, dark } = useTheme();
   const guide = getFacultyGuide(profile?.slug ?? slug);
   const verifiedAliases = (profile?.aliases ?? [])
@@ -101,7 +101,22 @@ export default function FacultyProfile() {
       <main id={MAIN_CONTENT_ID} className="py-8">
         <Container width="reading">
         {error ? (
-          <p className={`text-sm ${t.muted}`}>{error}</p>
+          // The failure is the page's heading, with the Try again the course
+          // page and the Explore steps give a failed lookup. This used to be a
+          // bare line with no heading and nothing that could ask again. No
+          // teacher name: the lookup that would supply one is what failed.
+          <div className={`rounded-xl border border-dashed ${t.border} ${t.card} p-8 text-center`}>
+            <h1 className={`text-sm font-semibold ${t.text}`}>{error}</h1>
+            {retry && (
+              <button
+                type="button"
+                onClick={retry}
+                className={`mt-3 min-h-11 rounded-xl border ${t.border} px-4 text-sm font-medium ${t.hover}`}
+              >
+                Try again
+              </button>
+            )}
+          </div>
         ) : loading ? (
           <div className="space-y-3">
             <div className={`h-8 w-56 animate-pulse rounded ${t.input}`} />

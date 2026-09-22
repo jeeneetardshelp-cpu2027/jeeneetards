@@ -135,10 +135,21 @@ export function usePlaylistBrowse({
   // returns, an unfiltered result set is on screen under a filtered heading.
   // Not querying at all is the only correct behaviour.
   enabled = true,
+  // WHY the gate is shut, which `enabled` alone cannot say.
+  //
+  //   false  a prerequisite is still resolving. An answer is coming, so keep
+  //          reporting loading and let the caller hold its skeleton.
+  //   true   a prerequisite FAILED, or matched nothing. Nothing is coming until
+  //          the student acts, and the caller already renders why. Report NOT
+  //          loading, with no error of its own: a second message would repeat
+  //          the caller's behind a Retry that could not fix it.
+  //
+  // Either way no request is issued. Ignored while `enabled` is true.
+  blocked = false,
 }) {
-  const [state, setState] = useState({
-    items: [], total: null, strongTotal: null, loading: true, error: null, hasMore: false,
-  });
+  const [state, setState] = useState(() => ({
+    items: [], total: null, strongTotal: null, loading: enabled || !blocked, error: null, hasMore: false,
+  }));
   const languageKey = JSON.stringify(language ?? []);
   const contentTypeKey = JSON.stringify(contentType ?? []);
   const difficultyKey = JSON.stringify(difficulty ?? []);
@@ -168,8 +179,10 @@ export function usePlaylistBrowse({
     const contentTypeValues = JSON.parse(contentTypeKey);
     const difficultyValues = JSON.parse(difficultyKey);
     if (!enabled) {
-      // Hold the skeleton rather than showing a stale or unfiltered list.
-      setState({ items: [], total: null, strongTotal: null, loading: true, error: null, hasMore: false });
+      // Hold the skeleton rather than showing a stale or unfiltered list —
+      // unless the gate is shut for good, in which case there is nothing to
+      // hold it for. total stays null: nothing was counted.
+      setState({ items: [], total: null, strongTotal: null, loading: !blocked, error: null, hasMore: false });
       return;
     }
     if (!isSupabaseConfigured) {
@@ -480,7 +493,7 @@ export function usePlaylistBrowse({
       items, total, strongTotal, loading: false, error: null,
       hasMore: total != null ? (page + 1) * pageSize < total : items.length === pageSize,
     });
-  }, [enabled, goalId, boardId, subjectId, chapterId, stage, channelId, teacherId,
+  }, [enabled, blocked, goalId, boardId, subjectId, chapterId, stage, channelId, teacherId,
       chapterClassKey,
       languageKey, contentTypeKey, difficultyKey,
       search, sort, page, pageSize]);
