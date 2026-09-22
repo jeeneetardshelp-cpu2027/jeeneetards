@@ -140,8 +140,9 @@ async function main() {
     `${Number.isFinite(limit) ? ` (--limit ${limit})` : ""}.`,
   );
   if (!due.length) {
-    // The normal result on most weekly runs: each video is checked about
-    // monthly, so a run usually finds nothing due and never calls YouTube.
+    // Reached only when --max-age skips everything (a manual run; the daily
+    // schedule passes no --max-age and checks every video), so YouTube is
+    // never called.
     // Write the report anyway (see writeReport). Without it the verdict step
     // cannot tell this quiet week from a broken run, and goes red.
     const { reportPath } = writeReport(

@@ -130,8 +130,9 @@ export function planLivenessUpdate(videos, details, nowIso) {
  * The report a run writes when nothing is due for a check: every video was
  * verified within the --max-age window, so YouTube is not called at all.
  *
- * This is the NORMAL result on most weekly runs — each video is checked about
- * monthly — and until 15 Sep 2026 the runner exited on this path WITHOUT
+ * Under the old schedule (weekly, --max-age 30) this was the normal result on
+ * most runs; the daily schedule checks every video, so now only a manual run
+ * with --max-age can land here. Until 15 Sep 2026 the runner exited on this path WITHOUT
  * writing a report. The workflow's verdict step then found no file and, as
  * designed, failed on "unknown". So every quiet week went red, which is worse
  * than noise: a genuinely broken run looked exactly the same.

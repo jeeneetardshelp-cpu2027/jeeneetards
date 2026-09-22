@@ -1,20 +1,27 @@
 # Link-rot check: find lessons whose YouTube videos have been deleted, made
 # private, or had embedding turned off — before a student does.
 #
-# CADENCE: the trigger is weekly but each video is checked about MONTHLY. The
-# --max-age 30 flag skips anything verified within 30 days, so a weekly run only
-# picks up what has aged past the cutoff; a run with nothing due exits before it
-# calls YouTube at all, and costs one paginated read. Polling weekly rather than
-# monthly just means newly-due videos wait at most 7 days instead of 30. Every
-# row was stamped at once on 2026-09-01, so they currently all fall due together.
+# CADENCE: daily, and every run checks EVERY video. videos.list takes 50 ids per
+# call at 1 quota unit each, so the whole catalogue (5,559 videos on 2026-09-22)
+# costs about 112 units: roughly 1% of the 10,000-unit daily allowance, with
+# popularity-refresh adding about 110 on Wednesdays. So a lesson made private is
+# caught by the next morning.
+#
+# It used to run weekly and skip anything verified within 30 days, to save
+# quota that turned out not to matter. Every row had been stamped on 2026-09-01,
+# so nothing fell due until October, and in the meantime 20 of course 485's 21
+# lectures went private and played "Private video" to students for three weeks.
 #
 # Runs src/scripts/checkVideoLiveness.js (idempotent). Videos that stopped
 # embedding are marked 'blocked' (the watch UI already shows an honest
 # "YouTube only" link); deleted/private videos are marked 'unavailable' and
 # reported for the owner to review — never auto-removed.
 #
-# The job then FAILS when anything needs a human, because checkVideoLiveness.js
-# itself always exits 0 — see the last step.
+# The job then FAILS when anything NEW needs a human, because
+# checkVideoLiveness.js itself always exits 0 — see the last step. A lesson an
+# earlier run already marked 'unavailable' is re-checked every day (so a recovery
+# is noticed) and listed in the summary, but does not turn the run red again;
+# see livenessGate.js.
 #
 # Requires three repository secrets (Settings → Secrets and variables → Actions):
 #   LIVENESS_SUPABASE_URL          — the project URL (same value as VITE_SUPABASE_URL)
@@ -26,7 +33,7 @@ name: video-liveness
 
 on:
   schedule:
-    - cron: "30 22 * * 0" # Sundays 22:30 UTC = Mondays 04:00 IST, before the study day starts
+    - cron: "30 22 * * *" # Daily 22:30 UTC = 04:00 IST, before the study day starts
   workflow_dispatch:
     inputs:
       dry_run:
@@ -68,11 +75,12 @@ jobs:
           } > .env
 
       # Manual runs default to --dry-run so the plumbing can be tested without
-      # touching production; the weekly schedule always runs for real.
+      # touching production; the daily schedule always runs for real. No
+      # --max-age: every run checks every video (see CADENCE above).
       - name: Check video liveness
         env:
           DRY_RUN_FLAG: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run && '--dry-run' || '' }}
-        run: node src/scripts/checkVideoLiveness.js --max-age 30 $DRY_RUN_FLAG
+        run: node src/scripts/checkVideoLiveness.js $DRY_RUN_FLAG
 
       - name: Upload report
         if: always()
@@ -88,7 +96,7 @@ jobs:
       # tick and tell nobody. Exiting non-zero re-uses GitHub's existing
       # "your scheduled workflow failed" email as the notification — no bot
       # token, no issue permissions, nothing new to configure:
-      #   green = catalogue clean, red = go and look.
+      #   green = nothing new, red = go and look.
       # It also fails when the report is unreadable: not knowing whether the
       # catalogue is healthy must never be reported as healthy.
       - name: Fail if any lesson needs review

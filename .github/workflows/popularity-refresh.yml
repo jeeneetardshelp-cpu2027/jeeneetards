@@ -11,10 +11,10 @@
 # the state the first run was fixing.
 #
 # CADENCE. Weekly, matching REFRESH_INTERVAL_DAYS, so each run refreshes the
-# whole catalogue and nothing is ever more than a week stale. Staggered from
-# video-liveness.yml (Sundays) onto Wednesdays: both jobs spend YouTube quota
-# (~110 units of the 10,000/day allowance for this one) and there is no reason
-# to have them contend on the same day.
+# whole catalogue and nothing is ever more than a week stale. Runs on
+# Wednesdays. video-liveness.yml runs every day, so on Wednesdays both spend
+# YouTube quota: about 110 units each of the 10,000/day allowance, both batching
+# 50 ids per call — far too little to contend.
 #
 # Runs src/scripts/refreshVideoStats.js (idempotent, safe to re-run). It exits
 # non-zero on any failure, which reuses GitHub's "scheduled workflow failed"
