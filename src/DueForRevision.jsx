@@ -22,6 +22,7 @@ import { RotateCcw } from "lucide-react";
 import { Container } from "./AppShell.jsx";
 import { useTheme } from "./theme.jsx";
 import { BRAND_TEAL } from "./brandColors.js";
+import { namesMatch } from "./courseMetadata.js";
 import {
   dueForRevision, markChapterRevised, pauseRevisionForToday, revisionAge, snoozeChapter,
 } from "./revision.js";
@@ -108,10 +109,13 @@ export default function DueForRevision() {
               </p>
               {/* A course whose title IS the chapter name adds nothing —
                   "Rotational Motion / Physics · Rotational Motion" reads as a
-                  bug. Many chapter-sized playlists are titled that way. */}
-              {(item.subject || (item.courseTitle && item.courseTitle !== item.chapterName)) && (
+                  bug. Many chapter-sized playlists are titled that way, some
+                  in another case or punctuation ("SURFACE CHEMISTRY"), so this
+                  is namesMatch, the rule the chapter share preview uses
+                  (src/courseMetadata.js). */}
+              {(item.subject || (item.courseTitle && !namesMatch(item.courseTitle, item.chapterName))) && (
                 <p className={`mt-0.5 truncate text-xs ${t.muted}`}>
-                  {[item.subject, item.courseTitle !== item.chapterName ? item.courseTitle : null]
+                  {[item.subject, namesMatch(item.courseTitle, item.chapterName) ? null : item.courseTitle]
                     .filter(Boolean).join(" · ")}
                 </p>
               )}

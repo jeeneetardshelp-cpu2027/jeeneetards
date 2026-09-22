@@ -129,6 +129,73 @@ describe("what it says", () => {
     expect(document.body.textContent).toMatch(/Physics/);
   });
 
+  it("counts a title that differs only by case or spacing as the same name", () => {
+    // namesMatch in src/courseMetadata.js — the rule the chapter share preview
+    // uses too, so a chapter repeats nowhere or everywhere, not by surface.
+    seed([
+      item(24, {
+        chapterId: 32, chapterName: "Surface Chemistry", courseTitle: "SURFACE CHEMISTRY", subject: "Chemistry",
+      }),
+      item(25, {
+        chapterId: 33, chapterName: "Friction", courseTitle: "FRICTION", subject: null,
+      }),
+      // Inner spacing, which a plain trim + lowercase would miss.
+      item(26, {
+        chapterId: 34, chapterName: "Binomial Theorem", courseTitle: "Binomial  Theorem", subject: null,
+      }),
+    ]);
+    show();
+    expect(document.body.textContent).not.toMatch(/SURFACE CHEMISTRY/);
+    expect(document.body.textContent).toMatch(/Surface Chemistry/);
+    expect(document.body.textContent).not.toMatch(/Chemistry · /);
+    // No subject and no distinct title: no second line at all.
+    const frictionRow = screen.getByText("Friction").closest("li");
+    expect(frictionRow.querySelector("p.truncate")).toBeNull();
+    expect(frictionRow.textContent).not.toMatch(/FRICTION/);
+    // Testing Library's default normaliser collapses whitespace, so a second
+    // line reading "Binomial  Theorem" would be found here too.
+    expect(screen.getAllByText("Binomial Theorem")).toHaveLength(1);
+    const binomialRow = screen.getByText("Binomial Theorem").closest("li");
+    expect(binomialRow.querySelector("p.truncate")).toBeNull();
+  });
+
+  it("counts a title that differs only by punctuation as the same name", () => {
+    // Same words, commas and a full stop aside: namesMatch calls it one name.
+    seed([item(24, {
+      chapterName: "Work Energy and Power", courseTitle: "Work, Energy and Power.", subject: null,
+    })]);
+    show();
+    const row = screen.getByText("Work Energy and Power").closest("li");
+    expect(row.querySelector("p.truncate")).toBeNull();
+    expect(document.body.textContent).not.toMatch(/Work, Energy/);
+  });
+
+  it("with a subject shown, a title that differs by spacing or punctuation is still not repeated", () => {
+    // The subject keeps the second line on screen, so these rows pin the inner
+    // filter (the item.courseTitle half of the join) to namesMatch; the
+    // subject: null rows above only pin the outer condition.
+    seed([
+      item(24, {
+        chapterId: 36, chapterName: "Binomial Theorem", courseTitle: "Binomial  Theorem", subject: "Mathematics",
+      }),
+      item(25, {
+        chapterId: 35, chapterName: "Laws of Motion", courseTitle: "Laws, of Motion.", subject: "Physics",
+      }),
+    ]);
+    show();
+    const binomial = screen.getByText("Binomial Theorem").closest("li");
+    expect(binomial.querySelector("p.truncate").textContent).toBe("Mathematics");
+    const laws = screen.getByText("Laws of Motion").closest("li");
+    expect(laws.querySelector("p.truncate").textContent).toBe("Physics");
+    expect(document.body.textContent).not.toMatch(/Mathematics · |Physics · /);
+  });
+
+  it("still shows a course title that only CONTAINS the chapter name", () => {
+    seed([item(24, { courseTitle: "Rotational Motion — JEE Physics" })]);
+    show();
+    expect(document.body.textContent).toMatch(/Physics · Rotational Motion — JEE Physics/);
+  });
+
   it("never claims to know what the student has forgotten", () => {
     seed([item(80)]);
     show();

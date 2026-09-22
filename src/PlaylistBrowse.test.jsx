@@ -112,9 +112,10 @@ beforeEach(() => {
 });
 
 describe("playlist card channel navigation", () => {
-  // 132 courses store the channel name in `teacher`, so the card rendered an
-  // initials circle, the channel logo, and the name twice: "C Competishun+ ·
-  // Competishun+". One credit, one avatar.
+  // Many courses store the channel name in `teacher` (counts:
+  // src/courseCredit.js), so the card rendered an initials circle, the
+  // channel logo, and the name twice: "C Competishun+ · Competishun+". One
+  // credit, one avatar.
   it("does not print the channel name twice when teacher repeats it", () => {
     render(
       <MemoryRouter>

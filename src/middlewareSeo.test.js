@@ -2347,9 +2347,10 @@ describe("course pages linking their teacher's faculty profile", () => {
   });
 
   it("cannot link a credit that was suppressed as the channel's own name", async () => {
-    // 132 courses store the channel name in `teacher`. courseCredit drops that
-    // row, and a dropped row has nothing to wrap — a suppressed credit must
-    // not reappear as a link just because a slug happened to resolve.
+    // Many courses store the channel name in `teacher` (counts:
+    // src/courseCredit.js). courseCredit drops that row, and a dropped row
+    // has nothing to wrap — a suppressed credit must not reappear as a link
+    // just because a slug happened to resolve.
     const html = await courseHtml({
       teacher: "Competishun+",
       institutes_channels: { name: "Competishun+" },

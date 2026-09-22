@@ -18,12 +18,21 @@
 // preview can never claim a confidence the course page refuses to show. The
 // chapter card shows no rating at all — a course's rating is not a chapter's.
 //
+// SAID ONCE. Neither card repeats a name, each line by its own rule. A
+// teacher who is only the channel's own name again (case and spacing aside)
+// is credited through courseCredit (src/courseCredit.js), so the byline
+// names them once; a chapter named like its course (case, spacing and
+// punctuation aside) drops the "From the course" line through namesMatch
+// (src/courseMetadata.js). A name that only contains the other is kept on
+// purpose: the extra words say something.
+//
 // FONTS. The renderer embeds the KaTeX Main serif (Latin coverage only). A
 // title containing scripts those fonts cannot draw — Devanagari most of all —
 // must fall back to the static social-preview.png rather than render tofu
 // into a shared image. needsStaticFallback() is that decision.
 
 import { BRAND_TEAL, subjectColor } from "../../src/brandColors.js";
+import { courseCredit } from "../../src/courseCredit.js";
 import { ratingDisplay } from "../../src/ratingConfidence.js";
 import { namesMatch } from "../../src/courseMetadata.js";
 
@@ -71,10 +80,14 @@ function lectureCount(value) {
 /** Normalise the PostgREST playlists row into what the card actually draws. */
 export function courseCardModel(row) {
   if (!row || typeof row !== "object" || !row.title) return null;
+  // Credited on the full names, before the 40-character cut: a teacher who is
+  // only the channel again is dropped and the linked channel kept, so the
+  // byline cannot read "Mohit Tyagi  —  Mohit Tyagi" (src/courseCredit.js).
+  const credit = courseCredit({ teacher: row.teacher, institute: row.institutes_channels?.name });
   return {
     title: truncate(row.title, 90),
-    teacher: truncate(row.teacher ?? "", 40),
-    channel: truncate(row.institutes_channels?.name ?? "", 40),
+    teacher: truncate(credit.teacher ?? "", 40),
+    channel: truncate(credit.institute ?? "", 40),
     subject: String(row.subjects?.name ?? "").trim(),
     lectures: lectureCount(row.playlist_videos?.[0]?.count),
     rating: ratingDisplay(row.average_rating, row.ratings_count),
@@ -229,7 +242,8 @@ export function courseCardTree(model) {
 
 /**
  * The 1200x630 chapter card: the chapter name as the headline, the course it
- * is from beneath it, then the same teacher/channel byline as the course card.
+ * is from beneath it (unless the course is named after the chapter), then the
+ * same credited teacher/channel byline as the course card.
  * The chips carry only what was counted for THIS chapter in THIS course — and
  * no rating chip, because no chapter-level rating exists to stand behind.
  */

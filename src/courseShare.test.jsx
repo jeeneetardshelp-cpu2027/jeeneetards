@@ -168,6 +168,34 @@ describe("courseShareText", () => {
   it("still says something honest when only the title is known", () => {
     expect(courseShareText({ title: "Fluids" })).toBe("Watch Fluids free on JEENEETARD");
   });
+
+  // courseCredit (src/courseCredit.js) decides the byline: a teacher who is
+  // only the channel's own name again is dropped and the channel kept.
+  it("names a teacher who IS the channel once", () => {
+    expect(courseShareText({
+      title: "Binomial Theorem", lectures: 92,
+      teacher: "Mohit Tyagi", institute: "Mohit Tyagi",
+    })).toBe("Watch Binomial Theorem free — 92 lectures by Mohit Tyagi on JEENEETARD");
+  });
+
+  it("treats a case-only difference as the same name", () => {
+    expect(courseShareText({
+      title: "Chemistry Class 10", lectures: 3,
+      teacher: "Sunlike Study", institute: "Sunlike study",
+    })).toBe("Watch Chemistry Class 10 free — 3 lectures by Sunlike study on JEENEETARD");
+  });
+
+  it("keeps both names when one only contains the other", () => {
+    expect(courseShareText({
+      title: "Science Class 10", lectures: 5,
+      teacher: "Alakh Pandey", institute: "Alakh Pandey - Class 9th & 10th",
+    })).toBe("Watch Science Class 10 free — 5 lectures by Alakh Pandey — Alakh Pandey - Class 9th & 10th on JEENEETARD");
+  });
+
+  it("credits a lone channel as before", () => {
+    expect(courseShareText({ title: "Fluids", lectures: 2, teacher: null, institute: "Physics Wallah" }))
+      .toBe("Watch Fluids free — 2 lectures by Physics Wallah on JEENEETARD");
+  });
 });
 
 describe("the watch page share row", () => {
@@ -212,5 +240,27 @@ describe("the watch page share row", () => {
     expect(screen.getByRole("button", { name: /Share this/ })).toBeTruthy();
     // …so the always-available row does not stack a second one above it.
     expect(screen.queryByRole("link", { name: "Share this course on WhatsApp" })).toBeNull();
+  });
+});
+
+// Course 88's shape on the real page: the page hands courseShareText the raw
+// teacher and channel, and the channel's name used to travel twice ("by Mohit
+// Tyagi — Mohit Tyagi"). The rule lives in src/courseCredit.js.
+describe("the watch page share row, when the teacher is the channel", () => {
+  it("names them once in the message", async () => {
+    const original = catalogue.course.teacher;
+    catalogue.course.teacher = "Mohit Tyagi";
+    try {
+      renderApp("/course/1");
+      await screen.findByRole("heading", { name: "Lesson one" });
+      const href = whatsappLink().getAttribute("href");
+      const message = decodeURIComponent(href.replace("https://wa.me/?text=", ""));
+      expect(message).toBe(
+        "Watch Complete Kinematics free — 2 lectures by Mohit Tyagi on JEENEETARD "
+        + `${window.location.origin}/course/1/complete-kinematics?ref=share`,
+      );
+    } finally {
+      catalogue.course.teacher = original;
+    }
   });
 });

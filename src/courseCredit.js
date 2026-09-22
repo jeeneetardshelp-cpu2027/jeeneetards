@@ -1,9 +1,14 @@
 // courseCredit.js — who to credit for a course, without saying it twice.
 //
+// This file is where the teacher/channel counts live. Other comments point
+// here rather than restating them, so a re-measurement changes one place.
+//
 // A course carries a free-text `teacher` and a linked `institutes_channels`
-// row. For 132 of 484 courses (production, 2026-09-02) they are the same
-// string, because the importer filled `teacher` with the YouTube channel's
-// name. Every surface that shows both then says it twice:
+// row. For 132 of 493 courses (production, 22 Sep 2026; 132 of 484 on 2 Sep)
+// they are the same string, because the importer filled `teacher` with the
+// YouTube channel's name. One of them, course 159, differs only by case
+// ("Sunlike Study" / "Sunlike study"). Every surface that shows both then says
+// it twice:
 //
 //   card / watch page   "C  Competishun+ · Competishun+"   (two avatars, too)
 //   meta description    "2 Chemistry lectures by Competishun+ from Competishun+."
@@ -23,9 +28,9 @@
 // round: the institute is the linked entity — it has an id, a logo and a
 // /browse?channel= destination — so keeping it preserves the link, and
 // "from Competishun+" reads correctly where "by Competishun+" would imply a
-// person. This is presentation only. `playlists.teacher` is untouched, and
-// 131 of the 132 rows carry faculty_credit_status 'pending' for whoever
-// reviews the credits properly later.
+// person. This is presentation only. `playlists.teacher` is untouched, and on
+// 2 Sep 2026 131 of the 132 rows carried faculty_credit_status 'pending' for
+// whoever reviews the credits properly later.
 
 const normalise = (value) => String(value ?? "").trim().toLowerCase().replace(/\s+/g, " ");
 
@@ -36,7 +41,8 @@ const normalise = (value) => String(value ?? "").trim().toLowerCase().replace(/\
  * counts as a duplicate. Names where one merely contains the other are left
  * alone — "Alakh Pandey" beside "Alakh Pandey - Class 9th & 10th", or
  * "Chaitanya Rastogi" beside "DexterChem - Chemistry by Chaitanya Rastogi",
- * carry information the other does not, and 25 courses look like that.
+ * carry information the other does not, and 25 courses looked like that on
+ * 22 Sep 2026 (as on 2 Sep).
  * Collapsing them would delete a real name, which is worse than repeating one.
  *
  * @returns {{ teacher: string|null, institute: string|null, duplicated: boolean }}

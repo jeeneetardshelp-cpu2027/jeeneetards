@@ -1,7 +1,8 @@
 // courseCredit: say who taught a course once, not twice.
 //
-// 132 of 484 courses (production, 2026-09-02) store the YouTube channel's own
-// name in `playlists.teacher`, so every surface that shows both said it twice.
+// Many courses store the YouTube channel's own name in `playlists.teacher`
+// (the counts live in src/courseCredit.js), so every surface that shows both
+// said it twice.
 // The live meta description for /course/167 read, verbatim:
 //
 //     "2 Chemistry lectures by Competishun+ from Competishun+."
@@ -29,8 +30,9 @@ describe("an exact duplicate is said once", () => {
   });
 
   it("covers the person-named channels too, not just institutes", () => {
-    // 39 of the 132 are a person whose channel carries their own name. The
-    // data is right there; it is only the repetition that is wrong.
+    // Some of them are a person whose channel carries their own name (counts:
+    // src/courseCredit.js). The data is right there; it is only the
+    // repetition that is wrong.
     for (const name of ["Mohit Tyagi", "Digraj Singh Rajput", "Shobhit Nirwan"]) {
       expect(courseCredit({ teacher: name, institute: name }).teacher).toBeNull();
     }
@@ -49,9 +51,9 @@ describe("a real pair is never collapsed", () => {
     ["ExpHub", "Exphub 9th &10th"],
     ["Neha Agrawal", "Neha Agrawal Mathematically Inclined"],
   ])("keeps a near-duplicate: %s beside %s", (teacher, institute) => {
-    // 25 courses look like this. One name contains the other but each carries
-    // something the other does not, so collapsing them would delete a real
-    // name — worse than repeating one.
+    // Real courses look like this (counts: src/courseCredit.js). One name
+    // contains the other but each carries something the other does not, so
+    // collapsing them would delete a real name — worse than repeating one.
     const credit = courseCredit({ teacher, institute });
     expect(credit.duplicated).toBe(false);
     expect(credit.teacher).toBe(teacher);

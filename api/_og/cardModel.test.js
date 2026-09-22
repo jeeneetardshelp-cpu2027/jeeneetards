@@ -255,3 +255,112 @@ describe("chapterCardTree", () => {
     expect(svg).toContain('height="630"');
   }, 30_000);
 });
+
+// Said once, not twice. courseCredit (src/courseCredit.js, where the teacher
+// counts live) credits a teacher who is only the channel again once;
+// namesMatch (src/courseMetadata.js, tested above for the course line) names a
+// chapter once. Course 88 is the shape that shipped a repeat on BOTH lines of
+// its chapter preview: teacher and channel are both "Mohit Tyagi", and its one
+// chapter is named "Binomial Theorem", exactly like the course.
+describe("names are drawn once, not twice", () => {
+  const COURSE_88 = {
+    title: "Binomial Theorem",
+    teacher: "Mohit Tyagi",
+    average_rating: null,
+    ratings_count: 0,
+    subjects: { name: "Mathematics" },
+    institutes_channels: { name: "Mohit Tyagi" },
+    playlist_videos: [{ count: 92 }],
+  };
+  const CHAPTER_78 = { name: "Binomial Theorem", lectures: 92 };
+
+  // How many times `name` is said anywhere on the card, whole strings or not.
+  const saidTimes = (strings, name) =>
+    strings.join(" | ").toLowerCase().split(name.toLowerCase()).length - 1;
+  const bylineOf = (strings) => strings.filter((s) => s.includes("Tyagi") || s.includes("Sunlike") || s.includes("Alakh"));
+
+  it("credits a teacher who IS the channel once, on the course card", () => {
+    const model = courseCardModel(COURSE_88);
+    // The teacher is dropped and the linked channel kept — courseCredit's rule.
+    expect(model).toMatchObject({ teacher: "", channel: "Mohit Tyagi" });
+    const t = texts(courseCardTree(model));
+    expect(bylineOf(t)).toEqual(["Mohit Tyagi"]);
+    expect(saidTimes(t, "Mohit Tyagi")).toBe(1);
+    expect(t.some((s) => s.includes("  —  "))).toBe(false);
+  });
+
+  it("credits a teacher who IS the channel once, on the chapter card", () => {
+    const model = chapterCardModel(COURSE_88, CHAPTER_78);
+    expect(model).toMatchObject({ teacher: "", channel: "Mohit Tyagi" });
+    const t = texts(chapterCardTree(model));
+    expect(bylineOf(t)).toEqual(["Mohit Tyagi"]);
+    expect(saidTimes(t, "Mohit Tyagi")).toBe(1);
+  });
+
+  it("treats a case-only difference as the same name, and keeps the channel's spelling", () => {
+    const row = { ...ROW, teacher: "Sunlike Study", institutes_channels: { name: "Sunlike study" } };
+    for (const t of [
+      texts(courseCardTree(courseCardModel(row))),
+      texts(chapterCardTree(chapterCardModel(row, { name: "Moment of Inertia", lectures: 6 }))),
+    ]) {
+      expect(bylineOf(t)).toEqual(["Sunlike study"]);
+      expect(saidTimes(t, "Sunlike Study")).toBe(1);
+    }
+  });
+
+  it("keeps BOTH names when one only contains the other", () => {
+    const row = { ...ROW, teacher: "Alakh Pandey", institutes_channels: { name: "Alakh Pandey - Class 9th & 10th" } };
+    for (const t of [
+      texts(courseCardTree(courseCardModel(row))),
+      texts(chapterCardTree(chapterCardModel(row, { name: "Moment of Inertia", lectures: 6 }))),
+    ]) {
+      expect(t).toContain("Alakh Pandey  —  Alakh Pandey - Class 9th & 10th");
+    }
+  });
+
+  it("compares the full names, not the 40-character cut the byline draws", () => {
+    // Equal for the first 40 characters, different after: two real names.
+    const stem = "Physics Wallah Foundation Olympiad Batch ";
+    const row = { ...ROW, teacher: `${stem}Class 9`, institutes_channels: { name: `${stem}Class 10` } };
+    const model = courseCardModel(row);
+    expect(model.teacher).not.toBe("");
+    expect(model.channel).not.toBe("");
+  });
+
+  it("keeps the course line when chapter and title differ only after the cuts the card draws", () => {
+    // Identical for the first 89 characters (more than the course line's 50
+    // and within the headline's 90), different after: a real course line.
+    const stem = "Complete Revision of Electromagnetic Induction and Alternating Current with PYQs for JEE ";
+    const model = chapterCardModel({ ...ROW, title: `${stem}Main` }, { name: `${stem}Advanced`, lectures: 3 });
+    expect(model.courseTitle).not.toBe("");
+    expect(texts(chapterCardTree(model)).some((s) => s.startsWith("From the course: "))).toBe(true);
+  });
+
+  it("draws course 88's chapter card with each name once, and the model says so", () => {
+    const model = chapterCardModel(COURSE_88, CHAPTER_78);
+    expect(model).toEqual({
+      chapter: "Binomial Theorem",
+      courseTitle: "",
+      teacher: "",
+      channel: "Mohit Tyagi",
+      subject: "Mathematics",
+      lectures: 92,
+    });
+    const t = texts(chapterCardTree(model));
+    expect(saidTimes(t, "Binomial Theorem")).toBe(1);
+    expect(saidTimes(t, "Mohit Tyagi")).toBe(1);
+  });
+
+  it("still renders through satori at 1200x630 without the course line", async () => {
+    const svg = await satori(chapterCardTree(chapterCardModel(COURSE_88, CHAPTER_78)), {
+      width: CARD_WIDTH,
+      height: CARD_HEIGHT,
+      fonts: [
+        { name: "KaTeX Main", data: fontRegular, weight: 400, style: "normal" },
+        { name: "KaTeX Main", data: fontBold, weight: 700, style: "normal" },
+      ],
+    });
+    expect(svg).toContain('width="1200"');
+    expect(svg).toContain('height="630"');
+  }, 30_000);
+});
