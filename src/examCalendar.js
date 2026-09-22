@@ -38,15 +38,23 @@
 // more than a day ahead of the student's calendar, which can only be a typo.
 //
 // Recorded checks:
+//   21 Sep 2026  jeeadv.ac.in and cbse.gov.in read in a browser. jeeadv.ac.in
+//                was still the JEE (Advanced) 2026 site, and its newest notice
+//                (16 Jul 2026, JoSAA round 5) said nothing about 2027. The
+//                newest cbse.gov.in notice was the circular on the List of
+//                Candidates for the 2027 exams (dated 17 Sep, posted 21 Sep);
+//                its signed pages give no exam dates, only "February–March"
+//                for Class X's first exam. Applies to JEE Advanced and CBSE,
+//                which disappear from 6 Nov 2026 unless re-checked.
 //   15 Sep 2026  jeemain.nta.nic.in and neet.nta.nic.in read directly. The
 //                newest notices on both were for the 2026 exams, with nothing
 //                for 2027. Applies to both JEE Main sessions and NEET UG, which
 //                disappear from 31 Oct 2026 unless re-checked.
 //   27 Aug 2026  jeeadv.ac.in and cbse.gov.in served no readable text to the
-//                15 Sep check, so JEE Advanced and CBSE keep the day their
+//                15 Sep check, so JEE Advanced and CBSE kept the day their
 //                windows were written (commit 69fcfdb). Stamping 15 Sep on them
-//                would record a check that did not happen. They disappear from
-//                12 Oct 2026 unless someone opens those sites and re-checks.
+//                would have recorded a check that did not happen. Replaced by
+//                the 21 Sep check.
 
 /**
  * How many days a check stays good. Long enough that a re-check fits easily
@@ -97,7 +105,7 @@ export const EXAM_CALENDAR = Object.freeze([
     expectedLabel: "late May 2027",
     authority: "IIT (JAB)",
     officialUrl: "https://jeeadv.ac.in/",
-    checkedOn: "2026-08-27",
+    checkedOn: "2026-09-21",
   },
   {
     slug: "neet-ug-2027",
@@ -125,7 +133,7 @@ export const EXAM_CALENDAR = Object.freeze([
     expectedLabel: "February–April 2027",
     authority: "CBSE",
     officialUrl: "https://www.cbse.gov.in/",
-    checkedOn: "2026-08-27",
+    checkedOn: "2026-09-21",
   },
 ]);
 
