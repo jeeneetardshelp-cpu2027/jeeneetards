@@ -9,7 +9,7 @@
 // So the workflow ends by reading the report back and failing the job when
 // something needs a human. GitHub already emails the owner when a scheduled
 // workflow fails, so that costs no new configuration and no new permissions:
-//   green = catalogue clean, red = go and look.
+//   green = nothing new, red = go and look.
 //
 // Fail-safe direction matters here. A report that is missing, truncated or the
 // wrong shape means we do NOT know whether the catalogue is healthy, and
@@ -21,12 +21,24 @@
 // runner writes a report on that path (buildNothingDueReport); this reads it
 // like any other, and the summary says nothing was checked rather than implying
 // a check found nothing.
+//
+// The same reasoning covers lessons that are ALREADY dead. The check runs every
+// day over every video, so a lesson an earlier run marked 'unavailable' is
+// re-checked daily (that is how a recovery gets noticed) and each re-check lists
+// it in the report's `dead` again. Failing on those would turn the job red every
+// morning for the same lessons until someone removes them, and a job that is
+// always red is one nobody reads. So only a lesson that was NOT already
+// unavailable is news; the known ones are listed, with their links, and do not
+// fail the run. A dead entry that does not say what it was before (an older
+// report shape) counts as news: not knowing must never pass.
 
 /**
  * @param {unknown} report  parsed tmp/video-liveness-report.json
  * @returns {{ needsAttention: boolean, unreadable: boolean, reason: string|null,
- *            dead: object[], newlyBlocked: object[], recovered: object[],
- *            dryRun: boolean, nothingDue: object|null }}
+ *            dead: object[], stillUnavailable: object[], newlyBlocked: object[],
+ *            recovered: object[], dryRun: boolean, nothingDue: object|null }}
+ *   `dead` holds only lessons that newly died this run; `stillUnavailable`
+ *   holds the ones an earlier run had already marked.
  */
 export function buildGateVerdict(report) {
   const unreadable = (reason) => ({
@@ -34,6 +46,7 @@ export function buildGateVerdict(report) {
     unreadable: true,
     reason,
     dead: [],
+    stillUnavailable: [],
     newlyBlocked: [],
     recovered: [],
     dryRun: false,
@@ -50,18 +63,21 @@ export function buildGateVerdict(report) {
     return unreadable("the report has no 'newly_blocked' array");
   }
 
-  const dead = report.dead;
+  const alreadyMarked = (d) => d?.was === "unavailable";
+  const dead = report.dead.filter((d) => !alreadyMarked(d));
+  const stillUnavailable = report.dead.filter(alreadyMarked);
   const newlyBlocked = report.newly_blocked;
   const note = report.nothing_due;
   return {
-    // Both warrant a look. 'dead' needs a removal decision (which can empty a
-    // chapter, so it is deliberately the owner's call). 'blocked' still has an
-    // honest "YouTube only" fallback in the watch UI, but with zero blocked
-    // videos in the catalogue today, the first one is news.
+    // Both warrant a look. A new death needs a removal decision (which can
+    // empty a chapter, so it is deliberately the owner's call). 'blocked' still
+    // has an honest "YouTube only" fallback in the watch UI, but with zero
+    // blocked videos in the catalogue today, the first one is news.
     needsAttention: dead.length + newlyBlocked.length > 0,
     unreadable: false,
     reason: null,
     dead,
+    stillUnavailable,
     newlyBlocked,
     recovered: Array.isArray(report.recovered) ? report.recovered : [],
     // A dry run detects exactly what a real run detects; only the write is
@@ -76,6 +92,24 @@ export function buildGateVerdict(report) {
 
 // "1 lesson(s)" reads like a machine wrote it. The owner reads these.
 const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
+
+const watchUrl = (d) => d.watch_url || `https://www.youtube.com/watch?v=${d.youtube_video_id}`;
+
+/** The known-dead lessons, listed so they are never out of sight, never failing the run. */
+function stillUnavailableLines(verdict) {
+  if (!verdict.stillUnavailable.length) return [];
+  const lines = [
+    "",
+    `### ${plural(verdict.stillUnavailable.length, "lesson is", "lessons are")} still unavailable from earlier runs`,
+    "",
+    "Already marked unavailable, so the lesson list labels them instead of",
+    "showing a broken player. They stay listed until you decide to remove them,",
+    "and they do not turn the run red again.",
+    "",
+  ];
+  for (const d of verdict.stillUnavailable) lines.push(`- video ${d.id} — ${watchUrl(d)}`);
+  return lines;
+}
 
 /**
  * Markdown for the job summary and the console. Reports only what the report
@@ -109,10 +143,15 @@ export function renderGateSummary(verdict) {
       lines.push("", `No lesson was due for a check. ${scope}, so nothing was sent to YouTube this run.`);
       return lines.join("\n");
     }
-    lines.push("", "No dead or newly-blocked lessons. Nothing to do.");
+    // "No dead lessons" is only true when there are none at all. With known
+    // dead ones still listed, say that nothing NEW died.
+    lines.push("", verdict.stillUnavailable.length
+      ? "No newly dead or newly-blocked lessons. Nothing new to do."
+      : "No dead or newly-blocked lessons. Nothing to do.");
     if (verdict.recovered.length) {
       lines.push("", `${plural(verdict.recovered.length, "lesson", "lessons")} recovered and now embed again.`);
     }
+    lines.push(...stillUnavailableLines(verdict));
     return lines.join("\n");
   }
 
@@ -126,10 +165,7 @@ export function renderGateSummary(verdict) {
       "made by the cron.",
       "",
     );
-    for (const d of verdict.dead) {
-      const url = d.watch_url || `https://www.youtube.com/watch?v=${d.youtube_video_id}`;
-      lines.push(`- video ${d.id} — ${url}`);
-    }
+    for (const d of verdict.dead) lines.push(`- video ${d.id} — ${watchUrl(d)}`);
   }
 
   if (verdict.newlyBlocked.length) {
@@ -152,5 +188,6 @@ export function renderGateSummary(verdict) {
     for (const r of verdict.recovered) lines.push(`- video ${r.id} (was ${r.was})`);
   }
 
+  lines.push(...stillUnavailableLines(verdict));
   return lines.join("\n");
 }

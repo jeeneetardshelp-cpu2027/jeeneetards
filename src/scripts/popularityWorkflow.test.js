@@ -28,10 +28,16 @@ describe("the popularity refresh schedule", () => {
     expect(script).toContain("const REFRESH_INTERVAL_DAYS = 7;");
   });
 
-  it("does not contend with the liveness check for YouTube quota", () => {
-    // Both jobs spend quota. Same cadence, different weekday.
-    const day = (cron) => cron.split(" ")[4];
-    expect(day(cronOf(workflow))).not.toBe(day(cronOf(liveness)));
+  it("shares YouTube's daily quota with the liveness check with room to spare", () => {
+    // The liveness check runs every day over every video (since 22 Sep 2026),
+    // so the two jobs can no longer take turns by weekday, and they do not need
+    // to: both ask videos.list for 50 ids per call, 1 quota unit each, so each
+    // costs about a unit per 50 videos (~112 for 5,559) against a 10,000-unit
+    // daily allowance. What would break that is a caller that stopped batching,
+    // so pin the batching both jobs depend on.
+    const youtubeNode = readFileSync(resolve(HERE, "youtubeNode.js"), "utf8");
+    expect(cronOf(liveness)).toMatch(/^\d+ \d+ \* \* \*$/);
+    expect(youtubeNode.match(/i \+= 50\)/g)?.length).toBeGreaterThanOrEqual(2);
   });
 
   it("only ever runs against the real repository", () => {

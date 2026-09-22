@@ -15,7 +15,7 @@
 // what the runner actually writes.
 import { describe, expect, it } from "vitest";
 import { buildGateVerdict, renderGateSummary } from "./livenessGate.js";
-import { buildNothingDueReport } from "./videoLiveness.js";
+import { buildNothingDueReport, planLivenessUpdate } from "./videoLiveness.js";
 
 const clean = { dry_run: false, dead: [], newly_blocked: [], recovered: [] };
 const withDead = {
@@ -151,5 +151,86 @@ describe("renderGateSummary", () => {
     const text = renderGateSummary(buildGateVerdict({ ...nothingDue, nothing_due: {} }));
     expect(text).toContain("No lesson was due for a check");
     expect(text).not.toMatch(/undefined|NaN/);
+  });
+});
+
+// The check runs daily over every video, so a lesson an earlier run marked
+// 'unavailable' is in every day's `dead` list again. Course 485's 20 privated
+// lectures (marked 22 Sep 2026) are the shape: failing on them would send the
+// same red email every morning until someone removes them. Only a NEW death is
+// news; the known ones stay listed and visible.
+describe("a lesson that an earlier run already marked unavailable", () => {
+  const known = {
+    id: 5314, youtube_video_id: "adhIOgGv5tM",
+    watch_url: "https://www.youtube.com/watch?v=adhIOgGv5tM", was: "unavailable",
+  };
+  const fresh = {
+    id: 99, youtube_video_id: "new001",
+    watch_url: "https://www.youtube.com/watch?v=new001", was: "embeddable",
+  };
+
+  it("does not turn a run red again", () => {
+    const v = buildGateVerdict({ ...clean, dead: [known] });
+    expect(v.needsAttention).toBe(false);
+    expect(v.dead).toEqual([]);
+    expect(v.stillUnavailable).toEqual([known]);
+  });
+
+  it("still fails for a lesson that has just died", () => {
+    const v = buildGateVerdict({ ...clean, dead: [fresh] });
+    expect(v.needsAttention).toBe(true);
+    expect(v.dead).toEqual([fresh]);
+  });
+
+  it("still fails for a lesson that was blocked and is now gone", () => {
+    expect(buildGateVerdict({ ...clean, dead: [{ ...fresh, was: "blocked" }] }).needsAttention).toBe(true);
+  });
+
+  it("fails when a new death arrives alongside known ones, and calls only the new one news", () => {
+    const v = buildGateVerdict({ ...clean, dead: [known, fresh] });
+    expect(v.needsAttention).toBe(true);
+    expect(v.dead).toEqual([fresh]);
+    expect(v.stillUnavailable).toEqual([known]);
+    const text = renderGateSummary(v);
+    expect(text).toContain("1 lesson is gone from YouTube");
+    expect(text).toContain("1 lesson is still unavailable from earlier runs");
+  });
+
+  it.each([
+    ["no previous status at all", { id: 7, youtube_video_id: "old7" }],
+    ["a null previous status", { id: 8, youtube_video_id: "old8", was: null }],
+  ])("treats a dead entry with %s as new, so an older report cannot hide a death", (_label, entry) => {
+    expect(buildGateVerdict({ ...clean, dead: [entry] }).needsAttention).toBe(true);
+  });
+
+  it("keeps listing the known ones, with links, without claiming there are none", () => {
+    const text = renderGateSummary(buildGateVerdict({ ...clean, dead: [known] }));
+    expect(text).toContain("1 lesson is still unavailable from earlier runs");
+    expect(text).toContain("https://www.youtube.com/watch?v=adhIOgGv5tM");
+    expect(text).toContain("No newly dead or newly-blocked lessons");
+    expect(text).not.toContain("No dead or newly-blocked lessons");
+  });
+
+  it("lists the known ones on a failing run too", () => {
+    const text = renderGateSummary(buildGateVerdict({
+      ...clean, dead: [known], newly_blocked: [{ id: 77, youtube_video_id: "xyz789", was: "embeddable" }],
+    }));
+    expect(text).toContain("stopped allowing embedding");
+    expect(text).toContain("still unavailable from earlier runs");
+  });
+
+  it("reads the runner's real shape for a re-checked lesson", () => {
+    // planLivenessUpdate puts every lesson the API omitted in `dead`, and the
+    // runner copies its previous status into `was` — for an already-unavailable
+    // lesson, that is 'unavailable'. Built from the runner's own functions.
+    const { updates, dead } = planLivenessUpdate(
+      [{ id: 5314, youtube_video_id: "adhIOgGv5tM", embedding_status: "unavailable" }],
+      new Map(), "2026-09-23T00:00:00.000Z",
+    );
+    const report = {
+      ...clean,
+      dead: dead.map((d) => ({ ...d, was: updates.find((u) => u.id === d.id).previous })),
+    };
+    expect(buildGateVerdict(report).needsAttention).toBe(false);
   });
 });
